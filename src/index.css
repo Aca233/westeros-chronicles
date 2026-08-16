@@ -1,0 +1,258 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #0a0908;
+    color: #e6ded1;
+    font-family: "Noto Serif SC", "Cinzel", Georgia, serif;
+  }
+}
+
+/* 自定义滚动条 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0e0d0b;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2b231c;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #c89d54;
+}
+
+/* 羊皮纸光泽卡片 */
+.got-card-texture {
+  background: linear-gradient(135deg, rgba(26, 22, 18, 0.95) 0%, rgba(19, 16, 13, 0.98) 100%);
+  border: 1px solid rgba(200, 157, 84, 0.2);
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.6), 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* 封蜡红发光特效 */
+.wax-glow {
+  box-shadow: 0 0 15px rgba(138, 28, 20, 0.4);
+}
+
+/* 暗金色微光下划线 */
+.gold-hover-tag {
+  color: #e5be6c;
+  text-decoration: underline;
+  text-decoration-color: rgba(200, 157, 84, 0.4);
+  text-underline-offset: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.gold-hover-tag:hover {
+  color: #fff1ba;
+  text-decoration-color: #c89d54;
+  background-color: rgba(200, 157, 84, 0.1);
+  border-radius: 2px;
+}
+
+/* 打字机光标动效 */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.typing-cursor::after {
+  content: '▋';
+  color: #c89d54;
+  animation: blink 0.8s infinite;
+  margin-left: 2px;
+}
+
+/*
+ * react-body-highlighter 会以肌群名称统一着色，左右同名肌群无法通过 data 分开。
+ * 人体为正面视图：画面左侧是角色右手（主手），画面右侧是角色左手（副手）。
+ * 仅覆盖手臂对应的 SVG 多边形，保留其余人体、伤情与界面样式不变。
+ */
+.body-model .rbh polygon {
+  stroke: rgba(200, 157, 84, 0.78);
+  stroke-width: 0.9px;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  transition: fill 0.2s ease, stroke 0.2s ease, filter 0.2s ease;
+}
+
+.body-model--mainhand .rbh polygon:nth-of-type(7),
+.body-model--mainhand .rbh polygon:nth-of-type(10),
+.body-model--mainhand .rbh polygon:nth-of-type(14),
+.body-model--mainhand .rbh polygon:nth-of-type(30),
+.body-model--mainhand .rbh polygon:nth-of-type(33),
+.body-model--offhand .rbh polygon:nth-of-type(8),
+.body-model--offhand .rbh polygon:nth-of-type(9),
+.body-model--offhand .rbh polygon:nth-of-type(13),
+.body-model--offhand .rbh polygon:nth-of-type(31),
+.body-model--offhand .rbh polygon:nth-of-type(32) {
+  fill: #f5d796 !important;
+  stroke: #fff1c2;
+  stroke-width: 1.2px;
+  filter: drop-shadow(0 0 3px rgba(245, 215, 150, 0.9));
+}
+
+/* CK3 风格统治者设计器控件 */
+.creator-input {
+  width: 100%;
+  border: 1px solid #4a3928;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 0.5rem 0.625rem;
+  color: #e6ded1;
+  font-size: 0.75rem;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.creator-input:focus {
+  border-color: #b98b47;
+  box-shadow: inset 0 0 0 1px rgba(200, 157, 84, 0.2);
+}
+
+.creator-step-button,
+.creator-stat-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #c9bba8;
+  background: #251d16;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+.creator-step-button {
+  width: 2rem;
+  height: 2rem;
+}
+
+.creator-stat-button {
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 1px solid #4a3928;
+}
+
+.creator-step-button:hover:not(:disabled),
+.creator-stat-button:hover:not(:disabled) {
+  color: #f0d18e;
+  background: #49351f;
+}
+
+.creator-step-button:disabled,
+.creator-stat-button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* CK3 风格人物窗口：深色雕花边框、金属页签与非现代卡片轮廓。 */
+.ck3-character-window {
+  background-image:
+    radial-gradient(circle at 18% 0%, rgba(166, 117, 53, 0.08), transparent 34%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.012) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.012) 75%);
+  background-size: auto, 8px 8px;
+}
+
+.ck3-ornament-line {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 40;
+  height: 3px;
+  pointer-events: none;
+  background: linear-gradient(90deg, #2f2216, #b78a49 20%, #e3c27f 50%, #b78a49 80%, #2f2216);
+  box-shadow: 0 1px 7px rgba(183, 138, 73, 0.28);
+}
+
+.ck3-heraldry-frame,
+.ck3-portrait-frame {
+  border: 1px solid #85673f;
+  box-shadow:
+    inset 0 0 0 2px #16100b,
+    inset 0 0 0 3px rgba(201, 157, 84, 0.22),
+    0 5px 13px rgba(0, 0, 0, 0.65);
+  clip-path: polygon(6px 0, calc(100% - 6px) 0, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 0 calc(100% - 6px), 0 6px);
+}
+
+.ck3-portrait-frame::before,
+.ck3-portrait-frame::after {
+  content: '';
+  position: absolute;
+  z-index: 10;
+  width: 28px;
+  height: 28px;
+  pointer-events: none;
+}
+
+.ck3-portrait-frame::before {
+  left: 6px;
+  top: 6px;
+  border-left: 2px solid rgba(216, 177, 101, 0.55);
+  border-top: 2px solid rgba(216, 177, 101, 0.55);
+}
+
+.ck3-portrait-frame::after {
+  right: 6px;
+  bottom: 6px;
+  border-right: 2px solid rgba(216, 177, 101, 0.55);
+  border-bottom: 2px solid rgba(216, 177, 101, 0.55);
+}
+
+/* 人物肖像必须是窗口中最强的视觉锚点，不能退化成难以辨认的细线图标。 */
+.ck3-portrait-frame--hero {
+  border-color: #b18a50;
+  box-shadow:
+    inset 0 0 0 2px #120d09,
+    inset 0 0 0 4px rgba(226, 190, 116, 0.24),
+    inset 0 -45px 75px rgba(0, 0, 0, 0.72),
+    0 8px 24px rgba(0, 0, 0, 0.72),
+    0 0 13px rgba(180, 130, 58, 0.14);
+}
+
+.ck3-bust-silhouette {
+  position: relative;
+  width: 220px;
+  height: 218px;
+  filter: drop-shadow(0 12px 12px rgba(0, 0, 0, 0.92));
+  transform: scale(0.78);
+  transform-origin: center center;
+}
+
+.ck3-bust-silhouette__head,
+.ck3-bust-silhouette__neck,
+.ck3-bust-silhouette__body {
+  position: absolute;
+  display: block;
+  background: linear-gradient(105deg, #9a876b 0%, #c1aa83 42%, #75644f 100%);
+}
+
+.ck3-bust-silhouette__head {
+  left: 77px;
+  top: 8px;
+  width: 68px;
+  height: 82px;
+  border-radius: 46% 46% 44% 44% / 42% 42% 56% 56%;
+  box-shadow: inset -13px -8px 15px rgba(30, 21, 14, 0.42), inset 6px 3px 9px rgba(246, 219, 166, 0.14);
+}
+
+.ck3-bust-silhouette__neck {
+  left: 94px;
+  top: 79px;
+  width: 35px;
+  height: 35px;
+  border-radius: 0 0 10px 10px;
+}
+
+.ck3-bust-silhouette__body {
+  left: 18px;
+  bottom: 0;
+  width: 186px;
+  height: 125px;
+  border-radius: 52% 52% 12px 12px / 40% 40% 10px 10px;
+  clip-path: polygon(20% 7%, 39% 0, 50% 17%, 61% 0, 80% 7%, 100% 42%, 92% 100%, 8% 100%, 0 42%);
+  box-shadow: inset -30px -18px 35px rgba(28, 19, 13, 0.48), inset 18px 5px 20px rgba(245, 215, 158, 0.1);
+}

@@ -1,0 +1,24 @@
+# Canon character
+Stark_3 = {
+    name = Eddard # Canon, THE Eddard
+    dynasty = dynn_Stark
+    father = Stark_1
+    mother = Stark_127
+    religion = old_gods_wnw
+    culture = northman
+    sexuality = heterosexual
+    martial = 8
+    diplomacy = 9
+    trait = honest
+    trait = just
+    8263.1.1 = {
+        birth = yes
+        add_character_flag = canon_status_canon
+    }
+    8298.1.1 = { trait = family_first }
+    8298.2.1 = { add_spouse = Tully_4 }
+    8298.3.1 = { make_trait_inactive = just }
+    8299.1.10 = {
+        death = { death_reason = death_execution }
+    }
+}

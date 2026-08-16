@@ -1,0 +1,7 @@
+Semi_1 = {
+    name = Addam
+    8290.1.1 = {
+        birth = yes
+        add_character_flag = canon_status_semicanon
+    }
+}

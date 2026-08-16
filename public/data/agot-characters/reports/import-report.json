@@ -1,0 +1,17 @@
+{
+  "counts": {
+    "canon": 2760,
+    "emittedRecords": 126978,
+    "excludedTechnical": 2397,
+    "genealogy": 99284,
+    "modSupporting": 21148,
+    "semicanon": 3786,
+    "totalSourceRecords": 129375,
+    "unsupportedOperations": 12750
+  },
+  "datasetHash": "073a4303b715bed2577aeab0cda186b7afee18e0c0fa2b266e31ba1785046af1",
+  "excludedTiers": [
+    "technical"
+  ],
+  "warnings": []
+}

@@ -1,0 +1,25 @@
+// Extracted from AGOT Simplified Chinese localization.
+// Dynamic Paradox character references are normalized to “该角色” for the browser creator.
+export const AGOT_TRAIT_DESCRIPTIONS: Readonly<Record<string, string>> = {
+  nightswatch: '该角色已披上黑袍加入了守夜人军团。',
+  lifestyle_mariner: '历经百次航行的资深航海大师，在指挥船只和船员方面无人能及，能熟练地穿越那些会让普通水手送命的风暴。',
+  authoritative: '该角色的声音很有分量，在鼓舞他人的同时也让许多人感到恐惧。',
+  rude: '该角色心直口快，完全不顾他人的感受，想说什么就说什么。',
+  inquisitive: '该角色着迷于世界中的奥秘。',
+  uncouth: '该角色个人形象低于常人标准，但其对此毫不在意。',
+  one_handed: '该角色只有一只手。',
+  scurvy: '该角色由于长期饮食不当，身体虚弱，牙龈出血，皮肤还出现了斑点。',
+  crippled: '该角色已经瘫痪，大部分身体部位无法动弹。',
+  greyscale: '该角色身上大面积皮肤龟裂剥落，这是灰鳞病的明显症状。',
+  burned: '该角色被火烧伤，现在身上烧焦的皮肉成了终生的伤疤。',
+  mute: '该角色无法表述自己的想法——以及任何事物。',
+  half_blind: '该角色的一只眼睛失明了。',
+  the_mark: '该角色的手像青蛙一样有蹼，是有记号的人。',
+  dragon_dreams: '该角色被凶兆与未来可能的景象所扰。',
+  greensight: '该角色会做预示性的「绿梦」，使其得以窥视未来吉凶。',
+  fashionable: '剪裁考究、设计优雅的服装吸引着该角色的注意力——同时还有其钱包的注意力。',
+  fire_obsessed: '该角色着迷于火的力量，出于精神原因或者某种不太光彩的目的……',
+  freedman: '该角色曾经是奴隶，但现在已重获自由。',
+  spider: '该角色是掌控间谍网的大师。',
+  dragonrider: '驭龙者是极少数能驯服龙的人，他们掌握着这股可怕的力量，并将其用于自己的意图。',
+};

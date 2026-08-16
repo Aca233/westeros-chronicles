@@ -1,0 +1,4 @@
+Dummy_1 = {
+    name = Placeholder
+    8290.1.1 = { birth = yes }
+}
