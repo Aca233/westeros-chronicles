@@ -2,80 +2,442 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================
+   主题变量:日间 = 羊皮海图;夜间 = 牛皮纸棕
+   ============================================================ */
+:root {
+  --ink: 233 223 200;
+  --ink-2: 242 234 214;
+  --ink-3: 220 207 178;
+  --hairline: 201 185 143;
+  --hairline-bright: 168 148 106;
+  --gold: 138 106 44;
+  --gold-bright: 107 78 26;
+  --gold-deep: 176 138 60;
+  --rubric: 166 50 38;
+  --rubric-deep: 124 36 27;
+  --rubric-bright: 194 74 56;
+  --parchment: 43 36 23;
+  --parchment-dim: 74 63 44;
+  --parchment-faint: 138 123 98;
+  --shadow: 74 58 32;
+  --map-lines: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='420' viewBox='0 0 420 420'%3E%3Cg fill='none' stroke='%23a8946a' stroke-width='1'%3E%3Cpath d='M-20 90 C60 40 130 130 210 95 S350 30 440 80'/%3E%3Cpath d='M-20 118 C70 66 140 158 220 122 S360 58 440 108' opacity='0.7'/%3E%3Cpath d='M-20 300 C50 260 120 340 200 305 S340 250 440 295'/%3E%3Cpath d='M-20 328 C60 288 130 368 210 332 S350 278 440 322' opacity='0.7'/%3E%3Ccircle cx='330' cy='190' r='26'/%3E%3Ccircle cx='330' cy='190' r='38' opacity='0.6'/%3E%3Ccircle cx='330' cy='190' r='50' opacity='0.35'/%3E%3Cpath d='M80 200 l10 10 M90 200 l-10 10' opacity='0.8'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+[data-theme='night'] {
+  --ink: 43 33 22;
+  --ink-2: 54 42 28;
+  --ink-3: 35 27 18;
+  --hairline: 74 58 38;
+  --hairline-bright: 107 85 55;
+  --gold: 201 164 92;
+  --gold-bright: 232 200 126;
+  --gold-deep: 154 122 70;
+  --rubric: 194 74 56;
+  --rubric-deep: 150 48 34;
+  --rubric-bright: 226 110 82;
+  --parchment: 232 217 188;
+  --parchment-dim: 176 155 122;
+  --parchment-faint: 125 108 82;
+  --shadow: 16 10 5;
+  --map-lines: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='420' viewBox='0 0 420 420'%3E%3Cg fill='none' stroke='%235a4630' stroke-width='1'%3E%3Cpath d='M-20 90 C60 40 130 130 210 95 S350 30 440 80'/%3E%3Cpath d='M-20 118 C70 66 140 158 220 122 S360 58 440 108' opacity='0.7'/%3E%3Cpath d='M-20 300 C50 260 120 340 200 305 S340 250 440 295'/%3E%3Cpath d='M-20 328 C60 288 130 368 210 332 S350 278 440 322' opacity='0.7'/%3E%3Ccircle cx='330' cy='190' r='26'/%3E%3Ccircle cx='330' cy='190' r='38' opacity='0.6'/%3E%3Ccircle cx='330' cy='190' r='50' opacity='0.35'/%3E%3Cpath d='M80 200 l10 10 M90 200 l-10 10' opacity='0.8'/%3E%3C/g%3E%3C/svg%3E");
+}
+
 @layer base {
   body {
-    background-color: #0a0908;
-    color: #e6ded1;
+    background-color: rgb(var(--ink));
+    color: rgb(var(--parchment));
     font-family: "Noto Serif SC", "Cinzel", Georgia, serif;
+    transition: background-color 0.4s ease, color 0.4s ease;
   }
 }
 
-/* 自定义滚动条 */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+/* ============================================================
+   氛围:海图刻线、流云投影、纸尘颗粒、边缘旧化
+   ============================================================ */
+.map-atmosphere {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: var(--map-lines);
+  background-size: 420px 420px;
+  opacity: 0.16;
+}
+[data-theme='night'] .map-atmosphere { opacity: 0.2; }
+
+.map-atmosphere::before {
+  content: '';
+  position: absolute;
+  inset: -20%;
+  background:
+    radial-gradient(38% 30% at 24% 30%, rgba(90, 74, 48, 0.10), transparent 70%),
+    radial-gradient(30% 26% at 70% 62%, rgba(90, 74, 48, 0.08), transparent 70%),
+    radial-gradient(46% 38% at 55% 18%, rgba(255, 250, 236, 0.35), transparent 70%);
+  animation: cloud-drift 46s ease-in-out infinite alternate;
+}
+[data-theme='night'] .map-atmosphere::before {
+  background:
+    radial-gradient(38% 30% at 24% 30%, rgba(0, 0, 0, 0.16), transparent 70%),
+    radial-gradient(30% 26% at 70% 62%, rgba(0, 0, 0, 0.12), transparent 70%),
+    radial-gradient(46% 38% at 55% 18%, rgba(255, 214, 150, 0.10), transparent 70%);
 }
 
-::-webkit-scrollbar-track {
-  background: #0e0d0b;
+.map-atmosphere::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+  opacity: 0.05;
+  mix-blend-mode: multiply;
 }
 
-::-webkit-scrollbar-thumb {
-  background: #2b231c;
+.map-edge-burn {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  box-shadow:
+    inset 0 0 140px rgba(101, 78, 40, 0.28),
+    inset 0 0 34px rgba(101, 78, 40, 0.16);
+}
+[data-theme='night'] .map-edge-burn {
+  box-shadow:
+    inset 0 0 150px rgba(8, 5, 2, 0.55),
+    inset 0 0 40px rgba(8, 5, 2, 0.3);
+}
+
+@keyframes cloud-drift {
+  0% { transform: translate3d(-2.5%, -1%, 0) scale(1); }
+  50% { transform: translate3d(1.5%, 1.5%, 0) scale(1.04); }
+  100% { transform: translate3d(3%, -0.5%, 0) scale(1.02); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .map-atmosphere::before { animation: none; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================================
+   发丝线与饰符
+   ============================================================ */
+.hairline {
+  height: 1px;
+  border: 0;
+  background: linear-gradient(90deg, transparent, rgb(var(--gold) / 0.6), transparent);
+}
+.hairline-solid { height: 1px; border: 0; background: rgb(var(--hairline)); }
+
+.rule-diamond {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: rgb(var(--gold));
+}
+.rule-diamond::before,
+.rule-diamond::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgb(var(--gold) / 0.55));
+}
+.rule-diamond::after {
+  background: linear-gradient(90deg, rgb(var(--gold) / 0.55), transparent);
+}
+
+/* ============================================================
+   字体角色
+   ============================================================ */
+.font-display { font-family: "Cinzel", "Noto Serif SC", serif; }
+
+.eyebrow {
+  font-family: "Cinzel", serif;
+  font-size: 10px;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: rgb(var(--gold));
+}
+
+/* 纸页朱红日期章 */
+.sheet-stamp {
+  position: absolute;
+  top: -11px;
+  right: 26px;
+  z-index: 5;
+  padding: 3px 10px;
+  border: 1.5px solid rgb(var(--rubric) / 0.8);
+  color: rgb(var(--rubric));
+  background: rgb(var(--ink-2) / 0.94);
+  font-family: "Cinzel", "Noto Serif SC", serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  white-space: nowrap;
+  box-shadow:
+    inset 0 0 0 1px rgb(var(--ink-2) / 0.9),
+    inset 0 0 0 2.5px rgb(var(--rubric) / 0.3),
+    0 2px 5px rgb(var(--shadow) / 0.18);
+}
+
+/* 白文朱红印章 */
+.seal-stamp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(150deg, #b33a28, #8e2a1d);
+  color: #f2ead6;
   border-radius: 3px;
+  box-shadow:
+    inset 0 0 0 1.5px rgba(242, 234, 214, 0.55),
+    inset 0 2px 5px rgba(0, 0, 0, 0.3),
+    0 2px 6px rgba(124, 36, 27, 0.35);
+  font-family: "Noto Serif SC", serif;
+  font-weight: 900;
+  line-height: 1;
+  transform: rotate(-2deg);
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #c89d54;
+/* 场景正文 */
+.deed-prose {
+  font-size: 15.5px;
+  line-height: 2.05;
+  letter-spacing: 0.015em;
+  color: rgb(var(--parchment));
+}
+@media (min-width: 768px) { .deed-prose { font-size: 16.5px; } }
+.deed-prose p + p { margin-top: 1.1em; }
+.deed-prose p { text-indent: 2em; }
+.deed-prose p:first-child { text-indent: 0; }
+
+/* 名词考据:墨色 + 黄铜点线 */
+.lore-term {
+  color: rgb(var(--parchment));
+  font-weight: 600;
+  border-bottom: 1px dotted rgb(var(--gold) / 0.7);
+  padding-bottom: 1px;
+  cursor: help;
+  transition: border-color 0.18s ease, background 0.18s ease;
+}
+.lore-term:hover {
+  border-bottom-color: rgb(var(--gold));
+  background: rgb(var(--gold) / 0.12);
 }
 
-/* 羊皮纸光泽卡片 */
+/* ============================================================
+   决断纸条 + 火漆编号戳
+   ============================================================ */
+.choice-slab {
+  position: relative;
+  width: 100%;
+  text-align: left;
+  padding: 11px 16px 11px 14px;
+  background: linear-gradient(180deg, rgb(var(--ink-2)), rgb(var(--ink-3)));
+  border: 1px solid rgb(var(--hairline));
+  color: rgb(var(--parchment));
+  box-shadow: 0 2px 5px rgb(var(--shadow) / 0.14), inset 0 1px 0 rgb(var(--ink-2) / 0.8);
+  transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.22s ease, border-color 0.22s ease;
+}
+.choice-slab:hover:not(:disabled) {
+  transform: translateY(2px);
+  border-color: rgb(var(--hairline-bright));
+  box-shadow: 0 1px 2px rgb(var(--shadow) / 0.18), inset 0 1px 3px rgb(var(--shadow) / 0.10);
+}
+.choice-slab:active:not(:disabled) { transform: translateY(3px) scale(0.998); }
+.choice-slab:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.choice-numeral {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 34% 30%, #c24a38, #a63226 58%, #7c241b);
+  color: #f2ead6;
+  font-family: "Cinzel", serif;
+  font-weight: 700;
+  font-size: 12px;
+  box-shadow:
+    inset 0 0 0 1.5px rgba(242, 234, 214, 0.4),
+    inset 0 -3px 5px rgba(0, 0, 0, 0.28),
+    0 2px 5px rgba(124, 36, 27, 0.4);
+  transform: rotate(-4deg);
+  transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.choice-slab:hover:not(:disabled) .choice-numeral { transform: rotate(0deg) scale(1.06); }
+
+/* ============================================================
+   御令输入与火漆印钮
+   ============================================================ */
+.command-input {
+  width: 100%;
+  background: rgb(var(--ink-2) / 0.55);
+  border: 1px solid rgb(var(--hairline));
+  border-bottom: 2px solid rgb(var(--gold));
+  padding: 12px 16px;
+  color: rgb(var(--parchment));
+  font-size: 14px;
+  font-family: "Noto Serif SC", serif;
+  outline: none;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+.command-input::placeholder { color: rgb(var(--parchment-faint)); font-style: italic; }
+.command-input:focus {
+  background: rgb(var(--ink-2));
+  border-color: rgb(var(--hairline-bright));
+  border-bottom-color: rgb(var(--rubric));
+  box-shadow: 0 8px 18px -12px rgb(var(--rubric-deep) / 0.35);
+}
+.command-input:disabled { opacity: 0.55; }
+
+.btn-decree {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 22px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 32% 28%, #c24a38, #a63226 55%, #7c241b 100%);
+  color: #f6efdd;
+  font-family: "Noto Serif SC", serif;
+  font-weight: 700;
+  font-size: 13.5px;
+  letter-spacing: 0.08em;
+  border: 1px solid #7c241b;
+  box-shadow:
+    inset 0 0 0 1.5px rgba(246, 239, 221, 0.35),
+    inset 0 -4px 8px rgba(0, 0, 0, 0.25),
+    inset 0 2px 3px rgba(255, 200, 170, 0.3),
+    0 4px 12px rgba(124, 36, 27, 0.4);
+  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s ease, filter 0.25s ease;
+}
+.btn-decree:hover:not(:disabled) {
+  filter: brightness(1.06);
+  transform: translateY(1px);
+  box-shadow:
+    inset 0 0 0 1.5px rgba(246, 239, 221, 0.4),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.28),
+    inset 0 2px 3px rgba(255, 200, 170, 0.3),
+    0 2px 6px rgba(124, 36, 27, 0.45);
+}
+.btn-decree:active:not(:disabled) { transform: translateY(2px) scale(0.97); }
+.btn-decree:disabled { opacity: 0.4; cursor: not-allowed; filter: grayscale(0.35); }
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border: 1px solid rgb(var(--hairline));
+  color: rgb(var(--parchment-dim));
+  font-size: 12px;
+  background: rgb(var(--ink-2) / 0.5);
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+.btn-ghost:hover:not(:disabled) {
+  color: rgb(var(--parchment));
+  border-color: rgb(var(--gold));
+  background: rgb(var(--ink-2));
+}
+.btn-ghost:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ============================================================
+   面板与浮层
+   ============================================================ */
+.panel-iron {
+  background: linear-gradient(180deg, rgb(var(--ink-2)), rgb(var(--ink-3)));
+  border: 1px solid rgb(var(--hairline-bright));
+  box-shadow:
+    0 14px 34px -14px rgb(var(--shadow) / 0.4),
+    inset 0 1px 0 rgb(var(--ink-2) / 0.85);
+}
+
+.modal-backdrop {
+  background: rgba(43, 36, 23, 0.5);
+  backdrop-filter: blur(5px) sepia(0.25);
+}
+[data-theme='night'] .modal-backdrop { background: rgba(10, 7, 4, 0.62); }
+
 .got-card-texture {
-  background: linear-gradient(135deg, rgba(26, 22, 18, 0.95) 0%, rgba(19, 16, 13, 0.98) 100%);
-  border: 1px solid rgba(200, 157, 84, 0.2);
-  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.6), 0 4px 20px rgba(0, 0, 0, 0.4);
+  background: linear-gradient(180deg, rgb(var(--ink-2)), rgb(var(--ink-3)));
+  border: 1px solid rgb(var(--hairline-bright));
 }
+.wax-glow { box-shadow: 0 0 15px rgb(var(--rubric) / 0.4); }
+.gold-hover-tag { color: rgb(var(--gold)); }
 
-/* 封蜡红发光特效 */
-.wax-glow {
-  box-shadow: 0 0 15px rgba(138, 28, 20, 0.4);
+/* ============================================================
+   羽毛笔光标与进场
+   ============================================================ */
+@keyframes ink-blink {
+  0%, 100% { opacity: 1; transform: scaleY(1); }
+  50% { opacity: 0.2; transform: scaleY(0.8); }
 }
-
-/* 暗金色微光下划线 */
-.gold-hover-tag {
-  color: #e5be6c;
-  text-decoration: underline;
-  text-decoration-color: rgba(200, 157, 84, 0.4);
-  text-underline-offset: 4px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.gold-hover-tag:hover {
-  color: #fff1ba;
-  text-decoration-color: #c89d54;
-  background-color: rgba(200, 157, 84, 0.1);
-  border-radius: 2px;
-}
-
-/* 打字机光标动效 */
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
-
 .typing-cursor::after {
-  content: '▋';
-  color: #c89d54;
-  animation: blink 0.8s infinite;
-  margin-left: 2px;
+  content: '▍';
+  color: rgb(var(--rubric));
+  animation: ink-blink 0.9s ease-in-out infinite;
+  margin-left: 3px;
 }
 
-/*
- * react-body-highlighter 会以肌群名称统一着色，左右同名肌群无法通过 data 分开。
- * 人体为正面视图：画面左侧是角色右手（主手），画面右侧是角色左手（副手）。
- * 仅覆盖手臂对应的 SVG 多边形，保留其余人体、伤情与界面样式不变。
- */
+@keyframes scene-rise {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.scene-enter { animation: scene-rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+/* ============================================================
+   星盘(掷骰)
+   ============================================================ */
+@keyframes astro-spin { to { transform: rotate(360deg); } }
+@keyframes astro-spin-rev { to { transform: rotate(-360deg); } }
+.astro-ring {
+  position: absolute;
+  border-radius: 999px;
+  pointer-events: none;
+}
+.astro-ring--outer {
+  inset: -14px;
+  border: 1.5px dashed rgb(var(--gold) / 0.75);
+  animation: astro-spin 2.4s linear infinite;
+}
+.astro-ring--inner {
+  inset: -6px;
+  border: 1px dotted rgb(var(--rubric) / 0.7);
+  animation: astro-spin-rev 1.7s linear infinite;
+}
+.astro-ring--outer.astro-ring--settled { animation-duration: 28s; border-color: rgb(var(--gold) / 0.5); }
+.astro-ring--inner.astro-ring--settled { animation-duration: 36s; border-color: rgb(var(--rubric) / 0.4); }
+
+/* ============================================================
+   游戏图标:日间墨印 / 夜间暖调原色
+   ============================================================ */
+.game-icon--ink {
+  mix-blend-mode: multiply;
+  filter: sepia(0.55) saturate(0.78) contrast(1.06) brightness(0.97) drop-shadow(0 1px 1px rgba(74, 58, 32, 0.25));
+}
+[data-theme='night'] .game-icon--ink {
+  mix-blend-mode: normal;
+  filter: sepia(0.5) saturate(0.82) brightness(1.08) contrast(0.95) drop-shadow(0 2px 3px rgba(0, 0, 0, 0.45));
+}
+
+/* ============================================================
+   滚动条
+   ============================================================ */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgb(var(--hairline-bright)); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgb(var(--gold)); }
+.scrollbar-none { scrollbar-width: none; }
+.scrollbar-none::-webkit-scrollbar { display: none; }
+
+/* ============================================================
+   react-body-highlighter 覆盖(校验脚本要求,勿改取值)
+   人体为正面视图:画面左侧是角色右手(主手),右侧是左手(副手)。
+   ============================================================ */
 .body-model .rbh polygon {
   stroke: rgba(200, 157, 84, 0.78);
   stroke-width: 0.9px;
@@ -100,82 +462,39 @@
   filter: drop-shadow(0 0 3px rgba(245, 215, 150, 0.9));
 }
 
-/* CK3 风格统治者设计器控件 */
-.creator-input {
-  width: 100%;
-  border: 1px solid #4a3928;
-  background: rgba(0, 0, 0, 0.3);
-  padding: 0.5rem 0.625rem;
-  color: #e6ded1;
-  font-size: 0.75rem;
-  outline: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.creator-input:focus {
-  border-color: #b98b47;
-  box-shadow: inset 0 0 0 1px rgba(200, 157, 84, 0.2);
-}
-
-.creator-step-button,
-.creator-stat-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: #c9bba8;
-  background: #251d16;
-  transition: color 0.2s ease, background 0.2s ease;
-}
-
-.creator-step-button {
-  width: 2rem;
-  height: 2rem;
-}
-
-.creator-stat-button {
-  width: 1.5rem;
-  height: 1.5rem;
-  border: 1px solid #4a3928;
-}
-
-.creator-step-button:hover:not(:disabled),
-.creator-stat-button:hover:not(:disabled) {
-  color: #f0d18e;
-  background: #49351f;
-}
-
-.creator-step-button:disabled,
-.creator-stat-button:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
-}
-
-/* CK3 风格人物窗口：深色雕花边框、金属页签与非现代卡片轮廓。 */
+/* ============================================================
+   CK3 人物窗口:图桌上的身份纸卡
+   ============================================================ */
 .ck3-character-window {
   background-image:
-    radial-gradient(circle at 18% 0%, rgba(166, 117, 53, 0.08), transparent 34%),
-    linear-gradient(135deg, rgba(255, 255, 255, 0.012) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.012) 75%);
-  background-size: auto, 8px 8px;
+    radial-gradient(420px 260px at 50% -60px, rgb(var(--ink-2) / 0.6), transparent 70%),
+    linear-gradient(180deg, rgb(var(--ink-2)) 0%, rgb(var(--ink)) 100%);
 }
 
 .ck3-ornament-line {
   position: absolute;
   inset: 0 0 auto;
   z-index: 40;
-  height: 3px;
+  height: 2px;
   pointer-events: none;
-  background: linear-gradient(90deg, #2f2216, #b78a49 20%, #e3c27f 50%, #b78a49 80%, #2f2216);
-  box-shadow: 0 1px 7px rgba(183, 138, 73, 0.28);
+  background: linear-gradient(90deg, transparent, rgb(var(--gold)) 25%, rgb(var(--gold-bright)) 50%, rgb(var(--gold)) 75%, transparent);
 }
 
 .ck3-heraldry-frame,
 .ck3-portrait-frame {
-  border: 1px solid #85673f;
+  border: 1.5px solid #6b5230;
   box-shadow:
-    inset 0 0 0 2px #16100b,
-    inset 0 0 0 3px rgba(201, 157, 84, 0.22),
-    0 5px 13px rgba(0, 0, 0, 0.65);
+    inset 0 0 0 2px #f2ead6,
+    inset 0 0 0 3.5px rgba(138, 106, 44, 0.45),
+    0 4px 12px rgba(74, 58, 32, 0.3);
   clip-path: polygon(6px 0, calc(100% - 6px) 0, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 0 calc(100% - 6px), 0 6px);
+}
+[data-theme='night'] .ck3-heraldry-frame,
+[data-theme='night'] .ck3-portrait-frame {
+  box-shadow:
+    inset 0 0 0 2px #241b12,
+    inset 0 0 0 3.5px rgba(201, 164, 92, 0.35),
+    0 4px 12px rgba(0, 0, 0, 0.5);
 }
 
 .ck3-portrait-frame::before,
@@ -183,62 +502,63 @@
   content: '';
   position: absolute;
   z-index: 10;
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
   pointer-events: none;
 }
-
 .ck3-portrait-frame::before {
   left: 6px;
   top: 6px;
-  border-left: 2px solid rgba(216, 177, 101, 0.55);
-  border-top: 2px solid rgba(216, 177, 101, 0.55);
+  border-left: 2px solid rgba(201, 164, 92, 0.7);
+  border-top: 2px solid rgba(201, 164, 92, 0.7);
 }
-
 .ck3-portrait-frame::after {
   right: 6px;
   bottom: 6px;
-  border-right: 2px solid rgba(216, 177, 101, 0.55);
-  border-bottom: 2px solid rgba(216, 177, 101, 0.55);
+  border-right: 2px solid rgba(201, 164, 92, 0.7);
+  border-bottom: 2px solid rgba(201, 164, 92, 0.7);
 }
 
-/* 人物肖像必须是窗口中最强的视觉锚点，不能退化成难以辨认的细线图标。 */
 .ck3-portrait-frame--hero {
-  border-color: #b18a50;
+  border-color: #6b5230;
   box-shadow:
-    inset 0 0 0 2px #120d09,
-    inset 0 0 0 4px rgba(226, 190, 116, 0.24),
-    inset 0 -45px 75px rgba(0, 0, 0, 0.72),
-    0 8px 24px rgba(0, 0, 0, 0.72),
-    0 0 13px rgba(180, 130, 58, 0.14);
+    inset 0 0 0 2px #f2ead6,
+    inset 0 0 0 4px rgba(138, 106, 44, 0.35),
+    inset 0 -40px 60px rgba(101, 78, 40, 0.28),
+    0 8px 22px rgba(74, 58, 32, 0.35);
+}
+[data-theme='night'] .ck3-portrait-frame--hero {
+  box-shadow:
+    inset 0 0 0 2px #241b12,
+    inset 0 0 0 4px rgba(201, 164, 92, 0.3),
+    inset 0 -40px 60px rgba(0, 0, 0, 0.5),
+    0 8px 22px rgba(0, 0, 0, 0.55);
 }
 
+/* 墨绘人物剪影 */
 .ck3-bust-silhouette {
   position: relative;
   width: 220px;
   height: 218px;
-  filter: drop-shadow(0 12px 12px rgba(0, 0, 0, 0.92));
+  filter: drop-shadow(0 10px 10px rgba(74, 58, 32, 0.4));
   transform: scale(0.78);
   transform-origin: center center;
 }
-
 .ck3-bust-silhouette__head,
 .ck3-bust-silhouette__neck,
 .ck3-bust-silhouette__body {
   position: absolute;
   display: block;
-  background: linear-gradient(105deg, #9a876b 0%, #c1aa83 42%, #75644f 100%);
+  background: linear-gradient(105deg, #8a6f4d 0%, #a98d63 42%, #6e5739 100%);
 }
-
 .ck3-bust-silhouette__head {
   left: 77px;
   top: 8px;
   width: 68px;
   height: 82px;
   border-radius: 46% 46% 44% 44% / 42% 42% 56% 56%;
-  box-shadow: inset -13px -8px 15px rgba(30, 21, 14, 0.42), inset 6px 3px 9px rgba(246, 219, 166, 0.14);
+  box-shadow: inset -13px -8px 15px rgba(58, 42, 22, 0.4), inset 6px 3px 9px rgba(246, 230, 190, 0.25);
 }
-
 .ck3-bust-silhouette__neck {
   left: 94px;
   top: 79px;
@@ -246,7 +566,6 @@
   height: 35px;
   border-radius: 0 0 10px 10px;
 }
-
 .ck3-bust-silhouette__body {
   left: 18px;
   bottom: 0;
@@ -254,5 +573,47 @@
   height: 125px;
   border-radius: 52% 52% 12px 12px / 40% 40% 10px 10px;
   clip-path: polygon(20% 7%, 39% 0, 50% 17%, 61% 0, 80% 7%, 100% 42%, 92% 100%, 8% 100%, 0 42%);
-  box-shadow: inset -30px -18px 35px rgba(28, 19, 13, 0.48), inset 18px 5px 20px rgba(245, 215, 158, 0.1);
+  box-shadow: inset -30px -18px 35px rgba(58, 42, 22, 0.42), inset 18px 5px 20px rgba(246, 230, 190, 0.2);
 }
+
+/* ============================================================
+   统治者设计器控件
+   ============================================================ */
+.creator-input {
+  width: 100%;
+  border: 1px solid rgb(var(--hairline-bright));
+  background: rgb(var(--ink-2) / 0.6);
+  padding: 0.55rem 0.7rem;
+  color: rgb(var(--parchment));
+  font-size: 0.78rem;
+  font-family: "Noto Serif SC", serif;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+.creator-input:focus {
+  border-color: rgb(var(--gold));
+  background: rgb(var(--ink-2));
+  box-shadow: 0 0 0 1px rgb(var(--gold) / 0.3);
+}
+.creator-input::placeholder { color: rgb(var(--parchment-faint)); }
+
+.creator-step-button,
+.creator-stat-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: rgb(var(--parchment-dim));
+  background: rgb(var(--ink-3));
+  border: 1px solid rgb(var(--hairline-bright));
+  transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+.creator-step-button { width: 2rem; height: 2rem; }
+.creator-stat-button { width: 1.5rem; height: 1.5rem; }
+.creator-step-button:hover:not(:disabled),
+.creator-stat-button:hover:not(:disabled) {
+  color: rgb(var(--parchment));
+  background: rgb(var(--ink-2));
+  border-color: rgb(var(--gold));
+}
+.creator-step-button:disabled,
+.creator-stat-button:disabled { opacity: 0.35; cursor: not-allowed; }

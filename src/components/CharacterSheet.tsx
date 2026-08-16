@@ -188,10 +188,10 @@ export const CharacterSheet: React.FC<{ embedded?: boolean }> = ({ embedded = fa
   const activePointer = currentTarget ? pointerConfigs[currentTarget] : null;
 
   return (
-    <aside className={`${embedded ? 'w-full bg-transparent p-2 overflow-visible' : 'w-full h-full bg-[#0e0c0a]/98 border-r border-[#2d241c] p-3.5 got-card-texture overflow-y-auto'} flex flex-col gap-3 select-none scrollbar-thin`}>
+    <aside className={`${embedded ? 'w-full overflow-visible bg-transparent p-2' : 'h-full w-full overflow-y-auto border-r border-hairline bg-ink p-3.5'} flex select-none flex-col gap-3 font-serif text-parchment scrollbar-thin`}>
       {/* 独立人物栏保留旧身份卡；嵌入 CK3 窗口时只显示健康、装备与物品功能。 */}
       {!embedded && (
-      <div className="bg-gradient-to-b from-[#191410] to-[#120f0c] rounded-xl p-3.5 border border-[#3d3022] relative overflow-hidden shadow-lg shrink-0">
+      <div className="panel-iron relative shrink-0 overflow-hidden p-3.5">
         {lord.coatOfArms ? (
           <CoatOfArms design={lord.coatOfArms} muted className="absolute right-1 -bottom-3 w-20 pointer-events-none" />
         ) : (
@@ -201,53 +201,53 @@ export const CharacterSheet: React.FC<{ embedded?: boolean }> = ({ embedded = fa
           />
         )}
 
-        <div className="flex items-center gap-3 mb-2">
-          <div className="w-12 h-12 rounded-xl bg-black/60 border border-[#c89d54]/50 flex items-center justify-center shadow-inner shrink-0 p-1">
+        <div className="mb-2 flex items-center gap-3">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center border border-gold-deep/60 bg-[#2b2417] p-1">
             {lord.coatOfArms ? (
               <CoatOfArms design={lord.coatOfArms} className="h-full" />
             ) : (
-              <GameIcon icon={getHouseIconId(lord.houseSigil || lord.house)} className="w-full h-full drop-shadow-md" />
+              <GameIcon icon={getHouseIconId(lord.houseSigil || lord.house)} tone="raw" className="w-full h-full drop-shadow-md" />
             )}
           </div>
-          <div className="flex-1 min-w-0">
-            <h2 className="font-serif font-bold text-[#f5d796] text-base tracking-wide leading-tight truncate">
+          <div className="min-w-0 flex-1">
+            <h2 className="truncate font-serif text-base font-bold leading-tight tracking-wide text-gold-bright">
               {lord.house}
             </h2>
-            <p className="text-xs text-[#8a652a] italic font-serif truncate">
+            <p className="truncate font-serif text-xs italic text-gold-deep">
               "{lord.houseWords}"
             </p>
           </div>
         </div>
 
-        <div className="mt-1.5 pt-2 border-t border-[#2d241c] flex items-center justify-between text-xs">
+        <div className="mt-1.5 flex items-center justify-between border-t border-hairline pt-2 text-xs">
           <div>
-            <span className="font-bold text-[#e6ded1] text-sm font-serif">{lord.name}</span>
-            <span className="text-[#a89f91] ml-2 font-mono">({lord.age} 岁 · {lord.gender})</span>
+            <span className="font-serif text-sm font-bold text-parchment">{lord.name}</span>
+            <span className="ml-2 font-mono text-parchment-dim">({lord.age} 岁 · {lord.gender})</span>
           </div>
-          <span className="text-[#c89d54] font-serif truncate max-w-[140px]">{lord.title}</span>
+          <span className="max-w-[140px] truncate font-serif text-gold">{lord.title}</span>
         </div>
 
         {/* 随身金币与声望 */}
-        <div className="grid grid-cols-2 gap-2 pt-2 mt-2 border-t border-[#2d241c] text-xs font-mono">
-          <div className="flex items-center justify-between bg-black/45 px-2.5 py-1.5 rounded-lg border border-[#2d241c]">
-            <span className="flex items-center gap-1.5 text-[#e5be6c] font-bold">
-              <Coins className="w-4 h-4 text-[#c89d54]" />
-              {lord.goldDragons} <span className="text-[11px] font-normal text-[#a89f91]">金龙</span>
+        <div className="mt-2 grid grid-cols-2 gap-2 border-t border-hairline pt-2 font-mono text-xs">
+          <div className="flex items-center justify-between border border-hairline bg-ink-2/70 px-2.5 py-1.5">
+            <span className="flex items-center gap-1.5 font-bold text-gold-bright">
+              <Coins className="h-4 w-4 text-gold" />
+              {lord.goldDragons} <span className="text-[11px] font-normal text-parchment-dim">金龙</span>
             </span>
-            <span className="text-[#8a7b6c] text-[11px]">{lord.silverStags} 银鹿</span>
+            <span className="text-[11px] text-parchment-faint">{lord.silverStags} 银鹿</span>
           </div>
 
-          <div className="flex items-center justify-between bg-black/45 px-2.5 py-1.5 rounded-lg border border-[#2d241c]">
-            <span className="flex items-center gap-1.5 text-amber-200 font-bold">
-              <Crown className="w-4 h-4 text-amber-300" />
-              {lord.prestige} <span className="text-[11px] font-normal text-[#a89f91]">威仪</span>
+          <div className="flex items-center justify-between border border-hairline bg-ink-2/70 px-2.5 py-1.5">
+            <span className="flex items-center gap-1.5 font-bold text-gold-bright">
+              <Crown className="h-4 w-4 text-gold" />
+              {lord.prestige} <span className="text-[11px] font-normal text-parchment-dim">威仪</span>
             </span>
-            <span className="text-red-400 text-[11px]">{lord.dread} 恶名</span>
+            <span className="text-[11px] text-rubric-bright">{lord.dread} 恶名</span>
           </div>
         </div>
 
         {/* CK3 六项角色能力 */}
-        <div className="grid grid-cols-6 gap-1 pt-2 mt-2 border-t border-[#2d241c] text-center font-serif">
+        <div className="mt-2 grid grid-cols-6 gap-1 border-t border-hairline pt-2 text-center font-serif">
           {CK3_SKILLS.map((skill) => (
             <CompactStatCell
               key={skill.key}
@@ -260,12 +260,12 @@ export const CharacterSheet: React.FC<{ embedded?: boolean }> = ({ embedded = fa
 
 
         {/* 游戏内人物特质：使用 CK3 / AGOT 正式图标，点击后展开说明与规则效果。 */}
-        <div data-character-traits className="pt-2 mt-2 border-t border-[#2d241c] font-serif">
-          <div className="flex items-center justify-between gap-2 mb-2">
-            <span className="flex items-center gap-1.5 text-[11px] font-bold text-[#c89d54]">
-              <ScrollText className="w-3.5 h-3.5" />人物特质
+        <div data-character-traits className="mt-2 border-t border-hairline pt-2 font-serif">
+          <div className="mb-2 flex items-center justify-between gap-2">
+            <span className="flex items-center gap-1.5 text-[11px] font-bold text-gold">
+              <ScrollText className="h-3.5 w-3.5" />人物特质
             </span>
-            <span className="text-[9px] font-mono text-[#766958]">{displayedTraits.length} 项</span>
+            <span className="font-mono text-[9px] text-parchment-faint">{displayedTraits.length} 项</span>
           </div>
           {displayedTraits.length > 0 ? (
             <>
@@ -280,14 +280,14 @@ export const CharacterSheet: React.FC<{ embedded?: boolean }> = ({ embedded = fa
                       onClick={() => setActiveTraitId(selected ? null : trait.id)}
                       title={`${trait.name}：${description}`}
                       aria-pressed={selected}
-                      className={`w-[58px] shrink-0 rounded-md border px-1 py-1.5 flex flex-col items-center gap-1 transition-colors ${
+                      className={`flex w-[58px] shrink-0 flex-col items-center gap-1 border px-1 py-1.5 transition-colors ${
                         selected
-                          ? 'border-[#e5be6c] bg-[#352719] shadow-[inset_0_0_12px_rgba(200,157,84,0.16)]'
-                          : 'border-[#352a20] bg-black/35 hover:border-[#8a652a] hover:bg-[#211910]'
+                          ? 'border-gold bg-gold-deep/20 shadow-[inset_0_0_12px_rgba(201,164,92,0.16)]'
+                          : 'border-hairline bg-ink-3/40 hover:border-gold-deep hover:bg-ink-2'
                       }`}
                     >
                       <GameIcon icon={trait.icon} className="w-11 h-11 shrink-0" />
-                      <span className={`w-full truncate text-[9px] font-bold ${selected ? 'text-[#f0d18e]' : 'text-[#b9ad9d]'}`}>
+                      <span className={`w-full truncate text-[9px] font-bold ${selected ? 'text-gold-bright' : 'text-parchment-dim'}`}>
                         {trait.name}
                       </span>
                     </button>
@@ -295,14 +295,14 @@ export const CharacterSheet: React.FC<{ embedded?: boolean }> = ({ embedded = fa
                 })}
               </div>
               {activeTrait && (
-                <div className="mt-2 rounded-md border border-[#5a4329] bg-black/35 px-2.5 py-2 text-[10px] leading-relaxed">
+                <div className="mt-2 border border-hairline-bright bg-ink-3/50 px-2.5 py-2 text-[10px] leading-relaxed">
                   <div className="flex items-center justify-between gap-2">
-                    <strong className="text-[#f0d18e] text-[11px]">{activeTrait.name}</strong>
-                    <span className="text-[#8f7b61]">{activeTrait.isLegacy ? '旧存档标签' : TRAIT_CATEGORY_LABELS[activeTrait.category]}</span>
+                    <strong className="text-[11px] text-gold-bright">{activeTrait.name}</strong>
+                    <span className="text-parchment-faint">{activeTrait.isLegacy ? '旧存档标签' : TRAIT_CATEGORY_LABELS[activeTrait.category]}</span>
                   </div>
-                  <p className="mt-1 text-[#a89f91]">{formatTraitDescription(activeTrait.description, lord.name)}</p>
+                  <p className="mt-1 text-parchment-dim">{formatTraitDescription(activeTrait.description, lord.name)}</p>
                   {(formatTraitModifiers(activeTrait.modifiers) || formatTraitRuleEffects(activeTrait.rules).length > 0) && (
-                    <p className="mt-1 text-[#c28f4b]">
+                    <p className="mt-1 text-gold">
                       {[formatTraitModifiers(activeTrait.modifiers), ...formatTraitRuleEffects(activeTrait.rules)].filter(Boolean).join(' · ')}
                     </p>
                   )}
@@ -310,7 +310,7 @@ export const CharacterSheet: React.FC<{ embedded?: boolean }> = ({ embedded = fa
               )}
             </>
           ) : (
-            <div className="rounded-md border border-[#30261d] bg-black/25 py-3 text-center text-[10px] text-[#665c52]">
+            <div className="border border-hairline bg-ink-3/40 py-3 text-center text-[10px] text-parchment-faint">
               尚未记录人物特质
             </div>
           )}
@@ -319,21 +319,26 @@ export const CharacterSheet: React.FC<{ embedded?: boolean }> = ({ embedded = fa
       )}
 
       {/* 模块 2： 纵向拉长版人体解剖图与【直连到达指示线 + 独立部位精准发光】 */}
-      <div className="bg-gradient-to-b from-[#16120e] to-[#100d0a] rounded-xl p-3 border border-[#3d3022] flex flex-col gap-2 shadow-md shrink-0">
+      <div className="panel-iron flex shrink-0 flex-col gap-2 p-3">
+
+        <div className="flex items-center justify-between gap-2">
+          <p className="eyebrow">健康与装备</p>
+          <HeartPulse className="h-3.5 w-3.5 text-gold-deep" />
+        </div>
 
         {/* 异常状态提示条 */}
         {(body.isBleeding || body.isPoisoned || body.isInfected) && (
-          <div className="flex flex-wrap gap-1.5 p-1.5 bg-black/50 rounded-lg border border-red-900/50 text-xs">
-            {body.isBleeding && <span className="text-red-400 font-bold flex items-center gap-1 animate-pulse"><Droplets className="w-3.5 h-3.5" />持续大出血</span>}
-            {body.isPoisoned && <span className="text-purple-400 font-bold flex items-center gap-1 animate-pulse"><Skull className="w-3.5 h-3.5" />身中剧毒</span>}
-            {body.isInfected && <span className="text-amber-400 font-bold flex items-center gap-1"><Biohazard className="w-3.5 h-3.5" />伤口发炎</span>}
+          <div className="flex flex-wrap gap-1.5 border border-rubric/50 bg-ink-3/50 p-1.5 text-xs">
+            {body.isBleeding && <span className="flex items-center gap-1 font-bold text-rubric-bright animate-pulse"><Droplets className="w-3.5 h-3.5" />持续大出血</span>}
+            {body.isPoisoned && <span className="flex items-center gap-1 font-bold text-rubric animate-pulse"><Skull className="w-3.5 h-3.5" />身中剧毒</span>}
+            {body.isInfected && <span className="flex items-center gap-1 font-bold text-gold-bright"><Biohazard className="w-3.5 h-3.5" />伤口发炎</span>}
           </div>
         )}
 
         {/* 核心工坊：三行架构 + SVG 绝对直连到达指示线 */}
-        <div className="relative bg-gradient-to-b from-[#0c0907] via-[#14100c] to-[#0a0806] p-2.5 rounded-xl border border-[#2d241c] flex flex-col justify-between h-[320px] shadow-inner overflow-hidden">
+        <div className="relative flex h-[320px] flex-col justify-between overflow-hidden border border-hairline bg-gradient-to-b from-ink-2 via-ink-3 to-ink p-2.5 shadow-inner">
           {/* 背景微弱坐标网格 */}
-          <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#c89d54_1px,transparent_1px)] [background-size:12px_12px] pointer-events-none" />
+          <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#c9a45c_1px,transparent_1px)] [background-size:12px_12px] pointer-events-none" />
 
           {/* ══════════════════════════════════════════════════════════════════ */}
           {/*  全程直连到达指示线层 (Direct Pointer Line to Exact Target) */}
@@ -359,7 +364,7 @@ export const CharacterSheet: React.FC<{ embedded?: boolean }> = ({ embedded = fa
                 <polyline
                   points={`${activePointer.startX},${activePointer.startY} ${activePointer.midX},${activePointer.midY} ${activePointer.endX},${activePointer.endY}`}
                   fill="none"
-                  stroke="#f5d796"
+                  stroke="#eac97e"
                   strokeWidth="1.2"
                   strokeDasharray="2 1"
                   filter="url(#gold-line-glow)"
@@ -371,7 +376,7 @@ export const CharacterSheet: React.FC<{ embedded?: boolean }> = ({ embedded = fa
                   cx={activePointer.startX}
                   cy={activePointer.startY}
                   r="1.2"
-                  fill="#c89d54"
+                  fill="#c9a45c"
                   stroke="#fff"
                   strokeWidth="0.4"
                   filter="url(#gold-line-glow)"
@@ -383,7 +388,7 @@ export const CharacterSheet: React.FC<{ embedded?: boolean }> = ({ embedded = fa
                   cy={activePointer.endY}
                   r="1.8"
                   fill="#ffffff"
-                  stroke="#f5d796"
+                  stroke="#eac97e"
                   strokeWidth="0.8"
                   filter="url(#gold-line-glow)"
                 />
@@ -403,15 +408,15 @@ export const CharacterSheet: React.FC<{ embedded?: boolean }> = ({ embedded = fa
           >
             <Model
               type="anterior"
-              bodyColor="#2b2117"
-              highlightedColors={['#d97706', '#ea580c', '#dc2626', '#f5d796']} // 4号索引为当前选中的金色发光高亮
+              bodyColor="#2e2519"
+              highlightedColors={['#d97706', '#b4432f', '#d4593f', '#eac97e']} // 4号索引为当前选中的金色发光高亮
               data={bodyHighlighterData}
               onClick={handleMuscleClick}
               style={{ width: '100%', height: '100%', maxHeight: '300px', maxWidth: '170px' }}
               svgStyle={{
                 filter:
                   currentTarget
-                    ? 'drop-shadow(0 0 8px rgba(245, 215, 150, 0.5)) drop-shadow(0 4px 12px rgba(0,0,0,0.9))'
+                    ? 'drop-shadow(0 0 8px rgba(234, 201, 126, 0.5)) drop-shadow(0 4px 12px rgba(0,0,0,0.9))'
                     : 'drop-shadow(0 4px 12px rgba(0,0,0,0.9))',
                 transition: 'filter 0.2s ease',
               }}
@@ -505,22 +510,22 @@ export const CharacterSheet: React.FC<{ embedded?: boolean }> = ({ embedded = fa
         </div>
 
         {/* 伴兽、随身物品与地点储藏 */}
-        <div className="flex flex-col gap-2 pt-1 border-t border-[#2d241c]/80">
+        <div className="flex flex-col gap-2 border-t border-hairline pt-2">
           {gear.companion && (
             <button
               type="button"
               onClick={() => setActiveSlot(activeSlot === 'companion' ? null : 'companion')}
-              className={`w-full px-2.5 py-1.5 rounded-lg border text-left flex items-center justify-between transition-all ${
+              className={`flex w-full items-center justify-between border px-2.5 py-1.5 text-left transition-colors ${
                 activeSlot === 'companion'
-                  ? 'bg-[#2b221a] border-[#c89d54] shadow-md ring-1 ring-[#c89d54]'
-                  : 'bg-black/35 border-[#2d241c] hover:border-[#c89d54]/40'
+                  ? 'border-gold bg-ink-3 ring-1 ring-inset ring-gold/60'
+                  : 'border-hairline bg-ink-3/40 hover:border-gold-deep'
               }`}
             >
               <div className="flex items-center gap-1.5 truncate">
                 <GameIcon icon="companion-wolf" className="w-6 h-6 shrink-0" />
-                <span className="text-[#e5be6c] font-serif font-semibold text-xs truncate">{gear.companion.name}</span>
+                <span className="truncate font-serif text-xs font-semibold text-gold-bright">{gear.companion.name}</span>
               </div>
-              <span className="text-[10px] text-emerald-400 font-mono shrink-0">{gear.companion.bonus}</span>
+              <span className="shrink-0 font-mono text-[10px] text-emerald-700">{gear.companion.bonus}</span>
             </button>
           )}
 
@@ -580,13 +585,13 @@ export const CharacterSheet: React.FC<{ embedded?: boolean }> = ({ embedded = fa
           ))}
 
           {remoteStorageSites.length > 0 && (
-            <div className="bg-black/30 rounded-lg border border-[#2d241c] px-2.5 py-2">
-              <div className="flex items-center gap-1 text-[11px] font-serif font-bold text-[#8d806f]">
+            <div className="border border-hairline bg-ink-3/40 px-2.5 py-2">
+              <div className="flex items-center gap-1 font-serif text-[11px] font-bold text-parchment-dim">
                 <MapPin className="w-3.5 h-3.5" />远方储藏
               </div>
               <div className="mt-1 space-y-1">
                 {remoteStorageSites.map((site) => (
-                  <div key={site.id} className="flex items-center justify-between gap-2 text-[10px] text-[#74695c]">
+                  <div key={site.id} className="flex items-center justify-between gap-2 text-[10px] text-parchment-faint">
                     <span className="truncate">{site.name}</span>
                     <span className="shrink-0">{site.location} · {site.items.length} 件</span>
                   </div>
@@ -598,7 +603,7 @@ export const CharacterSheet: React.FC<{ embedded?: boolean }> = ({ embedded = fa
 
         {/* 动态插槽检视卡 */}
         {currentTarget && (
-          <div className="bg-black/80 p-2.5 rounded-xl border border-[#c89d54]/80 text-xs font-serif animate-in fade-in shadow-xl">
+          <div className="border border-gold/70 bg-ink/95 p-2.5 font-serif text-xs shadow-xl animate-in fade-in">
             <SlotInspectionDetails
               slotKey={currentTarget}
               body={body}
@@ -647,14 +652,14 @@ function CustodySection({
   isStreaming?: boolean;
 }) {
   return (
-    <div className="bg-black/45 rounded-xl p-2.5 border border-[#2d241c] flex flex-col gap-2 shadow-inner">
-      <div className="flex items-center justify-between gap-2 text-xs font-serif pb-1 border-b border-[#261f18]">
-        <span className="font-bold flex items-center gap-1 text-[#c89d54] min-w-0">
+    <div className="flex flex-col gap-2 border border-hairline bg-ink-2/60 p-2.5 shadow-inner">
+      <div className="flex items-center justify-between gap-2 border-b border-hairline pb-1 font-serif text-xs">
+        <span className="flex min-w-0 items-center gap-1 font-bold text-gold">
           {icon}<span className="truncate">{title}</span>
         </span>
-        <span className="font-mono text-[10px] text-[#8a7b6c] shrink-0">{meta}</span>
+        <span className="shrink-0 font-mono text-[10px] text-parchment-faint">{meta}</span>
       </div>
-      {description && <p className="text-[9.5px] text-[#74695c] leading-snug">{description}</p>}
+      {description && <p className="text-[9.5px] leading-snug text-parchment-faint">{description}</p>}
       <div className="flex flex-col gap-1.5">
         {items.length ? items.map((item) => {
           const target = `item_${targetPrefix}__${item.id}`;
@@ -667,25 +672,25 @@ function CustodySection({
           });
           const equipLabel = item.slot === 'mainhand' || item.slot === 'offhand' ? '装备' : '穿上';
           return (
-            <div key={`${targetPrefix}_${item.id}`} className="bg-[#14100c] hover:bg-[#1f1913] p-2 rounded-lg border border-[#2d241c] hover:border-[#c89d54]/60 flex items-center justify-between transition-all group text-xs">
-              <div className="flex flex-col flex-1 mr-2 min-w-0">
-                <div className="flex items-center gap-1 font-semibold text-[#e6ded1] font-serif text-[11.5px] truncate group-hover:text-[#f5d796]">
+            <div key={`${targetPrefix}_${item.id}`} className="group flex items-center justify-between border border-hairline bg-ink/70 p-2 text-xs transition-colors hover:border-gold-deep hover:bg-ink-3/60">
+              <div className="mr-2 flex min-w-0 flex-1 flex-col">
+                <div className="flex items-center gap-1 truncate font-serif text-[11.5px] font-semibold text-parchment group-hover:text-gold-bright">
                   <InventoryCategoryIcon item={item} />
                   <span className="truncate">{item.name}</span>
-                  <span className="font-mono text-[10px] text-[#c89d54] ml-1">x{item.quantity}</span>
+                  <span className="ml-1 font-mono text-[10px] text-gold">x{item.quantity}</span>
                 </div>
-                <p className="text-[10px] text-[#8a7b6c] truncate font-serif mt-0.5">{item.description}</p>
+                <p className="mt-0.5 truncate font-serif text-[10px] text-parchment-faint">{item.description}</p>
               </div>
-              <div className="shrink-0 flex items-center gap-1">
-                {canUse && <button type="button" onClick={() => onUse(item.id)} className="px-2 py-1 bg-[#2b2118] hover:bg-[#3d2e20] text-[#f5d796] rounded text-[10.5px] font-serif font-bold border border-[#8a652a]/50">使用</button>}
-                {canEquip && <button type="button" onClick={() => onQueueEquip(item, from, title)} disabled={isQueued || isStreaming} title={isQueued ? '已加入下一次对话的待执行队列' : '将在下一次对话生成完成后生效'} className="px-2 py-1 bg-[#2a241a] hover:bg-[#403422] text-[#f5d796] rounded text-[10.5px] font-serif font-bold border border-[#c89d54]/60 disabled:opacity-55 disabled:cursor-not-allowed">{isQueued ? '已排队' : equipLabel}</button>}
-                {!canEquip && !allowUse && <span className="px-1.5 py-0.5 text-[9.5px] text-[#766958] border border-[#3c3024] bg-black/30">存放</span>}
-                <button type="button" onClick={() => onInspect(activeSlot === target ? null : target)} className="px-1.5 py-1 bg-black/40 hover:bg-[#241e17] text-[#a89f91] hover:text-[#e6ded1] rounded text-[10.5px] font-serif border border-[#2d241c]">检视</button>
+              <div className="flex shrink-0 items-center gap-1">
+                {canUse && <button type="button" onClick={() => onUse(item.id)} className="border border-hairline-bright bg-ink-3 px-2 py-1 font-serif text-[10.5px] font-bold text-parchment transition-colors hover:border-gold hover:text-gold-bright">使用</button>}
+                {canEquip && <button type="button" onClick={() => onQueueEquip(item, from, title)} disabled={isQueued || isStreaming} title={isQueued ? '已加入下一次对话的待执行队列' : '将在下一次对话生成完成后生效'} className="border border-gold/60 bg-gold-deep/20 px-2 py-1 font-serif text-[10.5px] font-bold text-gold-bright transition-colors hover:bg-gold-deep/35 disabled:cursor-not-allowed disabled:opacity-40">{isQueued ? '已排队' : equipLabel}</button>}
+                {!canEquip && !allowUse && <span className="border border-hairline bg-ink-3/40 px-1.5 py-0.5 text-[9.5px] text-parchment-faint">存放</span>}
+                <button type="button" onClick={() => onInspect(activeSlot === target ? null : target)} className="border border-hairline bg-ink-3/50 px-1.5 py-1 font-serif text-[10.5px] text-parchment-dim transition-colors hover:border-gold-deep hover:text-parchment">检视</button>
               </div>
             </div>
           );
         }) : (
-          <div className="py-2 text-center text-[#665c52] text-xs font-serif italic bg-black/20 rounded-lg border border-[#2d241c]/30">{emptyText}</div>
+          <div className="border border-hairline/60 bg-ink-3/30 py-2 text-center font-serif text-xs italic text-parchment-faint">{emptyText}</div>
         )}
       </div>
     </div>
@@ -721,12 +726,12 @@ function LinkedGearCard({
   onClick: () => void;
 }) {
   const woundBorder = woundLevel === 'critical'
-    ? 'border-red-600 animate-pulse bg-red-950/40 text-red-300'
+    ? 'border-rubric-bright bg-rubric-deep/30 text-rubric-bright animate-pulse'
     : woundLevel === 'heavy'
-    ? 'border-orange-500 bg-orange-950/30 text-orange-300'
+    ? 'border-rubric bg-rubric-deep/20 text-rubric-bright'
     : woundLevel === 'minor'
-    ? 'border-amber-500 bg-amber-950/30 text-amber-300'
-    : 'border-[#2d241c] bg-black/50 text-[#e6ded1]';
+    ? 'border-gold-deep bg-gold-deep/10 text-gold-bright'
+    : 'border-gold-deep bg-gold-deep/20 text-parchment';
 
   const isHighlighted = isActive || isHovered;
   const displayedGearIcon = gearItem ? getGearIconId(gearItem.icon, gearItem.slot) : gearIcon;
@@ -737,26 +742,26 @@ function LinkedGearCard({
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       onClick={onClick}
-      className={`w-[108px] p-2 rounded-lg border text-left flex flex-col justify-center transition-all duration-150 shadow-sm ${
+      className={`flex w-[108px] flex-col justify-center border p-2 text-left shadow-sm transition-all duration-150 ${
         isHighlighted
-          ? 'bg-[#2b221a] border-[#f5d796] ring-2 ring-[#c89d54]/80 scale-[1.03] shadow-lg'
-          : `${woundBorder} hover:border-[#c89d54]/60 hover:bg-[#1f1913]`
+          ? 'border-gold-bright bg-ink-3 shadow-lg ring-1 ring-inset ring-gold scale-[1.03]'
+          : `${woundBorder} hover:border-gold hover:bg-ink-3`
       }`}
     >
       {/* 顶部部位名 + 创伤指示 */}
-      <div className="flex items-center justify-between text-[11px] text-[#a89f91] font-mono leading-none mb-1">
-        <span className="flex items-center gap-1 font-serif text-[#f5d796] font-bold">
+      <div className="mb-1 flex items-center justify-between font-mono text-[11px] leading-none text-parchment-dim">
+        <span className="flex items-center gap-1 font-serif font-bold text-gold-bright">
           <span>{fleshIcon}</span> {zoneName}
         </span>
         {woundLevel && woundLevel !== 'intact' ? (
-          <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
+          <span className="h-2 w-2 bg-rubric-bright animate-ping" />
         ) : (
-          <span className="text-[10px] text-emerald-400">完好</span>
+          <span className="text-[10px] text-emerald-700">完好</span>
         )}
       </div>
 
       {/* 装备名称 */}
-      <div className="flex items-center gap-1 text-xs font-serif font-bold text-[#e6ded1] truncate leading-tight">
+      <div className="flex items-center gap-1 truncate font-serif text-xs font-bold leading-tight text-parchment">
         <GameIcon icon={displayedGearIcon} className="w-5 h-5 shrink-0 drop-shadow" />
         <span className="truncate">{gearItem ? gearItem.name : fallbackName}</span>
       </div>
@@ -781,22 +786,22 @@ function SlotInspectionDetails({
   if (slotKey === 'head') {
     return (
       <div className="flex flex-col gap-1.5 text-xs">
-        <div className="flex justify-between items-center font-bold text-[#f5d796]">
+        <div className="flex items-center justify-between font-bold text-gold-bright">
           <span className="flex items-center gap-1"><Brain className="w-3.5 h-3.5" />头部与咽喉 (致命要害)</span>
-          <span className="text-red-400">伤情: 【{getWoundLabel(body.head.level)}】</span>
+          <span className="text-rubric-bright">伤情: 【{getWoundLabel(body.head.level)}】</span>
         </div>
-        <p className="text-xs text-[#a89f91]">
+        <p className="text-xs text-parchment-dim">
           创痕记录: {body.head.wounds.length ? body.head.wounds.join(' · ') : '骨骼完好无创口'}
         </p>
-        <div className="flex items-center justify-between pt-1 border-t border-[#33271d]">
-          <p className="text-xs text-[#e6ded1] truncate mr-2">
-            <span className="text-[#c89d54]">配备头盔:</span> {gear.head ? `${gear.head.name} (${gear.head.bonusText || '防护要害'})` : '未佩戴头盔 (要害暴露)'}
+        <div className="flex items-center justify-between border-t border-hairline pt-1">
+          <p className="mr-2 truncate text-xs text-parchment">
+            <span className="text-gold">配备头盔:</span> {gear.head ? `${gear.head.name} (${gear.head.bonusText || '防护要害'})` : '未佩戴头盔 (要害暴露)'}
           </p>
           {gear.head && onUnequip && (
             <button
               type="button"
               onClick={() => onUnequip('head')}
-              className="px-2 py-0.5 bg-red-950/40 hover:bg-red-900/60 text-red-300 hover:text-white rounded border border-red-800/40 text-[10.5px] transition-colors shrink-0"
+              className="shrink-0 border border-rubric/60 bg-rubric-deep/25 px-2 py-0.5 text-[10.5px] text-rubric-bright transition-colors hover:bg-rubric-deep/50 hover:text-parchment"
               title="卸下头盔并收存到当前可用地点"
             >
               卸下
@@ -810,22 +815,22 @@ function SlotInspectionDetails({
   if (slotKey === 'torso') {
     return (
       <div className="flex flex-col gap-1.5 text-xs">
-        <div className="flex justify-between items-center font-bold text-[#f5d796]">
+        <div className="flex items-center justify-between font-bold text-gold-bright">
           <span className="flex items-center gap-1"><Heart className="w-3.5 h-3.5" />胸膛与躯干 (致命要害)</span>
-          <span className="text-red-400">伤情: 【{getWoundLabel(body.torso.level)}】</span>
+          <span className="text-rubric-bright">伤情: 【{getWoundLabel(body.torso.level)}】</span>
         </div>
-        <p className="text-xs text-[#a89f91]">
+        <p className="text-xs text-parchment-dim">
           创痕记录: {body.torso.wounds.length ? body.torso.wounds.join(' · ') : '胸肋与脏腑完好'}
         </p>
-        <div className="flex items-center justify-between pt-1 border-t border-[#33271d]">
-          <p className="text-xs text-[#e6ded1] truncate mr-2">
-            <span className="text-[#c89d54]">当前穿着:</span> <strong className="text-[#f5d796]">{gear.torso.name}</strong> ({gear.torso.condition || '完好'})
+        <div className="flex items-center justify-between border-t border-hairline pt-1">
+          <p className="mr-2 truncate text-xs text-parchment">
+            <span className="text-gold">当前穿着:</span> <strong className="text-gold-bright">{gear.torso.name}</strong> ({gear.torso.condition || '完好'})
           </p>
           {gear.torso && gear.torso.name !== '贴身亚麻衫' && onUnequip && (
             <button
               type="button"
               onClick={() => onUnequip('torso')}
-              className="px-2 py-0.5 bg-red-950/40 hover:bg-red-900/60 text-red-300 hover:text-white rounded border border-red-800/40 text-[10.5px] transition-colors shrink-0"
+              className="shrink-0 border border-rubric/60 bg-rubric-deep/25 px-2 py-0.5 text-[10.5px] text-rubric-bright transition-colors hover:bg-rubric-deep/50 hover:text-parchment"
               title="换下当前衣甲并收存到当前可用地点"
             >
               卸下
@@ -839,26 +844,26 @@ function SlotInspectionDetails({
   if (slotKey === 'mainhand') {
     return (
       <div className="flex flex-col gap-1.5 text-xs">
-        <div className="flex justify-between items-center font-bold text-[#f5d796]">
+        <div className="flex items-center justify-between font-bold text-gold-bright">
           <span className="flex items-center gap-1"><Swords className="w-3.5 h-3.5" />主手与佩剑及双臂</span>
-          <span className="text-amber-300">臂力: 【{getWoundLabel(body.arms.level)}】</span>
+          <span className="text-gold">臂力: 【{getWoundLabel(body.arms.level)}】</span>
         </div>
         <div className="flex items-center justify-between">
-          <p className="text-xs text-[#e6ded1] truncate mr-2">
-            当前武器: <strong className="text-[#f5d796]">{gear.mainhand.name}</strong> ({gear.mainhand.bonusText})
+          <p className="mr-2 truncate text-xs text-parchment">
+            当前武器: <strong className="text-gold-bright">{gear.mainhand.name}</strong> ({gear.mainhand.bonusText})
           </p>
           {gear.mainhand && gear.mainhand.name !== '徒手空拳' && onUnequip && (
             <button
               type="button"
               onClick={() => onUnequip('mainhand')}
-              className="px-2 py-0.5 bg-red-950/40 hover:bg-red-900/60 text-red-300 hover:text-white rounded border border-red-800/40 text-[10.5px] transition-colors shrink-0"
+              className="shrink-0 border border-rubric/60 bg-rubric-deep/25 px-2 py-0.5 text-[10.5px] text-rubric-bright transition-colors hover:bg-rubric-deep/50 hover:text-parchment"
               title="收起佩剑并归入随身物品"
             >
               卸下
             </button>
           )}
         </div>
-        <p className="text-[11px] text-[#a89f91]">{gear.mainhand.description}</p>
+        <p className="text-[11px] text-parchment-dim">{gear.mainhand.description}</p>
       </div>
     );
   }
@@ -866,18 +871,18 @@ function SlotInspectionDetails({
   if (slotKey === 'offhand') {
     return (
       <div className="flex flex-col gap-1.5 text-xs">
-        <div className="flex justify-between items-center font-bold text-[#f5d796]">
+        <div className="flex items-center justify-between font-bold text-gold-bright">
           <span className="flex items-center gap-1"><Shield className="w-3.5 h-3.5" />左手副手与防御大盾</span>
         </div>
         <div className="flex items-center justify-between">
-          <p className="text-xs text-[#e6ded1] truncate mr-2">
+          <p className="mr-2 truncate text-xs text-parchment">
             {gear.offhand ? `${gear.offhand.name} (${gear.offhand.condition || '完好'}) · ${gear.offhand.bonusText || '格挡偏斜'}` : '副手无装备 (双手持握或轻装)'}
           </p>
           {gear.offhand && onUnequip && (
             <button
               type="button"
               onClick={() => onUnequip('offhand')}
-              className="px-2 py-0.5 bg-red-950/40 hover:bg-red-900/60 text-red-300 hover:text-white rounded border border-red-800/40 text-[10.5px] transition-colors shrink-0"
+              className="shrink-0 border border-rubric/60 bg-rubric-deep/25 px-2 py-0.5 text-[10.5px] text-rubric-bright transition-colors hover:bg-rubric-deep/50 hover:text-parchment"
               title="卸下副手装备并收存到当前可用地点"
             >
               卸下
@@ -891,22 +896,22 @@ function SlotInspectionDetails({
   if (slotKey === 'legs') {
     return (
       <div className="flex flex-col gap-1.5 text-xs">
-        <div className="flex justify-between items-center font-bold text-[#f5d796]">
+        <div className="flex items-center justify-between font-bold text-gold-bright">
           <span className="flex items-center gap-1"><Footprints className="w-3.5 h-3.5" />双腿下肢与足部穿着</span>
-          <span className="text-amber-300">机动: 【{getWoundLabel(body.legs.level)}】</span>
+          <span className="text-gold">机动: 【{getWoundLabel(body.legs.level)}】</span>
         </div>
-        <p className="text-xs text-[#a89f91]">
+        <p className="text-xs text-parchment-dim">
           创痕记录: {body.legs.wounds.length ? body.legs.wounds.join(' · ') : '下肢稳健敏捷'}
         </p>
-        <div className="flex items-center justify-between pt-1 border-t border-[#33271d]">
-          <p className="text-xs text-[#e6ded1] truncate mr-2">
-            <span className="text-[#c89d54]">足部:</span> {gear.legs ? gear.legs.name : '精工熟皮长靴'}
+        <div className="flex items-center justify-between border-t border-hairline pt-1">
+          <p className="mr-2 truncate text-xs text-parchment">
+            <span className="text-gold">足部:</span> {gear.legs ? gear.legs.name : '精工熟皮长靴'}
           </p>
           {gear.legs && onUnequip && (
             <button
               type="button"
               onClick={() => onUnequip('legs')}
-              className="px-2 py-0.5 bg-red-950/40 hover:bg-red-900/60 text-red-300 hover:text-white rounded border border-red-800/40 text-[10.5px] transition-colors shrink-0"
+              className="shrink-0 border border-rubric/60 bg-rubric-deep/25 px-2 py-0.5 text-[10.5px] text-rubric-bright transition-colors hover:bg-rubric-deep/50 hover:text-parchment"
               title="换下足部装备并收存到当前可用地点"
             >
               卸下
@@ -920,16 +925,16 @@ function SlotInspectionDetails({
   if (slotKey === 'companion') {
     return (
       <div className="flex flex-col gap-1 text-xs">
-        <div className="flex justify-between items-center font-bold text-[#f5d796]">
+        <div className="flex items-center justify-between font-bold text-gold-bright">
           <span className="flex items-center gap-1"><PawPrint className="w-3.5 h-3.5" />通灵伴兽 / 战兽</span>
         </div>
         {gear.companion ? (
           <div>
-            <p className="text-xs text-emerald-300 font-semibold">{gear.companion.name} ({gear.companion.bonus})</p>
-            <p className="text-[11px] text-[#a89f91]">{gear.companion.description}</p>
+            <p className="text-xs font-semibold text-emerald-700">{gear.companion.name} ({gear.companion.bonus})</p>
+            <p className="text-[11px] text-parchment-dim">{gear.companion.description}</p>
           </div>
         ) : (
-          <p className="text-xs text-[#a89f91]">暂无伴兽</p>
+          <p className="text-xs text-parchment-dim">暂无伴兽</p>
         )}
       </div>
     );
@@ -941,16 +946,16 @@ function SlotInspectionDetails({
     if (item) {
       return (
         <div className="flex flex-col gap-1 text-xs">
-          <div className="flex justify-between items-center font-bold text-[#f5d796]">
+          <div className="flex items-center justify-between font-bold text-gold-bright">
             <span className="flex items-center gap-1"><InventoryCategoryIcon item={item} />{item.name}</span>
-            <span className="text-[#c89d54] font-mono text-[11px]">数量: x{item.quantity}</span>
+            <span className="font-mono text-[11px] text-gold">数量: x{item.quantity}</span>
           </div>
-          <p className="text-xs text-[#e6ded1]">{item.description}</p>
-          <p className="text-[11px] text-[#a89f91] pt-1 border-t border-[#33271d]">
-            类别: <span className="text-[#e5be6c]">{item.category}</span>
+          <p className="text-xs text-parchment">{item.description}</p>
+          <p className="border-t border-hairline pt-1 text-[11px] text-parchment-dim">
+            类别: <span className="text-gold-bright">{item.category}</span>
           </p>
           {getEquipmentWearNotice(item.gearData || item) && (
-            <p className="text-[11px] leading-relaxed text-amber-200/80 border border-amber-900/40 bg-amber-950/20 px-2 py-1.5">
+            <p className="border border-gold-deep/50 bg-gold-deep/10 px-2 py-1.5 text-[11px] leading-relaxed text-gold-bright/80">
               {getEquipmentWearNotice(item.gearData || item)}
             </p>
           )}
@@ -977,22 +982,22 @@ function getWoundLabel(level: WoundLevel): string {
 function CompactStatCell({ label, val, icon }: { label: string; val: number; icon: GameIconId }) {
   const rank = getCk3SkillRank(val);
   const valueColor = val >= 25
-    ? 'text-amber-300'
+    ? 'text-rubric'
     : val >= 20
-      ? 'text-cyan-300'
+      ? 'text-emerald-700'
       : val >= 16
-        ? 'text-emerald-300'
+        ? 'text-emerald-700'
         : val <= 4
-          ? 'text-red-400'
-          : 'text-[#f5d796]';
+          ? 'text-rubric-bright'
+          : 'text-gold-bright';
 
   return (
     <div
-      className="bg-black/45 px-0.5 py-1 rounded-lg border border-[#2d241c] flex flex-col items-center justify-center hover:border-[#8a652a] transition-colors"
+      className="flex flex-col items-center justify-center border border-hairline bg-ink-2/70 px-0.5 py-1 transition-colors hover:border-gold-deep"
       title={`${label}：${rank}`}
     >
       <GameIcon icon={icon} className="w-12 h-12 shrink-0 drop-shadow-md" />
-      <span className={`font-mono font-bold text-xs leading-none -mt-1 ${valueColor}`}>{val}</span>
+      <span className={`font-display font-bold text-xs leading-none -mt-1 ${valueColor}`}>{val}</span>
     </div>
   );
 }
@@ -1003,8 +1008,8 @@ function InventoryCategoryIcon({ item }: { item: InventoryItem }) {
     return <GameIcon icon={gameIcon} className="w-5 h-5 shrink-0 drop-shadow" />;
   }
 
-  if (item.category === '药草') return <Leaf className="w-3.5 h-3.5 text-emerald-400 shrink-0" />;
-  if (item.category === '毒物') return <FlaskConical className="w-3.5 h-3.5 text-purple-400 shrink-0" />;
-  if (item.category === '文书' || item.category === '信物') return <ScrollText className="w-3.5 h-3.5 text-[#c89d54] shrink-0" />;
-  return <Package className="w-3.5 h-3.5 text-[#a89f91] shrink-0" />;
+  if (item.category === '药草') return <Leaf className="w-3.5 h-3.5 text-emerald-700 shrink-0" />;
+  if (item.category === '毒物') return <FlaskConical className="w-3.5 h-3.5 text-rubric-bright shrink-0" />;
+  if (item.category === '文书' || item.category === '信物') return <ScrollText className="w-3.5 h-3.5 text-gold shrink-0" />;
+  return <Package className="w-3.5 h-3.5 text-parchment-dim shrink-0" />;
 }

@@ -123,11 +123,14 @@ export function getInventoryIconId(category: string, name = ''): GameIconId | nu
 export interface GameIconProps extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'src'> {
   icon: GameIconId;
   decorative?: boolean;
+  /** ink:以 multiply 混入纸面,作铜版墨印;raw:原色,用于墨砖等深色底 */
+  tone?: 'ink' | 'raw';
 }
 
 export const GameIcon: React.FC<GameIconProps> = ({
   icon,
   decorative = true,
+  tone = 'ink',
   alt = '',
   className = '',
   ...props
@@ -137,7 +140,7 @@ export const GameIcon: React.FC<GameIconProps> = ({
     alt={decorative ? '' : alt}
     aria-hidden={decorative || undefined}
     draggable={false}
-    className={`object-contain select-none ${className}`}
+    className={`object-contain select-none ${tone === 'ink' ? 'game-icon--ink ' : ''}${className}`}
     {...props}
   />
 );

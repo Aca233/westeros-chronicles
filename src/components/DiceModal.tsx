@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useGameStore } from '../store/useGameStore';
-import { Dices, Sparkles, CheckCircle2, XCircle } from 'lucide-react';
+import { Dices } from 'lucide-react';
 
 export const DiceModal: React.FC = () => {
   const { isDiceModalOpen, activeDiceCheck, closeDiceModal } = useGameStore();
@@ -25,6 +25,19 @@ export const DiceModal: React.FC = () => {
     return () => clearInterval(interval);
   }, [isDiceModalOpen, activeDiceCheck]);
 
+  // 星盘落定后,Enter / Space / Esc 均可接受命运
+  useEffect(() => {
+    if (!isDiceModalOpen || isRolling) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        closeDiceModal();
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [isDiceModalOpen, isRolling, closeDiceModal]);
+
   if (!isDiceModalOpen || !activeDiceCheck) return null;
 
   // 兼容没有特质字段的旧存档检定记录。
@@ -32,72 +45,80 @@ export const DiceModal: React.FC = () => {
   const traitModifierBreakdown = activeDiceCheck.traitModifierBreakdown ?? [];
   const signed = (value: number) => `${value >= 0 ? '+' : ''}${value}`;
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-4 animate-in fade-in duration-150 select-none">
-      <div className="bg-[#14110e] border border-[#c89d54] rounded-2xl p-6 max-w-sm w-full shadow-2xl got-card-texture flex flex-col items-center text-center relative">
-        {/* 顶部检定标题 */}
-        <div className="flex items-center gap-2 text-xs font-serif text-[#c89d54] uppercase tracking-wider mb-2">
-          <Dices className="w-4 h-4" />
-          <span>D20 跑团规则检定</span>
-        </div>
+  const verdict = activeDiceCheck.isNatural20
+    ? { word: '天 成', tone: 'text-rubric' }
+    : activeDiceCheck.isNatural1
+      ? { word: '溃 败', tone: 'text-rubric-deep' }
+      : activeDiceCheck.success
+        ? { word: '得 手', tone: 'text-emerald-700' }
+        : { word: '落 空', tone: 'text-rubric' };
 
-        <h3 className="font-serif font-bold text-lg text-[#e6ded1] mb-1">
-          {activeDiceCheck.attributeName} 检定
+  return (
+    <div
+      className="modal-backdrop fixed inset-0 z-50 flex select-none items-center justify-center p-4"
+      onClick={() => { if (!isRolling) closeDiceModal(); }}
+      role="dialog"
+      aria-modal="true"
+      aria-label={`${activeDiceCheck.attributeName}检定结果`}
+    >
+      <div
+        className="panel-iron scene-enter relative flex w-full max-w-sm flex-col items-center p-8 text-center"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* 顶部:检定名目 */}
+        <p className="eyebrow flex items-center gap-2">
+          <Dices className="h-3.5 w-3.5" />
+          命运星盘 · D20
+        </p>
+        <h3 className="mt-3 font-serif text-xl font-black tracking-[0.14em] text-parchment">
+          {activeDiceCheck.attributeName}检定
         </h3>
-        <p className="text-xs text-[#a89f91] mb-5 font-serif line-clamp-2 px-2">
-          "{activeDiceCheck.actionText}"
+        <p className="mt-1.5 line-clamp-2 max-w-xs px-2 font-serif text-[11px] italic leading-relaxed text-parchment-faint">
+          “{activeDiceCheck.actionText}”
         </p>
 
-        {/* 20 面骰子动效容器 */}
-        <div className="relative my-2">
-          <div
-            className={`w-24 h-24 rounded-2xl flex items-center justify-center text-4xl font-mono font-black border-2 transition-all duration-300 ${
-              isRolling
-                ? 'bg-[#2b221a] border-[#8a652a] text-[#e5be6c] animate-bounce'
-                : activeDiceCheck.isNatural20
-                ? 'bg-gradient-to-br from-amber-600 to-amber-900 border-amber-300 text-white scale-110 shadow-lg wax-glow'
-                : activeDiceCheck.isNatural1
-                ? 'bg-gradient-to-br from-red-800 to-red-950 border-red-500 text-white scale-95'
-                : activeDiceCheck.success
-                ? 'bg-emerald-950 border-emerald-500 text-emerald-200'
-                : 'bg-red-950/70 border-red-800 text-red-300'
-            }`}
-          >
-            {displayNumber}
+        {/* 星盘:双环对转,停摆定数 */}
+        <div className="relative my-10">
+          <div className={`astro-ring astro-ring--outer ${isRolling ? '' : 'astro-ring--settled'}`} aria-hidden="true" />
+          <div className={`astro-ring astro-ring--inner ${isRolling ? '' : 'astro-ring--settled'}`} aria-hidden="true" />
+          <div className="flex h-28 w-28 items-center justify-center rounded-full border border-hairline-bright bg-ink-2 shadow-[inset_0_2px_8px_rgba(74,58,32,0.18)]">
+            <span
+              className={`font-display text-[56px] font-black leading-none ${
+                isRolling ? 'text-parchment-dim' : verdict.tone
+              }`}
+            >
+              {displayNumber}
+            </span>
           </div>
-          {activeDiceCheck.isNatural20 && !isRolling && (
-            <Sparkles className="w-6 h-6 text-amber-300 absolute -top-2 -right-2 animate-spin" />
-          )}
         </div>
 
-        {/* 结算公式与说明 */}
+        {/* 结算账目 */}
         {!isRolling && (
-          <div className="flex flex-col items-center gap-2 mt-4 animate-in fade-in duration-200 w-full">
-            <div className="w-full rounded border border-[#33271d] bg-black/40 px-3 py-2 font-mono text-xs text-[#e6ded1]">
-              <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1">
+          <div className="scene-enter flex w-full flex-col items-center gap-3">
+            <div className="w-full border-y border-hairline py-2.5 font-mono text-[11px] text-parchment-dim">
+              <div className="flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1">
                 <span>出目 {activeDiceCheck.roll}</span>
                 <span>属性 {signed(activeDiceCheck.attributeModifier)}</span>
                 {activeDiceCheck.equipmentBonus !== 0 && (
                   <span>武器 {signed(activeDiceCheck.equipmentBonus)}</span>
                 )}
                 {traitModifier !== 0 && (
-                  <span className={traitModifier > 0 ? 'text-emerald-300' : 'text-red-300'}>
+                  <span className={traitModifier > 0 ? 'text-emerald-700' : 'text-rubric'}>
                     特质 {signed(traitModifier)}
                   </span>
                 )}
-                <span className="font-bold text-[#e5be6c]">总点数 {activeDiceCheck.total}</span>
-                <span className="text-[#a89f91]">目标 DC {activeDiceCheck.dc}</span>
+                <span className="font-bold text-gold-bright">总计 {activeDiceCheck.total}</span>
+                <span>DC {activeDiceCheck.dc}</span>
               </div>
               {traitModifierBreakdown.length > 0 && (
-                <div className="mt-2 flex flex-wrap items-center justify-center gap-1 border-t border-[#33271d]/70 pt-2 text-[10px]">
-                  <span className="mr-1 text-[#8f8375]">特质明细</span>
+                <div className="mt-2 flex flex-wrap items-center justify-center gap-1 border-t border-hairline pt-2 text-[9.5px]">
                   {traitModifierBreakdown.map((item) => (
                     <span
                       key={`${item.traitId}-${item.value}`}
-                      className={`rounded border px-1.5 py-0.5 ${
+                      className={`border px-1.5 py-0.5 ${
                         item.value > 0
-                          ? 'border-emerald-800/60 bg-emerald-950/40 text-emerald-300'
-                          : 'border-red-800/60 bg-red-950/40 text-red-300'
+                          ? 'border-emerald-700/50 text-emerald-800'
+                          : 'border-rubric-deep/60 text-rubric-deep'
                       }`}
                     >
                       {item.name} {signed(item.value)}
@@ -107,47 +128,23 @@ export const DiceModal: React.FC = () => {
               )}
             </div>
 
-            {/* 判定结论徽章 */}
-            <div
-              className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-serif font-bold ${
-                activeDiceCheck.isNatural20
-                  ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
-                  : activeDiceCheck.isNatural1
-                  ? 'bg-red-600/20 text-red-400 border border-red-600/40'
-                  : activeDiceCheck.success
-                  ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
-                  : 'bg-red-500/20 text-red-300 border border-red-500/40'
-              }`}
-            >
-              {activeDiceCheck.success ? (
-                <CheckCircle2 className="w-4 h-4" />
-              ) : (
-                <XCircle className="w-4 h-4" />
-              )}
-              <span>
-                {activeDiceCheck.isNatural20
-                  ? '大成功 (NATURAL 20)'
-                  : activeDiceCheck.isNatural1
-                  ? '大失败 (NATURAL 1)'
-                  : activeDiceCheck.success
-                  ? '检定通过 (SUCCESS)'
-                  : '检定失败 (FAILURE)'}
-              </span>
-            </div>
+            <span className={`font-serif text-lg font-black tracking-[0.5em] ${verdict.tone}`}>
+              {verdict.word}
+            </span>
 
-            <p className="text-xs text-[#e6ded1] font-serif leading-relaxed mt-1">
+            <p className="max-w-xs font-serif text-[12px] leading-relaxed text-parchment">
               {activeDiceCheck.resultDescription}
             </p>
           </div>
         )}
 
-        {/* 确认关闭按钮 */}
+        {/* 确认 */}
         <button
           onClick={closeDiceModal}
           disabled={isRolling}
-          className="mt-6 w-full py-2.5 bg-[#1c1813] hover:bg-[#2b221a] text-[#e5be6c] font-serif font-bold text-xs rounded-lg border border-[#33271d] hover:border-[#c89d54] transition-all disabled:opacity-40"
+          className="btn-decree mt-8 !px-8"
         >
-          {isRolling ? '掷骰中……' : '接受命运，继续剧情'}
+          {isRolling ? '星盘未停……' : '接受命运'}
         </button>
       </div>
     </div>
