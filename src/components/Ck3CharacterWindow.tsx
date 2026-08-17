@@ -110,7 +110,6 @@ export const Ck3CharacterWindow: React.FC<Ck3CharacterWindowProps> = ({
               displayedTraits={displayedTraits}
               activeTraitId={activeTraitId}
               onTraitSelect={setActiveTraitId}
-              houseIcon={houseIcon}
             />
 
             <nav
@@ -211,44 +210,71 @@ function IdentityHeader({
 }) {
   return (
     <header className="relative shrink-0 overflow-hidden px-4 pb-4 pt-5">
-      <GameIcon icon={houseIcon} className="pointer-events-none absolute -right-6 -top-10 h-44 w-44 opacity-[0.08] grayscale" />
-      {dossier.kind === 'npc' && (
-        <div data-character-navigation className="relative z-10 mb-2 flex items-center gap-1.5">
-          {canGoBack && (
-            <button type="button" onClick={onBack} className="btn-ghost !px-2 !py-1 !text-[9px]">
-              <ArrowLeft className="h-3 w-3" />返回上一人物
-            </button>
+      <div
+        data-character-identity-layout="split"
+        className="grid grid-cols-[minmax(0,1fr)_132px] items-stretch gap-3 sm:grid-cols-[minmax(0,1fr)_168px] sm:gap-4"
+      >
+        <div className="min-w-0 text-left">
+          {dossier.kind === 'npc' && (
+            <div data-character-navigation className="mb-3 flex flex-wrap items-center justify-start gap-1.5">
+              {canGoBack && (
+                <button type="button" onClick={onBack} className="btn-ghost !px-2 !py-1 !text-[9px]">
+                  <ArrowLeft className="h-3 w-3" />返回上一人物
+                </button>
+              )}
+              <button type="button" onClick={onReturnToPlayer} className="btn-ghost !px-2 !py-1 !text-[9px]">
+                <UserRound className="h-3 w-3" />回到自己
+              </button>
+            </div>
           )}
-          <button type="button" onClick={onReturnToPlayer} className="btn-ghost !px-2 !py-1 !text-[9px]">
-            <UserRound className="h-3 w-3" />回到自己
-          </button>
-        </div>
-      )}
-      <div className="relative flex items-start gap-3.5">
-        <div className="ck3-heraldry-frame flex h-[84px] w-[74px] shrink-0 items-center justify-center bg-[#2b2417] p-1.5">
-          {dossier.kind === 'player' && dossier.player.coatOfArms ? (
-            <CoatOfArms design={dossier.player.coatOfArms} className="h-full" />
-          ) : (
-            <GameIcon icon={houseIcon} tone="raw" className="h-full w-full object-contain drop-shadow-[0_4px_5px_rgba(0,0,0,0.8)]" />
-          )}
-        </div>
-        <div className="min-w-0 flex-1">
-          <p className="eyebrow">{dossier.dynastyName}</p>
-          <h2 className="mt-1 truncate font-serif text-[26px] font-black leading-tight tracking-wide text-parchment">{dossier.name}</h2>
-          <p className="mt-0.5 truncate font-serif text-[12.5px] font-semibold text-gold">
+
+          <div className="flex items-start gap-3">
+            <div className="ck3-heraldry-frame flex h-[62px] w-[54px] shrink-0 items-center justify-center bg-[#2b2417] p-1.5">
+              {dossier.kind === 'player' && dossier.player.coatOfArms ? (
+                <CoatOfArms design={dossier.player.coatOfArms} className="h-full" />
+              ) : (
+                <GameIcon icon={houseIcon} tone="raw" className="h-full w-full object-contain drop-shadow-[0_4px_5px_rgba(0,0,0,0.8)]" />
+              )}
+            </div>
+            <div className="min-w-0 pt-0.5">
+              <p className="eyebrow">{dossier.dynastyName}</p>
+              <h2 className="mt-1 break-words font-serif text-[25px] font-black leading-[1.12] tracking-[0.04em] text-parchment">{dossier.name}</h2>
+            </div>
+          </div>
+
+          <p className="mt-3 font-serif text-[12px] font-semibold leading-relaxed text-gold">
             {dossier.title}
-            {dossier.age !== undefined && <span className="ml-2 font-mono text-[10.5px] font-normal text-parchment-faint">{dossier.age} 岁</span>}
+            {dossier.age !== undefined && <span className="ml-2 font-mono text-[10px] font-normal text-parchment-faint">{dossier.age} 岁</span>}
             {!dossier.alive && <span className="ml-2 border border-rubric/60 bg-rubric/20 px-1.5 py-0.5 text-[9px] text-rubric-bright">已故</span>}
           </p>
-          <div className="mt-2.5 flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1 text-[10px] text-parchment-dim">
-            <span className="truncate">{dossier.house}</span>
-            <span className="truncate border-l border-hairline-bright pl-3">{dossier.culture}</span>
-            <span className="truncate border-l border-hairline-bright pl-3">{dossier.faith}</span>
-            <span className="flex min-w-0 items-center gap-1 truncate border-l border-hairline-bright pl-3">
-              <MapPin className="h-3 w-3 shrink-0 text-gold-deep" />{dossier.location}
+          <div className="mt-2.5 flex flex-col items-start gap-1 text-[10px] text-parchment-dim">
+            <span>{dossier.house}</span>
+            <span>{dossier.culture} · {dossier.faith}</span>
+            <span className="inline-flex min-w-0 items-center gap-1">
+              <MapPin className="h-3 w-3 shrink-0 text-gold-deep" /><span className="truncate">{dossier.location}</span>
             </span>
           </div>
         </div>
+
+        <section
+          data-character-portrait-side="right"
+          className="ck3-portrait-frame ck3-portrait-frame--hero relative h-[188px] w-full self-start overflow-hidden bg-[radial-gradient(circle_at_50%_30%,#3d2f19_0%,#17110a_52%,#070503_100%)] sm:h-[210px]"
+          aria-label="人物肖像"
+        >
+          <GameIcon icon={houseIcon} tone="raw" className="absolute left-1/2 top-[42%] h-36 w-36 -translate-x-1/2 -translate-y-1/2 opacity-[0.16] grayscale drop-shadow-[0_0_16px_rgba(201,164,92,0.35)] sm:h-44 sm:w-44" />
+          <div className="absolute inset-x-0 bottom-0 h-[70%] bg-[linear-gradient(180deg,transparent,rgba(0,0,0,0.8))]" />
+          <div className={`absolute inset-0 flex items-center justify-center pb-7 ${dossier.alive ? '' : 'opacity-60 grayscale'}`} aria-hidden="true">
+            <div className="ck3-bust-silhouette">
+              <span className="ck3-bust-silhouette__head" />
+              <span className="ck3-bust-silhouette__neck" />
+              <span className="ck3-bust-silhouette__body" />
+            </div>
+          </div>
+          <div className="absolute inset-x-2 bottom-2 border-t border-gold-deep/50 pt-1.5 text-center sm:inset-x-3">
+            <div className="truncate text-[10px] font-bold tracking-wide text-gold-bright">{dossier.house}</div>
+            <div className="mt-0.5 truncate text-[8px] italic text-parchment-dim">“{dossier.houseWords}”</div>
+          </div>
+        </section>
       </div>
       <hr className="hairline mt-4" aria-hidden="true" />
     </header>
@@ -260,32 +286,14 @@ function OverviewTab({
   displayedTraits,
   activeTraitId,
   onTraitSelect,
-  houseIcon,
 }: {
   dossier: CharacterDossier;
   displayedTraits: ReturnType<typeof resolveCharacterTraits>;
   activeTraitId: string | null;
   onTraitSelect: (traitId: string | null) => void;
-  houseIcon: ReturnType<typeof getHouseIconId>;
 }) {
   return (
     <div className="flex flex-col gap-4 p-4 pb-6">
-      <section className="ck3-portrait-frame ck3-portrait-frame--hero relative mx-auto h-[225px] w-[72%] min-w-[250px] max-w-[340px] overflow-hidden bg-[radial-gradient(circle_at_50%_30%,#3d2f19_0%,#17110a_52%,#070503_100%)]" aria-label="人物肖像">
-        <GameIcon icon={houseIcon} tone="raw" className="absolute left-1/2 top-[42%] h-52 w-52 -translate-x-1/2 -translate-y-1/2 opacity-[0.16] grayscale drop-shadow-[0_0_16px_rgba(201,164,92,0.35)]" />
-        <div className="absolute inset-x-0 bottom-0 h-[70%] bg-[linear-gradient(180deg,transparent,rgba(0,0,0,0.8))]" />
-        <div className={`absolute inset-0 flex items-center justify-center pb-7 ${dossier.alive ? '' : 'opacity-60 grayscale'}`} aria-hidden="true">
-          <div className="ck3-bust-silhouette">
-            <span className="ck3-bust-silhouette__head" />
-            <span className="ck3-bust-silhouette__neck" />
-            <span className="ck3-bust-silhouette__body" />
-          </div>
-        </div>
-        <div className="absolute inset-x-5 bottom-3 border-t border-gold-deep/50 pt-2 text-center">
-          <div className="truncate text-[12px] font-bold tracking-wide text-gold-bright">{dossier.house}</div>
-          <div className="mt-0.5 truncate text-[9px] italic text-parchment-dim">“{dossier.houseWords}”</div>
-        </div>
-      </section>
-
       <section data-character-traits className="border-y border-hairline py-3" aria-label="人物特质">
         <div className="mb-2 flex items-center justify-between px-0.5">
           <PanelHeading icon={<ScrollText className="h-4 w-4" />} title="特质" />

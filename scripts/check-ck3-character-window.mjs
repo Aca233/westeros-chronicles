@@ -22,6 +22,9 @@ if (!windowSource.includes('data-ck3-character-window')) failures.push('人物�
 if (!appSource.includes("import { Ck3CharacterWindow } from './components/Ck3CharacterWindow'")) failures.push('App 尚未导入 CK3 人物窗口。');
 if (!appSource.includes('<Ck3CharacterWindow')) failures.push('App 尚未使用 CK3 人物窗口。');
 if (!windowSource.includes('CK3_SKILLS.map')) failures.push('人物窗口没有渲染 CK3 六项属性。');
+if (!windowSource.includes('data-character-identity-layout="split"')) failures.push('人物身份区没有使用左侧信息、右侧头像的双栏布局。');
+if (!windowSource.includes('data-character-portrait-side="right"')) failures.push('人物头像没有固定在身份区右侧。');
+if (!windowSource.includes('className="min-w-0 text-left"')) failures.push('人物顶部身份信息没有左对齐。');
 if (!windowSource.includes('<GameIcon icon={skill.icon}')) failures.push('六项属性没有优先使用游戏图标。');
 if (/text-(?:3xl|4xl|5xl)[^"']*[^\n]*\{value\}/.test(windowSource)) failures.push('属性数字字号过大。');
 if (windowSource.includes('{skill.label}</span>') || windowSource.includes('{skill.label}</small>')) failures.push('属性区重复显示了外交、军事等小字。');
