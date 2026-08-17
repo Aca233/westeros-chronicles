@@ -36,7 +36,8 @@
     "test:character-dossier": "node scripts/test-character-dossier.mjs",
     "test:character-navigation": "node scripts/test-character-navigation.mjs",
     "check:story-character-links": "node scripts/check-story-character-links.mjs",
-    "test:item-catalog": "node scripts/test-item-catalog.mjs"
+    "test:item-catalog": "node scripts/test-item-catalog.mjs",
+    "test:item-custody": "node scripts/test-item-custody.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",
