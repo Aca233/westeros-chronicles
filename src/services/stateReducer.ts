@@ -11,6 +11,7 @@ import { canContainerAccept, ensureItemCustody, getAccessibleStorageSites, infer
 import { applyItemActions, type ItemActionContext } from '../features/items/actions';
 import { ITEM_CATALOG } from '../data/itemDefinitions';
 import type { ItemAction, ItemStateCommand } from '../features/items/types';
+import { aggregateEquippedItemEffects, getZoneProtection, mitigateWoundLevel } from '../features/items/effects';
 
 
 function inferEquipmentSlot(item: InventoryItem, requested?: EquippedGearSlot): EquippedGearSlot {
@@ -203,6 +204,15 @@ function itemCommandToAction(command: ItemStateCommand): ItemAction {
   }
 }
 
+function inferDamageTags(text: string): string[] {
+  const tags = new Set<string>();
+  if (/剑|刀|刃|劈|砍|斩|割|抓|slashing/i.test(text)) tags.add('slashing');
+  if (/刺|箭|矛|枪|弩|贯穿|piercing/i.test(text)) tags.add('piercing');
+  if (/锤|撞|砸|棍|钝|坠落|blunt/i.test(text)) tags.add('blunt');
+  if (/火|烧|烫|灼|fire/i.test(text)) tags.add('fire');
+  return [...tags];
+}
+
 function locationRoot(location: string): string {
   return location.split('·', 1)[0].trim();
 }
@@ -255,11 +265,32 @@ export function applyStateCommands(
         if (!zone) break;
 
         const levels: WoundLevel[] = ['intact', 'minor', 'heavy', 'critical'];
-        let effectiveLevel = cmd.level;
+        const damageTags = cmd.damageTags?.length
+          ? [...new Set(cmd.damageTags)]
+          : inferDamageTags(`${cmd.reason ?? ''} ${cmd.woundText}`);
+        const equippedEffects = next.items
+          ? aggregateEquippedItemEffects(next.items, ITEM_CATALOG)
+          : { active: [] };
+        const protection = getZoneProtection(equippedEffects, cmd.zone, damageTags);
+        let effectiveLevel = mitigateWoundLevel(cmd.level, protection);
+
+        if (effectiveLevel !== cmd.level) {
+          const matchingArmor = equippedEffects.active.filter((entry) => entry.effect.kind === 'protection'
+            && entry.effect.zones.includes(cmd.zone)
+            && entry.effect.damageTags.some((tag) => damageTags.includes(tag)));
+          const armorNames = [...new Set(matchingArmor.map((entry) => entry.itemName))];
+          for (const instanceId of new Set(matchingArmor.map((entry) => entry.instanceId))) {
+            const instance = next.items.instances[instanceId];
+            if (instance) instance.durability = Math.max(0, instance.durability - 5);
+          }
+          changesLog.push(` 护甲减伤: ${armorNames.join('、') || '当前防护'}将伤势由【${cmd.level}】减轻为【${effectiveLevel}】，耐久受损`);
+        }
+
+        const beforeTraitResistance = effectiveLevel;
         const injuryResistance = traitEffects.resistances.injury ?? 0;
         if (didTraitResistanceTrigger(injuryResistance, random())) {
-          effectiveLevel = levels[Math.max(0, levels.indexOf(cmd.level) - 1)];
-          changesLog.push(` 特质抵抗: 受伤抗性生效，伤势由【${cmd.level}】减轻为【${effectiveLevel}】`);
+          effectiveLevel = levels[Math.max(0, levels.indexOf(effectiveLevel) - 1)];
+          changesLog.push(` 特质抵抗: 受伤抗性生效，伤势由【${beforeTraitResistance}】减轻为【${effectiveLevel}】`);
         }
 
         zone.level = effectiveLevel;

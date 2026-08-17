@@ -40,7 +40,8 @@ export const DiceModal: React.FC = () => {
 
   if (!isDiceModalOpen || !activeDiceCheck) return null;
 
-  // 兼容没有特质字段的旧存档检定记录。
+  const equipmentModifier = activeDiceCheck.equipmentModifier;
+  const equipmentModifierBreakdown = activeDiceCheck.equipmentModifierBreakdown;
   const traitModifier = activeDiceCheck.traitModifier ?? 0;
   const traitModifierBreakdown = activeDiceCheck.traitModifierBreakdown ?? [];
   const signed = (value: number) => `${value >= 0 ? '+' : ''}${value}`;
@@ -99,8 +100,8 @@ export const DiceModal: React.FC = () => {
               <div className="flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1">
                 <span>出目 {activeDiceCheck.roll}</span>
                 <span>属性 {signed(activeDiceCheck.attributeModifier)}</span>
-                {activeDiceCheck.equipmentBonus !== 0 && (
-                  <span>武器 {signed(activeDiceCheck.equipmentBonus)}</span>
+                {equipmentModifier !== 0 && (
+                  <span>物品 {signed(equipmentModifier)}</span>
                 )}
                 {traitModifier !== 0 && (
                   <span className={traitModifier > 0 ? 'text-emerald-700' : 'text-rubric'}>
@@ -110,6 +111,23 @@ export const DiceModal: React.FC = () => {
                 <span className="font-bold text-gold-bright">总计 {activeDiceCheck.total}</span>
                 <span>DC {activeDiceCheck.dc}</span>
               </div>
+              {equipmentModifierBreakdown.length > 0 && (
+                <div className="mt-2 flex flex-wrap items-center justify-center gap-1 border-t border-hairline pt-2 text-[9.5px]">
+                  {equipmentModifierBreakdown.map((item) => (
+                    <span
+                      key={`${item.instanceId}-${item.reason}-${item.value}`}
+                      title={item.reason}
+                      className={`border px-1.5 py-0.5 ${
+                        item.value > 0
+                          ? 'border-emerald-700/50 text-emerald-800'
+                          : 'border-rubric-deep/60 text-rubric-deep'
+                      }`}
+                    >
+                      {item.name} {signed(item.value)}
+                    </span>
+                  ))}
+                </div>
+              )}
               {traitModifierBreakdown.length > 0 && (
                 <div className="mt-2 flex flex-wrap items-center justify-center gap-1 border-t border-hairline pt-2 text-[9.5px]">
                   {traitModifierBreakdown.map((item) => (

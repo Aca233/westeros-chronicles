@@ -267,7 +267,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
       diceCheck = performD20Check(
         safeActionText,
         gameState.lord.attributes,
-        gameState.lord.gear,
+        gameState.lord.items,
+        ITEM_CATALOG,
         gameState.lord.traitIds ?? [],
         diceDecision.attribute,
         diceDecision.dc,

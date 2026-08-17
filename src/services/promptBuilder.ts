@@ -2,12 +2,12 @@ import { GameState, D20Check } from '../types/game';
 import type { PendingItemAction } from '../features/items/itemActionQueue';
 import { stripEmoji } from './textSanitizer';
 import { aggregateSelectedTraitEffects, formatTraitDescription, formatTraitRuleEffects, getTraitCheckContributions } from '../data/characterTraits';
-import { inferCheckFromAction } from './diceEngine';
+import { inferCheckFromAction, inferItemSceneTags } from './diceEngine';
 import { describeNarrativeAdvantage } from './traitEffectEngine';
 import type { DiceDecision, DiceMode } from './dicePolicy';
 import { ITEM_CATALOG } from '../data/itemDefinitions';
 import { getItemDefinition } from '../features/items/catalog';
-import { aggregateEquippedItemEffects, formatItemNarrativeDirectives, getEquipmentBurden } from '../features/items/effects';
+import { aggregateEquippedItemEffects, formatItemNarrativeDirectives, getEquipmentBurden, getUnlockedItemActions } from '../features/items/effects';
 import { getUsedCarryUnits } from '../features/items/custody';
 import { formatPendingItemPrompt } from '../features/items/itemActionQueue';
 
@@ -254,13 +254,17 @@ export function buildChatMessages(
     const traitBreakdown = diceCheck.traitModifierBreakdown.length
       ? diceCheck.traitModifierBreakdown.map((item) => `${item.name} ${item.value >= 0 ? '+' : ''}${item.value}`).join(' · ')
       : '无相关特质修正';
+    const itemBreakdown = diceCheck.equipmentModifierBreakdown.length
+      ? diceCheck.equipmentModifierBreakdown.map((item) => `${item.name}“${item.reason}” ${item.value >= 0 ? '+' : ''}${item.value}`).join(' · ')
+      : '无相关物品修正';
     const contract = diceCheck.outcomeContract;
     currentActionPrompt += `
 
 【D20 规则检定结果：程序已完成结算，禁止重新计算】
 - 当前动作: ${contract.intent}
 - 检定项目: ${diceCheck.attributeName} vs 难度 DC ${diceCheck.dc}
-- 掷骰公式: D20 ${diceCheck.roll} + 属性 ${diceCheck.attributeModifier >= 0 ? '+' : ''}${diceCheck.attributeModifier} + 装备 ${diceCheck.equipmentBonus >= 0 ? '+' : ''}${diceCheck.equipmentBonus} + 特质 ${diceCheck.traitModifier >= 0 ? '+' : ''}${diceCheck.traitModifier} = ${diceCheck.total}
+- 掷骰公式: D20 ${diceCheck.roll} + 属性 ${diceCheck.attributeModifier >= 0 ? '+' : ''}${diceCheck.attributeModifier} + 物品 ${diceCheck.equipmentModifier >= 0 ? '+' : ''}${diceCheck.equipmentModifier} + 特质 ${diceCheck.traitModifier >= 0 ? '+' : ''}${diceCheck.traitModifier} = ${diceCheck.total}
+- 物品明细: ${itemBreakdown}
 - 特质明细: ${traitBreakdown}
 - 判定结论: ${diceCheck.isNatural20 ? '自然 20，当前动作在合理边界内取得更佳结果' : diceCheck.isNatural1 ? '自然 1，当前动作在既有风险内遭遇局部失败' : diceCheck.success ? '当前动作成功' : '当前动作失败'}
 - 成功边界: ${contract.successOutcome}
@@ -273,6 +277,11 @@ export function buildChatMessages(
     const inferred = inferCheckFromAction(currentUserInput);
     const contributions = getTraitCheckContributions(gameState.lord.traitIds ?? [], inferred.domain);
     const totalModifier = contributions.reduce((total, item) => total + item.value, 0);
+    const sceneTags = inferItemSceneTags(currentUserInput, inferred.domain);
+    const itemEffects = aggregateEquippedItemEffects(gameState.lord.items, ITEM_CATALOG);
+    const unlockedActions = getUnlockedItemActions(itemEffects, { actionText: currentUserInput, sceneTags });
+    const itemFacts = formatItemNarrativeDirectives(itemEffects).slice(0, 12).join('；') || '无额外装备事实';
+    const burden = getEquipmentBurden(itemEffects);
     const contributionText = contributions.length
       ? contributions.map((item) => `${item.name} ${item.value >= 0 ? '+' : ''}${item.value}`).join(' · ')
       : '无相关特质倾向';
@@ -283,6 +292,10 @@ export function buildChatMessages(
 - 判断理由: ${diceContext.decision.reason}
 - 相关特质: ${contributionText}
 - 综合倾向: ${describeNarrativeAdvantage(totalModifier)}
+- 当前物品场景: ${sceneTags.length ? sceneTags.join('、') : '一般场景'}
+- 物品允许行动: ${unlockedActions.length ? unlockedActions.join('、') : '无额外行动'}
+- 穿戴负担: ${burden || '无明显负担'}
+- 当前装备事实与代价: ${itemFacts}
 - 规则边界: 特质倾向只帮助塑造合理过程，不代表自动成功或失败；不得把普通行动升级为意外灾难或天降奇迹。
 - 玩家控制: RP 倾向不得替玩家作出后续决定。`;
   }

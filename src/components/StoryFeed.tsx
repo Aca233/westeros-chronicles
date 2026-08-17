@@ -296,8 +296,10 @@ function DeedSheet({
 
 // D20 检验戳记
 function DiceLedger({ check }: { check: NonNullable<StoryTurn['diceCheck']> }) {
-  const traitModifier = check.traitModifier ?? 0;
-  const traitModifierBreakdown = check.traitModifierBreakdown ?? [];
+  const equipmentModifier = check.equipmentModifier;
+  const equipmentModifierBreakdown = check.equipmentModifierBreakdown;
+  const traitModifier = check.traitModifier;
+  const traitModifierBreakdown = check.traitModifierBreakdown;
   const signed = (value: number) => `${value >= 0 ? '+' : ''}${value}`;
 
   return (
@@ -310,7 +312,7 @@ function DiceLedger({ check }: { check: NonNullable<StoryTurn['diceCheck']> }) {
         <span className="font-mono text-[11px] text-parchment-dim">
           出目 {check.roll}
           {' '}属性 {signed(check.attributeModifier)}
-          {check.equipmentBonus !== 0 && <> 武器 {signed(check.equipmentBonus)}</>}
+          {equipmentModifier !== 0 && <> 物品 {signed(equipmentModifier)}</>}
           {traitModifier !== 0 && <span className="text-gold-bright"> 特质 {signed(traitModifier)}</span>}
           {' '}总计 <strong className="text-parchment">{check.total}</strong>
         </span>
@@ -328,6 +330,15 @@ function DiceLedger({ check }: { check: NonNullable<StoryTurn['diceCheck']> }) {
           {check.isNatural20 ? '天成' : check.isNatural1 ? '溃败' : check.success ? '得手' : '落空'}
         </span>
       </div>
+      {equipmentModifierBreakdown.length > 0 && (
+        <div className="mt-2 flex flex-wrap gap-1.5 border-t border-hairline pt-2 font-mono text-[9.5px] text-parchment-faint">
+          {equipmentModifierBreakdown.map((item) => (
+            <span key={`${item.instanceId}-${item.reason}-${item.value}`} title={item.reason} className="border border-hairline px-1.5 py-0.5">
+              {item.name} {signed(item.value)}
+            </span>
+          ))}
+        </div>
+      )}
       {traitModifierBreakdown.length > 0 && (
         <div className="mt-2 flex flex-wrap gap-1.5 border-t border-hairline pt-2 font-mono text-[9.5px] text-parchment-faint">
           {traitModifierBreakdown.map((item) => (

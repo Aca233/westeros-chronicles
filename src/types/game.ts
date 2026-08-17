@@ -162,7 +162,7 @@ export interface LordProfile {
 
 // 状态指令
 export type StateCommand =
-  | { type: 'INJURE_ZONE'; zone: BodyZoneKey; level: WoundLevel; woundText: string; reason?: string }
+  | { type: 'INJURE_ZONE'; zone: BodyZoneKey; level: WoundLevel; woundText: string; reason?: string; damageTags?: string[] }
   | { type: 'HEAL_ZONE'; zone: BodyZoneKey | 'all'; level?: WoundLevel; clearWound?: string }
   | { type: 'SET_BLEEDING'; value: boolean }
   | { type: 'SET_POISONED'; value: boolean }
@@ -202,7 +202,14 @@ export interface D20Check {
   dc: number;
   roll: number;
   attributeModifier: number;
-  equipmentBonus: number;
+  equipmentModifier: number;
+  equipmentModifierBreakdown: Array<{
+    definitionId: string;
+    instanceId: string;
+    name: string;
+    value: number;
+    reason: string;
+  }>;
   checkDomain: TraitCheckDomain;
   traitModifier: number;
   traitModifierBreakdown: Array<{ traitId: string; name: string; value: number }>;
