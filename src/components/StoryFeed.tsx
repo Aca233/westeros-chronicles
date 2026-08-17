@@ -5,6 +5,7 @@ import { WESTEROS_ENTITIES, EntityInfo } from '../data/entities';
 import { ArrowDown, ChevronDown, ChevronRight, Dices, Feather } from 'lucide-react';
 import { GameIcon, isGameIconId } from './GameIcon';
 import { stripEmoji } from '../services/textSanitizer';
+import type { CharacterId } from '../features/characters/types';
 
 // 每张纸页的搁置倾角:由 turn id 定角,稳定不闪动
 function sheetTilt(id: string): number {
@@ -14,7 +15,11 @@ function sheetTilt(id: string): number {
   return tilts[Math.abs(hash) % tilts.length];
 }
 
-export const StoryFeed: React.FC = () => {
+export interface StoryFeedProps {
+  onSelectCharacter?: (characterId: CharacterId) => void;
+}
+
+export const StoryFeed: React.FC<StoryFeedProps> = ({ onSelectCharacter = () => undefined }) => {
   const { gameState, isStreaming, streamingText } = useGameStore();
   const bottomRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -69,6 +74,7 @@ export const StoryFeed: React.FC = () => {
             turn={turn}
             isLatest={index === gameState.turns.length - 1}
             tilt={sheetTilt(turn.id)}
+            onSelectCharacter={onSelectCharacter}
           />
         ))}
 
@@ -104,7 +110,17 @@ export const StoryFeed: React.FC = () => {
 };
 
 // 一页记载:一次决断与其掀起的波澜
-function DeedSheet({ turn, isLatest, tilt }: { turn: StoryTurn; isLatest: boolean; tilt: number }) {
+function DeedSheet({
+  turn,
+  isLatest,
+  tilt,
+  onSelectCharacter,
+}: {
+  turn: StoryTurn;
+  isLatest: boolean;
+  tilt: number;
+  onSelectCharacter: (characterId: CharacterId) => void;
+}) {
   const [isThinkOpen, setIsThinkOpen] = useState(false);
   const [hoveredEntity, setHoveredEntity] = useState<{ entity: EntityInfo; x: number; y: number } | null>(null);
 
@@ -140,23 +156,40 @@ function DeedSheet({ turn, isLatest, tilt }: { turn: StoryTurn; isLatest: boolea
       }
 
       const entityToHover = matchedEntity;
-      parts.push(
-        <span
-          key={`entity_${keyCounter++}`}
-          className="lore-term"
-          onMouseEnter={(e) => {
-            const rect = e.currentTarget.getBoundingClientRect();
-            setHoveredEntity({
-              entity: entityToHover,
-              x: rect.left + rect.width / 2,
-              y: rect.bottom + 8,
-            });
-          }}
-          onMouseLeave={() => setHoveredEntity(null)}
-        >
-          {matchedKeyword}
-        </span>
-      );
+      const showEntityCard = (element: HTMLElement) => {
+        const rect = element.getBoundingClientRect();
+        setHoveredEntity({
+          entity: entityToHover,
+          x: rect.left + rect.width / 2,
+          y: rect.bottom + 8,
+        });
+      };
+      const sharedProps = {
+        key: `entity_${keyCounter++}`,
+        onMouseEnter: (event: React.MouseEvent<HTMLElement>) => showEntityCard(event.currentTarget),
+        onMouseLeave: () => setHoveredEntity(null),
+      };
+
+      if (entityToHover.category === 'character' && entityToHover.characterId) {
+        parts.push(
+          <button
+            {...sharedProps}
+            type="button"
+            data-story-character-link={entityToHover.characterId}
+            className="lore-term lore-term--character"
+            aria-label={`查看${matchedKeyword}的人物档案`}
+            title={`打开${entityToHover.name}的人物档案`}
+            onClick={() => {
+              setHoveredEntity(null);
+              onSelectCharacter(entityToHover.characterId!);
+            }}
+          >
+            {matchedKeyword}
+          </button>
+        );
+      } else {
+        parts.push(<span {...sharedProps} className="lore-term">{matchedKeyword}</span>);
+      }
 
       remaining = remaining.substring(earliestIndex + matchedKeyword.length);
     }
@@ -251,6 +284,9 @@ function DeedSheet({ turn, isLatest, tilt }: { turn: StoryTurn; isLatest: boolea
             <div className="mt-1.5 border-t border-hairline pt-1.5 font-mono text-[10px] font-semibold text-gold">
               {hoveredEntity.entity.extraStats}
             </div>
+          )}
+          {hoveredEntity.entity.category === 'character' && hoveredEntity.entity.characterId && (
+            <div className="mt-2 border-t border-hairline pt-2 text-[9px] tracking-wide text-gold-bright">点击姓名查看完整人物档案</div>
           )}
         </div>
       )}

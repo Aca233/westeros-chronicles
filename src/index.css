@@ -226,6 +226,23 @@
   border-bottom-color: rgb(var(--gold));
   background: rgb(var(--gold) / 0.12);
 }
+.lore-term--character {
+  appearance: none;
+  display: inline;
+  margin: 0;
+  border-left: 0;
+  border-right: 0;
+  border-top: 0;
+  background: transparent;
+  font: inherit;
+  line-height: inherit;
+  cursor: pointer;
+}
+.lore-term--character:focus-visible {
+  outline: 1px solid rgb(var(--gold));
+  outline-offset: 2px;
+  background: rgb(var(--gold) / 0.12);
+}
 
 /* ============================================================
    决断纸条 + 火漆编号戳

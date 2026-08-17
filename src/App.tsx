@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Header } from './components/Header';
 import { Ck3CharacterWindow } from './components/Ck3CharacterWindow';
 import { StoryFeed } from './components/StoryFeed';
@@ -10,11 +10,16 @@ import { useGameStore } from './store/useGameStore';
 import { UserRound, X } from 'lucide-react';
 import { stripEmoji } from './services/textSanitizer';
 import { useCharacterNavigation } from './features/characters/useCharacterNavigation';
+import type { CharacterId } from './features/characters/types';
 
 export const App: React.FC = () => {
   const { changesLog } = useGameStore();
   const [isDossierOpen, setDossierOpen] = useState(false);
   const characterNavigation = useCharacterNavigation();
+  const openStoryCharacter = useCallback((characterId: CharacterId) => {
+    characterNavigation.openCharacter(characterId);
+    if (window.matchMedia('(max-width: 1023px)').matches) setDossierOpen(true);
+  }, [characterNavigation.openCharacter]);
 
   // 全局快捷键:/ 聚焦命令行;Esc 收起移动端卷宗
   useEffect(() => {
@@ -74,7 +79,7 @@ export const App: React.FC = () => {
               </div>
             </div>
           )}
-          <StoryFeed />
+          <StoryFeed onSelectCharacter={openStoryCharacter} />
           <ActionDock />
         </section>
 
