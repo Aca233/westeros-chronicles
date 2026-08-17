@@ -41,7 +41,8 @@
     "test:item-equipment": "node scripts/test-item-equipment.mjs",
     "test:item-effects": "node scripts/test-item-effects.mjs",
     "test:item-actions": "node scripts/test-item-actions.mjs",
-    "test:item-action-queue": "node scripts/test-item-action-queue.mjs"
+    "test:item-action-queue": "node scripts/test-item-action-queue.mjs",
+    "test:item-definitions": "node scripts/test-item-definitions.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",
