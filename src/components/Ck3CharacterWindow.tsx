@@ -32,6 +32,8 @@ import { useCharacterDossier } from '../features/characters/useCharacterDossier'
 import type { CharacterDossier, NpcCharacterDossier } from '../features/characters/characterDossier';
 import type { CharacterId, StaticCharacterRecord } from '../features/characters/types';
 import type { StoryTurn, WoundLevel } from '../types/game';
+import { ITEM_CATALOG } from '../data/itemDefinitions';
+import { getItemDefinition } from '../features/items/catalog';
 import { CharacterSheet } from './CharacterSheet';
 import { CharacterSearch } from './CharacterSearch';
 import { CoatOfArms } from './CoatOfArms';
@@ -560,11 +562,20 @@ function woundTone(level: WoundLevel): string {
 }
 
 function PlayerInventoryTab() {
-  const { gameState, useInventoryItem, queueEquipmentAction, pendingEquipmentActions, isStreaming } = useGameStore();
+  const { gameState, queueItemAction, pendingItemActions, isStreaming } = useGameStore();
   const { lord } = gameState;
   const carriedItems = lord.carriedItems || lord.gear.inventory || lord.gear.pouch || [];
   const storageSites = lord.storageSites || [];
   const transports = lord.transports || [];
+  const resolveCarriedInstance = (item: (typeof carriedItems)[number]) => Object.values(lord.items.instances).find((instance) => {
+    if (lord.items.placements[instance.instanceId]?.type !== 'carried') return false;
+    const definition = getItemDefinition(ITEM_CATALOG, instance.definitionId);
+    if (item.category === '药草') return definition.category === 'medicine';
+    if (item.category === '毒物') return definition.category === 'poison';
+    if (item.category === '武器') return definition.category === 'weapon' && definition.equippable;
+    if (item.category === '防具') return definition.category === 'armor' && definition.equippable;
+    return false;
+  });
   return (
     <div className="space-y-4 p-4 pb-8">
       <SectionTitle icon={<Backpack />} title="随身物品" subtitle={`${getUsedCapacity(carriedItems)} / 8 格 · 仅携带便于随身保管的小件`} />
@@ -574,7 +585,8 @@ function PlayerInventoryTab() {
             const icon = getInventoryIconId(item.category, item.name);
             const canUse = item.category === '药草' || item.category === '毒物';
             const canEquip = item.category === '武器' || item.category === '防具' || Boolean(item.slot);
-            const isQueued = pendingEquipmentActions.some((action) => action.itemId === item.id && action.from.type === 'carried');
+            const newInstance = resolveCarriedInstance(item);
+            const isQueued = newInstance ? pendingItemActions.some((action) => action.instanceId === newInstance.instanceId) : false;
             const equipLabel = item.slot === 'mainhand' || item.slot === 'offhand' ? '装备' : '穿上';
             return (
               <div key={item.id} className="flex items-center gap-3 bg-ink-3/30 px-2 py-2.5">
@@ -584,11 +596,15 @@ function PlayerInventoryTab() {
                     <strong className="truncate font-serif text-[12px] text-parchment">{item.name}</strong>
                     <div className="flex shrink-0 items-center gap-1">
                       <span className="font-mono text-[10px] text-gold">×{item.quantity}</span>
-                      {canUse && <button type="button" onClick={() => useInventoryItem(item.id)} className="btn-ghost !px-1.5 !py-0.5 !text-[9px]">使用</button>}
+                      {canUse && <button type="button" onClick={() => newInstance && queueItemAction({ kind: 'use', instanceId: newInstance.instanceId })} className="btn-ghost !px-1.5 !py-0.5 !text-[9px]">使用</button>}
                       {canEquip && (
                         <button
                           type="button"
-                          onClick={() => queueEquipmentAction(item, { type: 'carried' }, '随身物品')}
+                          onClick={() => {
+                            if (!newInstance) return;
+                            const position = getItemDefinition(ITEM_CATALOG, newInstance.definitionId).allowedPositions[0];
+                            if (position) queueItemAction({ kind: 'equip', instanceId: newInstance.instanceId, position, displacedTo: { type: 'carried' } });
+                          }}
                           disabled={isQueued || isStreaming}
                           className="btn-ghost !px-1.5 !py-0.5 !text-[9px] disabled:cursor-not-allowed disabled:opacity-40"
                           title={isQueued ? '已加入下一次对话的待执行队列' : '将在下一次对话生成完成后生效'}

@@ -1,56 +1,48 @@
-import { readFile } from 'node:fs/promises';
+import { access, readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 const read = (path) => readFile(join(root, path), 'utf8');
-const [presets, creator, prompt, reducer, sheet, dossier, types, store, dock, queue] = await Promise.all([
-  read('src/data/presets.ts'),
-  read('src/components/CharacterCreator.tsx'),
+const [definitions, presets, prompt, reducer, store, dock, queue, equipment] = await Promise.all([
+  read('src/data/itemDefinitions.ts'),
+  read('src/data/itemPresetState.ts'),
   read('src/services/promptBuilder.ts'),
   read('src/services/stateReducer.ts'),
-  read('src/components/CharacterSheet.tsx'),
-  read('src/components/Ck3CharacterWindow.tsx'),
-  read('src/types/game.ts'),
   read('src/store/useGameStore.ts'),
   read('src/components/ActionDock.tsx'),
-  read('src/services/equipmentQueue.ts'),
+  read('src/features/items/itemActionQueue.ts'),
+  read('src/features/items/equipment.ts'),
 ]);
 const failures = [];
 const requireMarker = (source, marker, message) => { if (!source.includes(marker)) failures.push(message); };
-requireMarker(presets, "name: '北境深灰羊毛外衣'", 'Ned is still shown in battle armor during the godswood opening.');
-requireMarker(presets, "name: '徒手空拳'", 'Unarmed current-scene loadout is missing.');
-requireMarker(presets, "id: 'winterfell_armory'", 'Ned battle equipment is not stored in the Winterfell armory.');
-requireMarker(presets, 'carriedItems:', 'Preset carried-item lists are missing.');
-requireMarker(creator, '家族纹章礼服', 'Custom rulers still begin in battle armor inside the great hall.');
-requireMarker(creator, 'storageSites:', 'Custom ruler armory storage is missing.');
-requireMarker(types, 'interface TransportStorage', 'Transport storage model is missing.');
-requireMarker(prompt, '唯一当前穿戴与持握的装备', 'Prompt does not bind narration to the current equipped slots.');
-requireMarker(prompt, '玩家无需使用任何固定关键词', 'Prompt still requires a fixed equipment phrase.');
-requireMarker(prompt, '"type": "EQUIP_ITEM"', 'Prompt does not use source-backed equipment changes.');
-requireMarker(prompt, '当前地点可用储藏', 'Prompt does not expose location storage.');
-requireMarker(reducer, '必须先归入随身物品、当前据点或附近运输工具', 'Reducer still allows conjuring equipment directly into a slot.');
-requireMarker(reducer, 'equipFromContainer(next, cmd.itemId, cmd.from, cmd.slot, changesLog)', 'Source-backed equipment cannot be applied without a legacy preparation flag.');
-requireMarker(prompt, '不得把战甲当作日常服装持续穿戴', 'Prompt does not prevent permanent everyday armor use.');
-requireMarker(dossier, 'function PlayerInventoryTab()', 'Character dossier does not provide a dedicated carried-items tab.');
-requireMarker(dossier, 'title="随身物品"', 'Dedicated carried-items tab does not show carried items.');
-requireMarker(dossier, "queueEquipmentAction(item, { type: 'carried' }, '随身物品')", 'Dedicated carried-items tab cannot queue equipped items.');
-requireMarker(dossier, 'useInventoryItem(item.id)', 'Dedicated carried-items tab cannot use consumable items.');
-if (sheet.includes('title="随身物品"')) failures.push('Health and equipment tab still duplicates the carried-items section.');
-requireMarker(sheet, '远方储藏', 'Character sheet does not separate inaccessible storage.');
-requireMarker(types, 'interface PendingEquipmentAction', 'Pending equipment action model is missing.');
-requireMarker(sheet, 'onQueueEquip={queueEquipmentAction}', 'Equipment buttons still change gear immediately instead of entering the queue.');
-requireMarker(dock, 'data-equipment-queue', 'Action dock does not expose the pending equipment queue.');
-requireMarker(dock, '下一次对话生成成功后生效', 'Action dock does not explain delayed equipment timing.');
-requireMarker(queue, '前端只会在本次回复成功后确定性结算装备状态', 'Queued equipment is not bound to the next successful response.');
-requireMarker(store, 'mergePendingEquipmentCommands(submittedEquipmentActions', 'Queued equipment is not merged into the next successful turn.');
-requireMarker(store, 'removeSubmittedEquipmentActions(get().pendingEquipmentActions', 'Successful submissions do not clear only their queued equipment actions.');
-if (types.includes('preparation?:') || reducer.includes('preparation !==')) failures.push('Legacy battle-preparation gate still exists.');
-if (prompt.includes('"type": "EQUIP_GEAR"')) failures.push('Prompt still teaches the model to replace equipment directly.');
-if (prompt.includes('EQUIP_FROM_INVENTORY') || prompt.includes('ADD_INVENTORY_ITEM')) failures.push('Prompt still teaches the legacy all-purpose inventory model.');
-
+requireMarker(definitions, "id: 'artifact.ice'", 'The item catalog does not define Ice.');
+requireMarker(definitions, "layer: 'outerwear'", 'Cloaks are not represented as the torso outerwear layer.');
+requireMarker(presets, "instanceId: 'ned.ice'", 'Ned does not have a deterministic Ice instance.');
+requireMarker(presets, "siteId: 'winterfell_armory'", 'Winterfell armory custody is missing.');
+requireMarker(prompt, '当前装备（唯一真实穿戴状态）', 'Prompt does not use the authoritative equipped item state.');
+requireMarker(prompt, '当前可访问物品', 'Prompt does not expose only accessible item summaries.');
+requireMarker(prompt, 'ITEM_EQUIP', 'Prompt does not teach the new item equip command.');
+requireMarker(reducer, 'applyItemActions', 'Reducer does not apply item commands atomically.');
+requireMarker(store, 'pendingItemActions', 'Store does not expose the generic item queue.');
+requireMarker(store, 'mergePendingItemCommands', 'Queued item commands are not merged on submission.');
+requireMarker(store, 'removeSubmittedItemActions', 'Successful submission does not remove only its queue snapshot.');
+requireMarker(dock, 'data-item-action-queue', 'Action dock does not expose the generic item queue.');
+requireMarker(dock, '待执行物品动作', 'Action dock still labels the queue as equipment-only.');
+requireMarker(dock, '下一次对话生成成功后生效', 'Action dock does not explain delayed application.');
+requireMarker(queue, '生成失败时仍保留队列和原状态', 'Queue prompt does not preserve actions after generation failure.');
+requireMarker(equipment, "'head',\n  'torso',\n  'mainhand',\n  'offhand',\n  'feet',\n  'accessories'", 'Equipment does not expose the six agreed groups.');
+for (const legacy of ['EQUIP_GEAR', 'EQUIP_FROM_INVENTORY', 'ADD_INVENTORY_ITEM', 'USE_POUCH_ITEM']) {
+  if (prompt.includes(legacy)) failures.push(`Prompt still teaches legacy command ${legacy}.`);
+}
+try {
+  await access(join(root, 'src/services/equipmentQueue.ts'));
+  failures.push('Legacy equipment-only queue module still exists.');
+} catch {
+  // Expected after generic item queue cutover.
+}
 if (failures.length) {
   console.error(failures.join('\n'));
   process.exit(1);
 }
-console.log('Equipment custody and next-dialog equipment queue are source-backed.');
+console.log('Authoritative item custody and generic next-dialog action queue are source-backed.');

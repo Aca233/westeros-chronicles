@@ -22,7 +22,11 @@ import {
   MapPin,
   Ship,
 } from 'lucide-react';
-import { GearItem, WoundLevel, InventoryItem, EquippedGearSlot, ItemContainerRef, PendingEquipmentAction } from '../types/game';
+import { GearItem, WoundLevel, InventoryItem, EquippedGearSlot, ItemContainerRef } from '../types/game';
+import type { PendingItemAction } from '../features/items/itemActionQueue';
+import type { EquipmentPosition, ItemPlacement } from '../features/items/types';
+import { ITEM_CATALOG } from '../data/itemDefinitions';
+import { getItemDefinition } from '../features/items/catalog';
 import Model, { IExerciseData, IMuscleStats, Muscle } from 'react-body-highlighter';
 import { GameIcon, GameIconId, getGearIconId, getHouseIconId, getInventoryIconId } from './GameIcon';
 import { CoatOfArms } from './CoatOfArms';
@@ -32,7 +36,45 @@ import { getEquipmentWearNotice } from '../services/equipmentRules';
 import { getAccessibleStorageSites, getAccessibleTransports, getUsedCapacity } from '../services/itemCustody';
 
 export const CharacterSheet: React.FC<{ embedded?: boolean }> = ({ embedded = false }) => {
-  const { gameState, unequipGear, queueEquipmentAction, pendingEquipmentActions, isStreaming } = useGameStore();
+  const { gameState, unequipGear, queueItemAction, pendingItemActions, isStreaming } = useGameStore();
+  const resolveLegacyInstanceId = (item: InventoryItem, from: ItemContainerRef): string | undefined => {
+    const position: EquipmentPosition | undefined = item.slot === 'head' ? { group: 'head' }
+      : item.slot === 'mainhand' ? { group: 'mainhand' }
+        : item.slot === 'offhand' ? { group: 'offhand' }
+          : item.slot === 'legs' ? { group: 'feet' }
+            : item.slot === 'cloak' ? { group: 'torso', layer: 'outerwear' }
+              : item.slot === 'torso' ? { group: 'torso', layer: 'armor' }
+                : undefined;
+    return Object.values(gameState.lord.items.instances).find((instance) => {
+      const placement = gameState.lord.items.placements[instance.instanceId];
+      const sameContainer = from.type === 'carried'
+        ? placement.type === 'carried'
+        : from.type === 'site'
+          ? placement.type === 'site' && placement.siteId === from.id
+          : placement.type === 'vehicle' && placement.vehicleId === from.id;
+      if (!sameContainer) return false;
+      const definition = getItemDefinition(ITEM_CATALOG, instance.definitionId);
+      if (position) return definition.allowedPositions.some((allowed) => JSON.stringify(allowed) === JSON.stringify(position));
+      return item.category === '药草' ? definition.category === 'medicine' : item.category === '毒物' ? definition.category === 'poison' : false;
+    })?.instanceId;
+  };
+  const queueLegacyEquipmentAction = (item: InventoryItem, from: ItemContainerRef) => {
+    const instanceId = resolveLegacyInstanceId(item, from);
+    if (!instanceId) return;
+    const definition = getItemDefinition(ITEM_CATALOG, gameState.lord.items.instances[instanceId].definitionId);
+    const position = definition.allowedPositions[0];
+    if (!position) return;
+    const displacedTo: ItemPlacement = from.type === 'site' ? { type: 'site', siteId: from.id }
+      : from.type === 'vehicle' ? { type: 'vehicle', vehicleId: from.id }
+        : { type: 'carried' };
+    queueItemAction({ kind: 'equip', instanceId, position, displacedTo });
+  };
+  const queueLegacyUse = (itemId: string) => {
+    const item = (gameState.lord.carriedItems ?? []).find((entry) => entry.id === itemId);
+    if (!item) return;
+    const instanceId = resolveLegacyInstanceId(item, { type: 'carried' });
+    if (instanceId) queueItemAction({ kind: 'use', instanceId });
+  };
   const { lord } = gameState;
   const { body, gear } = lord;
   const carriedItems = lord.carriedItems || gear.inventory || gear.pouch || [];
@@ -541,8 +583,8 @@ export const CharacterSheet: React.FC<{ embedded?: boolean }> = ({ embedded = fa
               activeSlot={activeSlot}
               onInspect={setActiveSlot}
               from={{ type: 'site', id: site.id }}
-              pendingEquipmentActions={pendingEquipmentActions}
-              onQueueEquip={queueEquipmentAction}
+              pendingItemActions={pendingItemActions}
+              onQueueEquip={queueLegacyEquipmentAction}
               isStreaming={isStreaming}
             />
           ))}
@@ -560,8 +602,8 @@ export const CharacterSheet: React.FC<{ embedded?: boolean }> = ({ embedded = fa
               activeSlot={activeSlot}
               onInspect={setActiveSlot}
               from={{ type: 'vehicle', id: vehicle.id }}
-              pendingEquipmentActions={pendingEquipmentActions}
-              onQueueEquip={queueEquipmentAction}
+              pendingItemActions={pendingItemActions}
+              onQueueEquip={queueLegacyEquipmentAction}
               isStreaming={isStreaming}
             />
           ))}
@@ -611,7 +653,7 @@ function CustodySection({
   activeSlot,
   onInspect,
   from,
-  pendingEquipmentActions,
+  pendingItemActions,
   onUse,
   onQueueEquip,
   allowUse = false,
@@ -627,7 +669,7 @@ function CustodySection({
   activeSlot: string | null;
   onInspect: (value: string | null) => void;
   from: ItemContainerRef;
-  pendingEquipmentActions: PendingEquipmentAction[];
+  pendingItemActions: PendingItemAction[];
   onUse?: (itemId: string) => void;
   onQueueEquip?: (item: InventoryItem, from: ItemContainerRef, sourceLabel: string) => void;
   allowUse?: boolean;
@@ -647,11 +689,7 @@ function CustodySection({
           const target = `item_${targetPrefix}__${item.id}`;
           const canUse = allowUse && (item.category === '药草' || item.category === '毒物') && onUse;
           const canEquip = (item.category === '武器' || item.category === '防具' || Boolean(item.slot)) && onQueueEquip;
-          const isQueued = pendingEquipmentActions.some((action) => {
-            if (action.itemId !== item.id || action.from.type !== from.type) return false;
-            if (action.from.type === 'carried' || from.type === 'carried') return true;
-            return action.from.id === from.id;
-          });
+          const isQueued = pendingItemActions.some((action) => action.itemName === item.name && action.action.kind === 'equip');
           const equipLabel = item.slot === 'mainhand' || item.slot === 'offhand' ? '装备' : '穿上';
           return (
             <div key={`${targetPrefix}_${item.id}`} className="group flex items-center justify-between border border-hairline bg-ink/70 p-2 text-xs transition-colors hover:border-gold-deep hover:bg-ink-3/60">

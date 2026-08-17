@@ -19,7 +19,7 @@
     "check:trait-display": "node scripts/check-trait-display.mjs",
     "test:dice-policy": "node --experimental-strip-types scripts/test-dice-policy.mjs",
     "test:state-reducer": "node scripts/test-state-reducer.mjs",
-    "test:equipment-queue": "node scripts/test-equipment-queue.mjs",
+    "test:equipment-queue": "npm run test:item-action-queue",
     "test:equipment-queue-store": "node scripts/test-equipment-queue-store.mjs",
     "check:current-equipment": "node scripts/check-current-equipment.mjs",
     "import:agot-characters": "python3 -m scripts.agot_character_import.cli --start-date 8298.1.1 --output public/data/agot-characters",

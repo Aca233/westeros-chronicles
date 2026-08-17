@@ -3,7 +3,7 @@ import test from 'node:test';
 import { build } from 'esbuild';
 
 const dependencyStubs = {
-  name: 'equipment-queue-store-stubs',
+  name: 'item-queue-store-stubs',
   setup(buildApi) {
     buildApi.onResolve({ filter: /services[\\/]api$/ }, () => ({ path: 'api-stub', namespace: 'queue-test' }));
     buildApi.onResolve({ filter: /services[\\/]db$/ }, () => ({ path: 'db-stub', namespace: 'queue-test' }));
@@ -11,11 +11,11 @@ const dependencyStubs = {
       loader: 'js',
       contents: `
         export async function streamChatCompletion() {
-          if (globalThis.__equipmentQueueRequestShouldFail) throw new Error('模拟生成失败');
-          return '<narrate>装备动作已在本轮叙事中完成。</narrate>';
+          if (globalThis.__itemQueueRequestShouldFail) throw new Error('模拟生成失败');
+          return '<narrate>物品动作已在本轮叙事中完成。</narrate>';
         }
         export function parseModelOutput(_raw, turnNumber, playerInput) {
-          return { turnNumber, playerInput, think: '', narrate: '装备动作已在本轮叙事中完成。', branches: [], stateCommands: [] };
+          return { turnNumber, playerInput, think: '', narrate: '物品动作已在本轮叙事中完成。', branches: [], stateCommands: [] };
         }
       `,
     }));
@@ -31,53 +31,49 @@ const dependencyStubs = {
   },
 };
 
-const bundle = await build({
-  entryPoints: ['src/store/useGameStore.ts'],
-  bundle: true,
-  write: false,
-  format: 'esm',
-  platform: 'node',
-  plugins: [dependencyStubs],
-});
-
+const bundle = await build({ entryPoints: ['src/store/useGameStore.ts'], bundle: true, write: false, format: 'esm', platform: 'node', plugins: [dependencyStubs] });
 globalThis.alert = () => {};
-globalThis.__equipmentQueueRequestShouldFail = false;
+globalThis.__itemQueueRequestShouldFail = false;
 const moduleUrl = `data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString('base64')}`;
 const { useGameStore } = await import(moduleUrl);
 
-test('点击装备只排队，下一次对话成功后才真正穿上', async () => {
-  const before = useGameStore.getState();
-  const armory = before.gameState.lord.storageSites.find((site) => site.id === 'winterfell_armory');
-  const armor = armory.items.find((item) => item.slot === 'torso');
-  const oldTorsoName = before.gameState.lord.gear.torso.name;
+function resetQueue() {
+  useGameStore.setState({ pendingItemActions: [], isStreaming: false, streamingText: '' });
+}
 
-  before.queueEquipmentAction(armor, { type: 'site', id: armory.id }, armory.name);
-  assert.equal(useGameStore.getState().gameState.lord.gear.torso.name, oldTorsoName);
-  assert.equal(useGameStore.getState().pendingEquipmentActions.length, 1);
+test('装备、转移和使用可同时排队，成功回复后统一结算', async () => {
+  resetQueue();
+  const before = useGameStore.getState();
+  const originalHerbCharges = before.gameState.lord.items.instances['ned.staunching_herbs'].charges;
+  before.queueItemAction({ kind: 'equip', instanceId: 'ned.chainmail', position: { group: 'torso', layer: 'armor' }, displacedTo: { type: 'site', siteId: 'winterfell_armory' } });
+  before.queueItemAction({ kind: 'transfer', instanceId: 'ned.castle_sword', to: { type: 'carried' } });
+  before.queueItemAction({ kind: 'use', instanceId: 'ned.staunching_herbs' });
+  assert.equal(useGameStore.getState().pendingItemActions.length, 3);
+  assert.deepEqual(useGameStore.getState().gameState.lord.items.placements['ned.chainmail'], { type: 'site', siteId: 'winterfell_armory' });
 
   await useGameStore.getState().submitAction('继续听取鲁温学士的禀报', 'narrative');
-  assert.equal(useGameStore.getState().gameState.lord.gear.torso.name, armor.name);
-  assert.equal(useGameStore.getState().pendingEquipmentActions.length, 0);
+  const after = useGameStore.getState();
+  assert.deepEqual(after.gameState.lord.items.placements['ned.chainmail'], { type: 'equipped', position: { group: 'torso', layer: 'armor' } });
+  assert.deepEqual(after.gameState.lord.items.placements['ned.castle_sword'], { type: 'carried' });
+  assert.equal(after.gameState.lord.items.instances['ned.staunching_herbs'].charges, originalHerbCharges - 1);
+  assert.equal(after.pendingItemActions.length, 0);
 });
 
-test('下一次对话生成失败时保留装备队列且不改变装备', async () => {
+test('生成失败会保留物品队列和完整物品状态', async () => {
+  resetQueue();
   const before = useGameStore.getState();
-  const armory = before.gameState.lord.storageSites.find((site) => site.id === 'winterfell_armory');
-  const helmet = armory.items.find((item) => item.slot === 'head');
-  const oldHeadName = before.gameState.lord.gear.head?.name;
-
-  before.queueEquipmentAction(helmet, { type: 'site', id: armory.id }, armory.name);
-  globalThis.__equipmentQueueRequestShouldFail = true;
+  const originalItems = structuredClone(before.gameState.lord.items);
+  before.queueItemAction({ kind: 'repair', instanceId: 'ned.castle_sword', amount: 10 });
+  const queuedSnapshot = structuredClone(useGameStore.getState().pendingItemActions);
+  globalThis.__itemQueueRequestShouldFail = true;
   const originalConsoleError = console.error;
   console.error = () => {};
   try {
     await useGameStore.getState().submitAction('继续当前谈话', 'narrative');
   } finally {
     console.error = originalConsoleError;
-    globalThis.__equipmentQueueRequestShouldFail = false;
+    globalThis.__itemQueueRequestShouldFail = false;
   }
-
-  assert.equal(useGameStore.getState().gameState.lord.gear.head?.name, oldHeadName);
-  assert.equal(useGameStore.getState().pendingEquipmentActions.length, 1);
-  assert.equal(useGameStore.getState().pendingEquipmentActions[0].itemId, helmet.id);
+  assert.deepEqual(useGameStore.getState().gameState.lord.items, originalItems);
+  assert.deepEqual(useGameStore.getState().pendingItemActions, queuedSnapshot);
 });

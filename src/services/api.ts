@@ -1,4 +1,5 @@
-import { ApiConfig, StoryTurn, StateCommand, GameState, PendingEquipmentAction } from '../types/game';
+import { ApiConfig, StoryTurn, StateCommand, GameState } from '../types/game';
+import type { PendingItemAction } from '../features/items/itemActionQueue';
 import { stripEmoji } from './textSanitizer';
 import { ITEM_CATALOG } from '../data/itemDefinitions';
 import { getItemDefinition } from '../features/items/catalog';
@@ -121,7 +122,7 @@ export function generateOfflineDemoResponse(
   playerInput: string,
   turnNumber: number,
   gameState?: GameState,
-  pendingEquipmentActions: PendingEquipmentAction[] = [],
+  pendingItemActions: PendingItemAction[] = [],
 ): Omit<StoryTurn, 'id' | 'timestamp'> {
   playerInput = stripEmoji(playerInput);
   const stateCommands: StateCommand[] = [];
@@ -210,13 +211,10 @@ export function generateOfflineDemoResponse(
   }
 
 
-  if (pendingEquipmentActions.length) {
-    const queuedNarrative = pendingEquipmentActions.map((action) => {
-      const handling = action.slot === 'mainhand' || action.slot === 'offhand'
-        ? '取出后调整到惯用的位置'
-        : '取出后逐一理顺衬层、系带与扣件';
-      return `侍从从${action.sourceLabel}取来【${action.itemName}】，${handling}。当最后一处细节确认妥当，这件装备才真正穿戴在你身上。`;
-    }).join('\n\n');
+  if (pendingItemActions.length) {
+    const queuedNarrative = pendingItemActions
+      .map((action) => `你已经决定${action.label}【${action.itemName}】；叙事会自然表现过程，实际状态只在本次回复成功后统一结算。`)
+      .join('\n\n');
     dynamicNarrate = `${queuedNarrative}\n\n${dynamicNarrate}`;
   }
 
@@ -244,7 +242,7 @@ export async function streamChatCompletion(
   onChunk: (partialText: string) => void,
   signal?: AbortSignal,
   gameState?: GameState,
-  pendingEquipmentActions: PendingEquipmentAction[] = [],
+  pendingItemActions: PendingItemAction[] = [],
 ): Promise<string> {
   // 如果未配置 API Key，走离线 Demo
   if (!config.apiKey || config.apiKey.trim() === '') {
@@ -254,7 +252,7 @@ export async function streamChatCompletion(
         messages[messages.length - 1].content.slice(0, 30),
         Math.floor(messages.length / 2) + 1,
         gameState,
-        pendingEquipmentActions,
+        pendingItemActions,
       );
       const rawText = [
         `<think>\n${demo.think}\n</think>`,

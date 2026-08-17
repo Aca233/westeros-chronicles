@@ -58,7 +58,7 @@ function reset() {
   globalThis.__characterStoreRollbackState = null;
   useGameStore.setState({
     gameState: structuredClone(initial), isStreaming: false, streamingText: '', changesLog: [],
-    pendingEquipmentActions: [], characterTurnContext: null,
+    pendingItemActions: [], characterTurnContext: null,
   });
 }
 

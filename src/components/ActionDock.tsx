@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Dices, Hourglass, Send, X } from 'lucide-react';
+import { Dices, Hourglass, Package, Send, X } from 'lucide-react';
 import { useGameStore } from '../store/useGameStore';
 import { stripEmoji } from '../services/textSanitizer';
 import type { DiceMode } from '../services/dicePolicy';
-import { GameIcon, getGearIconId } from './GameIcon';
+import { GameIcon } from './GameIcon';
 
 const DICE_MODES: ReadonlyArray<{ id: DiceMode; label: string; title: string }> = [
   { id: 'auto', label: '自动判断', title: '程序先判断行动是否可行、是否存在真实阻力与失败后果,再根据伤势、环境、准备和协助调整 DC' },
@@ -18,8 +18,8 @@ export const ActionDock: React.FC = () => {
     gameState,
     isStreaming,
     submitAction,
-    pendingEquipmentActions,
-    cancelEquipmentAction,
+    pendingItemActions,
+    cancelItemAction,
   } = useGameStore();
   const [customInput, setCustomInput] = useState('');
   const [diceMode, setDiceMode] = useState<DiceMode>('auto');
@@ -109,36 +109,36 @@ export const ActionDock: React.FC = () => {
           </div>
         )}
 
-        {/* 待披挂的装备 */}
-        {pendingEquipmentActions.length > 0 && (
+        {/* 待执行物品动作 */}
+        {pendingItemActions.length > 0 && (
           <section
-            data-equipment-queue
+            data-item-action-queue
             className="border border-gold-deep/50 bg-ink-2/70 px-3 py-2.5"
-            aria-label="待执行装备"
+            aria-label="待执行物品动作"
           >
             <div className="mb-2 flex items-baseline justify-between gap-3">
               <span className="text-[11px] font-semibold tracking-wide text-gold-bright">
-                待披挂 <span className="font-mono text-[9px] text-parchment-faint">×{pendingEquipmentActions.length}</span>
+                待执行物品动作 <span className="font-mono text-[9px] text-parchment-faint">×{pendingItemActions.length}</span>
               </span>
               <span className="text-[9px] leading-snug text-parchment-faint">下一次对话生成成功后生效</span>
             </div>
             <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
-              {pendingEquipmentActions.map((action) => (
+              {pendingItemActions.map((action) => (
                 <div
                   key={action.id}
                   className="flex min-w-0 items-center gap-2 border border-hairline bg-ink-3/40 px-2 py-1.5"
                 >
-                  <GameIcon icon={getGearIconId(action.icon, action.slot)} className="h-7 w-7 shrink-0" />
+                  {action.image.type === 'game' ? <GameIcon icon={action.image.icon as any} className="h-7 w-7 shrink-0" /> : <Package className="h-5 w-5 shrink-0 text-gold" />}
                   <div className="min-w-0 flex-1 font-serif">
                     <p className="truncate text-[10.5px] font-semibold text-parchment">{action.itemName}</p>
-                    <p className="truncate text-[9px] text-parchment-faint">来自 {action.sourceLabel}</p>
+                    <p className="truncate text-[9px] text-parchment-faint">{action.label}</p>
                   </div>
                   <button
                     type="button"
-                    onClick={() => cancelEquipmentAction(action.id)}
+                    onClick={() => cancelItemAction(action.id)}
                     disabled={isStreaming}
-                    title={isStreaming ? '本次对话完成后才能继续调整队列' : `取消穿上${action.itemName}`}
-                    aria-label={`取消穿上${action.itemName}`}
+                    title={isStreaming ? '本次对话完成后才能继续调整队列' : `取消${action.label}${action.itemName}`}
+                    aria-label={`取消${action.label}${action.itemName}`}
                     className="flex h-6 w-6 shrink-0 items-center justify-center border border-hairline text-parchment-dim transition-colors hover:border-rubric/60 hover:text-rubric disabled:cursor-not-allowed disabled:opacity-40"
                   >
                     <X className="h-3.5 w-3.5" />

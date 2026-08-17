@@ -96,16 +96,6 @@ export type ItemContainerRef =
   | { type: 'vehicle'; id: string };
 
 
-export interface PendingEquipmentAction {
-  id: string;
-  itemId: string;
-  itemName: string;
-  icon?: InventoryItem['icon'];
-  from: ItemContainerRef;
-  slot: EquippedGearSlot;
-  sourceLabel: string;
-}
-
 // 兼容别名
 export type PouchItem = InventoryItem;
 

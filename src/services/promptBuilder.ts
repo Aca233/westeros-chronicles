@@ -1,4 +1,5 @@
-import { GameState, D20Check, PendingEquipmentAction } from '../types/game';
+import { GameState, D20Check } from '../types/game';
+import type { PendingItemAction } from '../features/items/itemActionQueue';
 import { stripEmoji } from './textSanitizer';
 import { aggregateSelectedTraitEffects, formatTraitDescription, formatTraitRuleEffects, getTraitCheckContributions } from '../data/characterTraits';
 import { inferCheckFromAction } from './diceEngine';
@@ -8,7 +9,7 @@ import { ITEM_CATALOG } from '../data/itemDefinitions';
 import { getItemDefinition } from '../features/items/catalog';
 import { aggregateEquippedItemEffects, formatItemNarrativeDirectives, getEquipmentBurden } from '../features/items/effects';
 import { getUsedCarryUnits } from '../features/items/custody';
-import { formatPendingEquipmentPrompt } from './equipmentQueue';
+import { formatPendingItemPrompt } from '../features/items/itemActionQueue';
 
 // 权游核心大宪章系统提示词 (长篇严肃小说体裁 + 对白全融合 + 沉浸深度文学)
 export const GOT_CONSTITUTION_PROMPT = `
@@ -206,7 +207,7 @@ export function buildChatMessages(
   currentUserInput: string,
   diceCheck?: D20Check,
   diceContext?: DicePromptContext,
-  pendingEquipmentActions: PendingEquipmentAction[] = [],
+  pendingItemActions: PendingItemAction[] = [],
   characterContext?: string,
 ): Array<{ role: 'system' | 'user' | 'assistant'; content: string }> {
   const messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }> = [];
@@ -244,7 +245,7 @@ export function buildChatMessages(
   }
 
   // 4. 当前回合用户输入 + 掷骰检定结果 (如果有)
-  const pendingEquipmentPrompt = formatPendingEquipmentPrompt(pendingEquipmentActions);
+  const pendingEquipmentPrompt = formatPendingItemPrompt(pendingItemActions);
   const safeCharacterContext = typeof characterContext === 'string'
     ? stripEmoji(characterContext).replace(/</g, '＜').replace(/>/g, '＞')
     : '';
