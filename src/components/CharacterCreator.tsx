@@ -20,6 +20,7 @@ import { useGameStore } from '../store/useGameStore';
 import { PRESET_SCENARIOS, PresetScenario } from '../data/presets';
 import { HOUSES } from '../data/houses';
 import { LordAttributes, LordProfile, createDefaultBody } from '../types/game';
+import { createCustomRulerItemState } from '../data/itemPresetState';
 import { GameIcon, getHouseIconId } from './GameIcon';
 import { CoatOfArms } from './CoatOfArms';
 import { stripEmoji } from '../services/textSanitizer';
@@ -195,6 +196,7 @@ export const CharacterCreator: React.FC = () => {
     if (!canComplete) return;
     const chosenTraitNames = selectedTraits.map((trait) => trait.name);
     const customLord: LordProfile = {
+      items: createCustomRulerItemState(),
       name: stripEmoji(customName) || '维斯特洛新星',
       house: effectiveHouseName,
       dynastyName: effectiveDynastyName,

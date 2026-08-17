@@ -10,7 +10,7 @@ import { saveTurnSnapshot, commitTurnAtomically, rollbackLastTurn, clearSaveData
 import { stripEmoji, stripEmojiDeep } from '../services/textSanitizer';
 import { normalizeCk3Attributes } from '../data/ck3Skills';
 import { migrateLordIdentityData, migrateLordTraitData } from '../data/characterTraits';
-import { ensureItemCustody } from '../services/itemCustody';
+import { ITEM_SAVE_FORMAT_VERSION } from '../features/items/saveVersion';
 import { createPendingEquipmentAction, enqueueEquipmentAction, mergePendingEquipmentCommands, removeSubmittedEquipmentActions } from '../services/equipmentQueue';
 
 export interface CharacterTurnContext extends CharacterCommandBatchBaseContext { promptContext?: string; }
@@ -81,6 +81,7 @@ function createWorldRunId(): string {
 }
 
 const INITIAL_GAME_STATE: GameState = {
+  saveFormatVersion: ITEM_SAVE_FORMAT_VERSION,
   currentYear: 298,
   currentMonth: 10,
   currentDay: 15,
@@ -189,7 +190,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
   // 开启新剧本
   startNewGame: async (lord, opening) => {
     await clearSaveData();
-    const safeLord = migrateLordIdentityData(migrateLordTraitData(ensureItemCustody(stripEmojiDeep(lord))));
+    const safeLord = migrateLordIdentityData(migrateLordTraitData(stripEmojiDeep(lord)));
     safeLord.attributes = normalizeCk3Attributes(safeLord.attributes);
     if (safeLord.baseAttributes) safeLord.baseAttributes = normalizeCk3Attributes(safeLord.baseAttributes);
     const newTurn: StoryTurn = {
@@ -204,6 +205,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     };
 
     const newGameState: GameState = {
+      saveFormatVersion: ITEM_SAVE_FORMAT_VERSION,
       currentYear: 298,
       currentMonth: 10,
       currentDay: 15,
@@ -405,7 +407,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const previousState = await rollbackLastTurn();
     if (previousState) {
       const restoredState = stripEmojiDeep(previousState);
-      restoredState.lord = migrateLordIdentityData(migrateLordTraitData(ensureItemCustody(restoredState.lord)));
+      restoredState.lord = migrateLordIdentityData(migrateLordTraitData(restoredState.lord));
       restoredState.lord.attributes = normalizeCk3Attributes(restoredState.lord.attributes);
       if (restoredState.lord.baseAttributes) restoredState.lord.baseAttributes = normalizeCk3Attributes(restoredState.lord.baseAttributes);
       set({

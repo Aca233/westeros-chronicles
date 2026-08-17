@@ -2,6 +2,7 @@ import type { CoatOfArmsDesign } from '../data/heraldry';
 import type { TraitCheckDomain } from '../services/traitEffectEngine';
 import type { CheckOutcomeContract } from '../services/dicePolicy';
 import type { CharacterStateCommand } from '../features/characters/characterCommands';
+import type { ItemSystemState } from '../features/items/types';
 
 // CK3 同款六项角色能力。常见角色通常位于 0 - 30 区间，数值允许因加成继续提高。
 export interface LordAttributes {
@@ -145,7 +146,10 @@ export interface LordProfile {
   body: LordBodyCondition;
   overallStatus: '强健' | '挂彩' | '负重伤' | '垂危' | '阵亡';
 
-  // 部位对应装备栏
+  // 新物品系统的唯一运行时状态。
+  items: ItemSystemState;
+
+  // 临时脚手架：Tasks 7-12 期间仅供旧界面编译，禁止读取或写回 items。
   gear: LordGearSlots;
 
   // 财富与声望
@@ -244,6 +248,7 @@ export interface WorldCharacterStateRef {
 
 // 游戏全局状态
 export interface GameState {
+  saveFormatVersion: 4;
   currentYear: number;
   currentMonth: number;
   currentDay: number;

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useGameStore } from '../store/useGameStore';
 import { Settings, Key, Server, Cpu, Flame, X, Download, Upload, RefreshCw, CheckCircle2, AlertCircle } from 'lucide-react';
 import { stripEmoji } from '../services/textSanitizer';
-import { exportSaveData, importSaveData } from '../services/db';
+import { clearSaveData, exportSaveData, importSaveData } from '../services/db';
 import { fetchAvailableModels } from '../services/api';
 
 export const SettingsModal: React.FC = () => {
@@ -117,6 +117,17 @@ export const SettingsModal: React.FC = () => {
       }
     } catch (err) {
       alert('导入存档失败: ' + err);
+    }
+  };
+
+  const handleResetTestSave = async () => {
+    const confirmed = window.confirm('这会删除当前测试存档、人物事件与回合历史，且无法撤销。确认继续吗？');
+    if (!confirmed) return;
+    try {
+      await clearSaveData();
+      window.location.reload();
+    } catch (err) {
+      alert('重置测试存档失败: ' + err);
     }
   };
 
@@ -338,6 +349,10 @@ export const SettingsModal: React.FC = () => {
               <span>导入 JSON 存档</span>
               <input type="file" accept=".json" onChange={handleImportSave} className="hidden" />
             </label>
+            <button type="button" onClick={handleResetTestSave} className="btn-ghost col-span-2 justify-center !py-2 text-rubric-bright">
+              <RefreshCw className="h-3.5 w-3.5" />
+              <span>重置测试存档</span>
+            </button>
           </div>
         </div>
 

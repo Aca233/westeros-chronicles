@@ -1,5 +1,6 @@
 import { LordProfile, createDefaultBody } from '../types/game';
 import { calculateFinalAttributes, migrateLordIdentityData } from './characterTraits';
+import { createDaenerysItemState, createJonItemState, createNedItemState } from './itemPresetState';
 
 export interface PresetScenario {
   id: string;
@@ -43,6 +44,7 @@ export const PRESET_SCENARIOS: PresetScenario[] = [
     difficulty: '普通',
     backgroundStory: '前首相琼恩·艾林暴毙，国王劳勃·拜拉席恩率领庞大御驾亲临北境。平静的临冬城即将被卷入君临的政治风暴与暗杀漩涡。',
     initialLord: createPresetLord({
+      items: createNedItemState(),
       name: '艾德·史塔克',
       house: '史塔克家族',
       houseWords: '凛冬将至 (Winter is Coming)',
@@ -161,6 +163,7 @@ export const PRESET_SCENARIOS: PresetScenario[] = [
     difficulty: '困难',
     backgroundStory: '作为临冬城的私生子，琼恩告别了家人，跟随叔叔班扬·史塔克北上绝境长城，穿上黑衣成为守夜人誓言兄弟。长城之外的塞外正悄然发生着可怕的异变。',
     initialLord: createPresetLord({
+      items: createJonItemState(),
       name: '琼恩·雪诺',
       house: '雪诺 (史塔克私生子)',
       houseWords: '守夜人誓约 (Night gathers, and now my watch begins)',
@@ -258,6 +261,7 @@ export const PRESET_SCENARIOS: PresetScenario[] = [
     difficulty: '史诗',
     backgroundStory: '坦格利安王室覆灭，风暴降生的丹妮莉丝在厄索斯大陆流亡。哥哥韦赛里斯将其作为筹码许配给多斯拉克的卓戈卡奥，以换取夺回铁王座的军队。',
     initialLord: createPresetLord({
+      items: createDaenerysItemState(),
       name: '丹妮莉丝·坦格利安',
       house: '坦格利安家族',
       houseWords: '血与火 (Fire and Blood)',
