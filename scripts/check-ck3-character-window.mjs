@@ -17,6 +17,7 @@ async function read(relativePath) {
 const windowSource = await read('src/components/Ck3CharacterWindow.tsx');
 const appSource = await read('src/App.tsx');
 const sheetSource = await read('src/components/CharacterSheet.tsx');
+const itemManagementSource = await read('src/components/items/ItemManagementPanel.tsx');
 
 if (!windowSource.includes('data-ck3-character-window')) failures.push('人物窗口缺少 CK3 根标记。');
 if (!appSource.includes("import { Ck3CharacterWindow } from './components/Ck3CharacterWindow'")) failures.push('App 尚未导入 CK3 人物窗口。');
@@ -57,7 +58,11 @@ for (const relation of ['配偶', '继承人', '领主', '父亲', '母亲', '�
   if (!windowSource.includes(relation)) failures.push(`缺少关系人物卡：${relation}`);
 }
 if (!sheetSource.includes('embedded?: boolean')) failures.push('旧健康装备面板尚未提供嵌入模式。');
-if (!windowSource.includes('<CharacterSheet embedded')) failures.push('健康与装备页签尚未接入旧功能。');
+if (!windowSource.includes('<CharacterSheet embedded')) failures.push('健康与装备页签尚未接入装备功能。');
+if (!windowSource.includes('<ItemManagementPanel')) failures.push('玩家物品页签没有接入集中物品管理。');
+for (const marker of ["id: 'carried'", "id: 'current-site'", "id: 'vehicle'", "id: 'remote-site'", 'data-item-search', 'data-item-category-filter', 'data-item-sort']) {
+  if (!itemManagementSource.includes(marker)) failures.push(`集中物品管理缺少 ${marker}。`);
+}
 
 if (failures.length) {
   console.error(failures.join('\n'));

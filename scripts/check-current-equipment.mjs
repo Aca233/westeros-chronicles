@@ -1,48 +1,46 @@
-import { access, readFile } from 'node:fs/promises';
+import { access, readFile, readdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
-const read = (path) => readFile(join(root, path), 'utf8');
-const [definitions, presets, prompt, reducer, store, dock, queue, equipment] = await Promise.all([
-  read('src/data/itemDefinitions.ts'),
-  read('src/data/itemPresetState.ts'),
-  read('src/services/promptBuilder.ts'),
-  read('src/services/stateReducer.ts'),
-  read('src/store/useGameStore.ts'),
-  read('src/components/ActionDock.tsx'),
-  read('src/features/items/itemActionQueue.ts'),
-  read('src/features/items/equipment.ts'),
-]);
 const failures = [];
-const requireMarker = (source, marker, message) => { if (!source.includes(marker)) failures.push(message); };
-requireMarker(definitions, "id: 'artifact.ice'", 'The item catalog does not define Ice.');
-requireMarker(definitions, "layer: 'outerwear'", 'Cloaks are not represented as the torso outerwear layer.');
-requireMarker(presets, "instanceId: 'ned.ice'", 'Ned does not have a deterministic Ice instance.');
-requireMarker(presets, "siteId: 'winterfell_armory'", 'Winterfell armory custody is missing.');
-requireMarker(prompt, '当前装备（唯一真实穿戴状态）', 'Prompt does not use the authoritative equipped item state.');
-requireMarker(prompt, '当前可访问物品', 'Prompt does not expose only accessible item summaries.');
-requireMarker(prompt, 'ITEM_EQUIP', 'Prompt does not teach the new item equip command.');
-requireMarker(reducer, 'applyItemActions', 'Reducer does not apply item commands atomically.');
-requireMarker(store, 'pendingItemActions', 'Store does not expose the generic item queue.');
-requireMarker(store, 'mergePendingItemCommands', 'Queued item commands are not merged on submission.');
-requireMarker(store, 'removeSubmittedItemActions', 'Successful submission does not remove only its queue snapshot.');
-requireMarker(dock, 'data-item-action-queue', 'Action dock does not expose the generic item queue.');
-requireMarker(dock, '待执行物品动作', 'Action dock still labels the queue as equipment-only.');
-requireMarker(dock, '下一次对话生成成功后生效', 'Action dock does not explain delayed application.');
-requireMarker(queue, '生成失败时仍保留队列和原状态', 'Queue prompt does not preserve actions after generation failure.');
-requireMarker(equipment, "'head',\n  'torso',\n  'mainhand',\n  'offhand',\n  'feet',\n  'accessories'", 'Equipment does not expose the six agreed groups.');
-for (const legacy of ['EQUIP_GEAR', 'EQUIP_FROM_INVENTORY', 'ADD_INVENTORY_ITEM', 'USE_POUCH_ITEM']) {
-  if (prompt.includes(legacy)) failures.push(`Prompt still teaches legacy command ${legacy}.`);
+const read = (path) => readFile(join(root, path), 'utf8');
+let manager = '';
+try { manager = await read('src/components/items/ItemManagementPanel.tsx'); } catch { failures.push('ItemManagementPanel.tsx is missing.'); }
+
+for (const marker of ["id: 'carried'", "id: 'current-site'", "id: 'vehicle'", "id: 'remote-site'", 'data-custody-tab={tab.id}']) {
+  if (manager && !manager.includes(marker)) failures.push(`Item management is missing custody marker ${marker}.`);
 }
-try {
-  await access(join(root, 'src/services/equipmentQueue.ts'));
-  failures.push('Legacy equipment-only queue module still exists.');
-} catch {
-  // Expected after generic item queue cutover.
+for (const marker of ['data-item-search', 'data-item-category-filter', 'data-item-sort', '<ItemCard', 'queueItemAction']) {
+  if (manager && !manager.includes(marker)) failures.push(`Item management is missing ${marker}.`);
 }
-if (failures.length) {
-  console.error(failures.join('\n'));
-  process.exit(1);
+for (const option of ['当前位置', '类别', '品质', '耐久', '名称']) {
+  if (manager && !manager.includes(option)) failures.push(`Item sorting is missing ${option}.`);
 }
-console.log('Authoritative item custody and generic next-dialog action queue are source-backed.');
+
+async function sourceFiles(dir) {
+  const entries = await readdir(dir, { withFileTypes: true });
+  const files = [];
+  for (const entry of entries) {
+    const path = join(dir, entry.name);
+    if (entry.isDirectory()) files.push(...await sourceFiles(path));
+    else if (/\.(?:ts|tsx)$/.test(entry.name)) files.push(path);
+  }
+  return files;
+}
+const forbidden = [
+  'InventoryItem', 'GearItem', 'LordGearSlots', 'carriedItems', 'gear.inventory', 'gear.pouch',
+  'PendingEquipmentAction', 'EQUIP_GEAR', 'EQUIP_FROM_INVENTORY', 'ADD_INVENTORY_ITEM',
+  'USE_INVENTORY_ITEM', 'ADD_POUCH_ITEM', 'USE_POUCH_ITEM',
+];
+for (const file of await sourceFiles(join(root, 'src'))) {
+  const source = await readFile(file, 'utf8');
+  for (const token of forbidden) if (source.includes(token)) failures.push(`${file.slice(root.length + 1)} still contains ${token}.`);
+  if (/(?:>|title=["'])\s*检视\s*(?:<|["'])/.test(source)) failures.push(`${file.slice(root.length + 1)} still renders a standalone inspect action.`);
+}
+try { await access(join(root, 'src/services/equipmentQueue.ts')); failures.push('Legacy equipment queue still exists.'); } catch {}
+try { await access(join(root, 'src/services/itemCustody.ts')); failures.push('Legacy item custody service still exists.'); } catch {}
+try { await access(join(root, 'src/services/equipmentRules.ts')); failures.push('Legacy equipment rules service still exists.'); } catch {}
+
+if (failures.length) { console.error(failures.join('\n')); process.exit(1); }
+console.log('Centralized item management is authoritative and legacy item code is absent.');

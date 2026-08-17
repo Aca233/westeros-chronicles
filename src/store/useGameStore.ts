@@ -19,7 +19,7 @@ import {
   removeSubmittedItemActions,
   type PendingItemAction,
 } from '../features/items/itemActionQueue';
-import type { EquipmentPosition, ItemAction, ItemPlacement, ItemStateCommand } from '../features/items/types';
+import type { ItemAction, ItemStateCommand } from '../features/items/types';
 import { ITEM_CATALOG } from '../data/itemDefinitions';
 import { getItemDefinition } from '../features/items/catalog';
 
@@ -57,10 +57,6 @@ interface GameStore {
   startNewGame: (lord: LordProfile, opening: { think?: string; narrate: string; speak?: Array<{ speaker: string; text: string }>; branches: string[] }) => Promise<void>;
   submitAction: (actionText: string, diceMode?: DiceMode) => Promise<void>;
   undoTurn: () => Promise<void>;
-  useInventoryItem: (itemId: string) => void;
-  usePouchItem: (itemId: string) => void;
-  unequipGear: (slot: keyof LordProfile['gear']) => void;
-  equipFromInventory: (itemId: string, slot?: keyof LordProfile['gear']) => void;
 }
 
 // 默认 API 配置
@@ -171,41 +167,6 @@ export const useGameStore = create<GameStore>((set, get) => ({
     if (get().isStreaming) return;
     set((state) => ({ pendingItemActions: cancelQueuedItemAction(state.pendingItemActions, actionId) }));
   },
-
-  // 临时旧卡片桥接：只解析已经存在的新实例，不再修改旧物品数组。
-  useInventoryItem: (itemId: string) => {
-    if (get().gameState.lord.items.instances[itemId]) get().queueItemAction({ kind: 'use', instanceId: itemId });
-  },
-  usePouchItem: (itemId: string) => get().useInventoryItem(itemId),
-  unequipGear: (slot: keyof LordProfile['gear']) => {
-    const groupMap: Partial<Record<keyof LordProfile['gear'], EquipmentPosition['group']>> = {
-      head: 'head', torso: 'torso', mainhand: 'mainhand', offhand: 'offhand', legs: 'feet', cloak: 'torso',
-    };
-    const group = groupMap[slot];
-    if (!group) return;
-    const { items, location } = get().gameState.lord;
-    const instance = Object.values(items.instances).find((entry) => {
-      const placement = items.placements[entry.instanceId];
-      if (placement.type !== 'equipped' || placement.position.group !== group) return false;
-      if (slot === 'cloak') return placement.position.group === 'torso' && placement.position.layer === 'outerwear';
-      if (slot === 'torso') return placement.position.group === 'torso' && placement.position.layer !== 'outerwear';
-      return true;
-    });
-    if (!instance) return;
-    const root = location.split('·', 1)[0].trim();
-    const localSite = Object.values(items.sites).find((site) => site.location.split('·', 1)[0].trim() === root);
-    const to: ItemPlacement = localSite ? { type: 'site', siteId: localSite.id } : { type: 'carried' };
-    get().queueItemAction({ kind: 'unequip', instanceId: instance.instanceId, to });
-  },
-  equipFromInventory: (itemId: string) => {
-    const { items } = get().gameState.lord;
-    const instance = items.instances[itemId];
-    if (!instance || items.placements[itemId]?.type !== 'carried') return;
-    const definition = getItemDefinition(ITEM_CATALOG, instance.definitionId);
-    const position = definition.allowedPositions[0];
-    if (position) get().queueItemAction({ kind: 'equip', instanceId: itemId, position, displacedTo: { type: 'carried' } });
-  },
-
 
   // 开启新剧本
   startNewGame: async (lord, opening) => {

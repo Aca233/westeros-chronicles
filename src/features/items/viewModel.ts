@@ -212,7 +212,11 @@ function belongsToTab(
   tab: CustodyTab,
 ): boolean {
   if (tab === 'carried') return placement.type === 'carried';
-  if (tab === 'vehicle') return placement.type === 'vehicle';
+  if (tab === 'vehicle') {
+    if (placement.type !== 'vehicle') return false;
+    const vehicle = state.vehicles[placement.vehicleId];
+    return Boolean(vehicle && sameLocation(vehicle.location, currentLocation));
+  }
   if (placement.type !== 'site') return false;
   const site = state.sites[placement.siteId];
   if (!site) return false;

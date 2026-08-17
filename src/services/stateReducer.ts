@@ -1,5 +1,4 @@
-import { LordProfile, StateCommand, BodyZoneKey, WoundLevel, GearItem, EquippedGearSlot, InventoryItem, ItemContainerRef } from '../types/game';
-import { getGearIconId, isGameIconId } from '../components/GameIcon';
+import { LordProfile, StateCommand, BodyZoneKey, WoundLevel } from '../types/game';
 import { stripEmoji } from './textSanitizer';
 import { normalizeCk3Attributes } from '../data/ck3Skills';
 import { aggregateSelectedTraitEffects } from '../data/characterTraits';
@@ -7,134 +6,11 @@ import { applyPositiveMultiplier, didTraitResistanceTrigger } from './traitEffec
 import type { CharacterEvent, CharacterId, CharacterRelationship } from '../features/characters/types';
 import type { CharacterCommandContext, CharacterState, CharacterStateCommand, ValidatedCharacterEventInput } from '../features/characters/characterCommands';
 import { validateCharacterCommand } from '../features/characters/characterCommandValidator';
-import { canContainerAccept, ensureItemCustody, getAccessibleStorageSites, inferItemSize, resolveContainerItems } from './itemCustody';
 import { applyItemActions, type ItemActionContext } from '../features/items/actions';
 import { ITEM_CATALOG } from '../data/itemDefinitions';
 import type { ItemAction, ItemStateCommand } from '../features/items/types';
 import { aggregateEquippedItemEffects, getZoneProtection, mitigateWoundLevel } from '../features/items/effects';
 
-
-function inferEquipmentSlot(item: InventoryItem, requested?: EquippedGearSlot): EquippedGearSlot {
-  if (requested) return requested;
-  if (item.slot) return item.slot;
-  if (/头盔|战盔|风帽|冠冕/i.test(item.name)) return 'head';
-  if (/甲|铠|胸甲|锁子甲/i.test(item.name)) return 'torso';
-  if (/剑|刀|枪|斧|匕首|碎心|寒冰/i.test(item.name)) return 'mainhand';
-  if (/盾|火把/i.test(item.name)) return 'offhand';
-  if (/靴|鞋|护胫/i.test(item.name)) return 'legs';
-  if (/斗篷|大氅|披风/i.test(item.name)) return 'cloak';
-  return 'mainhand';
-}
-
-function gearToStoredItem(item: GearItem, slot: EquippedGearSlot): InventoryItem {
-  const isDefensive = slot !== 'mainhand' && !(/刀|剑|枪|斧|匕首/.test(item.name));
-  const stored: InventoryItem = {
-    id: item.id || `stored_gear_${Date.now()}`,
-    name: item.name,
-    category: isDefensive ? '防具' : '武器',
-    quantity: 1,
-    description: item.description || `${item.name} (${item.bonusText || '装备'})`,
-    icon: item.icon,
-    slot,
-    gearData: item,
-  };
-  stored.size = inferItemSize(stored);
-  return stored;
-}
-
-function sanitizeStoredItem(item: InventoryItem): InventoryItem {
-  const itemName = stripEmoji(item.name || '神秘物品');
-  const gearData: GearItem | undefined = item.gearData
-    ? {
-        ...item.gearData,
-        id: stripEmoji(item.gearData.id || item.id || `gear_${Date.now()}`),
-        name: stripEmoji(item.gearData.name || itemName),
-        slotName: stripEmoji(item.gearData.slotName || '装备'),
-        bonusText: stripEmoji(item.gearData.bonusText || '无额外加成'),
-        description: stripEmoji(item.gearData.description || item.description || '收存的装备。'),
-        icon: getGearIconId(item.gearData.icon || item.icon, String(item.gearData.slot || item.slot || 'mainhand')),
-      }
-    : undefined;
-  const slot = item.slot || (gearData?.slot !== 'accessory' ? gearData?.slot : undefined);
-  const normalized: InventoryItem = {
-    id: stripEmoji(item.id || `item_${Date.now()}`),
-    name: itemName,
-    category: item.category || '工具',
-    quantity: Math.max(1, item.quantity || 1),
-    description: stripEmoji(item.description || '一件尚未详细记录的物品。'),
-    icon: isGameIconId(item.icon) ? item.icon : gearData?.icon,
-    slot,
-    gearData,
-    size: item.size,
-  };
-  normalized.size = inferItemSize(normalized);
-  return normalized;
-}
-
-function addItemToContainer(
-  lord: LordProfile,
-  item: InventoryItem,
-  destination: ItemContainerRef,
-  changesLog: string[],
-): boolean {
-  const target = resolveContainerItems(lord, destination);
-  if (!target.items || !target.accessible) {
-    changesLog.push(`[物品] 无法收存: ${target.label}不在当前地点或当前不可用`);
-    return false;
-  }
-  const normalized = sanitizeStoredItem(item);
-  if (!canContainerAccept(destination, target.items, normalized, normalized.quantity, target.capacity)) {
-    changesLog.push(`[物品] 无法收存: 【${normalized.name}】体积过大或${target.label}容量不足`);
-    return false;
-  }
-  const existing = target.items.find((entry) => entry.id === normalized.id || entry.name === normalized.name);
-  if (existing) existing.quantity += normalized.quantity;
-  else target.items.push(normalized);
-  changesLog.push(`[物品] 【${normalized.name}】已存入${target.label}`);
-  return true;
-}
-
-function equipFromContainer(
-  lord: LordProfile,
-  itemId: string,
-  sourceRef: ItemContainerRef,
-  requestedSlot: EquippedGearSlot | undefined,
-  changesLog: string[],
-): void {
-  const source = resolveContainerItems(lord, sourceRef);
-  if (!source.items || !source.accessible) {
-    changesLog.push(`[装备] 无法取用: ${source.label}不在当前地点`);
-    return;
-  }
-  const itemIndex = source.items.findIndex((item) => item.id === itemId);
-  if (itemIndex < 0) {
-    changesLog.push(`[装备] 无法取用: ${source.label}中没有对应物品`);
-    return;
-  }
-  const sourceItem = source.items[itemIndex];
-  const targetSlot = inferEquipmentSlot(sourceItem, requestedSlot);
-  const newGear: GearItem = sourceItem.gearData || {
-    id: sourceItem.id,
-    name: sourceItem.name,
-    slot: targetSlot,
-    slotName: targetSlot === 'head' ? '头部战盔' : targetSlot === 'torso' ? '躯干衣甲' : targetSlot === 'mainhand' ? '主手佩剑' : targetSlot === 'offhand' ? '副手装备' : targetSlot === 'cloak' ? '肩背斗篷' : '下肢鞋靴',
-    quality: '精良',
-    condition: '完好坚固',
-    bonusText: '装备效果',
-    description: sourceItem.description || '一件可以使用的装备。',
-    icon: getGearIconId(sourceItem.icon, targetSlot),
-  };
-
-  sourceItem.quantity -= 1;
-  if (sourceItem.quantity <= 0) source.items.splice(itemIndex, 1);
-
-  const oldGear = lord.gear[targetSlot] as GearItem | undefined;
-  if (oldGear && oldGear.name !== '徒手空拳' && oldGear.name !== '贴身亚麻衫') {
-    source.items.push(gearToStoredItem(oldGear, targetSlot));
-  }
-  (lord.gear as any)[targetSlot] = newGear;
-  changesLog.push(`[装备] 从${source.label}取用并穿戴: [${newGear.slotName}] 【${newGear.name}】`);
-}
 
 // 重新计算领主综合身体状态
 function evaluateOverallStatus(lord: LordProfile): '强健' | '挂彩' | '负重伤' | '垂危' | '阵亡' {
@@ -235,7 +111,6 @@ export function applyStateCommands(
   random: () => number = Math.random
 ): { updatedLord: LordProfile; changesLog: string[]; isFatalDeath: boolean } {
   const next: LordProfile = JSON.parse(JSON.stringify(lord));
-  ensureItemCustody(next);
   next.attributes = normalizeCk3Attributes(next.attributes);
   const changesLog: string[] = [];
   const traitEffects = aggregateSelectedTraitEffects(next.traitIds ?? []);
@@ -243,16 +118,12 @@ export function applyStateCommands(
 
   const itemCommands = commands.filter(isItemStateCommand);
   if (itemCommands.length > 0) {
-    if (!next.items) {
-      changesLog.push('[物品] 当前存档缺少新版物品状态，请重置测试存档');
+    const itemResult = applyItemActions(next.items, itemCommands.map(itemCommandToAction), createItemActionContext(next), ITEM_CATALOG);
+    if (itemResult.ok) {
+      next.items = itemResult.state;
+      changesLog.push(...itemResult.log.map((entry) => `[物品] ${entry}`));
     } else {
-      const itemResult = applyItemActions(next.items, itemCommands.map(itemCommandToAction), createItemActionContext(next), ITEM_CATALOG);
-      if (itemResult.ok) {
-        next.items = itemResult.state;
-        changesLog.push(...itemResult.log.map((entry) => `[物品] ${entry}`));
-      } else {
-        changesLog.push(`[物品] 批次未结算：${itemResult.error}`);
-      }
+      changesLog.push(`[物品] 批次未结算：${itemResult.error}`);
     }
   }
 
@@ -268,9 +139,7 @@ export function applyStateCommands(
         const damageTags = cmd.damageTags?.length
           ? [...new Set(cmd.damageTags)]
           : inferDamageTags(`${cmd.reason ?? ''} ${cmd.woundText}`);
-        const equippedEffects = next.items
-          ? aggregateEquippedItemEffects(next.items, ITEM_CATALOG)
-          : { active: [] };
+        const equippedEffects = aggregateEquippedItemEffects(next.items, ITEM_CATALOG);
         const protection = getZoneProtection(equippedEffects, cmd.zone, damageTags);
         let effectiveLevel = mitigateWoundLevel(cmd.level, protection);
 
@@ -362,158 +231,6 @@ export function applyStateCommands(
         }
         next.body.isInfected = cmd.value;
         changesLog.push(cmd.value ? ' 伤口发炎: 创口发炎并伴随高热' : ' 高热退去: 伤口炎症消退');
-        break;
-      }
-
-      //  装备磨损/替换
-      case 'SET_GEAR_CONDITION': {
-        const item = next.gear[cmd.slot] as any;
-        if (item && item.condition) {
-          item.condition = cmd.condition;
-          changesLog.push(` 装备损耗: [${item.name}] 状态变为【${cmd.condition}】`);
-        }
-        break;
-      }
-
-      case 'EQUIP_GEAR': {
-        // AI 不能把叙事中临时提到或尚未取得的装备直接写进当前装备栏。
-        // 所有新装备必须先通过 ADD_INVENTORY_ITEM 进入物品栏，再由 EQUIP_FROM_INVENTORY 穿戴。
-        changesLog.push('[装备] 拒绝装备: 该物品必须先归入随身物品、当前据点或附近运输工具，不能凭空替换当前装备');
-        break;
-      }
-
-      // 卸下装备；大件战具优先返回当前据点，轻便物品可随身携带。
-      case 'UNEQUIP_GEAR': {
-        const slot = (cmd.slot || 'head').toLowerCase() as EquippedGearSlot;
-        const currentItem = next.gear[slot] as GearItem | undefined;
-        if (!currentItem || currentItem.name === '徒手空拳' || currentItem.name === '贴身亚麻衫') break;
-
-        const storedItem = gearToStoredItem(currentItem, slot);
-        let destination = cmd.to;
-        if (!destination) {
-          const localStorage = getAccessibleStorageSites(next)[0];
-          destination = inferItemSize(storedItem) === 'large' && localStorage
-            ? { type: 'site', id: localStorage.id }
-            : { type: 'carried' };
-        }
-        if (cmd.moveToInventory !== false && !addItemToContainer(next, storedItem, destination, changesLog)) break;
-
-        if (slot === 'head' || slot === 'offhand' || slot === 'cloak' || slot === 'legs') {
-          delete next.gear[slot];
-        } else if (slot === 'mainhand') {
-          next.gear.mainhand = {
-            id: 'g_bare_fist', name: '徒手空拳', slot: 'mainhand', slotName: '空手', quality: '粗制',
-            condition: '完好坚固', bonusText: '无武器加成', description: '未持握任何武器。', icon: 'gear-sword',
-          };
-        } else if (slot === 'torso') {
-          next.gear.torso = {
-            id: 'g_cloth', name: '贴身亚麻衫', slot: 'torso', slotName: '贴身衣物', quality: '粗制',
-            condition: '完好坚固', bonusText: '无护甲防护', description: '未穿戴任何外层衣甲。', icon: 'gear-armor',
-          };
-        }
-        changesLog.push(`[装备] 已换下: 【${currentItem.name}】`);
-        break;
-      }
-
-      // 新系统：从随身、当前据点或附近运输工具中取用装备。
-      case 'EQUIP_ITEM': {
-        equipFromContainer(next, cmd.itemId, cmd.from, cmd.slot, changesLog);
-        break;
-      }
-
-      // 旧指令兼容：旧物品栏等同于随身物品。
-      case 'EQUIP_FROM_INVENTORY': {
-        equipFromContainer(next, cmd.itemId, { type: 'carried' }, cmd.slot, changesLog);
-        break;
-      }
-
-      case 'TRANSFER_ITEM': {
-        const source = resolveContainerItems(next, cmd.from);
-        const target = resolveContainerItems(next, cmd.to);
-        if (!source.items || !source.accessible) {
-          changesLog.push(`[物品] 无法移动: ${source.label}不在当前地点`);
-          break;
-        }
-        if (!target.items || !target.accessible) {
-          changesLog.push(`[物品] 无法移动: ${target.label}不在当前地点`);
-          break;
-        }
-        const index = source.items.findIndex((item) => item.id === cmd.itemId);
-        if (index < 0) {
-          changesLog.push(`[物品] 无法移动: ${source.label}中没有对应物品`);
-          break;
-        }
-        const sourceItem = source.items[index];
-        const quantity = Math.max(1, Math.min(cmd.quantity || sourceItem.quantity, sourceItem.quantity));
-        if (!canContainerAccept(cmd.to, target.items, sourceItem, quantity, target.capacity)) {
-          changesLog.push(`[物品] 无法移动: 【${sourceItem.name}】体积过大或${target.label}容量不足`);
-          break;
-        }
-        const moved = { ...sourceItem, quantity };
-        sourceItem.quantity -= quantity;
-        if (sourceItem.quantity <= 0) source.items.splice(index, 1);
-        const existing = target.items.find((item) => item.id === moved.id || item.name === moved.name);
-        if (existing) existing.quantity += quantity;
-        else target.items.push(moved);
-        changesLog.push(`[物品] 【${moved.name}】从${source.label}移至${target.label}`);
-        break;
-      }
-
-      case 'ADD_TRANSPORT': {
-        if (!cmd.transport || (next.transports || []).some((vehicle) => vehicle.id === cmd.transport.id)) break;
-        next.transports = next.transports || [];
-        next.transports.push({
-          ...cmd.transport,
-          id: stripEmoji(cmd.transport.id),
-          name: stripEmoji(cmd.transport.name),
-          location: stripEmoji(cmd.transport.location || next.location),
-          description: stripEmoji(cmd.transport.description || '可用于装载和运送物品的运输工具。'),
-          capacity: Math.max(1, cmd.transport.capacity || 8),
-          items: (cmd.transport.items || []).map(sanitizeStoredItem),
-        });
-        changesLog.push(`[运输] 获得运输工具: 【${cmd.transport.name}】`);
-        break;
-      }
-
-      case 'MOVE_TRANSPORT': {
-        const vehicle = (next.transports || []).find((entry) => entry.id === cmd.transportId);
-        if (!vehicle) {
-          changesLog.push('[运输] 无法移动: 未找到对应运输工具');
-          break;
-        }
-        const sourceAccessible = resolveContainerItems(next, { type: 'vehicle', id: vehicle.id }).accessible;
-        if (!sourceAccessible) {
-          changesLog.push(`[运输] 无法移动: 【${vehicle.name}】不在当前地点`);
-          break;
-        }
-        vehicle.location = stripEmoji(cmd.location);
-        changesLog.push(`[运输] 【${vehicle.name}】随队抵达${vehicle.location}`);
-        break;
-      }
-
-      case 'USE_CARRIED_ITEM':
-      case 'USE_INVENTORY_ITEM':
-      case 'USE_POUCH_ITEM': {
-        const carried = next.carriedItems || [];
-        const index = carried.findIndex((item) => item.id === cmd.itemId);
-        if (index !== -1) {
-          const item = carried[index];
-          item.quantity -= 1;
-          changesLog.push(`[物品] 使用随身物品: 【${item.name}】`);
-          if (item.quantity <= 0) carried.splice(index, 1);
-        }
-        break;
-      }
-
-      case 'ADD_ITEM': {
-        if (cmd.item) addItemToContainer(next, cmd.item, cmd.to, changesLog);
-        break;
-      }
-
-      case 'ADD_CARRIED_ITEM':
-      case 'ADD_INVENTORY_ITEM':
-      case 'ADD_POUCH_ITEM': {
-        if (cmd.item) addItemToContainer(next, cmd.item, { type: 'carried' }, changesLog);
         break;
       }
 

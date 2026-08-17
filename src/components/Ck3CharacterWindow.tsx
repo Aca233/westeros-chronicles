@@ -6,9 +6,7 @@ import {
   Coins,
   Crown,
   HeartPulse,
-  Landmark,
   MapPin,
-  Package,
   RotateCcw,
   ScrollText,
   Shield,
@@ -25,19 +23,17 @@ import {
   resolveCharacterTraits,
   TRAIT_CATEGORY_LABELS,
 } from '../data/characterTraits';
-import { getUsedCapacity } from '../services/itemCustody';
 import { resolveLordFamilyRecords, type LordFamilyRecords } from '../features/characters/lordRelationshipResolver';
 import { StaticCharacterRepository } from '../features/characters/staticCharacterRepository';
 import { useCharacterDossier } from '../features/characters/useCharacterDossier';
 import type { CharacterDossier, NpcCharacterDossier } from '../features/characters/characterDossier';
 import type { CharacterId, StaticCharacterRecord } from '../features/characters/types';
 import type { StoryTurn, WoundLevel } from '../types/game';
-import { ITEM_CATALOG } from '../data/itemDefinitions';
-import { getItemDefinition } from '../features/items/catalog';
 import { CharacterSheet } from './CharacterSheet';
 import { CharacterSearch } from './CharacterSearch';
 import { CoatOfArms } from './CoatOfArms';
-import { GameIcon, getHouseIconId, getInventoryIconId } from './GameIcon';
+import { GameIcon, getHouseIconId } from './GameIcon';
+import { ItemManagementPanel } from './items/ItemManagementPanel';
 
 const TABS = [
   { id: 'relations', label: '关系与家族', icon: UsersRound },
@@ -562,72 +558,7 @@ function woundTone(level: WoundLevel): string {
 }
 
 function PlayerInventoryTab() {
-  const { gameState, queueItemAction, pendingItemActions, isStreaming } = useGameStore();
-  const { lord } = gameState;
-  const carriedItems = lord.carriedItems || lord.gear.inventory || lord.gear.pouch || [];
-  const storageSites = lord.storageSites || [];
-  const transports = lord.transports || [];
-  const resolveCarriedInstance = (item: (typeof carriedItems)[number]) => Object.values(lord.items.instances).find((instance) => {
-    if (lord.items.placements[instance.instanceId]?.type !== 'carried') return false;
-    const definition = getItemDefinition(ITEM_CATALOG, instance.definitionId);
-    if (item.category === '药草') return definition.category === 'medicine';
-    if (item.category === '毒物') return definition.category === 'poison';
-    if (item.category === '武器') return definition.category === 'weapon' && definition.equippable;
-    if (item.category === '防具') return definition.category === 'armor' && definition.equippable;
-    return false;
-  });
-  return (
-    <div className="space-y-4 p-4 pb-8">
-      <SectionTitle icon={<Backpack />} title="随身物品" subtitle={`${getUsedCapacity(carriedItems)} / 8 格 · 仅携带便于随身保管的小件`} />
-      {carriedItems.length > 0 ? (
-        <div className="divide-y divide-hairline border-y border-hairline">
-          {carriedItems.map((item) => {
-            const icon = getInventoryIconId(item.category, item.name);
-            const canUse = item.category === '药草' || item.category === '毒物';
-            const canEquip = item.category === '武器' || item.category === '防具' || Boolean(item.slot);
-            const newInstance = resolveCarriedInstance(item);
-            const isQueued = newInstance ? pendingItemActions.some((action) => action.instanceId === newInstance.instanceId) : false;
-            const equipLabel = item.slot === 'mainhand' || item.slot === 'offhand' ? '装备' : '穿上';
-            return (
-              <div key={item.id} className="flex items-center gap-3 bg-ink-3/30 px-2 py-2.5">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center border border-hairline-bright/60 bg-ink-2">{icon ? <GameIcon icon={icon} className="h-9 w-9" /> : <Package className="h-6 w-6 text-gold-deep" />}</div>
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center justify-between gap-2">
-                    <strong className="truncate font-serif text-[12px] text-parchment">{item.name}</strong>
-                    <div className="flex shrink-0 items-center gap-1">
-                      <span className="font-mono text-[10px] text-gold">×{item.quantity}</span>
-                      {canUse && <button type="button" onClick={() => newInstance && queueItemAction({ kind: 'use', instanceId: newInstance.instanceId })} className="btn-ghost !px-1.5 !py-0.5 !text-[9px]">使用</button>}
-                      {canEquip && (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            if (!newInstance) return;
-                            const position = getItemDefinition(ITEM_CATALOG, newInstance.definitionId).allowedPositions[0];
-                            if (position) queueItemAction({ kind: 'equip', instanceId: newInstance.instanceId, position, displacedTo: { type: 'carried' } });
-                          }}
-                          disabled={isQueued || isStreaming}
-                          className="btn-ghost !px-1.5 !py-0.5 !text-[9px] disabled:cursor-not-allowed disabled:opacity-40"
-                          title={isQueued ? '已加入下一次对话的待执行队列' : '将在下一次对话生成完成后生效'}
-                        >
-                          {isQueued ? '已排队' : equipLabel}
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                  <p className="mt-1 truncate text-[10px] text-parchment-faint">{item.description}</p>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      ) : <EmptyState label="没有随身携带的物品" />}
-      <div className="grid grid-cols-2 gap-2">
-        <StorageSummary icon={<Landmark className="h-5 w-5" />} label="据点储藏" count={storageSites.length} detail={`${storageSites.reduce((sum, site) => sum + site.items.length, 0)} 件物品`} />
-        <StorageSummary icon={<Shield className="h-5 w-5" />} label="运输工具" count={transports.length} detail={`${transports.reduce((sum, vehicle) => sum + vehicle.items.length, 0)} 件物品`} />
-      </div>
-      <p className="border-l-2 border-gold-deep/70 bg-ink-3/30 px-3 py-2 font-serif text-[10px] leading-relaxed text-parchment-dim">随身物品在此使用或加入穿戴队列；据点与运输工具中的装备仍在“健康与装备”页签处理。</p>
-    </div>
-  );
+  return <div className="p-4 pb-8"><ItemManagementPanel /></div>;
 }
 
 function NpcInventoryTab() {

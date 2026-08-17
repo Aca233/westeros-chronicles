@@ -33,7 +33,8 @@ test('所有新游戏入口直接提供新物品状态', () => {
   assert.match(presetsSource, /items: createNedItemState\(\)/);
   assert.match(presetsSource, /items: createJonItemState\(\)/);
   assert.match(presetsSource, /items: createDaenerysItemState\(\)/);
-  assert.match(creatorSource, /items: createCustomRulerItemState\(\)/);
+  assert.match(creatorSource, /const customItems = createCustomRulerItemState\(\)/);
+  assert.match(creatorSource, /items: customItems/);
 });
 
 test('设置界面提供显式测试存档重置且成功清除后才刷新', () => {

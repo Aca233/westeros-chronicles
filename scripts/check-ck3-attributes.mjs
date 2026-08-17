@@ -27,27 +27,24 @@ for (const skill of skills) {
 const characterSheet = await readFile(join(root, 'src/components/CharacterSheet.tsx'), 'utf8');
 if (!characterSheet.includes('CK3_SKILLS.map')) failures.push('Character sheet does not render the shared CK3 skill definitions.');
 const compactStatCell = characterSheet.match(/function CompactStatCell[\s\S]*?\n\}/)?.[0] ?? '';
-if (!compactStatCell.includes('w-12 h-12')) failures.push('Character sheet CK3 skill icons are not large enough.');
+if (!compactStatCell.includes('h-12 w-12')) failures.push('Character sheet CK3 skill icons are not large enough.');
 if (!compactStatCell.includes('text-xs')) failures.push('Character sheet CK3 skill values are not compact enough.');
 if (compactStatCell.includes('>{label}</span>')) failures.push('Character sheet still renders redundant skill labels below the icons.');
 if (characterSheet.includes('zoneName="肩背"') || characterSheet.includes("slotKey === 'cloak'")) {
   failures.push('Character sheet still renders the shoulder slot.');
 }
-const topSlotRow = characterSheet.match(/<div data-slot-row="top"[\s\S]*?<\/div>/)?.[0] ?? '';
-if (!topSlotRow.includes('justify-between') || !topSlotRow.includes('gearItem={gear.head}') || !topSlotRow.includes('gearItem={gear.torso}')) {
-  failures.push('Head and torso slots are not arranged across the top row.');
-}
-const weaponSlotRow = characterSheet.match(/<div data-slot-row="weapons"[\s\S]*?<\/div>/)?.[0] ?? '';
-if (!weaponSlotRow.includes('justify-between') || !weaponSlotRow.includes('gearItem={gear.mainhand}') || !weaponSlotRow.includes('gearItem={gear.offhand}')) {
-  failures.push('Main-hand and off-hand slots are not arranged symmetrically.');
-}
+if (!characterSheet.includes('<EquipmentPanel body={body}')) failures.push('Character sheet does not use the authoritative six-group equipment panel.');
+const equipmentPanel = await readFile(join(root, 'src/components/items/EquipmentPanel.tsx'), 'utf8');
+if (!equipmentPanel.includes("['head', 'torso', 'mainhand', 'offhand', 'feet', 'accessories']")) failures.push('Equipment groups are not in the approved order.');
+if (!equipmentPanel.includes('data-hand-pair')) failures.push('Main-hand and off-hand are not arranged symmetrically.');
+
 
 const characterCreator = await readFile(join(root, 'src/components/CharacterCreator.tsx'), 'utf8');
 if (!characterCreator.includes('CK3_SKILLS.map')) failures.push('Character creator does not render all six CK3 skills.');
 if (!characterCreator.includes('handleStatChange(skill.key, 1)')) failures.push('Character creator does not allocate CK3 skills one point at a time.');
 
 const stateReducer = await readFile(join(root, 'src/services/stateReducer.ts'), 'utf8');
-if (!stateReducer.includes('normalizeCk3Attributes(next.attributes)')) failures.push('State reducer does not migrate legacy attributes.');
+if (!stateReducer.includes('normalizeCk3Attributes(next.attributes)')) failures.push('State reducer does not normalize CK3 attributes.');
 
 const promptBuilder = await readFile(join(root, 'src/services/promptBuilder.ts'), 'utf8');
 if (!promptBuilder.includes('CK3 六项能力')) failures.push('Prompt does not describe the CK3 six-skill system.');

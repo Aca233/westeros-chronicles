@@ -39,84 +39,6 @@ export interface LordBodyCondition {
   isInfected: boolean;   // 伤口发炎
 }
 
-// 部位对应装备项
-export interface GearItem {
-  id: string;
-  name: string;
-  slot: 'head' | 'torso' | 'mainhand' | 'offhand' | 'legs' | 'cloak' | 'accessory';
-  slotName: string;      // "头部战盔", "躯干战甲", "主手武器", "副手盾牌", "下肢护胫", "披风斗篷", "佩饰信物"
-  type?: string;         // "双手巨剑", "长剑", "板甲" 等
-  quality: '粗制' | '精良' | '大师精铸' | '瓦雷利亚古钢';
-  condition?: '完好坚固' | '受损磨损' | '严重破损' | '完全碎裂';
-  bonusText: string;     // 如 "削铁如泥 · 破甲极高" 或 "提供重型胸腹防护"
-  description: string;
-  icon: string;
-}
-
-// 随身补给与重要信物 / 物品栏槽位
-export type EquippedGearSlot = Exclude<GearItem['slot'], 'accessory'>;
-
-export type ItemSize = 'tiny' | 'small' | 'medium' | 'large';
-
-export interface InventoryItem {
-  id: string;
-  name: string;
-  category: '药草' | '毒物' | '文书' | '信物' | '工具' | '奇物' | '防具' | '武器' | '补给' | '坐骑';
-  quantity: number;
-  description: string;
-  icon?: string;
-  slot?: EquippedGearSlot;
-  gearData?: GearItem;
-  size?: ItemSize;
-}
-
-
-export interface StorageSite {
-  id: string;
-  name: string;
-  type: 'armory' | 'wardrobe' | 'room' | 'warehouse' | 'stable' | 'camp' | 'other';
-  location: string;
-  description: string;
-  items: InventoryItem[];
-}
-
-export interface TransportStorage {
-  id: string;
-  name: string;
-  type: 'packhorse' | 'wagon' | 'ship' | 'other';
-  location: string;
-  capacity: number;
-  description: string;
-  items: InventoryItem[];
-}
-
-export type ItemContainerRef =
-  | { type: 'carried' }
-  | { type: 'site'; id: string }
-  | { type: 'vehicle'; id: string };
-
-
-// 兼容别名
-export type PouchItem = InventoryItem;
-
-// 领主全身装备栏 (与身体部位 1:1 挂钩)
-export interface LordGearSlots {
-  head?: GearItem;             // 头部装备 (战盔/风帽/冠冕)
-  torso: GearItem;             // 躯干装备 (重板甲/锁子甲/丝绸长袍)
-  mainhand: GearItem;          // 主手武器 (巨剑/长剑/龙晶匕首)
-  offhand?: GearItem;          // 副手装备 (鸢形大盾/短刀/火把)
-  legs?: GearItem;             // 腿部装备 (精钢护胫马靴/熟皮长靴)
-  cloak?: GearItem;            // 披风/斗篷 (纯黑守夜人斗篷/狼皮大氅)
-  companion?: {                // 通灵战兽/坐骑
-    name: string;
-    type: string;
-    bonus: string;
-    description: string;
-  };
-  inventory?: InventoryItem[];  // 旧存档兼容字段，新系统使用 LordProfile.carriedItems
-  pouch?: InventoryItem[];      // 旧存档兼容字段
-}
-
 // 领主完整角色卡
 export interface LordProfile {
   name: string;
@@ -139,9 +61,6 @@ export interface LordProfile {
   // 新物品系统的唯一运行时状态。
   items: ItemSystemState;
 
-  // 临时脚手架：Tasks 7-12 期间仅供旧界面编译，禁止读取或写回 items。
-  gear: LordGearSlots;
-
   // 财富与声望
   goldDragons: number;
   silverStags: number;
@@ -153,11 +72,6 @@ export interface LordProfile {
   baseAttributes?: LordAttributes; // 未计入人物特质修正的基础值，用于防止重复叠加
   traits: string[];
   traitIds?: string[];
-
-  // 物品归属：随身小件、固定据点和可移动运输工具互相独立。
-  carriedItems?: InventoryItem[];
-  storageSites?: StorageSite[];
-  transports?: TransportStorage[];
 }
 
 // 状态指令
@@ -167,21 +81,6 @@ export type StateCommand =
   | { type: 'SET_BLEEDING'; value: boolean }
   | { type: 'SET_POISONED'; value: boolean }
   | { type: 'SET_INFECTED'; value: boolean }
-  | { type: 'SET_GEAR_CONDITION'; slot: EquippedGearSlot; condition: GearItem['condition'] }
-  | { type: 'EQUIP_GEAR'; slot: EquippedGearSlot; item: GearItem }
-  | { type: 'UNEQUIP_GEAR'; slot: EquippedGearSlot; moveToInventory?: boolean; to?: ItemContainerRef }
-  | { type: 'EQUIP_FROM_INVENTORY'; itemId: string; slot?: EquippedGearSlot }
-  | { type: 'USE_CARRIED_ITEM'; itemId: string }
-  | { type: 'ADD_CARRIED_ITEM'; item: InventoryItem }
-  | { type: 'ADD_ITEM'; item: InventoryItem; to: ItemContainerRef }
-  | { type: 'EQUIP_ITEM'; itemId: string; from: ItemContainerRef; slot?: EquippedGearSlot }
-  | { type: 'TRANSFER_ITEM'; itemId: string; from: ItemContainerRef; to: ItemContainerRef; quantity?: number }
-  | { type: 'ADD_TRANSPORT'; transport: TransportStorage }
-  | { type: 'MOVE_TRANSPORT'; transportId: string; location: string }
-  | { type: 'USE_INVENTORY_ITEM'; itemId: string }
-  | { type: 'ADD_INVENTORY_ITEM'; item: InventoryItem }
-  | { type: 'USE_POUCH_ITEM'; itemId: string }
-  | { type: 'ADD_POUCH_ITEM'; item: InventoryItem }
   | { type: 'MODIFY_GOLD'; goldDragons?: number; silverStags?: number; reason?: string }
   | { type: 'MODIFY_STAT'; stat: keyof LordAttributes; delta: number; reason?: string }
   | { type: 'MODIFY_PRESTIGE'; delta: number }

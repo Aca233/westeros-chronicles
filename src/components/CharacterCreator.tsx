@@ -195,8 +195,14 @@ export const CharacterCreator: React.FC = () => {
   const handleStartCustom = () => {
     if (!canComplete) return;
     const chosenTraitNames = selectedTraits.map((trait) => trait.name);
+    const customItems = createCustomRulerItemState();
+    for (const site of Object.values(customItems.sites)) {
+      site.location = effectiveSeat;
+      if (site.id === 'custom_ruler_room') site.name = `${effectiveSeat}领主起居室`;
+    }
+    for (const vehicle of Object.values(customItems.vehicles)) vehicle.location = effectiveSeat;
     const customLord: LordProfile = {
-      items: createCustomRulerItemState(),
+      items: customItems,
       name: stripEmoji(customName) || '维斯特洛新星',
       house: effectiveHouseName,
       dynastyName: effectiveDynastyName,
@@ -219,39 +225,10 @@ export const CharacterCreator: React.FC = () => {
       baseAttributes: { ...customAttributes },
       traits: [...chosenTraitNames, `${effectiveDynastyName}血脉`],
       traitIds: [...selectedTraitIds],
-      gear: {
-        torso: {
-          id: 'c_custom_court_attire', name: `${effectiveHouseName}纹章礼服`, slot: 'torso', slotName: '家族纹章礼服',
-          quality: '精良', condition: '完好坚固', bonusText: '正式仪态', description: '以家族颜色与纹章装饰的领主日常礼服。', icon: 'gear-cloak',
-        },
-        mainhand: {
-          id: 'c_custom_weapon', name: `${effectiveHouseName}传承精钢剑`, slot: 'mainhand', slotName: '腰间佩剑',
-          quality: '精良', condition: '完好坚固', bonusText: '锋利平衡', description: '家族大师锻造的锋利长剑，平日悬挂在腰间。', icon: 'gear-sword',
-        },
-      },
-      carriedItems: [
-        { id: 'p_c1', name: '金创止血草药', category: '药草', quantity: 2, size: 'tiny', description: '随身止血急救药包。' },
-      ],
-      storageSites: [
-        {
-          id: 'custom_castle_armory', name: `${effectiveSeat}军械库`, type: 'armory', location: effectiveSeat,
-          description: '由家族军械官看守的城堡武备库。',
-          items: [{
-            id: 'c_custom_armor', name: `${effectiveHouseName}精锻锁子重甲`, category: '防具', quantity: 1, size: 'large',
-            description: '镌刻家族纹章的坚固战甲，平日收存在城堡军械库。', icon: 'gear-armor', slot: 'torso',
-            gearData: { id: 'c_custom_armor', name: `${effectiveHouseName}精锻锁子重甲`, slot: 'torso', slotName: '躯干战甲', quality: '大师精铸', condition: '完好坚固', bonusText: '坚实防护', description: '镌刻有家族纹章的坚固防具。', icon: 'gear-armor' },
-          }],
-        },
-        {
-          id: 'custom_castle_stable', name: `${effectiveSeat}马厩`, type: 'stable', location: effectiveSeat,
-          description: '城堡用于饲养坐骑与驮畜的马厩。', items: [],
-        },
-      ],
-      transports: [],
     };
     const customOpening = {
       think: `自创领主开局: ${customLord.name} 刚刚在 ${effectiveSeat} 继任领主之位。维斯特洛七国风云变幻，国王劳勃的王权摇摇欲坠。`,
-      narrate: `微风吹拂着【${effectiveSeat}】高耸的黑色城垛，绣有${effectiveHouseName}纹章的巨大旗帜在风中猎猎作响。\n\n你身着【${customLord.gear.torso.name}】，腰悬【${customLord.gear.mainhand.name}】，独自站在领主大厅的古老石椅前。高耸的穹顶下，壁炉中的柴火噼啪作响。家族箴言“${effectiveHouseWords}”深刻在壁炉石梁上，历经风雨仍然清晰。\n\n沉重的橡木大门被侍卫推开，城堡总管捧着密封羊皮卷走入内厅，躬身道：“大人，七国各地的使者已在厅外等候。君临的权斗愈发激烈，各方势力都在注视${effectiveDynastyName}的一举一动，请您定夺接下来的方略。”\n\n大厅内归于肃静，骑士与封臣的目光一同落在你的身上。`,
+      narrate: `微风吹拂着【${effectiveSeat}】高耸的黑色城垛，绣有${effectiveHouseName}纹章的巨大旗帜在风中猎猎作响。\n\n你身着厚实的领主常服，家族佩剑收在触手可及之处，独自站在领主大厅的古老石椅前。高耸的穹顶下，壁炉中的柴火噼啪作响。家族箴言“${effectiveHouseWords}”深刻在壁炉石梁上，历经风雨仍然清晰。\n\n沉重的橡木大门被侍卫推开，城堡总管捧着密封羊皮卷走入内厅，躬身道：“大人，七国各地的使者已在厅外等候。君临的权斗愈发激烈，各方势力都在注视${effectiveDynastyName}的一举一动，请您定夺接下来的方略。”\n\n大厅内归于肃静，骑士与封臣的目光一同落在你的身上。`,
       branches: [
         '向封臣发表演说，确立新任领主的权威',
         '令学士分析各大家族的联姻与密谋动向',
