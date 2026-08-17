@@ -46,7 +46,8 @@
     "test:item-save-version": "node scripts/test-item-save-version.mjs",
     "test:item-state-commands": "node scripts/test-item-state-commands.mjs",
     "test:item-dice-integration": "node scripts/test-item-dice-integration.mjs",
-    "test:item-view-model": "node scripts/test-item-view-model.mjs"
+    "test:item-view-model": "node scripts/test-item-view-model.mjs",
+    "check:item-equipment-ui": "node scripts/check-item-equipment-ui.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",
