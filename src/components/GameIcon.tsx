@@ -102,6 +102,10 @@ export function getGameIconPath(icon: GameIconId): string {
     : `/assets/game-icons/${icon}.webp`;
 }
 
+export function getSafeGameIconId(value: unknown, fallback: GameIconId = 'artifact-goblet'): GameIconId {
+  return isGameIconId(value) ? value : fallback;
+}
+
 export function getHouseIconId(value: string): GameIconId {
   if (isGameIconId(value) && value.startsWith('house-')) return value;
   return HOUSE_NAME_TO_ICON[value] ?? HOUSE_NAME_TO_ICON[value.toLowerCase()] ?? 'artifact-crown';
