@@ -39,6 +39,7 @@ class CharacterExtractionTests(unittest.TestCase):
         records = []
         for name in (
             "paradox_sample.txt",
+            "spouse_counterpart.txt",
             "semicanon.txt",
             "north_ancestors.txt",
             "agot_dummy_characters.txt",
@@ -108,6 +109,7 @@ class DatasetWriterTests(unittest.TestCase):
         records = []
         for name in (
             "paradox_sample.txt",
+            "spouse_counterpart.txt",
             "semicanon.txt",
             "north_ancestors.txt",
             "agot_dummy_characters.txt",
@@ -144,6 +146,20 @@ class DatasetWriterTests(unittest.TestCase):
             self.assertNotIn("agot:Dummy_1", {record["id"] for record in all_records})
             self.assertIn("agot:Stark_3", {record["id"] for record in all_records})
 
+    def test_writer_makes_source_marriages_visible_to_both_spouses(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            output = Path(temp_dir) / "dataset"
+            write_dataset(
+                self._records(), output, {"modVersion": "fixture"}, AgotDate.parse("8298.6.1"), {}
+            )
+            all_records = []
+            for shard in output.joinpath("shards").glob("*.json"):
+                all_records.extend(json.loads(shard.read_text(encoding="utf-8")))
+            by_id = {record["id"]: record for record in all_records}
+
+            self.assertIn("agot:Tully_4", by_id["agot:Stark_3"]["spouseIds"])
+            self.assertIn("agot:Stark_3", by_id["agot:Tully_4"]["spouseIds"])
+
     def test_writer_falls_back_when_directory_replace_is_denied(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             output = Path(temp_dir) / "dataset"
@@ -153,7 +169,7 @@ class DatasetWriterTests(unittest.TestCase):
                 )
 
             self.assertTrue((output / "manifest.json").exists())
-            self.assertEqual(manifest.counts["emittedRecords"], 3)
+            self.assertEqual(manifest.counts["emittedRecords"], 4)
 
     def test_search_index_stays_lightweight_and_points_to_existing_shards(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:

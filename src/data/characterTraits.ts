@@ -408,6 +408,29 @@ export function getHouseIdentity(houseId: string): HouseIdentity {
   return HOUSE_IDENTITIES[houseId] ?? { culture: '安达尔人', faith: '七神信仰' };
 }
 
+type IdentityBearingLord = {
+  houseSigil?: string;
+  culture?: string;
+  faith?: string;
+};
+
+/** 为经典家族旧档案补齐身份；自建家族和玩家明确填写的内容保持原样。 */
+export function migrateLordIdentityData<T extends IdentityBearingLord>(lord: T): T {
+  const houseId = lord.houseSigil?.replace(/^house[-_]/i, '').trim().toLowerCase();
+  const identity = houseId ? HOUSE_IDENTITIES[houseId] : undefined;
+  if (!identity) return lord;
+
+  const culture = lord.culture?.trim();
+  const faith = lord.faith?.trim();
+  if (culture && faith) return lord;
+
+  return {
+    ...lord,
+    culture: culture || identity.culture,
+    faith: faith || identity.faith,
+  };
+}
+
 export function calculateFinalAttributes(
   baseAttributes: LordAttributes,
   selectedTraitIds: readonly string[]

@@ -1,5 +1,5 @@
 import { LordProfile, createDefaultBody } from '../types/game';
-import { calculateFinalAttributes } from './characterTraits';
+import { calculateFinalAttributes, migrateLordIdentityData } from './characterTraits';
 
 export interface PresetScenario {
   id: string;
@@ -21,11 +21,12 @@ export interface PresetScenario {
 }
 
 function createPresetLord(lord: LordProfile): LordProfile {
-  const baseAttributes = { ...lord.attributes };
+  const identifiedLord = migrateLordIdentityData(lord);
+  const baseAttributes = { ...identifiedLord.attributes };
   return {
-    ...lord,
+    ...identifiedLord,
     baseAttributes,
-    attributes: calculateFinalAttributes(baseAttributes, lord.traitIds ?? []),
+    attributes: calculateFinalAttributes(baseAttributes, identifiedLord.traitIds ?? []),
   };
 }
 

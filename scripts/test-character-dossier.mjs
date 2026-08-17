@@ -8,8 +8,10 @@ async function bundleModule(entryPoint) {
   return import(url);
 }
 
-const { characterAgeAtYear, characterDatasetYear, createNpcDossier, dynastySlug } = await bundleModule('src/features/characters/characterDossier.ts');
+const { characterAgeAtYear, characterDatasetYear, createNpcDossier, createPlayerDossier, dynastySlug } = await bundleModule('src/features/characters/characterDossier.ts');
 const { resolveCharacter } = await bundleModule('src/features/characters/characterProjector.ts');
+const { migrateLordIdentityData } = await bundleModule('src/data/characterTraits.ts');
+const { PRESET_SCENARIOS } = await bundleModule('src/data/presets.ts');
 
 const attributes = { diplomacy: 11, martial: 12, stewardship: 13, intrigue: 14, learning: 15, prowess: 16 };
 
@@ -69,4 +71,23 @@ test('未知家族仍保留可读名称而不是伪造主要家族', () => {
   const dossier = createNpcDossier(resolved({ dynastyId: 'dynn_Flint_of_Widows_Watch' }), 298);
   assert.equal(dynastySlug(dossier.dynastyId), 'Flint of Widows Watch');
   assert.equal(dossier.house, 'Flint of Widows Watch家族');
+});
+
+test('所有经典开局人物都显示可靠的文化与信仰', () => {
+  for (const preset of PRESET_SCENARIOS) {
+    const dossier = createPlayerDossier(preset.initialLord);
+    assert.notEqual(dossier.culture, '文化未记录', `${preset.id} 缺少文化`);
+    assert.notEqual(dossier.faith, '信仰未记录', `${preset.id} 缺少信仰`);
+  }
+});
+
+test('旧存档只补齐已知家族身份且不会覆盖自建内容', () => {
+  assert.deepEqual(
+    migrateLordIdentityData({ houseSigil: 'house-stark' }),
+    { houseSigil: 'house-stark', culture: '北境人', faith: '旧神信仰' },
+  );
+  assert.deepEqual(
+    migrateLordIdentityData({ houseSigil: 'custom-wolf', culture: '山地氏族', faith: '旧神信仰' }),
+    { houseSigil: 'custom-wolf', culture: '山地氏族', faith: '旧神信仰' },
+  );
 });

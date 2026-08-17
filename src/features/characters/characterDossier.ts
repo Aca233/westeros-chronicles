@@ -1,4 +1,5 @@
 import { HOUSES } from '../../data/houses';
+import { migrateLordIdentityData } from '../../data/characterTraits';
 import type {
   BodyZoneKey,
   LordAttributes,
@@ -124,36 +125,37 @@ function houseMetadata(dynastyId: string | null | undefined) {
 }
 
 export function createPlayerDossier(lord: LordProfile): PlayerCharacterDossier {
+  const identifiedLord = migrateLordIdentityData(lord);
   return {
     id: PLAYER_DOSSIER_ID,
     kind: 'player',
-    name: lord.name,
-    dynastyName: lord.dynastyName || lord.house,
-    house: lord.house,
-    houseWords: lord.houseWords,
-    houseSigil: lord.houseSigil,
-    title: lord.title,
-    titles: lord.title ? [lord.title] : [],
-    age: lord.age,
-    gender: lord.gender,
-    culture: lord.culture || '文化未记录',
-    faith: lord.faith || '信仰未记录',
-    location: lord.location,
-    alive: lord.overallStatus !== '阵亡',
-    deathReason: lord.overallStatus === '阵亡' ? '人物已经死亡' : undefined,
-    attributes: lord.attributes,
-    traitIds: uniqueEducationFirst(lord.traitIds ?? []),
-    legacyTraits: [...(lord.traits ?? [])],
+    name: identifiedLord.name,
+    dynastyName: identifiedLord.dynastyName || identifiedLord.house,
+    house: identifiedLord.house,
+    houseWords: identifiedLord.houseWords,
+    houseSigil: identifiedLord.houseSigil,
+    title: identifiedLord.title,
+    titles: identifiedLord.title ? [identifiedLord.title] : [],
+    age: identifiedLord.age,
+    gender: identifiedLord.gender,
+    culture: identifiedLord.culture || '文化未记录',
+    faith: identifiedLord.faith || '信仰未记录',
+    location: identifiedLord.location,
+    alive: identifiedLord.overallStatus !== '阵亡',
+    deathReason: identifiedLord.overallStatus === '阵亡' ? '人物已经死亡' : undefined,
+    attributes: identifiedLord.attributes,
+    traitIds: uniqueEducationFirst(identifiedLord.traitIds ?? []),
+    legacyTraits: [...(identifiedLord.traits ?? [])],
     relations: { spouseIds: [], relationships: [], notableRelations: [] },
-    wounds: Object.values(lord.body).flatMap((zone) => typeof zone === 'object' && 'wounds' in zone ? zone.wounds : []),
+    wounds: Object.values(identifiedLord.body).flatMap((zone) => typeof zone === 'object' && 'wounds' in zone ? zone.wounds : []),
     woundLevels: {
-      head: lord.body.head.level,
-      torso: lord.body.torso.level,
-      arms: lord.body.arms.level,
-      legs: lord.body.legs.level,
+      head: identifiedLord.body.head.level,
+      torso: identifiedLord.body.torso.level,
+      arms: identifiedLord.body.arms.level,
+      legs: identifiedLord.body.legs.level,
     },
     memories: [],
-    player: lord,
+    player: identifiedLord,
   };
 }
 

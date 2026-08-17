@@ -3,7 +3,7 @@ import { GameState } from '../types/game';
 import type { CharacterEventEnvelope, CharacterEventInput } from '../features/characters/characterEventStore';
 import type { CharacterId } from '../features/characters/types';
 import { normalizeCk3Attributes } from '../data/ck3Skills';
-import { migrateLordTraitData } from '../data/characterTraits';
+import { migrateLordIdentityData, migrateLordTraitData } from '../data/characterTraits';
 import { ensureItemCustody } from './itemCustody';
 
 export interface GameSnapshot {
@@ -119,7 +119,7 @@ export async function importSaveData(jsonString: string): Promise<GameState | nu
     if (!Array.isArray(parsed.snapshots)) throw new Error('无效的存档格式');
     const migratedSnapshots = parsed.snapshots.map((snapshot: GameSnapshot) => {
       if (snapshot?.gameState?.lord?.attributes) {
-        snapshot.gameState.lord = migrateLordTraitData(ensureItemCustody(snapshot.gameState.lord));
+        snapshot.gameState.lord = migrateLordIdentityData(migrateLordTraitData(ensureItemCustody(snapshot.gameState.lord)));
         snapshot.gameState.lord.attributes = normalizeCk3Attributes(snapshot.gameState.lord.attributes);
         if (snapshot.gameState.lord.baseAttributes) snapshot.gameState.lord.baseAttributes = normalizeCk3Attributes(snapshot.gameState.lord.baseAttributes);
       }
