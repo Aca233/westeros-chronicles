@@ -157,12 +157,12 @@ export function generateOfflineDemoResponse(
   if (/头盔|战盔|面盔|披甲|穿甲|战甲|盔甲|全副武装|盾牌|大盾|护胫/i.test(playerInput)) {
     const wantsFullLoadout = /披甲|穿甲|战甲|盔甲|全副武装/i.test(playerInput);
     const requestedGroups = wantsFullLoadout
-      ? ['torso', 'head', 'offhand', 'feet']
+      ? ['torso', 'head', 'offhand', 'legs']
       : /头盔|战盔|面盔/i.test(playerInput)
         ? ['head']
         : /盾牌|大盾/i.test(playerInput)
           ? ['offhand']
-          : ['feet'];
+          : ['legs'];
     const selected = requestedGroups.flatMap((group) => {
       const entry = availableItems.find((candidate) => candidate.definition.allowedPositions.some((position) => position.group === group));
       if (!entry) return [];

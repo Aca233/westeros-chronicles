@@ -74,7 +74,7 @@ test('混合物品批次中任一命令无效会回滚整个物品批次', () =>
 
 test('离线叙事只从目录和可访问实例生成新版物品命令', () => {
   const lord = ned();
-  const gameState = { saveFormatVersion: 4, currentYear: 298, currentMonth: 10, currentDay: 15, currentSeason: '晚秋', turnCount: 1, lord, turns: [], worldFlags: {}, isGameOver: false };
+  const gameState = { saveFormatVersion: 5, currentYear: 298, currentMonth: 10, currentDay: 15, currentSeason: '晚秋', turnCount: 1, lord, turns: [], worldFlags: {}, isGameOver: false };
   const response = generateOfflineDemoResponse('换剑', 2, gameState);
   const itemCommand = response.stateCommands.find((command) => command.type === 'ITEM_EQUIP');
   assert.ok(itemCommand);

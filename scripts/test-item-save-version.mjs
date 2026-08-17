@@ -13,12 +13,12 @@ const [dbSource, settingsSource, presetsSource, creatorSource] = await Promise.a
   readFile('src/components/CharacterCreator.tsx', 'utf8'),
 ]);
 
-test('物品存档格式固定为版本 4 并明确拒绝旧版本', () => {
-  assert.equal(ITEM_SAVE_FORMAT_VERSION, 4);
-  assert.throws(() => assertSupportedSaveEnvelope({ version: 3, snapshots: [] }), /测试版存档格式已更新.*重置/);
-  assert.doesNotThrow(() => assertSupportedSaveEnvelope({ version: 4, snapshots: [] }));
-  assert.throws(() => assertSupportedGameState({ saveFormatVersion: 3 }), /测试版存档格式已更新.*重置/);
-  assert.doesNotThrow(() => assertSupportedGameState({ saveFormatVersion: 4, lord: { items: { schemaVersion: 1 } } }));
+test('物品存档格式固定为版本 5 并明确拒绝旧版本', () => {
+  assert.equal(ITEM_SAVE_FORMAT_VERSION, 5);
+  assert.throws(() => assertSupportedSaveEnvelope({ version: 4, snapshots: [] }), /测试版存档格式已更新.*重置/);
+  assert.doesNotThrow(() => assertSupportedSaveEnvelope({ version: 5, snapshots: [] }));
+  assert.throws(() => assertSupportedGameState({ saveFormatVersion: 4 }), /测试版存档格式已更新.*重置/);
+  assert.doesNotThrow(() => assertSupportedGameState({ saveFormatVersion: 5, lord: { items: { schemaVersion: 1 } } }));
 });
 
 test('数据库不迁移旧物品并在事务前校验版本', () => {

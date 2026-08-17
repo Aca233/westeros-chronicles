@@ -37,14 +37,18 @@ test('每个收纳实例只出现在一个保管页签且远方据点独立', ()
   assert.deepEqual(byTab.vehicle.map((card) => card.instanceId), ['ned.castle_sword']);
 });
 
-test('六组顺序固定且躯干与佩饰摘要聚合内部位置', () => {
+test('六组顺序固定且躯干、双腿与佩饰摘要聚合内部位置', () => {
   const state = createNedItemState();
   const groups = buildEquipmentGroupModels({ state, catalog: ITEM_CATALOG, pendingActions: [] });
-  assert.deepEqual(groups.map((group) => group.group), ['head', 'torso', 'mainhand', 'offhand', 'feet', 'accessories']);
+  assert.deepEqual(groups.map((group) => group.group), ['head', 'torso', 'mainhand', 'offhand', 'legs', 'accessories']);
   const torso = groups.find((group) => group.group === 'torso');
   assert.deepEqual(torso.positions.map((position) => position.label), ['服装', '护甲', '外披']);
   assert.match(torso.summary, /北境羊毛束腰衣/);
   assert.match(torso.summary, /灰狼皮大氅/);
+  const legs = groups.find((group) => group.group === 'legs');
+  assert.deepEqual(legs.positions.map((position) => position.label), ['腿部', '足部']);
+  assert.match(legs.summary, /北境羊毛马裤/);
+  assert.match(legs.summary, /北境熟皮骑行靴/);
   const accessories = groups.find((group) => group.group === 'accessories');
   assert.equal(accessories.positions.length, 3);
   assert.equal(accessories.items.length, 1);

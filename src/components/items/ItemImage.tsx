@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
   BookOpen,
+  Footprints,
   Gem,
   Hammer,
   PackageOpen,
@@ -19,6 +20,7 @@ const LIBRARY_ICONS: Record<string, LucideIcon> = {
   sword: Sword,
   shield: Shield,
   clothing: Shirt,
+  footwear: Footprints,
   jewelry: Gem,
   tool: Hammer,
   document: ScrollText,

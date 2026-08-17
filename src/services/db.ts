@@ -10,7 +10,7 @@ import {
 
 export interface GameSnapshot {
   id?: number;
-  formatVersion: 4;
+  formatVersion: typeof ITEM_SAVE_FORMAT_VERSION;
   turnNumber: number;
   timestamp: number;
   gameState: GameState;

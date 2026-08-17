@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Search } from 'lucide-react';
+import { Hourglass, Search } from 'lucide-react';
 import { ITEM_CATALOG } from '../../data/itemDefinitions';
 import { getItemDefinition } from '../../features/items/catalog';
 import { DEFAULT_CARRIED_CAPACITY, getUsedCarryUnits } from '../../features/items/custody';
@@ -14,8 +14,11 @@ import {
   type CustodyTab,
   type ItemCardModel,
 } from '../../features/items/viewModel';
+import { getTransferDestinationChoices } from '../../features/items/actionChoices';
 import { useGameStore } from '../../store/useGameStore';
 import { ItemCard } from './ItemCard';
+import { ItemChoiceDialog } from './ItemChoiceDialog';
+import { ItemGiftDialog } from './ItemGiftDialog';
 
 const CUSTODY_TABS: Array<{ id: CustodyTab; label: string }> = [
   { id: 'carried', label: '随身物品' },
@@ -37,33 +40,12 @@ function locationRoot(location: string): string {
 function sameLocation(left: string, right: string): boolean {
   return locationRoot(left) === locationRoot(right);
 }
-function samePlacement(left: ItemPlacement, right: ItemPlacement): boolean {
-  if (left.type !== right.type) return false;
-  if (left.type === 'carried') return true;
-  if (left.type === 'site') return right.type === 'site' && left.siteId === right.siteId;
-  if (left.type === 'vehicle') return right.type === 'vehicle' && left.vehicleId === right.vehicleId;
-  return false;
-}
-
 function preferredStorage(state: ReturnType<typeof useGameStore.getState>['gameState']['lord']['items'], currentLocation: string): ItemPlacement {
   const site = Object.values(state.sites).find((entry) => sameLocation(entry.location, currentLocation));
   if (site) return { type: 'site', siteId: site.id };
   const vehicle = Object.values(state.vehicles).find((entry) => sameLocation(entry.location, currentLocation));
   if (vehicle) return { type: 'vehicle', vehicleId: vehicle.id };
   return { type: 'carried' };
-}
-
-function transferDestination(
-  state: ReturnType<typeof useGameStore.getState>['gameState']['lord']['items'],
-  currentLocation: string,
-  from: ItemPlacement,
-): ItemPlacement | undefined {
-  const choices: ItemPlacement[] = [
-    { type: 'carried' },
-    ...Object.values(state.sites).filter((site) => sameLocation(site.location, currentLocation)).map((site): ItemPlacement => ({ type: 'site', siteId: site.id })),
-    ...Object.values(state.vehicles).filter((vehicle) => sameLocation(vehicle.location, currentLocation)).map((vehicle): ItemPlacement => ({ type: 'vehicle', vehicleId: vehicle.id })),
-  ];
-  return choices.find((choice) => !samePlacement(choice, from));
 }
 
 function exactActions(
@@ -112,6 +94,16 @@ export const ItemManagementPanel: React.FC = () => {
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState<ItemCategory | 'all'>('all');
   const [sortMode, setSortMode] = useState<SortMode>('location');
+  const [transferRequest, setTransferRequest] = useState<{ instanceId: string; name: string } | null>(null);
+  const [giftRequest, setGiftRequest] = useState<{ instanceId: string; name: string } | null>(null);
+  const pendingByInstance = useMemo(() => new Map(pendingItemActions.map((action) => [action.instanceId, action])), [pendingItemActions]);
+
+  const transferChoices = useMemo(() => {
+    if (!transferRequest) return [];
+    const placement = state.placements[transferRequest.instanceId];
+    if (!placement) return [];
+    return getTransferDestinationChoices({ state, currentLocation: lord.location, from: placement });
+  }, [lord.location, state, transferRequest]);
 
   const cards = useMemo(() => {
     const models = buildItemCardModels({ state, catalog: ITEM_CATALOG, currentLocation: lord.location, pendingActions: pendingItemActions, tab: activeTab });
@@ -150,14 +142,12 @@ export const ItemManagementPanel: React.FC = () => {
       case 'unequip': queued = { kind: 'unequip', instanceId: card.instanceId, to: preferredStorage(state, lord.location) }; break;
       case 'use': queued = { kind: 'use', instanceId: card.instanceId }; break;
       case 'transfer': {
-        const to = transferDestination(state, lord.location, placement);
-        if (to) queued = { kind: 'transfer', instanceId: card.instanceId, to };
-        break;
+        setTransferRequest({ instanceId: card.instanceId, name: card.name });
+        return;
       }
       case 'gift': {
-        const recipient = window.prompt('请输入受赠人物标识');
-        if (recipient?.trim()) queued = { kind: 'gift', instanceId: card.instanceId, recipientId: recipient.trim() };
-        break;
+        setGiftRequest({ instanceId: card.instanceId, name: card.name });
+        return;
       }
       case 'discard': queued = { kind: 'discard', instanceId: card.instanceId }; break;
       case 'repair': queued = { kind: 'repair', instanceId: card.instanceId, amount: 25 }; break;
@@ -173,16 +163,34 @@ export const ItemManagementPanel: React.FC = () => {
     if (queued) queueItemAction(queued);
   };
 
+  const chooseTransferDestination = (choiceId: string) => {
+    if (!transferRequest || isStreaming) return;
+    const choice = transferChoices.find((candidate) => candidate.id === choiceId);
+    if (!choice) return;
+    queueItemAction({ kind: 'transfer', instanceId: transferRequest.instanceId, to: choice.placement });
+    setTransferRequest(null);
+  };
+
   const tabCounts = useMemo(() => Object.fromEntries(CUSTODY_TABS.map((tab) => [tab.id, buildItemCardModels({ state, catalog: ITEM_CATALOG, currentLocation: lord.location, pendingActions: pendingItemActions, tab: tab.id }).length])), [lord.location, pendingItemActions, state]);
   const usedCarry = getUsedCarryUnits(state, ITEM_CATALOG);
 
   return (
+    <>
     <section className="space-y-3" data-item-management>
+      {pendingItemActions.length > 0 && (
+        <div className="queue-banner" role="status">
+          <Hourglass className="h-3.5 w-3.5 shrink-0 text-gold" />
+          <span>
+            <strong className="font-bold">{pendingItemActions.length} 项物品动作待生效</strong>
+            <span className="text-parchment-dim"> · 下一次成功对话后结算,可在主页御令栏上方撤销</span>
+          </span>
+        </div>
+      )}
       <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-4" role="tablist" aria-label="物品保管位置">
         {CUSTODY_TABS.map((tab) => (
           <button key={tab.id} type="button" role="tab" data-custody-tab={tab.id} aria-selected={activeTab === tab.id} onClick={() => setActiveTab(tab.id)} className={`border px-2 py-2 text-left transition-colors ${activeTab === tab.id ? 'border-gold bg-gold-deep/15 text-gold-bright' : 'border-hairline bg-ink-3/40 text-parchment-dim hover:border-gold-deep'}`}>
-            <span className="block font-serif text-[10.5px] font-bold">{tab.label}</span>
-            <span className="mt-0.5 block font-mono text-[8.5px] text-parchment-faint">{tabCounts[tab.id]} 件</span>
+            <span className="block font-serif text-[11px] font-bold">{tab.label}</span>
+            <span className="mt-0.5 block font-mono text-[9.5px] text-parchment-faint">{tabCounts[tab.id]} 件</span>
           </button>
         ))}
       </div>
@@ -190,29 +198,56 @@ export const ItemManagementPanel: React.FC = () => {
       <div className="grid gap-2 border border-hairline bg-ink-3/35 p-2 sm:grid-cols-[minmax(140px,1fr)_auto_auto]">
         <label className="flex items-center gap-2 border border-hairline bg-ink-2/65 px-2">
           <Search className="h-3.5 w-3.5 text-gold-dim" />
-          <input data-item-search value={query} onChange={(event) => setQuery(event.target.value)} placeholder="搜索名称、材质或来历" className="min-w-0 flex-1 bg-transparent py-1.5 font-serif text-[10px] text-parchment outline-none placeholder:text-parchment-faint" />
+          <input data-item-search value={query} onChange={(event) => setQuery(event.target.value)} placeholder="搜索名称、材质或来历" className="min-w-0 flex-1 bg-transparent py-1.5 font-serif text-[11px] text-parchment outline-none placeholder:text-parchment-faint" />
         </label>
-        <select data-item-category-filter value={category} onChange={(event) => setCategory(event.target.value as ItemCategory | 'all')} className="border border-hairline bg-ink-2 px-2 py-1.5 font-serif text-[10px] text-parchment outline-none">
+        <select data-item-category-filter value={category} onChange={(event) => setCategory(event.target.value as ItemCategory | 'all')} className="border border-hairline bg-ink-2 px-2 py-1.5 font-serif text-[11px] text-parchment outline-none">
           <option value="all">全部类别</option>
           {Object.entries(CATEGORY_LABELS).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
         </select>
-        <select data-item-sort value={sortMode} onChange={(event) => setSortMode(event.target.value as SortMode)} className="border border-hairline bg-ink-2 px-2 py-1.5 font-serif text-[10px] text-parchment outline-none">
+        <select data-item-sort value={sortMode} onChange={(event) => setSortMode(event.target.value as SortMode)} className="border border-hairline bg-ink-2 px-2 py-1.5 font-serif text-[11px] text-parchment outline-none">
           <option value="location">当前位置</option><option value="category">类别</option><option value="quality">品质</option><option value="durability">耐久</option><option value="name">名称</option>
         </select>
       </div>
 
-      <div className="flex items-center justify-between gap-2 font-mono text-[9px] text-parchment-faint">
+      <div className="flex items-center justify-between gap-2 font-mono text-[10px] text-parchment-dim">
         <span>{activeTab === 'carried' ? `随身体积 ${usedCarry}/${DEFAULT_CARRIED_CAPACITY}` : CUSTODY_TABS.find((tab) => tab.id === activeTab)?.label}</span>
-        {activeTab === 'remote-site' && <span>远方物品只读，抵达对应地点后才能操作</span>}
+        {activeTab === 'remote-site' && <span>远方物品只读,抵达对应地点后才能操作</span>}
       </div>
 
       {cards.length > 0 ? (
         <div className="grid gap-2 xl:grid-cols-2">
-          {cards.map((card) => <ItemCard key={card.key} item={card} onAction={queueCardAction} />)}
+          {cards.map((card) => <ItemCard key={card.key} item={card} pendingNote={pendingByInstance.get(card.instanceId)?.label} onAction={queueCardAction} />)}
         </div>
       ) : (
-        <div className="border border-dashed border-hairline py-10 text-center font-serif text-[11px] text-parchment-faint">此页没有符合条件的物品</div>
+        <div className="border border-dashed border-hairline py-10 text-center font-serif text-[11.5px] text-parchment-dim">此页没有符合条件的物品</div>
       )}
     </section>
+    {transferRequest && (
+      <ItemChoiceDialog
+        title={`转移${transferRequest.name}`}
+        description="选择物品要转移到的保管位置。选择后会加入队列,并在下一次成功对话后完成。"
+        options={transferChoices.map((choice) => ({
+          id: choice.id,
+          title: choice.label,
+          subtitle: choice.kind === 'carried' ? '随身物品' : choice.kind === 'site' ? '据点储藏' : '运输工具',
+          detail: choice.detail,
+          icon: choice.kind,
+        }))}
+        emptyMessage="当前位置没有其他可用的保管位置。"
+        onChoose={chooseTransferDestination}
+        onClose={() => setTransferRequest(null)}
+      />
+    )}
+    {giftRequest && (
+      <ItemGiftDialog
+        itemName={giftRequest.name}
+        onConfirm={(recipientId) => {
+          if (!isStreaming) queueItemAction({ kind: 'gift', instanceId: giftRequest.instanceId, recipientId });
+          setGiftRequest(null);
+        }}
+        onClose={() => setGiftRequest(null)}
+      />
+    )}
+    </>
   );
 };

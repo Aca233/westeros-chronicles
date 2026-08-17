@@ -9,6 +9,8 @@ export interface ItemCardProps {
   item: ItemCardModel;
   compact?: boolean;
   defaultExpanded?: boolean;
+  /** 已排队待结算的动作名,如「穿上」;传入后卡片显示待生效徽标 */
+  pendingNote?: string;
   onAction?: (item: ItemCardModel, action: ItemCardModel['actions'][number]) => void;
 }
 
@@ -20,15 +22,23 @@ const QUALITY_CLASS: Record<ItemCardModel['quality'], string> = {
   legendary: 'border-gold/75 shadow-[inset_0_0_18px_rgba(156,117,47,0.1)]',
 };
 
+/** 主操作(穿戴/使用/更换)描金,危险操作(丢弃)朱红,其余素色 */
+function actionVariant(kind: ItemAction['kind']): string {
+  if (kind === 'equip' || kind === 'use' || kind === 'unequip') return ' item-action--primary';
+  if (kind === 'discard') return ' item-action--danger';
+  return '';
+}
+
 export const ItemCard: React.FC<ItemCardProps> = ({
   item,
   compact = false,
   defaultExpanded = false,
+  pendingNote,
   onAction,
 }) => {
   const [expanded, setExpanded] = useState(defaultExpanded);
   return (
-    <article className={`overflow-hidden border bg-ink-2/75 ${QUALITY_CLASS[item.quality]}`} data-item-instance={item.instanceId}>
+    <article className={`overflow-hidden border bg-ink-2/75 ${QUALITY_CLASS[item.quality]} ${pendingNote ? 'border-l-2 border-l-gold' : ''}`} data-item-instance={item.instanceId}>
       <button
         type="button"
         aria-expanded={expanded}
@@ -40,13 +50,16 @@ export const ItemCard: React.FC<ItemCardProps> = ({
           <ItemImage image={item.image} alt={item.name} className="h-full w-full" />
         </span>
         <span className="min-w-0 flex-1">
-          <span className="block truncate font-serif text-[12px] font-bold text-parchment">{item.name}</span>
-          <span className="mt-1 flex flex-wrap gap-x-2 gap-y-0.5 font-mono text-[9px] text-parchment-faint">
+          <span className="line-clamp-2 block break-words font-serif text-[12.5px] font-bold leading-snug text-parchment" title={item.name}>{item.name}</span>
+          <span className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5 font-mono text-[10px] text-parchment-faint">
             <span>{item.quantityLabel}</span>
             <span>{item.durabilityLabel}</span>
             <span>{item.bulkLabel}</span>
           </span>
-          <span className="mt-1 block truncate font-serif text-[9.5px] text-gold-dim">{item.locationLabel}</span>
+          <span className="mt-1 flex flex-wrap items-center gap-2">
+            <span className="line-clamp-2 block break-words font-serif text-[10px] leading-relaxed text-gold-dim" title={item.locationLabel}>{item.locationLabel}</span>
+            {pendingNote && <span className="pending-chip">待生效 · {pendingNote}</span>}
+          </span>
         </span>
         <ChevronDown className={`h-4 w-4 shrink-0 text-gold-dim transition-transform ${expanded ? 'rotate-180' : ''}`} />
       </button>
@@ -63,7 +76,7 @@ export const ItemCard: React.FC<ItemCardProps> = ({
                 event.stopPropagation();
                 if (!action.disabledReason) onAction?.(item, action);
               }}
-              className="border border-hairline-bright px-2 py-1 font-serif text-[9.5px] text-parchment-dim transition-colors hover:border-gold-deep hover:text-parchment disabled:cursor-not-allowed disabled:opacity-40"
+              className={`item-action${actionVariant(action.kind)}`}
             >
               {action.label}
             </button>

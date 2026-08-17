@@ -43,6 +43,8 @@ export function createNedItemState(): ItemSystemState {
     { instanceId: 'ned.ice', definitionId: 'artifact.ice', placement: { type: 'equipped', position: { group: 'mainhand' } }, overrides: { isHeirloom: true, lawfulControllerId: 'house_stark', renown: 100 } },
     { instanceId: 'ned.wool_tunic', definitionId: 'clothing.northern_wool_tunic', placement: { type: 'equipped', position: { group: 'torso', layer: 'garment' } } },
     { instanceId: 'ned.grey_cloak', definitionId: 'clothing.grey_wolf_cloak', placement: { type: 'equipped', position: { group: 'torso', layer: 'outerwear' } } },
+    { instanceId: 'ned.wool_breeches', definitionId: 'legwear.northern_wool_breeches', placement: { type: 'equipped', position: { group: 'legs', layer: 'legwear' } } },
+    { instanceId: 'ned.riding_boots', definitionId: 'footwear.northern_riding_boots', placement: { type: 'equipped', position: { group: 'legs', layer: 'footwear' } } },
     { instanceId: 'ned.house_seal', definitionId: 'keepsake.house_seal', placement: { type: 'equipped', position: { group: 'accessories', index: 0 } }, overrides: { customName: '临冬城公爵印章', lawfulControllerId: 'house_stark' } },
     { instanceId: 'ned.wolf_helm', definitionId: 'armor.stark_wolf_helm', placement: { type: 'site', siteId: 'winterfell_armory' } },
     { instanceId: 'ned.chainmail', definitionId: 'armor.castle_chainmail', placement: { type: 'site', siteId: 'winterfell_armory' } },
@@ -60,6 +62,8 @@ export function createJonItemState(): ItemSystemState {
     { instanceId: 'jon.uniform', definitionId: 'clothing.nights_watch_uniform', placement: { type: 'equipped', position: { group: 'torso', layer: 'garment' } } },
     { instanceId: 'jon.black_cloak', definitionId: 'clothing.black_winter_cloak', placement: { type: 'equipped', position: { group: 'torso', layer: 'outerwear' } } },
     { instanceId: 'jon.leathers', definitionId: 'armor.nights_watch_leathers', placement: { type: 'equipped', position: { group: 'torso', layer: 'armor' } } },
+    { instanceId: 'jon.wool_trousers', definitionId: 'legwear.nights_watch_wool_trousers', placement: { type: 'equipped', position: { group: 'legs', layer: 'legwear' } } },
+    { instanceId: 'jon.patrol_boots', definitionId: 'footwear.nights_watch_patrol_boots', placement: { type: 'equipped', position: { group: 'legs', layer: 'footwear' } } },
     { instanceId: 'jon.castle_sword', definitionId: 'weapon.castle_bastard_sword', placement: { type: 'equipped', position: { group: 'mainhand' } }, overrides: { customName: '守夜人手半剑' } },
     { instanceId: 'jon.spirits', definitionId: 'supply.nights_watch_spirits', placement: { type: 'carried' }, overrides: { charges: 4 } },
     { instanceId: 'jon.staunching_herbs', definitionId: 'medicine.maester_staunching_herbs', placement: { type: 'site', siteId: 'castle_black_quarters' }, overrides: { charges: 2 } },
@@ -72,6 +76,8 @@ export function createJonItemState(): ItemSystemState {
 export function createDaenerysItemState(): ItemSystemState {
   return createPreset([
     { instanceId: 'daenerys.silk_robe', definitionId: 'clothing.pentos_silk_robe', placement: { type: 'equipped', position: { group: 'torso', layer: 'garment' } } },
+    { instanceId: 'daenerys.silk_skirt', definitionId: 'legwear.pentos_silk_skirt', placement: { type: 'equipped', position: { group: 'legs', layer: 'legwear' } } },
+    { instanceId: 'daenerys.soft_shoes', definitionId: 'footwear.pentos_soft_shoes', placement: { type: 'equipped', position: { group: 'legs', layer: 'footwear' } } },
     { instanceId: 'daenerys.silver_ring', definitionId: 'jewelry.simple_silver_ring', placement: { type: 'equipped', position: { group: 'accessories', index: 0 } }, overrides: { customName: '坦格利安旧银戒' } },
     { instanceId: 'daenerys.black_red_egg', definitionId: 'artifact.petrified_dragon_egg_black_red', placement: { type: 'carried' }, overrides: { lawfulControllerId: 'char_daenerys', renown: 40 } },
     { instanceId: 'daenerys.green_bronze_egg', definitionId: 'artifact.petrified_dragon_egg_green_bronze', placement: { type: 'site', siteId: 'pentos_guest_room' }, overrides: { lawfulControllerId: 'char_daenerys', renown: 40 } },
@@ -85,6 +91,8 @@ export function createDaenerysItemState(): ItemSystemState {
 export function createCustomRulerItemState(): ItemSystemState {
   return createPreset([
     { instanceId: 'custom.wool_tunic', definitionId: 'clothing.northern_wool_tunic', placement: { type: 'equipped', position: { group: 'torso', layer: 'garment' } } },
+    { instanceId: 'custom.travel_trousers', definitionId: 'legwear.sturdy_travel_trousers', placement: { type: 'equipped', position: { group: 'legs', layer: 'legwear' } } },
+    { instanceId: 'custom.travel_boots', definitionId: 'footwear.sturdy_travel_boots', placement: { type: 'equipped', position: { group: 'legs', layer: 'footwear' } } },
     { instanceId: 'custom.silver_ring', definitionId: 'jewelry.simple_silver_ring', placement: { type: 'equipped', position: { group: 'accessories', index: 0 } } },
     { instanceId: 'custom.house_seal', definitionId: 'keepsake.house_seal', placement: { type: 'equipped', position: { group: 'accessories', index: 1 } }, overrides: { customName: '自建家族印章' } },
     { instanceId: 'custom.castle_sword', definitionId: 'weapon.castle_bastard_sword', placement: { type: 'carried' } },

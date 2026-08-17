@@ -5,11 +5,13 @@ import type {
 } from './types';
 
 const TORSO_LAYERS = new Set(['garment', 'armor', 'outerwear']);
-const SIMPLE_GROUPS = new Set(['head', 'mainhand', 'offhand', 'feet']);
+const LEG_LAYERS = new Set(['legwear', 'footwear']);
+const SIMPLE_GROUPS = new Set(['head', 'mainhand', 'offhand']);
 
 function isValidPosition(position: EquipmentPosition): boolean {
   if (SIMPLE_GROUPS.has(position.group)) return true;
   if (position.group === 'torso') return TORSO_LAYERS.has(position.layer);
+  if (position.group === 'legs') return LEG_LAYERS.has(position.layer);
   if (position.group === 'accessories') return position.index === 0 || position.index === 1 || position.index === 2;
   return false;
 }

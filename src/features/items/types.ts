@@ -15,13 +15,15 @@ export type ItemCategory =
 export type ItemBulk = 'tiny' | 'small' | 'medium' | 'large';
 export type CraftQuality = 'rough' | 'common' | 'fine' | 'masterwork' | 'legendary';
 export type ItemRarity = 'common' | 'uncommon' | 'rare' | 'illustrious' | 'unique';
-export type EquipmentGroup = 'head' | 'torso' | 'mainhand' | 'offhand' | 'feet' | 'accessories';
+export type EquipmentGroup = 'head' | 'torso' | 'mainhand' | 'offhand' | 'legs' | 'accessories';
 export type TorsoLayer = 'garment' | 'armor' | 'outerwear';
+export type LegLayer = 'legwear' | 'footwear';
 export type AccessoryIndex = 0 | 1 | 2;
 
 export type EquipmentPosition =
-  | { group: 'head' | 'mainhand' | 'offhand' | 'feet' }
+  | { group: 'head' | 'mainhand' | 'offhand' }
   | { group: 'torso'; layer: TorsoLayer }
+  | { group: 'legs'; layer: LegLayer }
   | { group: 'accessories'; index: AccessoryIndex };
 
 export type ItemPlacement =

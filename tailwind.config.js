@@ -20,6 +20,7 @@ export default {
           DEFAULT: v('--gold'),
           bright: v('--gold-bright'),
           deep: v('--gold-deep'),
+          dim: v('--gold-dim'),
         },
         rubric: {
           DEFAULT: v('--rubric'),

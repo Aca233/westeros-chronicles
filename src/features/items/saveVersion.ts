@@ -1,4 +1,4 @@
-export const ITEM_SAVE_FORMAT_VERSION = 4 as const;
+export const ITEM_SAVE_FORMAT_VERSION = 5 as const;
 
 const RESET_REQUIRED_MESSAGE = '测试版存档格式已更新，请重置测试存档后重新开始。';
 
@@ -7,7 +7,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 export function assertSupportedGameState(value: unknown): asserts value is {
-  saveFormatVersion: 4;
+  saveFormatVersion: 5;
   lord: { items: { schemaVersion: 1 } };
 } {
   if (!isRecord(value)
@@ -20,7 +20,7 @@ export function assertSupportedGameState(value: unknown): asserts value is {
 }
 
 export function assertSupportedSaveEnvelope(value: unknown): asserts value is {
-  version: 4;
+  version: 5;
   snapshots: unknown[];
   worldRuns?: unknown[];
   characterEvents?: unknown[];

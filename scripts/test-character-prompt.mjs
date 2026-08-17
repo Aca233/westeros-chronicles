@@ -351,7 +351,7 @@ test('领主状态切片只暴露当前装备与可访问物品的稳定 ID 和�
   state.items.instances.remote_secret = { instanceId: 'remote_secret', definitionId: 'jewelry.simple_silver_ring', quantity: 1, durability: 100, quality: 'fine', customName: '不可泄漏远方戒指', renown: 0, isHeirloom: false, history: [] };
   state.items.placements.remote_secret = { type: 'site', siteId: 'remote_vault' };
   const gameState = {
-    saveFormatVersion: 4, currentYear: 298, currentMonth: 10, currentDay: 15, currentSeason: '晚秋', turnCount: 1,
+    saveFormatVersion: 5, currentYear: 298, currentMonth: 10, currentDay: 15, currentSeason: '晚秋', turnCount: 1,
     lord: state, turns: [], worldFlags: {}, isGameOver: false,
   };
   const messages = buildChatMessages(gameState, '检视当前处境');

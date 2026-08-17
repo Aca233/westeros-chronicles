@@ -23,6 +23,7 @@ const module = await import(moduleUrl);
 const {
   ACCESSORY_INDICES,
   EQUIPMENT_GROUPS,
+  LEG_LAYERS,
   TORSO_LAYERS,
   canEquipItem,
   createEmptyItemSystem,
@@ -78,6 +79,8 @@ const catalog = createItemCatalog([
   definition({ id: 'armor.mail', name: '锁子甲', category: 'armor', subcategory: 'mail', bulk: 'medium', allowedPositions: [{ group: 'torso', layer: 'armor' }] }),
   definition({ id: 'armor.plate', name: '板甲', category: 'armor', subcategory: 'plate', bulk: 'large', allowedPositions: [{ group: 'torso', layer: 'armor' }] }),
   definition({ id: 'clothing.cloak', name: '北境大氅', subcategory: 'cloak', allowedPositions: [{ group: 'torso', layer: 'outerwear' }] }),
+  definition({ id: 'clothing.breeches', name: '羊毛长裤', subcategory: 'breeches', allowedPositions: [{ group: 'legs', layer: 'legwear' }] }),
+  definition({ id: 'clothing.boots', name: '熟皮靴', subcategory: 'boots', allowedPositions: [{ group: 'legs', layer: 'footwear' }] }),
   definition({ id: 'weapon.greatsword', name: '巨剑', category: 'weapon', subcategory: 'greatsword', bulk: 'medium', allowedPositions: [{ group: 'mainhand' }], handedness: 'two' }),
   definition({ id: 'weapon.sword', name: '长剑', category: 'weapon', subcategory: 'sword', allowedPositions: [{ group: 'mainhand' }, { group: 'offhand' }], handedness: 'one' }),
   definition({ id: 'weapon.shield', name: '盾牌', category: 'weapon', subcategory: 'shield', allowedPositions: [{ group: 'offhand' }], handedness: 'one' }),
@@ -97,8 +100,9 @@ function stateWith(definitionIds) {
 const options = { currentLocation: '临冬城', displacedTo: { type: 'carried' } };
 
 test('装备只暴露六个常态分组和规定的隐藏位置', () => {
-  assert.deepEqual(EQUIPMENT_GROUPS, ['head', 'torso', 'mainhand', 'offhand', 'feet', 'accessories']);
+  assert.deepEqual(EQUIPMENT_GROUPS, ['head', 'torso', 'mainhand', 'offhand', 'legs', 'accessories']);
   assert.equal(TORSO_LAYERS.join(','), 'garment,armor,outerwear');
+  assert.equal(LEG_LAYERS.join(','), 'legwear,footwear');
   assert.equal(ACCESSORY_INDICES.length, 3);
   assert.equal(EQUIPMENT_GROUPS.includes('cloak'), false);
   assert.equal(EQUIPMENT_GROUPS.includes('shoulder'), false);
@@ -111,6 +115,14 @@ test('躯干护甲和外披可以同时存在', () => {
   state = equipItem(state, catalog, 'clothing_cloak', { group: 'torso', layer: 'outerwear' }, options);
   assert.equal(getEquippedInstance(state, { group: 'torso', layer: 'armor' })?.instanceId, 'armor_mail');
   assert.equal(getEquippedInstance(state, { group: 'torso', layer: 'outerwear' })?.instanceId, 'clothing_cloak');
+});
+
+test('双腿内的腿部与足部可以同时装备', () => {
+  let state = stateWith(['clothing.breeches', 'clothing.boots']);
+  state = equipItem(state, catalog, 'clothing_breeches', { group: 'legs', layer: 'legwear' }, options);
+  state = equipItem(state, catalog, 'clothing_boots', { group: 'legs', layer: 'footwear' }, options);
+  assert.equal(getEquippedInstance(state, { group: 'legs', layer: 'legwear' })?.instanceId, 'clothing_breeches');
+  assert.equal(getEquippedInstance(state, { group: 'legs', layer: 'footwear' })?.instanceId, 'clothing_boots');
 });
 
 test('佩饰只有三个内部位置，第四件会被拒绝', () => {

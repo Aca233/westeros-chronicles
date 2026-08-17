@@ -3,6 +3,7 @@ import { getItemDefinition } from './catalog';
 import {
   ACCESSORY_INDICES,
   EQUIPMENT_GROUPS,
+  LEG_LAYERS,
   TORSO_LAYERS,
   getEquippedInstance,
   getReservedPositions,
@@ -61,7 +62,7 @@ const GROUP_LABELS: Record<EquipmentGroup, string> = {
   torso: '躯干',
   mainhand: '主手',
   offhand: '副手',
-  feet: '足部',
+  legs: '双腿',
   accessories: '佩饰',
 };
 
@@ -73,6 +74,7 @@ const BULK_LABELS: Record<ItemBulk, string> = {
 };
 
 const TORSO_LABELS = { garment: '服装', armor: '护甲', outerwear: '外披' } as const;
+const LEG_LABELS = { legwear: '腿部', footwear: '足部' } as const;
 const EFFECT_KIND_LABELS: Record<ItemEffect['kind'], string> = {
   check_modifier: '检定',
   action_unlock: '行动',
@@ -96,12 +98,14 @@ function sameLocation(left: string, right: string): boolean {
 
 function positionKey(position: EquipmentPosition): string {
   if (position.group === 'torso') return `torso:${position.layer}`;
+  if (position.group === 'legs') return `legs:${position.layer}`;
   if (position.group === 'accessories') return `accessories:${position.index}`;
   return position.group;
 }
 
 function positionLabel(position: EquipmentPosition): string {
   if (position.group === 'torso') return TORSO_LABELS[position.layer];
+  if (position.group === 'legs') return LEG_LABELS[position.layer];
   if (position.group === 'accessories') return `佩饰 ${position.index + 1}`;
   return GROUP_LABELS[position.group];
 }
@@ -266,9 +270,11 @@ export function buildEquipmentGroupModels(input: {
   return EQUIPMENT_GROUPS.map((group) => {
     const positions: EquipmentPosition[] = group === 'torso'
       ? TORSO_LAYERS.map((layer) => ({ group: 'torso', layer }))
-      : group === 'accessories'
-        ? ACCESSORY_INDICES.map((index) => ({ group: 'accessories', index }))
-        : [{ group } as EquipmentPosition];
+      : group === 'legs'
+        ? LEG_LAYERS.map((layer) => ({ group: 'legs', layer }))
+        : group === 'accessories'
+          ? ACCESSORY_INDICES.map((index) => ({ group: 'accessories', index }))
+          : [{ group } as EquipmentPosition];
     const positionModels = positions.map((position) => positionModel(input.state, input.catalog, input.pendingActions, position));
     const items = positionModels.flatMap((position) => position.item ? [position.item] : []);
     const reservedByTwoHandedItem = positions.some((position) => reservedKeys.has(positionKey(position)));

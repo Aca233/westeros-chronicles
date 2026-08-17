@@ -19,6 +19,7 @@ let pendingSequence = 0;
 
 function positionKey(position: EquipmentPosition): string {
   if (position.group === 'torso') return `torso:${position.layer}`;
+  if (position.group === 'legs') return `legs:${position.layer}`;
   if (position.group === 'accessories') return `accessories:${position.index}`;
   return position.group;
 }

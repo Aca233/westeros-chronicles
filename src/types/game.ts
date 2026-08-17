@@ -145,7 +145,7 @@ export interface WorldCharacterStateRef {
 
 // 游戏全局状态
 export interface GameState {
-  saveFormatVersion: 4;
+  saveFormatVersion: 5;
   currentYear: number;
   currentMonth: number;
   currentDay: number;

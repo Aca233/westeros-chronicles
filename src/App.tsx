@@ -42,7 +42,11 @@ export const App: React.FC = () => {
       if ((e.key === 'c' || e.key === 'C') && !typing) {
         setDossierOpen((open) => !open);
       }
-      if (e.key === 'Escape') setDossierOpen(false);
+      if (e.key === 'Escape') {
+        // 物品选择/赠予对话框浮在卷宗之上:Esc 先关最上层,卷宗保持
+        const itemDialogOpen = document.querySelector('[data-item-choice-dialog], [data-item-gift-dialog]');
+        if (!itemDialogOpen) setDossierOpen(false);
+      }
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);

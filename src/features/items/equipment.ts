@@ -9,6 +9,7 @@ import type {
   ItemInstance,
   ItemPlacement,
   ItemSystemState,
+  LegLayer,
   TorsoLayer,
 } from './types';
 
@@ -17,11 +18,12 @@ export const EQUIPMENT_GROUPS: readonly EquipmentGroup[] = [
   'torso',
   'mainhand',
   'offhand',
-  'feet',
+  'legs',
   'accessories',
 ];
 
 export const TORSO_LAYERS: readonly TorsoLayer[] = ['garment', 'armor', 'outerwear'];
+export const LEG_LAYERS: readonly LegLayer[] = ['legwear', 'footwear'];
 export const ACCESSORY_INDICES: readonly AccessoryIndex[] = [0, 1, 2];
 
 export interface EquipmentGroupView {
@@ -41,6 +43,7 @@ export interface UnequipOptions {
 function positionsEqual(left: EquipmentPosition, right: EquipmentPosition): boolean {
   if (left.group !== right.group) return false;
   if (left.group === 'torso') return right.group === 'torso' && left.layer === right.layer;
+  if (left.group === 'legs') return right.group === 'legs' && left.layer === right.layer;
   if (left.group === 'accessories') return right.group === 'accessories' && left.index === right.index;
   return true;
 }
@@ -48,8 +51,9 @@ function positionsEqual(left: EquipmentPosition, right: EquipmentPosition): bool
 function isEquipmentPosition(value: EquipmentPosition): boolean {
   if (!EQUIPMENT_GROUPS.includes(value.group)) return false;
   if (value.group === 'torso') return TORSO_LAYERS.includes(value.layer);
+  if (value.group === 'legs') return LEG_LAYERS.includes(value.layer);
   if (value.group === 'accessories') return ACCESSORY_INDICES.includes(value.index);
-  return value.group === 'head' || value.group === 'mainhand' || value.group === 'offhand' || value.group === 'feet';
+  return value.group === 'head' || value.group === 'mainhand' || value.group === 'offhand';
 }
 
 export function getEquippedInstance(

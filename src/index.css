@@ -21,8 +21,9 @@
   --rubric-bright: 194 74 56;
   --parchment: 43 36 23;
   --parchment-dim: 74 63 44;
-  --parchment-faint: 138 123 98;
+  --parchment-faint: 108 93 68;
   --shadow: 74 58 32;
+  --gold-dim: 146 118 66;
 
   /* 动效曲线 */
   --ease-fluid: cubic-bezier(0.22, 1, 0.36, 1);
@@ -48,8 +49,9 @@
   --rubric-bright: 228 112 84;
   --parchment: 232 217 188;
   --parchment-dim: 178 157 124;
-  --parchment-faint: 128 111 86;
+  --parchment-faint: 156 138 110;
   --shadow: 6 4 2;
+  --gold-dim: 172 140 88;
 
   --glow-strength: 0.14;
 }
@@ -911,6 +913,74 @@ hr.hairline {
   border: 0;
   height: 1px;
   background: linear-gradient(90deg, transparent, rgb(var(--hairline) / 0.85) 18%, rgb(var(--hairline) / 0.85) 82%, transparent);
+}
+
+/* 待生效徽标:已排队、下次对话结算 */
+.pending-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 7px;
+  border: 1px solid rgb(var(--gold) / 0.55);
+  border-radius: 999px;
+  background: rgb(var(--gold) / 0.12);
+  color: rgb(var(--gold-bright));
+  font-family: "Noto Serif SC", serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+.pending-chip::before {
+  content: '';
+  width: 4px;
+  height: 4px;
+  border-radius: 999px;
+  background: currentColor;
+  animation: quill-dot 1.4s ease-in-out infinite;
+}
+
+/* 队列通告条 */
+.queue-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgb(var(--gold) / 0.5);
+  background: linear-gradient(90deg, rgb(var(--gold) / 0.14), rgb(var(--gold) / 0.05));
+  padding: 8px 12px;
+  font-family: "Noto Serif SC", serif;
+  font-size: 11px;
+  color: rgb(var(--parchment));
+}
+
+/* 物品操作钮 */
+.item-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border: 1px solid rgb(var(--hairline-bright));
+  padding: 4px 10px;
+  font-family: "Noto Serif SC", serif;
+  font-size: 10.5px;
+  color: rgb(var(--parchment-dim));
+  transition: color 0.18s ease, border-color 0.18s ease, background 0.18s ease, transform 0.18s var(--ease-fluid);
+}
+.item-action:hover:not(:disabled) {
+  border-color: rgb(var(--gold-deep));
+  color: rgb(var(--parchment));
+  background: rgb(var(--gold) / 0.08);
+}
+.item-action:active:not(:disabled) { transform: scale(0.95); }
+.item-action:disabled { cursor: not-allowed; opacity: 0.42; }
+.item-action--primary {
+  border-color: rgb(var(--gold-deep));
+  color: rgb(var(--gold-bright));
+  font-weight: 700;
+}
+.item-action--danger:hover:not(:disabled) {
+  border-color: rgb(var(--rubric));
+  color: rgb(var(--rubric-bright));
+  background: rgb(var(--rubric) / 0.08);
 }
 
 /* ============================================================

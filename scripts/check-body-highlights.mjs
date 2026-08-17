@@ -14,7 +14,8 @@ if (!css.includes('.body-model .rbh polygon {') || !css.includes('stroke: rgba(2
 if (count(sheet, "muscles: ['head', 'neck']") < 2) failures.push('Head highlighting does not include the neck for wounds and selection.');
 if (!sheet.includes("muscles: ['biceps', 'triceps', 'forearm', 'front-deltoids']")) failures.push('Arm wound highlighting is missing an upper-arm muscle group.');
 if (count(sheet, "muscles: ['quadriceps', 'abductors', 'calves', 'knees']") < 2) failures.push('Leg highlighting does not include the hip region for wounds and selection.');
-if (!/m === 'biceps'.*m === 'triceps'.*m === 'forearm'.*m === 'front-deltoids'/.test(sheet)) failures.push('Clicking the triceps does not select an arm slot.');
+if (!sheet.includes('const currentTarget = hoveredSlot;') || sheet.includes('setActiveSlot') || sheet.includes('onClick={handleMuscleClick}')) failures.push('Clicking a body zone still creates a persistent highlight.');
+if (!sheet.includes("['mainhand', '主手', body.arms.level, body.arms.wounds]") || !sheet.includes("['offhand', '副手', body.arms.level, body.arms.wounds]") || sheet.includes("['mainhand', '双臂'")) failures.push('Main hand and off hand are collapsed back into a single arms card.');
 
 for (const index of [7, 10, 14, 30, 33]) {
   if (!css.includes(`.body-model--mainhand .rbh polygon:nth-of-type(${index})`)) failures.push(`Main-hand highlight is missing polygon ${index}.`);

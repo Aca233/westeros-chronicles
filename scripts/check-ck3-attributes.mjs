@@ -35,7 +35,7 @@ if (characterSheet.includes('zoneName="肩背"') || characterSheet.includes("slo
 }
 if (!characterSheet.includes('<EquipmentPanel body={body}')) failures.push('Character sheet does not use the authoritative six-group equipment panel.');
 const equipmentPanel = await readFile(join(root, 'src/components/items/EquipmentPanel.tsx'), 'utf8');
-if (!equipmentPanel.includes("['head', 'torso', 'mainhand', 'offhand', 'feet', 'accessories']")) failures.push('Equipment groups are not in the approved order.');
+if (!equipmentPanel.includes("['head', 'torso', 'mainhand', 'offhand', 'legs', 'accessories']")) failures.push('Equipment groups are not in the approved order.');
 if (!equipmentPanel.includes('data-hand-pair')) failures.push('Main-hand and off-hand are not arranged symmetrically.');
 
 

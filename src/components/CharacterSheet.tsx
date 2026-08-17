@@ -8,8 +8,9 @@ import {
   ScrollText,
   Skull,
 } from 'lucide-react';
-import Model, { type IExerciseData, type IMuscleStats } from 'react-body-highlighter';
+import Model, { type IExerciseData } from 'react-body-highlighter';
 import { useGameStore } from '../store/useGameStore';
+import { useThemeMode } from '../hooks/useThemeMode';
 import type { EquipmentGroup } from '../features/items/types';
 import type { WoundLevel } from '../types/game';
 import { GameIcon, type GameIconId, getHouseIconId } from './GameIcon';
@@ -26,14 +27,22 @@ import { EquipmentPanel } from './items/EquipmentPanel';
 
 export const CharacterSheet: React.FC<{ embedded?: boolean }> = ({ embedded = false }) => {
   const { gameState } = useGameStore();
+  const theme = useThemeMode();
   const { lord } = gameState;
   const { body } = lord;
   const displayedTraits = resolveCharacterTraits(lord.traitIds ?? [], lord.traits ?? []);
-  const [activeSlot, setActiveSlot] = useState<string | null>('torso');
   const [hoveredSlot, setHoveredSlot] = useState<string | null>(null);
   const [activeTraitId, setActiveTraitId] = useState<string | null>(null);
   const activeTrait = displayedTraits.find((trait) => trait.id === activeTraitId);
-  const currentTarget = hoveredSlot || activeSlot;
+  const currentTarget = hoveredSlot;
+
+  // 人体着色:日间羊皮淡彩,夜间烛下深墨
+  const bodyFill = theme === 'night' ? '#2e2519' : '#cdb889';
+  const bodyShadow = currentTarget
+    ? 'drop-shadow(0 0 4px rgba(234,201,126,0.8))'
+    : theme === 'night'
+      ? 'drop-shadow(0 2px 3px rgba(0,0,0,0.75))'
+      : 'drop-shadow(0 2px 3px rgba(74,58,32,0.32))';
 
   const bodyHighlighterData: IExerciseData[] = [];
   const getFreq = (level: WoundLevel) => {
@@ -64,19 +73,8 @@ export const CharacterSheet: React.FC<{ embedded?: boolean }> = ({ embedded = fa
     bodyHighlighterData.push({ name: '下肢选中', muscles: ['quadriceps', 'abductors', 'calves', 'knees'], frequency: 4 });
   }
 
-  const handleMuscleClick = (stats?: IMuscleStats) => {
-    if (!stats?.muscle) return;
-    const m = stats.muscle as string;
-    if (m === 'head' || m === 'trapezius' || m === 'neck') setActiveSlot('head');
-    else if (m === 'chest' || m === 'abs' || m === 'obliques') setActiveSlot('torso');
-    else if (m === 'biceps' || m === 'triceps' || m === 'forearm' || m === 'front-deltoids') setActiveSlot('mainhand');
-    else if (m === 'quadriceps' || m === 'calves' || m === 'knees' || m === 'adductor' || m === 'abductors') setActiveSlot('legs');
-  };
-
   const focusEquipmentGroup = (group: EquipmentGroup | null) => {
-    if (group === 'feet') setHoveredSlot('legs');
-    else if (group === 'accessories') setHoveredSlot(null);
-    else setHoveredSlot(group);
+    setHoveredSlot(group);
   };
 
   return (
@@ -175,15 +173,14 @@ export const CharacterSheet: React.FC<{ embedded?: boolean }> = ({ embedded = fa
         <div className="grid gap-2 border border-hairline bg-gradient-to-b from-ink-2 via-ink-3 to-ink p-2.5 shadow-inner sm:grid-cols-[minmax(150px,0.75fr)_minmax(180px,1fr)]">
           <div className="relative min-h-[280px] overflow-hidden border border-hairline bg-ink/35">
             <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#c9a45c_1px,transparent_1px)] [background-size:12px_12px]" />
-            <div className={`body-model absolute inset-0 flex items-center justify-center filter brightness-95 contrast-125 ${currentTarget === 'mainhand' ? 'body-model--mainhand' : currentTarget === 'offhand' ? 'body-model--offhand' : ''}`}>
+            <div className={`body-model absolute inset-0 flex items-center justify-center ${currentTarget === 'mainhand' ? 'body-model--mainhand' : currentTarget === 'offhand' ? 'body-model--offhand' : ''}`}>
               <Model
                 type="anterior"
-                bodyColor="#2e2519"
+                bodyColor={bodyFill}
                 highlightedColors={['#d97706', '#b4432f', '#d4593f', '#eac97e']}
                 data={bodyHighlighterData}
-                onClick={handleMuscleClick}
                 style={{ width: '100%', height: '100%', maxHeight: '270px', maxWidth: '165px' }}
-                svgStyle={{ filter: currentTarget ? 'drop-shadow(0 0 4px rgba(234,201,126,0.8))' : 'drop-shadow(0 2px 3px rgba(0,0,0,0.75))' }}
+                svgStyle={{ filter: bodyShadow }}
               />
             </div>
           </div>
@@ -191,17 +188,18 @@ export const CharacterSheet: React.FC<{ embedded?: boolean }> = ({ embedded = fa
             {([
               ['head', '头部', body.head.level, body.head.wounds],
               ['torso', '躯干', body.torso.level, body.torso.wounds],
-              ['mainhand', '双臂', body.arms.level, body.arms.wounds],
+              ['mainhand', '主手', body.arms.level, body.arms.wounds],
+              ['offhand', '副手', body.arms.level, body.arms.wounds],
               ['legs', '双腿', body.legs.level, body.legs.wounds],
             ] as const).map(([key, label, level, wounds]) => (
-              <button key={key} type="button" onMouseEnter={() => setHoveredSlot(key)} onMouseLeave={() => setHoveredSlot(null)} onClick={() => setActiveSlot(key)} className={`border px-2 py-2 text-left ${currentTarget === key ? 'border-gold bg-gold-deep/15' : 'border-hairline bg-ink-2/55'}`}>
-                <span className="flex items-center justify-between gap-2"><strong className="font-serif text-[11px] text-parchment">{label}</strong><span className="font-mono text-[9px] text-gold-dim">{getWoundLabel(level)}</span></span>
-                <span className="mt-1 line-clamp-2 block font-serif text-[9px] leading-relaxed text-parchment-faint">{wounds.length ? wounds.join(' · ') : '未记录创伤'}</span>
-              </button>
+              <div key={key} data-body-zone={key} onMouseEnter={() => setHoveredSlot(key)} onMouseLeave={() => setHoveredSlot(null)} className={`border px-2 py-2 text-left transition-colors ${currentTarget === key ? 'border-gold bg-gold-deep/15' : 'border-hairline bg-ink-2/55'}`}>
+                <span className="flex items-center justify-between gap-2"><strong className="font-serif text-[11.5px] text-parchment">{label}</strong><span className={`font-mono text-[10px] ${level === 'intact' ? 'text-gold-dim' : 'font-bold text-rubric'}`}>{getWoundLabel(level)}</span></span>
+                <span className="mt-1 line-clamp-2 block font-serif text-[10px] leading-relaxed text-parchment-dim">{wounds.length ? wounds.join(' · ') : '未记录创伤'}</span>
+              </div>
             ))}
             <div className="col-span-2 mt-1 border border-hairline bg-ink-3/35 px-2.5 py-2">
               <span className="eyebrow !text-[8px]">总体状态</span>
-              <p className="mt-1 font-serif text-[11px] text-gold-bright">{lord.overallStatus}</p>
+              <p className="mt-1 font-serif text-[12px] font-semibold text-gold-bright">{lord.overallStatus}</p>
             </div>
           </div>
         </div>

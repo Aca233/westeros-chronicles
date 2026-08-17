@@ -34,6 +34,14 @@ const requiredIds = [
   'clothing.nights_watch_uniform',
   'clothing.grey_wolf_cloak',
   'clothing.black_winter_cloak',
+  'footwear.northern_riding_boots',
+  'footwear.nights_watch_patrol_boots',
+  'footwear.pentos_soft_shoes',
+  'footwear.sturdy_travel_boots',
+  'legwear.northern_wool_breeches',
+  'legwear.nights_watch_wool_trousers',
+  'legwear.pentos_silk_skirt',
+  'legwear.sturdy_travel_trousers',
   'armor.stark_wolf_helm',
   'armor.castle_chainmail',
   'armor.nights_watch_leathers',
@@ -93,6 +101,22 @@ test('四套预设确定、合法且不从旧装备对象迁移', () => {
   assert.equal(createNedItemState().instances['ned.ice'].definitionId, 'artifact.ice');
   assert.equal(createNedItemState().instances['ned.wool_tunic'].definitionId, 'clothing.northern_wool_tunic');
   assert.equal(createJonItemState().instances['jon.castle_sword'].definitionId, 'weapon.castle_bastard_sword');
+});
+
+test('每套初始预设的双腿组同时具有腿部与足部物品', () => {
+  const factories = [createNedItemState, createJonItemState, createDaenerysItemState, createCustomRulerItemState];
+  for (const factory of factories) {
+    const state = factory();
+    const equippedLegs = Object.entries(state.placements).filter(([, placement]) => placement.type === 'equipped' && placement.position.group === 'legs');
+    assert.equal(equippedLegs.length, 2);
+    assert.deepEqual(equippedLegs.map(([, placement]) => placement.position.layer).sort(), ['footwear', 'legwear']);
+    for (const [instanceId, placement] of equippedLegs) {
+      const definition = ITEM_CATALOG.get(state.instances[instanceId].definitionId);
+      assert.ok(definition);
+      assert.equal(definition.category, 'clothing');
+      assert.deepEqual(definition.allowedPositions, [{ group: 'legs', layer: placement.position.layer }]);
+    }
+  }
 });
 
 test('药物与酒液预设使用明确次数而不是隐藏百分比', () => {
