@@ -170,7 +170,7 @@ function isAtCurrentLocation(containerLocation: string, currentLocation: string)
   return locationRoot(containerLocation) === locationRoot(currentLocation);
 }
 
-function assertPlacementAccessible(
+export function assertPlacementAccessible(
   state: ItemSystemState,
   placement: ItemPlacement,
   currentLocation: string,
