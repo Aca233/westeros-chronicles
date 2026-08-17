@@ -1,7 +1,43 @@
 import { createItemCatalog } from '../features/items/catalog';
-import type { ItemDefinition } from '../features/items/types';
+import type { ItemCategory, ItemDefinition, ItemImageRef } from '../features/items/types';
 
 const defineItem = (definition: ItemDefinition): ItemDefinition => definition;
+
+const CATEGORY_IMAGES: Record<ItemCategory, ItemImageRef> = {
+  weapon: { type: 'game', icon: 'gear-sword' },
+  armor: { type: 'game', icon: 'gear-armor' },
+  clothing: { type: 'game', icon: 'gear-cloak' },
+  jewelry: { type: 'game', icon: 'artifact-ruby' },
+  tool: { type: 'library', iconName: 'tool' },
+  document: { type: 'game', icon: 'artifact-white-book' },
+  medicine: { type: 'library', iconName: 'medicine' },
+  poison: { type: 'library', iconName: 'medicine' },
+  supply: { type: 'library', iconName: 'supply' },
+  keepsake: { type: 'game', icon: 'artifact-crown' },
+};
+
+type ExpandedItemInput = Pick<ItemDefinition,
+  'id' | 'name' | 'description' | 'roleplayText' | 'category' | 'subcategory' | 'tags' | 'material' | 'effects'
+> & Partial<Omit<ItemDefinition,
+  'id' | 'name' | 'description' | 'roleplayText' | 'category' | 'subcategory' | 'tags' | 'material' | 'effects'
+>>;
+
+function expandedItem(input: ExpandedItemInput): ItemDefinition {
+  const stackable = input.stackable ?? false;
+  return defineItem({
+    ...input,
+    image: input.image ?? CATEGORY_IMAGES[input.category],
+    baseQuality: input.baseQuality ?? 'common',
+    rarity: input.rarity ?? 'common',
+    bulk: input.bulk ?? 'small',
+    stackable,
+    maxStack: input.maxStack ?? (stackable ? 20 : 1),
+    unique: input.unique ?? false,
+    equippable: input.equippable ?? false,
+    allowedPositions: input.allowedPositions ?? [],
+    baseValue: input.baseValue ?? 5,
+  });
+}
 
 export const ITEM_DEFINITIONS: readonly ItemDefinition[] = [
   defineItem({
@@ -191,7 +227,7 @@ export const ITEM_DEFINITIONS: readonly ItemDefinition[] = [
     category: 'weapon',
     subcategory: 'greatsword',
     tags: ['greatsword', 'two_handed', 'valyrian_steel', 'stark', 'melee', 'heirloom'],
-    image: { type: 'game', icon: 'gear-sword' },
+    image: { type: 'wiki', path: '/assets/item-images/artifact-ice.webp', fallbackIcon: 'gear-sword' },
     material: '瓦雷利亚钢',
     baseQuality: 'legendary',
     rarity: 'unique',
@@ -428,6 +464,248 @@ export const ITEM_DEFINITIONS: readonly ItemDefinition[] = [
     ],
     provenance: { origin: '据称来自亚夏以东的阴影之地，后由潘托斯总督伊利里欧赠予丹妮莉丝·坦格利安。' },
   })),
+
+  expandedItem({
+    id: 'weapon.dornish_sand_dagger', name: '多恩沙地短匕', category: 'weapon', subcategory: 'dagger',
+    description: '窄身双刃匕首配有防滑皮柄，便于藏在轻袍或马靴中，是多恩旅人常见的防身武器。',
+    roleplayText: '短刃并不适合堂皇对阵，却能在贴身纠缠和狭窄门廊里迅速出手。',
+    tags: ['dorne', 'dagger', 'melee', 'concealable'], material: '多恩钢与蜥蜴皮', baseQuality: 'fine', rarity: 'uncommon', bulk: 'tiny',
+    equippable: true, allowedPositions: [{ group: 'mainhand' }, { group: 'offhand' }], baseValue: 18,
+    effects: [
+      { kind: 'check_modifier', domain: 'duel', value: 1, stackGroup: 'duel.weapon', cap: 5, condition: { actionPatterns: ['匕首', '短刃', '贴身'], requiredSceneTags: ['melee'] }, label: '贴身短刃' },
+      { kind: 'narrative', directive: '短匕容易携带和隐藏，但面对长兵器、厚甲或开阔战场时明显吃亏。' },
+    ], provenance: { origin: '多恩阳戟城一带的刀匠作坊' },
+  }),
+  expandedItem({
+    id: 'weapon.ironborn_boarding_axe', name: '铁民登船斧', category: 'weapon', subcategory: 'axe',
+    description: '短柄单刃战斧，斧背带钩，原本用于攀船、破索与近距离登舷厮杀。',
+    roleplayText: '盐迹浸入木柄，斧钩上总能找到旧绳纤维。',
+    tags: ['iron_islands', 'axe', 'boarding', 'melee'], material: '群岛铁与浸油硬木', baseQuality: 'fine', rarity: 'uncommon', bulk: 'medium',
+    equippable: true, allowedPositions: [{ group: 'mainhand' }], baseValue: 26,
+    effects: [
+      { kind: 'check_modifier', domain: 'duel', value: 2, stackGroup: 'duel.weapon', cap: 5, condition: { actionPatterns: ['劈砍', '战斧', '登船'], requiredSceneTags: ['melee'] }, label: '登舷劈砍' },
+      { kind: 'action_unlock', actionId: 'hook_rigging', label: '钩住绳索或船舷' },
+      { kind: 'narrative', directive: '登船斧在甲板和近战中凶狠实用，挥舞时却比短剑更容易暴露空当。' },
+    ], provenance: { origin: '铁群岛派克城外的海岸铁匠铺' },
+  }),
+  expandedItem({
+    id: 'weapon.vale_ash_spear', name: '谷地白蜡长矛', category: 'weapon', subcategory: 'spear',
+    description: '以笔直白蜡木制成的长矛，钢制矛头适合守住山道、马背冲刺或列阵迎敌。',
+    roleplayText: '长杆经过油蜡打磨，在寒冷山风中仍不易开裂。',
+    tags: ['vale', 'spear', 'polearm', 'melee'], material: '谷地白蜡木与精钢', baseQuality: 'fine', rarity: 'common', bulk: 'large',
+    equippable: true, allowedPositions: [{ group: 'mainhand' }], handedness: 'two', baseValue: 22,
+    effects: [
+      { kind: 'check_modifier', domain: 'battle', value: 2, stackGroup: 'battle.weapon', cap: 4, condition: { requiredSceneTags: ['melee'] }, label: '山道拒敌' },
+      { kind: 'burden', value: 1, stackGroup: 'weapon.burden', cap: 3, label: '长杆不便' },
+      { kind: 'narrative', directive: '长矛能控制距离并适合列阵，但在室内、密林和贴身缠斗中难以转动。' },
+    ], provenance: { origin: '艾林谷诸侯的城堡军械库' },
+  }),
+  expandedItem({
+    id: 'weapon.reach_yew_bow', name: '河湾地紫杉长弓', category: 'weapon', subcategory: 'bow',
+    description: '以多年阴干的紫杉木制成，弓背覆筋，适合猎场和有准备的远距离射击。',
+    roleplayText: '弓弦必须保持干燥，每次远行都要反复上蜡检查。',
+    tags: ['reach', 'bow', 'ranged', 'hunting'], material: '河湾地紫杉木、牛筋与麻弦', baseQuality: 'fine', rarity: 'uncommon', bulk: 'large',
+    equippable: true, allowedPositions: [{ group: 'mainhand' }], handedness: 'two', baseValue: 32,
+    effects: [
+      { kind: 'check_modifier', domain: 'battle', value: 2, stackGroup: 'battle.ranged', cap: 4, condition: { actionPatterns: ['射箭', '放箭', '远射'], requiredSceneTags: ['ranged'] }, label: '紫杉强弓' },
+      { kind: 'action_unlock', actionId: 'ranged_shot', label: '远距离射击' },
+      { kind: 'narrative', directive: '长弓需要箭矢、展开空间和稳定拉距；近身后不能继续当作可靠武器使用。' },
+    ], provenance: { origin: '河湾地长弓匠人行会' },
+  }),
+  expandedItem({
+    id: 'weapon.riverlands_kite_shield', name: '河间地铁边鸢盾', category: 'weapon', subcategory: 'shield',
+    description: '高身木芯鸢盾，边缘包铁，漆面通常绘有封君或骑士家徽。',
+    roleplayText: '旧凹痕和重新上漆的地方比纹章更能说明它经历过什么。',
+    tags: ['riverlands', 'shield', 'defense', 'melee'], material: '层压木、熟皮与铁边', baseQuality: 'fine', rarity: 'common', bulk: 'large',
+    equippable: true, allowedPositions: [{ group: 'offhand' }], baseValue: 24,
+    effects: [
+      { kind: 'protection', zones: ['torso', 'arms'], damageTags: ['slashing', 'piercing', 'blunt'], value: 2, stackGroup: 'armor.shield', cap: 3, label: '鸢盾遮护' },
+      { kind: 'burden', value: 1, stackGroup: 'shield.burden', cap: 2, label: '大盾负担' },
+      { kind: 'narrative', directive: '鸢盾能遮护身体和偏转攻击，却占用副手，并在奔跑、攀爬和狭窄空间中妨碍动作。' },
+    ], provenance: { origin: '河间地渡口与城堡军械库' },
+  }),
+  expandedItem({
+    id: 'artifact.longclaw', name: '瓦雷利亚钢长剑“长爪”', category: 'weapon', subcategory: 'longsword',
+    description: '莫尔蒙家族传承的瓦雷利亚钢长剑，剑首后来改刻为白色冰原狼。',
+    roleplayText: '这柄剑的分量不仅来自钢，也来自赠剑之人的信任和守夜人的誓言。',
+    tags: ['northern', 'nights_watch', 'valyrian_steel', 'sword', 'heirloom', 'melee'], material: '瓦雷利亚钢、银与象牙色石料',
+    image: { type: 'wiki', path: '/assets/item-images/artifact-longclaw.webp', fallbackIcon: 'gear-sword' }, baseQuality: 'legendary', rarity: 'unique', bulk: 'medium',
+    unique: true, equippable: true, allowedPositions: [{ group: 'mainhand' }], baseValue: 4200,
+    effects: [
+      { kind: 'check_modifier', domain: 'duel', value: 4, stackGroup: 'duel.weapon', cap: 5, condition: { actionPatterns: ['持剑', '挥剑', '决斗'], requiredSceneTags: ['melee'] }, label: '瓦雷利亚钢锋刃' },
+      { kind: 'social', contextTags: ['northern', 'nights_watch'], value: 2, stackGroup: 'identity.heirloom', cap: 4, label: '莫尔蒙旧传承' },
+      { kind: 'narrative', directive: '长爪锋利轻韧，却不会让持剑者越过技艺、距离和现实局势自动获胜。' },
+    ], provenance: { origin: '熊岛莫尔蒙家族传承，后由杰奥·莫尔蒙赠予琼恩·雪诺。', boundHouse: 'house_mormont' },
+  }),
+  expandedItem({
+    id: 'artifact.dawn', name: '星陨巨剑“黎明”', category: 'weapon', subcategory: 'greatsword',
+    description: '戴恩家族以陨星之心锻造的乳白色巨剑，只交给获封“拂晓神剑”的家族勇士。',
+    roleplayText: '苍白剑身在光下近乎发亮，任何公开携带都等同于宣示古老荣誉。',
+    tags: ['dorne', 'dayne', 'meteorite', 'greatsword', 'heirloom', 'melee'], material: '陨星金属',
+    image: { type: 'wiki', path: '/assets/item-images/artifact-dawn.webp', fallbackIcon: 'gear-sword' }, baseQuality: 'legendary', rarity: 'unique', bulk: 'large',
+    unique: true, equippable: true, allowedPositions: [{ group: 'mainhand' }], handedness: 'two', baseValue: 4800,
+    effects: [
+      { kind: 'check_modifier', domain: 'duel', value: 4, stackGroup: 'duel.weapon', cap: 5, condition: { actionPatterns: ['巨剑', '挥剑', '决斗'], requiredSceneTags: ['melee'] }, label: '星陨剑锋' },
+      { kind: 'social', contextTags: ['dorne', 'court', 'knighthood'], value: 3, stackGroup: 'identity.heirloom', cap: 4, label: '拂晓神剑之证' },
+      { kind: 'burden', value: 2, stackGroup: 'weapon.burden', cap: 3, label: '礼制重器' },
+      { kind: 'narrative', directive: '黎明的公开持有受戴恩家族传统约束；强夺或冒用会带来明确的政治和名誉后果。' },
+    ], provenance: { origin: '多恩星坠城戴恩家族，由坠落陨星之心锻造。', boundHouse: 'house_dayne' },
+  }),
+  expandedItem({
+    id: 'artifact.blackfyre', name: '瓦雷利亚钢剑“黑火”', category: 'weapon', subcategory: 'longsword',
+    description: '征服者伊耿所持的瓦雷利亚钢剑，后来成为坦格利安王权与黑火宣称的核心象征。',
+    roleplayText: '它每一次现身都会唤起王朝、叛乱和合法性的争执，远胜一柄普通宝剑。',
+    tags: ['crownlands', 'targaryen', 'blackfyre', 'valyrian_steel', 'sword', 'heirloom', 'melee'], material: '瓦雷利亚钢',
+    image: { type: 'wiki', path: '/assets/item-images/artifact-blackfyre.webp', fallbackIcon: 'gear-sword' }, baseQuality: 'legendary', rarity: 'unique', bulk: 'medium',
+    unique: true, equippable: true, allowedPositions: [{ group: 'mainhand' }], baseValue: 5200,
+    effects: [
+      { kind: 'check_modifier', domain: 'duel', value: 4, stackGroup: 'duel.weapon', cap: 5, condition: { actionPatterns: ['持剑', '挥剑', '决斗'], requiredSceneTags: ['melee'] }, label: '瓦雷利亚钢锋刃' },
+      { kind: 'social', contextTags: ['crownlands', 'court', 'targaryen', 'succession'], value: 4, stackGroup: 'identity.heirloom', cap: 4, label: '王权与宣称之剑' },
+      { kind: 'narrative', directive: '黑火的象征意义会引发政治判断、效忠与敌意，但持剑本身不会自动创造合法王位宣称。' },
+    ], provenance: { origin: '坦格利安王室传世之剑，曾由征服者伊耿持有。', boundHouse: 'house_targaryen' },
+  }),
+  expandedItem({
+    id: 'armor.riverlands_quilted_gambeson', name: '河间地绗缝软甲', category: 'armor', subcategory: 'gambeson',
+    description: '多层亚麻与羊毛紧密绗缝的护衣，吸收撞击并可作为锁甲内衬。', roleplayText: '吸满汗水或雨水后会变得沉重，必须及时晾干。',
+    tags: ['riverlands', 'cloth_armor', 'travel', 'rain'], material: '绗缝亚麻、羊毛与熟皮', baseQuality: 'common', bulk: 'medium',
+    equippable: true, allowedPositions: [{ group: 'torso', layer: 'armor' }], baseValue: 16,
+    effects: [
+      { kind: 'protection', zones: ['torso', 'arms'], damageTags: ['blunt', 'slashing'], value: 2, stackGroup: 'armor.body', cap: 5, label: '绗缝缓冲' },
+      { kind: 'narrative', directive: '软甲能缓解擦砍和撞击，却难以抵挡有力穿刺；淋雨后会增加疲劳和寒意。' },
+    ], provenance: { origin: '河间地城镇裁甲作坊' },
+  }),
+  expandedItem({
+    id: 'armor.crownlands_field_plate', name: '王领骑士野战板甲', category: 'armor', subcategory: 'plate',
+    description: '为骑士实战打造的胸背板、臂甲与护腰组合，关节处以内衬锁甲连接。', roleplayText: '扣带必须由侍从逐一收紧，金属表面经常需要除锈和上油。',
+    tags: ['crownlands', 'heavy_armor', 'plate', 'battle'], material: '淬火钢、锁环与熟皮', baseQuality: 'masterwork', rarity: 'rare', bulk: 'large',
+    equippable: true, allowedPositions: [{ group: 'torso', layer: 'armor' }], baseValue: 240,
+    effects: [
+      { kind: 'protection', zones: ['torso', 'arms'], damageTags: ['slashing', 'piercing', 'blunt'], value: 5, stackGroup: 'armor.body', cap: 5, label: '成套钢板防护' },
+      { kind: 'burden', value: 3, stackGroup: 'armor.body.burden', cap: 4, label: '重型板甲' },
+      { kind: 'heat', contextTags: ['warm', 'hot'], value: 2, stackGroup: 'armor.body.heat', cap: 4, label: '封闭闷热' },
+      { kind: 'fatigue', contextTags: ['travel', 'combat'], value: 2, stackGroup: 'armor.body.fatigue', cap: 4, label: '披甲消耗' },
+      { kind: 'narrative', directive: '野战板甲允许长期穿着，但睡眠、赶路、炎热环境、宫廷礼仪和无声行动都会付出明确代价。' },
+    ], provenance: { origin: '君临钢铁街的骑士铠甲铺' },
+  }),
+  expandedItem({
+    id: 'clothing.dornish_desert_wraps', name: '多恩沙行裹袍', category: 'clothing', subcategory: 'travel_clothes',
+    description: '宽松浅色亚麻长袍配头巾，可遮挡烈日、风沙与昼夜温差。', roleplayText: '布料轻薄但层层交叠，脸部可在沙风中迅速遮住。',
+    tags: ['dorne', 'travel', 'hot', 'desert'], material: '多恩细亚麻', baseQuality: 'fine', bulk: 'small',
+    equippable: true, allowedPositions: [{ group: 'torso', layer: 'garment' }], baseValue: 12,
+    effects: [
+      { kind: 'narrative', directive: '沙行裹袍适合炎热与风沙，在北境寒冬和正式七国宫廷中并不合宜。' },
+    ], provenance: { origin: '多恩商旅裁缝' },
+  }),
+  expandedItem({
+    id: 'clothing.reach_brocade_court_gown', name: '河湾锦缎宫廷礼服', category: 'clothing', subcategory: 'court_clothes',
+    description: '以深绿与金线织成的正式礼服，剪裁强调家世、财富和受过训练的宫廷仪态。', roleplayText: '精细袖口与长摆要求穿戴者放慢动作，绝不适合泥泞道路。',
+    tags: ['reach', 'court', 'formal', 'luxury'], material: '河湾锦缎、金线与丝绸', baseQuality: 'masterwork', rarity: 'rare', bulk: 'medium',
+    equippable: true, allowedPositions: [{ group: 'torso', layer: 'garment' }], baseValue: 85,
+    effects: [
+      { kind: 'check_modifier', domain: 'diplomacy', value: 1, stackGroup: 'court.clothing', cap: 2, condition: { requiredSceneTags: ['court'] }, label: '合宜宫廷衣装' },
+      { kind: 'social', contextTags: ['court', 'reach', 'nobility'], value: 2, stackGroup: 'clothing.court', cap: 3, label: '河湾贵族排场' },
+      { kind: 'narrative', directive: '昂贵礼服在宫廷中显得合宜，在战斗、恶劣天气和长途骑行中容易污损并限制动作。' },
+    ], provenance: { origin: '高庭织工与裁缝作坊' },
+  }),
+  expandedItem({
+    id: 'jewelry.reach_rose_necklace', name: '高庭金玫瑰项链', category: 'jewelry', subcategory: 'necklace',
+    description: '金丝盘成玫瑰花瓣，中央嵌一粒浅绿宝石，是河湾贵族常用的礼赠。', roleplayText: '它在烛光下足够耀眼，也足够让知情者追问赠予者。',
+    tags: ['reach', 'jewelry', 'court', 'gift'], material: '黄金与浅绿宝石', baseQuality: 'masterwork', rarity: 'rare', bulk: 'tiny',
+    equippable: true, allowedPositions: [{ group: 'accessories', index: 0 }, { group: 'accessories', index: 1 }, { group: 'accessories', index: 2 }], baseValue: 130,
+    effects: [{ kind: 'social', contextTags: ['court', 'reach'], value: 1, stackGroup: 'jewelry.court', cap: 2, label: '高庭礼赠' }, { kind: 'narrative', directive: '珠宝能表达财富与关系，却也会吸引觊觎、辨认和关于来历的追问。' }],
+    provenance: { origin: '高庭金匠铺' },
+  }),
+  expandedItem({
+    id: 'jewelry.vale_moonstone_ring', name: '谷地月长石戒指', category: 'jewelry', subcategory: 'ring',
+    description: '银戒托起乳白月长石，石面在不同角度呈现冷蓝光泽。', roleplayText: '戒圈内侧刻着鹰翼与山峰，做工克制而清晰。',
+    tags: ['vale', 'jewelry', 'moonstone', 'nobility'], material: '白银与月长石', baseQuality: 'fine', rarity: 'uncommon', bulk: 'tiny',
+    equippable: true, allowedPositions: [{ group: 'accessories', index: 0 }, { group: 'accessories', index: 1 }, { group: 'accessories', index: 2 }], baseValue: 46,
+    effects: [{ kind: 'social', contextTags: ['vale', 'court'], value: 1, stackGroup: 'jewelry.identity', cap: 2, label: '谷地贵族饰物' }, { kind: 'narrative', directive: '月长石戒指没有超自然预言能力，它的意义来自身份、赠礼和公开佩戴。' }],
+    provenance: { origin: '海鸥镇银匠作坊' },
+  }),
+  expandedItem({
+    id: 'jewelry.crownlands_signet_ring', name: '王领纹章戒', category: 'jewelry', subcategory: 'signet_ring',
+    description: '宽面金戒刻有私人纹章，可在小型蜡封上留下清晰印痕。', roleplayText: '戒面磨损的位置显示它经常被取下压入热蜡。',
+    tags: ['crownlands', 'jewelry', 'seal', 'document'], material: '黄金与黑玛瑙', baseQuality: 'fine', rarity: 'uncommon', bulk: 'tiny',
+    equippable: true, allowedPositions: [{ group: 'accessories', index: 0 }, { group: 'accessories', index: 1 }, { group: 'accessories', index: 2 }], baseValue: 58,
+    effects: [{ kind: 'action_unlock', actionId: 'seal_private_letter', label: '加盖私人纹章蜡封' }, { kind: 'social', contextTags: ['court', 'document'], value: 1, stackGroup: 'identity.seal', cap: 3, label: '私人印信' }, { kind: 'narrative', directive: '纹章戒能证明蜡封来源，但丢失、盗用或伪造都会产生可以追查的风险。' }],
+    provenance: { origin: '君临金匠铺' },
+  }),
+  ...([
+    ['tool.hemp_rope', '结实麻绳', 'rope', ['travel', 'climbing'], '浸油大麻纤维', '固定、捆扎或攀爬', '麻绳能提供固定点和牵引力，但必须有可靠支点，割断或磨损后会失效。'],
+    ['tool.hooded_torch', '带罩火把', 'torch', ['light', 'flammable'], '松木、油布与铁罩', '照亮黑暗区域', '火把提供可见光，也会暴露位置、产生烟气并可能点燃易燃物。'],
+    ['tool.crownlands_lock_tools', '君临锁匠工具卷', 'lock_tools', ['crownlands', 'lock', 'intrigue'], '细钢、铜丝与熟皮卷', '尝试处理机械锁', '开锁工具只允许尝试处理能接触到的机械锁；复杂锁、警报和看守仍需面对。'],
+    ['tool.maester_healer_kit', '学士医治工具箱', 'healer_tools', ['medicine', 'injury', 'maester'], '钢针、夹钳、亚麻线与木盒', '清创、缝合与夹取异物', '医治工具能改善合格治疗的条件，却不能让没有知识的人自动完成复杂手术。'],
+  ] as const).map(([id, name, subcategory, tags, material, label, directive]) => expandedItem({
+    id, name, category: 'tool', subcategory, description: `${name}由${material}制成，按用途整理，适合在具备时间与操作空间时使用。`,
+    roleplayText: `使用前必须检查${name}是否完整、干燥并处在手边。`, tags: [...tags], material, baseQuality: 'fine', bulk: subcategory === 'rope' ? 'medium' : 'small',
+    stackable: false, baseValue: subcategory === 'healer_tools' ? 24 : 8,
+    effects: [{ kind: 'action_unlock', actionId: subcategory, label }, { kind: 'narrative', directive }],
+  })),
+  ...([
+    ['document.sealed_raven_letter', '封蜡渡鸦信', 'letter', ['letter', 'raven', 'court'], '一封带有完整蜡封、收件人和发件标记的短笺。', '蜡封、笔迹与传递路线都可能成为真实性和泄密的证据。'],
+    ['document.castle_household_ledger', '城堡收支账册', 'ledger', ['stewardship', 'ledger', 'castle'], '记录租税、粮秣、薪饷和仓储变化的逐页账册。', '账册能支持核对和追查，却可能因漏记、伪造或过期而误导判断。'],
+    ['document.riverlands_road_map', '河间地渡口路图', 'map', ['riverlands', 'map', 'travel'], '标出主要河流、渡口、城镇和雨季难行道路的折叠羊皮图。', '地图提供既有路线知识，不会显示实时军队、断桥或刚发生的洪水。'],
+    ['document.citadel_history_book', '学城编年史抄本', 'book', ['learning', 'book', 'citadel'], '一册经学士校订的历史抄本，边缘留有不同读者的批注。', '书籍能提供记载和观点，但需要阅读时间，也可能包含偏见、矛盾与缺页。'],
+  ] as const).map(([id, name, subcategory, tags, description, directive]) => expandedItem({
+    id, name, category: 'document', subcategory, description, roleplayText: '羊皮纸边缘带有折痕、墨迹和长期翻阅留下的柔软手感。',
+    tags: [...tags], material: '羊皮纸、墨水与线装皮封', image: { type: 'game', icon: 'artifact-white-book' }, baseQuality: 'fine', bulk: subcategory === 'book' || subcategory === 'ledger' ? 'medium' : 'tiny',
+    stackable: false, baseValue: subcategory === 'book' ? 18 : 6,
+    effects: [{ kind: 'action_unlock', actionId: `consult_${subcategory}`, label: `查阅${name}` }, { kind: 'narrative', directive }],
+  })),
+  expandedItem({
+    id: 'medicine.clean_linen_bandages', name: '洁净亚麻绷带', category: 'medicine', subcategory: 'bandages',
+    description: '煮洗、晒干并卷好的亚麻布条，用于加压止血、固定敷料和保护创口。', roleplayText: '布卷闻起来只有皂角和阳光味，使用后便不能当作洁净物重复收回。',
+    tags: ['medicine', 'bandage', 'injury', 'consumable'], material: '煮洗亚麻布', image: { type: 'library', iconName: 'medicine' }, bulk: 'tiny', stackable: true, maxStack: 12, baseValue: 2,
+    effects: [{ kind: 'action_unlock', actionId: 'bandage_wound', label: '包扎并加压止血', condition: { requiredSceneTags: ['injury'] } }, { kind: 'narrative', directive: '绷带能控制出血和保护创口，不能直接修复骨折、内伤或严重感染。' }],
+    provenance: { origin: '城堡洗衣房与学士药房' },
+  }),
+  expandedItem({
+    id: 'medicine.maester_antidote', name: '学士通用解毒剂', category: 'medicine', subcategory: 'antidote',
+    description: '针对常见植物毒与腐败毒素配制的苦涩药剂，必须尽早按毒物表现使用。', roleplayText: '瓶签列出适用症状和剂量，最后一行警告它并非万能解药。',
+    tags: ['medicine', 'antidote', 'poison', 'consumable'], material: '草药提取液、木炭粉与陶瓶', baseQuality: 'fine', rarity: 'uncommon', bulk: 'tiny', stackable: false, baseValue: 20,
+    effects: [{ kind: 'action_unlock', actionId: 'administer_antidote', label: '针对症状服用解毒剂', condition: { requiredSceneTags: ['poison'] } }, { kind: 'narrative', directive: '解毒剂只能处理相符且尚来得及干预的毒物；错误药剂、过晚用药或未知毒素仍可能恶化。' }],
+    provenance: { origin: '受训学士的药房' },
+  }),
+  ...([
+    ['poison.nightshade_extract', '颠茄浓汁', 'nightshade', ['nightshade', 'plant_poison'], '颠茄浆果与酒精', '使目标出现口干、眩晕和意识混乱', '颠茄剂量难以控制，误触、误饮或保存不当同样会伤害持有者。'],
+    ['poison.tears_of_lys', '里斯之泪', 'tears_of_lys', ['lys', 'subtle_poison'], '无色炼制毒液与玻璃瓶', '尝试以难察觉方式下毒', '里斯之泪不是立即生效的戏剧机关；投毒需要接触、剂量和不被察觉的机会。'],
+    ['poison.the_strangler_crystal', '扼死者结晶', 'strangler', ['strangler', 'crystal_poison'], '深紫毒晶与银纸', '将结晶溶入液体', '扼死者危险、醒目且剂量致命，携带和使用都可能留下证据并误伤旁人。'],
+    ['poison.basilisk_venom', '蜥蜴狮毒液', 'basilisk_venom', ['essos', 'venom', 'rare_poison'], '干燥毒液、蜂蜜与黑釉瓶', '制备会扰乱心智的毒饵', '蜥蜴狮毒液的效果取决于配制、摄入和受害者状态，不能凭空控制他人的具体选择。'],
+  ] as const).map(([id, name, subcategory, tags, material, label, directive]) => expandedItem({
+    id, name, category: 'poison', subcategory, description: `${name}被密封在带警示记号的小容器中，任何泄漏都可能造成严重后果。`,
+    roleplayText: '容器口有蜡和细线双重封固，熟悉药理的人不会徒手开启。', tags: ['poison', 'consumable', ...tags], material,
+    image: { type: 'library', iconName: 'medicine' }, baseQuality: 'fine', rarity: subcategory === 'nightshade' ? 'uncommon' : 'rare', bulk: 'tiny', stackable: false, baseValue: subcategory === 'nightshade' ? 15 : 80,
+    effects: [{ kind: 'action_unlock', actionId: `prepare_${subcategory}`, label }, { kind: 'narrative', directive }],
+    provenance: { origin: subcategory === 'nightshade' ? '草药师与黑市药贩' : '狭海彼岸的隐秘毒药贸易' },
+  })),
+  ...([
+    ['supply.hard_travel_rations', '硬饼与腌肉口粮', 'rations', ['travel', 'food'], '烘干谷饼、盐渍肉与蜡布', '食用一天口粮', '口粮能避免正常旅途中的饥饿，却会消耗数量，也可能受潮、腐败或不足以支撑极端劳作。'],
+    ['supply.leather_waterskin', '熟皮水囊', 'waterskin', ['travel', 'water'], '涂蜡熟皮与木塞', '饮水或分配饮水', '水囊必须先在可靠水源装满；容量有限，炎热和长途跋涉会更快消耗。'],
+    ['supply.lamp_oil_flask', '灯油陶瓶', 'lamp_oil', ['light', 'flammable'], '亚麻籽油与封口陶瓶', '补充油灯或引火', '灯油可以维持照明并帮助引火，也会泄漏、产生气味并形成火灾风险。'],
+    ['supply.fletched_arrows', '白羽箭束', 'arrows', ['ranged', 'ammunition'], '白蜡木箭杆、铁镞与鹅羽', '为弓补充箭矢', '箭矢是有限弹药；射出后可能折断、遗失或需要在安全条件下回收。'],
+  ] as const).map(([id, name, subcategory, tags, material, label, directive]) => expandedItem({
+    id, name, category: 'supply', subcategory, description: `${name}按旅行和守备需要妥善捆扎，便于清点剩余数量。`,
+    roleplayText: '磨损、潮气和余量都能从包装表面直接看出来。', tags: ['supply', 'consumable', ...tags], material,
+    image: { type: 'library', iconName: subcategory === 'arrows' ? 'sword' : 'supply' }, bulk: subcategory === 'arrows' ? 'medium' : 'small', stackable: true, maxStack: subcategory === 'arrows' ? 40 : 12, baseValue: 4,
+    effects: [{ kind: 'action_unlock', actionId: `use_${subcategory}`, label }, { kind: 'narrative', directive }],
+  })),
+  expandedItem({
+    id: 'keepsake.family_hair_locket', name: '家族发丝小盒', category: 'keepsake', subcategory: 'family_keepsake',
+    description: '掌心大小的银盒，内藏亲人发丝、褪色小像或一张折叠短笺。', roleplayText: '盒盖开启时会露出长期触摸形成的细密划痕。',
+    tags: ['family', 'memory', 'personal'], material: '白银、丝带与微型羊皮纸', baseQuality: 'fine', rarity: 'uncommon', bulk: 'tiny',
+    equippable: true, allowedPositions: [{ group: 'accessories', index: 0 }, { group: 'accessories', index: 1 }, { group: 'accessories', index: 2 }], baseValue: 20,
+    effects: [{ kind: 'narrative', directive: '家族小盒不会提供超自然加成；它会影响人物如何纪念、隐瞒或公开一段关系。' }],
+    provenance: { origin: '私人家族遗物' },
+  }),
+  expandedItem({
+    id: 'keepsake.seven_pointed_star_token', name: '七芒星祈祷牌', category: 'keepsake', subcategory: 'religious_token',
+    description: '刻有七芒星与简短祷词的小型木牌，边缘因反复摩挲而变得光滑。', roleplayText: '它可以挂在颈前、腰带或床柱旁，朴素得不像贵重物。',
+    tags: ['faith', 'seven', 'religious_token'], material: '圣堂祝福过的硬木与麻绳', baseQuality: 'common', bulk: 'tiny',
+    equippable: true, allowedPositions: [{ group: 'accessories', index: 0 }, { group: 'accessories', index: 1 }, { group: 'accessories', index: 2 }], baseValue: 3,
+    effects: [{ kind: 'social', contextTags: ['faith', 'seven', 'sept'], value: 1, stackGroup: 'identity.faith', cap: 2, label: '公开信仰标记' }, { kind: 'narrative', directive: '祈祷牌能表明信仰并承载个人安慰，但不会凭空产生神迹或强迫他人信服。' }],
+    provenance: { origin: '七神圣堂' },
+  }),
 ];
 
 export const ITEM_CATALOG = createItemCatalog(ITEM_DEFINITIONS);

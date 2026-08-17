@@ -47,7 +47,8 @@
     "test:item-state-commands": "node scripts/test-item-state-commands.mjs",
     "test:item-dice-integration": "node scripts/test-item-dice-integration.mjs",
     "test:item-view-model": "node scripts/test-item-view-model.mjs",
-    "check:item-equipment-ui": "node scripts/check-item-equipment-ui.mjs"
+    "check:item-equipment-ui": "node scripts/check-item-equipment-ui.mjs",
+    "check:item-images": "node scripts/check-item-images.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",
@@ -66,6 +67,7 @@
     "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.5.3",
+    "sharp": "0.34.3",
     "tailwindcss": "^3.4.17",
     "typescript": "~5.7.2",
     "vite": "^6.2.0"
