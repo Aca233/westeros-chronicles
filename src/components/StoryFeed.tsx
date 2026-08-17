@@ -1,22 +1,86 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useGameStore } from '../store/useGameStore';
 import { StoryTurn } from '../types/game';
 import { WESTEROS_ENTITIES, EntityInfo } from '../data/entities';
-import { ArrowDown, ChevronDown, ChevronRight, Dices, Feather } from 'lucide-react';
+import { ArrowDown } from 'lucide-react';
 import { GameIcon, isGameIconId } from './GameIcon';
 import { stripEmoji } from '../services/textSanitizer';
+import { OpeningCeremony } from './OpeningCeremony';
 import type { CharacterId } from '../features/characters/types';
-
-// 每张纸页的搁置倾角:由 turn id 定角,稳定不闪动
-function sheetTilt(id: string): number {
-  let hash = 0;
-  for (let i = 0; i < id.length; i++) hash = (hash * 31 + id.charCodeAt(i)) | 0;
-  const tilts = [-0.9, -0.45, 0.5, 0.95, -0.6, 0.3];
-  return tilts[Math.abs(hash) % tilts.length];
-}
 
 export interface StoryFeedProps {
   onSelectCharacter?: (characterId: CharacterId) => void;
+}
+
+/** 视口内揭示:元素进入视野一次后定格 */
+function useInViewOnce<T extends HTMLElement>() {
+  const ref = useRef<T | null>(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || inView) return undefined;
+    if (!('IntersectionObserver' in window)) {
+      setInView(true);
+      return undefined;
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setInView(true);
+            observer.disconnect();
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -4% 0px' },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [inView]);
+
+  return { ref, inView };
+}
+
+function Reveal({
+  as = 'div',
+  className = '',
+  delay = 0,
+  children,
+}: {
+  as?: 'div' | 'p' | 'section' | 'span';
+  className?: string;
+  delay?: number;
+  children: React.ReactNode;
+}) {
+  const { ref, inView } = useInViewOnce<HTMLElement>();
+  return React.createElement(
+    as,
+    {
+      ref,
+      className: `reveal${inView ? ' is-inview' : ''}${className ? ` ${className}` : ''}`,
+      style: { '--reveal-delay': `${delay}ms` } as React.CSSProperties,
+    },
+    children,
+  );
+}
+
+/** 罗马数字:场景幽灵序号 */
+function toRoman(num: number): string {
+  const table: Array<[number, string]> = [
+    [1000, 'M'], [900, 'CM'], [500, 'D'], [400, 'CD'],
+    [100, 'C'], [90, 'XC'], [50, 'L'], [40, 'XL'],
+    [10, 'X'], [9, 'IX'], [5, 'V'], [4, 'IV'], [1, 'I'],
+  ];
+  let rest = Math.max(1, Math.floor(num));
+  let out = '';
+  for (const [value, glyph] of table) {
+    while (rest >= value) {
+      out += glyph;
+      rest -= value;
+    }
+  }
+  return out;
 }
 
 export const StoryFeed: React.FC<StoryFeedProps> = ({ onSelectCharacter = () => undefined }) => {
@@ -25,14 +89,13 @@ export const StoryFeed: React.FC<StoryFeedProps> = ({ onSelectCharacter = () => 
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showJump, setShowJump] = useState(false);
 
-  // 贴近底部才算在阅读最新一页
   const isNearBottom = () => {
     const el = scrollRef.current;
     if (!el) return true;
     return el.scrollHeight - el.scrollTop - el.clientHeight < 140;
   };
 
-  // 智能跟随:只在读者位于底部时跟滚;翻读旧页时不打扰,改为浮钮提示
+  // 智能跟随:贴近底部才跟滚;翻读旧页时不打扰
   useEffect(() => {
     if (isNearBottom()) {
       bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -41,90 +104,129 @@ export const StoryFeed: React.FC<StoryFeedProps> = ({ onSelectCharacter = () => 
     }
   }, [gameState.turns.length, streamingText]);
 
+  // 顶部金线:把阅读进度写到根变量,Header 拾取
+  const publishProgress = useCallback(() => {
+    const el = scrollRef.current;
+    const max = el ? el.scrollHeight - el.clientHeight : 0;
+    const p = el && max > 0 ? Math.min(1, Math.max(0, el.scrollTop / max)) : 0;
+    document.documentElement.style.setProperty('--scroll-p', p.toFixed(4));
+  }, []);
+
+  // 幽灵序号视差:距视野中心越远,偏移越明显
+  const parallaxRaf = useRef(0);
+  const updateGhostParallax = useCallback(() => {
+    cancelAnimationFrame(parallaxRaf.current);
+    parallaxRaf.current = requestAnimationFrame(() => {
+      const root = scrollRef.current;
+      if (!root) return;
+      const rootRect = root.getBoundingClientRect();
+      const mid = rootRect.top + rootRect.height / 2;
+      root.querySelectorAll<HTMLElement>('.ghost-numeral').forEach((el) => {
+        const rect = el.getBoundingClientRect();
+        const delta = rect.top + rect.height / 2 - mid;
+        el.style.setProperty('--par', `${(-delta * 0.06).toFixed(1)}px`);
+      });
+    });
+  }, []);
+
   const handleScroll = () => {
     if (isNearBottom()) setShowJump(false);
+    publishProgress();
+    updateGhostParallax();
   };
+
+  useEffect(() => {
+    publishProgress();
+    updateGhostParallax();
+    return () => cancelAnimationFrame(parallaxRaf.current);
+  }, [gameState.turns.length, streamingText, publishProgress, updateGhostParallax]);
 
   const jumpToLatest = () => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
     setShowJump(false);
   };
 
+  const isEmptyStage = gameState.turns.length === 0 && !isStreaming;
+
   return (
     <div className="relative min-h-0 flex-1">
-    <div ref={scrollRef} onScroll={handleScroll} className="h-full overflow-y-auto">
-      <div className="mx-auto flex w-full max-w-[46rem] flex-col gap-10 px-5 pb-12 pt-24 md:px-8">
-        {/* 开场引子 */}
-        {gameState.turns.length === 0 && !isStreaming && (
-          <div className="scene-enter flex flex-col items-center py-14 text-center">
-            <div className="rule-diamond w-44">
-              <span className="inline-block h-1.5 w-1.5 rotate-45 bg-current" />
+      <div ref={scrollRef} onScroll={handleScroll} className="h-full overflow-y-auto">
+        <div
+          className={
+            isEmptyStage
+              ? 'mx-auto flex h-full w-full max-w-[46rem] flex-col px-5 md:px-6'
+              : 'mx-auto w-full max-w-[42rem] px-5 pb-16 pt-10 md:px-6 md:pt-14'
+          }
+        >
+          {/* 开场仪式:未落笔时,整幅舞台让给题名 */}
+          {isEmptyStage && <OpeningCeremony />}
+
+          {/* 场景流:文字即界面 */}
+          {gameState.turns.map((turn, index) => (
+            <SceneBlock
+              key={turn.id}
+              turn={turn}
+              isFirst={index === 0}
+              onSelectCharacter={onSelectCharacter}
+            />
+          ))}
+
+          {/* 正在书写 */}
+          {isStreaming && (
+            <div className="scene-enter">
+              <SceneDivider label="书写中" pulsing />
+              <LiveStreamingRenderer rawText={streamingText} />
             </div>
-            <p className="mt-8 max-w-sm font-serif text-[15px] leading-loose text-parchment-dim">
-              七国静默,渡鸦未至。<br />
-              你的第一道御令,将决定这段传奇从何写起。
-            </p>
-          </div>
-        )}
+          )}
 
-        {/* 摊在桌上的纸页 */}
-        {gameState.turns.map((turn, index) => (
-          <DeedSheet
-            key={turn.id}
-            turn={turn}
-            isLatest={index === gameState.turns.length - 1}
-            tilt={sheetTilt(turn.id)}
-            onSelectCharacter={onSelectCharacter}
-          />
-        ))}
-
-        {/* 正在书写的一页 */}
-        {isStreaming && (
-          <article
-            className="scene-enter relative border border-hairline-bright/70 bg-ink-2 px-7 py-7 md:px-10 md:py-8 shadow-[0_16px_36px_rgba(74,58,32,0.3)]"
-            style={{ transform: 'rotate(-0.5deg)' }}
-          >
-            <span className="sheet-stamp !text-gold-deep !border-gold-deep/70" style={{ transform: 'rotate(3deg)' }}>
-              书写中
-            </span>
-            <LiveStreamingRenderer rawText={streamingText} />
-          </article>
-        )}
-
-        <div ref={bottomRef} className="h-2" />
+          <div ref={bottomRef} className="h-2" />
+        </div>
       </div>
-    </div>
 
-    {showJump && (
-      <button
-        type="button"
-        onClick={jumpToLatest}
-        className="btn-ghost scene-enter absolute bottom-4 right-5 z-20 !border-gold-deep/60 !bg-ink-2/95 !text-gold shadow-[0_8px_20px_rgba(74,58,32,0.3)]"
-      >
-        <ArrowDown className="h-3.5 w-3.5" />
-        回到最新一页
-      </button>
-    )}
+      {showJump && (
+        <button
+          type="button"
+          onClick={jumpToLatest}
+          className="jump-latest scene-enter absolute bottom-4 right-5 z-20"
+        >
+          <ArrowDown className="h-3.5 w-3.5" />
+          回到最新
+        </button>
+      )}
     </div>
   );
 };
 
-// 一页记载:一次决断与其掀起的波澜
-function DeedSheet({
+// 回合分隔:一行纪年,两枚菱花
+function SceneDivider({ label, pulsing = false }: { label: string; pulsing?: boolean }) {
+  return (
+    <div className="scene-divider select-none">
+      <span className="divider-gem" aria-hidden="true" />
+      <span className="flex items-center gap-3 whitespace-nowrap font-display text-[11px] font-bold tracking-[0.22em]">
+        {label}
+        {pulsing && (
+          <span className="quill-dots" aria-hidden="true"><i /><i /><i /></span>
+        )}
+      </span>
+      <span className="divider-gem" aria-hidden="true" />
+    </div>
+  );
+}
+
+// 一个场景:幽灵序号、御令、检验、暗线与正文
+function SceneBlock({
   turn,
-  isLatest,
-  tilt,
+  isFirst,
   onSelectCharacter,
 }: {
   turn: StoryTurn;
-  isLatest: boolean;
-  tilt: number;
+  isFirst: boolean;
   onSelectCharacter: (characterId: CharacterId) => void;
 }) {
   const [isThinkOpen, setIsThinkOpen] = useState(false);
-  const [hoveredEntity, setHoveredEntity] = useState<{ entity: EntityInfo; x: number; y: number } | null>(null);
+  const [hoveredEntity, setHoveredEntity] = useState<{ entity: EntityInfo; x: number; y: number; above: boolean } | null>(null);
 
-  // 名词考据:海蓝点线 + 悬浮旁注
+  // 名词考据:墨字黄铜点线 + 悬浮旁注
   const renderHighlightedNarrate = (text: string) => {
     const parts: React.ReactNode[] = [];
     let remaining = text;
@@ -156,23 +258,26 @@ function DeedSheet({
       }
 
       const entityToHover = matchedEntity;
-      const showEntityCard = (element: HTMLElement) => {
-        const rect = element.getBoundingClientRect();
-        setHoveredEntity({
-          entity: entityToHover,
-          x: rect.left + rect.width / 2,
-          y: rect.bottom + 8,
-        });
-      };
       const sharedProps = {
-        key: `entity_${keyCounter++}`,
-        onMouseEnter: (event: React.MouseEvent<HTMLElement>) => showEntityCard(event.currentTarget),
+        onMouseEnter: (event: React.MouseEvent<HTMLElement>) => {
+          const rect = event.currentTarget.getBoundingClientRect();
+          const x = Math.min(Math.max(rect.left + rect.width / 2, 140), window.innerWidth - 140);
+          const above = rect.bottom + 210 > window.innerHeight;
+          setHoveredEntity({
+            entity: entityToHover,
+            x,
+            y: above ? rect.top - 10 : rect.bottom + 10,
+            above,
+          });
+        },
         onMouseLeave: () => setHoveredEntity(null),
       };
+      const key = `entity_${keyCounter++}`;
 
       if (entityToHover.category === 'character' && entityToHover.characterId) {
         parts.push(
           <button
+            key={key}
             {...sharedProps}
             type="button"
             data-story-character-link={entityToHover.characterId}
@@ -185,10 +290,14 @@ function DeedSheet({
             }}
           >
             {matchedKeyword}
-          </button>
+          </button>,
         );
       } else {
-        parts.push(<span {...sharedProps} className="lore-term">{matchedKeyword}</span>);
+        parts.push(
+          <span key={key} {...sharedProps} className="lore-term">
+            {matchedKeyword}
+          </span>,
+        );
       }
 
       remaining = remaining.substring(earliestIndex + matchedKeyword.length);
@@ -198,82 +307,73 @@ function DeedSheet({
   };
 
   return (
-    <article
-      className={`scene-enter relative border bg-ink-2 px-7 py-7 md:px-10 md:py-8 ${
-        isLatest
-          ? 'border-hairline-bright shadow-[0_18px_44px_rgba(74,58,32,0.36)]'
-          : 'border-hairline shadow-[0_12px_28px_rgba(74,58,32,0.24)]'
-      }`}
-      style={{ transform: `rotate(${tilt}deg)` }}
-    >
-      {/* 朱红日期章 */}
-      <span className="sheet-stamp" style={{ transform: `rotate(${tilt > 0 ? -4 : 4}deg)` }}>
-        {turn.gameDate || '征服历 298 AC · 10月15日'}
-      </span>
+    <section className="relative">
+      {/* 场景首行:幽灵序号伏于纪年之后 */}
+      <div className={`scene-head ${isFirst ? '!mt-2' : ''}`}>
+        <span className="ghost-numeral" aria-hidden="true">{toRoman(turn.turnNumber)}</span>
+        <Reveal>
+          <SceneDivider label={turn.gameDate || '征服历 298 AC · 10月15日'} />
+        </Reveal>
+      </div>
 
-      {/* 领主御令:页边的羽笔批注 */}
+      {/* 御令:这场戏的因,领主亲笔行书 */}
       {turn.turnNumber > 1 && turn.playerInput && (
-        <p className="mb-6 flex items-start gap-2.5 border-l-2 border-rubric/60 pl-4 pr-2 pt-5 font-serif text-[13px] italic leading-relaxed text-parchment-dim">
-          <Feather className="mt-0.5 h-3.5 w-3.5 shrink-0 text-rubric/70" aria-hidden="true" />
-          <span>{stripEmoji(turn.playerInput)}</span>
-        </p>
+        <Reveal as="p" className="decree-quote mb-9 px-2 md:px-6" delay={90}>
+          「{stripEmoji(turn.playerInput)}」
+        </Reveal>
       )}
 
-      {/* 掷骰检定:一枚检验戳记 */}
-      {turn.diceCheck && <DiceLedger check={turn.diceCheck} />}
+      {/* 掷骰检验:一行小字账目 */}
+      {turn.diceCheck && (
+        <Reveal delay={140}>
+          <DiceLedger check={turn.diceCheck} />
+        </Reveal>
+      )}
 
-      {/* 幕后暗线(可展开) */}
+      {/* 正文:泥金首字起笔 */}
+      <div className="deed-prose deed-prose--illuminated font-serif">
+        {turn.narrate.split(/\n+/).map((para, pIdx) => {
+          const trimmed = stripEmoji(para);
+          if (!trimmed) return null;
+          return (
+            <Reveal as="p" key={pIdx} delay={180 + Math.min(pIdx, 6) * 85}>
+              {renderHighlightedNarrate(trimmed)}
+            </Reveal>
+          );
+        })}
+      </div>
+
+      {/* 幕后暗线:一个安静的文字开关 */}
       {turn.think && (
-        <div className="mb-5 border border-hairline bg-ink-3/40">
+        <div className="mt-9 select-none">
           <button
             onClick={() => setIsThinkOpen(!isThinkOpen)}
-            className="flex w-full items-center justify-between px-3.5 py-2 text-left transition-colors hover:bg-ink-3/60"
+            className="mx-auto flex items-center gap-2 text-[11px] tracking-[0.2em] text-parchment-faint transition-colors hover:text-gold"
           >
-            <span className="flex items-center gap-2 text-[11px] font-semibold tracking-wide text-gold">
-              <span className="inline-block h-1 w-1 rotate-45 bg-current" aria-hidden="true" />
-              幕后暗线 · 动机与局势演化
-            </span>
-            <span className="flex items-center gap-1 font-mono text-[10px] text-parchment-faint">
-              {isThinkOpen ? '收起' : '展开'}
-              {isThinkOpen ? <ChevronDown className="h-3.5 w-3.5" /> : <ChevronRight className="h-3.5 w-3.5" />}
-            </span>
+            <span className="inline-block h-1 w-1 rotate-45 bg-current" aria-hidden="true" />
+            {isThinkOpen ? '收起幕后暗线' : '展开幕后暗线'}
           </button>
           {isThinkOpen && (
-            <div className="border-t border-hairline bg-ink-3/50 px-4 py-3 font-mono text-[11px] leading-relaxed text-parchment-dim whitespace-pre-wrap">
+            <div className="panel-pop mt-4 whitespace-pre-wrap border-l border-hairline-bright/60 pl-4 font-mono text-[11px] leading-relaxed text-parchment-dim">
               {stripEmoji(turn.think)}
             </div>
           )}
         </div>
       )}
 
-      {/* 正文 */}
-      <div className="deed-prose font-serif">
-        {turn.narrate.split(/\n+/).map((para, pIdx) => {
-          const trimmed = stripEmoji(para);
-          if (!trimmed) return null;
-          return <p key={pIdx}>{renderHighlightedNarrate(trimmed)}</p>;
-        })}
-      </div>
-
-      {/* 页脚时刻 */}
-      <div className="mt-6 flex justify-end select-none">
-        <span className="font-mono text-[9.5px] tracking-widest text-parchment-faint">
-          录于 {new Date(turn.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-        </span>
-      </div>
-
       {/* 名词旁注悬浮卡 */}
       {hoveredEntity && (
         <div
-          className="panel-iron scene-enter pointer-events-none fixed z-50 w-64 -translate-x-1/2 p-3.5"
+          className={`entity-popover panel-iron p-3.5${hoveredEntity.above ? ' entity-popover--above' : ''}`}
           style={{ left: `${hoveredEntity.x}px`, top: `${hoveredEntity.y}px` }}
+          role="tooltip"
         >
           <div className="mb-1.5 flex items-center gap-2 border-b border-hairline pb-1.5">
             {isGameIconId(hoveredEntity.entity.icon) && (
               <GameIcon icon={hoveredEntity.entity.icon} className="h-7 w-7 shrink-0" />
             )}
             <span className="font-serif text-[13px] font-bold text-gold-bright">{hoveredEntity.entity.name}</span>
-            <span className="ml-auto border border-hairline bg-ink-3/60 px-1.5 py-0.5 text-[9px] tracking-wider text-parchment-faint">
+            <span className="ml-auto text-[9px] tracking-wider text-parchment-faint">
               {hoveredEntity.entity.tag}
             </span>
           </div>
@@ -285,107 +385,77 @@ function DeedSheet({
               {hoveredEntity.entity.extraStats}
             </div>
           )}
-          {hoveredEntity.entity.category === 'character' && hoveredEntity.entity.characterId && (
-            <div className="mt-2 border-t border-hairline pt-2 text-[9px] tracking-wide text-gold-bright">点击姓名查看完整人物档案</div>
-          )}
         </div>
       )}
-    </article>
+    </section>
   );
 }
 
-// D20 检验戳记
+// D20 检验账目
 function DiceLedger({ check }: { check: NonNullable<StoryTurn['diceCheck']> }) {
   const equipmentModifier = check.equipmentModifier;
   const equipmentModifierBreakdown = check.equipmentModifierBreakdown;
   const traitModifier = check.traitModifier;
   const traitModifierBreakdown = check.traitModifierBreakdown;
   const signed = (value: number) => `${value >= 0 ? '+' : ''}${value}`;
+  const failed = check.isNatural1 || !check.success;
 
   return (
-    <div className="mb-6 select-none border border-dashed border-gold-deep/70 bg-ink-3/30 px-4 py-2.5">
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
-        <span className="flex items-center gap-1.5 text-[11px] font-semibold tracking-wide text-gold">
-          <Dices className="h-3.5 w-3.5" />
-          {check.attributeName}检定 · DC {check.dc}
-        </span>
-        <span className="font-mono text-[11px] text-parchment-dim">
-          出目 {check.roll}
-          {' '}属性 {signed(check.attributeModifier)}
-          {equipmentModifier !== 0 && <> 物品 {signed(equipmentModifier)}</>}
-          {traitModifier !== 0 && <span className="text-gold-bright"> 特质 {signed(traitModifier)}</span>}
-          {' '}总计 <strong className="text-parchment">{check.total}</strong>
-        </span>
-        <span
-          className={`ml-auto font-serif text-[12px] font-black tracking-[0.3em] ${
-            check.isNatural20
-              ? 'text-rubric'
-              : check.isNatural1
-                ? 'text-rubric-deep'
-                : check.success
-                  ? 'text-emerald-700'
-                  : 'text-rubric'
-          }`}
-        >
+    <div className="mb-9 select-none text-center">
+      <p className="font-mono text-[11px] leading-relaxed text-parchment-faint">
+        {check.attributeName}检定 · DC {check.dc}
+        {' '}· 出目 {check.roll}
+        {' '}属性 {signed(check.attributeModifier)}
+        {equipmentModifier !== 0 && <> 物品 {signed(equipmentModifier)}</>}
+        {traitModifier !== 0 && <span className="text-gold"> 特质 {signed(traitModifier)}</span>}
+        {' '}总计 <strong className="text-parchment">{check.total}</strong>
+        {' '}·{' '}
+        <strong className={`font-serif text-[12px] tracking-[0.3em] ${failed ? 'text-rubric' : 'text-parchment'}`}>
           {check.isNatural20 ? '天成' : check.isNatural1 ? '溃败' : check.success ? '得手' : '落空'}
-        </span>
-      </div>
+        </strong>
+      </p>
       {equipmentModifierBreakdown.length > 0 && (
-        <div className="mt-2 flex flex-wrap gap-1.5 border-t border-hairline pt-2 font-mono text-[9.5px] text-parchment-faint">
-          {equipmentModifierBreakdown.map((item) => (
-            <span key={`${item.instanceId}-${item.reason}-${item.value}`} title={item.reason} className="border border-hairline px-1.5 py-0.5">
-              {item.name} {signed(item.value)}
-            </span>
-          ))}
-        </div>
+        <p className="mt-1.5 font-mono text-[9.5px] text-parchment-faint">
+          {equipmentModifierBreakdown.map((item) => `${item.name} ${signed(item.value)}`).join(' · ')}
+        </p>
       )}
       {traitModifierBreakdown.length > 0 && (
-        <div className="mt-2 flex flex-wrap gap-1.5 border-t border-hairline pt-2 font-mono text-[9.5px] text-parchment-faint">
-          {traitModifierBreakdown.map((item) => (
-            <span key={`${item.traitId}-${item.value}`} className="border border-hairline px-1.5 py-0.5">
-              {item.name} {signed(item.value)}
-            </span>
-          ))}
-        </div>
+        <p className="mt-1.5 font-mono text-[9.5px] text-parchment-faint">
+          {traitModifierBreakdown.map((item) => `${item.name} ${signed(item.value)}`).join(' · ')}
+        </p>
       )}
     </div>
   );
 }
 
-// 实时流式渲染器:隐藏 XML 标签,呈现现场书写的文字
+// 实时流式渲染器
 function LiveStreamingRenderer({ rawText }: { rawText: string }) {
   const safeRawText = stripEmoji(rawText);
   if (!safeRawText) {
     return (
-      <div className="typing-cursor font-serif text-[13px] italic text-parchment-faint">
+      <div className="typing-cursor font-serif text-[14px] italic text-parchment-faint">
         羽笔蘸墨,正要落纸……
       </div>
     );
   }
 
-  // 提取正在输出的 think 片段
   let liveThink = '';
   const thinkMatch = safeRawText.match(/<think>([\s\S]*?)(?:<\/think>|$)/i);
   if (thinkMatch) {
     liveThink = thinkMatch[1].trim();
   }
 
-  // 清洗标签用于即时正文阅读
-  let cleanNarrate = safeRawText
+  const cleanNarrate = safeRawText
     .replace(/<think>[\s\S]*?(?:<\/think>|$)/gi, '')
     .replace(/<\/?(?:narrate|speak|branch|state_cmd)[^>]*>/gi, '')
     .trim();
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-5">
       {liveThink && (
-        <div className="border border-hairline bg-ink-3/40 p-3">
-          <div className="mb-1 flex items-center gap-1.5 text-[9.5px] font-bold uppercase tracking-[0.2em] text-gold">
-            <span className="inline-block h-1 w-1 animate-pulse rounded-full bg-current" />
-            暗线推演中
-          </div>
-          <p className="whitespace-pre-wrap font-mono text-[10.5px] leading-relaxed text-parchment-dim">{liveThink}</p>
-        </div>
+        <p className="whitespace-pre-wrap border-l border-hairline-bright/60 pl-4 font-mono text-[10.5px] leading-relaxed text-parchment-faint">
+          {liveThink}
+        </p>
       )}
       <div className="deed-prose typing-cursor whitespace-pre-wrap font-serif">
         {cleanNarrate || (liveThink ? '正在措辞……' : safeRawText)}

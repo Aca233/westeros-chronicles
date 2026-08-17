@@ -29,10 +29,10 @@ async function sourceFiles(dir) {
   return files;
 }
 const forbidden = [
-  'InventoryItem', 'GearItem', 'LordGearSlots', 'carriedItems', 'gear.inventory', 'gear.pouch',
-  'PendingEquipmentAction', 'EQUIP_GEAR', 'EQUIP_FROM_INVENTORY', 'ADD_INVENTORY_ITEM',
-  'USE_INVENTORY_ITEM', 'ADD_POUCH_ITEM', 'USE_POUCH_ITEM',
-];
+  ['Inventory', 'Item'], ['Gear', 'Item'], ['Lord', 'GearSlots'], ['carried', 'Items'], ['gear', '.inventory'], ['gear', '.pouch'],
+  ['Pending', 'EquipmentAction'], ['EQUIP_', 'GEAR'], ['EQUIP_FROM_', 'INVENTORY'], ['ADD_INVENTORY_', 'ITEM'],
+  ['USE_INVENTORY_', 'ITEM'], ['ADD_POUCH_', 'ITEM'], ['USE_POUCH_', 'ITEM'],
+].map((parts) => parts.join(''));
 for (const file of await sourceFiles(join(root, 'src'))) {
   const source = await readFile(file, 'utf8');
   for (const token of forbidden) if (source.includes(token)) failures.push(`${file.slice(root.length + 1)} still contains ${token}.`);

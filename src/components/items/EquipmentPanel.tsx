@@ -194,7 +194,7 @@ export const EquipmentPanel: React.FC<EquipmentPanelProps> = ({ body, focusedGro
           )}
           <button type="button" aria-expanded={isExpanded} onClick={() => toggle(group.group)} className="min-w-0 flex-1 text-left">
             <span className="flex items-center gap-2">
-              <strong className="font-serif text-[12px] text-gold-bright">{group.label}</strong>
+              <strong className="shrink-0 whitespace-nowrap font-serif text-[12px] text-gold-bright">{group.label}</strong>
               {wound && <span className="font-mono text-[9px] text-parchment-faint">{wound}</span>}
             </span>
             <span className="mt-0.5 block truncate font-serif text-[9.5px] text-parchment-dim">{group.summary}</span>

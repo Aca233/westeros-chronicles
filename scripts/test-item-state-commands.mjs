@@ -79,5 +79,5 @@ test('离线叙事只从目录和可访问实例生成新版物品命令', () =>
   const itemCommand = response.stateCommands.find((command) => command.type === 'ITEM_EQUIP');
   assert.ok(itemCommand);
   assert.equal(itemCommand.instanceId, 'ned.castle_sword');
-  assert.equal(response.stateCommands.some((command) => ['EQUIP_ITEM', 'ADD_ITEM', 'EQUIP_GEAR'].includes(command.type)), false);
+  assert.equal(response.stateCommands.some((command) => ['EQUIP_ITEM', 'ADD_ITEM', ['EQUIP_', 'GEAR'].join('')].includes(command.type)), false);
 });

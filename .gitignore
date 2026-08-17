@@ -38,3 +38,6 @@ scratch_*.html
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Playwright MCP QA artifacts
+.playwright-mcp/

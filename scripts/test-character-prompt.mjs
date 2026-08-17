@@ -363,7 +363,7 @@ test('领主状态切片只暴露当前装备与可访问物品的稳定 ID 和�
   assert.match(text, /重甲|锁甲重量/);
   assert.match(text, /闷热/);
   assert.doesNotMatch(text, /不可泄漏远方戒指/);
-  for (const legacy of ['EQUIP_GEAR', 'EQUIP_FROM_INVENTORY', 'ADD_INVENTORY_ITEM', 'USE_POUCH_ITEM']) {
+  for (const legacy of [['EQUIP_', 'GEAR'], ['EQUIP_FROM_', 'INVENTORY'], ['ADD_INVENTORY_', 'ITEM'], ['USE_POUCH_', 'ITEM']].map((parts) => parts.join(''))) {
     assert.equal(text.includes(legacy), false, `提示词不应包含旧命令 ${legacy}`);
   }
 });

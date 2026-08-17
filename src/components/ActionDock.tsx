@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Dices, Hourglass, Package, Send, X } from 'lucide-react';
+import { Dices, Hourglass, Send, X } from 'lucide-react';
 import { useGameStore } from '../store/useGameStore';
 import { stripEmoji } from '../services/textSanitizer';
 import type { DiceMode } from '../services/dicePolicy';
-import { GameIcon } from './GameIcon';
+import { ItemImage } from './items/ItemImage';
 
 const DICE_MODES: ReadonlyArray<{ id: DiceMode; label: string; title: string }> = [
   { id: 'auto', label: '自动判断', title: '程序先判断行动是否可行、是否存在真实阻力与失败后果,再根据伤势、环境、准备和协助调整 DC' },
@@ -27,7 +27,7 @@ export const ActionDock: React.FC = () => {
   const latestTurn = gameState.turns[gameState.turns.length - 1];
   const branches = latestTurn ? latestTurn.branches : [];
 
-  // 回合落定后自动聚焦命令行,下一道御令即刻可书
+  // 回合落定后自动聚焦命令行
   const prevStreaming = useRef(isStreaming);
   useEffect(() => {
     if (prevStreaming.current && !isStreaming && !gameState.isGameOver) {
@@ -36,7 +36,7 @@ export const ActionDock: React.FC = () => {
     prevStreaming.current = isStreaming;
   }, [isStreaming, gameState.isGameOver]);
 
-  // 数字键 1-6 直接落子决断分支(输入框聚焦时不劫持)
+  // 数字键 1-6 直接落子决断分支
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.key < '1' || e.key > '6') return;
@@ -66,10 +66,13 @@ export const ActionDock: React.FC = () => {
 
   if (gameState.isGameOver) {
     return (
-      <footer className="relative z-20 shrink-0 select-none border-t-4 border-double border-rubric/50 bg-ink-3 px-6 py-8 text-center">
+      <footer className="relative z-20 shrink-0 select-none border-t border-rubric/40 px-6 py-12 text-center">
         <p className="eyebrow !text-rubric">传奇终结</p>
-        <p className="mt-3 font-serif text-lg font-black tracking-[0.2em] text-parchment">领主陨落</p>
-        <p className="mx-auto mt-2 max-w-md font-serif text-xs leading-relaxed text-parchment-dim">
+        <p className="mt-4 font-brush text-5xl leading-tight text-rubric md:text-6xl">领主陨落</p>
+        <div className="identity-rule mx-auto mt-5 max-w-[240px]" aria-hidden="true">
+          <span className="divider-gem" />
+        </div>
+        <p className="mx-auto mt-5 max-w-md font-serif text-xs leading-relaxed text-parchment-dim">
           {gameState.deathReason || '生命终结,你的血脉与野心留在了维斯特洛的历史中。'}
         </p>
       </footer>
@@ -77,81 +80,73 @@ export const ActionDock: React.FC = () => {
   }
 
   const SubmitIcon = diceMode === 'narrative' ? Send : diceMode === 'force' ? Dices : Hourglass;
-  const submitLabel = diceMode === 'narrative' ? '口述此行' : diceMode === 'force' ? '掷骰而行' : '下令';
 
   return (
-    <footer className="relative z-20 shrink-0 border-t-4 border-double border-hairline-bright bg-gradient-to-b from-ink-3 to-ink-2 px-4 pb-3 pt-2.5 shadow-[0_-10px_30px_rgba(74,58,32,0.18)] md:px-8">
-      <div className="mx-auto flex w-full max-w-[46rem] flex-col gap-3">
-        {/* 决断纸条 */}
-        {branches.length > 0 && !isStreaming && (
-          <div className="flex flex-col gap-2">
-            <div className="flex items-center gap-3 px-0.5 select-none">
-              <span className="eyebrow">决断</span>
-              <span className="hairline flex-1" />
-              <span className="font-mono text-[9px] tracking-widest text-parchment-faint">
-                {branches.length} 条道途
-              </span>
-            </div>
-            <div className="flex flex-col gap-2">
-              {branches.map((branch, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleBranchClick(branch)}
-                  disabled={isStreaming}
-                  title={`按 ${index + 1} 快捷选择`}
-                  className="choice-slab group flex items-center gap-3.5"
-                >
-                  <span className="choice-numeral shrink-0">{ROMAN[index] ?? `${index + 1}`}</span>
-                  <span className="font-serif text-[13px] leading-relaxed md:text-[13.5px]">{branch}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* 待执行物品动作 */}
+    <footer className="dock-enter relative z-20 shrink-0 px-5 pb-5 pt-2 md:px-6">
+      <div className="mx-auto flex w-full max-w-[42rem] flex-col gap-4">
+        {/* 待执行物品动作:下一次成功对话后原子生效 */}
         {pendingItemActions.length > 0 && (
-          <section
-            data-item-action-queue
-            className="border border-gold-deep/50 bg-ink-2/70 px-3 py-2.5"
-            aria-label="待执行物品动作"
-          >
-            <div className="mb-2 flex items-baseline justify-between gap-3">
-              <span className="text-[11px] font-semibold tracking-wide text-gold-bright">
-                待执行物品动作 <span className="font-mono text-[9px] text-parchment-faint">×{pendingItemActions.length}</span>
-              </span>
-              <span className="text-[9px] leading-snug text-parchment-faint">下一次对话生成成功后生效</span>
-            </div>
-            <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
+          <section data-item-action-queue aria-label="待执行物品动作" className="select-none">
+            <p className="mb-1.5 text-[10px] tracking-[0.18em] text-gold">
+              待执行 ×{pendingItemActions.length}
+              <span className="ml-2 font-normal normal-case tracking-normal text-parchment-faint">下一次对话生成成功后生效</span>
+            </p>
+            <ul className="flex flex-col gap-1">
               {pendingItemActions.map((action) => (
-                <div
-                  key={action.id}
-                  className="flex min-w-0 items-center gap-2 border border-hairline bg-ink-3/40 px-2 py-1.5"
-                >
-                  {action.image.type === 'game' ? <GameIcon icon={action.image.icon as any} className="h-7 w-7 shrink-0" /> : <Package className="h-5 w-5 shrink-0 text-gold" />}
-                  <div className="min-w-0 flex-1 font-serif">
-                    <p className="truncate text-[10.5px] font-semibold text-parchment">{action.itemName}</p>
-                    <p className="truncate text-[9px] text-parchment-faint">{action.label}</p>
-                  </div>
+                <li key={action.id} className="flex items-center gap-2 font-serif text-[11px] text-parchment-dim">
+                  <ItemImage image={action.image} alt="" className="h-5 w-5 shrink-0" />
+                  <span className="truncate">{action.itemName}</span>
+                  <span className="truncate text-[9.5px] text-parchment-faint">{action.label}</span>
                   <button
                     type="button"
                     onClick={() => cancelItemAction(action.id)}
                     disabled={isStreaming}
                     title={isStreaming ? '本次对话完成后才能继续调整队列' : `取消${action.label}${action.itemName}`}
                     aria-label={`取消${action.label}${action.itemName}`}
-                    className="flex h-6 w-6 shrink-0 items-center justify-center border border-hairline text-parchment-dim transition-colors hover:border-rubric/60 hover:text-rubric disabled:cursor-not-allowed disabled:opacity-40"
+                    className="ml-auto text-parchment-faint transition-colors hover:text-rubric disabled:cursor-not-allowed disabled:opacity-40"
                   >
-                    <X className="h-3.5 w-3.5" />
+                    <X className="h-3 w-3" />
                   </button>
-                </div>
+                </li>
               ))}
-            </div>
+            </ul>
           </section>
         )}
 
-        {/* 写字台:检定规制、羽笔与火漆,一行收束 */}
-        <form onSubmit={handleCustomSubmit} className="flex items-stretch gap-2">
-          <div className="flex items-stretch border border-hairline-bright/70 bg-ink-2/50" role="group" aria-label="D20 检定模式">
+        {/* 决断:无框列表,朱红序数,墨痕扫过 */}
+        {branches.length > 0 && !isStreaming && (
+          <nav aria-label="决断分支" className="select-none">
+            {branches.map((branch, index) => (
+              <button
+                key={index}
+                onClick={() => handleBranchClick(branch)}
+                disabled={isStreaming}
+                title={`按 ${index + 1} 快捷选择`}
+                className="branch-row"
+              >
+                <span className="branch-numeral">{ROMAN[index] ?? `${index + 1}`}</span>
+                <span className="font-serif text-[13.5px] leading-relaxed">{branch}</span>
+              </button>
+            ))}
+          </nav>
+        )}
+
+        {/* 御令:墨线自画 + 火漆钤印 */}
+        <form onSubmit={handleCustomSubmit} className="flex items-end gap-3">
+          <span className="shrink-0 pb-2.5 font-serif text-[13px] font-bold tracking-[0.2em] text-gold">御令</span>
+          <div className={`command-line${isStreaming ? ' is-streaming' : ''}`}>
+            <input
+              ref={inputRef}
+              id="command-input"
+              type="text"
+              value={customInput}
+              onChange={(event) => setCustomInput(stripEmoji(event.target.value))}
+              disabled={isStreaming}
+              placeholder={isStreaming ? '局势推演中,静候回音……' : '口述你的行动(按 / 聚焦,按 1-6 选分支)……'}
+              className="command-input"
+            />
+          </div>
+          <div className="flex items-center gap-1 pb-1" role="group" aria-label="D20 检定模式">
             {DICE_MODES.map((mode) => {
               const ModeIcon = mode.id === 'auto' ? Hourglass : mode.id === 'force' ? Dices : Send;
               const active = diceMode === mode.id;
@@ -162,34 +157,26 @@ export const ActionDock: React.FC = () => {
                   onClick={() => setDiceMode(mode.id)}
                   title={`${mode.label}:${mode.title}`}
                   aria-pressed={active}
-                  className={`flex w-9 items-center justify-center border-r border-hairline transition-colors last:border-r-0 ${
-                    active
-                      ? 'bg-gold-deep/20 text-gold-bright'
-                      : 'text-parchment-faint hover:bg-ink-2/70 hover:text-parchment-dim'
+                  className={`relative flex h-7 w-7 items-center justify-center rounded-full transition-all duration-200 ${
+                    active ? 'scale-110 text-gold' : 'text-parchment-faint hover:text-parchment-dim'
                   }`}
                 >
                   <ModeIcon className="h-3.5 w-3.5" />
+                  {active && (
+                    <span className="absolute -bottom-0.5 left-1/2 h-1 w-1 -translate-x-1/2 rotate-45 bg-gold" aria-hidden="true" />
+                  )}
                 </button>
               );
             })}
           </div>
-          <input
-            ref={inputRef}
-            id="command-input"
-            type="text"
-            value={customInput}
-            onChange={(event) => setCustomInput(stripEmoji(event.target.value))}
-            disabled={isStreaming}
-            placeholder={isStreaming ? '局势推演中,静候回音……' : '口述你的行动(按 / 聚焦,按 1-6 选分支)……'}
-            className="command-input flex-1"
-          />
           <button
             type="submit"
             disabled={!customInput.trim() || isStreaming}
             className="btn-decree shrink-0"
+            title={diceMode === 'narrative' ? '口述此行' : diceMode === 'force' ? '掷骰而行' : '下令'}
+            aria-label="提交御令"
           >
             <SubmitIcon className="h-4 w-4" />
-            <span className="hidden sm:inline">{submitLabel}</span>
           </button>
         </form>
       </div>
