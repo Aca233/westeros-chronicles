@@ -8,6 +8,9 @@ import type { CharacterEvent, CharacterId, CharacterRelationship } from '../feat
 import type { CharacterCommandContext, CharacterState, CharacterStateCommand, ValidatedCharacterEventInput } from '../features/characters/characterCommands';
 import { validateCharacterCommand } from '../features/characters/characterCommandValidator';
 import { canContainerAccept, ensureItemCustody, getAccessibleStorageSites, inferItemSize, resolveContainerItems } from './itemCustody';
+import { applyItemActions, type ItemActionContext } from '../features/items/actions';
+import { ITEM_CATALOG } from '../data/itemDefinitions';
+import type { ItemAction, ItemStateCommand } from '../features/items/types';
 
 
 function inferEquipmentSlot(item: InventoryItem, requested?: EquippedGearSlot): EquippedGearSlot {
@@ -174,6 +177,47 @@ function evaluateOverallStatus(lord: LordProfile): '强健' | '挂彩' | '负重
   return '强健';
 }
 
+const ITEM_COMMAND_TYPES = new Set([
+  'ITEM_CREATE', 'ITEM_EQUIP', 'ITEM_UNEQUIP', 'ITEM_USE', 'ITEM_TRANSFER', 'ITEM_GIFT',
+  'ITEM_DISCARD', 'ITEM_REPAIR', 'ITEM_DAMAGE', 'ITEM_SPLIT', 'ITEM_MERGE', 'ITEM_MARK_HEIRLOOM',
+]);
+
+function isItemStateCommand(command: StateCommand): command is ItemStateCommand {
+  return ITEM_COMMAND_TYPES.has(command.type);
+}
+
+function itemCommandToAction(command: ItemStateCommand): ItemAction {
+  switch (command.type) {
+    case 'ITEM_CREATE': return { kind: 'acquire', instance: command.instance, placement: command.placement, historyType: command.historyType };
+    case 'ITEM_EQUIP': return { kind: 'equip', instanceId: command.instanceId, position: command.position, displacedTo: command.displacedTo };
+    case 'ITEM_UNEQUIP': return { kind: 'unequip', instanceId: command.instanceId, to: command.to };
+    case 'ITEM_USE': return { kind: 'use', instanceId: command.instanceId, quantity: command.quantity };
+    case 'ITEM_TRANSFER': return { kind: 'transfer', instanceId: command.instanceId, to: command.to, quantity: command.quantity, newInstanceId: command.newInstanceId };
+    case 'ITEM_GIFT': return { kind: 'gift', instanceId: command.instanceId, recipientId: command.recipientId, quantity: command.quantity, newInstanceId: command.newInstanceId };
+    case 'ITEM_DISCARD': return { kind: 'discard', instanceId: command.instanceId, quantity: command.quantity, newInstanceId: command.newInstanceId };
+    case 'ITEM_REPAIR': return { kind: 'repair', instanceId: command.instanceId, amount: command.amount };
+    case 'ITEM_DAMAGE': return { kind: 'damage', instanceId: command.instanceId, amount: command.amount, reason: command.reason };
+    case 'ITEM_SPLIT': return { kind: 'split', instanceId: command.instanceId, quantity: command.quantity, newInstanceId: command.newInstanceId, to: command.to };
+    case 'ITEM_MERGE': return { kind: 'merge', sourceInstanceId: command.sourceInstanceId, targetInstanceId: command.targetInstanceId };
+    case 'ITEM_MARK_HEIRLOOM': return { kind: 'mark_heirloom', instanceId: command.instanceId, houseId: command.houseId };
+  }
+}
+
+function locationRoot(location: string): string {
+  return location.split('·', 1)[0].trim();
+}
+
+function createItemActionContext(lord: LordProfile): ItemActionContext {
+  const root = locationRoot(lord.location);
+  return {
+    actorId: `lord:${lord.name}`,
+    actorLocation: lord.location,
+    gameDate: '当前回合',
+    accessibleSiteIds: new Set(Object.values(lord.items.sites).filter((site) => locationRoot(site.location) === root).map((site) => site.id)),
+    accessibleVehicleIds: new Set(Object.values(lord.items.vehicles).filter((vehicle) => locationRoot(vehicle.location) === root).map((vehicle) => vehicle.id)),
+  };
+}
+
 // 纯前端确定性数值结算 Reducer
 export function applyStateCommands(
   lord: LordProfile,
@@ -187,7 +231,23 @@ export function applyStateCommands(
   const traitEffects = aggregateSelectedTraitEffects(next.traitIds ?? []);
   let isFatalDeath = false;
 
+  const itemCommands = commands.filter(isItemStateCommand);
+  if (itemCommands.length > 0) {
+    if (!next.items) {
+      changesLog.push('[物品] 当前存档缺少新版物品状态，请重置测试存档');
+    } else {
+      const itemResult = applyItemActions(next.items, itemCommands.map(itemCommandToAction), createItemActionContext(next), ITEM_CATALOG);
+      if (itemResult.ok) {
+        next.items = itemResult.state;
+        changesLog.push(...itemResult.log.map((entry) => `[物品] ${entry}`));
+      } else {
+        changesLog.push(`[物品] 批次未结算：${itemResult.error}`);
+      }
+    }
+  }
+
   for (const cmd of commands) {
+    if (isItemStateCommand(cmd)) continue;
     switch (cmd.type) {
       //  局部肢体受创
       case 'INJURE_ZONE': {

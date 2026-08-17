@@ -2,7 +2,7 @@ import type { CoatOfArmsDesign } from '../data/heraldry';
 import type { TraitCheckDomain } from '../services/traitEffectEngine';
 import type { CheckOutcomeContract } from '../services/dicePolicy';
 import type { CharacterStateCommand } from '../features/characters/characterCommands';
-import type { ItemSystemState } from '../features/items/types';
+import type { ItemStateCommand, ItemSystemState } from '../features/items/types';
 
 // CK3 同款六项角色能力。常见角色通常位于 0 - 30 区间，数值允许因加成继续提高。
 export interface LordAttributes {
@@ -201,6 +201,7 @@ export type StateCommand =
   | { type: 'CHANGE_TITLE'; title: string }
   | { type: 'ADVANCE_TIME'; days?: number; months?: number; years?: number; season?: string; reason?: string }
   | { type: 'SET_DATE'; year?: number; month?: number; day?: number; season?: string; reason?: string }
+  | ItemStateCommand
   | CharacterStateCommand;
 
 // D20 跑团检定定义

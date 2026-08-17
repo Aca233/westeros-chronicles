@@ -43,7 +43,8 @@
     "test:item-actions": "node scripts/test-item-actions.mjs",
     "test:item-action-queue": "node scripts/test-item-action-queue.mjs",
     "test:item-definitions": "node scripts/test-item-definitions.mjs",
-    "test:item-save-version": "node scripts/test-item-save-version.mjs"
+    "test:item-save-version": "node scripts/test-item-save-version.mjs",
+    "test:item-state-commands": "node scripts/test-item-state-commands.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",
