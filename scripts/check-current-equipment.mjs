@@ -4,12 +4,13 @@ import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 const read = (path) => readFile(join(root, path), 'utf8');
-const [presets, creator, prompt, reducer, sheet, types, store, dock, queue] = await Promise.all([
+const [presets, creator, prompt, reducer, sheet, dossier, types, store, dock, queue] = await Promise.all([
   read('src/data/presets.ts'),
   read('src/components/CharacterCreator.tsx'),
   read('src/services/promptBuilder.ts'),
   read('src/services/stateReducer.ts'),
   read('src/components/CharacterSheet.tsx'),
+  read('src/components/Ck3CharacterWindow.tsx'),
   read('src/types/game.ts'),
   read('src/store/useGameStore.ts'),
   read('src/components/ActionDock.tsx'),
@@ -31,7 +32,11 @@ requireMarker(prompt, '当前地点可用储藏', 'Prompt does not expose locati
 requireMarker(reducer, '必须先归入随身物品、当前据点或附近运输工具', 'Reducer still allows conjuring equipment directly into a slot.');
 requireMarker(reducer, 'equipFromContainer(next, cmd.itemId, cmd.from, cmd.slot, changesLog)', 'Source-backed equipment cannot be applied without a legacy preparation flag.');
 requireMarker(prompt, '不得把战甲当作日常服装持续穿戴', 'Prompt does not prevent permanent everyday armor use.');
-requireMarker(sheet, 'title="随身物品"', 'Character sheet does not show carried items.');
+requireMarker(dossier, 'function PlayerInventoryTab()', 'Character dossier does not provide a dedicated carried-items tab.');
+requireMarker(dossier, 'title="随身物品"', 'Dedicated carried-items tab does not show carried items.');
+requireMarker(dossier, "queueEquipmentAction(item, { type: 'carried' }, '随身物品')", 'Dedicated carried-items tab cannot queue equipped items.');
+requireMarker(dossier, 'useInventoryItem(item.id)', 'Dedicated carried-items tab cannot use consumable items.');
+if (sheet.includes('title="随身物品"')) failures.push('Health and equipment tab still duplicates the carried-items section.');
 requireMarker(sheet, '远方储藏', 'Character sheet does not separate inaccessible storage.');
 requireMarker(types, 'interface PendingEquipmentAction', 'Pending equipment action model is missing.');
 requireMarker(sheet, 'onQueueEquip={queueEquipmentAction}', 'Equipment buttons still change gear immediately instead of entering the queue.');

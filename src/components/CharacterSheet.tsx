@@ -7,7 +7,6 @@ import {
   Sparkles,
   HeartPulse,
   Package,
-  Backpack,
   Biohazard,
   Brain,
   Droplets,
@@ -33,7 +32,7 @@ import { getEquipmentWearNotice } from '../services/equipmentRules';
 import { getAccessibleStorageSites, getAccessibleTransports, getUsedCapacity } from '../services/itemCustody';
 
 export const CharacterSheet: React.FC<{ embedded?: boolean }> = ({ embedded = false }) => {
-  const { gameState, useInventoryItem, unequipGear, queueEquipmentAction, pendingEquipmentActions, isStreaming } = useGameStore();
+  const { gameState, unequipGear, queueEquipmentAction, pendingEquipmentActions, isStreaming } = useGameStore();
   const { lord } = gameState;
   const { body, gear } = lord;
   const carriedItems = lord.carriedItems || gear.inventory || gear.pouch || [];
@@ -509,7 +508,7 @@ export const CharacterSheet: React.FC<{ embedded?: boolean }> = ({ embedded = fa
           </div>
         </div>
 
-        {/* 伴兽、随身物品与地点储藏 */}
+        {/* 伴兽与地点储藏；随身物品集中在人物卷宗的独立页签。 */}
         <div className="flex flex-col gap-2 border-t border-hairline pt-2">
           {gear.companion && (
             <button
@@ -528,23 +527,6 @@ export const CharacterSheet: React.FC<{ embedded?: boolean }> = ({ embedded = fa
               <span className="shrink-0 font-mono text-[10px] text-emerald-700">{gear.companion.bonus}</span>
             </button>
           )}
-
-          <CustodySection
-            title="随身物品"
-            icon={<Backpack className="w-3.5 h-3.5" />}
-            meta={`${getUsedCapacity(carriedItems)} / 8 格`}
-            emptyText="没有随身携带的物品"
-            items={carriedItems}
-            targetPrefix="carried"
-            activeSlot={activeSlot}
-            onInspect={setActiveSlot}
-            from={{ type: 'carried' }}
-            pendingEquipmentActions={pendingEquipmentActions}
-            onUse={useInventoryItem}
-            onQueueEquip={queueEquipmentAction}
-            allowUse
-            isStreaming={isStreaming}
-          />
 
           {accessibleStorageSites.map((site) => (
             <CustodySection

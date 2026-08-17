@@ -552,7 +552,8 @@ function woundTone(level: WoundLevel): string {
 }
 
 function PlayerInventoryTab() {
-  const lord = useGameStore((state) => state.gameState.lord);
+  const { gameState, useInventoryItem, queueEquipmentAction, pendingEquipmentActions, isStreaming } = useGameStore();
+  const { lord } = gameState;
   const carriedItems = lord.carriedItems || lord.gear.inventory || lord.gear.pouch || [];
   const storageSites = lord.storageSites || [];
   const transports = lord.transports || [];
@@ -563,10 +564,34 @@ function PlayerInventoryTab() {
         <div className="divide-y divide-hairline border-y border-hairline">
           {carriedItems.map((item) => {
             const icon = getInventoryIconId(item.category, item.name);
+            const canUse = item.category === '药草' || item.category === '毒物';
+            const canEquip = item.category === '武器' || item.category === '防具' || Boolean(item.slot);
+            const isQueued = pendingEquipmentActions.some((action) => action.itemId === item.id && action.from.type === 'carried');
+            const equipLabel = item.slot === 'mainhand' || item.slot === 'offhand' ? '装备' : '穿上';
             return (
               <div key={item.id} className="flex items-center gap-3 bg-ink-3/30 px-2 py-2.5">
                 <div className="flex h-11 w-11 shrink-0 items-center justify-center border border-hairline-bright/60 bg-ink-2">{icon ? <GameIcon icon={icon} className="h-9 w-9" /> : <Package className="h-6 w-6 text-gold-deep" />}</div>
-                <div className="min-w-0 flex-1"><div className="flex items-center justify-between gap-2"><strong className="truncate font-serif text-[12px] text-parchment">{item.name}</strong><span className="font-mono text-[10px] text-gold">×{item.quantity}</span></div><p className="mt-1 truncate text-[10px] text-parchment-faint">{item.description}</p></div>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center justify-between gap-2">
+                    <strong className="truncate font-serif text-[12px] text-parchment">{item.name}</strong>
+                    <div className="flex shrink-0 items-center gap-1">
+                      <span className="font-mono text-[10px] text-gold">×{item.quantity}</span>
+                      {canUse && <button type="button" onClick={() => useInventoryItem(item.id)} className="btn-ghost !px-1.5 !py-0.5 !text-[9px]">使用</button>}
+                      {canEquip && (
+                        <button
+                          type="button"
+                          onClick={() => queueEquipmentAction(item, { type: 'carried' }, '随身物品')}
+                          disabled={isQueued || isStreaming}
+                          className="btn-ghost !px-1.5 !py-0.5 !text-[9px] disabled:cursor-not-allowed disabled:opacity-40"
+                          title={isQueued ? '已加入下一次对话的待执行队列' : '将在下一次对话生成完成后生效'}
+                        >
+                          {isQueued ? '已排队' : equipLabel}
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                  <p className="mt-1 truncate text-[10px] text-parchment-faint">{item.description}</p>
+                </div>
               </div>
             );
           })}
@@ -576,7 +601,7 @@ function PlayerInventoryTab() {
         <StorageSummary icon={<Landmark className="h-5 w-5" />} label="据点储藏" count={storageSites.length} detail={`${storageSites.reduce((sum, site) => sum + site.items.length, 0)} 件物品`} />
         <StorageSummary icon={<Shield className="h-5 w-5" />} label="运输工具" count={transports.length} detail={`${transports.reduce((sum, vehicle) => sum + vehicle.items.length, 0)} 件物品`} />
       </div>
-      <p className="border-l-2 border-gold-deep/70 bg-ink-3/30 px-3 py-2 font-serif text-[10px] leading-relaxed text-parchment-dim">穿戴、卸下、使用物品和地点仓储仍可在“健康与装备”页签中操作，穿戴会在下一次对话完成后生效。</p>
+      <p className="border-l-2 border-gold-deep/70 bg-ink-3/30 px-3 py-2 font-serif text-[10px] leading-relaxed text-parchment-dim">随身物品在此使用或加入穿戴队列；据点与运输工具中的装备仍在“健康与装备”页签处理。</p>
     </div>
   );
 }
