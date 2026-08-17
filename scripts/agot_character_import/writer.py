@@ -85,6 +85,20 @@ def _record(history: CharacterHistory, start_date: AgotDate, localization: Mappi
     return full, search, len(projected.unsupported_operations)
 
 
+def _make_spouse_links_reciprocal(records: Iterable[dict[str, Any]]) -> int:
+    record_list = list(records)
+    records_by_id = {record["id"]: record for record in record_list}
+    added = 0
+    for record in record_list:
+        for spouse_id in tuple(record["spouseIds"]):
+            spouse = records_by_id.get(spouse_id)
+            if spouse is None or record["id"] in spouse["spouseIds"]:
+                continue
+            spouse["spouseIds"].append(record["id"])
+            added += 1
+    return added
+
+
 def write_dataset(
     histories: Iterable[CharacterHistory],
     output_root: Path,
@@ -104,6 +118,10 @@ def write_dataset(
         search_index.append(search)
         unsupported_count += unsupported
 
+    reciprocal_spouse_links_added = _make_spouse_links_reciprocal(
+        record for records in shard_records.values() for record in records
+    )
+
     for records in shard_records.values():
         records.sort(key=lambda record: record["id"])
     search_index.sort(key=lambda record: (record["name"], record["id"]))
@@ -117,6 +135,7 @@ def write_dataset(
         "modSupporting": sum(history.tier == CanonTier.MOD_SUPPORTING for history in history_list),
         "genealogy": sum(history.tier == CanonTier.GENEALOGY for history in history_list),
         "unsupportedOperations": unsupported_count,
+        "reciprocalSpouseLinksAdded": reciprocal_spouse_links_added,
     }
     fingerprint = {
         "schemaVersion": SCHEMA_VERSION,

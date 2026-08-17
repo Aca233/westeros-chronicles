@@ -1,3 +1,5 @@
+import type { CharacterId } from '../features/characters/types';
+
 export interface EntityInfo {
   keywords: string[];
   name: string;
@@ -6,6 +8,7 @@ export interface EntityInfo {
   tag: string;
   description: string;
   extraStats?: string;
+  characterId?: CharacterId;
 }
 
 export const WESTEROS_ENTITIES: EntityInfo[] = [
@@ -52,6 +55,7 @@ export const WESTEROS_ENTITIES: EntityInfo[] = [
     keywords: ['劳勃·拜拉席恩', '劳勃国王', '劳勃'],
     name: '劳勃·拜拉席恩 (Robert I)',
     category: 'character',
+    characterId: 'agot:Baratheon_2',
     icon: 'artifact-crown',
     tag: '七国之王 · 铁王座之主',
     description: '篡夺者战争的发起者，曾以重锤击碎雷加王子胸膛的传奇战士，如今沉溺于醇酒与狩猎。',
@@ -61,6 +65,7 @@ export const WESTEROS_ENTITIES: EntityInfo[] = [
     keywords: ['瑟曦·兰尼斯特', '瑟曦王后', '瑟曦'],
     name: '瑟曦·兰尼斯特 (Cersei Lannister)',
     category: 'character',
+    characterId: 'agot:Lannister_6',
     icon: 'artifact-crown',
     tag: '七国王后 · 凯岩城金狮',
     description: '泰温·兰尼斯特公爵的掌上明珠。容貌倾国倾城，性格骄纵狠辣，深陷宫廷密谋。',
@@ -70,6 +75,7 @@ export const WESTEROS_ENTITIES: EntityInfo[] = [
     keywords: ['詹姆·兰尼斯特', '弑君者', '詹姆'],
     name: '詹姆·兰尼斯特 (Jaime Lannister)',
     category: 'character',
+    characterId: 'agot:Lannister_7',
     icon: 'gear-sword',
     tag: '御林铁卫 · 御前第一剑士',
     description: '亲手刺杀疯王的“弑君者”。七国剑术无双的金色骑士，蔑视世俗荣誉。',
@@ -79,6 +85,7 @@ export const WESTEROS_ENTITIES: EntityInfo[] = [
     keywords: ['提利昂·兰尼斯特', '小恶魔', '提利昂'],
     name: '提利昂·兰尼斯特 (Tyrion Lannister)',
     category: 'character',
+    characterId: 'agot:Lannister_8',
     icon: 'artifact-goblet',
     tag: '兰尼斯特次子 · 智囊侏儒',
     description: '生为侏儒却拥有整个维斯特洛最敏锐深邃的头脑与口才，善于洞察人性阴暗。',
@@ -88,6 +95,7 @@ export const WESTEROS_ENTITIES: EntityInfo[] = [
     keywords: ['凯特琳·徒利', '凯特琳夫人', '凯特琳'],
     name: '凯特琳·徒利 (Catelyn Stark)',
     category: 'character',
+    characterId: 'agot:Tully_4',
     icon: 'artifact-winter-rose',
     tag: '临冬城公爵夫人 · 奔流城之女',
     description: '艾德·史塔克的爱妻，徒利家族“家族、责任、荣誉”箴言的坚定践行者。',
@@ -97,6 +105,7 @@ export const WESTEROS_ENTITIES: EntityInfo[] = [
     keywords: ['琼恩·艾林', '前首相'],
     name: '琼恩·艾林 (Jon Arryn)',
     category: 'character',
+    characterId: 'agot:Arryn_3',
     icon: 'house-arryn',
     tag: '前御前首相 · 鹰巢城公爵 (已故)',
     description: '养育劳勃与艾德如亲子的长者。近期在君临红堡离奇暴毙，死因疑点重重。',

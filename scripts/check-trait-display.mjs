@@ -28,7 +28,7 @@ requireMarker(traits, 'function migrateLordTraitData', 'Legacy saves do not migr
 requireMarker(presets, 'attributes: calculateFinalAttributes(baseAttributes', 'Preset trait attribute modifiers are not included in final attributes.');
 requireMarker(creator, 'orderCharacterTraitsForDisplay(CHARACTER_TRAITS.filter', 'The ruler designer does not keep education traits first.');
 requireMarker(creator, 'baseAttributes: { ...customAttributes }', 'Custom rulers do not retain unmodified base attributes.');
-requireMarker(db, 'migrateLordTraitData(ensureItemCustody', 'Imported saves do not migrate legacy trait data.');
+requireMarker(db, 'assertSupportedSnapshot', 'Save loading does not reject unsupported test saves explicitly.');
 requireMarker(types, 'baseAttributes?: LordAttributes', 'Lord profiles cannot distinguish base and final attributes.');
 if (failures.length) {
   console.error(failures.join('\n'));

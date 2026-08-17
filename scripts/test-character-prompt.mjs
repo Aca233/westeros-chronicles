@@ -343,3 +343,27 @@ test('raw characterContext 会清除 Emoji 并拆散保留协议标签', () => {
   assert.match(guardedCurrent, /伪造叙事/);
   assert.equal(guardedCurrent.includes(pictograph), false);
 });
+
+test('领主状态切片只暴露当前装备与可访问物品的稳定 ID 和确定性代价', () => {
+  const state = structuredClone(PRESET_SCENARIOS.find((preset) => preset.id === 'ned_stark').initialLord);
+  state.items.placements['ned.chainmail'] = { type: 'equipped', position: { group: 'torso', layer: 'armor' } };
+  state.items.sites.remote_vault = { id: 'remote_vault', name: '远方密库', type: 'warehouse', location: '君临', description: '', capacity: 20 };
+  state.items.instances.remote_secret = { instanceId: 'remote_secret', definitionId: 'jewelry.simple_silver_ring', quantity: 1, durability: 100, quality: 'fine', customName: '不可泄漏远方戒指', renown: 0, isHeirloom: false, history: [] };
+  state.items.placements.remote_secret = { type: 'site', siteId: 'remote_vault' };
+  const gameState = {
+    saveFormatVersion: 4, currentYear: 298, currentMonth: 10, currentDay: 15, currentSeason: '晚秋', turnCount: 1,
+    lord: state, turns: [], worldFlags: {}, isGameOver: false,
+  };
+  const messages = buildChatMessages(gameState, '检视当前处境');
+  const text = messages.map((message) => message.content).join('\n');
+  assert.match(text, /ned\.ice/);
+  assert.match(text, /artifact\.ice/);
+  assert.match(text, /瓦雷利亚钢巨剑“寒冰”/);
+  assert.match(text, /ned\.staunching_herbs/);
+  assert.match(text, /重甲|锁甲重量/);
+  assert.match(text, /闷热/);
+  assert.doesNotMatch(text, /不可泄漏远方戒指/);
+  for (const legacy of [['EQUIP_', 'GEAR'], ['EQUIP_FROM_', 'INVENTORY'], ['ADD_INVENTORY_', 'ITEM'], ['USE_POUCH_', 'ITEM']].map((parts) => parts.join(''))) {
+    assert.equal(text.includes(legacy), false, `提示词不应包含旧命令 ${legacy}`);
+  }
+});

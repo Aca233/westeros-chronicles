@@ -36,12 +36,30 @@ if (report.datasetHash !== manifest.datasetHash) failures.push('Import report an
 if (searchIndex.some((entry) => entry.canonTier === 'technical')) failures.push('Technical characters leaked into search index.');
 if (searchIndex.some((entry) => !entry.id?.startsWith('agot:'))) failures.push('Search index contains an invalid character ID.');
 
+const records = [];
 for (const shard of new Set(searchIndex.map((entry) => entry.shard))) {
   try {
-    await access(join(datasetRoot, 'shards', `${shard}.json`));
+    const shardPath = join(datasetRoot, 'shards', `${shard}.json`);
+    await access(shardPath);
+    records.push(...await readJson(shardPath));
   } catch {
     failures.push(`Missing character shard ${shard}.json.`);
   }
+}
+
+if (records.length !== manifest.counts?.emittedRecords) failures.push('Character shard record count does not match emitted records.');
+if (records.some((record) => !record.cultureId)) failures.push('At least one character is missing culture data.');
+if (records.some((record) => !record.faithId)) failures.push('At least one character is missing faith data.');
+
+const recordsById = new Map(records.map((record) => [record.id, record]));
+for (const record of records) {
+  for (const spouseId of record.spouseIds ?? []) {
+    const spouse = recordsById.get(spouseId);
+    if (!spouse) failures.push(`Character ${record.id} references missing spouse ${spouseId}.`);
+    else if (!(spouse.spouseIds ?? []).includes(record.id)) failures.push(`Marriage ${record.id}/${spouseId} is not reciprocal.`);
+    if (failures.length >= 20) break;
+  }
+  if (failures.length >= 20) break;
 }
 
 if (failures.length) {

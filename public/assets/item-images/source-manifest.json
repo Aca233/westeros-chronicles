@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "items": [
+    {
+      "itemId": "artifact.ice",
+      "localPath": "/assets/item-images/artifact-ice.webp",
+      "sourcePage": "https://awoiaf.westeros.org/index.php/Ice",
+      "sourceImage": "https://awoiaf.westeros.org/images/1/18/Ice_Sarah_Biddle_II.png",
+      "retrievedAt": "2026-08-17T11:40:44.497Z",
+      "attribution": "A Wiki of Ice and Fire contributors and the credited source artist",
+      "licenseNote": "Used as locally cached reference art; see the source page for attribution and rights information.",
+      "sha256": "022f434944577fb5c271af84e347c85f70470cc2d8c6457b8500ade5facc6d67",
+      "localSourcePath": "scripts/item-image-sources/artifact-ice.png",
+      "sourceSha256": "c6b65a3e154b2617f234099896ebc6408ce51e783599014c9abd75ebc690ebe8"
+    },
+    {
+      "itemId": "artifact.longclaw",
+      "localPath": "/assets/item-images/artifact-longclaw.webp",
+      "sourcePage": "https://awoiaf.westeros.org/index.php/Longclaw",
+      "sourceImage": "https://awoiaf.westeros.org/images/a/aa/Jose_Manzanedo_Jeor_Mormont.jpg",
+      "retrievedAt": "2026-08-17T11:40:44.497Z",
+      "attribution": "A Wiki of Ice and Fire contributors and the credited source artist",
+      "licenseNote": "Used as locally cached reference art; see the source page for attribution and rights information.",
+      "sha256": "44f8ab159a519855a8d07987d54dc75e244496850af1b38344c21c9bd0f1e4d7",
+      "localSourcePath": "scripts/item-image-sources/artifact-longclaw.png",
+      "sourceSha256": "f398687d7a052a4c8a98d59ef406f6cde37fe3930be508be1f61fbd4db01ae70"
+    },
+    {
+      "itemId": "artifact.dawn",
+      "localPath": "/assets/item-images/artifact-dawn.webp",
+      "sourcePage": "https://awoiaf.westeros.org/index.php/Dawn",
+      "sourceImage": "https://awoiaf.westeros.org/images/6/65/Ser_Arthur_Dayne_by_henning.jpg",
+      "retrievedAt": "2026-08-17T11:40:44.497Z",
+      "attribution": "A Wiki of Ice and Fire contributors and the credited source artist",
+      "licenseNote": "Used as locally cached reference art; see the source page for attribution and rights information.",
+      "sha256": "5a75ec5453f802fba671a13cf1867fc53191d75b6c1c23b5cd654757f8317fc8",
+      "localSourcePath": "scripts/item-image-sources/artifact-dawn.png",
+      "sourceSha256": "c76137af3fca17f310ce81766a09e41c74265f2fe4e37b404445b4e45c628e3f"
+    },
+    {
+      "itemId": "artifact.blackfyre",
+      "localPath": "/assets/item-images/artifact-blackfyre.webp",
+      "sourcePage": "https://awoiaf.westeros.org/index.php/Blackfyre",
+      "sourceImage": "https://awoiaf.westeros.org/images/7/73/AEGON_I.jpg",
+      "retrievedAt": "2026-08-17T11:40:44.497Z",
+      "attribution": "A Wiki of Ice and Fire contributors and the credited source artist",
+      "licenseNote": "Used as locally cached reference art; see the source page for attribution and rights information.",
+      "sha256": "621560b9c00f13dd2bca20de723072b5224ab8026f338967799bf3b435dbfad7",
+      "localSourcePath": "scripts/item-image-sources/artifact-blackfyre.png",
+      "sourceSha256": "8dbcbc990e420f521f8b23c68b22543e2b26497ceb6722bc854b36f0e7802cd5"
+    }
+  ]
+}

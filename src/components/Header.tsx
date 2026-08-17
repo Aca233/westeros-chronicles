@@ -1,83 +1,88 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useGameStore } from '../store/useGameStore';
-import { Settings, PlusCircle, RotateCcw, Calendar, Clock, Hourglass } from 'lucide-react';
-import { GameIcon } from './GameIcon';
+import { Settings, RotateCcw, Feather, Moon, Sun } from 'lucide-react';
 
 export const Header: React.FC = () => {
   const { gameState, isStreaming, openSettings, openCreator, undoTurn } = useGameStore();
   const { currentYear, currentMonth, currentDay, currentSeason, turnCount } = gameState;
 
+  // 日间 = 羊皮纸;夜间 = 烛下牛皮卷
+  const [theme, setTheme] = useState<'day' | 'night'>(() =>
+    document.documentElement.dataset.theme === 'night' ? 'night' : 'day'
+  );
+  const toggleTheme = () => {
+    const next = theme === 'night' ? 'day' : 'night';
+    setTheme(next);
+    document.documentElement.dataset.theme = next;
+    try { localStorage.setItem('westeros-theme', next); } catch { /* 忽略隐私模式 */ }
+  };
+
   return (
-    <header className="h-12 bg-[#0e0c0a]/95 border-b border-[#33271d] px-4 md:px-6 flex items-center justify-between z-30 backdrop-blur-md select-none shrink-0">
-      {/* 左侧：游戏标题 */}
-      <div className="flex items-center gap-2">
-        <GameIcon icon="gear-sword" className="w-7 h-7 drop-shadow-md" />
-        <h1 className="font-serif font-bold text-[#e5be6c] tracking-wider text-sm md:text-base">
+    <header className="header-enter relative z-30 flex h-12 shrink-0 select-none items-center justify-between border-b border-hairline/60 px-4 md:px-6">
+      {/* 阅读进度:一缕金线 */}
+      <div className="scroll-progress" aria-hidden="true" />
+
+      {/* 左:印章与题名 */}
+      <div className="flex min-w-0 items-center gap-2.5">
+        <span className="seal-stamp h-7 w-7 shrink-0 text-[12px]" aria-hidden="true">史</span>
+        <h1 className="whitespace-nowrap font-serif text-[14px] font-black tracking-[0.16em] text-parchment">
           维斯特洛编年史
         </h1>
-        <span className="text-[10px] text-[#8a652a] font-serif hidden sm:inline-block tracking-widest uppercase">
-          Chronicles of Westeros
+        <span className="eyebrow hidden !text-[9px] lg:inline">A Game of Thrones · Roleplay</span>
+      </div>
+
+      {/* 中:纪年(小字,黄铜,菱花相隔) */}
+      <div className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-3 md:flex">
+        <span className="font-display text-[12px] font-bold tracking-[0.12em] text-gold">
+          {currentYear} AC
+        </span>
+        <span className="h-1 w-1 rotate-45 bg-hairline-bright/70" aria-hidden="true" />
+        <span className="text-[10.5px] text-parchment-faint">
+          {currentMonth || 10}月{currentDay || 15}日
+        </span>
+        <span className="h-1 w-1 rotate-45 bg-hairline-bright/70" aria-hidden="true" />
+        <span className="font-serif text-[11px] italic text-parchment-dim">{currentSeason}</span>
+        <span className="h-1 w-1 rotate-45 bg-hairline-bright/70" aria-hidden="true" />
+        <span className="font-mono text-[10px] text-parchment-faint">
+          回合 <strong className="font-display text-[11.5px] text-gold">{turnCount}</strong>
         </span>
       </div>
 
-      {/* 中间：只保留时间、时节与回合纪年信息 */}
-      <div className="flex items-center gap-2 md:gap-4 bg-[#17130f] px-3.5 py-1 rounded-full border border-[#33271d] shadow-inner text-xs font-serif">
-        {/* 纪年与具体日期 */}
-        <div className="flex items-center gap-1.5 text-[#e6ded1]">
-          <Calendar className="w-3.5 h-3.5 text-[#c89d54]" />
-          <span className="font-bold tracking-wide">
-            征服历 {currentYear} AC · {currentMonth || 10}月{currentDay || 15}日
-          </span>
-        </div>
-
-        <div className="w-[1px] h-3 bg-[#33271d]" />
-
-        {/* 时节 */}
-        <div className="flex items-center gap-1.5 text-[#e5be6c]">
-          <Clock className="w-3.5 h-3.5 text-[#8a652a]" />
-          <span className="italic">{currentSeason}</span>
-        </div>
-
-        <div className="w-[1px] h-3 bg-[#33271d]" />
-
-        {/* 回合数 */}
-        <div className="flex items-center gap-1 text-[#a89f91] font-mono">
-          <Hourglass className="w-3.5 h-3.5 text-[#c89d54]" />
-          <span>第 <strong className="text-[#e5be6c]">{turnCount}</strong> 回合</span>
-        </div>
-      </div>
-
-      {/* 右侧：系统功能按钮组 */}
-      <div className="flex items-center gap-2">
-        {/* 回退上一回合 */}
+      {/* 右:铜件(无痕) */}
+      <div className="flex items-center gap-0.5">
         <button
           onClick={undoTurn}
           disabled={isStreaming || turnCount <= 1}
-          className="flex items-center gap-1 text-xs px-2.5 py-1 rounded bg-[#1c1813] hover:bg-[#2b241c] text-[#a89f91] hover:text-[#e6ded1] border border-[#33271d] transition-all disabled:opacity-30 disabled:cursor-not-allowed"
-          title="回退到上一回合决策"
+          className="btn-ghost"
+          title="撤回上一回合的决断"
         >
-          <RotateCcw className="w-3.5 h-3.5" />
+          <RotateCcw className="h-3.5 w-3.5" />
           <span className="hidden md:inline">撤回</span>
         </button>
-
-        {/* 开启新剧本 */}
         <button
           onClick={openCreator}
           disabled={isStreaming}
-          className="flex items-center gap-1 text-xs px-2.5 py-1 rounded bg-[#1c1813] hover:bg-[#2b241c] text-[#c89d54] hover:text-[#e5be6c] border border-[#33271d] transition-all disabled:opacity-40"
-          title="选择新剧本或自创领主"
+          className="btn-ghost !text-rubric hover:!text-rubric-bright"
+          title="另起新局或重塑领主"
         >
-          <PlusCircle className="w-3.5 h-3.5" />
-          <span className="hidden md:inline">新剧本</span>
+          <Feather className="h-3.5 w-3.5" />
+          <span className="hidden md:inline">新局</span>
         </button>
-
-        {/* 设置 */}
+        <button
+          onClick={toggleTheme}
+          className="btn-ghost !px-2"
+          title={theme === 'night' ? '切换为日间(羊皮纸)' : '切换为夜间(烛光)'}
+          aria-label="切换日夜间主题"
+        >
+          {theme === 'night' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+        </button>
         <button
           onClick={openSettings}
-          className="p-1 rounded bg-[#1c1813] hover:bg-[#2b241c] text-[#a89f91] hover:text-[#e6ded1] border border-[#33271d] transition-all"
+          className="btn-ghost !px-2"
           title="大模型 API 设置"
+          aria-label="设置"
         >
-          <Settings className="w-4 h-4" />
+          <Settings className="h-4 w-4" />
         </button>
       </div>
     </header>

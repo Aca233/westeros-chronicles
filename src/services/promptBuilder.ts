@@ -1,12 +1,15 @@
-import { GameState, D20Check, PendingEquipmentAction } from '../types/game';
+import { GameState, D20Check } from '../types/game';
+import type { PendingItemAction } from '../features/items/itemActionQueue';
 import { stripEmoji } from './textSanitizer';
 import { aggregateSelectedTraitEffects, formatTraitDescription, formatTraitRuleEffects, getTraitCheckContributions } from '../data/characterTraits';
-import { inferCheckFromAction } from './diceEngine';
+import { inferCheckFromAction, inferItemSceneTags } from './diceEngine';
 import { describeNarrativeAdvantage } from './traitEffectEngine';
 import type { DiceDecision, DiceMode } from './dicePolicy';
-import { getEquipmentWearNotice, requiresBattlePreparation } from './equipmentRules';
-import { getAccessibleStorageSites, getAccessibleTransports, getUsedCapacity } from './itemCustody';
-import { formatPendingEquipmentPrompt } from './equipmentQueue';
+import { ITEM_CATALOG } from '../data/itemDefinitions';
+import { getItemDefinition } from '../features/items/catalog';
+import { aggregateEquippedItemEffects, formatItemNarrativeDirectives, getEquipmentBurden, getUnlockedItemActions } from '../features/items/effects';
+import { getUsedCarryUnits } from '../features/items/custody';
+import { formatPendingItemPrompt } from '../features/items/itemActionQueue';
 
 // 权游核心大宪章系统提示词 (长篇严肃小说体裁 + 对白全融合 + 沉浸深度文学)
 export const GOT_CONSTITUTION_PROMPT = `
@@ -90,20 +93,14 @@ export const GOT_CONSTITUTION_PROMPT = `
   //  动态时间流逝（由你根据剧情耗时精准裁定）：
   // { "type": "ADVANCE_TIME", "days": 1, "reason": "大厅对峙与商议持续至深夜" }
   //
-  // 【获得物品与唯一归属】：小件可加入随身物品；大件必须进入当前据点或附近运输工具。
-  // { "type": "ADD_ITEM", "item": { "id": "item_secret_letter", "name": "莱莎·艾林的密信", "category": "文书", "quantity": 1, "size": "tiny", "description": "一封密信" }, "to": { "type": "carried" } },
-  // { "type": "ADD_ITEM", "item": { "id": "cargo_grain", "name": "袋装谷物", "category": "补给", "quantity": 6, "size": "large", "description": "封口的谷物麻袋" }, "to": { "type": "vehicle", "id": "wagon_1" } },
-  //
-  // 【物品移动】：只有来源和目的地都在当前地点可用时才能移动。
-  // { "type": "TRANSFER_ITEM", "itemId": "item_secret_letter", "from": { "type": "carried" }, "to": { "type": "site", "id": "winterfell_room" } },
-  // 马车、驮马或船只随队出发时，同时更新角色地点和运输工具地点；未随行的运输工具及货物留在原处。
-  // { "type": "MOVE_TRANSPORT", "transportId": "wagon_1", "location": "国王大道 · 营地" },
-  //
-  // 【从据点或运输工具取用装备】：玩家表达方式可以自然多样，不要求他说出任何固定词语。
-  // 普通武器与战甲都不要求额外前置标记；只要来源在当前地点真实可用，即可在正文写出合理的取用与穿戴过程后更新。
-  // { "type": "EQUIP_ITEM", "itemId": "g_stored_armor", "from": { "type": "site", "id": "winterfell_armory" }, "slot": "torso" },
-  // 换下装备使用 UNEQUIP_GEAR，并用 to 指定送回的据点或运输工具；不得直接创造装备或让同一件物品同时存在于多处。
-  // { "type": "UNEQUIP_GEAR", "slot": "torso", "to": { "type": "site", "id": "winterfell_armory" } },
+  // 【物品命令只引用状态切片中的 definitionId 与 instanceId，禁止临时编造旧装备对象】：
+  // { "type": "ITEM_EQUIP", "instanceId": "ned.castle_sword", "position": { "group": "mainhand" }, "displacedTo": { "type": "site", "siteId": "winterfell_armory" } },
+  // { "type": "ITEM_UNEQUIP", "instanceId": "ned.chainmail", "to": { "type": "site", "siteId": "winterfell_armory" } },
+  // { "type": "ITEM_TRANSFER", "instanceId": "ned.staunching_herbs", "to": { "type": "site", "siteId": "winterfell_room" } },
+  // { "type": "ITEM_USE", "instanceId": "ned.staunching_herbs" },
+  // { "type": "ITEM_GIFT", "instanceId": "gift_ring", "recipientId": "agot:Stark_5" },
+  // 获得物品时只能使用目录中已存在的 definitionId，并提供全局唯一 instanceId；不得凭空定义未知名剑、战甲或奇物。
+  // 前端已排队的 ITEM_* 动作由程序在成功回复后结算，模型不得重复输出。
   //
   //  肢体创伤、铠甲磨损、伤口治愈与金币收支：
   // { "type": "INJURE_ZONE", "zone": "arms", "level": "minor", "woundText": "右臂格挡划伤" },
@@ -119,20 +116,35 @@ export const GOT_CONSTITUTION_PROMPT = `
 export function buildStateSlice(gameState: GameState): string {
   const { lord, currentYear, currentMonth, currentDay, currentSeason, turnCount } = gameState;
   const body = lord.body;
-  const gear = lord.gear;
-  const preparedBattleGear = [gear.head, gear.torso, gear.offhand, gear.legs]
-    .filter((item) => requiresBattlePreparation(item));
-  const battleWearNotice = preparedBattleGear.length
-    ? `${preparedBattleGear.map((item) => item?.name).filter(Boolean).join('、')}处于战备穿戴状态。${getEquipmentWearNotice(preparedBattleGear[0]) || ''}`
-    : null;
-  const carriedItems = lord.carriedItems || gear.inventory || gear.pouch || [];
-  const localSites = getAccessibleStorageSites(lord);
-  const localTransports = getAccessibleTransports(lord);
-  const remoteSites = (lord.storageSites || []).filter((site) => !localSites.some((local) => local.id === site.id));
-  const formatItems = (items: typeof carriedItems) => items.map((item) => `${item.name}x${item.quantity}`).join(', ') || '空';
-  const localSiteSummary = localSites.map((site) => `${site.name}{id:${site.id}}: ${formatItems(site.items)}`).join('；') || '无';
-  const localTransportSummary = localTransports.map((vehicle) => `${vehicle.name}{id:${vehicle.id},容量:${getUsedCapacity(vehicle.items)}/${vehicle.capacity}}: ${formatItems(vehicle.items)}`).join('；') || '无';
-  const remoteSiteSummary = remoteSites.map((site) => `${site.name}{id:${site.id},地点:${site.location}}: ${formatItems(site.items)}`).join('；') || '无';
+  const itemState = lord.items;
+  const rootLocation = lord.location.split('·', 1)[0].trim();
+  const itemEntries = Object.values(itemState.instances).map((instance) => ({
+    instance,
+    definition: getItemDefinition(ITEM_CATALOG, instance.definitionId),
+    placement: itemState.placements[instance.instanceId],
+  }));
+  const equippedEntries = itemEntries.filter((entry) => entry.placement.type === 'equipped');
+  const accessibleEntries = itemEntries.filter((entry) => {
+    if (entry.placement.type === 'carried') return true;
+    if (entry.placement.type === 'site') return itemState.sites[entry.placement.siteId]?.location.split('·', 1)[0].trim() === rootLocation;
+    if (entry.placement.type === 'vehicle') return itemState.vehicles[entry.placement.vehicleId]?.location.split('·', 1)[0].trim() === rootLocation;
+    return false;
+  });
+  const formatEntry = (entry: typeof itemEntries[number]) => {
+    const count = entry.instance.quantity > 1 ? `,数量:${entry.instance.quantity}` : '';
+    const charges = entry.instance.charges !== undefined ? `,次数:${entry.instance.charges}` : '';
+    return `${entry.instance.customName ?? entry.definition.name}{definitionId:${entry.definition.id},instanceId:${entry.instance.instanceId}${count}${charges}}`;
+  };
+  const equippedSummary = equippedEntries.map((entry) => {
+    const placement = entry.placement.type === 'equipped' ? JSON.stringify(entry.placement.position) : '';
+    return `${formatEntry(entry)},位置:${placement}`;
+  }).join('；') || '无';
+  const accessibleSummary = accessibleEntries.map(formatEntry).join('；') || '无';
+  const equippedEffects = aggregateEquippedItemEffects(itemState, ITEM_CATALOG);
+  const burden = getEquipmentBurden(equippedEffects);
+  const itemDirectives = formatItemNarrativeDirectives(equippedEffects).slice(0, 16).join('；') || '无额外装备事实';
+  const carryUsage = getUsedCarryUnits(itemState, ITEM_CATALOG);
+
 
   const levelNames: Record<string, string> = {
     intact: '完好',
@@ -168,15 +180,12 @@ export function buildStateSlice(gameState: GameState): string {
 - 当前地点: ${lord.location}
 - 整体体魄: 【${lord.overallStatus}】 (异常体态: ${statusList.length > 0 ? statusList.join(', ') : '无'})
 - 部位伤情: ${bodySummary}
-- 当前穿着: 躯干 [${gear.torso.name}] (${gear.torso.condition || '完好'}) ${gear.head ? `| 头部 [${gear.head.name}] (${gear.head.condition || '完好'})` : '| 头部未佩戴装备'} ${gear.cloak ? `| 外层 [${gear.cloak.name}]` : ''} ${gear.legs ? `| 足部 [${gear.legs.name}]` : ''}
-- 当前主手或佩剑: [${gear.mainhand.name}] (${gear.mainhand.bonusText})
-- 当前副手: ${gear.offhand ? `[${gear.offhand.name}] (${gear.offhand.bonusText})` : '空'}
-- 战甲负担: ${battleWearNotice || '当前未穿戴重型战甲'}
-- 当前在场伴兽: ${gear.companion ? `[${gear.companion.name}] (${gear.companion.bonus})` : '无'}
-- 随身物品（容量 ${getUsedCapacity(carriedItems)}/8，仅小件且当前未装备）: ${formatItems(carriedItems)}
-- 当前地点可用储藏: ${localSiteSummary}
-- 附近运输工具: ${localTransportSummary}
-- 远方储藏（仅可知，不可在当前场景取用）: ${remoteSiteSummary}
+- 当前装备（唯一真实穿戴状态）: ${equippedSummary}
+- 当前可访问物品（随身、当前据点与随行运输工具）: ${accessibleSummary}
+- 随身体积: ${carryUsage}/8
+- 装备负担: ${burden > 0 ? burden : '无明显负担'}
+- 装备确定性事实与场景代价: ${itemDirectives}
+- 远方储藏: 不向当前场景提供原始清单，不能直接取用
 - 随身财富: ${lord.goldDragons} 金龙, ${lord.silverStags} 银鹿 | 威仪: ${lord.prestige}, 恶名: ${lord.dread}
 - CK3 六项能力: 外交 ${lord.attributes.diplomacy}, 军事 ${lord.attributes.martial}, 管理 ${lord.attributes.stewardship}, 谋略 ${lord.attributes.intrigue}, 学识 ${lord.attributes.learning}, 勇武 ${lord.attributes.prowess}
 - 特质标签: ${lord.traits.join(', ')}
@@ -198,7 +207,7 @@ export function buildChatMessages(
   currentUserInput: string,
   diceCheck?: D20Check,
   diceContext?: DicePromptContext,
-  pendingEquipmentActions: PendingEquipmentAction[] = [],
+  pendingItemActions: PendingItemAction[] = [],
   characterContext?: string,
 ): Array<{ role: 'system' | 'user' | 'assistant'; content: string }> {
   const messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }> = [];
@@ -236,7 +245,7 @@ export function buildChatMessages(
   }
 
   // 4. 当前回合用户输入 + 掷骰检定结果 (如果有)
-  const pendingEquipmentPrompt = formatPendingEquipmentPrompt(pendingEquipmentActions);
+  const pendingEquipmentPrompt = formatPendingItemPrompt(pendingItemActions);
   const safeCharacterContext = typeof characterContext === 'string'
     ? stripEmoji(characterContext).replace(/</g, '＜').replace(/>/g, '＞')
     : '';
@@ -245,13 +254,17 @@ export function buildChatMessages(
     const traitBreakdown = diceCheck.traitModifierBreakdown.length
       ? diceCheck.traitModifierBreakdown.map((item) => `${item.name} ${item.value >= 0 ? '+' : ''}${item.value}`).join(' · ')
       : '无相关特质修正';
+    const itemBreakdown = diceCheck.equipmentModifierBreakdown.length
+      ? diceCheck.equipmentModifierBreakdown.map((item) => `${item.name}“${item.reason}” ${item.value >= 0 ? '+' : ''}${item.value}`).join(' · ')
+      : '无相关物品修正';
     const contract = diceCheck.outcomeContract;
     currentActionPrompt += `
 
 【D20 规则检定结果：程序已完成结算，禁止重新计算】
 - 当前动作: ${contract.intent}
 - 检定项目: ${diceCheck.attributeName} vs 难度 DC ${diceCheck.dc}
-- 掷骰公式: D20 ${diceCheck.roll} + 属性 ${diceCheck.attributeModifier >= 0 ? '+' : ''}${diceCheck.attributeModifier} + 装备 ${diceCheck.equipmentBonus >= 0 ? '+' : ''}${diceCheck.equipmentBonus} + 特质 ${diceCheck.traitModifier >= 0 ? '+' : ''}${diceCheck.traitModifier} = ${diceCheck.total}
+- 掷骰公式: D20 ${diceCheck.roll} + 属性 ${diceCheck.attributeModifier >= 0 ? '+' : ''}${diceCheck.attributeModifier} + 物品 ${diceCheck.equipmentModifier >= 0 ? '+' : ''}${diceCheck.equipmentModifier} + 特质 ${diceCheck.traitModifier >= 0 ? '+' : ''}${diceCheck.traitModifier} = ${diceCheck.total}
+- 物品明细: ${itemBreakdown}
 - 特质明细: ${traitBreakdown}
 - 判定结论: ${diceCheck.isNatural20 ? '自然 20，当前动作在合理边界内取得更佳结果' : diceCheck.isNatural1 ? '自然 1，当前动作在既有风险内遭遇局部失败' : diceCheck.success ? '当前动作成功' : '当前动作失败'}
 - 成功边界: ${contract.successOutcome}
@@ -264,6 +277,11 @@ export function buildChatMessages(
     const inferred = inferCheckFromAction(currentUserInput);
     const contributions = getTraitCheckContributions(gameState.lord.traitIds ?? [], inferred.domain);
     const totalModifier = contributions.reduce((total, item) => total + item.value, 0);
+    const sceneTags = inferItemSceneTags(currentUserInput, inferred.domain);
+    const itemEffects = aggregateEquippedItemEffects(gameState.lord.items, ITEM_CATALOG);
+    const unlockedActions = getUnlockedItemActions(itemEffects, { actionText: currentUserInput, sceneTags });
+    const itemFacts = formatItemNarrativeDirectives(itemEffects).slice(0, 12).join('；') || '无额外装备事实';
+    const burden = getEquipmentBurden(itemEffects);
     const contributionText = contributions.length
       ? contributions.map((item) => `${item.name} ${item.value >= 0 ? '+' : ''}${item.value}`).join(' · ')
       : '无相关特质倾向';
@@ -274,6 +292,10 @@ export function buildChatMessages(
 - 判断理由: ${diceContext.decision.reason}
 - 相关特质: ${contributionText}
 - 综合倾向: ${describeNarrativeAdvantage(totalModifier)}
+- 当前物品场景: ${sceneTags.length ? sceneTags.join('、') : '一般场景'}
+- 物品允许行动: ${unlockedActions.length ? unlockedActions.join('、') : '无额外行动'}
+- 穿戴负担: ${burden || '无明显负担'}
+- 当前装备事实与代价: ${itemFacts}
 - 规则边界: 特质倾向只帮助塑造合理过程，不代表自动成功或失败；不得把普通行动升级为意外灾难或天降奇迹。
 - 玩家控制: RP 倾向不得替玩家作出后续决定。`;
   }

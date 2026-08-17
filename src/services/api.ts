@@ -1,6 +1,9 @@
-import { ApiConfig, StoryTurn, StateCommand, GameState, ItemContainerRef, InventoryItem, PendingEquipmentAction } from '../types/game';
+import { ApiConfig, StoryTurn, StateCommand, GameState } from '../types/game';
+import type { PendingItemAction } from '../features/items/itemActionQueue';
 import { stripEmoji } from './textSanitizer';
-import { getAccessibleStorageSites, getAccessibleTransports } from './itemCustody';
+import { ITEM_CATALOG } from '../data/itemDefinitions';
+import { getItemDefinition } from '../features/items/catalog';
+import type { EquipmentPosition, ItemPlacement } from '../features/items/types';
 
 // 解析模型输出的 XML 结构化标签 (小说流全融合 + 深度思考全捕获)
 export function parseModelOutput(
@@ -119,84 +122,99 @@ export function generateOfflineDemoResponse(
   playerInput: string,
   turnNumber: number,
   gameState?: GameState,
-  pendingEquipmentActions: PendingEquipmentAction[] = [],
+  pendingItemActions: PendingItemAction[] = [],
 ): Omit<StoryTurn, 'id' | 'timestamp'> {
   playerInput = stripEmoji(playerInput);
   const stateCommands: StateCommand[] = [];
   let dynamicNarrate = '';
   const think = `AI 幕后推演 (Turn ${turnNumber}): 领主下达指令【${playerInput}】。系统判定其行动意图，并动态推演战备变化与封臣反应。`;
 
-  const availableItems: Array<{ item: InventoryItem; from: ItemContainerRef; label: string }> = gameState
-    ? [
-        ...(gameState.lord.carriedItems || []).map((item) => ({ item, from: { type: 'carried' } as ItemContainerRef, label: '随身行囊' })),
-        ...getAccessibleStorageSites(gameState.lord).flatMap((site) => site.items.map((item) => ({ item, from: { type: 'site', id: site.id } as ItemContainerRef, label: site.name }))),
-        ...getAccessibleTransports(gameState.lord).flatMap((vehicle) => vehicle.items.map((item) => ({ item, from: { type: 'vehicle', id: vehicle.id } as ItemContainerRef, label: vehicle.name }))),
-      ]
+  const rootLocation = gameState?.lord.location.split('·', 1)[0].trim() ?? '';
+  const availableItems = gameState
+    ? Object.values(gameState.lord.items.instances).flatMap((instance) => {
+        const placement = gameState.lord.items.placements[instance.instanceId];
+        if (placement.type === 'equipped' || placement.type === 'character' || placement.type === 'lost') return [];
+        let label = '随身行囊';
+        if (placement.type === 'site') {
+          const site = gameState.lord.items.sites[placement.siteId];
+          if (!site || site.location.split('·', 1)[0].trim() !== rootLocation) return [];
+          label = site.name;
+        }
+        if (placement.type === 'vehicle') {
+          const vehicle = gameState.lord.items.vehicles[placement.vehicleId];
+          if (!vehicle || vehicle.location.split('·', 1)[0].trim() !== rootLocation) return [];
+          label = vehicle.name;
+        }
+        return [{ instance, definition: getItemDefinition(ITEM_CATALOG, instance.definitionId), placement, label }];
+      })
     : [];
+  const localSite = gameState
+    ? Object.values(gameState.lord.items.sites).find((site) => site.location.split('·', 1)[0].trim() === rootLocation)
+    : undefined;
+  const displacedTo: ItemPlacement = localSite ? { type: 'site', siteId: localSite.id } : { type: 'carried' };
 
-  // 离线模式同样只会取用当前地点真实存在的装备，不会生成著名武器或战甲。
+  // 离线模式只引用目录定义和当前可访问实例，不构造临时装备对象。
   if (/头盔|战盔|面盔|披甲|穿甲|战甲|盔甲|全副武装|盾牌|大盾|护胫/i.test(playerInput)) {
     const wantsFullLoadout = /披甲|穿甲|战甲|盔甲|全副武装/i.test(playerInput);
-    const requestedSlots = wantsFullLoadout
-      ? ['torso', 'head', 'offhand', 'legs']
+    const requestedGroups = wantsFullLoadout
+      ? ['torso', 'head', 'offhand', 'feet']
       : /头盔|战盔|面盔/i.test(playerInput)
         ? ['head']
         : /盾牌|大盾/i.test(playerInput)
           ? ['offhand']
-          : ['legs'];
-    const selected = requestedSlots
-      .map((slot) => availableItems.find((entry) => entry.item.slot === slot))
-      .filter((entry): entry is NonNullable<typeof entry> => Boolean(entry));
+          : ['feet'];
+    const selected = requestedGroups.flatMap((group) => {
+      const entry = availableItems.find((candidate) => candidate.definition.allowedPositions.some((position) => position.group === group));
+      if (!entry) return [];
+      const position = entry.definition.allowedPositions.find((candidate) => candidate.group === group) as EquipmentPosition;
+      return [{ ...entry, position }];
+    });
     for (const entry of selected) {
-      stateCommands.push({
-        type: 'EQUIP_ITEM',
-        itemId: entry.item.id,
-        from: entry.from,
-        slot: entry.item.slot,
-      });
+      stateCommands.push({ type: 'ITEM_EQUIP', instanceId: entry.instance.instanceId, position: entry.position, displacedTo });
     }
     if (selected.length) {
-      const names = selected.map((entry) => `【${entry.item.name}】`).join('、');
+      const names = selected.map((entry) => `【${entry.instance.customName ?? entry.definition.name}】`).join('、');
       const sourceNames = [...new Set(selected.map((entry) => entry.label))].join('与');
-      dynamicNarrate = `你并未使用什么刻板口令，只是把意思交代清楚。侍从立刻明白了你的打算，快步赶往${sourceNames}。片刻后，木箱与铁扣在石室中依次开启，${names}被逐件送到近前。
-
-穿戴并非眨眼之间完成。侍从先整理内衬，再依次扣紧皮带、系索与金属搭扣；沉重部件落到肩背时，冷铁的重量随之压实。待最后一处系扣检查完毕，你才真正进入适合短时作战的状态。`;
+      dynamicNarrate = `你把意思交代清楚后，侍从快步赶往${sourceNames}。木箱和铁扣依次开启，${names}被逐件送到近前。穿戴并非眨眼完成：内衬先被理顺，随后才是皮带、系索和金属搭扣。待最后一处扣件检查妥当，装备才真正落到你的身上。`;
     } else {
-      dynamicNarrate = `侍从听懂了你的意思，却没有立刻应声照办。他查过身边行囊、当前据点和附近车驾后，低声禀报道：“大人，您要的战具不在这里。若要取用，只能先回到存放它的地方，或命人用马车送来。”
-
-远方仓库里的东西不会因为一句命令凭空出现在眼前。眼下能做的，只是根据现有衣着和武器重新安排计划。`;
+      dynamicNarrate = '侍从查过随身行囊、当前据点和附近车驾，没有找到符合要求且能够立刻取用的战具。远方储藏不会因一句命令凭空出现在眼前。';
     }
-  }
-  else if (/拔剑|佩剑|换剑|取剑|长剑|匕首|兵器/i.test(playerInput)) {
-    const weapon = availableItems.find((entry) => entry.item.category === '武器' && entry.item.slot === 'mainhand');
+  } else if (/拔剑|佩剑|换(?:一把|一柄)?剑|取剑|长剑|匕首|兵器/i.test(playerInput)) {
+    const weapon = availableItems.find((entry) => entry.definition.category === 'weapon' && entry.definition.allowedPositions.some((position) => position.group === 'mainhand'));
     if (weapon) {
-      stateCommands.push({ type: 'EQUIP_ITEM', itemId: weapon.item.id, from: weapon.from, slot: 'mainhand' });
-      dynamicNarrate = `你话音刚落，近旁的人便领会了意图，从${weapon.label}取来【${weapon.item.name}】。剑鞘与革带在手中调整妥当，金属护手映出壁炉的暗红火光。你将它佩到腰间，拇指轻抵剑格；随着一声短促的摩擦声，剑锋出鞘寸许，又稳稳归位。`;
+      stateCommands.push({ type: 'ITEM_EQUIP', instanceId: weapon.instance.instanceId, position: { group: 'mainhand' }, displacedTo });
+      dynamicNarrate = `侍从从${weapon.label}取来【${weapon.instance.customName ?? weapon.definition.name}】。剑鞘和革带调整妥当后，你才将它置于惯用位置；这一变化将在叙事成功结束后由物品状态统一结算。`;
     } else {
-      dynamicNarrate = `你下意识按向腰侧，却没有让一柄不存在的武器凭空出现。当前地点、随身行囊和附近车驾中都没有可供替换的兵器；若要取剑，必须先找到真实存放它的地方。`;
+      dynamicNarrate = '你下意识按向腰侧，却没有让一柄不存在的武器凭空出现。当前可访问物品中没有合适兵器。';
     }
-  }
-  else if (/药|草药|地图|密信|钥匙|物品|毒/i.test(playerInput)) {
-    const item: InventoryItem = /地图|密信/i.test(playerInput)
-      ? { id: `item_${Date.now()}_letter`, name: '封蜡羊皮文书', category: '文书', quantity: 1, size: 'tiny', description: '刚刚合法取得并随身收好的羊皮文书。', icon: 'artifact-white-book' }
-      : { id: `item_${Date.now()}_herb`, name: '包扎药草小包', category: '药草', quantity: 1, size: 'tiny', description: '可以随身携带的一小包止血药草。' };
-    stateCommands.push({ type: 'ADD_ITEM', item, to: { type: 'carried' } });
-    dynamicNarrate = `对方将【${item.name}】交到你手中。它体积不大，被仔细包好后收入随身皮囊，并没有占据多少地方。侍从复述了用途与禁忌，确认你已经真正接过物品后才退到一旁。`;
-  }
-  // 4. 默认经典小说章节
-  else {
-    const currentClothing = gameState?.lord.gear.torso.name || '厚实的日常外衣';
-    dynamicNarrate = `风雪在古老的城垛间发出如狼嗥般的尖啸，刺骨寒气掠过石墙与窗缝。\n\n你理了理身上的【${currentClothing}】，大步走入烛火摇曳的领主大厅。沉重的橡木长桌两侧，披坚执锐的北境封臣与骑士们纷纷停下了低语，数十双警惕而深邃的眼睛齐刷刷地注视着你。壁炉里的泥煤木柴噼啪爆裂，喷吐出带着松脂与焦苦气味的青烟，火光将众人拉长的阴影投射在粗粝的花岗岩石墙上。\n\n“公爵大人！”罗德利克教头快步迎了上来，皮靴踏在冰冷的青石板上发出沉重坚实的回响。他抹了一把胡须上凝结的白霜，右手习惯性地按在佩剑护手上，粗重地喘着白汽低声道：“国王陛下的前锋旗队已经穿过了避冬市镇！劳勃陛下的金冠宝冠雄鹿旗在暴风雪里猎猎翻卷，但他身后的兰尼斯特随行卫队……足足有三百精骑，全部披挂着耀眼的猩红斗篷与镀金板甲。”\n\n鲁温学士压低了嗓音，走到你身侧：“大人，君临局势风云变幻，各方势力都在注视着我们的一举一动，请您定夺接下来的家族方略！”`;
+  } else if (/药|草药|毒/i.test(playerInput)) {
+    const medicine = availableItems.find((entry) => entry.definition.category === 'medicine' || entry.definition.category === 'poison');
+    if (medicine) {
+      stateCommands.push({ type: 'ITEM_USE', instanceId: medicine.instance.instanceId });
+      dynamicNarrate = `你取出【${medicine.instance.customName ?? medicine.definition.name}】，先确认瓶塞、包布和剩余次数，再按它的真实用途使用。药物不会凭空治愈重伤，实际效果仍受伤势和场景限制。`;
+    } else {
+      dynamicNarrate = '当前随身行囊、据点和同行车驾中没有可用药物，叙事不会临时创造一份。';
+    }
+  } else if (/地图|密信|钥匙|物品/i.test(playerInput)) {
+    dynamicNarrate = '你检查了当前可访问物品，没有发现与要求相符的现成实例。若要取得新的文书或钥匙，必须由明确剧情来源使用已登记的目录定义创建，不能由一句含糊描述凭空生成。';
+  } else {
+    const currentClothing = gameState
+      ? Object.values(gameState.lord.items.instances).flatMap((instance) => {
+          const placement = gameState.lord.items.placements[instance.instanceId];
+          if (placement.type !== 'equipped' || placement.position.group !== 'torso') return [];
+          const definition = getItemDefinition(ITEM_CATALOG, instance.definitionId);
+          return definition.category === 'clothing' ? [instance.customName ?? definition.name] : [];
+        })[0] ?? '厚实的日常外衣'
+      : '厚实的日常外衣';
+    dynamicNarrate = `风雪在古老城垛间发出低沉尖啸，冷气掠过石墙和窗缝。你理了理身上的【${currentClothing}】，走入烛火摇曳的大厅。封臣们停下低语，等待你给出下一道命令；任何武器、衣物或药品的变化都必须来自当前真实物品状态。`;
     stateCommands.push({ type: 'MODIFY_PRESTIGE', delta: 5 });
   }
 
-  if (pendingEquipmentActions.length) {
-    const queuedNarrative = pendingEquipmentActions.map((action) => {
-      const handling = action.slot === 'mainhand' || action.slot === 'offhand'
-        ? '取出后调整到惯用的位置'
-        : '取出后逐一理顺衬层、系带与扣件';
-      return `侍从从${action.sourceLabel}取来【${action.itemName}】，${handling}。当最后一处细节确认妥当，这件装备才真正穿戴在你身上。`;
-    }).join('\n\n');
+
+  if (pendingItemActions.length) {
+    const queuedNarrative = pendingItemActions
+      .map((action) => `你已经决定${action.label}【${action.itemName}】；叙事会自然表现过程，实际状态只在本次回复成功后统一结算。`)
+      .join('\n\n');
     dynamicNarrate = `${queuedNarrative}\n\n${dynamicNarrate}`;
   }
 
@@ -224,7 +242,7 @@ export async function streamChatCompletion(
   onChunk: (partialText: string) => void,
   signal?: AbortSignal,
   gameState?: GameState,
-  pendingEquipmentActions: PendingEquipmentAction[] = [],
+  pendingItemActions: PendingItemAction[] = [],
 ): Promise<string> {
   // 如果未配置 API Key，走离线 Demo
   if (!config.apiKey || config.apiKey.trim() === '') {
@@ -234,7 +252,7 @@ export async function streamChatCompletion(
         messages[messages.length - 1].content.slice(0, 30),
         Math.floor(messages.length / 2) + 1,
         gameState,
-        pendingEquipmentActions,
+        pendingItemActions,
       );
       const rawText = [
         `<think>\n${demo.think}\n</think>`,

@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { GameState, LordProfile, StoryTurn, ApiConfig, D20Check, InventoryItem, ItemContainerRef, PendingEquipmentAction } from '../types/game';
+import { GameState, LordProfile, StoryTurn, ApiConfig, D20Check, type StateCommand } from '../types/game';
 import { PRESET_SCENARIOS } from '../data/presets';
 import { applyStateCommands, isCharacterStateCommand, validateCharacterCommandBatch, type CharacterCommandBatchBaseContext } from '../services/stateReducer';
 import { performD20Check } from '../services/diceEngine';
@@ -9,9 +9,19 @@ import { streamChatCompletion, parseModelOutput } from '../services/api';
 import { saveTurnSnapshot, commitTurnAtomically, rollbackLastTurn, clearSaveData } from '../services/db';
 import { stripEmoji, stripEmojiDeep } from '../services/textSanitizer';
 import { normalizeCk3Attributes } from '../data/ck3Skills';
-import { migrateLordTraitData } from '../data/characterTraits';
-import { ensureItemCustody } from '../services/itemCustody';
-import { createPendingEquipmentAction, enqueueEquipmentAction, mergePendingEquipmentCommands, removeSubmittedEquipmentActions } from '../services/equipmentQueue';
+import { migrateLordIdentityData, migrateLordTraitData } from '../data/characterTraits';
+import { ITEM_SAVE_FORMAT_VERSION } from '../features/items/saveVersion';
+import {
+  cancelItemAction as cancelQueuedItemAction,
+  createPendingItemAction,
+  enqueueItemAction,
+  mergePendingItemCommands,
+  removeSubmittedItemActions,
+  type PendingItemAction,
+} from '../features/items/itemActionQueue';
+import type { ItemAction, ItemStateCommand } from '../features/items/types';
+import { ITEM_CATALOG } from '../data/itemDefinitions';
+import { getItemDefinition } from '../features/items/catalog';
 
 export interface CharacterTurnContext extends CharacterCommandBatchBaseContext { promptContext?: string; }
 
@@ -23,7 +33,7 @@ interface GameStore {
   streamingText: string;
   activeDiceCheck: D20Check | null;
   changesLog: string[];
-  pendingEquipmentActions: PendingEquipmentAction[];
+  pendingItemActions: PendingItemAction[];
   characterTurnContext: CharacterTurnContext | null;
   
   // 模态弹窗状态
@@ -39,18 +49,14 @@ interface GameStore {
   openCreator: () => void;
   closeCreator: () => void;
   closeDiceModal: () => void;
-  queueEquipmentAction: (item: InventoryItem, from: ItemContainerRef, sourceLabel: string) => void;
-  cancelEquipmentAction: (actionId: string) => void;
+  queueItemAction: (action: ItemAction) => void;
+  cancelItemAction: (actionId: string) => void;
   setCharacterTurnContext: (context: CharacterTurnContext | null) => void;
 
   // 游戏核心流程
   startNewGame: (lord: LordProfile, opening: { think?: string; narrate: string; speak?: Array<{ speaker: string; text: string }>; branches: string[] }) => Promise<void>;
   submitAction: (actionText: string, diceMode?: DiceMode) => Promise<void>;
   undoTurn: () => Promise<void>;
-  useInventoryItem: (itemId: string) => void;
-  usePouchItem: (itemId: string) => void;
-  unequipGear: (slot: keyof LordProfile['gear']) => void;
-  equipFromInventory: (itemId: string, slot?: keyof LordProfile['gear']) => void;
 }
 
 // 默认 API 配置
@@ -75,12 +81,13 @@ function loadStoredApiConfig(): ApiConfig {
 }
 
 const defaultPreset = PRESET_SCENARIOS[0];
-const AGOT_DATASET_HASH = '073a4303b715bed2577aeab0cda186b7afee18e0c0fa2b266e31ba1785046af1';
+const AGOT_DATASET_HASH = 'bad838f66b60701ce38662f148e63bd8551fdb8711eacb4fd507d356194d1652';
 function createWorldRunId(): string {
   return "run_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 10);
 }
 
 const INITIAL_GAME_STATE: GameState = {
+  saveFormatVersion: ITEM_SAVE_FORMAT_VERSION,
   currentYear: 298,
   currentMonth: 10,
   currentDay: 15,
@@ -111,7 +118,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
   streamingText: '',
   activeDiceCheck: null,
   changesLog: [],
-  pendingEquipmentActions: [],
+  pendingItemActions: [],
   characterTurnContext: null,
   isDiceModalOpen: false,
   isSettingsOpen: false,
@@ -134,62 +141,37 @@ export const useGameStore = create<GameStore>((set, get) => ({
   closeCreator: () => set({ isCreatorOpen: false }),
   closeDiceModal: () => set({ isDiceModalOpen: false, activeDiceCheck: null }),
 
-  // 装备点击只进入队列；当前装备会在下一次叙事成功返回后更新。
-  queueEquipmentAction: (item, from, sourceLabel) => {
+  queueItemAction: (action) => {
     if (get().isStreaming) return;
-    const action = createPendingEquipmentAction(item, from, sourceLabel);
-    set((state) => ({
-      pendingEquipmentActions: enqueueEquipmentAction(state.pendingEquipmentActions, action),
-    }));
+    const instanceId = action.kind === 'acquire'
+      ? action.instance.instanceId
+      : action.kind === 'merge'
+        ? action.sourceInstanceId
+        : action.instanceId;
+    const instance = action.kind === 'acquire' ? action.instance : get().gameState.lord.items.instances[instanceId];
+    if (!instance) return;
+    const definition = getItemDefinition(ITEM_CATALOG, instance.definitionId);
+    const verb: Record<ItemAction['kind'], string> = {
+      acquire: '收下', equip: '穿上', unequip: '卸下', use: '使用', transfer: '转移', gift: '赠送',
+      discard: '丢弃', repair: '修理', damage: '受损', split: '拆分', merge: '合并', mark_heirloom: '立为传家宝',
+    };
+    const pending = createPendingItemAction(action, {
+      itemName: instance.customName ?? definition.name,
+      image: definition.image,
+      label: verb[action.kind],
+    });
+    set((state) => ({ pendingItemActions: enqueueItemAction(state.pendingItemActions, pending) }));
   },
   setCharacterTurnContext: (context) => set({ characterTurnContext: context ? { ...context, characters: context.characters.map((character) => ({ ...character })), promptContext: context.promptContext ? stripEmoji(context.promptContext) : undefined } : null }),
-  cancelEquipmentAction: (actionId) => {
+  cancelItemAction: (actionId) => {
     if (get().isStreaming) return;
-    set((state) => ({
-      pendingEquipmentActions: state.pendingEquipmentActions.filter((action) => action.id !== actionId),
-    }));
-  },
-
-  // 使用随身物品
-  useInventoryItem: (itemId: string) => {
-    const { gameState } = get();
-    const { updatedLord, changesLog } = applyStateCommands(gameState.lord, [
-      { type: 'USE_CARRIED_ITEM', itemId },
-    ]);
-
-    set({
-      gameState: { ...gameState, lord: updatedLord },
-      changesLog: [...get().changesLog, ...changesLog],
-    });
-  },
-  usePouchItem: (itemId: string) => {
-    get().useInventoryItem(itemId);
-  },
-
-  // 卸下身上装备并按体积分配至随身或当前据点
-  unequipGear: (slot: keyof LordProfile['gear']) => {
-    const { gameState } = get();
-    const { updatedLord, changesLog } = applyStateCommands(gameState.lord, [
-      { type: 'UNEQUIP_GEAR', slot: slot as any },
-    ]);
-
-    set({
-      gameState: { ...gameState, lord: updatedLord },
-      changesLog: [...get().changesLog, ...changesLog],
-    });
-  },
-
-  // 旧界面动作兼容：从随身物品选择装备时也进入下一回合队列。
-  equipFromInventory: (itemId: string) => {
-    const { gameState } = get();
-    const item = (gameState.lord.carriedItems || []).find((entry) => entry.id === itemId);
-    if (item) get().queueEquipmentAction(item, { type: 'carried' }, '随身物品');
+    set((state) => ({ pendingItemActions: cancelQueuedItemAction(state.pendingItemActions, actionId) }));
   },
 
   // 开启新剧本
   startNewGame: async (lord, opening) => {
     await clearSaveData();
-    const safeLord = migrateLordTraitData(ensureItemCustody(stripEmojiDeep(lord)));
+    const safeLord = migrateLordIdentityData(migrateLordTraitData(stripEmojiDeep(lord)));
     safeLord.attributes = normalizeCk3Attributes(safeLord.attributes);
     if (safeLord.baseAttributes) safeLord.baseAttributes = normalizeCk3Attributes(safeLord.baseAttributes);
     const newTurn: StoryTurn = {
@@ -204,6 +186,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     };
 
     const newGameState: GameState = {
+      saveFormatVersion: ITEM_SAVE_FORMAT_VERSION,
       currentYear: 298,
       currentMonth: 10,
       currentDay: 15,
@@ -224,18 +207,18 @@ export const useGameStore = create<GameStore>((set, get) => ({
       changesLog: [`维斯特洛新传奇开启: ${safeLord.house} · ${safeLord.name}`],
       streamingText: '',
       isStreaming: false,
-      pendingEquipmentActions: [],
+      pendingItemActions: [],
       characterTurnContext: null,
     });
   },
 
   // 提交领主行动
   submitAction: async (actionText: string, diceMode: DiceMode = 'auto') => {
-    const { gameState, apiConfig, isStreaming, pendingEquipmentActions, characterTurnContext } = get();
+    const { gameState, apiConfig, isStreaming, pendingItemActions, characterTurnContext } = get();
     const safeActionText = stripEmoji(actionText);
     if (isStreaming || gameState.isGameOver || !safeActionText) return;
 
-    const submittedEquipmentActions = [...pendingEquipmentActions];
+    const submittedItemActions = [...pendingItemActions];
     let diceCheck: D20Check | undefined = undefined;
 
     // 1. 只有存在真实风险的行动才进行 D20 检定；叙事模式永不隐藏掷骰。
@@ -245,7 +228,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
       diceCheck = performD20Check(
         safeActionText,
         gameState.lord.attributes,
-        gameState.lord.gear,
+        gameState.lord.items,
+        ITEM_CATALOG,
         gameState.lord.traitIds ?? [],
         diceDecision.attribute,
         diceDecision.dc,
@@ -261,7 +245,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
     try {
       // 2. 组装 Prompt
-      const messages = buildChatMessages(gameState, safeActionText, diceCheck, { mode: diceMode, decision: diceDecision }, submittedEquipmentActions, characterTurnContext?.promptContext);
+      const messages = buildChatMessages(gameState, safeActionText, diceCheck, { mode: diceMode, decision: diceDecision }, submittedItemActions, characterTurnContext?.promptContext);
 
       // 3. 流式请求
       const rawOutput = await streamChatCompletion(
@@ -272,7 +256,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
         },
         undefined,
         gameState,
-        submittedEquipmentActions,
+        submittedItemActions,
       );
 
       // 4. 解析结构化标签
@@ -280,7 +264,10 @@ export const useGameStore = create<GameStore>((set, get) => ({
       const parsedTurn = parseModelOutput(rawOutput, nextTurnNumber, safeActionText);
 
       // 5. 确定性状态结算
-      const stateCommands = mergePendingEquipmentCommands(submittedEquipmentActions, parsedTurn.stateCommands || []);
+      const parsedCommands = parsedTurn.stateCommands || [];
+      const modelItemCommands = parsedCommands.filter((command): command is ItemStateCommand => command.type.startsWith('ITEM_'));
+      const nonItemCommands = parsedCommands.filter((command) => !command.type.startsWith('ITEM_'));
+      const stateCommands: StateCommand[] = [...mergePendingItemCommands(submittedItemActions, modelItemCommands), ...nonItemCommands];
       const characterBatch = validateCharacterCommandBatch(stateCommands, characterTurnContext ?? undefined, nextTurnNumber);
       const lordCommands = stateCommands.filter((command) => !isCharacterStateCommand(command));
       const { updatedLord, changesLog, isFatalDeath } = applyStateCommands(gameState.lord, lordCommands);
@@ -381,7 +368,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
         gameState: updatedGameState,
         isStreaming: false,
         streamingText: '',
-        pendingEquipmentActions: removeSubmittedEquipmentActions(get().pendingEquipmentActions, submittedEquipmentActions),
+        pendingItemActions: removeSubmittedItemActions(get().pendingItemActions, submittedItemActions),
         characterTurnContext: characterTurnContext
           ? { ...characterBatch.context, promptContext: characterTurnContext.promptContext }
           : null,
@@ -405,13 +392,13 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const previousState = await rollbackLastTurn();
     if (previousState) {
       const restoredState = stripEmojiDeep(previousState);
-      restoredState.lord = migrateLordTraitData(ensureItemCustody(restoredState.lord));
+      restoredState.lord = migrateLordIdentityData(migrateLordTraitData(restoredState.lord));
       restoredState.lord.attributes = normalizeCk3Attributes(restoredState.lord.attributes);
       if (restoredState.lord.baseAttributes) restoredState.lord.baseAttributes = normalizeCk3Attributes(restoredState.lord.baseAttributes);
       set({
         gameState: restoredState,
         changesLog: ['时光倒流: 已回退到上一回合决策点'],
-        pendingEquipmentActions: [],
+        pendingItemActions: [],
         characterTurnContext: null,
       });
     } else {

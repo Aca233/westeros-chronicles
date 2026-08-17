@@ -1,0 +1,7 @@
+Tully_4 = {
+    name = Catelyn
+    dynasty = dynn_Tully
+    religion = fots_seven
+    culture = riverman_main
+    8264.1.1 = { birth = yes }
+}
