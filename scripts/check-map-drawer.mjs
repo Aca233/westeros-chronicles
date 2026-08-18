@@ -1,0 +1,32 @@
+import assert from 'node:assert/strict'
+import { readFileSync } from 'node:fs'
+
+const app = readFileSync('src/App.tsx', 'utf8')
+const drawer = readFileSync('src/features/map/MapDrawer.tsx', 'utf8')
+const canvas = readFileSync('src/features/map/MapCanvas.tsx', 'utf8')
+const store = readFileSync('src/features/map/mapUiStore.ts', 'utf8')
+const css = readFileSync('src/index.css', 'utf8')
+const { useMapUiStore } = await import('../src/features/map/mapUiStore.ts')
+
+assert.match(app, /维斯特洛地图/)
+assert.match(app, /e\.key === 'm'/i)
+assert.match(drawer, /aria-label="维斯特洛地图"/)
+assert.match(drawer, /地图资料未能载入/)
+assert.match(canvas, /new maplibregl\.Map/)
+assert.match(store, /activeDrawer: 'map' \| 'character' \| null/)
+assert.match(css, /72vw/)
+assert.match(css, /1180px/)
+assert.match(css, /82vw/)
+assert.match(css, /100vw/)
+
+useMapUiStore.setState({ activeDrawer: null, selectedLocationId: null, lastViewport: null })
+useMapUiStore.getState().openMap('b_winterfell')
+assert.equal(useMapUiStore.getState().activeDrawer, 'map')
+assert.equal(useMapUiStore.getState().selectedLocationId, 'b_winterfell')
+useMapUiStore.getState().openCharacterDrawer()
+assert.equal(useMapUiStore.getState().activeDrawer, 'character')
+useMapUiStore.getState().toggleMap()
+assert.equal(useMapUiStore.getState().activeDrawer, 'map')
+useMapUiStore.getState().closeDrawer()
+assert.equal(useMapUiStore.getState().activeDrawer, null)
+console.log('地图抽屉结构检查通过。')

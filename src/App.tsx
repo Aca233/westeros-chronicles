@@ -14,22 +14,24 @@ import { X } from 'lucide-react';
 import { stripEmoji } from './services/textSanitizer';
 import { useCharacterNavigation } from './features/characters/useCharacterNavigation';
 import type { CharacterId } from './features/characters/types';
+import { MapDrawer } from './features/map/MapDrawer';
+import { useMapUiStore } from './features/map/mapUiStore';
 
 export const App: React.FC = () => {
   const { changesLog, isTvTimelineOpen, closeTvTimeline } = useGameStore();
-  const [isDossierOpen, setDossierOpen] = useState(false);
   const [booted, setBooted] = useState(false);
   const characterNavigation = useCharacterNavigation();
+  const activeDrawer = useMapUiStore((state) => state.activeDrawer);
+  const openCharacterDrawer = useMapUiStore((state) => state.openCharacterDrawer);
+  const closeDrawer = useMapUiStore((state) => state.closeDrawer);
+  const toggleCharacter = useMapUiStore((state) => state.toggleCharacter);
+  const toggleMap = useMapUiStore((state) => state.toggleMap);
 
   // 点击正文中的人名:打开对应卷宗;卷宗收于抽屉,两端都自动拉出
   const openStoryCharacter = useCallback((characterId: CharacterId) => {
     characterNavigation.openCharacter(characterId);
-    if (window.matchMedia('(max-width: 1023px)').matches) {
-      setDossierOpen(true); // 移动端:点击人物后自动打开人物抽屉
-    } else {
-      setDossierOpen(true); // 桌面端:同样以抽屉呈现卷宗
-    }
-  }, [characterNavigation.openCharacter]);
+    openCharacterDrawer();
+  }, [characterNavigation.openCharacter, openCharacterDrawer]);
 
   // 全局快捷键:/ 聚焦命令行;C 开合卷宗;Esc 收起卷宗
   useEffect(() => {
@@ -41,17 +43,20 @@ export const App: React.FC = () => {
         document.getElementById('command-input')?.focus();
       }
       if ((e.key === 'c' || e.key === 'C') && !typing) {
-        setDossierOpen((open) => !open);
+        toggleCharacter();
+      }
+      if ((e.key === 'm' || e.key === 'M') && !typing) {
+        toggleMap();
       }
       if (e.key === 'Escape') {
         // 物品选择/赠予对话框浮在卷宗之上:Esc 先关最上层,卷宗保持
         const itemDialogOpen = document.querySelector('[data-item-choice-dialog], [data-item-gift-dialog]');
-        if (!itemDialogOpen) setDossierOpen(false);
+        if (!itemDialogOpen) closeDrawer();
       }
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, []);
+  }, [closeDrawer, toggleCharacter, toggleMap]);
 
   const dossierWindow = (
     <Ck3CharacterWindow
@@ -102,11 +107,24 @@ export const App: React.FC = () => {
         <ActionDock />
       </main>
 
-      {/* 卷宗竖签(右缘) */}
-      {!isDossierOpen && (
+      {/* 地图竖签(左缘) */}
+      {activeDrawer === null && (
         <button
           type="button"
-          onClick={() => setDossierOpen(true)}
+          onClick={toggleMap}
+          className="map-tab fixed left-0 top-1/2 z-30 -translate-y-1/2"
+          aria-label="打开维斯特洛地图"
+          title="维斯特洛地图(按 M)"
+        >
+          维斯特洛地图
+        </button>
+      )}
+
+      {/* 卷宗竖签(右缘) */}
+      {activeDrawer === null && (
+        <button
+          type="button"
+          onClick={openCharacterDrawer}
           className="dossier-tab fixed right-0 top-1/2 z-30 -translate-y-1/2"
           aria-label="打开人物卷宗"
           title="人物卷宗(按 C)"
@@ -116,15 +134,15 @@ export const App: React.FC = () => {
       )}
 
       {/* 卷宗抽屉 */}
-      {isDossierOpen && (
+      {activeDrawer === 'character' && (
         <div className="fixed inset-0 z-40" role="dialog" aria-modal="true" aria-label="人物卷宗">
-          <div className="modal-backdrop absolute inset-0" onClick={() => setDossierOpen(false)} />
+          <div className="modal-backdrop absolute inset-0" onClick={closeDrawer} />
           <div className="drawer-enter absolute right-0 top-0 flex h-full w-[92vw] max-w-[460px] flex-col border-l border-hairline-bright bg-ink shadow-[-32px_0_80px_rgba(0,0,0,0.45)]">
             <div className="flex h-11 shrink-0 items-center justify-between border-b border-hairline/70 px-4 select-none">
               <span className="eyebrow">人物卷宗</span>
               <button
                 type="button"
-                onClick={() => setDossierOpen(false)}
+                onClick={closeDrawer}
                 className="btn-ghost !px-1.5"
                 aria-label="收起人物卷宗"
               >
@@ -135,6 +153,8 @@ export const App: React.FC = () => {
           </div>
         </div>
       )}
+
+      <MapDrawer />
 
       {/* 模态弹窗系统 */}
       <DiceModal />

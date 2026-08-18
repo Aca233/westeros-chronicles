@@ -46,7 +46,7 @@ export class MapRepository {
   private readonly fetcher: MapFetcher
   private readonly cache = new PromiseCache<string, unknown>()
 
-  constructor(fetcher: MapFetcher = fetch) {
+  constructor(fetcher: MapFetcher = (input, init) => fetch(input, init)) {
     this.fetcher = fetcher
   }
 
