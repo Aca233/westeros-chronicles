@@ -31,6 +31,10 @@ if (manager && (!manager.includes('<ItemChoiceDialog') || !manager.includes('get
 if (manager.includes('function transferDestination(')) failures.push('Item transfer still selects the first destination directly.');
 if (dialog && !dialog.includes('data-item-choice-dialog')) failures.push('The shared item choice dialog lacks its stable UI marker.');
 if (dialog && !dialog.includes('break-words')) failures.push('Choice dialog text does not wrap long words.');
+if (panel.includes('<PendingItemActionList') || manager.includes('<PendingItemActionList')) failures.push('The dossier still renders a separate pending-action banner instead of cancelling in place.');
+if (!itemCard.includes('onCancelPending') || !itemCard.includes('取消操作')) failures.push('Pending item cards do not replace their original action area with an in-place cancel button.');
+if (manager && (!manager.includes('onCancelPending=') || !manager.includes('cancelItemAction(pending.id)'))) failures.push('The dossier item tab does not connect card-level cancellation to the queued action.');
+if (panel && (!panel.includes('pendingReplacement') || !panel.includes('cancelItemAction(pendingReplacement.id)'))) failures.push('The equipment replacement button does not become an in-place cancel control.');
 if (/item\.name\}[^\n]*truncate|item\.locationLabel\}[^\n]*truncate/.test(itemCard)) failures.push('Item card names or locations are still forced into a clipped single line.');
 const forbiddenCloakMarker = ['data-equipment-group="', 'cloak', '"'].join('');
 if (panel.includes(forbiddenCloakMarker) || panel.includes('肩部') || panel.includes('独立披风')) failures.push('A forbidden shoulder or independent cloak group remains.');

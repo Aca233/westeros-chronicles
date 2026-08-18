@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { Search, UserRound, X } from 'lucide-react';
+import { Search, X } from 'lucide-react';
 import { dossierRepository } from '../features/characters/useCharacterDossier';
 import type { CharacterId, CharacterSearchHit } from '../features/characters/types';
 import { dynastySlug } from '../features/characters/characterDossier';
-import { GameIcon, getHouseIconId } from './GameIcon';
+import { getHouseIconId } from './GameIcon';
+import { CharacterPortrait } from './CharacterPortrait';
 
 interface CharacterSearchProps {
   onSelectCharacter: (characterId: CharacterId) => void;
+  aliveOnly?: boolean;
 }
 
-export const CharacterSearch: React.FC<CharacterSearchProps> = ({ onSelectCharacter }) => {
+export const CharacterSearch: React.FC<CharacterSearchProps> = ({ onSelectCharacter, aliveOnly = false }) => {
   const [isOpen, setOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [includeGenealogy, setIncludeGenealogy] = useState(false);
@@ -30,9 +32,9 @@ export const CharacterSearch: React.FC<CharacterSearchProps> = ({ onSelectCharac
     const timer = window.setTimeout(() => {
       setLoading(true);
       setError(null);
-      dossierRepository.search(normalized, { includeGenealogy, limit: 24 })
+      dossierRepository.search(normalized, { includeGenealogy: aliveOnly ? false : includeGenealogy, alive: aliveOnly ? true : undefined, limit: 24 })
         .then((hits) => {
-          if (!cancelled) setResults(hits.filter((hit) => hit.name.trim()));
+          if (!cancelled) setResults(hits.filter((hit) => hit.name.trim() && (!aliveOnly || (hit.born && hit.alive && hit.canonTier !== 'genealogy'))));
         })
         .catch((reason: unknown) => {
           if (!cancelled) {
@@ -49,7 +51,7 @@ export const CharacterSearch: React.FC<CharacterSearchProps> = ({ onSelectCharac
       cancelled = true;
       window.clearTimeout(timer);
     };
-  }, [isOpen, query, includeGenealogy]);
+  }, [isOpen, query, includeGenealogy, aliveOnly]);
 
   if (!isOpen) {
     return (
@@ -83,7 +85,7 @@ export const CharacterSearch: React.FC<CharacterSearchProps> = ({ onSelectCharac
           <X className="h-3.5 w-3.5" />
         </button>
       </div>
-      <label className="mt-2 flex items-center gap-2 text-[9px] text-parchment-faint">
+      {!aliveOnly && <label className="mt-2 flex items-center gap-2 text-[9px] text-parchment-faint">
         <input
           type="checkbox"
           checked={includeGenealogy}
@@ -91,7 +93,7 @@ export const CharacterSearch: React.FC<CharacterSearchProps> = ({ onSelectCharac
           className="accent-[#b08a3c]"
         />
         包含家谱人物
-      </label>
+      </label>}
 
       <div className="mt-2 max-h-56 space-y-1 overflow-y-auto">
         {isLoading && <SearchState text="正在查阅人物索引" />}
@@ -112,11 +114,13 @@ export const CharacterSearch: React.FC<CharacterSearchProps> = ({ onSelectCharac
               }}
               className="flex w-full items-center gap-2 border border-hairline bg-ink-3/40 px-2 py-1.5 text-left transition-colors hover:border-gold-deep hover:bg-ink-3"
             >
-              <span className="flex h-9 w-8 shrink-0 items-center justify-center border border-hairline-bright bg-ink-2 p-0.5">
-                {icon === 'artifact-crown'
-                  ? <UserRound className="h-5 w-5 text-parchment-faint" />
-                  : <GameIcon icon={icon} tone="raw" className="h-full w-full" />}
-              </span>
+              <CharacterPortrait
+                characterId={hit.id}
+                houseIcon={icon}
+                alt={`${hit.name}的肖像`}
+                deceased={!hit.alive}
+                className="h-9 w-8 shrink-0 border border-hairline-bright"
+              />
               <span className="min-w-0 flex-1">
                 <strong className="block truncate font-serif text-[11px] text-parchment">{hit.name}</strong>
                 <span className="mt-0.5 block truncate text-[9px] text-parchment-faint">

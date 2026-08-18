@@ -5,14 +5,23 @@ import { build } from 'esbuild';
 const dependencyStubs = {
   name: 'item-queue-store-stubs',
   setup(buildApi) {
-    buildApi.onResolve({ filter: /services[\\/]api$/ }, () => ({ path: 'api-stub', namespace: 'queue-test' }));
+    buildApi.onResolve({ filter: /(?:services[\\/])?api$/ }, () => ({ path: 'api-stub', namespace: 'queue-test' }));
     buildApi.onResolve({ filter: /services[\\/]db$/ }, () => ({ path: 'db-stub', namespace: 'queue-test' }));
     buildApi.onLoad({ filter: /api-stub/, namespace: 'queue-test' }, () => ({
       loader: 'js',
       contents: `
-        export async function streamChatCompletion() {
+        export async function requestTurnResolutionCompletion() {
           if (globalThis.__itemQueueRequestShouldFail) throw new Error('模拟生成失败');
-          return '<narrate>物品动作已在本轮叙事中完成。</narrate>';
+          return '<resolution>物品动作可执行。</resolution><state_cmd>[]</state_cmd>';
+        }
+        export async function streamNarrativeCompletion() {
+          if (globalThis.__itemQueueRequestShouldFail) throw new Error('模拟生成失败');
+          return '<narrate>物品动作已在本轮叙事中完成。</narrate><branch>1. 继续</branch>';
+        }
+        export function extractJsonArrayFromXml(raw, tag) {
+          const open = '<' + tag + '>'; const close = '</' + tag + '>';
+          const start = raw.indexOf(open); const end = raw.indexOf(close, start + open.length);
+          return start >= 0 && end > start ? JSON.parse(raw.slice(start + open.length, end)) : [];
         }
         export function parseModelOutput(_raw, turnNumber, playerInput) {
           return { turnNumber, playerInput, think: '', narrate: '物品动作已在本轮叙事中完成。', branches: [], stateCommands: [] };
@@ -22,6 +31,7 @@ const dependencyStubs = {
     buildApi.onLoad({ filter: /db-stub/, namespace: 'queue-test' }, () => ({
       loader: 'js',
       contents: `
+        export const db = {};
         export async function saveTurnSnapshot() {}
         export async function commitTurnAtomically() {}
         export async function rollbackLastTurn() { return null; }

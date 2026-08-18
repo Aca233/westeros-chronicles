@@ -1,7 +1,9 @@
 import type { BodyZoneKey, WoundLevel } from '../../types/game';
+import type { EquipmentPosition } from '../items/types';
 import type {
   CharacterEvent,
   CharacterId,
+  CharacterItemRecord,
   CharacterMemory,
   CharacterRelationship,
   KnowledgeVisibility,
@@ -20,6 +22,7 @@ export interface CharacterState {
   wounds?: string[];
   relationships?: CharacterRelationship[];
   deathReason?: string | null;
+  items?: CharacterItemRecord[];
 }
 
 export interface CharacterMemoryInput {
@@ -44,7 +47,12 @@ export type CharacterStateCommand =
   | { type: 'DIVORCE_CHARACTERS'; characterId: CharacterId; spouseId: CharacterId; reason?: string; commandId?: CharacterCommandId }
   | { type: 'ADD_CHARACTER_MEMORY'; characterId: CharacterId; memory: CharacterMemoryInput; commandId?: CharacterCommandId }
   | { type: 'GRANT_CHARACTER_TITLE'; characterId: CharacterId; titleId: string; commandId?: CharacterCommandId }
-  | { type: 'REVOKE_CHARACTER_TITLE'; characterId: CharacterId; titleId: string; commandId?: CharacterCommandId };
+  | { type: 'REVOKE_CHARACTER_TITLE'; characterId: CharacterId; titleId: string; commandId?: CharacterCommandId }
+  | { type: 'CHARACTER_ITEM_ACQUIRE'; characterId: CharacterId; definitionId: string; instanceId: string; commandId?: CharacterCommandId }
+  | { type: 'CHARACTER_ITEM_EQUIP'; characterId: CharacterId; instanceId: string; position: EquipmentPosition; commandId?: CharacterCommandId }
+  | { type: 'CHARACTER_ITEM_UNEQUIP'; characterId: CharacterId; instanceId: string; commandId?: CharacterCommandId }
+  | { type: 'CHARACTER_ITEM_TRANSFER'; fromCharacterId: CharacterId; toCharacterId: CharacterId; instanceId: string; commandId?: CharacterCommandId }
+  | { type: 'CHARACTER_ITEM_LOSE'; characterId: CharacterId; instanceId: string; commandId?: CharacterCommandId };
 
 /** CharacterEvent in types.ts is the single authoritative event union. */
 export type ValidatedCharacterEvent = CharacterEvent;

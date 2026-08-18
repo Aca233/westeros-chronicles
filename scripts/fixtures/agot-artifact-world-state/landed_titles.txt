@@ -1,0 +1,9 @@
+e_the_crownlands = {
+    k_the_blackwater = {
+        d_kings_landing = {
+            c_kings_landing = {
+                b_the_red_keep = { province = 4151 }
+            }
+        }
+    }
+}

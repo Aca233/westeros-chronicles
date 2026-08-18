@@ -25,6 +25,8 @@ for (const entity of WESTEROS_ENTITIES.filter((entry) => entry.category !== 'cha
 }
 
 assert.ok(storySource.includes('data-story-character-link'), '文章高亮人物缺少可测试的点击标记');
+assert.ok(storySource.includes('data-story-world-facts'), '正文没有展示统一回合事实。');
+assert.ok(storySource.includes('data-story-fact-character'), '回合事实中的人物不能打开人物卷宗。');
 assert.ok(storySource.includes('onSelectCharacter(entityToHover.characterId!)'), '文章高亮人物没有调用人物栏导航');
 assert.ok(appSource.includes('<StoryFeed onSelectCharacter={openStoryCharacter} />'), 'App 没有把人物导航传给文章');
 assert.ok(appSource.includes("window.matchMedia('(max-width: 1023px)').matches"), '移动端点击人物后不会自动打开人物抽屉');

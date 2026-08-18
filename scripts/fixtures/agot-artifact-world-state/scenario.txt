@@ -1,0 +1,45 @@
+agot_historical_artifacts_setup = {
+    agot_assign_starting_family_weapons_effect = yes
+
+    if = {
+        limit = { game_start_date < 8000.12.1 }
+        character:Stark_old ?= { create_old_winter_crown = { OWNER = THIS } }
+    }
+    if = {
+        limit = { game_start_date >= 8299.1.16 }
+        character:Stark_8 ?= { create_new_winter_crown = { OWNER = THIS } }
+    }
+
+    title:b_the_red_keep.holder = {
+        create_iron_throne = { OWNER = this }
+        scope:newly_created_artifact = { equip_artifact_to_owner = yes }
+    }
+
+    if = {
+        limit = { has_game_rule = unsupported_rule }
+        character:Unknown_1 = { create_unknown_relic = { OWNER = this } }
+    }
+
+    if = {
+        limit = { game_start_date >= 8290.1.1 }
+        character:Mormont_2 = { create_duplicate_unique = { OWNER = this } }
+    }
+    if = {
+        limit = { game_start_date >= 8291.1.1 }
+        character:Stark_7 = { create_duplicate_unique = { OWNER = this } }
+    }
+}
+
+agot_assign_starting_family_weapons_effect = {
+    if = {
+        limit = { game_start_date >= 8299.1.1 }
+        character:Stark_7 ?= { create_longclaw = { OWNER = THIS } }
+    }
+    else_if = {
+        limit = { game_start_date >= 8293.6.1 }
+        character:Mormont_2 ?= { create_longclaw = { OWNER = THIS } }
+    }
+    else = {
+        character:Mormont_1 ?= { create_longclaw = { OWNER = THIS } }
+    }
+}

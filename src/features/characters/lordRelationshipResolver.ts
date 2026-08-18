@@ -1,6 +1,7 @@
 import type { CharacterId, CharacterSearchHit, StaticCharacterRecord } from './types';
 
 export interface LordRelationshipIdentity {
+  canonicalCharacterId?: CharacterId;
   name: string;
   house: string;
   houseSigil?: string;
@@ -11,6 +12,9 @@ export interface LordRelationshipIdentity {
 export interface LordFamilyRecords {
   subject?: StaticCharacterRecord;
   spouse?: StaticCharacterRecord;
+  spouses?: StaticCharacterRecord[];
+  children?: StaticCharacterRecord[];
+  siblings?: StaticCharacterRecord[];
   father?: StaticCharacterRecord;
   mother?: StaticCharacterRecord;
 }
@@ -19,6 +23,7 @@ export interface LordRelationshipRepository {
   search(query: string, filters?: { includeGenealogy?: boolean; limit?: number }): Promise<CharacterSearchHit[]>;
   get(id: CharacterId): Promise<StaticCharacterRecord | undefined>;
   getMany(ids: readonly CharacterId[]): Promise<StaticCharacterRecord[]>;
+  getKinship(id: CharacterId): Promise<import('./types').CharacterKinshipEntry>;
 }
 
 const DYNASTY_HINTS: ReadonlyArray<{ needles: readonly string[]; dynasty: string }> = [
@@ -79,35 +84,51 @@ export async function resolveLordFamilyRecords(
   identity: LordRelationshipIdentity,
   repository: LordRelationshipRepository,
 ): Promise<LordFamilyRecords> {
-  const query = givenName(identity.name);
-  if (!query) return {};
-  const dynastyHint = inferDynastyHint(identity);
-  const hits = await repository.search(query, { includeGenealogy: false, limit: 80 });
-  const ranked = hits
-    .map((hit) => ({ hit, score: scoreHit(identity, hit, dynastyHint) }))
-    .filter((entry) => Number.isFinite(entry.score))
-    .sort((a, b) => b.score - a.score || a.hit.id.localeCompare(b.hit.id));
-  const best = ranked[0]?.hit;
-  if (!best) return {};
-  if (dynastyHint && !normalize(best.dynastyId).includes(dynastyHint)) return {};
+  let subject: StaticCharacterRecord | undefined;
 
-  const subject = await repository.get(best.id);
+  if (identity.canonicalCharacterId) {
+    subject = await repository.get(identity.canonicalCharacterId);
+  } else {
+    const query = givenName(identity.name);
+    if (!query) return {};
+    const dynastyHint = inferDynastyHint(identity);
+    const hits = await repository.search(query, { includeGenealogy: false, limit: 80 });
+    const ranked = hits
+      .map((hit) => ({ hit, score: scoreHit(identity, hit, dynastyHint) }))
+      .filter((entry) => Number.isFinite(entry.score))
+      .sort((a, b) => b.score - a.score || a.hit.id.localeCompare(b.hit.id));
+    const best = ranked[0]?.hit;
+    if (!best) return {};
+    if (dynastyHint && !normalize(best.dynastyId).includes(dynastyHint)) return {};
+    subject = await repository.get(best.id);
+  }
+
   if (!subject) return {};
+  const kinship = await repository.getKinship(subject.id);
+  const fatherId = subject.fatherId || kinship.fatherId || undefined;
+  const motherId = subject.motherId || kinship.motherId || undefined;
+  const spouseIds = [...new Set([...(subject.spouseIds ?? []), ...kinship.spouseIds])];
   const relativeIds = [...new Set([
-    ...(subject.spouseIds ?? []),
-    subject.fatherId,
-    subject.motherId,
+    ...spouseIds,
+    ...kinship.childIds,
+    ...kinship.siblingIds,
+    fatherId,
+    motherId,
   ].filter((id): id is CharacterId => Boolean(id)))];
   const relatives = new Map((await repository.getMany(relativeIds)).map((record) => [record.id, record]));
-  const spouse = (subject.spouseIds ?? [])
+  const resolveMany = (ids: readonly CharacterId[]) => ids
     .map((id) => relatives.get(id))
-    .filter((record): record is StaticCharacterRecord => Boolean(record))
-    .sort((a, b) => Number(b.alive) - Number(a.alive) || a.id.localeCompare(b.id))[0];
+    .filter((record): record is StaticCharacterRecord => Boolean(record));
+  const spouses = resolveMany(spouseIds)
+    .sort((a, b) => Number(b.alive) - Number(a.alive) || a.id.localeCompare(b.id));
 
   return {
     subject,
-    ...(spouse ? { spouse } : {}),
-    ...(subject.fatherId && relatives.get(subject.fatherId) ? { father: relatives.get(subject.fatherId) } : {}),
-    ...(subject.motherId && relatives.get(subject.motherId) ? { mother: relatives.get(subject.motherId) } : {}),
+    spouses,
+    children: resolveMany(kinship.childIds),
+    siblings: resolveMany(kinship.siblingIds),
+    ...(spouses[0] ? { spouse: spouses[0] } : {}),
+    ...(fatherId && relatives.get(fatherId) ? { father: relatives.get(fatherId) } : {}),
+    ...(motherId && relatives.get(motherId) ? { mother: relatives.get(motherId) } : {}),
   };
 }

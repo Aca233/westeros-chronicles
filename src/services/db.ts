@@ -20,6 +20,105 @@ export interface GameSnapshot {
 export interface WorldRunRecord { runId: string; datasetHash: string; revision: number; createdAt: number; }
 export interface CharacterStateCacheRecord { runId: string; characterId: CharacterId; revision: number; state: unknown; }
 
+const CHARACTER_COMMAND_TYPES = new Set([
+  'SET_CHARACTER_RELATIONSHIP', 'ADD_CHARACTER_TRAIT', 'REMOVE_CHARACTER_TRAIT',
+  'MOVE_CHARACTER', 'INJURE_CHARACTER', 'HEAL_CHARACTER', 'KILL_CHARACTER',
+  'MARRY_CHARACTERS', 'DIVORCE_CHARACTERS', 'ADD_CHARACTER_MEMORY',
+  'GRANT_CHARACTER_TITLE', 'REVOKE_CHARACTER_TITLE',
+]);
+
+function sameDate(
+  left: { year: number; month: number; day: number },
+  right: { year: number; month: number; day: number },
+): boolean {
+  return left.year === right.year && left.month === right.month && left.day === right.day;
+}
+
+/**
+ * Persisted projections are only useful when they describe the same committed
+ * turn. Keep this guard beside the transaction boundary so malformed callers
+ * cannot store a story, ledger, character events, and date that disagree.
+ */
+export function assertTurnCommitConsistency(
+  gameState: GameState,
+  characterEvents?: readonly CharacterEventInput[],
+): void {
+  if (!Number.isInteger(gameState.turnCount) || gameState.turnCount < 1) {
+    throw new Error(`无效的当前回合号：${gameState.turnCount}`);
+  }
+  if (gameState.turns.length !== gameState.turnCount) {
+    throw new Error(`故事回合数量与当前回合号不一致：${gameState.turns.length}/${gameState.turnCount}`);
+  }
+  gameState.turns.forEach((turn, index) => {
+    const expected = index + 1;
+    if (turn.turnNumber !== expected) throw new Error(`故事回合号不连续：期望 ${expected}，实际 ${turn.turnNumber}`);
+  });
+
+  const history = gameState.worldHistory;
+  const expectedHistoryLength = gameState.turnCount - 1;
+  if (history.turns.length !== expectedHistoryLength) {
+    throw new Error(`世界账本回合数量与当前回合号不一致：${history.turns.length}/${expectedHistoryLength}`);
+  }
+  history.turns.forEach((turn, index) => {
+    const expected = index + 2;
+    if (turn.turn !== expected) throw new Error(`世界账本回合号不连续：期望 ${expected}，实际 ${turn.turn}`);
+    if (turn.facts.some((fact) => fact.turn !== turn.turn)) {
+      throw new Error(`世界账本回合 ${turn.turn} 含有其他回合的事实`);
+    }
+  });
+
+  const latestHistory = history.turns.length ? history.turns[history.turns.length - 1] : undefined;
+  const expectedDate = latestHistory?.resolvedOn ?? history.startDate;
+  const currentDate = { year: gameState.currentYear, month: gameState.currentMonth, day: gameState.currentDay };
+  if (!sameDate(currentDate, expectedDate)) {
+    throw new Error(`当前日期与世界账本不一致：${currentDate.year}.${currentDate.month}.${currentDate.day}`);
+  }
+  if (latestHistory) {
+    const latestStory = gameState.turns.length ? gameState.turns[gameState.turns.length - 1] : undefined;
+    if (!latestStory || JSON.stringify(latestStory.stateCommands ?? []) !== JSON.stringify(latestHistory.acceptedCommands)) {
+      throw new Error(`故事回合与世界账本回合 ${latestHistory.turn} 的接受命令不一致`);
+    }
+  }
+
+  if (gameState.worldCharacters && gameState.worldCharacters.revision !== history.turns.length) {
+    throw new Error(`人物世界修订号与世界账本不一致：${gameState.worldCharacters.revision}/${history.turns.length}`);
+  }
+
+  if (characterEvents !== undefined) {
+    const acceptedCharacterCommands = latestHistory?.acceptedCommands
+      .filter((command) => CHARACTER_COMMAND_TYPES.has(command.type)) ?? [];
+    if ((acceptedCharacterCommands.length === 0) !== (characterEvents.length === 0)) {
+      throw new Error('人物事件与世界账本中的人物命令不一致');
+    }
+    const identityPrefix = `${gameState.turnCount}:`;
+    const identities = new Set<string>();
+    characterEvents.forEach((event) => {
+      if (!event.id.startsWith(identityPrefix)) throw new Error(`人物事件 ${event.id} 不属于回合 ${gameState.turnCount}`);
+      if (identities.has(event.id)) throw new Error(`人物事件 ID 重复：${event.id}`);
+      identities.add(event.id);
+    });
+  }
+}
+
+export function assertTurnSuccessor(previous: GameState, next: GameState): void {
+  const previousRunId = previous.worldCharacters?.runId;
+  const nextRunId = next.worldCharacters?.runId;
+  if (!previousRunId || previousRunId !== nextRunId) {
+    throw new Error('前后快照不属于同一世界运行');
+  }
+  if (next.turnCount !== previous.turnCount + 1) {
+    throw new Error(`快照回合必须连续：${previous.turnCount} -> ${next.turnCount}`);
+  }
+  if (next.worldHistory.turns.length !== previous.worldHistory.turns.length + 1) {
+    throw new Error('世界账本没有随下一回合连续推进');
+  }
+  const previousRevision = previous.worldCharacters?.revision;
+  const nextRevision = next.worldCharacters?.revision;
+  if (previousRevision === undefined || nextRevision !== previousRevision + 1) {
+    throw new Error(`人物世界修订号必须连续：${previousRevision ?? '无'} -> ${nextRevision ?? '无'}`);
+  }
+}
+
 export class GotDatabase extends Dexie {
   snapshots!: Table<GameSnapshot, number>;
   worldRuns!: Table<WorldRunRecord, string>;
@@ -47,6 +146,11 @@ function assertSupportedSnapshot(snapshot: unknown): asserts snapshot is GameSna
     throw new Error('测试版存档格式已更新，请重置测试存档后重新开始。');
   }
   assertSupportedGameState((snapshot as { gameState?: unknown }).gameState);
+  const supported = snapshot as GameSnapshot;
+  if (supported.turnNumber !== supported.gameState.turnCount) {
+    throw new Error(`快照回合号与游戏状态不一致：${supported.turnNumber}/${supported.gameState.turnCount}`);
+  }
+  assertTurnCommitConsistency(supported.gameState);
 }
 
 async function upsertWorldRun(gameState: GameState): Promise<void> {
@@ -58,6 +162,7 @@ async function upsertWorldRun(gameState: GameState): Promise<void> {
 
 export async function saveTurnSnapshot(gameState: GameState, summaryNote?: string): Promise<number> {
   assertSupportedGameState(gameState);
+  assertTurnCommitConsistency(gameState);
   return db.transaction('rw', db.snapshots, db.worldRuns, async () => {
     await upsertWorldRun(gameState);
     return db.snapshots.add({ formatVersion: ITEM_SAVE_FORMAT_VERSION, turnNumber: gameState.turnCount, timestamp: Date.now(), gameState: clone(gameState), summaryNote });
@@ -70,9 +175,14 @@ export async function commitTurnAtomically(
   summaryNote?: string,
 ): Promise<number> {
   assertSupportedGameState(gameState);
+  assertTurnCommitConsistency(gameState, characterEvents);
   const ref = gameState.worldCharacters;
   if (characterEvents.length && !ref) throw new Error('人物事件缺少世界运行标识，无法提交');
   return db.transaction('rw', db.snapshots, db.worldRuns, db.characterEvents, db.characterStateCache, async () => {
+    const previousSnapshot = await db.snapshots.orderBy('turnNumber').reverse().first();
+    if (!previousSnapshot) throw new Error('缺少前一回合快照，无法原子提交');
+    assertSupportedSnapshot(previousSnapshot);
+    assertTurnSuccessor(previousSnapshot.gameState, gameState);
     if (ref) {
       for (const [sequence, input] of characterEvents.entries()) {
         const key: [string, string] = [ref.runId, input.id];
@@ -107,6 +217,7 @@ export async function rollbackLastTurn(): Promise<GameState | null> {
     const previous = all[1];
     assertSupportedSnapshot(current);
     assertSupportedSnapshot(previous);
+    assertTurnSuccessor(previous.gameState, current.gameState);
     if (current.id) await db.snapshots.delete(current.id);
     const ref = current.gameState.worldCharacters ?? previous.gameState.worldCharacters;
     if (ref) {

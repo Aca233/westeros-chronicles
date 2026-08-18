@@ -2,11 +2,13 @@ import { calculateFinalAttributes } from '../../data/characterTraits';
 import type { CharacterEventEnvelope } from './characterEventStore';
 import { projectCharacterEvents } from './characterEventStore';
 import { generateMissingBaseAttributes } from './attributeGenerator';
-import type { ResolvedCharacter, StaticCharacterRecord } from './types';
+import { expandBaselineLoadout, projectCharacterItems } from './characterItems';
+import type { ResolvedCharacter, StaticCharacterLoadoutProfile, StaticCharacterRecord } from './types';
 
 export interface CharacterProjectionContext {
   datasetVersion: string;
   currentYear: number;
+  loadoutProfile?: StaticCharacterLoadoutProfile;
 }
 
 function orderTraitIds(traits: readonly string[]): string[] {
@@ -32,5 +34,6 @@ export function resolveCharacter(
     attributes: calculateFinalAttributes(baseAttributes, traits),
     memories: events.flatMap((entry) => entry.event.type === 'ADD_MEMORY' ? [entry.event.memory] : []),
     knowledge: [],
+    items: projectCharacterItems(expandBaselineLoadout(staticRecord, context.loadoutProfile), events),
   };
 }

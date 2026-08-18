@@ -28,14 +28,31 @@ const { StaticCharacterRepository } = await bundleModule('src/features/character
 function createFixtureRepository() {
   const counts = new Map();
   const payloads = {
-    '/data/manifest.json': { schemaVersion: 1, datasetHash: 'fixture', startDate: '8298.1.1', displayYear: 298, counts: {}, shards: ['ab'], source: { sourceId: '2962333032' } },
+    '/data/manifest.json': { schemaVersion: 2, datasetHash: 'fixture', startDate: '8298.1.1', displayYear: 298, counts: {}, shards: ['ab'], source: { sourceId: '2962333032' } },
+    '/data/loadouts/ab.json': {
+      'agot:Stark_3': { characterId: 'agot:Stark_3', templateId: 'northern_noble', overrideId: 'eddard_stark_daily' },
+      'agot:Child_1': { characterId: 'agot:Child_1', templateId: 'child' },
+    },
+    '/data/kinship/ab.json': {
+      'agot:Stark_3': { spouseIds: [], childIds: ['agot:Child_1'], siblingIds: [], fatherId: 'agot:Ancestor_1' },
+      'agot:Child_1': { spouseIds: [], childIds: [], siblingIds: [], fatherId: 'agot:Stark_3' },
+      'agot:Ancestor_1': { spouseIds: [], childIds: ['agot:Stark_3'], siblingIds: [] },
+    },
+    '/data/title-holders.json': {
+      'agot:Stark_3': [
+        { id: 'e_the_north', name: '北境', tier: 'empire' },
+        { id: 'k_winterfell', name: '临冬城', tier: 'kingdom' },
+      ],
+    },
     '/data/search-index.json': [
       { id: 'agot:Stark_3', name: '艾德', nameKey: 'Eddard', canonTier: 'canon', born: true, alive: true, shard: 'ab' },
       { id: 'agot:Ancestor_1', name: '布兰登', nameKey: 'Brandon', canonTier: 'genealogy', born: true, alive: false, shard: 'ab' },
+      { id: 'agot:Child_1', name: '罗柏', nameKey: 'Robb', canonTier: 'canon', born: true, alive: true, shard: 'ab' },
     ],
     '/data/shards/ab.json': [
       { id: 'agot:Stark_3', rawId: 'Stark_3', canonTier: 'canon', name: '艾德', born: true, alive: true, baseAttributes: { diplomacy: 9 }, traits: [], spouseIds: [], relations: [], hasDna: true, source: { file: 'north.txt', line: 1 } },
       { id: 'agot:Ancestor_1', rawId: 'Ancestor_1', canonTier: 'genealogy', name: '布兰登', born: true, alive: false, baseAttributes: {}, traits: [], spouseIds: [], relations: [], hasDna: false, source: { file: 'north_ancestors.txt', line: 1 } },
+      { id: 'agot:Child_1', rawId: 'Child_1', canonTier: 'canon', name: '罗柏', fatherId: 'agot:Stark_3', born: true, alive: true, baseAttributes: {}, traits: [], spouseIds: [], relations: [], hasDna: false, source: { file: 'north.txt', line: 2 } },
     ],
   };
   const fetchJson = async (path) => {
@@ -54,9 +71,61 @@ test('repository fetches each character shard only once', async () => {
   assert.equal(await repo.get('agot:Missing_1'), undefined);
 });
 
+test('repository loads sharded static loadout profiles once', async () => {
+  const { repo, counts } = createFixtureRepository();
+  assert.equal((await repo.getLoadoutProfile('agot:Stark_3')).templateId, 'northern_noble');
+  assert.equal((await repo.getLoadoutProfile('agot:Ancestor_1')), undefined);
+  assert.equal(counts.get('/data/loadouts/ab.json'), 1);
+});
+
+test('repository loads reverse kinship and resolves children', async () => {
+  const { repo, counts } = createFixtureRepository();
+  assert.deepEqual((await repo.getKinship('agot:Stark_3')).childIds, ['agot:Child_1']);
+  assert.deepEqual((await repo.getChildren('agot:Stark_3')).map((record) => record.id), ['agot:Child_1']);
+  await repo.getKinship('agot:Stark_3');
+  assert.equal(counts.get('/data/kinship/ab.json'), 1);
+});
+
+test('repository merges localized title holdings and loads the title map only once', async () => {
+  const { repo, counts } = createFixtureRepository();
+  const eddard = await repo.get('agot:Stark_3');
+  const ancestor = await repo.get('agot:Ancestor_1');
+  assert.deepEqual(eddard.titleIds, ['e_the_north', 'k_winterfell']);
+  assert.deepEqual(eddard.titles, ['北境', '临冬城']);
+  assert.deepEqual(ancestor.titleIds, []);
+  assert.deepEqual(ancestor.titles, []);
+  assert.equal(counts.get('/data/title-holders.json'), 1);
+});
+
+const { parseCharacterKinshipIndex, parseCharacterLoadoutShard, parseCharacterTitleHolders } = await bundleModule('src/features/characters/characterDatasetSchema.ts');
+
+test('loadout schema validates matching AGOT IDs and template names', () => {
+  assert.equal(parseCharacterLoadoutShard({
+    'agot:Stark_3': { characterId: 'agot:Stark_3', templateId: 'northern_noble' },
+  })['agot:Stark_3'].templateId, 'northern_noble');
+  assert.throws(() => parseCharacterLoadoutShard({ 'agot:Stark_3': { characterId: 'agot:Other', templateId: 'x' } }), /装束/);
+});
+
+test('kinship schema validates AGOT IDs and family arrays', () => {
+  assert.deepEqual(parseCharacterKinshipIndex({
+    'agot:Stark_3': { spouseIds: [], childIds: ['agot:Child_1'], siblingIds: ['agot:Stark_4', 'agot:Stark_4'] },
+  })['agot:Stark_3'].siblingIds, ['agot:Stark_4']);
+  assert.throws(() => parseCharacterKinshipIndex({ Stark_3: { spouseIds: [], childIds: [], siblingIds: [] } }), /亲属/);
+  assert.throws(() => parseCharacterKinshipIndex({ 'agot:Stark_3': { spouseIds: [], childIds: ['agot:Stark_3'], siblingIds: [] } }), /亲属/);
+  assert.throws(() => parseCharacterKinshipIndex({ 'agot:Stark_3': { spouseIds: [], childIds: [], siblingIds: ['agot:Stark_3'] } }), /亲属/);
+});
+
+test('title holder schema rejects malformed or non-AGOT mappings', () => {
+  assert.deepEqual(parseCharacterTitleHolders({
+    'agot:Stark_3': [{ id: 'e_the_north', name: '北境', tier: 'empire' }],
+  })['agot:Stark_3'][0].name, '北境');
+  assert.throws(() => parseCharacterTitleHolders({ Stark_3: [] }), /头衔/);
+  assert.throws(() => parseCharacterTitleHolders({ 'agot:Stark_3': [{ id: 'e_the_north', name: '', tier: 'empire' }] }), /头衔/);
+});
+
 test('default repository search hides genealogy but can include it explicitly', async () => {
   const { repo } = createFixtureRepository();
-  assert.deepEqual((await repo.search('', {})).map((hit) => hit.id), ['agot:Stark_3']);
+  assert.deepEqual((await repo.search('', {})).map((hit) => hit.id), ['agot:Stark_3', 'agot:Child_1']);
   assert.deepEqual((await repo.search('Brandon', { includeGenealogy: true })).map((hit) => hit.id), ['agot:Ancestor_1']);
 });
 
@@ -144,4 +213,28 @@ test('relationship dimensions clamp and produce a compact summary', () => {
   assert.equal(relation.fear, 0);
   assert.match(relationshipSummary(relation), /信任 42/);
   assert.match(relationshipSummary(relation), /尊敬 70/);
+});
+
+const { expandBaselineLoadout, projectCharacterItems } = await bundleModule('src/features/characters/characterItems.ts');
+
+test('baseline loadout expands to stable owned and equipped ordinary items', () => {
+  const profile = { characterId: 'agot:Stark_3', templateId: 'northern_noble', overrideId: 'eddard_stark_daily' };
+  const first = expandBaselineLoadout(eddardBase, profile);
+  const second = expandBaselineLoadout(eddardBase, profile);
+  assert.deepEqual(first, second);
+  assert.ok(first.some((item) => item.equippedPosition?.group === 'torso'));
+  assert.ok(first.some((item) => item.equippedPosition?.group === 'legs' && item.equippedPosition.layer === 'footwear'));
+  assert.ok(first.every((item) => item.ownerId === eddardBase.id && item.custody.type === 'character'));
+});
+
+test('character item events override baseline equipment deterministically', () => {
+  const profile = { characterId: 'agot:Stark_3', templateId: 'northern_noble' };
+  const baseItems = expandBaselineLoadout(eddardBase, profile);
+  const garment = baseItems.find((item) => item.instanceId.endsWith(':garment'));
+  const events = [
+    { id: 'unequip', runId: 'run', characterId: eddardBase.id, turn: 1, sequence: 0, timestamp: 1, event: { type: 'ITEM_UNEQUIP', instanceId: garment.instanceId } },
+    { id: 'equip', runId: 'run', characterId: eddardBase.id, turn: 2, sequence: 0, timestamp: 2, event: { type: 'ITEM_EQUIP', instanceId: garment.instanceId, position: { group: 'torso', layer: 'garment' } } },
+    { id: 'lose', runId: 'run', characterId: eddardBase.id, turn: 3, sequence: 0, timestamp: 3, event: { type: 'ITEM_LOSE', instanceId: garment.instanceId } },
+  ];
+  assert.equal(projectCharacterItems(baseItems, events).some((item) => item.instanceId === garment.instanceId), false);
 });

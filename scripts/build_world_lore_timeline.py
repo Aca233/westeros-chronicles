@@ -1,0 +1,324 @@
+# -*- coding: utf-8 -*-
+"""
+Build complete 12,000-year Westeros & Essos World Lore Timeline dataset.
+Covers Dawn Age, Age of Heroes, Long Night, Andal Invasion, Valyria, Aegon's Conquest,
+Targaryen Dynasty (Dance of Dragons, Blackfyre Rebellions), Robert's Rebellion, up to 305 AC.
+"""
+
+import json
+import os
+
+def build_lore_timeline():
+    lore_data = {
+        "title": "维斯特洛与已知世界·万年通史与完整世界观时间线 (Complete World Lore of Westeros & Essos)",
+        "timeline_span": "12,000 BC — 305 AC (共计一万两千余年)",
+        "chronology_system": "以征服历 (Aegon's Conquest - AC) 为基准原点，征服前为 BC (Before Conquest)，征服后为 AC (After Conquest)",
+        "eras": [
+            {
+                "id": "dawn_age",
+                "era_name_zh": "黎明纪元",
+                "era_name_en": "The Dawn Age",
+                "time_span": "约 12,000 BC 以前",
+                "overview": "在人类踏足这片土地之前，维斯特洛由神秘的原住民「森林之子」和身形庞大的「巨人」共同统治。森林之子崇拜无名旧神，在鱼梁木上雕刻深邃的面孔，使用黑曜石（龙晶）武器与自然魔法。",
+                "key_events": [
+                    {
+                        "year": "约 12,000 BC",
+                        "title": "先民跨过多恩之臂入侵",
+                        "description": "来自东方厄斯索斯大陆的「先民（First Men）」手持青铜武器、骑乘战马，穿过多恩之臂（当时连接维斯特洛与厄斯索斯的陆桥）大举涌入维斯特洛。先民开荒伐木，大量砍伐雕刻神圣面孔的鱼梁木，引发与森林之子的旷日持久大战。"
+                    },
+                    {
+                        "year": "约 11,000 BC",
+                        "title": "多恩之臂破碎与颈泽之锤",
+                        "description": "为了阻挡源源不断的先民侵略，森林之子的绿先知施展毁天灭地的水魔法，召唤海啸击碎了多恩之臂，使其断裂为如今的多恩断臂角与石阶群岛。随后又在颈泽施展「水之锤」，将颈泽化为无边沼泽泥潭，但仍无法彻底逆转战局。"
+                    },
+                    {
+                        "year": "约 10,000 BC",
+                        "title": "千面屿盟誓 (The Pact)",
+                        "description": "在神眼湖中央的千面屿上，先民酋长与森林之子绿先知达成和平盟约：森林之子保留深山密林，先民获得海岸与平原并承诺永不砍伐鱼梁木。先民逐渐放弃原有信仰，改宗皈依森林之子的「旧神（Old Gods）」，两族迎来两千年的和平与繁荣。"
+                    }
+                ]
+            },
+            {
+                "id": "age_of_heroes",
+                "era_name_zh": "英雄纪元",
+                "era_name_en": "The Age of Heroes",
+                "time_span": "约 10,000 BC — 8,000 BC",
+                "overview": "这是维斯特洛传奇神话与贵族先祖并起的黄金时代。百大古老王国林立，无数名垂千古的开国始祖在此期间建立起各大家族传承万年的巍峨堡垒。",
+                "key_events": [
+                    {
+                        "year": "约 9,000 BC",
+                        "title": "传奇始祖建立各大王国与古老堡垒",
+                        "description": "筑城者布兰登（Brandon the Builder）建立临冬城并奠定史塔克家族；青手加尔斯（Garth Greenhand）繁衍河湾地诸侯；聪明的兰恩（Lann the Clever）用智谋从卡斯特利家族手中骗取凯岩城奠定兰尼斯特基业；风暴王杜兰（Durran Godsgrief）在海神与风女神的狂怒下筑起永不倒塌的风息堡；灰王（Grey King）诛杀海怪统领铁群岛。"
+                    }
+                ]
+            },
+            {
+                "id": "long_night",
+                "era_name_zh": "长夜与绝境长城",
+                "era_name_en": "The Long Night & The Battle for the Dawn",
+                "time_span": "约 8,000 BC",
+                "overview": "长达整整一代人的严冬降临维斯特洛，太阳长达数十年不升起。极北永冬之地诞生出冰冷的恶魔「异鬼（The Others / White Walkers）」，携亡灵尸鬼海啸般南下，将人类文明推向灭绝边缘。",
+                "key_events": [
+                    {
+                        "year": "约 8,000 BC",
+                        "title": "异鬼南侵与长夜降临",
+                        "description": "异鬼骑乘死马与冰蜘蛛南下，将所有战死的人类与野兽转化为蓝眼尸鬼。维斯特洛陷入饥荒与极寒地狱。"
+                    },
+                    {
+                        "year": "约 7,950 BC",
+                        "title": "黎明之战与亚梭尔·亚亥",
+                        "description": "传奇英雄亚梭尔·亚亥（Azor Ahai）将宝剑插进挚爱妻子妮萨·妮萨的胸膛，锻造出燃烧着炽烈圣火的魔剑「光明使者（Lightbringer）」。最后英雄（Last Hero）深入塞外寻找森林之子，先民与森林之子结盟在「黎明之战」中击溃异鬼，将残余异鬼驱逐回极北荒原。"
+                    },
+                    {
+                        "year": "约 7,900 BC",
+                        "title": "修建绝境长城与创立守夜人",
+                        "description": "筑城者布兰登借助巨人神力与森林之子古老防御魔法，修筑了高七百英尺、横贯三百英里的巨型寒冰「绝境长城（The Wall）」，并创立黑衣「守夜人军团（Night's Watch）」，誓死守候人类生者防线。"
+                    },
+                    {
+                        "year": "约 7,800 BC",
+                        "title": "夜王（Night's King）叛乱",
+                        "description": "第十三任守夜人总司令爱上一位皮肤如冰雪苍白、双眼如寒星幽蓝的异鬼女人，自立为王统治长夜堡十三年。最终冬境之王史塔克与塞外之王乔曼联手将其诛灭，将其名字从一切史册中彻底抹去。"
+                    }
+                ]
+            },
+            {
+                "id": "andal_invasion",
+                "era_name_zh": "安达尔人入侵与七国并立",
+                "era_name_en": "The Andal Invasion & Seven Kingdoms",
+                "time_span": "约 6,000 BC — 4,000 BC",
+                "overview": "金发碧眼的安达尔人手持钢铁刀剑、胸前雕刻七芒星，自厄斯索斯跨越狭海大举入侵维斯特洛。他们带来了「七神信仰（Faith of the Seven）」与铁器锻造技术，彻底重塑了维斯特洛的文化与政治版图。",
+                "key_events": [
+                    {
+                        "year": "约 6,000 BC",
+                        "title": "安达尔人征服谷地与南境诸国",
+                        "description": "安达尔人在艾林谷击溃先民建立鹰巢城；随后横扫河间地、西境、河湾地和风暴地。安达尔人大量砍伐焚烧鱼梁木神木林，屠杀残存的森林之子（森林之子被迫彻底退隐长城以北）。"
+                    },
+                    {
+                        "year": "约 5,000 BC",
+                        "title": "北境血战卡林湾阻击安达尔人",
+                        "description": "北境冬境之王凭借险要的卡林湾沼泽要塞，无数次全歼南来的安达尔人侵略军。北境成为维斯特洛大陆唯一成功抵御安达尔人、完整保全先民纯正血统与旧神信仰的独立王国。"
+                    }
+                ]
+            },
+            {
+                "id": "valyria_rise_and_doom",
+                "era_name_zh": "瓦雷利亚帝国与末日浩劫",
+                "era_name_en": "Rise of Valyria & The Doom",
+                "time_span": "约 5,000 BC — 114 BC",
+                "overview": "厄斯索斯大陆上的瓦雷利亚牧羊人在十四火峰火山群发现了巨龙，通过魔法驯服巨龙并掌握无坚不摧的瓦雷利亚钢锻造法，建立了横扫已知世界的「瓦雷利亚自由堡垒（Valyrian Freehold）」。",
+                "key_events": [
+                    {
+                        "year": "约 4,700 BC",
+                        "title": "五次吉斯战争与摧毁古吉斯帝国",
+                        "description": "瓦雷利亚巨龙军团彻底焚毁了以奴隶制称霸的古吉斯帝国金字塔，在废墟上播撒盐与硫磺，成为世界唯一超级霸权。"
+                    },
+                    {
+                        "year": "约 700 BC",
+                        "title": "洛伊拿战争与娜梅莉亚迁徙多恩",
+                        "description": "洛伊拿水魔法领袖加林亲王率二十五万大军对抗瓦雷利亚三百条巨龙遭龙焰全歼。洛伊拿女王娜梅莉亚（Princess Nymeria）率领万艘战船载着幸存妇孺渡海逃亡多恩，焚毁船只与莫尔斯·马泰尔领主联姻，彻底统一多恩。"
+                    },
+                    {
+                        "year": "114 BC",
+                        "title": "丹妮丝做梦与坦格利安移居龙石岛",
+                        "description": "坦格利安家族少女丹妮丝（Daenys the Dreamer）预见到瓦雷利亚将被烈火毁灭的末日幻象。其父伊纳尔·坦格利安相信预言，将全部家产、五条巨龙变卖移居至维斯特洛东海前哨——龙石岛。"
+                    },
+                    {
+                        "year": "102 BC",
+                        "title": "瓦雷利亚末日浩劫 (The Doom of Valyria)",
+                        "description": "十四火峰同时发生毁天灭地的超级火山爆发与地裂大地震。数千座宫殿、巨龙与无上魔法帝国在一天之内沉入沸腾的烟海（Smoking Sea），文明断绝，进入长达百年的「流血世纪」。"
+                    }
+                ]
+            },
+            {
+                "id": "aegons_conquest",
+                "era_name_zh": "征服战争与七国归一",
+                "era_name_en": "Aegon's Conquest & Unified Westeros",
+                "time_span": "2 BC — 1 AC",
+                "overview": "「征服者」伊耿·坦格利安一世与两位姐妹妻子维桑尼亚、雷妮丝，携三条庞大成年巨龙（黑死神贝勒里恩、瓦格哈尔、米拉西斯）登陆黑水湾，开启了统合七大王国、建立铁王座的伟大征服。",
+                "key_events": [
+                    {
+                        "year": "2 BC",
+                        "title": "伊耿登陆黑水河口",
+                        "description": "伊耿率领不足两千兵力与三条巨龙在黑水河口登陆，修筑简陋木堡（日后红堡雏形），向全大陆国王发出最后通牒：臣服者保全领地，抗拒者彻底毁灭。"
+                    },
+                    {
+                        "year": "2 BC",
+                        "title": "赫伦堡的焚毁 (Burning of Harrenhal)",
+                        "description": "河间地暴君黑心赫伦夸口自己的万年石堡固若金汤。伊耿驾驭黑死神贝勒里恩飞上云霄，自天而降喷吐万度龙焰，将赫伦堡五座高耸石塔活活烧融成融化的蜡烛，赫伦全族葬身火海。随后奔流城艾德敏·徒利倒戈受封河间地守护。"
+                    },
+                    {
+                        "year": "2 BC",
+                        "title": "怒火燎原之战 (Field of Fire)",
+                        "description": "河湾王加德纳与凯岩王兰尼斯特组成五万五千人的庞大联军。伊耿与两姐妹首次同时释放三条巨龙，龙焰焚烧平原，四千敌军被活活烧成焦炭，加德纳王室断绝。提利尔家族献高庭受封南境守护；洛伦·兰尼斯特下跪称臣受封西境守护。"
+                    },
+                    {
+                        "year": "2 BC",
+                        "title": "绝境臣服之王：托伦·史塔克下跪",
+                        "description": "北境之王托伦·史塔克率三万北境大军南下红叉河。见识了赫伦堡残骸与三只遮天蔽日的巨龙后，为了保全北境子民免遭龙焰屠杀，托伦单膝下跪向伊耿交出古老青铜王冠，受封北境守护，被后世尊称为「降服王（The King Who Knelt）」/「明智之王」。"
+                    },
+                    {
+                        "year": "1 AC",
+                        "title": "旧镇加冕与铁王座铸造",
+                        "description": "总主教在繁星圣堂为伊耿涂圣油加冕为「全境守护者与七国之王」。伊耿命黑死神贝勒里恩喷吐龙焰，将战败臣服者上千柄利剑熔铸成布满尖刺与锋刃的至高象征——「铁王座（The Iron Throne）」！"
+                    }
+                ]
+            },
+            {
+                "id": "targaryen_dynasty",
+                "era_name_zh": "坦格利安王朝盛衰与血龙狂舞",
+                "era_name_en": "Targaryen Dynasty & The Dance of Dragons",
+                "time_span": "1 AC — 281 AC",
+                "overview": "坦格利安家族统治维斯特洛近三百年。期间经历了残酷梅葛与教团武装的残酷洗礼、杰赫里斯大帝五十载太平盛世，随后因继承权爆发毁灭性的内战「血龙狂舞」，导致巨龙绝种；后经五次黑火叛乱，最终在疯王时代走向穷途末路。",
+                "key_events": [
+                    {
+                        "year": "42 — 48 AC",
+                        "title": "残酷的梅葛 (Maegor the Cruel) 与红堡地宫",
+                        "description": "梅葛一世以铁血暴政镇压教团武装起义，建造了坚不可摧的红堡（并在完工后屠杀了所有工匠以守密地道暗门）。最终神秘暴毙于铁王座尖刺之上。"
+                    },
+                    {
+                        "year": "48 — 103 AC",
+                        "title": "人民仲裁者杰赫里斯一世盛世",
+                        "description": "「老国王」杰赫里斯一世与其贤妻亚莉珊王后统治半个世纪，统一全境法典，修筑国王大道，平息教团冲突，奠定七国黄金繁荣期。"
+                    },
+                    {
+                        "year": "129 — 131 AC",
+                        "title": "血龙狂舞 (The Dance of the Dragons)",
+                        "description": "韦赛里斯一世死后，长女雷妮拉·坦格利安（黑党）与异母幼弟伊耿二世（绿党）争夺铁王座爆发惨绝人寰的全境巨龙内战。戴蒙·坦格利安与伊蒙德在神眼湖上空上演双龙同归于尽；雷妮拉被伊耿二世当着幼子面喂给巨龙吞食；此战导致二十余条巨龙几乎屠灭殆尽，坦格利安家族元气大伤。"
+                    },
+                    {
+                        "year": "153 AC",
+                        "title": "末代畸形龙死去与真龙灭绝",
+                        "description": "「龙祸」伊耿三世在位期间，最后一条羸弱畸形如猫咪大小的幼龙在龙穴中死去。长达近两百年间维斯特洛世上再无真龙翱翔，魔法力量逐渐衰落。"
+                    },
+                    {
+                        "year": "196 — 260 AC",
+                        "title": "庸王分封与五次黑火叛乱",
+                        "description": "「庸王」伊耿四世临终前将所有私生子正名，并将瓦雷利亚钢圣剑黑火赐予私生子戴蒙·黑火。戴蒙掀起黑火叛乱，引发坦格利安红龙与黑火黑龙长达数十年的血腥内战，直至九铜板王之战马里斯·黑火被巴利斯坦斩杀方告终结。"
+                    },
+                    {
+                        "year": "259 AC",
+                        "title": "盛夏厅的悲剧 (Tragedy at Summerhall)",
+                        "description": "「不屈的」伊耿五世试图在盛夏厅行宫用野火孵化七枚龙蛋，不幸引发大爆炸火灾，国王与其御林铁卫高个邓肯爵士双双殉难。在浓烟烈火中，雷加·坦格利安王子降生人间。"
+                    }
+                ]
+            },
+            {
+                "id": "roberts_rebellion",
+                "era_name_zh": "疯王之乱与篡夺者战争",
+                "era_name_en": "Robert's Rebellion & Fall of Dragons",
+                "time_span": "281 AC — 283 AC",
+                "overview": "疯王伊里斯二世精神癫狂，赫伦堡比武大会雷加王子将冬雪桂冠献给莱安娜·史塔克引发私奔疑云；疯王在君临残杀奈德父兄并勒令交出劳勃与奈德，引爆了彻底推翻近三百年坦格利安王朝的「篡夺者战争（劳勃叛乱）」。",
+                "key_events": [
+                    {
+                        "year": "281 AC",
+                        "title": "赫伦堡比武大会 (Tourney at Harrenhal)",
+                        "description": "全大陆贵族齐聚赫伦堡。雷加·坦格利安王子夺得骑枪冠军，策马越过自己产后的妻子伊莉亚，将象征爱与美之女王的蓝色冬雪玫瑰桂冠放在了临冬城小姐莱安娜·史塔克膝上，全场一片死寂，播下帝国崩塌的火种。"
+                    },
+                    {
+                        "year": "282 AC",
+                        "title": "疯王残杀史塔克父兄与起兵",
+                        "description": "布兰登·史塔克赴君临讨要被雷加“绑架”的妹妹莱安娜，被疯王逮捕。随后父亲瑞卡德公爵赴京，被疯王用野火在铁王座前活活吊烤，布兰登被勒死在皮带机绞盘上。疯王勒令鹰巢城琼恩·艾林交出养子劳勃与奈德，琼恩·艾林断然起兵抗命，狼鹿鹰三家结盟起义。"
+                    },
+                    {
+                        "year": "283 AC",
+                        "title": "三叉戟河之战 (Battle of the Trident)",
+                        "description": "两军决战于三叉戟河红宝石滩。雷加王子与劳勃·拜拉席恩在河水中央展开史诗决斗。劳勃挥舞沉重的双手巨战锤，一锤砸碎了雷加胸甲上由红宝石镶嵌的三头龙徽记！雷加倒在河水中咽气，三叉戟河漂满了碎裂的红宝石，王军全线崩溃。"
+                    },
+                    {
+                        "year": "283 AC",
+                        "title": "君临沦陷与弑君者詹姆",
+                        "description": "泰温·兰尼斯特率兵假意勤王骗开君临城门大肆清洗。疯王下令引爆全城野火与五十万百姓玉石俱焚，年轻的御林铁卫詹姆·兰尼斯特拔剑刺穿了火术士与疯王的胸膛拯救全城，背负「弑君者」万世骂名。魔山残杀伊莉亚王妃与两名坦格利安幼童。"
+                    },
+                    {
+                        "year": "283 AC",
+                        "title": "极乐塔之战与莱安娜托孤",
+                        "description": "奈德·史塔克率六骑士在极乐塔血战拂晓神剑亚瑟·戴恩。奈德在血腥的产床上找到了奄奄一息的妹妹莱安娜。莱安娜将自己与雷加的儿子托付给奈德，耳语其真名并恳求：“答应我，奈德……答应我。”奈德将婴儿带回临冬城，对外谎称为自己的私生子「琼恩·雪诺」抚养成童。"
+                    }
+                ]
+            },
+            {
+                "id": "canon_era",
+                "era_name_zh": "劳勃治世与五王之战至大终局",
+                "era_name_en": "Robert's Reign & War of the Five Kings",
+                "time_span": "283 AC — 305 AC",
+                "overview": "劳勃登上铁王座迎娶瑟曦，平定葛雷乔伊叛乱；298 AC 首相琼恩·艾林猝逝，奈德南下任相，五王之战爆发、血色婚礼、艰难屯亡灵狂潮、私生子之战、野火焚圣堂、长城坍塌、漫漫长夜决战与铁王座熔毁，维斯特洛翻开全新纪元篇章。",
+                "key_events": [
+                    {
+                        "year": "289 AC",
+                        "title": "葛雷乔伊叛乱",
+                        "description": "巴隆·葛雷乔伊自立为铁群岛之王。劳勃与奈德率全境联军攻破派克岛城墙，巴隆次子战死，幼子席恩·葛雷乔伊被奈德带回临冬城充当养子质子。"
+                    },
+                    {
+                        "year": "298 AC",
+                        "title": "五王之战爆发与奈德被斩首",
+                        "description": "劳勃驾崩，乔佛里弑首相奈德，罗柏起兵称北境之王，丹妮莉丝在厄斯索斯火葬堆孵化三条真龙，异鬼复苏。"
+                    },
+                    {
+                        "year": "299 AC — 300 AC",
+                        "title": "黑水河之战与血色婚礼",
+                        "description": "提利昂野火大破史坦尼斯舰队；罗柏在孪河城遭佛雷与波顿屠杀陨落；乔佛里紫色婚礼中毒身亡；提利昂弑父流亡。"
+                    },
+                    {
+                        "year": "301 AC — 303 AC",
+                        "title": "艰难屯浩劫、私生子之战与野火焚圣堂",
+                        "description": "夜王血洗艰难屯；雪诺复活夺回临冬城；瑟曦野火炸毁贝勒大圣堂加冕女王；丹妮莉丝千帆渡海归来。"
+                    },
+                    {
+                        "year": "304 AC — 305 AC",
+                        "title": "漫漫长夜终结、君临覆灭与铁王座熔毁",
+                        "description": "夜王骑冰龙轰塌长城；临冬城决战艾莉亚刺杀夜王拯救全人类；丹妮莉丝龙焰屠城君临；琼恩刺死龙母，卓耿熔毁铁王座；布兰当选六国之王，珊莎加冕北境女王，雪诺回归塞外。"
+                    }
+                ]
+            }
+        ]
+    }
+
+    out_dir = 'public/data/tv-timeline'
+    os.makedirs(out_dir, exist_ok=True)
+    out_file = os.path.join(out_dir, 'westeros_world_lore_timeline.json')
+    with open(out_file, 'w', encoding='utf-8') as f:
+        json.dump(lore_data, f, ensure_ascii=False, indent=2)
+
+    print(f"Generated world lore dataset at: {out_file}")
+
+    # Also generate comprehensive Markdown artifact
+    art_dir = r"C:\Users\Aca\.gemini\antigravity\brain\42f9f24f-7979-4eea-87f3-fb1780357430"
+    art_file = os.path.join(art_dir, "westeros_complete_world_lore_timeline.md")
+
+    md = []
+    md.append("# 维斯特洛与已知世界·万年通史与完整世界观时间线")
+    md.append("\n> **纪年体系**：以伊耿·坦格利安征服战争加冕之年为原点（征服前为 BC，征服后为 AC）")
+    md.append(f"> **时间跨度**：{lore_data['timeline_span']}")
+    md.append("> **世界观版图**：维斯特洛七大王国、绝境长城与塞外永冬之地、厄斯索斯自由贸易城邦、古瓦雷利亚与吉斯帝国\n")
+
+    md.append("## 维斯特洛一万两千年宏观编年总表\n")
+    md.append("| 纪元阶段 | 时代跨度 | 核心文明与统治力量 | 重大转折历史事件 | 遗留世界奇迹/圣物 |")
+    md.append("| :--- | :--- | :--- | :--- | :--- |")
+    md.append("| **黎明纪元** | 12,000 BC 以前 | 森林之子、巨人、先民 | 先民入侵、击碎多恩之臂、千面屿盟誓 | 鱼梁木心树、断臂角群岛 |")
+    md.append("| **英雄纪元** | 10,000 - 8,000 BC | 先民百国百家诸侯 | 临冬城/凯岩城/高庭/风息堡建立 | 临冬城、风息堡、参天塔 |")
+    md.append("| **长夜与长城** | 约 8,000 BC | 先民与森林之子盟军 | 异鬼南侵、黎明之战、夜王叛乱 | 绝境长城、守夜人军团、光明使者 |")
+    md.append("| **安达尔入侵** | 6,000 - 4,000 BC | 安达尔人、先民北境 | 征服南境六国、卡林湾阻击战 | 七神信仰、七芒星圣堂、骑士制度 |")
+    md.append("| **瓦雷利亚崛起** | 5,000 - 114 BC | 瓦雷利亚自由堡垒 | 驯龙驭火、吉斯战争、末日浩劫 | 瓦雷利亚钢宝剑、巨龙血脉、龙石岛 |")
+    md.append("| **征服战争** | 2 BC - 1 AC | 征服者伊耿一世 | 赫伦堡焚毁、怒火燎原、七国归一 | 铁王座、红堡、君临城 |")
+    md.append("| **坦格利安王朝** | 1 AC - 281 AC | 坦格利安龙王家族 | 残酷梅葛、血龙狂舞、巨龙灭绝、黑火叛乱 | 盛夏厅遗迹、御林铁卫白典 |")
+    md.append("| **篡夺者战争** | 281 - 283 AC | 劳勃·拜拉席恩联盟 | 疯王残杀史塔克、三叉戟河之战、詹姆弑君 | 劳勃王朝建立、琼恩·雪诺降生 |")
+    md.append("| **正传时代** | 298 - 305 AC | 五王之战至六国分治 | 五王之争、艰难屯、私生子之战、漫漫长夜、铁王座熔毁 | 独立的北境王国、民选六国新制 |")
+    md.append("\n---\n")
+
+    for era in lore_data['eras']:
+        md.append(f"## 【{era['era_name_zh']}】 ({era['era_name_en']})")
+        md.append(f"- **时代跨度**：`{era['time_span']}`")
+        md.append(f"- **时代全貌**：{era['overview']}\n")
+        md.append("### 编年关键历史事件：")
+        for evt in era['key_events']:
+            md.append(f"#### ❖ {evt['year']} · {evt['title']}")
+            md.append(f"{evt['description']}\n")
+        md.append("---\n")
+
+    with open(art_file, 'w', encoding='utf-8') as f:
+        f.write('\n'.join(md))
+
+    print(f"Generated comprehensive lore markdown at: {art_file}")
+
+if __name__ == '__main__':
+    build_lore_timeline()

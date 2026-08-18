@@ -1,18 +1,23 @@
 {
   "counts": {
-    "canon": 2760,
-    "emittedRecords": 126978,
+    "canon": 1397,
+    "emittedRecords": 11450,
     "excludedTechnical": 2397,
-    "genealogy": 99284,
-    "modSupporting": 21148,
+    "genealogy": 1149,
+    "heldTitleCount": 1873,
+    "modSupporting": 8430,
+    "parentChildLinkCount": 14307,
+    "projectedRecords": 126978,
+    "prunedRecords": 115528,
     "reciprocalSpouseLinksAdded": 42596,
-    "semicanon": 3786,
+    "semicanon": 474,
+    "titleHolderCount": 1433,
     "totalSourceRecords": 129375,
     "unsupportedOperations": 12750
   },
-  "datasetHash": "bad838f66b60701ce38662f148e63bd8551fdb8711eacb4fd507d356194d1652",
+  "datasetHash": "1603cfd7469d643cf94bc5e42cfbdc086ae283e1ff2d4688b82873caaabf74a9",
   "displayYear": 298,
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "shards": [
     "00",
     "01",
@@ -276,8 +281,9 @@
     "localizationFileCount": 664,
     "modVersion": "0.5.0",
     "name": "A Game of Thrones",
-    "sourceChecksum": "96b71bf5859bc433c21465b58a2a8ff457760f52e950c6258362be49517e6e58",
-    "sourceId": "2962333032"
+    "sourceChecksum": "35cdeccc28802c6f6daff5453116513873923c15b81ab45ea198faab4adc06e7",
+    "sourceId": "2962333032",
+    "titleFileCount": 48
   },
   "startDate": "8298.1.1"
 }

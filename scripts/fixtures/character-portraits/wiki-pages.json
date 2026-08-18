@@ -1,0 +1,19 @@
+{
+  "batchcomplete": true,
+  "query": {
+    "pages": [
+      {
+        "pageid": 1616,
+        "title": "Jon Snow",
+        "fullurl": "https://awoiaf.westeros.org/index.php/Jon_Snow",
+        "revisions": [{"content": "{{Infobox character\n| firstname = Jon\n| lastname = Snow\n| image = Jon Snow.png\n| image_caption = Jon Snow, by Example Artist\n| Allegiance = [[House Stark]]\n| Father = [[Eddard Stark]]\n| Date_of_Birth = {{Date|283}}\n}}"}]
+      },
+      {
+        "pageid": 100,
+        "title": "Eddard Stark",
+        "fullurl": "https://awoiaf.westeros.org/index.php/Eddard_Stark",
+        "revisions": [{"content": "{{Infobox character\n| firstname = Eddard\n| lastname = Stark\n| image = Eddard Stark.jpg\n| Allegiance = [[House Stark]]\n| Father = [[Rickard Stark]]\n| Date_of_Birth = {{Date|263}}\n}}"}]
+      }
+    ]
+  }
+}

@@ -126,3 +126,20 @@ test('药物与酒液预设使用明确次数而不是隐藏百分比', () => {
   assert.ok(jon.instances['jon.spirits'].charges > 0);
   assert.equal(JSON.stringify({ ned, jon }).includes('%'), false);
 });
+
+
+test('离线生成的 AGOT 神器目录具有来源、图片与唯一性约束', () => {
+  const generated = ITEM_DEFINITIONS.filter((definition) => definition.contentSource);
+  assert.ok(generated.length >= 400, `生成神器只有 ${generated.length} 件`);
+  const approvedSources = new Set(['2962333032', '2995674648', '2962713441', '3101422928', '2950245430']);
+  for (const definition of generated) {
+    assert.ok(approvedSources.has(definition.contentSource.workshopId), `${definition.id} 来源未获准`);
+    assert.equal(definition.image.type, 'asset');
+    assert.match(definition.image.path, /^\/assets\/item-images\/generated\/agot-artifacts\/[a-f0-9]+\.webp$/);
+    assert.equal(definition.stackable, false);
+    assert.equal(definition.maxStack, 1);
+    if (definition.unique) assert.equal(definition.rarity, 'unique');
+    assert.equal(definition.allowedPositions.some((position) => position.group === 'shoulder' || position.group === 'cloak'), false);
+  }
+  assert.equal(new Set(generated.map((definition) => definition.id)).size, generated.length);
+});

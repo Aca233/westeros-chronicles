@@ -11,9 +11,10 @@ from scripts.agot_character_import.paradox import parse_document
 from scripts.agot_character_import.characters import extract_character_histories
 from scripts.agot_character_import.model import CanonTier
 from scripts.agot_character_import.timeline import AgotDate, project_character
+from scripts.agot_character_import.titles import ProjectedTitle, project_title_holders
 from scripts.agot_character_import.localization import load_localization, resolve_name
-from scripts.agot_character_import.writer import write_dataset
-from scripts.agot_character_import.cli import validate_mod_root
+from scripts.agot_character_import.writer import _build_kinship_index, write_dataset
+from scripts.agot_character_import.cli import import_dataset, validate_mod_root
 
 
 FIXTURE_ROOT = Path(__file__).resolve().parent / "fixtures" / "agot-character-import"
@@ -104,6 +105,51 @@ class LocalizationTests(unittest.TestCase):
         self.assertEqual(localization["quoted_name"], "“少狼主”")
 
 
+class TitleHistoryTests(unittest.TestCase):
+    def test_projects_direct_holders_at_start_date_and_ignores_future_or_nested_values(self) -> None:
+        projected = project_title_holders(
+            [FIXTURE_ROOT / "title_history.txt"],
+            AgotDate.parse("8298.1.1"),
+            {
+                "h_the_test_realm": "至高王座",
+                "e_the_north": "北境",
+                "k_winterfell": "临冬城",
+                "d_winterfell": "临冬城",
+                "c_same_day": "同日领",
+            },
+        )
+
+        self.assertEqual([title.id for title in projected["Hero_1"]], [
+            "h_the_test_realm", "e_the_north", "k_winterfell",
+        ])
+        self.assertEqual([title.name for title in projected["Hero_1"]], ["至高王座", "北境", "临冬城"])
+        self.assertEqual(projected["Final_1"][0].id, "c_same_day")
+        self.assertNotIn("Old_1", projected)
+        self.assertNotIn("Wrong_1", projected)
+        self.assertNotIn("Future_1", projected)
+
+    def test_holder_zero_clears_title_and_missing_localization_becomes_readable(self) -> None:
+        projected = project_title_holders(
+            [FIXTURE_ROOT / "title_history.txt"], AgotDate.parse("8298.1.1"), {}
+        )
+
+        self.assertNotIn("c_cleared", [title.id for titles in projected.values() for title in titles])
+        fallback = projected["Fallback_1"][0]
+        self.assertEqual(fallback.name, "Missing Localization")
+        self.assertNotEqual(fallback.name, fallback.id)
+
+    def test_projection_is_deterministic_for_reversed_input_order(self) -> None:
+        first_path = FIXTURE_ROOT / "title_history.txt"
+        second_path = FIXTURE_ROOT / "title_history_second.txt"
+        second_path.write_text("c_second = { 8290.1.1 = { holder = Hero_1 } }\n", encoding="utf-8")
+        try:
+            first = project_title_holders([first_path, second_path], AgotDate.parse("8298.1.1"), {})
+            second = project_title_holders([second_path, first_path], AgotDate.parse("8298.1.1"), {})
+            self.assertEqual(first, second)
+        finally:
+            second_path.unlink(missing_ok=True)
+
+
 class DatasetWriterTests(unittest.TestCase):
     def _records(self):
         records = []
@@ -137,7 +183,7 @@ class DatasetWriterTests(unittest.TestCase):
             )
 
             self.assertEqual(self._tree_hash(temp / "a"), self._tree_hash(temp / "b"))
-            self.assertEqual(first.schema_version, 1)
+            self.assertEqual(first.schema_version, 2)
             self.assertEqual(first.dataset_hash, second.dataset_hash)
             self.assertEqual(first.counts["excludedTechnical"], 1)
             all_records = []
@@ -145,6 +191,51 @@ class DatasetWriterTests(unittest.TestCase):
                 all_records.extend(json.loads(shard.read_text(encoding="utf-8")))
             self.assertNotIn("agot:Dummy_1", {record["id"] for record in all_records})
             self.assertIn("agot:Stark_3", {record["id"] for record in all_records})
+
+    def test_writer_prunes_isolated_genealogy_but_keeps_core_spouse(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            output = Path(temp_dir) / "dataset"
+            manifest = write_dataset(
+                self._records(), output, {"modVersion": "fixture"}, AgotDate.parse("8298.6.1"), {}
+            )
+            emitted_ids = {
+                record["id"]
+                for path in output.joinpath("shards").glob("*.json")
+                for record in json.loads(path.read_text(encoding="utf-8"))
+            }
+
+            self.assertEqual(emitted_ids, {"agot:Stark_3", "agot:Tully_4", "agot:Semi_1"})
+            self.assertEqual(manifest.counts["projectedRecords"], 4)
+            self.assertEqual(manifest.counts["emittedRecords"], 3)
+            self.assertEqual(manifest.counts["prunedRecords"], 1)
+
+    def test_writer_emits_title_holder_map_counts_and_hashes_title_changes(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp = Path(temp_dir)
+            first_titles = {
+                "Stark_3": (ProjectedTitle("e_the_north", "北境", "empire"),),
+                "Missing_1": (ProjectedTitle("c_missing", "失落领", "county"),),
+            }
+            second_titles = {
+                "Stark_3": (ProjectedTitle("e_the_north", "北境守护地", "empire"),),
+            }
+            first = write_dataset(
+                self._records(), temp / "a", {"modVersion": "fixture", "titleFileCount": 1},
+                AgotDate.parse("8298.6.1"), {}, first_titles,
+            )
+            second = write_dataset(
+                self._records(), temp / "b", {"modVersion": "fixture", "titleFileCount": 1},
+                AgotDate.parse("8298.6.1"), {}, second_titles,
+            )
+
+            title_map = json.loads((temp / "a" / "title-holders.json").read_text(encoding="utf-8"))
+            self.assertEqual(title_map["agot:Stark_3"][0], {
+                "id": "e_the_north", "name": "北境", "tier": "empire",
+            })
+            self.assertNotIn("agot:Missing_1", title_map, "未进入人物数据集的持有人不应进入运行时映射")
+            self.assertEqual(first.counts["titleHolderCount"], 1)
+            self.assertEqual(first.counts["heldTitleCount"], 1)
+            self.assertNotEqual(first.dataset_hash, second.dataset_hash)
 
     def test_writer_makes_source_marriages_visible_to_both_spouses(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -160,6 +251,30 @@ class DatasetWriterTests(unittest.TestCase):
             self.assertIn("agot:Tully_4", by_id["agot:Stark_3"]["spouseIds"])
             self.assertIn("agot:Stark_3", by_id["agot:Tully_4"]["spouseIds"])
 
+    def test_writer_derives_siblings_from_shared_parents(self) -> None:
+        kinship = _build_kinship_index([
+            {"id": "agot:parent", "spouseIds": []},
+            {"id": "agot:child_b", "fatherId": "agot:parent", "spouseIds": []},
+            {"id": "agot:child_a", "fatherId": "agot:parent", "spouseIds": []},
+        ])
+        self.assertEqual(kinship["agot:child_a"]["siblingIds"], ["agot:child_b"])
+        self.assertEqual(kinship["agot:child_b"]["siblingIds"], ["agot:child_a"])
+
+    def test_writer_emits_reverse_kinship_index(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            output = Path(temp_dir) / "dataset"
+            write_dataset(
+                self._records(), output, {"modVersion": "fixture"}, AgotDate.parse("8298.6.1"), {}
+            )
+            kinship = {}
+            for path in output.joinpath("kinship").glob("*.json"):
+                kinship.update(json.loads(path.read_text(encoding="utf-8")))
+
+            self.assertEqual(kinship["agot:Stark_3"]["spouseIds"], ["agot:Tully_4"])
+            self.assertEqual(kinship["agot:Tully_4"]["spouseIds"], ["agot:Stark_3"])
+            for entry in kinship.values():
+                self.assertEqual(entry["childIds"], sorted(set(entry["childIds"])))
+
     def test_writer_falls_back_when_directory_replace_is_denied(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             output = Path(temp_dir) / "dataset"
@@ -169,7 +284,7 @@ class DatasetWriterTests(unittest.TestCase):
                 )
 
             self.assertTrue((output / "manifest.json").exists())
-            self.assertEqual(manifest.counts["emittedRecords"], 4)
+            self.assertEqual(manifest.counts["emittedRecords"], 3)
 
     def test_search_index_stays_lightweight_and_points_to_existing_shards(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -181,6 +296,54 @@ class DatasetWriterTests(unittest.TestCase):
 
             self.assertNotIn("traits", index[0])
             self.assertTrue(all((output / "shards" / f'{item["shard"]}.json').exists() for item in index))
+
+
+class ImporterTitleSourceTests(unittest.TestCase):
+    def test_import_rejects_agot_root_without_title_history(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir) / "2962333032"
+            (root / "history" / "characters").mkdir(parents=True)
+            (root / "descriptor.mod").write_text(
+                'version="0.5.0"\nname="A Game of Thrones"\n', encoding="utf-8"
+            )
+            (root / "history" / "characters" / "fixture.txt").write_text(
+                "Stark_3 = { name = Eddard }\n", encoding="utf-8"
+            )
+
+            with self.assertRaisesRegex(ValueError, "No AGOT title files"):
+                import_dataset(root, Path(temp_dir) / "output", AgotDate.parse("8298.1.1"))
+
+    def test_import_includes_title_files_in_source_checksum_and_dataset(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir) / "2962333032"
+            (root / "history" / "characters").mkdir(parents=True)
+            (root / "history" / "titles").mkdir(parents=True)
+            (root / "localization" / "simp_chinese").mkdir(parents=True)
+            (root / "descriptor.mod").write_text(
+                'version="0.5.0"\nname="A Game of Thrones"\n', encoding="utf-8"
+            )
+            (root / "history" / "characters" / "fixture.txt").write_text(
+                "# Canon character\nStark_3 = { name = Eddard }\n", encoding="utf-8"
+            )
+            title_file = root / "history" / "titles" / "fixture.txt"
+            title_file.write_text(
+                "e_the_north = { 8298.1.1 = { holder = Stark_3 } }\n", encoding="utf-8"
+            )
+            (root / "localization" / "simp_chinese" / "fixture_l_simp_chinese.yml").write_text(
+                'l_simp_chinese:\n e_the_north:0 "北境"\n', encoding="utf-8"
+            )
+
+            first = import_dataset(root, Path(temp_dir) / "first", AgotDate.parse("8298.1.1"))
+            title_file.write_text(
+                "e_the_north = { 8298.1.1 = { holder = 0 } }\n", encoding="utf-8"
+            )
+            second = import_dataset(root, Path(temp_dir) / "second", AgotDate.parse("8298.1.1"))
+
+            first_titles = json.loads((Path(temp_dir) / "first" / "title-holders.json").read_text(encoding="utf-8"))
+            self.assertEqual(first.source["titleFileCount"], 1)
+            self.assertEqual(first_titles["agot:Stark_3"][0]["name"], "北境")
+            self.assertNotEqual(first.source["sourceChecksum"], second.source["sourceChecksum"])
+            self.assertNotEqual(first.dataset_hash, second.dataset_hash)
 
 
 class SourceBoundaryTests(unittest.TestCase):

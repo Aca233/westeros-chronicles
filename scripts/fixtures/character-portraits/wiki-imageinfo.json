@@ -1,0 +1,33 @@
+{
+  "batchcomplete": true,
+  "query": {
+    "pages": [
+      {
+        "title": "File:Jon Snow.png",
+        "imageinfo": [{
+          "url": "https://awoiaf.westeros.org/images/jon.png",
+          "descriptionurl": "https://awoiaf.westeros.org/index.php/File:Jon_Snow.png",
+          "width": 449,
+          "height": 488,
+          "mime": "image/png",
+          "extmetadata": {
+            "Artist": {"value": "Example Artist"},
+            "LicenseShortName": {"value": "Fair use"},
+            "LicenseUrl": {"value": "https://example.test/license"}
+          }
+        }]
+      },
+      {
+        "title": "File:Eddard Stark.jpg",
+        "imageinfo": [{
+          "url": "https://awoiaf.westeros.org/images/eddard.jpg",
+          "descriptionurl": "https://awoiaf.westeros.org/index.php/File:Eddard_Stark.jpg",
+          "width": 400,
+          "height": 600,
+          "mime": "image/jpeg",
+          "extmetadata": {"Artist": {"value": "Another Artist"}}
+        }]
+      }
+    ]
+  }
+}

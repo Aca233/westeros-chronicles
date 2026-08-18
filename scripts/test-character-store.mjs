@@ -5,24 +5,34 @@ import { build } from 'esbuild';
 const stubs = {
   name: 'character-store-stubs',
   setup(api) {
-    api.onResolve({ filter: /services[\\/]api$/ }, () => ({ path: 'api-stub', namespace: 'character-store' }));
+    api.onResolve({ filter: /(?:services[\\/])?api$/ }, () => ({ path: 'api-stub', namespace: 'character-store' }));
     api.onResolve({ filter: /services[\\/]db$/ }, () => ({ path: 'db-stub', namespace: 'character-store' }));
     api.onLoad({ filter: /api-stub/, namespace: 'character-store' }, () => ({
       loader: 'js',
       contents: `
-        export async function streamChatCompletion(messages) {
+        export async function requestTurnResolutionCompletion(messages) {
           globalThis.__characterStoreMessages = messages;
           if (globalThis.__characterStoreApiFails) throw new Error('模拟 API 失败');
-          return '<narrate>人物状态已处理。</narrate>';
+          return '<resolution>规则解析完成。</resolution><state_cmd>' + JSON.stringify(globalThis.__characterStoreCommands || []) + '</state_cmd>';
+        }
+        export async function streamNarrativeCompletion() {
+          if (globalThis.__characterStoreApiFails) throw new Error('模拟 API 失败');
+          return '<narrate>人物状态已处理。</narrate><branch>1. 继续</branch>';
+        }
+        export function extractJsonArrayFromXml(raw, tag) {
+          const open = '<' + tag + '>'; const close = '</' + tag + '>';
+          const start = raw.indexOf(open); const end = raw.indexOf(close, start + open.length);
+          return start >= 0 && end > start ? JSON.parse(raw.slice(start + open.length, end)) : [];
         }
         export function parseModelOutput(_raw, turnNumber, playerInput) {
-          return { turnNumber, playerInput, think: '', narrate: '人物状态已处理。', branches: [], stateCommands: globalThis.__characterStoreCommands || [] };
+          return { turnNumber, playerInput, think: '', narrate: '人物状态已处理。', branches: [], stateCommands: [] };
         }
       `,
     }));
     api.onLoad({ filter: /db-stub/, namespace: 'character-store' }, () => ({
       loader: 'js',
       contents: `
+        export const db = {};
         export async function saveTurnSnapshot() {}
         export async function clearSaveData() {}
         export async function commitTurnAtomically(state, events) {

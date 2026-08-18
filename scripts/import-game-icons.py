@@ -11,6 +11,7 @@ from PIL import Image
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 SOURCE_ROOT = PROJECT_ROOT / "2962333032"
 OUTPUT_ROOT = PROJECT_ROOT / "public" / "assets" / "game-icons"
+IMPORTED_TRAIT_ICON_MAP = PROJECT_ROOT / "scripts" / "imported-character-trait-icons.json"
 CK3_GAME_ROOT = Path(os.environ.get("CK3_GAME_ROOT", r"C:\Program Files (x86)\Steam\steamapps\common\Crusader Kings III\game"))
 CK3_SKILL_SPRITE = CK3_GAME_ROOT / "gfx" / "interface" / "icons" / "icon_skills.dds"
 CK3_SKILL_NAMES = ("diplomacy", "martial", "stewardship", "intrigue", "learning", "prowess")
@@ -297,6 +298,16 @@ def main() -> None:
     for name, source in AGOT_TRAIT_SOURCES.items():
         save(name, Image.open(agot_trait_root / source), allow_upscale=True)
         manifest[name] = f"AGOT/gfx/interface/icons/traits/{source}"
+
+    imported_trait_sources = json.loads(IMPORTED_TRAIT_ICON_MAP.read_text(encoding="utf-8"))
+    for trait_id, entry in imported_trait_sources.items():
+        icon_id = entry["iconId"]
+        source = entry["file"]
+        source_kind = entry["source"]
+        source_root = agot_trait_root if source_kind == "agot" else CK3_TRAIT_ROOT
+        source_prefix = "AGOT" if source_kind == "agot" else "CK3"
+        save(icon_id, Image.open(source_root / source), allow_upscale=True)
+        manifest[icon_id] = f"{source_prefix}/gfx/interface/icons/traits/{source}"
 
     (OUTPUT_ROOT / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(f"Imported {len(manifest)} game icons into {OUTPUT_ROOT}")

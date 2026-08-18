@@ -1,0 +1,482 @@
+{
+  "rowdy": {
+    "iconId": "trait-imported-rowdy",
+    "source": "ck3",
+    "file": "rowdy.dds"
+  },
+  "bossy": {
+    "iconId": "trait-imported-bossy",
+    "source": "ck3",
+    "file": "bossy.dds"
+  },
+  "charming": {
+    "iconId": "trait-imported-charming",
+    "source": "ck3",
+    "file": "charming.dds"
+  },
+  "pensive": {
+    "iconId": "trait-imported-pensive",
+    "source": "ck3",
+    "file": "pensive.dds"
+  },
+  "curious": {
+    "iconId": "trait-imported-curious",
+    "source": "ck3",
+    "file": "curious.dds"
+  },
+  "knight": {
+    "iconId": "trait-imported-knight",
+    "source": "agot",
+    "file": "knight.dds"
+  },
+  "maester_historical": {
+    "iconId": "trait-imported-maester-historical",
+    "source": "agot",
+    "file": "maester.dds"
+  },
+  "septon": {
+    "iconId": "trait-imported-septon",
+    "source": "agot",
+    "file": "septon.dds"
+  },
+  "tourney_participant": {
+    "iconId": "trait-imported-tourney-participant",
+    "source": "ck3",
+    "file": "tournament.dds"
+  },
+  "widowed": {
+    "iconId": "trait-imported-widowed",
+    "source": "agot",
+    "file": "widowed.dds"
+  },
+  "refusing_marriage": {
+    "iconId": "trait-imported-refusing-marriage",
+    "source": "agot",
+    "file": "refusing_marriage.dds"
+  },
+  "archmaester": {
+    "iconId": "trait-imported-archmaester",
+    "source": "agot",
+    "file": "maester.dds"
+  },
+  "disputed_heritage": {
+    "iconId": "trait-imported-disputed-heritage",
+    "source": "ck3",
+    "file": "disputed_heritage.dds"
+  },
+  "wild_oat": {
+    "iconId": "trait-imported-wild-oat",
+    "source": "ck3",
+    "file": "wild_oat.dds"
+  },
+  "viking": {
+    "iconId": "trait-imported-viking",
+    "source": "ck3",
+    "file": "viking.dds"
+  },
+  "disinherited": {
+    "iconId": "trait-imported-disinherited",
+    "source": "ck3",
+    "file": "disinherited.dds"
+  },
+  "reaver": {
+    "iconId": "trait-imported-reaver",
+    "source": "ck3",
+    "file": "reaver.dds"
+  },
+  "adventurer_follower": {
+    "iconId": "trait-imported-adventurer-follower",
+    "source": "ck3",
+    "file": "adventurer_follower.dds"
+  },
+  "faith_warrior": {
+    "iconId": "trait-imported-faith-warrior",
+    "source": "ck3",
+    "file": "faith_warrior.dds"
+  },
+  "legitimized_bastard": {
+    "iconId": "trait-imported-legitimized-bastard",
+    "source": "ck3",
+    "file": "legitimized_bastard.dds"
+  },
+  "red_priest": {
+    "iconId": "trait-imported-red-priest",
+    "source": "agot",
+    "file": "red_priest.dds"
+  },
+  "child_of_concubine_male": {
+    "iconId": "trait-imported-child-of-concubine-male",
+    "source": "ck3",
+    "file": "child_of_concubine.dds"
+  },
+  "silent_sister": {
+    "iconId": "trait-imported-silent-sister",
+    "source": "agot",
+    "file": "silent_sister.dds"
+  },
+  "drowned_man": {
+    "iconId": "trait-imported-drowned-man",
+    "source": "agot",
+    "file": "drowned_man.dds"
+  },
+  "deserter": {
+    "iconId": "trait-imported-deserter",
+    "source": "agot",
+    "file": "deserter.dds"
+  },
+  "order_member": {
+    "iconId": "trait-imported-order-member",
+    "source": "ck3",
+    "file": "order_member.dds"
+  },
+  "heresiarch": {
+    "iconId": "trait-imported-heresiarch",
+    "source": "ck3",
+    "file": "heresiarch.dds"
+  },
+  "beardless_eunuch": {
+    "iconId": "trait-imported-beardless-eunuch",
+    "source": "ck3",
+    "file": "beardless_eunuch.dds"
+  },
+  "devoted": {
+    "iconId": "trait-imported-devoted",
+    "source": "ck3",
+    "file": "devoted.dds"
+  },
+  "child_of_concubine_female": {
+    "iconId": "trait-imported-child-of-concubine-female",
+    "source": "ck3",
+    "file": "child_of_concubine.dds"
+  },
+  "bearded_priest": {
+    "iconId": "trait-imported-bearded-priest",
+    "source": "agot",
+    "file": "bearded_priest.dds"
+  },
+  "shieldmaiden": {
+    "iconId": "trait-imported-shieldmaiden",
+    "source": "ck3",
+    "file": "shieldmaiden.dds"
+  },
+  "holy_warrior": {
+    "iconId": "trait-imported-holy-warrior",
+    "source": "ck3",
+    "file": "holy_warrior.dds"
+  },
+  "twin": {
+    "iconId": "trait-imported-twin",
+    "source": "ck3",
+    "file": "twin.dds"
+  },
+  "strong": {
+    "iconId": "trait-imported-strong",
+    "source": "ck3",
+    "file": "strong.dds"
+  },
+  "dull": {
+    "iconId": "trait-imported-dull",
+    "source": "ck3",
+    "file": "dull.dds"
+  },
+  "shrewd": {
+    "iconId": "trait-imported-shrewd",
+    "source": "ck3",
+    "file": "shrewd.dds"
+  },
+  "drunkard": {
+    "iconId": "trait-imported-drunkard",
+    "source": "ck3",
+    "file": "drunkard.dds"
+  },
+  "depressed_1": {
+    "iconId": "trait-imported-depressed-1",
+    "source": "ck3",
+    "file": "depressed_1.dds"
+  },
+  "lunatic_1": {
+    "iconId": "trait-imported-lunatic-1",
+    "source": "ck3",
+    "file": "lunatic_1.dds"
+  },
+  "celibate": {
+    "iconId": "trait-imported-celibate",
+    "source": "ck3",
+    "file": "celibate.dds"
+  },
+  "inbred": {
+    "iconId": "trait-imported-inbred",
+    "source": "ck3",
+    "file": "inbred.dds"
+  },
+  "hunchbacked": {
+    "iconId": "trait-imported-hunchbacked",
+    "source": "ck3",
+    "file": "hunchbacked.dds"
+  },
+  "sickly": {
+    "iconId": "trait-imported-sickly",
+    "source": "ck3",
+    "file": "sickly.dds"
+  },
+  "infertile": {
+    "iconId": "trait-imported-infertile",
+    "source": "ck3",
+    "file": "infertile.dds"
+  },
+  "clubfooted": {
+    "iconId": "trait-imported-clubfooted",
+    "source": "ck3",
+    "file": "clubfooted.dds"
+  },
+  "stuttering": {
+    "iconId": "trait-imported-stuttering",
+    "source": "ck3",
+    "file": "stuttering.dds"
+  },
+  "scaly": {
+    "iconId": "trait-imported-scaly",
+    "source": "ck3",
+    "file": "scaly.dds"
+  },
+  "lisping": {
+    "iconId": "trait-imported-lisping",
+    "source": "ck3",
+    "file": "lisping.dds"
+  },
+  "weak": {
+    "iconId": "trait-imported-weak",
+    "source": "ck3",
+    "file": "weak.dds"
+  },
+  "heterochromia_eyes": {
+    "iconId": "trait-imported-heterochromia-eyes",
+    "source": "agot",
+    "file": "heterochromia_random.dds"
+  },
+  "albino": {
+    "iconId": "trait-imported-albino",
+    "source": "ck3",
+    "file": "albino.dds"
+  },
+  "possessed_1": {
+    "iconId": "trait-imported-possessed-1",
+    "source": "ck3",
+    "file": "possessed_1.dds"
+  },
+  "hashishiyah": {
+    "iconId": "trait-imported-hashishiyah",
+    "source": "ck3",
+    "file": "hashishiyah.dds"
+  },
+  "contrite": {
+    "iconId": "trait-imported-contrite",
+    "source": "ck3",
+    "file": "contrite.dds"
+  },
+  "depressed_genetic": {
+    "iconId": "trait-imported-depressed-genetic",
+    "source": "ck3",
+    "file": "depressed_genetic.dds"
+  },
+  "irritable": {
+    "iconId": "trait-imported-irritable",
+    "source": "ck3",
+    "file": "irritable.dds"
+  },
+  "gallowsbait": {
+    "iconId": "trait-imported-gallowsbait",
+    "source": "ck3",
+    "file": "gallowsbait.dds"
+  },
+  "flagellant": {
+    "iconId": "trait-imported-flagellant",
+    "source": "ck3",
+    "file": "flagellant.dds"
+  },
+  "reclusive": {
+    "iconId": "trait-imported-reclusive",
+    "source": "ck3",
+    "file": "reclusive.dds"
+  },
+  "lunatic_genetic": {
+    "iconId": "trait-imported-lunatic-genetic",
+    "source": "ck3",
+    "file": "lunatic_genetic.dds"
+  },
+  "comfort_eater": {
+    "iconId": "trait-imported-comfort-eater",
+    "source": "ck3",
+    "file": "comfort_eater.dds"
+  },
+  "possessed_genetic": {
+    "iconId": "trait-imported-possessed-genetic",
+    "source": "ck3",
+    "file": "possessed_genetic.dds"
+  },
+  "deviant": {
+    "iconId": "trait-imported-deviant",
+    "source": "ck3",
+    "file": "deviant.dds"
+  },
+  "wheezing": {
+    "iconId": "trait-imported-wheezing",
+    "source": "ck3",
+    "file": "wheezing.dds"
+  },
+  "rakish": {
+    "iconId": "trait-imported-rakish",
+    "source": "ck3",
+    "file": "rakish.dds"
+  },
+  "lifestyle_blademaster": {
+    "iconId": "trait-imported-lifestyle-blademaster",
+    "source": "ck3",
+    "file": "blademaster.dds"
+  },
+  "lifestyle_poet": {
+    "iconId": "trait-imported-lifestyle-poet",
+    "source": "ck3",
+    "file": "lifestyle_poet.dds"
+  },
+  "lifestyle_hunter": {
+    "iconId": "trait-imported-lifestyle-hunter",
+    "source": "ck3",
+    "file": "hunter.dds"
+  },
+  "lifestyle_mystic": {
+    "iconId": "trait-imported-lifestyle-mystic",
+    "source": "ck3",
+    "file": "mystic.dds"
+  },
+  "disloyal": {
+    "iconId": "trait-imported-disloyal",
+    "source": "ck3",
+    "file": "disloyal.dds"
+  },
+  "lifestyle_reveler": {
+    "iconId": "trait-imported-lifestyle-reveler",
+    "source": "ck3",
+    "file": "reveler.dds"
+  },
+  "loyal": {
+    "iconId": "trait-imported-loyal",
+    "source": "ck3",
+    "file": "loyal.dds"
+  },
+  "reckless": {
+    "iconId": "trait-imported-reckless",
+    "source": "ck3",
+    "file": "reckless.dds"
+  },
+  "administrator": {
+    "iconId": "trait-imported-administrator",
+    "source": "ck3",
+    "file": "administrator.dds"
+  },
+  "family_first": {
+    "iconId": "trait-imported-family-first",
+    "source": "ck3",
+    "file": "family_first.dds"
+  },
+  "unyielding_defender": {
+    "iconId": "trait-imported-unyielding-defender",
+    "source": "ck3",
+    "file": "unyielding_defender.dds"
+  },
+  "military_engineer": {
+    "iconId": "trait-imported-military-engineer",
+    "source": "ck3",
+    "file": "military_engineer.dds"
+  },
+  "organizer": {
+    "iconId": "trait-imported-organizer",
+    "source": "ck3",
+    "file": "organizer.dds"
+  },
+  "cautious_leader": {
+    "iconId": "trait-imported-cautious-leader",
+    "source": "ck3",
+    "file": "cautious_leader.dds"
+  },
+  "aggressive_attacker": {
+    "iconId": "trait-imported-aggressive-attacker",
+    "source": "ck3",
+    "file": "aggressive_attacker.dds"
+  },
+  "profligate": {
+    "iconId": "trait-imported-profligate",
+    "source": "ck3",
+    "file": "profligate.dds"
+  },
+  "flexible_leader": {
+    "iconId": "trait-imported-flexible-leader",
+    "source": "ck3",
+    "file": "flexible_leader.dds"
+  },
+  "forder": {
+    "iconId": "trait-imported-forder",
+    "source": "ck3",
+    "file": "forder.dds"
+  },
+  "lifestyle_physician": {
+    "iconId": "trait-imported-lifestyle-physician",
+    "source": "ck3",
+    "file": "physician.dds"
+  },
+  "lifestyle_wayfarer": {
+    "iconId": "trait-imported-lifestyle-wayfarer",
+    "source": "ck3",
+    "file": "lifestyle_wayfarer.dds"
+  },
+  "lifestyle_gardener": {
+    "iconId": "trait-imported-lifestyle-gardener",
+    "source": "ck3",
+    "file": "gardener.dds"
+  },
+  "logistician": {
+    "iconId": "trait-imported-logistician",
+    "source": "ck3",
+    "file": "logistician.dds"
+  },
+  "lifestyle_herbalist": {
+    "iconId": "trait-imported-lifestyle-herbalist",
+    "source": "ck3",
+    "file": "lifestyle_herbalist.dds"
+  },
+  "berserker": {
+    "iconId": "trait-imported-berserker",
+    "source": "ck3",
+    "file": "berserker.dds"
+  },
+  "wilderness": {
+    "iconId": "trait-imported-wilderness",
+    "source": "ck3",
+    "file": "lifestyle_seasoned_pastor.dds"
+  },
+  "education_diplomacy_5": {
+    "iconId": "trait-imported-education-diplomacy-5",
+    "source": "ck3",
+    "file": "education_diplomacy_5.dds"
+  },
+  "education_martial_5": {
+    "iconId": "trait-imported-education-martial-5",
+    "source": "ck3",
+    "file": "education_martial_5.dds"
+  },
+  "education_stewardship_5": {
+    "iconId": "trait-imported-education-stewardship-5",
+    "source": "ck3",
+    "file": "education_stewardship_5.dds"
+  },
+  "education_intrigue_5": {
+    "iconId": "trait-imported-education-intrigue-5",
+    "source": "ck3",
+    "file": "education_intrigue_5.dds"
+  },
+  "education_learning_5": {
+    "iconId": "trait-imported-education-learning-5",
+    "source": "ck3",
+    "file": "education_learning_5.dds"
+  }
+}

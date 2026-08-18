@@ -43,10 +43,12 @@ export const ItemImage: React.FC<ItemImageProps> = ({
   className = '',
   decorative = false,
 }) => {
-  const [wikiFailed, setWikiFailed] = useState(false);
-  useEffect(() => setWikiFailed(false), [image]);
+  const [assetFailed, setAssetFailed] = useState(false);
+  useEffect(() => setAssetFailed(false), [image]);
 
-  if (image.type === 'game' || (image.type === 'wiki' && wikiFailed)) {
+  const isLocalAsset = image.type === 'wiki' || image.type === 'asset';
+
+  if (image.type === 'game' || (isLocalAsset && assetFailed)) {
     const icon = image.type === 'game' ? image.icon : image.fallbackIcon;
     return (
       <GameIcon
@@ -59,14 +61,14 @@ export const ItemImage: React.FC<ItemImageProps> = ({
     );
   }
 
-  if (image.type === 'wiki') {
+  if (isLocalAsset) {
     return (
       <img
         src={image.path}
         alt={decorative ? '' : alt}
         aria-hidden={decorative || undefined}
         draggable={false}
-        onError={() => setWikiFailed(true)}
+        onError={() => setAssetFailed(true)}
         className={`select-none object-contain ${className}`}
       />
     );

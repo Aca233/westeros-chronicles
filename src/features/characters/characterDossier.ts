@@ -1,5 +1,6 @@
 import { HOUSES } from '../../data/houses';
 import { migrateLordIdentityData } from '../../data/characterTraits';
+import { filterImportedCharacterTraits } from '../../data/importedCharacterTraitPolicy';
 import type {
   BodyZoneKey,
   LordAttributes,
@@ -8,6 +9,7 @@ import type {
 } from '../../types/game';
 import type {
   CharacterId,
+  CharacterKinshipEntry,
   CharacterMemory,
   CharacterRelationship,
   ResolvedCharacter,
@@ -19,6 +21,8 @@ export type CharacterDossierId = typeof PLAYER_DOSSIER_ID | CharacterId;
 
 export interface CharacterDossierRelations {
   spouseIds: CharacterId[];
+  childIds: CharacterId[];
+  siblingIds: CharacterId[];
   fatherId?: CharacterId;
   motherId?: CharacterId;
   relationships: CharacterRelationship[];
@@ -45,6 +49,8 @@ interface CharacterDossierBase {
   deathReason?: string;
   attributes: LordAttributes;
   traitIds: string[];
+  hiddenModifierTraitIds: string[];
+  statusTraitIds: string[];
   legacyTraits: string[];
   relations: CharacterDossierRelations;
   wounds: string[];
@@ -126,6 +132,9 @@ function houseMetadata(dynastyId: string | null | undefined) {
 
 export function createPlayerDossier(lord: LordProfile): PlayerCharacterDossier {
   const identifiedLord = migrateLordIdentityData(lord);
+  const importedTraits = identifiedLord.importedTraitIds
+    ? filterImportedCharacterTraits(identifiedLord.importedTraitIds, identifiedLord.age)
+    : undefined;
   return {
     id: PLAYER_DOSSIER_ID,
     kind: 'player',
@@ -138,15 +147,17 @@ export function createPlayerDossier(lord: LordProfile): PlayerCharacterDossier {
     titles: identifiedLord.title ? [identifiedLord.title] : [],
     age: identifiedLord.age,
     gender: identifiedLord.gender,
-    culture: identifiedLord.culture || '文化未记录',
-    faith: identifiedLord.faith || '信仰未记录',
+    culture: formatCharacterCulture(identifiedLord.culture),
+    faith: formatCharacterFaith(identifiedLord.faith),
     location: identifiedLord.location,
     alive: identifiedLord.overallStatus !== '阵亡',
     deathReason: identifiedLord.overallStatus === '阵亡' ? '人物已经死亡' : undefined,
     attributes: identifiedLord.attributes,
-    traitIds: uniqueEducationFirst(identifiedLord.traitIds ?? []),
-    legacyTraits: [...(identifiedLord.traits ?? [])],
-    relations: { spouseIds: [], relationships: [], notableRelations: [] },
+    traitIds: uniqueEducationFirst(importedTraits?.visibleTraitIds ?? identifiedLord.traitIds ?? []),
+    hiddenModifierTraitIds: importedTraits?.hiddenModifierIds ?? [],
+    statusTraitIds: importedTraits?.statusTraitIds ?? [],
+    legacyTraits: [...(identifiedLord.traits ?? [])].filter((name) => !/^[a-z0-9]+(?:_[a-z0-9]+)+$/i.test(name.trim())),
+    relations: { spouseIds: [], childIds: [], siblingIds: [], relationships: [], notableRelations: [] },
     wounds: Object.values(identifiedLord.body).flatMap((zone) => typeof zone === 'object' && 'wounds' in zone ? zone.wounds : []),
     woundLevels: {
       head: identifiedLord.body.head.level,
@@ -175,9 +186,17 @@ const FAITH_LABELS: Readonly<Record<string, string>> = {
   fc_pan_braavos: '布拉佛斯诸神', fc_pan_pentos: '潘托斯诸神',
 };
 
-function localizedRecordLabel(value: string | null | undefined, labels: Readonly<Record<string, string>>, fallback: string): string {
+function localizedRecordLabel(value: string | null | undefined, labels: Readonly<Record<string, string>>, fallback: string, untranslated: string): string {
   if (!value) return fallback;
-  return labels[value] ?? value.replace(/_/g, ' ');
+  return labels[value] ?? (/\p{Script=Han}/u.test(value) ? value : untranslated);
+}
+
+export function formatCharacterCulture(value: string | null | undefined): string {
+  return localizedRecordLabel(value, CULTURE_LABELS, '文化未记录', '其他文化');
+}
+
+export function formatCharacterFaith(value: string | null | undefined): string {
+  return localizedRecordLabel(value, FAITH_LABELS, '信仰未记录', '其他信仰');
 }
 
 function normalizeRelatedCharacterId(value: string): CharacterId | null {
@@ -186,9 +205,15 @@ function normalizeRelatedCharacterId(value: string): CharacterId | null {
   return null;
 }
 
-export function createNpcDossier(character: ResolvedCharacter, currentYear: number): NpcCharacterDossier {
+export function createNpcDossier(
+  character: ResolvedCharacter,
+  currentYear: number,
+  kinship: CharacterKinshipEntry = { spouseIds: character.spouseIds, childIds: [], siblingIds: [] },
+): NpcCharacterDossier {
   const house = houseMetadata(character.dynastyId);
-  const title = character.titles[0] || '无头衔人物';
+  const title = character.titles[0] || '未持有封地';
+  const age = characterAgeAtYear(character.birthDate, currentYear, character.deathDate, character.alive);
+  const importedTraits = filterImportedCharacterTraits(character.traits, age);
   const notableRelations = character.relations.flatMap((relation) => {
     const targetId = normalizeRelatedCharacterId(relation.target_id);
     return targetId ? [{ kind: relation.kind, targetId }] : [];
@@ -204,20 +229,24 @@ export function createNpcDossier(character: ResolvedCharacter, currentYear: numb
     houseSigil: house.sigil,
     title,
     titles: [...character.titles],
-    age: characterAgeAtYear(character.birthDate, currentYear, character.deathDate, character.alive),
+    age,
     gender: '性别未记录',
-    culture: localizedRecordLabel(character.cultureId, CULTURE_LABELS, '文化未记录'),
-    faith: localizedRecordLabel(character.faithId, FAITH_LABELS, '信仰未记录'),
+    culture: formatCharacterCulture(character.cultureId),
+    faith: formatCharacterFaith(character.faithId),
     location: character.locationId || '所在地未记录',
     alive: character.alive,
     deathReason: character.deathReason || undefined,
     attributes: character.attributes,
-    traitIds: uniqueEducationFirst(character.traits),
+    traitIds: uniqueEducationFirst(importedTraits.visibleTraitIds),
+    hiddenModifierTraitIds: importedTraits.hiddenModifierIds,
+    statusTraitIds: importedTraits.statusTraitIds,
     legacyTraits: [],
     relations: {
-      spouseIds: [...character.spouseIds],
-      fatherId: character.fatherId || undefined,
-      motherId: character.motherId || undefined,
+      spouseIds: [...new Set([...character.spouseIds, ...kinship.spouseIds])],
+      childIds: [...kinship.childIds],
+      siblingIds: [...kinship.siblingIds],
+      fatherId: character.fatherId || kinship.fatherId || undefined,
+      motherId: character.motherId || kinship.motherId || undefined,
       relationships: [...character.relationships],
       notableRelations,
     },
@@ -232,6 +261,8 @@ export function relatedCharacterIds(dossier: CharacterDossier): CharacterId[] {
   if (dossier.kind === 'player') return [];
   return [...new Set([
     ...dossier.relations.spouseIds,
+    ...dossier.relations.childIds,
+    ...dossier.relations.siblingIds,
     dossier.relations.fatherId,
     dossier.relations.motherId,
     ...dossier.relations.notableRelations.map((relation) => relation.targetId),

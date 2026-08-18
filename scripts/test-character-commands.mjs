@@ -15,6 +15,7 @@ async function bundleModule(entryPoint) {
 }
 
 const { validateCharacterCommand } = await bundleModule('src/features/characters/characterCommandValidator.ts');
+const { validateCharacterCommandBatch, isCharacterStateCommand } = await bundleModule('src/services/stateReducer.ts');
 const { InMemoryCharacterEventStore, appendCharacterEventRows, projectCharacterEvents } = await bundleModule('src/features/characters/characterEventStore.ts');
 const { resolveCharacter } = await bundleModule('src/features/characters/characterProjector.ts');
 
@@ -33,6 +34,7 @@ function character(id, overrides = {}) {
     spouseIds: [],
     titles: [],
     wounds: [],
+    items: [],
     ...overrides,
   };
 }
@@ -53,6 +55,139 @@ function assertRejected(result, reason) {
   assert.deepEqual(result.events, []);
   assert.match(result.reason, reason);
 }
+
+
+
+test('人物普通物品命令生成严格区分穿戴与保管的事件', () => {
+  const tunic = {
+    instanceId: 'npc:Arya_1:story:tunic-1',
+    definitionId: 'clothing.common_linen_tunic',
+    ownerId: ARYA,
+    custody: { type: 'character', characterId: ARYA },
+    equippedPosition: { group: 'torso', layer: 'garment' },
+    source: 'story_event',
+  };
+  const itemContext = context({
+    characters: [character(ARYA, { items: [tunic] }), character(SANSA), character(JON)],
+  });
+
+  const equip = validateCharacterCommand({
+    type: 'CHARACTER_ITEM_EQUIP', characterId: ARYA, instanceId: tunic.instanceId,
+    position: { group: 'torso', layer: 'garment' },
+  }, itemContext);
+  assert.equal(equip.ok, true);
+  assert.deepEqual(equip.events[0].event, {
+    type: 'ITEM_EQUIP', instanceId: tunic.instanceId, position: { group: 'torso', layer: 'garment' },
+  });
+
+  const unequip = validateCharacterCommand({
+    type: 'CHARACTER_ITEM_UNEQUIP', characterId: ARYA, instanceId: tunic.instanceId,
+  }, itemContext);
+  assert.equal(unequip.ok, true);
+  assert.deepEqual(unequip.events[0].event, { type: 'ITEM_UNEQUIP', instanceId: tunic.instanceId });
+
+  const lose = validateCharacterCommand({
+    type: 'CHARACTER_ITEM_LOSE', characterId: ARYA, instanceId: tunic.instanceId,
+  }, itemContext);
+  assert.equal(lose.ok, true);
+  assert.deepEqual(lose.events[0].event, { type: 'ITEM_LOSE', instanceId: tunic.instanceId });
+});
+
+test('人物获得物品验证定义与实例 ID，且新物品不自动穿戴', () => {
+  const acquire = validateCharacterCommand({
+    type: 'CHARACTER_ITEM_ACQUIRE', characterId: ARYA,
+    definitionId: 'clothing.common_linen_tunic', instanceId: 'npc:Arya_1:story:tunic-2',
+  }, context());
+  assert.equal(acquire.ok, true);
+  assert.deepEqual(acquire.events[0].event, {
+    type: 'ITEM_ACQUIRE',
+    item: {
+      instanceId: 'npc:Arya_1:story:tunic-2',
+      definitionId: 'clothing.common_linen_tunic',
+      ownerId: ARYA,
+      custody: { type: 'character', characterId: ARYA },
+      source: 'story_event',
+    },
+  });
+  assert.equal('equippedPosition' in acquire.events[0].event.item, false);
+
+  assertRejected(validateCharacterCommand({
+    type: 'CHARACTER_ITEM_ACQUIRE', characterId: ARYA,
+    definitionId: 'missing.definition', instanceId: 'npc:Arya_1:story:missing',
+  }, context()), /物品定义|不存在/);
+
+  assertRejected(validateCharacterCommand({
+    type: 'CHARACTER_ITEM_ACQUIRE', characterId: ARYA,
+    definitionId: 'clothing.common_linen_tunic', instanceId: 'duplicate-instance',
+  }, context({ characters: [character(ARYA, { items: [{
+    instanceId: 'duplicate-instance', definitionId: 'clothing.common_linen_tunic', ownerId: ARYA,
+    custody: { type: 'character', characterId: ARYA }, source: 'story_event',
+  }] }), character(SANSA), character(JON)] })), /实例.*已经存在|重复/);
+});
+
+test('人物穿戴命令拒绝未知实例、错误槽位和非本人保管物品', () => {
+  const footwear = {
+    instanceId: 'npc:Arya_1:story:shoes', definitionId: 'footwear.leather_turnshoes', ownerId: ARYA,
+    custody: { type: 'character', characterId: ARYA }, source: 'story_event',
+  };
+  const itemContext = context({ characters: [character(ARYA, { items: [footwear] }), character(SANSA), character(JON)] });
+  assertRejected(validateCharacterCommand({
+    type: 'CHARACTER_ITEM_EQUIP', characterId: ARYA, instanceId: 'unknown-item',
+    position: { group: 'legs', layer: 'footwear' },
+  }, itemContext), /物品实例不存在/);
+  assertRejected(validateCharacterCommand({
+    type: 'CHARACTER_ITEM_EQUIP', characterId: ARYA, instanceId: footwear.instanceId,
+    position: { group: 'head' },
+  }, itemContext), /装备位置|槽位/);
+
+  const heldBySansa = { ...footwear, custody: { type: 'character', characterId: SANSA } };
+  assertRejected(validateCharacterCommand({
+    type: 'CHARACTER_ITEM_EQUIP', characterId: ARYA, instanceId: footwear.instanceId,
+    position: { group: 'legs', layer: 'footwear' },
+  }, context({ characters: [character(ARYA, { items: [heldBySansa] }), character(SANSA), character(JON)] })), /保管|不在人物手中/);
+});
+
+test('人物物品转移原子生成转出与转入事件，并拒绝非保管人转移', () => {
+  const item = {
+    instanceId: 'npc:Arya_1:story:cloak', definitionId: 'clothing.plain_wool_cloak', ownerId: ARYA,
+    custody: { type: 'character', characterId: ARYA }, equippedPosition: { group: 'torso', layer: 'outerwear' },
+    source: 'story_event',
+  };
+  const itemContext = context({ characters: [character(ARYA, { items: [item] }), character(SANSA), character(JON)] });
+  const transfer = validateCharacterCommand({
+    type: 'CHARACTER_ITEM_TRANSFER', fromCharacterId: ARYA, toCharacterId: SANSA, instanceId: item.instanceId,
+  }, itemContext);
+  assert.equal(transfer.ok, true);
+  assert.deepEqual(transfer.events, [
+    { id: '1:0:0', characterId: ARYA, event: { type: 'ITEM_TRANSFER_OUT', instanceId: item.instanceId } },
+    { id: '1:0:1', characterId: SANSA, event: { type: 'ITEM_TRANSFER_IN', item: {
+      instanceId: item.instanceId, definitionId: item.definitionId, ownerId: SANSA,
+      custody: { type: 'character', characterId: SANSA }, source: 'story_event',
+    } } },
+  ]);
+
+  const siteItem = { ...item, custody: { type: 'site', siteId: 'winterfell-wardrobe' } };
+  assertRejected(validateCharacterCommand({
+    type: 'CHARACTER_ITEM_TRANSFER', fromCharacterId: ARYA, toCharacterId: SANSA, instanceId: item.instanceId,
+  }, context({ characters: [character(ARYA, { items: [siteItem] }), character(SANSA), character(JON)] })), /保管|不在人物手中/);
+});
+
+test('同批人物物品命令看见前序结果，且不会落入玩家 ITEM 命令路径', () => {
+  const commands = [
+    { type: 'CHARACTER_ITEM_ACQUIRE', characterId: ARYA, definitionId: 'clothing.common_linen_tunic', instanceId: 'batch-tunic' },
+    { type: 'CHARACTER_ITEM_EQUIP', characterId: ARYA, instanceId: 'batch-tunic', position: { group: 'torso', layer: 'garment' } },
+  ];
+  assert.equal(isCharacterStateCommand(commands[0]), true);
+  assert.equal(commands[0].type.startsWith('ITEM_'), false);
+  const batch = validateCharacterCommandBatch(commands, context(), 3);
+  assert.deepEqual(batch.rejected, []);
+  assert.equal(batch.events.length, 2);
+  assert.deepEqual(batch.context.characters.find((entry) => entry.id === ARYA).items, [{
+    instanceId: 'batch-tunic', definitionId: 'clothing.common_linen_tunic', ownerId: ARYA,
+    custody: { type: 'character', characterId: ARYA }, source: 'story_event',
+    equippedPosition: { group: 'torso', layer: 'garment' },
+  }]);
+});
 
 test('拒绝不存在人物的移动命令并返回中文原因', () => {
   const result = validateCharacterCommand({
@@ -465,6 +600,7 @@ test('验证事件可直接 append，并投影婚姻、离婚、头衔和伤势�
   const projected = projectCharacterEvents(base, await store.eventsForCharacter('projection-run', ARYA));
 
   assert.deepEqual(projected.spouseIds, []);
+  assert.deepEqual(projected.titleIds, []);
   assert.deepEqual(projected.titles, []);
   assert.deepEqual(projected.wounds, []);
   assert.equal(projected.woundLevels.torso, 'minor');

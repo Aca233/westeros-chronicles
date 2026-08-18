@@ -11,6 +11,7 @@ from typing import Iterable
 from .characters import extract_character_histories
 from .localization import load_localization
 from .timeline import AgotDate
+from .titles import project_title_holders
 from .writer import DatasetManifest, write_dataset
 
 
@@ -62,6 +63,9 @@ def import_dataset(mod_root: Path, output: Path, start_date: AgotDate) -> Datase
     character_files = sorted((root / "history" / "characters").glob("*.txt"))
     if not character_files:
         raise ValueError(f"No AGOT character files found under {root}")
+    title_files = sorted((root / "history" / "titles").glob("*.txt"))
+    if not title_files:
+        raise ValueError(f"No AGOT title files found under {root}")
 
     histories = []
     for path in character_files:
@@ -78,16 +82,18 @@ def import_dataset(mod_root: Path, output: Path, start_date: AgotDate) -> Datase
         for path in sorted(localization_root.rglob("*.yml"))
     ]
     localization = load_localization(localization_files)
-    source_files = character_files + localization_files + [root / "descriptor.mod"]
+    title_holders = project_title_holders(title_files, start_date, localization)
+    source_files = character_files + title_files + localization_files + [root / "descriptor.mod"]
     source_manifest = {
         "sourceId": WORKSHOP_ID,
         "name": MOD_NAME,
         "modVersion": _mod_version(root / "descriptor.mod"),
         "sourceChecksum": _source_checksum(source_files, root),
         "characterFileCount": len(character_files),
+        "titleFileCount": len(title_files),
         "localizationFileCount": len(localization_files),
     }
-    return write_dataset(histories, output, source_manifest, start_date, localization)
+    return write_dataset(histories, output, source_manifest, start_date, localization, title_holders)
 
 
 def build_parser() -> argparse.ArgumentParser:

@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { ChevronDown, Hammer, Hourglass, Shield, ThermometerSun, Weight } from 'lucide-react';
+import { ChevronDown, Hammer, Shield, ThermometerSun, Weight } from 'lucide-react';
 import { ITEM_CATALOG } from '../../data/itemDefinitions';
 import {
   aggregateEquippedItemEffects,
@@ -113,7 +113,7 @@ export interface EquipmentPanelProps {
 }
 
 export const EquipmentPanel: React.FC<EquipmentPanelProps> = ({ body, focusedGroup, onGroupFocus }) => {
-  const { gameState, pendingItemActions, queueItemAction, isStreaming } = useGameStore();
+  const { gameState, pendingItemActions, queueItemAction, cancelItemAction, isStreaming } = useGameStore();
   const state = gameState.lord.items;
   const currentLocation = gameState.lord.location;
   const groups = useMemo(() => buildEquipmentGroupModels({ state, catalog: ITEM_CATALOG, pendingActions: pendingItemActions }), [state, pendingItemActions]);
@@ -183,6 +183,7 @@ export const EquipmentPanel: React.FC<EquipmentPanelProps> = ({ body, focusedGro
     const isExpanded = expanded.has(group.group);
     const isFocused = focusedGroup === group.group;
     const pendingEntry = pendingForGroup(group);
+    const pendingReplacement = pendingItemActions.find((entry) => entry.action.kind === 'equip' && entry.action.position.group === group.group);
     return (
       <section
         key={group.group}
@@ -218,12 +219,18 @@ export const EquipmentPanel: React.FC<EquipmentPanelProps> = ({ body, focusedGro
           </button>
           <button
             type="button"
-            disabled={isStreaming || group.reservedByTwoHandedItem}
-            title={group.reservedByTwoHandedItem ? '副手由双手武器占用' : groupReplacementChoices.length ? '选择替换装备' : '查看当前地点的可用装备'}
-            onClick={() => openReplacementChoices(`更换${group.label}`, positions, group.items.map((item) => item.instanceId))}
-            className="item-action item-action--primary shrink-0 disabled:cursor-not-allowed disabled:opacity-35"
+            disabled={isStreaming || (!pendingReplacement && group.reservedByTwoHandedItem)}
+            title={pendingReplacement
+              ? isStreaming ? '本次对话完成后才能取消操作' : `取消${pendingReplacement.label}`
+              : group.reservedByTwoHandedItem ? '副手由双手武器占用'
+                : groupReplacementChoices.length ? '选择替换装备' : '查看当前地点的可用装备'}
+            onClick={() => {
+              if (pendingReplacement) cancelItemAction(pendingReplacement.id);
+              else openReplacementChoices(`更换${group.label}`, positions, group.items.map((item) => item.instanceId));
+            }}
+            className={`item-action shrink-0 disabled:cursor-not-allowed disabled:opacity-35 ${pendingReplacement ? 'item-action--danger' : 'item-action--primary'}`}
           >
-            更换
+            {pendingReplacement ? '取消' : '更换'}
           </button>
         </div>
 
@@ -248,6 +255,11 @@ export const EquipmentPanel: React.FC<EquipmentPanelProps> = ({ body, focusedGro
                     compact
                     item={cardForEquipment(position.item, !group.reservedByTwoHandedItem)}
                     pendingNote={pendingByInstance.get(position.item.instanceId)?.label}
+                    onCancelPending={() => {
+                      const pending = pendingByInstance.get(position.item!.instanceId);
+                      if (pending) cancelItemAction(pending.id);
+                    }}
+                    pendingCancellationDisabled={isStreaming}
                     onAction={(_item, action) => {
                       if (isStreaming) return;
                       if (action.kind === 'unequip') queueItemAction({ kind: 'unequip', instanceId: position.item!.instanceId, to: localStorageDestination(state, currentLocation) });
@@ -287,15 +299,6 @@ export const EquipmentPanel: React.FC<EquipmentPanelProps> = ({ body, focusedGro
 
   return (
     <div className="space-y-2.5" data-equipment-panel>
-      {pendingItemActions.length > 0 && (
-        <div className="queue-banner" role="status">
-          <Hourglass className="h-3.5 w-3.5 shrink-0 text-gold" />
-          <span>
-            <strong className="font-bold">{pendingItemActions.length} 项调整待生效</strong>
-            <span className="text-parchment-dim"> · 下一次成功对话后结算,可在主页御令栏上方撤销</span>
-          </span>
-        </div>
-      )}
       <div className="grid grid-cols-2 gap-1.5 border border-hairline bg-ink-3/35 p-2 sm:grid-cols-4">
         <span className="flex items-center gap-1.5 px-1 py-0.5" title="各部位当前防护值">
           <Shield className="h-4 w-4 shrink-0 text-gold" />

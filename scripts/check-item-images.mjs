@@ -56,3 +56,27 @@ for (const [itemId, [sourcePage, localPath]] of Object.entries(expected)) {
   assert.equal(digest, entry.sha256, `${itemId} 本地文件哈希与清单不一致`);
 }
 console.log('Item catalog breadth and localized Wiki image provenance are valid.');
+
+const generatedManifest = JSON.parse(await readFile('public/data/items/agot-artifact-import-manifest.json', 'utf8'));
+assert.equal(generatedManifest.schemaVersion, 1);
+assert.ok(generatedManifest.counts.emittedItems >= 400, `生成神器只有 ${generatedManifest.counts.emittedItems} 件`);
+assert.equal(generatedManifest.items.length, generatedManifest.counts.emittedItems);
+const generatedDefinitions = ITEM_DEFINITIONS.filter((definition) => definition.contentSource);
+assert.equal(generatedDefinitions.length, generatedManifest.counts.emittedItems);
+const approvedWorkshopIds = new Set(['2962333032', '2995674648', '2962713441', '3101422928', '2950245430']);
+const generatedById = new Map(generatedDefinitions.map((definition) => [definition.id, definition]));
+for (const item of generatedManifest.items) {
+  assert.ok(approvedWorkshopIds.has(item.workshopId), `${item.itemId} 使用了未批准来源 ${item.workshopId}`);
+  assert.match(item.sha256, /^[a-f0-9]{64}$/);
+  assert.match(item.sourceSha256, /^[a-f0-9]{64}$/);
+  const definition = generatedById.get(item.itemId);
+  assert.ok(definition, `生成目录缺少 ${item.itemId}`);
+  assert.equal(definition.image.type, 'asset');
+  assert.equal(definition.image.path, item.localPath);
+  assert.equal(definition.contentSource.imageSha256, item.sha256);
+  const filePath = join('public', item.localPath.replace(/^\//, ''));
+  const bytes = await readFile(filePath);
+  assert.ok(bytes.length > 0, `${filePath} 为空`);
+  assert.equal(createHash('sha256').update(bytes).digest('hex'), item.sha256, `${item.itemId} WebP 哈希不一致`);
+}
+console.log(`Validated ${generatedManifest.items.length} offline AGOT artifact images from approved Workshop sources.`);

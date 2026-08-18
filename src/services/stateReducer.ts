@@ -315,6 +315,8 @@ const CHARACTER_COMMAND_TYPES = new Set<string>([
   'SET_CHARACTER_RELATIONSHIP', 'ADD_CHARACTER_TRAIT', 'REMOVE_CHARACTER_TRAIT', 'MOVE_CHARACTER',
   'INJURE_CHARACTER', 'HEAL_CHARACTER', 'KILL_CHARACTER', 'MARRY_CHARACTERS', 'DIVORCE_CHARACTERS',
   'ADD_CHARACTER_MEMORY', 'GRANT_CHARACTER_TITLE', 'REVOKE_CHARACTER_TITLE',
+  'CHARACTER_ITEM_ACQUIRE', 'CHARACTER_ITEM_EQUIP', 'CHARACTER_ITEM_UNEQUIP',
+  'CHARACTER_ITEM_TRANSFER', 'CHARACTER_ITEM_LOSE',
 ]);
 
 export function isCharacterStateCommand(command: StateCommand): command is CharacterStateCommand {
@@ -355,6 +357,27 @@ function applyEventToCharacter(character: CharacterState, event: CharacterEvent)
       return { ...character, relationships };
     }
     case 'ADD_MEMORY': return character;
+    case 'ITEM_ACQUIRE':
+    case 'ITEM_TRANSFER_IN': {
+      const items = [...(character.items ?? []).filter((item) => item.instanceId !== event.item.instanceId), structuredClone(event.item)];
+      return { ...character, items };
+    }
+    case 'ITEM_EQUIP': return {
+      ...character,
+      items: (character.items ?? []).map((item) => item.instanceId === event.instanceId
+        ? { ...item, equippedPosition: { ...event.position } }
+        : item),
+    };
+    case 'ITEM_UNEQUIP': return {
+      ...character,
+      items: (character.items ?? []).map((item) => {
+        if (item.instanceId !== event.instanceId) return item;
+        const { equippedPosition: _equippedPosition, ...unequipped } = item;
+        return unequipped;
+      }),
+    };
+    case 'ITEM_TRANSFER_OUT':
+    case 'ITEM_LOSE': return { ...character, items: (character.items ?? []).filter((item) => item.instanceId !== event.instanceId) };
   }
 }
 
@@ -375,7 +398,10 @@ export function validateCharacterCommandBatch(
     };
   }
 
-  let characters = base.characters.map((character) => ({ ...character }));
+  let characters: CharacterState[] = base.characters.map((character) => ({
+    ...character,
+    items: character.items?.map((item) => structuredClone(item)),
+  }));
   let eventHistory = [...(base.eventHistory ?? [])];
   let present = base.presentCharacterIds ? new Set(base.presentCharacterIds) : undefined;
   const events: ValidatedCharacterEventInput[] = [];

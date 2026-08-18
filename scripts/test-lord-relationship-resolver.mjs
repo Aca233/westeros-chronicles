@@ -29,6 +29,16 @@ const repository = {
   async search() { return hits; },
   async get(id) { return records.get(id); },
   async getMany(ids) { return ids.map((id) => records.get(id)).filter(Boolean); },
+  async getKinship(id) {
+    const record = records.get(id);
+    return {
+      fatherId: record?.fatherId,
+      motherId: record?.motherId,
+      spouseIds: record?.spouseIds ?? [],
+      childIds: [],
+      siblingIds: [],
+    };
+  },
 };
 
 test('按姓名、家族和年龄锁定正确的 AGOT 人物，而不是同名祖先', async () => {
@@ -47,4 +57,30 @@ test('找不到可靠人物时返回空结果，不虚构关系', async () => {
   const emptyRepository = { ...repository, async search() { return []; } };
   const family = await resolveLordFamilyRecords({ name: '自建领主', house: '自建家族', age: 22, currentYear: 298 }, emptyRepository);
   assert.deepEqual(family, {});
+});
+
+
+test('现成人物使用稳定 ID 读取公开父亲与兄弟姐妹而不再按姓名猜测', async () => {
+  const directRecords = new Map([
+    ['agot:Stark_7', { id: 'agot:Stark_7', name: '琼恩', dynastyId: 'dynn_Stark', alive: true, fatherId: 'agot:Stark_3', spouseIds: [] }],
+    ['agot:Stark_3', records.get('agot:Stark_3')],
+    ['agot:Stark_6', { id: 'agot:Stark_6', name: '罗柏', dynastyId: 'dynn_Stark', alive: true, spouseIds: [] }],
+    ['agot:Stark_8', { id: 'agot:Stark_8', name: '珊莎', dynastyId: 'dynn_Stark', alive: true, spouseIds: [] }],
+  ]);
+  const directRepository = {
+    async search() { return []; },
+    async get(id) { return directRecords.get(id); },
+    async getMany(ids) { return ids.map((id) => directRecords.get(id)).filter(Boolean); },
+    async getKinship(id) {
+      if (id === 'agot:Stark_7') return { fatherId: 'agot:Stark_3', spouseIds: [], childIds: [], siblingIds: ['agot:Stark_6', 'agot:Stark_8'] };
+      return { spouseIds: [], childIds: [], siblingIds: [] };
+    },
+  };
+  const family = await resolveLordFamilyRecords({
+    canonicalCharacterId: 'agot:Stark_7', name: '琼恩', house: '史塔克家族', age: 15, currentYear: 298,
+  }, directRepository);
+  assert.equal(family.subject?.id, 'agot:Stark_7');
+  assert.equal(family.father?.id, 'agot:Stark_3');
+  assert.deepEqual(family.siblings?.map((record) => record.id), ['agot:Stark_6', 'agot:Stark_8']);
+  assert.equal(family.mother, undefined);
 });

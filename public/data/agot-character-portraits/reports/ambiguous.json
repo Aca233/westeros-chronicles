@@ -1,0 +1,693 @@
+{
+  "agot:ArrynGT_4": [
+    "Humfrey Wagstaff"
+  ],
+  "agot:Arryn_7": [
+    "Jeyne Royce"
+  ],
+  "agot:Arryn_hh_1": [
+    "Marillion"
+  ],
+  "agot:Ashwood_79": [
+    "Kedge Whiteye"
+  ],
+  "agot:Baelish_hh_1": [
+    "Bryen"
+  ],
+  "agot:Baratheon_hh_3": [
+    "Cressen"
+  ],
+  "agot:Baratheon_hh_4": [
+    "Pylos"
+  ],
+  "agot:Baratheon_hh_7": [
+    "Patchface"
+  ],
+  "agot:Baratheon_rs_8": [
+    "Bethany Bolton"
+  ],
+  "agot:Barrowstark_15": [
+    "Corenna Swann"
+  ],
+  "agot:Bigglestone_1": [
+    "Meribald"
+  ],
+  "agot:Blacktyde_1": [
+    "Beron Blacktyde"
+  ],
+  "agot:Blacktyde_7": [
+    "Beron Blacktyde"
+  ],
+  "agot:Blackwater_1": [
+    "Bronn"
+  ],
+  "agot:Boddy_60": [
+    "Meribald"
+  ],
+  "agot:Bolling_5": [
+    "Arlan V Durrandon"
+  ],
+  "agot:Bolton_2": [
+    "Damon Dance-for-Me"
+  ],
+  "agot:Bolton_3": [
+    "Steelshanks Walton"
+  ],
+  "agot:Bolton_hh_11": [
+    "Myranda Royce"
+  ],
+  "agot:Bolton_hh_3": [
+    "Walton Frey"
+  ],
+  "agot:Botley_39": [
+    "Sargon Botley"
+  ],
+  "agot:Botley_6": [
+    "Sargon Botley"
+  ],
+  "agot:Bracken_95": [
+    "Jayne Bracken"
+  ],
+  "agot:Bracken_96": [
+    "Jayne Bracken"
+  ],
+  "agot:Broome_25": [
+    "Lucinda Tully"
+  ],
+  "agot:Brownbarrow_20": [
+    "Kyra"
+  ],
+  "agot:Brownhill_2": [
+    "Walter Brownhill"
+  ],
+  "agot:Brownhill_3": [
+    "Walter Brownhill"
+  ],
+  "agot:Buckler_3": [
+    "Clement"
+  ],
+  "agot:Burrows_52": [
+    "Aenys Blackfyre"
+  ],
+  "agot:Caron_1": [
+    "Rolland Storm"
+  ],
+  "agot:Cassel_2": [
+    "Martyn Cassel"
+  ],
+  "agot:Cassel_3": [
+    "Rodrik Cassel"
+  ],
+  "agot:Cassel_4": [
+    "Jory Cassel"
+  ],
+  "agot:Castle_Black_11": [
+    "Gared"
+  ],
+  "agot:Castle_Black_21": [
+    "Rast"
+  ],
+  "agot:Castle_Black_23": [
+    "Halder"
+  ],
+  "agot:Castle_Black_28": [
+    "Kedge Whiteye"
+  ],
+  "agot:Castle_Black_5": [
+    "Clydas"
+  ],
+  "agot:Castle_Black_7": [
+    "Grenn"
+  ],
+  "agot:Chester_3": [
+    "Jon Lychester"
+  ],
+  "agot:Chester_hh_1": [
+    "Kerwin"
+  ],
+  "agot:Citadel_30": [
+    "Walgrave"
+  ],
+  "agot:Citadel_35": [
+    "Yandel"
+  ],
+  "agot:Citadel_43": [
+    "Roone"
+  ],
+  "agot:Citadel_44": [
+    "Lorcas"
+  ],
+  "agot:Clegane_hh_5": [
+    "Jon Connington"
+  ],
+  "agot:Coldwater_1": [
+    "Royce Coldwater"
+  ],
+  "agot:Coldwater_30": [
+    "Royce Coldwater"
+  ],
+  "agot:Cole_20": [
+    "Will Cole"
+  ],
+  "agot:Cole_22": [
+    "Will Cole"
+  ],
+  "agot:Correy_25": [
+    "Marei"
+  ],
+  "agot:Costayne_3": [
+    "Tommen Costayne",
+    "Tommen Costayne (knight)"
+  ],
+  "agot:Crabb_41": [
+    "Clarence Crabb",
+    "Clarence Crabb (Short)"
+  ],
+  "agot:Crakehall_3": [
+    "Roland Crakehall (Kingsguard)",
+    "Roland Crakehall (lord)"
+  ],
+  "agot:Curaze_rs_60": [
+    "Lyra Mormont"
+  ],
+  "agot:Dampwood_57": [
+    "Old Henly"
+  ],
+  "agot:Darkwood_39": [
+    "Amarei Crakehall"
+  ],
+  "agot:Darkwood_49": [
+    "Robin Ryger"
+  ],
+  "agot:Dayne_8": [
+    "Gerold Dayne"
+  ],
+  "agot:Deddings_22": [
+    "Lyonel Deddings"
+  ],
+  "agot:Deddings_26": [
+    "Lyonel Deddings"
+  ],
+  "agot:Dennecent_72": [
+    "Goodwin"
+  ],
+  "agot:Duckfield_1": [
+    "Rolly Duckfield"
+  ],
+  "agot:Dule_rs_1": [
+    "Jeyne Lydden"
+  ],
+  "agot:Fa_Zane_85_A": [
+    "Mellario"
+  ],
+  "agot:FarwyndLL_2": [
+    "Gyles Farwynd"
+  ],
+  "agot:FarwyndLL_3": [
+    "Ygon Farwynd"
+  ],
+  "agot:FarwyndLL_4": [
+    "Yohn Farwynd",
+    "Yohn Royce"
+  ],
+  "agot:Festering_70": [
+    "Luceon Frey"
+  ],
+  "agot:Fletcher_71": [
+    "Hodor"
+  ],
+  "agot:FlintFC_83": [
+    "Mina Tyrell"
+  ],
+  "agot:Flint_1": [
+    "Rickard Ryswell"
+  ],
+  "agot:Flint_10": [
+    "Donnel Flint"
+  ],
+  "agot:Flint_2": [
+    "Roose Bolton"
+  ],
+  "agot:Flint_6": [
+    "Robin Flint"
+  ],
+  "agot:Flint_69": [
+    "Damon Lannister (son of Jason)"
+  ],
+  "agot:Flint_91": [
+    "Donnel Flint"
+  ],
+  "agot:Fossoway_New_Barrel_6": [
+    "Jeyne Heddle"
+  ],
+  "agot:Frey_1": [
+    "Walder of Woodmere"
+  ],
+  "agot:Frey_51": [
+    "Pate (novice)"
+  ],
+  "agot:Frey_8": [
+    "Walder of Woodmere"
+  ],
+  "agot:Garrish_rs_57": [
+    "Lythene Frey"
+  ],
+  "agot:Giantsbane_2": [
+    "Toregg"
+  ],
+  "agot:Giantsbane_3": [
+    "Torwynd"
+  ],
+  "agot:Giantsbane_4": [
+    "Dormund"
+  ],
+  "agot:Giantsbane_5": [
+    "Munda"
+  ],
+  "agot:Gold_Draz_44": [
+    "Jeyne Heddle"
+  ],
+  "agot:Golden_Company_7": [
+    "Humfrey Hightower"
+  ],
+  "agot:Gothard_9": [
+    "Clement"
+  ],
+  "agot:Grey_2": [
+    "Squinty Jeyne"
+  ],
+  "agot:Grey_39": [
+    "Squinty Jeyne"
+  ],
+  "agot:Greyjoy_19": [
+    "Quenton Greyjoy (cousin)"
+  ],
+  "agot:Greyjoy_20": [
+    "Dagon Greyjoy",
+    "Dagon Greyjoy (Drunkard)"
+  ],
+  "agot:Greyjoy_3": [
+    "Quenton Greyjoy (cousin)"
+  ],
+  "agot:Greyjoy_7": [
+    "Victarion Greyjoy's third wife"
+  ],
+  "agot:Greysteel_12": [
+    "Florian Greysteel"
+  ],
+  "agot:Greysteel_15": [
+    "Florian Greysteel"
+  ],
+  "agot:Hall_28": [
+    "Raymun Fossoway"
+  ],
+  "agot:Harlaw_2": [
+    "Sigfryd Harlaw"
+  ],
+  "agot:Harlaw_3": [
+    "Sigfryd Harlaw"
+  ],
+  "agot:Harlton_hh_1": [
+    "Ethan Glover"
+  ],
+  "agot:Hide_92": [
+    "Kyra"
+  ],
+  "agot:Hornwood_1": [
+    "Daryn Hornwood"
+  ],
+  "agot:Hornwood_3": [
+    "Daryn Hornwood"
+  ],
+  "agot:Hunt_1": [
+    "Alyn Hunt"
+  ],
+  "agot:Hunt_6": [
+    "Alyn Hunt"
+  ],
+  "agot:Hunter_5": [
+    "Janyce Hunter"
+  ],
+  "agot:Hunter_8": [
+    "Janyce Hunter"
+  ],
+  "agot:Karamyn_rs_83": [
+    "Lanna Lannister"
+  ],
+  "agot:Karstark_10": [
+    "Jon Bulwer",
+    "Jon Fossoway"
+  ],
+  "agot:Karstark_16": [
+    "Harrion Karstark"
+  ],
+  "agot:Karstark_17": [
+    "Eddard Karstark"
+  ],
+  "agot:Karstark_18": [
+    "Torrhen Karstark"
+  ],
+  "agot:Karstark_2": [
+    "Arnolf Karstark"
+  ],
+  "agot:Knight_Kings_Landing_3": [
+    "Gregor Clegane"
+  ],
+  "agot:Knight_Riverlands_1": [
+    "Illifer the Penniless"
+  ],
+  "agot:LannisterLP_8": [
+    "Rosamund Lannister"
+  ],
+  "agot:Lannister_136": [
+    "Donnel Waynwood"
+  ],
+  "agot:Lannister_137": [
+    "Marei"
+  ],
+  "agot:Lannister_19": [
+    "Gerold III Lannister",
+    "Gerold Lannister (king)"
+  ],
+  "agot:Lannister_rs_1": [
+    "Briony"
+  ],
+  "agot:Lanster_34": [
+    "Briony"
+  ],
+  "agot:Litchmore_rs_79": [
+    "Bethany Rosby"
+  ],
+  "agot:Locke_5": [
+    "Sybelle Glover"
+  ],
+  "agot:Longwaters_1": [
+    "Daemon II Blackfyre",
+    "Daemon III Blackfyre"
+  ],
+  "agot:Loux_rs_2": [
+    "Jeyne Lydden"
+  ],
+  "agot:Lowborn_Braavos_5": [
+    "Brea"
+  ],
+  "agot:Lowborn_Braavos_8": [
+    "Talea"
+  ],
+  "agot:Lowborn_Kings_Landing_1": [
+    "Shae"
+  ],
+  "agot:Lowborn_Kings_Landing_7": [
+    "Chataya"
+  ],
+  "agot:Lowborn_Reach_3": [
+    "Satin"
+  ],
+  "agot:Lowborn_Wildling_1": [
+    "Ygritte"
+  ],
+  "agot:Lugus_5": [
+    "Ben"
+  ],
+  "agot:Madduc_79": [
+    "Shae"
+  ],
+  "agot:Marbrand_1": [
+    "Damon Marbrand"
+  ],
+  "agot:Marbrand_8": [
+    "Damon Marbrand"
+  ],
+  "agot:Martell_hh_12": [
+    "Ryon Allyrion"
+  ],
+  "agot:Martell_rs_8_B": [
+    "Lysa Arryn"
+  ],
+  "agot:Massey_5": [
+    "Wallace Massey"
+  ],
+  "agot:Massey_67": [
+    "Wallace Massey"
+  ],
+  "agot:MeadowsMP_50": [
+    "Alerie Hightower"
+  ],
+  "agot:Merryweather_5": [
+    "Taena Merryweather"
+  ],
+  "agot:MootonHM_107": [
+    "Perriane Frey"
+  ],
+  "agot:Mooton_3": [
+    "Myles Mooton"
+  ],
+  "agot:Mooton_7": [
+    "Myles Mooton"
+  ],
+  "agot:Most_Devout_20": [
+    "Humfrey Wagstaff"
+  ],
+  "agot:Mullgrub_rs_58": [
+    "Jeyne Lydden"
+  ],
+  "agot:Oakley_49": [
+    "Ben Blackthumb"
+  ],
+  "agot:Oldflowers_25": [
+    "Garth XI Gardener"
+  ],
+  "agot:Paege_30": [
+    "Robert Paege"
+  ],
+  "agot:Paege_4": [
+    "Robert Paege"
+  ],
+  "agot:Pale_56": [
+    "Young Henly"
+  ],
+  "agot:Payne_33": [
+    "Kyra"
+  ],
+  "agot:Peake_1": [
+    "Mervyn Flowers"
+  ],
+  "agot:Peake_76": [
+    "Clarice Osgrey"
+  ],
+  "agot:Prester_4": [
+    "Kyra"
+  ],
+  "agot:Pycelle_1": [
+    "Pycelle"
+  ],
+  "agot:Redsteel_rs_1": [
+    "Jeyne Marbrand"
+  ],
+  "agot:Redwyne_hh_2": [
+    "Ben Blackthumb"
+  ],
+  "agot:Rennock_1": [
+    "Bryen"
+  ],
+  "agot:Rowan_5": [
+    "Rhonda Rowan"
+  ],
+  "agot:Sarwyck_rs_1": [
+    "Dorna Swyft"
+  ],
+  "agot:Seaworth_1": [
+    "Davos Seaworth"
+  ],
+  "agot:ShettGT_3": [
+    "Uther Shett"
+  ],
+  "agot:Smallwood_4": [
+    "Carellen Smallwood"
+  ],
+  "agot:Smallwood_64": [
+    "Carellen Smallwood"
+  ],
+  "agot:Spearwife_2": [
+    "Holly"
+  ],
+  "agot:Staedmon_1": [
+    "Alesander Staedmon"
+  ],
+  "agot:Staedmon_74": [
+    "Alesander Staedmon"
+  ],
+  "agot:Stark_10": [
+    "Brandon Stark (father of Walton)",
+    "Brandon Stark (the Boisterous)",
+    "Brandon Stark (the Daughterless)",
+    "Brandon IX Stark",
+    "Brandon Stark (Bad)"
+  ],
+  "agot:Stark_hh_10": [
+    "Calon"
+  ],
+  "agot:Stark_hh_16": [
+    "Turnip"
+  ],
+  "agot:Stark_hh_18": [
+    "Palla"
+  ],
+  "agot:Stark_hh_19": [
+    "Kyra"
+  ],
+  "agot:Stark_hh_21": [
+    "Bandy"
+  ],
+  "agot:Stark_hh_22": [
+    "Shyra"
+  ],
+  "agot:Stark_hh_28": [
+    "Alys Arryn"
+  ],
+  "agot:Stark_hh_7": [
+    "Tomard"
+  ],
+  "agot:Strand_rs_62": [
+    "Gwynesse Harlaw"
+  ],
+  "agot:Strum_89": [
+    "Old Henly"
+  ],
+  "agot:Sunglass_1": [
+    "Triston of Tally Hill"
+  ],
+  "agot:Swann_38": [
+    "Balon Swann"
+  ],
+  "agot:Swann_5": [
+    "Ravella Smallwood"
+  ],
+  "agot:Swann_6": [
+    "Balon Swann"
+  ],
+  "agot:Targaryen_1": [
+    "Aerys I Targaryen",
+    "Aerys II Targaryen",
+    "Aerys II Targaryen's last mistress"
+  ],
+  "agot:Targaryen_12": [
+    "Aegon Targaryen (Young Griff)",
+    "Aegon Targaryen (son of Rhaegar)",
+    "Aegon Targaryen (son of Aerys II)"
+  ],
+  "agot:Thenn_1": [
+    "Styr"
+  ],
+  "agot:Toland_5": [
+    "Teora Toland"
+  ],
+  "agot:Toland_51": [
+    "Teora Toland"
+  ],
+  "agot:Tollett_1": [
+    "Jon Tollett"
+  ],
+  "agot:Tollett_30": [
+    "Jon Tollett"
+  ],
+  "agot:Treymore_rs_63": [
+    "Annara Farring"
+  ],
+  "agot:Tully_hh_5": [
+    "Tom of Sevenstreams"
+  ],
+  "agot:Uller_4": [
+    "Harmen Uller"
+  ],
+  "agot:Uller_8": [
+    "Harmen Uller"
+  ],
+  "agot:Umber_hh_1": [
+    "Hother Umber"
+  ],
+  "agot:Vance_Atranta_2": [
+    "Ronald Vance",
+    "Ronald Connington"
+  ],
+  "agot:Vance_Atranta_3": [
+    "Hugo Vance"
+  ],
+  "agot:Vance_Atranta_4": [
+    "Ellery Vance"
+  ],
+  "agot:Vance_Atranta_5": [
+    "Kirth Vance"
+  ],
+  "agot:Vance_Atranta_6": [
+    "Jon Vance",
+    "Jon Bulwer",
+    "Jon Fossoway"
+  ],
+  "agot:Vance_Wayfarers_Rest_9": [
+    "Hodor"
+  ],
+  "agot:Ward_rs_70": [
+    "Walda Frey (daughter of Walton)",
+    "Walda Frey (daughter of Edwyn)",
+    "Walda Frey (daughter of Merrett)",
+    "Walda Frey (daughter of Rhaegar)"
+  ],
+  "agot:Warrick_39": [
+    "Kyra"
+  ],
+  "agot:Waynwood_13": [
+    "Carolei Waynwood"
+  ],
+  "agot:Waynwood_15": [
+    "Anya Waynwood"
+  ],
+  "agot:Waynwood_18": [
+    "Carolei Waynwood"
+  ],
+  "agot:Waynwood_23": [
+    "Anya Waynwood"
+  ],
+  "agot:Waynwood_5": [
+    "Anya Waynwood"
+  ],
+  "agot:Wensington_56": [
+    "Rickard Stark"
+  ],
+  "agot:Whent_2": [
+    "Walter Whent"
+  ],
+  "agot:Whent_4": [
+    "Walter Whent"
+  ],
+  "agot:Whent_hh_3": [
+    "Gulian Swann"
+  ],
+  "agot:Whent_hh_4": [
+    "Ben Beesbury"
+  ],
+  "agot:Whitehill_hh_1": [
+    "Harys Haigh"
+  ],
+  "agot:Wildling_Nightswatch_3": [
+    "Leathers"
+  ],
+  "agot:Wildling_Nightswatch_6": [
+    "Jax"
+  ],
+  "agot:Windblown_4": [
+    "Gerold Dayne"
+  ],
+  "agot:Wylde_3": [
+    "Ormund Wylde"
+  ],
+  "agot:Wylde_9": [
+    "Ormund Wylde"
+  ],
+  "agot:Wythers_1": [
+    "Willam Wythers"
+  ],
+  "agot:Wythers_9": [
+    "Willam Wythers"
+  ]
+}

@@ -11,6 +11,8 @@ export interface ItemCardProps {
   defaultExpanded?: boolean;
   /** 已排队待结算的动作名,如「穿上」;传入后卡片显示待生效徽标 */
   pendingNote?: string;
+  onCancelPending?: () => void;
+  pendingCancellationDisabled?: boolean;
   onAction?: (item: ItemCardModel, action: ItemCardModel['actions'][number]) => void;
 }
 
@@ -34,6 +36,8 @@ export const ItemCard: React.FC<ItemCardProps> = ({
   compact = false,
   defaultExpanded = false,
   pendingNote,
+  onCancelPending,
+  pendingCancellationDisabled = false,
   onAction,
 }) => {
   const [expanded, setExpanded] = useState(defaultExpanded);
@@ -64,9 +68,23 @@ export const ItemCard: React.FC<ItemCardProps> = ({
         <ChevronDown className={`h-4 w-4 shrink-0 text-gold-dim transition-transform ${expanded ? 'rotate-180' : ''}`} />
       </button>
 
-      {item.actions.length > 0 && (
+      {(pendingNote || item.actions.length > 0) && (
         <div className="flex flex-wrap gap-1.5 border-t border-hairline px-3 py-2">
-          {item.actions.map((action) => (
+          {pendingNote ? (
+            <button
+              type="button"
+              disabled={pendingCancellationDisabled || !onCancelPending}
+              title={pendingCancellationDisabled ? '本次对话完成后才能取消操作' : `取消${pendingNote}`}
+              aria-label={`取消${pendingNote}`}
+              onClick={(event) => {
+                event.stopPropagation();
+                if (!pendingCancellationDisabled) onCancelPending?.();
+              }}
+              className="item-action item-action--danger"
+            >
+              取消操作
+            </button>
+          ) : item.actions.map((action) => (
             <button
               type="button"
               key={`${action.kind}-${action.label}`}

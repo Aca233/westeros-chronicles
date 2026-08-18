@@ -1,0 +1,2131 @@
+{
+  "conflicts": [],
+  "counts": {
+    "conflicts": 0,
+    "convertedImages": 414,
+    "emittedItems": 463,
+    "rejectedCandidates": 390
+  },
+  "datasetHash": "d1d28241c0cce7bdcc9cd1d051e7a2cb169001126ea90f373e6e148bde3068c6",
+  "rejected": [
+    {
+      "detail": "dragon_egg_$COLOR$",
+      "reason": "dynamic_name",
+      "source_id": "create_artifact_dragon_egg_effect"
+    },
+    {
+      "detail": "asoiaf_crown_of_winter_description",
+      "reason": "missing_description_localization",
+      "source_id": "agot_create_artifact_crown_of_winter_effect"
+    },
+    {
+      "detail": "asoiaf_crown_of_winter_description",
+      "reason": "missing_description_localization",
+      "source_id": "agot_create_artifact_crown_of_winter_historical_1_effect"
+    },
+    {
+      "detail": "asoiaf_crown_of_winter_description",
+      "reason": "missing_description_localization",
+      "source_id": "agot_create_artifact_crown_of_winter_historical_2_effect"
+    },
+    {
+      "detail": "placeholder",
+      "reason": "missing_description_localization",
+      "source_id": "agot_create_artifact_dragon_doll_02_effect"
+    },
+    {
+      "detail": "placeholder",
+      "reason": "missing_description_localization",
+      "source_id": "agot_create_artifact_glass_candle_effect"
+    },
+    {
+      "detail": "asoiaf_joffrey_I_crown_description",
+      "reason": "missing_description_localization",
+      "source_id": "agot_create_artifact_joffreyI_crown_effect"
+    },
+    {
+      "detail": "asoiaf_joffrey_I_crown_description",
+      "reason": "missing_description_localization",
+      "source_id": "agot_create_artifact_joffreyI_crown_historical_effect"
+    },
+    {
+      "detail": "asoiaf_renly_crown_description",
+      "reason": "missing_description_localization",
+      "source_id": "agot_create_artifact_renly_crown_effect"
+    },
+    {
+      "detail": "asoiaf_renly_crown_description",
+      "reason": "missing_description_localization",
+      "source_id": "agot_create_artifact_renly_crown_historical_effect"
+    },
+    {
+      "detail": "asoiaf_robert_I_crown_description",
+      "reason": "missing_description_localization",
+      "source_id": "agot_create_artifact_robertI_crown_effect"
+    },
+    {
+      "detail": "asoiaf_robert_I_crown_description",
+      "reason": "missing_description_localization",
+      "source_id": "agot_create_artifact_robertI_crown_historical_effect"
+    },
+    {
+      "detail": "asoiaf_sword_dark_sister_description",
+      "reason": "missing_description_localization",
+      "source_id": "agot_create_artifact_vs_dark_sister_effect:2"
+    },
+    {
+      "detail": "asoiaf_sword_heartsbane_description",
+      "reason": "missing_description_localization",
+      "source_id": "agot_create_artifact_vs_heartsbane_effect"
+    },
+    {
+      "detail": "asoiaf_sword_ice_description",
+      "reason": "missing_description_localization",
+      "source_id": "agot_create_artifact_vs_ice_effect"
+    },
+    {
+      "detail": "asoiaf_sword_longclaw_description",
+      "reason": "missing_description_localization",
+      "source_id": "agot_create_artifact_vs_longclaw_effect"
+    },
+    {
+      "detail": "asoiaf_sword_oathkeeper_description",
+      "reason": "missing_description_localization",
+      "source_id": "agot_create_artifact_vs_oathkeeper_effect"
+    },
+    {
+      "detail": "asoiaf_sword_widows_wail_description",
+      "reason": "missing_description_localization",
+      "source_id": "agot_create_artifact_vs_widows_wail_effect"
+    },
+    {
+      "detail": "asoiaf_sword_widows_wail_description",
+      "reason": "missing_description_localization",
+      "source_id": "agot_create_artifact_vs_widows_wail_historical_effect"
+    },
+    {
+      "detail": "asoiaf_sword_oathkeeper_description",
+      "reason": "missing_description_localization",
+      "source_id": "asoiaf_create_artifact_oathkeeper_effect_decision"
+    },
+    {
+      "detail": "asoiaf_sword_widows_wail_description",
+      "reason": "missing_description_localization",
+      "source_id": "asoiaf_create_artifact_widows_wail_effect_decision"
+    },
+    {
+      "detail": "dragon_horn_$COLOR$_desc",
+      "reason": "missing_description_localization",
+      "source_id": "create_artifact_dragon_horn_effect"
+    },
+    {
+      "detail": "asoiaf_sword_oathkeeper_description",
+      "reason": "missing_description_localization",
+      "source_id": "create_artifact_vs_oathkeeper_historical_effect"
+    },
+    {
+      "detail": "artifact_small_box.dds",
+      "reason": "missing_icon",
+      "source_id": "agot_create_aemond_eye_effect"
+    },
+    {
+      "detail": "aegon_i_crown_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_aegon_i_crown_historical_effect:2"
+    },
+    {
+      "detail": "archmaester_mask",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_archmaester_mask_effect"
+    },
+    {
+      "detail": "artifact_ring.dds",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_archmaester_ring_effect"
+    },
+    {
+      "detail": "artifact_regalia.dds",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_archmaester_rod_effect"
+    },
+    {
+      "detail": "artifact_pouch.dds",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_chain_link_effect"
+    },
+    {
+      "detail": "crown_of_winter_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_crown_of_winter_effect:2"
+    },
+    {
+      "detail": "crown_of_winter_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_crown_of_winter_historic_effect"
+    },
+    {
+      "detail": "crown_of_winter_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_crown_of_winter_historical_1_effect:2"
+    },
+    {
+      "detail": "crown_of_winter_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_crown_of_winter_historical_2_effect:2"
+    },
+    {
+      "detail": "artifact_scroll.dds",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_dondarrion_message_effect"
+    },
+    {
+      "detail": "artifact_bow_steppe.dds",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_dothraki_bow_effect"
+    },
+    {
+      "detail": "artifact_medium_box.dds",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_elenei_cloak_effect"
+    },
+    {
+      "detail": "artifact_medium_box.dds",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_elenei_cloak_old_effect"
+    },
+    {
+      "detail": "falcon_crown_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_falcon_crown_historic_effect"
+    },
+    {
+      "detail": "artifact_dagger.dds",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_flaying_knife_effect"
+    },
+    {
+      "detail": "artifact_reliquary.dds",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_florys_cloak_01_effect"
+    },
+    {
+      "detail": "artifact_medium_box.dds",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_florys_cloak_02_effect"
+    },
+    {
+      "detail": "artifact_small_box.dds",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_florys_cloak_03_effect"
+    },
+    {
+      "detail": "artifact_bow_mediterranean.dds",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_foss_bow_effect"
+    },
+    {
+      "detail": "artifact_reliquary.dds",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_green_hand_tabard_effect"
+    },
+    {
+      "detail": "artifact_reliquary.dds",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_herndons_horn_effect"
+    },
+    {
+      "detail": "artifact_reliquary.dds",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_horns_of_the_wood_effect"
+    },
+    {
+      "detail": "jaehaerys_crown_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_jaehaerys_crown_historical_effect:2"
+    },
+    {
+      "detail": "joffreyI_crown_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_joffreyI_crown_effect:2"
+    },
+    {
+      "detail": "joffreyI_crown_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_joffreyI_crown_historical_effect:2"
+    },
+    {
+      "detail": "longsword",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_kingsguard_sword_effect"
+    },
+    {
+      "detail": "sword",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_lucerys_gun_effect"
+    },
+    {
+      "detail": "artifact_reliquary.dds",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_marsh_king_mount_effect"
+    },
+    {
+      "detail": "artifact_wall_shield.dds",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_martell_wall_shield_effect"
+    },
+    {
+      "detail": "artifact_fabric_roll.dds",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_myrish_lace_effect"
+    },
+    {
+      "detail": "artifact_animal_figurine.dds",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_norvoshi_bear_carving_effect"
+    },
+    {
+      "detail": "artefact_icons_unique_artifact_cheese.dds",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_pentoshi_cheese_effect"
+    },
+    {
+      "detail": "artifact_steppe_axe.dds",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_redbeard_axe_effect"
+    },
+    {
+      "detail": "renly_crown_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_renly_crown_effect:2"
+    },
+    {
+      "detail": "renly_crown_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_renly_crown_historical_effect:2"
+    },
+    {
+      "detail": "robertI_crown_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_robertI_crown_effect:2"
+    },
+    {
+      "detail": "robertI_crown_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_robertI_crown_historical_effect:2"
+    },
+    {
+      "detail": "artifact_scroll.dds",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_saans_scrolls_effect"
+    },
+    {
+      "detail": "artifact_pelt.dds",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_skinchangers_second_pelt_effect"
+    },
+    {
+      "detail": "artifact_necklace.dds",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_soul_of_harrenhal_effect"
+    },
+    {
+      "detail": "artifact_medium_box.dds",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_stone_skin_club_effect"
+    },
+    {
+      "detail": "stormlands_crown_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_stormlands_crown_historic_effect"
+    },
+    {
+      "detail": "vs_andal_armingsword_gold_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_vs_andal_armingsword_gold_effect"
+    },
+    {
+      "detail": "vs_andal_armingsword_silver_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_vs_andal_armingsword_silver_effect"
+    },
+    {
+      "detail": "vs_andal_longsword_gold_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_vs_andal_longsword_gold_effect"
+    },
+    {
+      "detail": "vs_andal_longsword_silver_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_vs_andal_longsword_silver_effect"
+    },
+    {
+      "detail": "vs_black_death_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_vs_black_death_effect"
+    },
+    {
+      "detail": "vs_blackfyre_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_vs_blackfyre_effect:2"
+    },
+    {
+      "detail": "vs_dark_moon_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_vs_dark_moon_effect"
+    },
+    {
+      "detail": "darksister",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_vs_dark_sister_effect"
+    },
+    {
+      "detail": "vs_dark_sister_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_vs_dark_sister_effect:2"
+    },
+    {
+      "detail": "vs_dark_sister_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_vs_dark_sister_effect:3"
+    },
+    {
+      "detail": "vs_dragonbane_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_vs_dragonbane_effect"
+    },
+    {
+      "detail": "vs_firstman_armingsword_bronze_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_vs_firstman_armingsword_bronze_effect"
+    },
+    {
+      "detail": "vs_firstman_armingsword_gold_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_vs_firstman_armingsword_gold_effect"
+    },
+    {
+      "detail": "vs_firstman_armingsword_silver_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_vs_firstman_armingsword_silver_effect"
+    },
+    {
+      "detail": "vs_firstman_longsword_bronze_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_vs_firstman_longsword_bronze_effect"
+    },
+    {
+      "detail": "vs_firstman_longsword_gold_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_vs_firstman_longsword_gold_effect"
+    },
+    {
+      "detail": "vs_firstman_longsword_silver_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_vs_firstman_longsword_silver_effect"
+    },
+    {
+      "detail": "vs_glory_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_vs_glory_effect"
+    },
+    {
+      "detail": "vs_heartsbane_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_vs_heartsbane_effect:2"
+    },
+    {
+      "detail": "vs_ice_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_vs_ice_effect:2"
+    },
+    {
+      "detail": "vs_iron_price_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_vs_iron_price_effect"
+    },
+    {
+      "detail": "vs_longclaw_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_vs_longclaw_effect:2"
+    },
+    {
+      "detail": "vs_mothers_grief_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_vs_mothers_grief_effect"
+    },
+    {
+      "detail": "vs_oathkeeper_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_vs_oathkeeper_effect"
+    },
+    {
+      "detail": "vs_oathkeeper_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_vs_oathkeeper_effect:2"
+    },
+    {
+      "detail": "vs_pincer_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_vs_pincer_effect:2"
+    },
+    {
+      "detail": "vs_seafoam_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_vs_seafoam_effect:2"
+    },
+    {
+      "detail": "vs_skinpeeler_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_vs_skinpeeler_effect"
+    },
+    {
+      "detail": "vs_sting_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_vs_sting_effect"
+    },
+    {
+      "detail": "vs_stormy_nights_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_vs_stormy_nights_effect"
+    },
+    {
+      "detail": "vs_strangers_touch_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_vs_strangers_touch_effect"
+    },
+    {
+      "detail": "longsword",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_vs_sword_forged_effect"
+    },
+    {
+      "detail": "longsword",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_vs_sword_forged_effect"
+    },
+    {
+      "detail": "vs_talon_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_vs_talon_effect"
+    },
+    {
+      "detail": "vs_unkindness_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_vs_unkindness_effect"
+    },
+    {
+      "detail": "vs_valyrian_armingsword_gold_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_vs_valyrian_armingsword_gold_effect"
+    },
+    {
+      "detail": "vs_valyrian_armingsword_silver_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_vs_valyrian_armingsword_silver_effect"
+    },
+    {
+      "detail": "vs_valyrian_longsword_gold_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_vs_valyrian_longsword_gold_effect"
+    },
+    {
+      "detail": "vs_valyrian_longsword_silver_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_vs_valyrian_longsword_silver_effect"
+    },
+    {
+      "detail": "vs_widows_wail_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_vs_widows_wail_effect"
+    },
+    {
+      "detail": "vs_widows_wail_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_vs_widows_wail_effect:2"
+    },
+    {
+      "detail": "vs_widows_wail_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_vs_widows_wail_historical_effect:2"
+    },
+    {
+      "detail": "westerlands2_crown_visuals",
+      "reason": "missing_icon",
+      "source_id": "agot_create_artifact_westerlands2_crown_historic_effect"
+    },
+    {
+      "detail": "artifact_small_box.dds",
+      "reason": "missing_icon",
+      "source_id": "agot_create_bran_set_square_effect"
+    },
+    {
+      "detail": "artifact_pouch.dds",
+      "reason": "missing_icon",
+      "source_id": "agot_create_brewing_herbs_effect"
+    },
+    {
+      "detail": "artifact_ring.dds",
+      "reason": "missing_icon",
+      "source_id": "agot_create_eggs_boot_effect"
+    },
+    {
+      "detail": "artifact_drinking_vessel.dds",
+      "reason": "missing_icon",
+      "source_id": "agot_create_forgotten_magnars_drinking_horn_effect"
+    },
+    {
+      "detail": "artifact_chest.dds",
+      "reason": "missing_icon",
+      "source_id": "agot_create_fox_wedding_cloak_effect"
+    },
+    {
+      "detail": "artefact_icons_unique_artifact_buddhas_tooth.dds",
+      "reason": "missing_icon",
+      "source_id": "agot_create_giants_tooth_effect"
+    },
+    {
+      "detail": "artifact_reliquary.dds",
+      "reason": "missing_icon",
+      "source_id": "agot_create_harmund_tongue_effect"
+    },
+    {
+      "detail": "artifact_pouch.dds",
+      "reason": "missing_icon",
+      "source_id": "agot_create_smugglers_fingers_effect"
+    },
+    {
+      "detail": "artifact_scroll.dds",
+      "reason": "missing_icon",
+      "source_id": "agot_sunken_treasure_map_effect"
+    },
+    {
+      "detail": "vs_oathkeeper_visuals",
+      "reason": "missing_icon",
+      "source_id": "asoiaf_create_artifact_oathkeeper_effect_decision:2"
+    },
+    {
+      "detail": "vs_widows_wail_visuals",
+      "reason": "missing_icon",
+      "source_id": "asoiaf_create_artifact_widows_wail_effect_decision:2"
+    },
+    {
+      "detail": "crown_of_the_grey_king_rusted_visuals",
+      "reason": "missing_icon",
+      "source_id": "create_artifact_crown_of_the_grey_king_rusted_historic_effect"
+    },
+    {
+      "detail": "glass_candle",
+      "reason": "missing_icon",
+      "source_id": "create_artifact_glass_candle_effect"
+    },
+    {
+      "detail": "vs_oathkeeper_visuals",
+      "reason": "missing_icon",
+      "source_id": "create_artifact_vs_oathkeeper_historical_effect:2"
+    },
+    {
+      "detail": "dragon_whip",
+      "reason": "missing_icon",
+      "source_id": "create_dragon_whip_effect"
+    },
+    {
+      "detail": "lock_of_hair",
+      "reason": "missing_name_localization",
+      "source_id": "agot_ats_create_rohanne_hair_effect"
+    },
+    {
+      "detail": "asoiaf_hearteater_name",
+      "reason": "missing_name_localization",
+      "source_id": "asoiaf_create_artifact_hearteater_effect"
+    },
+    {
+      "detail": "asoiaf_hearteater_name",
+      "reason": "missing_name_localization",
+      "source_id": "asoiaf_create_artifact_hearteater_effect_historical"
+    },
+    {
+      "detail": "asoiaf_hound_armour_name",
+      "reason": "missing_name_localization",
+      "source_id": "asoiaf_create_artifact_hound_armour_effect_historical"
+    },
+    {
+      "detail": "asoiaf_sword_krakenfall_name",
+      "reason": "missing_name_localization",
+      "source_id": "asoiaf_create_artifact_krakenfall_effect"
+    },
+    {
+      "detail": "asoiaf_sword_krakenfall_name",
+      "reason": "missing_name_localization",
+      "source_id": "asoiaf_create_artifact_krakenfall_effect_historical"
+    },
+    {
+      "detail": "asoiaf_needle_name",
+      "reason": "missing_name_localization",
+      "source_id": "asoiaf_create_artifact_needle_effect"
+    },
+    {
+      "detail": "asoiaf_needle_name",
+      "reason": "missing_name_localization",
+      "source_id": "asoiaf_create_artifact_needle_effect_historical"
+    },
+    {
+      "detail": "asoiaf_red_vipers_spear_name",
+      "reason": "missing_name_localization",
+      "source_id": "asoiaf_create_artifact_red_vipers_spear_effect_historical"
+    },
+    {
+      "detail": "asoiaf_targaryen_falchion_name",
+      "reason": "missing_name_localization",
+      "source_id": "asoiaf_create_artifact_targaryen_falchion_effect"
+    },
+    {
+      "detail": "asoiaf_targaryen_falchion_name",
+      "reason": "missing_name_localization",
+      "source_id": "asoiaf_create_artifact_targaryen_falchion_effect_historical"
+    },
+    {
+      "detail": "ach_spawned_crown_name",
+      "reason": "missing_name_localization",
+      "source_id": "coronation_create_artifact_date_effect"
+    },
+    {
+      "detail": "ach_spawned_regalia_name",
+      "reason": "missing_name_localization",
+      "source_id": "coronation_create_artifact_date_effect:2"
+    },
+    {
+      "detail": "ach_yearly_crown_name",
+      "reason": "missing_name_localization",
+      "source_id": "coronation_create_artifact_yearly_effect"
+    },
+    {
+      "detail": "ach_yearly_regalia_name",
+      "reason": "missing_name_localization",
+      "source_id": "coronation_create_artifact_yearly_effect:2"
+    },
+    {
+      "detail": "artifact_animal_hide_big_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_animal_hide_effect"
+    },
+    {
+      "detail": "artifact_small_hide_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_animal_hide_effect:2"
+    },
+    {
+      "detail": "artifact_animal_trinket_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_animal_trinket_effect"
+    },
+    {
+      "detail": "artifact_animal_trinket_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_animal_trinket_effect:2"
+    },
+    {
+      "detail": "artifact_animal_trinket_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_animal_trinket_effect:3"
+    },
+    {
+      "detail": "artifact_animal_trinket_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_animal_trinket_effect:4"
+    },
+    {
+      "detail": "artifact_animal_trinket_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_animal_trinket_effect:5"
+    },
+    {
+      "detail": "placeholder",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_armor_effect"
+    },
+    {
+      "detail": "placeholder",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_armor_effect:10"
+    },
+    {
+      "detail": "placeholder",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_armor_effect:11"
+    },
+    {
+      "detail": "placeholder",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_armor_effect:12"
+    },
+    {
+      "detail": "placeholder",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_armor_effect:13"
+    },
+    {
+      "detail": "placeholder",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_armor_effect:14"
+    },
+    {
+      "detail": "placeholder",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_armor_effect:15"
+    },
+    {
+      "detail": "placeholder",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_armor_effect:16"
+    },
+    {
+      "detail": "placeholder",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_armor_effect:17"
+    },
+    {
+      "detail": "placeholder",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_armor_effect:18"
+    },
+    {
+      "detail": "placeholder",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_armor_effect:2"
+    },
+    {
+      "detail": "placeholder",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_armor_effect:3"
+    },
+    {
+      "detail": "placeholder",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_armor_effect:4"
+    },
+    {
+      "detail": "placeholder",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_armor_effect:5"
+    },
+    {
+      "detail": "placeholder",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_armor_effect:6"
+    },
+    {
+      "detail": "placeholder",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_armor_effect:7"
+    },
+    {
+      "detail": "placeholder",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_armor_effect:8"
+    },
+    {
+      "detail": "placeholder",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_armor_effect:9"
+    },
+    {
+      "detail": "asoiaf_aerys_II_crown_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_asoiaf_aerys_II_crown_effect"
+    },
+    {
+      "detail": "asoiaf_aerys_II_crown_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_asoiaf_aerys_II_crown_effect_historical"
+    },
+    {
+      "detail": "asoiaf_jaimes_sword_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_asoiaf_jaimes_sword_effect"
+    },
+    {
+      "detail": "asoiaf_radzig_sword_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_asoiaf_radzig_sword_effect_historical"
+    },
+    {
+      "detail": "asoiaf_red_priest_necklace_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_asoiaf_red_priest_necklace_effect"
+    },
+    {
+      "detail": "artifact_bird_feather_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_bird_feather_effect"
+    },
+    {
+      "detail": "placeholder",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_book_effect"
+    },
+    {
+      "detail": "placeholder",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_book_effect:2"
+    },
+    {
+      "detail": "placeholder",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_book_effect:3"
+    },
+    {
+      "detail": "placeholder",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_book_effect:4"
+    },
+    {
+      "detail": "placeholder",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_book_effect:5"
+    },
+    {
+      "detail": "placeholder",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_book_effect:6"
+    },
+    {
+      "detail": "placeholder",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_book_effect:7"
+    },
+    {
+      "detail": "placeholder",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_book_effect:8"
+    },
+    {
+      "detail": "artifact_longbow_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_bow_effect"
+    },
+    {
+      "detail": "artifact_bow_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_bow_effect:10"
+    },
+    {
+      "detail": "artifact_bow_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_bow_effect:11"
+    },
+    {
+      "detail": "artifact_bow_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_bow_effect:12"
+    },
+    {
+      "detail": "artifact_longbow_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_bow_effect:2"
+    },
+    {
+      "detail": "artifact_longbow_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_bow_effect:3"
+    },
+    {
+      "detail": "artifact_composite_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_bow_effect:4"
+    },
+    {
+      "detail": "artifact_composite_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_bow_effect:5"
+    },
+    {
+      "detail": "artifact_composite_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_bow_effect:6"
+    },
+    {
+      "detail": "artifact_crossbow_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_bow_effect:7"
+    },
+    {
+      "detail": "artifact_crossbow_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_bow_effect:8"
+    },
+    {
+      "detail": "artifact_crossbow_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_bow_effect:9"
+    },
+    {
+      "detail": "artifact_bowl_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_bowl_effect"
+    },
+    {
+      "detail": "artifact_bowl_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_bowl_effect:2"
+    },
+    {
+      "detail": "artifact_bowl_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_bowl_effect:3"
+    },
+    {
+      "detail": "artifact_bowl_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_bowl_effect:4"
+    },
+    {
+      "detail": "artifact_box_medium_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_box_medium_effect"
+    },
+    {
+      "detail": "artifact_box_medium_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_box_medium_effect:2"
+    },
+    {
+      "detail": "artifact_box_small_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_box_small_effect"
+    },
+    {
+      "detail": "artifact_box_small_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_box_small_effect:2"
+    },
+    {
+      "detail": "artifact_brooch_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_brooch_effect"
+    },
+    {
+      "detail": "artifact_brooch_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_brooch_effect:2"
+    },
+    {
+      "detail": "artifact_brooch_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_brooch_effect:3"
+    },
+    {
+      "detail": "artifact_brooch_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_brooch_effect:4"
+    },
+    {
+      "detail": "artifact_brooch_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_brooch_effect:5"
+    },
+    {
+      "detail": "artifact_brooch_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_brooch_pedestal_effect"
+    },
+    {
+      "detail": "artifact_brooch_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_brooch_pedestal_effect:2"
+    },
+    {
+      "detail": "artifact_brooch_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_brooch_pedestal_effect:3"
+    },
+    {
+      "detail": "artifact_diwan_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_cabinet_effect"
+    },
+    {
+      "detail": "artifact_table_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_cabinet_effect:2"
+    },
+    {
+      "detail": "artifact_cabinet_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_cabinet_effect:3"
+    },
+    {
+      "detail": "artifact_chest_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_chest_effect"
+    },
+    {
+      "detail": "artifact_wall_court_icon_large_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_court_icon_large_effect"
+    },
+    {
+      "detail": "artifact_wall_court_icon_large_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_court_icon_large_effect:2"
+    },
+    {
+      "detail": "artifact_wall_court_icon_large_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_court_icon_large_effect:3"
+    },
+    {
+      "detail": "artifact_wall_court_icon_small_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_court_icon_small_effect"
+    },
+    {
+      "detail": "artifact_wall_court_icon_small_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_court_icon_small_effect:2"
+    },
+    {
+      "detail": "artifact_wall_court_icon_small_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_court_icon_small_effect:3"
+    },
+    {
+      "detail": "artifact_crown_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_crown_effect"
+    },
+    {
+      "detail": "artifact_crown_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_crown_effect:2"
+    },
+    {
+      "detail": "artifact_crystal_carving_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_crystal_carving_effect"
+    },
+    {
+      "detail": "dynastic_imperial_seal.name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_dynastic_imperial_seal_effect"
+    },
+    {
+      "detail": "placeholder",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_elixir_effect"
+    },
+    {
+      "detail": "tgp_go_board",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_fp2_2p_chess_board_effect"
+    },
+    {
+      "detail": "fp2_2p_chess_board",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_fp2_2p_chess_board_effect:2"
+    },
+    {
+      "detail": "fp2_4p_chess_board",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_fp2_4p_chess_board_effect"
+    },
+    {
+      "detail": "fp2_andalusian_aquamanile",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_fp2_andalusian_aquamanile_core_effect"
+    },
+    {
+      "detail": "fp2_armillary_sphere",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_fp2_armillary_sphere_core_effect"
+    },
+    {
+      "detail": "artifact_goblet_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_goblet_effect"
+    },
+    {
+      "detail": "artifact_goblet_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_goblet_effect:2"
+    },
+    {
+      "detail": "artifact_goblet_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_goblet_effect:3"
+    },
+    {
+      "detail": "artifact_goblet_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_goblet_effect:4"
+    },
+    {
+      "detail": "artifact_icon_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_icon_effect"
+    },
+    {
+      "detail": "artifact_icon_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_icon_effect:2"
+    },
+    {
+      "detail": "artifact_icon_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_icon_effect:3"
+    },
+    {
+      "detail": "artifact_seal_of_investiture",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_imperial_seal_effect"
+    },
+    {
+      "detail": "artifact_seal_of_investiture",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_imperial_seal_effect:2"
+    },
+    {
+      "detail": "artifact_seal_of_investiture",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_imperial_seal_effect:3"
+    },
+    {
+      "detail": "artifact_necklace_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_necklace_effect"
+    },
+    {
+      "detail": "artifact_brooch_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_necklace_effect:2"
+    },
+    {
+      "detail": "artifact_necklace_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_necklace_effect:3"
+    },
+    {
+      "detail": "artifact_necklace_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_necklace_effect:4"
+    },
+    {
+      "detail": "artifact_necklace_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_necklace_effect:5"
+    },
+    {
+      "detail": "artifact_necklace_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_necklace_pedestal_effect"
+    },
+    {
+      "detail": "artifact_brooch_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_necklace_pedestal_effect:2"
+    },
+    {
+      "detail": "artifact_necklace_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_necklace_pedestal_effect:3"
+    },
+    {
+      "detail": "artifact_necklace_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_necklace_pedestal_effect:4"
+    },
+    {
+      "detail": "artifact_panacea_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_panacea_effect"
+    },
+    {
+      "detail": "artifact_pas_darmes_spurs_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_pas_darmes_spurs_effect"
+    },
+    {
+      "detail": "artifact_pas_darmes_token_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_pas_darmes_token_effect"
+    },
+    {
+      "detail": "artifact_pedestal_branch_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_pedestal_branch_relic_general_effect"
+    },
+    {
+      "detail": "artifact_pedestal_massive_diamond_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_pedestal_diamond_effect"
+    },
+    {
+      "detail": "artifact_pedestal_gold_nugget_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_pedestal_gold_effect"
+    },
+    {
+      "detail": "artifact_pedestal_human_skull_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_pedestal_human_skull_effect"
+    },
+    {
+      "detail": "artifact_pedestal_human_skull_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_pedestal_human_skull_specific_effect"
+    },
+    {
+      "detail": "artifact_pedestal_pouch_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_pedestal_pouch_effect"
+    },
+    {
+      "detail": "artifact_pedestal_religious_head_letter_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_pedestal_religious_head_letter_effect"
+    },
+    {
+      "detail": "artifact_pedestal_rock_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_pedestal_rock_effect"
+    },
+    {
+      "detail": "artifact_pedestal_scroll_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_pedestal_scroll_effect"
+    },
+    {
+      "detail": "artifact_philosophers_stone_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_philosophers_stone_effect"
+    },
+    {
+      "detail": "artifact_plate_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_plate_effect"
+    },
+    {
+      "detail": "artifact_plate_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_plate_effect:2"
+    },
+    {
+      "detail": "artifact_plate_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_plate_effect:3"
+    },
+    {
+      "detail": "artifact_plate_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_plate_effect:4"
+    },
+    {
+      "detail": "artifact_poetry_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_poetry_effect"
+    },
+    {
+      "detail": "artifact_pressed_flower_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_pressed_flower_effect"
+    },
+    {
+      "detail": "artifact_pressed_flower_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_pressed_flower_effect:2"
+    },
+    {
+      "detail": "artifact_regalia_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_regalia_effect"
+    },
+    {
+      "detail": "artifact_regalia_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_regalia_effect:2"
+    },
+    {
+      "detail": "artifact_ring_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_ring_effect"
+    },
+    {
+      "detail": "artifact_ring_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_ring_effect:2"
+    },
+    {
+      "detail": "artifact_ring_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_ring_effect:3"
+    },
+    {
+      "detail": "artifact_ring_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_ring_effect:4"
+    },
+    {
+      "detail": "artifact_ring_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_ring_effect:5"
+    },
+    {
+      "detail": "artifact_sculpture_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_sculpture_effect"
+    },
+    {
+      "detail": "artifact_sculpture_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_sculpture_effect:2"
+    },
+    {
+      "detail": "artifact_sculpture_religious_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_sculpture_religious_effect"
+    },
+    {
+      "detail": "asoiaf_stark_throne_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_stark_throne_effect"
+    },
+    {
+      "detail": "artifact_wall_tapestry_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_tapestry_effect"
+    },
+    {
+      "detail": "artifact_wall_tapestry_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_tapestry_effect:2"
+    },
+    {
+      "detail": "artifact_wall_tapestry_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_tapestry_effect:3"
+    },
+    {
+      "detail": "artifact_throne_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_throne_effect"
+    },
+    {
+      "detail": "artifact_tournament_favor_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_tournament_favor_effect"
+    },
+    {
+      "detail": "artifact_trinket_icon_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_trinket_icon_ancient_effect"
+    },
+    {
+      "detail": "artifact_trinket_icon_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_trinket_icon_effect"
+    },
+    {
+      "detail": "artifact_trinket_icon_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_trinket_icon_effect:2"
+    },
+    {
+      "detail": "artifact_trinket_icon_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_trinket_icon_effect:3"
+    },
+    {
+      "detail": "artifact_urn_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_urn_effect"
+    },
+    {
+      "detail": "artifact_urn_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_urn_effect:2"
+    },
+    {
+      "detail": "artifact_urn_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_urn_effect:3"
+    },
+    {
+      "detail": "artifact_urn_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_urn_effect:4"
+    },
+    {
+      "detail": "artifact_wall_banner_dynasty_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_wall_banner_effect"
+    },
+    {
+      "detail": "artifact_wall_banner_dynasty_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_wall_banner_effect:2"
+    },
+    {
+      "detail": "artifact_wall_banner_house_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_wall_banner_effect:3"
+    },
+    {
+      "detail": "artifact_wall_banner_house_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_wall_banner_effect:4"
+    },
+    {
+      "detail": "artifact_wall_banner_battle_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_wall_banner_effect:5"
+    },
+    {
+      "detail": "artifact_wall_banner_royal_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_wall_banner_effect:6"
+    },
+    {
+      "detail": "artifact_wall_narwhal_horn_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_wall_narwhal_horn_effect"
+    },
+    {
+      "detail": "artifact_wall_narwhal_horn_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_wall_narwhal_horn_effect:2"
+    },
+    {
+      "detail": "artifact_wall_shield_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_wall_shield_effect"
+    },
+    {
+      "detail": "artifact_wall_shield_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_wall_shield_effect:2"
+    },
+    {
+      "detail": "artifact_wall_skull_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_wall_skull_effect"
+    },
+    {
+      "detail": "artifact_axe_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_weapon_effect"
+    },
+    {
+      "detail": "artifact_mace_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_weapon_effect:10"
+    },
+    {
+      "detail": "artifact_mace_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_weapon_effect:11"
+    },
+    {
+      "detail": "artifact_mace_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_weapon_effect:12"
+    },
+    {
+      "detail": "artifact_dagger_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_weapon_effect:13"
+    },
+    {
+      "detail": "artifact_dagger_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_weapon_effect:14"
+    },
+    {
+      "detail": "artifact_dagger_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_weapon_effect:15"
+    },
+    {
+      "detail": "artifact_dagger_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_weapon_effect:16"
+    },
+    {
+      "detail": "artifact_sword_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_weapon_effect:17"
+    },
+    {
+      "detail": "artifact_sword_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_weapon_effect:18"
+    },
+    {
+      "detail": "artifact_sassanian_replica_sword_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_weapon_effect:19"
+    },
+    {
+      "detail": "artifact_axe_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_weapon_effect:2"
+    },
+    {
+      "detail": "artifact_longsword_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_weapon_effect:20"
+    },
+    {
+      "detail": "artifact_sword_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_weapon_effect:21"
+    },
+    {
+      "detail": "artifact_axe_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_weapon_effect:3"
+    },
+    {
+      "detail": "artifact_hammer_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_weapon_effect:4"
+    },
+    {
+      "detail": "artifact_hammer_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_weapon_effect:5"
+    },
+    {
+      "detail": "artifact_hammer_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_weapon_effect:6"
+    },
+    {
+      "detail": "artifact_spear_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_weapon_effect:7"
+    },
+    {
+      "detail": "artifact_spear_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_weapon_effect:8"
+    },
+    {
+      "detail": "artifact_spear_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_artifact_weapon_effect:9"
+    },
+    {
+      "detail": "bunga_mas",
+      "reason": "missing_name_localization",
+      "source_id": "create_bunga_mas_artifact_effect"
+    },
+    {
+      "detail": "love_artifact_poetry_name",
+      "reason": "missing_name_localization",
+      "source_id": "create_love_artifact_poetry_effect"
+    },
+    {
+      "detail": "medicine_jar",
+      "reason": "missing_name_localization",
+      "source_id": "generate_health_trinket_effect"
+    },
+    {
+      "detail": "lapidary_tourmaline",
+      "reason": "missing_name_localization",
+      "source_id": "generate_health_trinket_effect:2"
+    },
+    {
+      "detail": "scented_herb_pouch",
+      "reason": "missing_name_localization",
+      "source_id": "generate_health_trinket_effect:3"
+    },
+    {
+      "detail": "mythical_creature_horn",
+      "reason": "missing_name_localization",
+      "source_id": "generate_health_trinket_effect:4"
+    },
+    {
+      "detail": "lock_of_hair",
+      "reason": "missing_name_localization",
+      "source_id": "generate_romantic_trinket_effect"
+    },
+    {
+      "detail": "house_ribbon",
+      "reason": "missing_name_localization",
+      "source_id": "generate_romantic_trinket_effect:2"
+    },
+    {
+      "detail": "initials_necklace",
+      "reason": "missing_name_localization",
+      "source_id": "generate_romantic_trinket_effect:3"
+    },
+    {
+      "detail": "marriage_prayer_brooch",
+      "reason": "missing_name_localization",
+      "source_id": "generate_romantic_trinket_effect:4"
+    },
+    {
+      "detail": "wooden_phallus",
+      "reason": "missing_name_localization",
+      "source_id": "generate_romantic_trinket_effect:5"
+    },
+    {
+      "detail": "feather_trinket",
+      "reason": "missing_name_localization",
+      "source_id": "generate_tournament_trinket_effect"
+    },
+    {
+      "detail": "chess_trinket",
+      "reason": "missing_name_localization",
+      "source_id": "generate_tournament_trinket_effect:2"
+    },
+    {
+      "detail": "ribbon_trinket",
+      "reason": "missing_name_localization",
+      "source_id": "generate_tournament_trinket_effect:3"
+    },
+    {
+      "detail": "glass_orb_trinket",
+      "reason": "missing_name_localization",
+      "source_id": "generate_tournament_trinket_effect:4"
+    },
+    {
+      "detail": "tapestry_trinket",
+      "reason": "missing_name_localization",
+      "source_id": "generate_tournament_trinket_effect:5"
+    },
+    {
+      "detail": "gilded_rats_tail",
+      "reason": "missing_name_localization",
+      "source_id": "generate_trinket_effect"
+    },
+    {
+      "detail": "serpentine_budai",
+      "reason": "missing_name_localization",
+      "source_id": "generate_trinket_effect:10"
+    },
+    {
+      "detail": "mythical_creature_horn",
+      "reason": "missing_name_localization",
+      "source_id": "generate_trinket_effect:11"
+    },
+    {
+      "detail": "mythical_creature_figurine",
+      "reason": "missing_name_localization",
+      "source_id": "generate_trinket_effect:12"
+    },
+    {
+      "detail": "st_davids_taper",
+      "reason": "missing_name_localization",
+      "source_id": "generate_trinket_effect:13"
+    },
+    {
+      "detail": "jira_stick",
+      "reason": "missing_name_localization",
+      "source_id": "generate_trinket_effect:14"
+    },
+    {
+      "detail": "lucky_coin",
+      "reason": "missing_name_localization",
+      "source_id": "generate_trinket_effect:15"
+    },
+    {
+      "detail": "lavender_jade_pendant",
+      "reason": "missing_name_localization",
+      "source_id": "generate_trinket_effect:16"
+    },
+    {
+      "detail": "sekhmet_ring",
+      "reason": "missing_name_localization",
+      "source_id": "generate_trinket_effect:17"
+    },
+    {
+      "detail": "scarab_brooch",
+      "reason": "missing_name_localization",
+      "source_id": "generate_trinket_effect:18"
+    },
+    {
+      "detail": "quail_eggshell_gem",
+      "reason": "missing_name_localization",
+      "source_id": "generate_trinket_effect:2"
+    },
+    {
+      "detail": "stained_glass_shard",
+      "reason": "missing_name_localization",
+      "source_id": "generate_trinket_effect:3"
+    },
+    {
+      "detail": "xylospongium",
+      "reason": "missing_name_localization",
+      "source_id": "generate_trinket_effect:4"
+    },
+    {
+      "detail": "st_davids_morsel",
+      "reason": "missing_name_localization",
+      "source_id": "generate_trinket_effect:5"
+    },
+    {
+      "detail": "platypus_figurine",
+      "reason": "missing_name_localization",
+      "source_id": "generate_trinket_effect:6"
+    },
+    {
+      "detail": "terracotta_toy_fowl",
+      "reason": "missing_name_localization",
+      "source_id": "generate_trinket_effect:7"
+    },
+    {
+      "detail": "stewardship_general.2001.artifact.potsherd_holy",
+      "reason": "missing_name_localization",
+      "source_id": "generate_trinket_effect:8"
+    },
+    {
+      "detail": "small_bell_beaker",
+      "reason": "missing_name_localization",
+      "source_id": "generate_trinket_effect:9"
+    },
+    {
+      "detail": "warriors_head_artifact",
+      "reason": "missing_name_localization",
+      "source_id": "mpo_beheaded_warrior_artifact_creation_effect"
+    },
+    {
+      "detail": "warriors_head_artifact",
+      "reason": "missing_name_localization",
+      "source_id": "mpo_beheaded_warrior_artifact_creation_effect:10"
+    },
+    {
+      "detail": "warriors_head_artifact",
+      "reason": "missing_name_localization",
+      "source_id": "mpo_beheaded_warrior_artifact_creation_effect:11"
+    },
+    {
+      "detail": "warriors_head_artifact",
+      "reason": "missing_name_localization",
+      "source_id": "mpo_beheaded_warrior_artifact_creation_effect:12"
+    },
+    {
+      "detail": "warriors_head_artifact",
+      "reason": "missing_name_localization",
+      "source_id": "mpo_beheaded_warrior_artifact_creation_effect:13"
+    },
+    {
+      "detail": "warriors_head_artifact",
+      "reason": "missing_name_localization",
+      "source_id": "mpo_beheaded_warrior_artifact_creation_effect:14"
+    },
+    {
+      "detail": "warriors_head_artifact",
+      "reason": "missing_name_localization",
+      "source_id": "mpo_beheaded_warrior_artifact_creation_effect:15"
+    },
+    {
+      "detail": "warriors_head_artifact",
+      "reason": "missing_name_localization",
+      "source_id": "mpo_beheaded_warrior_artifact_creation_effect:16"
+    },
+    {
+      "detail": "warriors_head_artifact",
+      "reason": "missing_name_localization",
+      "source_id": "mpo_beheaded_warrior_artifact_creation_effect:17"
+    },
+    {
+      "detail": "warriors_head_artifact",
+      "reason": "missing_name_localization",
+      "source_id": "mpo_beheaded_warrior_artifact_creation_effect:18"
+    },
+    {
+      "detail": "warriors_head_artifact",
+      "reason": "missing_name_localization",
+      "source_id": "mpo_beheaded_warrior_artifact_creation_effect:2"
+    },
+    {
+      "detail": "warriors_head_artifact",
+      "reason": "missing_name_localization",
+      "source_id": "mpo_beheaded_warrior_artifact_creation_effect:3"
+    },
+    {
+      "detail": "warriors_head_artifact",
+      "reason": "missing_name_localization",
+      "source_id": "mpo_beheaded_warrior_artifact_creation_effect:4"
+    },
+    {
+      "detail": "warriors_head_artifact",
+      "reason": "missing_name_localization",
+      "source_id": "mpo_beheaded_warrior_artifact_creation_effect:5"
+    },
+    {
+      "detail": "warriors_head_artifact",
+      "reason": "missing_name_localization",
+      "source_id": "mpo_beheaded_warrior_artifact_creation_effect:6"
+    },
+    {
+      "detail": "warriors_head_artifact",
+      "reason": "missing_name_localization",
+      "source_id": "mpo_beheaded_warrior_artifact_creation_effect:7"
+    },
+    {
+      "detail": "warriors_head_artifact",
+      "reason": "missing_name_localization",
+      "source_id": "mpo_beheaded_warrior_artifact_creation_effect:8"
+    },
+    {
+      "detail": "warriors_head_artifact",
+      "reason": "missing_name_localization",
+      "source_id": "mpo_beheaded_warrior_artifact_creation_effect:9"
+    },
+    {
+      "detail": "paiza_artifact_title",
+      "reason": "missing_name_localization",
+      "source_id": "mpo_create_paiza_artifact_effect"
+    },
+    {
+      "detail": "executed_head_artifact",
+      "reason": "missing_name_localization",
+      "source_id": "mpo_execution_head_artifact_creation_effect"
+    },
+    {
+      "detail": "executed_head_artifact",
+      "reason": "missing_name_localization",
+      "source_id": "mpo_execution_head_artifact_creation_effect:2"
+    },
+    {
+      "detail": "tgp_cranial_trophy_artifact",
+      "reason": "missing_name_localization",
+      "source_id": "tgp_cranial_trophies_beheading_effect"
+    },
+    {
+      "detail": "tgp_cranial_trophy_artifact",
+      "reason": "missing_name_localization",
+      "source_id": "tgp_cranial_trophies_beheading_effect:2"
+    },
+    {
+      "detail": "tgp_cranial_trophy_artifact",
+      "reason": "missing_name_localization",
+      "source_id": "tgp_cranial_trophies_beheading_effect:3"
+    },
+    {
+      "detail": "tgp_cranial_trophy_artifact",
+      "reason": "missing_name_localization",
+      "source_id": "tgp_cranial_trophies_beheading_effect:4"
+    },
+    {
+      "detail": "tgp_cranial_trophy_artifact",
+      "reason": "missing_name_localization",
+      "source_id": "tgp_cranial_trophies_beheading_effect:5"
+    },
+    {
+      "detail": "tgp_cranial_trophy_artifact",
+      "reason": "missing_name_localization",
+      "source_id": "tgp_cranial_trophies_beheading_effect:6"
+    },
+    {
+      "detail": "tgp_cranial_trophy_artifact",
+      "reason": "missing_name_localization",
+      "source_id": "tgp_cranial_trophies_beheading_effect:7"
+    },
+    {
+      "detail": "tournament_prize_armor_name",
+      "reason": "missing_name_localization",
+      "source_id": "tournament_contest_armor_prize_effect"
+    },
+    {
+      "detail": "tournament_prize_bow_name",
+      "reason": "missing_name_localization",
+      "source_id": "tournament_contest_bow_prize_effect"
+    },
+    {
+      "detail": "tournament_prize_statuette_name",
+      "reason": "missing_name_localization",
+      "source_id": "tournament_contest_generate_prize_effect"
+    },
+    {
+      "detail": "tournament_prize_tun_barrel_name",
+      "reason": "missing_name_localization",
+      "source_id": "tournament_contest_generate_prize_effect:2"
+    },
+    {
+      "detail": "tournament_prize_scepter_name",
+      "reason": "missing_name_localization",
+      "source_id": "tournament_contest_generate_prize_effect:3"
+    },
+    {
+      "detail": "tournament_prize_scepter_name",
+      "reason": "missing_name_localization",
+      "source_id": "tournament_contest_generate_prize_effect:4"
+    },
+    {
+      "detail": "tournament_prize_weapon_name",
+      "reason": "missing_name_localization",
+      "source_id": "tournament_contest_weapon_prize_effect"
+    }
+  ],
+  "unmappedModifiers": [
+    "accolade_glory_gain_mult",
+    "additional_fort_level",
+    "attacker_advantage",
+    "attraction_opinion",
+    "barrowman_opinion",
+    "build_gold_cost",
+    "build_speed",
+    "cave_dweller_opinion",
+    "character_capital_county_monthly_development_growth_add",
+    "character_travel_safety_mult",
+    "character_travel_speed",
+    "character_travel_speed_mult",
+    "clergy_opinion",
+    "coastal_advantage",
+    "controlled_province_advantage",
+    "county_opinion_add",
+    "court_grandeur_baseline_add",
+    "courtier_and_guest_opinion",
+    "courtly_levy_contribution_mult",
+    "courtly_opinion",
+    "crannogman_opinion",
+    "crownlander_opinion",
+    "defender_advantage",
+    "defender_holding_advantage",
+    "desert_advantage",
+    "desert_mountains_advantage",
+    "development_growth",
+    "development_growth_factor",
+    "different_culture_opinion",
+    "different_faith_liege_opinion",
+    "diplomacy_per_piety_level",
+    "diplomacy_per_prestige_level",
+    "diplomatic_range_mult",
+    "direct_vassal_opinion",
+    "domain_limit",
+    "domain_tax_mult",
+    "dothraki_opinion",
+    "dread_baseline_add",
+    "dread_decay_mult",
+    "dread_gain_mult",
+    "dread_per_tyranny_mult",
+    "dynasty_house_opinion",
+    "dynasty_opinion",
+    "embarkation_cost_mult",
+    "enemy_hard_casualty_modifier",
+    "fangman_opinion",
+    "farmlands_tax_mult",
+    "fellow_vassal_opinion",
+    "fertility",
+    "first_clan_opinion",
+    "floodplains_advantage",
+    "forest_advantage",
+    "forestman_opinion",
+    "frozen_shoreman_opinion",
+    "glory_hound_levy_contribution_mult",
+    "glory_hound_opinion",
+    "happy_powerful_vassal_levy_contribution_mult",
+    "harborman_opinion",
+    "hard_casualty_modifier",
+    "health",
+    "heavy_cavalry_maintenance_mult",
+    "heavy_cavalry_toughness_mult",
+    "high_valyrian_opinion",
+    "highlands_advantage",
+    "hills_advantage",
+    "hills_development_growth_factor",
+    "hornfoot_opinion",
+    "ice_riverman_opinion",
+    "independent_ruler_opinion",
+    "intrigue_per_piety_level",
+    "ironborn_opinion",
+    "knight_effectiveness_mult",
+    "knight_limit",
+    "krakenman_opinion",
+    "lakefolk_opinion",
+    "learning_per_prestige_level",
+    "legitimacy_gain_mult",
+    "legitimacy_loss_mult",
+    "levy_reinforcement_rate",
+    "levy_reinforcement_rate_same_faith",
+    "levy_size",
+    "life_expectancy",
+    "light_cavalry_maintenance_mult",
+    "majorroad_forest_advantage",
+    "majorroad_highlands_advantage",
+    "majorroad_hills_advantage",
+    "majorroad_steppe_advantage",
+    "marcher_opinion",
+    "martial_per_piety_level",
+    "martial_per_prestige_level",
+    "max_combat_roll",
+    "max_loot_mult",
+    "men_at_arms_maintenance_per_dread_mult",
+    "milkwaterman_opinion",
+    "min_combat_roll",
+    "minorroad_forest_advantage",
+    "minorroad_highlands_advantage",
+    "minorroad_hills_advantage",
+    "minorroad_steppe_advantage",
+    "monthly_county_control_growth_add",
+    "monthly_diplomacy_lifestyle_xp_gain_mult",
+    "monthly_dynasty_prestige",
+    "monthly_dynasty_prestige_mult",
+    "monthly_income",
+    "monthly_income_mult",
+    "monthly_income_per_stress_level_mult",
+    "monthly_intrigue_lifestyle_xp_gain_mult",
+    "monthly_martial_lifestyle_xp_gain_mult",
+    "monthly_piety",
+    "monthly_piety_gain_mult",
+    "monthly_stewardship_lifestyle_xp_gain_mult",
+    "monthly_tyranny",
+    "mountains_advantage",
+    "mountains_construction_gold_cost",
+    "mountains_levy_size",
+    "movement_speed",
+    "naval_movement_speed_mult",
+    "negate_health_penalty_add",
+    "negate_prowess_penalty_add",
+    "negative_random_genetic_chance",
+    "nightrunner_opinion",
+    "northern_clan_opinion",
+    "northman_opinion",
+    "opinion_of_different_faith",
+    "opinion_of_female_rulers",
+    "opinion_of_parents",
+    "owned_hostile_scheme_success_chance_add",
+    "owned_legend_spread_mult",
+    "owned_personal_scheme_success_chance_add",
+    "owned_scheme_secrecy_add",
+    "piety_level_impact_mult",
+    "plains_min_combat_roll",
+    "powerful_vassal_opinion",
+    "prestige_level_impact_mult",
+    "prowess_no_portrait",
+    "prowess_per_piety_level",
+    "raid_speed",
+    "reachman_opinion",
+    "retreat_losses",
+    "riverman_main_opinion",
+    "salt_dornish_opinion",
+    "same_faith_opinion",
+    "sand_dornish_opinion",
+    "short_reign_duration_mult",
+    "siege_phase_time",
+    "spouse_opinion",
+    "steppe_advantage",
+    "stewardship_per_piety_level",
+    "stewardship_per_stress_level",
+    "stone_dornish_opinion",
+    "stormlander_main_opinion",
+    "stress_gain_mult",
+    "stress_loss_mult",
+    "tax_mult",
+    "the_pact_religion_opinion",
+    "the_rhllor_religion_opinion",
+    "the_seven_religion_opinion",
+    "the_ways_religion_opinion",
+    "thenn_opinion",
+    "tolerance_advantage_mod",
+    "twin_opinion",
+    "tyranny_gain_mult",
+    "valeman_opinion",
+    "vassal_tax_contribution_mult",
+    "westerman_main_opinion",
+    "winter_advantage",
+    "wolfswood_clansman_opinion"
+  ]
+}

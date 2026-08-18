@@ -1,13 +1,21 @@
 import {
   parseCharacterDatasetManifest,
+  parseCharacterKinshipIndex,
+  parseCharacterLoadoutShard,
   parseCharacterSearchIndex,
   parseCharacterShard,
+  parseCharacterTitleHolders,
 } from './characterDatasetSchema';
 import type {
   CharacterCanonTier,
   CharacterDatasetManifest,
   CharacterId,
+  CharacterKinshipEntry,
+  CharacterKinshipIndex,
+  CharacterLoadoutShard,
   CharacterSearchHit,
+  CharacterTitleHolders,
+  StaticCharacterLoadoutProfile,
   StaticCharacterRecord,
 } from './types';
 
@@ -30,6 +38,9 @@ export class StaticCharacterRepository {
   private readonly baseUrl: string;
   private manifestPromise?: Promise<CharacterDatasetManifest>;
   private indexPromise?: Promise<CharacterSearchHit[]>;
+  private titleHoldersPromise?: Promise<CharacterTitleHolders>;
+  private readonly kinshipShardPromises = new Map<string, Promise<CharacterKinshipIndex>>();
+  private readonly loadoutShardPromises = new Map<string, Promise<CharacterLoadoutShard>>();
   private readonly shardPromises = new Map<string, Promise<Map<CharacterId, StaticCharacterRecord>>>();
 
   constructor(baseUrl = '/data/agot-characters', private readonly fetchJson: FetchJson = defaultFetchJson) {
@@ -49,6 +60,32 @@ export class StaticCharacterRepository {
     return this.indexPromise;
   }
 
+  private loadLoadoutShard(shard: string): Promise<CharacterLoadoutShard> {
+    let pending = this.loadoutShardPromises.get(shard);
+    if (!pending) {
+      pending = this.fetchJson(`${this.baseUrl}/loadouts/${shard}.json`).then(parseCharacterLoadoutShard);
+      this.loadoutShardPromises.set(shard, pending);
+    }
+    return pending;
+  }
+
+  private loadKinshipShard(shard: string): Promise<CharacterKinshipIndex> {
+    let pending = this.kinshipShardPromises.get(shard);
+    if (!pending) {
+      pending = this.fetchJson(`${this.baseUrl}/kinship/${shard}.json`).then(parseCharacterKinshipIndex);
+      this.kinshipShardPromises.set(shard, pending);
+    }
+    return pending;
+  }
+
+  private loadTitleHolders(): Promise<CharacterTitleHolders> {
+    this.titleHoldersPromise ??= Promise.all([
+      this.loadManifest(),
+      this.fetchJson(`${this.baseUrl}/title-holders.json`).then(parseCharacterTitleHolders),
+    ]).then(([, titleHolders]) => titleHolders);
+    return this.titleHoldersPromise;
+  }
+
   private loadShard(shard: string): Promise<Map<CharacterId, StaticCharacterRecord>> {
     let pending = this.shardPromises.get(shard);
     if (!pending) {
@@ -64,12 +101,66 @@ export class StaticCharacterRepository {
     if (!id.startsWith('agot:')) return undefined;
     const hit = (await this.loadIndex()).find((entry) => entry.id === id);
     if (!hit) return undefined;
-    return (await this.loadShard(hit.shard)).get(id);
+    const [record, titleHolders] = await Promise.all([
+      this.loadShard(hit.shard).then((records) => records.get(id)),
+      this.loadTitleHolders(),
+    ]);
+    if (!record) return undefined;
+    const holdings = titleHolders[id] ?? [];
+    return {
+      ...record,
+      titleIds: holdings.map((title) => title.id),
+      titles: holdings.map((title) => title.name),
+    };
+  }
+
+  async getLoadoutProfile(id: CharacterId): Promise<StaticCharacterLoadoutProfile | undefined> {
+    const hit = (await this.loadIndex()).find((entry) => entry.id === id);
+    if (!hit) return undefined;
+    const profile = (await this.loadLoadoutShard(hit.shard))[id];
+    return profile ? { ...profile } : undefined;
+  }
+
+  async getKinship(id: CharacterId): Promise<CharacterKinshipEntry> {
+    const hit = (await this.loadIndex()).find((entry) => entry.id === id);
+    if (!hit) return { spouseIds: [], childIds: [], siblingIds: [] };
+    const entry = (await this.loadKinshipShard(hit.shard))[id];
+    return entry
+      ? { ...entry, spouseIds: [...entry.spouseIds], childIds: [...entry.childIds], siblingIds: [...entry.siblingIds] }
+      : { spouseIds: [], childIds: [], siblingIds: [] };
+  }
+
+  async getChildren(id: CharacterId): Promise<StaticCharacterRecord[]> {
+    const kinship = await this.getKinship(id);
+    return this.getMany(kinship.childIds);
   }
 
   async getMany(ids: readonly CharacterId[]): Promise<StaticCharacterRecord[]> {
     const records = await Promise.all(ids.map((id) => this.get(id)));
     return records.filter((record): record is StaticCharacterRecord => record !== undefined);
+  }
+
+  async findMentioned(text: string, filters: CharacterSearchFilters = {}): Promise<CharacterSearchHit[]> {
+    const normalized = text.toLocaleLowerCase('zh-CN');
+    const tiers = new Set(filters.canonTiers ?? ['canon', 'semicanon']);
+    const limit = Math.max(1, Math.min(filters.limit ?? 24, 100));
+    const matches = (await this.loadIndex())
+      .filter((hit) => tiers.has(hit.canonTier))
+      .filter((hit) => filters.includeGenealogy || hit.canonTier !== 'genealogy')
+      .filter((hit) => filters.alive === undefined || hit.alive === filters.alive)
+      .filter((hit) => {
+        const names = [hit.name, hit.nameKey].filter((value): value is string => typeof value === 'string' && value.trim().length >= 2);
+        return names.some((name) => normalized.includes(name.toLocaleLowerCase('zh-CN')));
+      })
+      .sort((left, right) => {
+        const leftLength = Math.max(left.name.length, left.nameKey?.length ?? 0);
+        const rightLength = Math.max(right.name.length, right.nameKey?.length ?? 0);
+        if (rightLength !== leftLength) return rightLength - leftLength;
+        if (left.alive !== right.alive) return left.alive ? -1 : 1;
+        if (left.canonTier !== right.canonTier) return left.canonTier === 'canon' ? -1 : 1;
+        return left.id.localeCompare(right.id);
+      });
+    return matches.slice(0, limit);
   }
 
   async search(query: string, filters: CharacterSearchFilters = {}): Promise<CharacterSearchHit[]> {

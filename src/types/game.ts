@@ -3,6 +3,9 @@ import type { TraitCheckDomain } from '../services/traitEffectEngine';
 import type { CheckOutcomeContract } from '../services/dicePolicy';
 import type { CharacterStateCommand } from '../features/characters/characterCommands';
 import type { ItemStateCommand, ItemSystemState } from '../features/items/types';
+import type { WorldArtifactState } from '../features/items/worldArtifacts';
+import type { WorldHistoryState } from '../features/world/worldHistory';
+import type { CharacterId } from '../features/characters/types';
 
 // CK3 同款六项角色能力。常见角色通常位于 0 - 30 区间，数值允许因加成继续提高。
 export interface LordAttributes {
@@ -41,6 +44,7 @@ export interface LordBodyCondition {
 
 // 领主完整角色卡
 export interface LordProfile {
+  canonicalCharacterId?: CharacterId;
   name: string;
   house: string;
   houseWords: string;
@@ -72,6 +76,7 @@ export interface LordProfile {
   baseAttributes?: LordAttributes; // 未计入人物特质修正的基础值，用于防止重复叠加
   traits: string[];
   traitIds?: string[];
+  importedTraitIds?: string[]; // 现成人物保留的完整离线原始特质，显示时按年龄与呈现策略投影
 }
 
 // 状态指令
@@ -145,7 +150,7 @@ export interface WorldCharacterStateRef {
 
 // 游戏全局状态
 export interface GameState {
-  saveFormatVersion: 5;
+  saveFormatVersion: 6;
   currentYear: number;
   currentMonth: number;
   currentDay: number;
@@ -154,6 +159,8 @@ export interface GameState {
   lord: LordProfile;
   turns: StoryTurn[];
   worldCharacters?: WorldCharacterStateRef;
+  worldArtifacts: WorldArtifactState;
+  worldHistory: WorldHistoryState;
   worldFlags: Record<string, boolean | string | number>;
   isGameOver: boolean;
   deathReason?: string;

@@ -84,7 +84,7 @@ export function parseModelOutput(
 }
 
 // 强健的 JSON 数组提取器 (容忍 Markdown 代码块、单行注释、末尾逗号等各种 LLM 瑕疵)
-function extractJsonArrayFromXml(rawText: string, tagName: string): any[] {
+export function extractJsonArrayFromXml(rawText: string, tagName: string): any[] {
   const match = rawText.match(new RegExp(`<${tagName}>([\\s\\S]*?)(?:<\\/${tagName}>|$)`, 'i'));
   if (!match) return [];
 
@@ -366,6 +366,112 @@ export async function streamChatCompletion(
     return `<think>\n${accumulatedReasoning}\n</think>\n\n${accumulatedContent}`;
   }
   return accumulatedContent;
+}
+
+
+export async function requestTurnResolutionCompletion(
+  messages: Array<{ role: string; content: string }>,
+  config: ApiConfig,
+  gameState?: GameState,
+  pendingItemActions: PendingItemAction[] = [],
+  signal?: AbortSignal,
+): Promise<string> {
+  if (!config.apiKey || config.apiKey.trim() === '') {
+    const demo = generateOfflineDemoResponse(
+      messages[messages.length - 1]?.content.slice(0, 120) ?? '',
+      (gameState?.turnCount ?? 0) + 1,
+      gameState,
+      pendingItemActions,
+    );
+    return `<resolution>程序离线解析了当前行动，最终事实仍以命令验证结果为准。</resolution>
+<state_cmd>
+${JSON.stringify(demo.stateCommands ?? [])}
+</state_cmd>`;
+  }
+  const baseUrl = (config.baseUrl || 'https://api.openai.com/v1').replace(/\/+$/, '');
+  const response = await fetch(`${baseUrl}/chat/completions`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${config.apiKey}` },
+    body: JSON.stringify({
+      model: config.model || 'gpt-4o',
+      messages,
+      temperature: Math.min(config.temperature ?? 0.7, 0.4),
+      max_tokens: 1600,
+      stream: false,
+    }),
+    signal,
+  });
+  if (!response.ok) {
+    const errorText = await response.text().catch(() => '网络请求失败');
+    throw new Error(`API 规则解析错误 (${response.status}): ${errorText}`);
+  }
+  const payload = await response.json();
+  const message = payload.choices?.[0]?.message;
+  const reasoning = message?.reasoning_content || message?.reasoning || '';
+  const content = message?.content || '';
+  return reasoning && !content.includes('<resolution>')
+    ? `<resolution>${reasoning}</resolution>
+${content}`
+    : content;
+}
+
+function offlineSettledNarrative(messages: Array<{ role: string; content: string }>): string {
+  const userMessage = [...messages].reverse().find((message) => message.role === 'user')?.content ?? '';
+  const action = userMessage.match(/【玩家行动】\s*([\s\S]*?)\s*【程序已确认】/)?.[1]?.trim() || '继续当前行动';
+  const confirmed = userMessage.split('【程序已确认】')[1]?.split('请严格根据以上事实写正文')[0] ?? '';
+  const lines = confirmed.split('\n').map((line) => line.trim()).filter(Boolean);
+  const valueOf = (prefix: string) => lines.find((line) => line.startsWith(prefix))?.slice(prefix.length).trim();
+  const date = valueOf('- 日期：') ?? '当前日期';
+  const dice = valueOf('- D20：') ?? '本回合没有额外检定';
+  const changes = valueOf('- 状态变化：');
+  const worldFacts = lines
+    .filter((line) => line.startsWith('- ')
+      && !['- 日期：', '- D20：', '- 接受命令：', '- 状态变化：'].some((prefix) => line.startsWith(prefix)))
+    .filter((line) => !/没有额外世界事件/.test(line))
+    .map((line) => line.replace(/^-\s*/, ''));
+
+  const paragraphs = [
+    `${date}，你把自己的决定付诸行动：“${action}”`,
+    dice.includes('没有 D20 检定') ? '这一步没有需要交给骰子的真实风险，结果由已经确认的现场条件直接决定。' : `检定结果已经落定：${dice}。`,
+  ];
+  if (changes && !/无数值变化/.test(changes)) paragraphs.push(`${changes.replace(/[；。]+$/, '')}。`);
+  if (worldFacts.length) paragraphs.push(worldFacts.map((fact) => `${fact.replace(/[。]+$/, '')}。`).join(''));
+  paragraphs.push('场景只沿着这些已经成立的结果继续，没有额外的命运转折被凭空加入。');
+
+  return [
+    '<think>离线叙述仅整理程序已经确认的本回合事实。</think>',
+    `<narrate>${paragraphs.join('\n\n')}</narrate>`,
+    '<branch>\n1. 观察在场人物对结果的直接反应\n2. 追问当前局势中仍未解决的问题\n3. 根据已经发生的变化采取下一步行动\n</branch>',
+  ].join('\n\n');
+}
+
+async function streamOfflineSettledNarrative(
+  rawText: string,
+  onChunk: (partialText: string) => void,
+  signal?: AbortSignal,
+): Promise<string> {
+  let index = 0;
+  let current = '';
+  while (index < rawText.length) {
+    if (signal?.aborted) throw new Error('叙事生成已取消');
+    current += rawText.slice(index, index + 12);
+    index += 12;
+    onChunk(current);
+    await new Promise((resolve) => setTimeout(resolve, 4));
+  }
+  return rawText;
+}
+
+export async function streamNarrativeCompletion(
+  messages: Array<{ role: string; content: string }>,
+  config: ApiConfig,
+  onChunk: (partialText: string) => void,
+  signal?: AbortSignal,
+): Promise<string> {
+  if (!config.apiKey || config.apiKey.trim() === '') {
+    return streamOfflineSettledNarrative(offlineSettledNarrative(messages), onChunk, signal);
+  }
+  return streamChatCompletion(messages, config, onChunk, signal);
 }
 
 // 动态拉取服务商可用模型列表

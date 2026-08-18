@@ -1,4 +1,5 @@
 import type { BodyZoneKey, LordAttributes, WoundLevel } from '../../types/game';
+import type { EquipmentPosition } from '../items/types';
 
 export type CharacterId = `agot:${string}` | `save:${string}:${string}`;
 export type CharacterCanonTier = 'canon' | 'semicanon' | 'mod_supporting' | 'genealogy';
@@ -17,8 +18,69 @@ export interface CharacterDatasetManifest {
     modVersion: string;
     sourceChecksum: string;
     characterFileCount: number;
+    titleFileCount: number;
     localizationFileCount: number;
   };
+}
+
+export interface StaticCharacterTitle {
+  id: string;
+  name: string;
+  tier: 'hegemon' | 'empire' | 'kingdom' | 'duchy' | 'county' | 'barony' | 'other';
+}
+
+export type CharacterTitleHolders = Partial<Record<CharacterId, StaticCharacterTitle[]>>;
+
+export interface CharacterKinshipEntry {
+  fatherId?: CharacterId;
+  motherId?: CharacterId;
+  spouseIds: CharacterId[];
+  childIds: CharacterId[];
+  siblingIds: CharacterId[];
+}
+
+export type CharacterKinshipIndex = Partial<Record<CharacterId, CharacterKinshipEntry>>;
+
+export interface CharacterPortraitRef {
+  characterId: CharacterId;
+  assetPath: string;
+  attributionId: string;
+  focalPoint?: string;
+}
+
+export type CharacterPortraitShard = Partial<Record<CharacterId, CharacterPortraitRef>>;
+
+export interface CharacterPortraitAttribution {
+  id: string;
+  pageTitle: string;
+  pageUrl: string;
+  originalUrl: string;
+  descriptionUrl?: string;
+  author?: string;
+  caption?: string;
+  licenseName?: string;
+  licenseUrl?: string;
+}
+
+export interface StaticCharacterLoadoutProfile {
+  characterId: CharacterId;
+  templateId: string;
+  overrideId?: string;
+}
+
+export type CharacterLoadoutShard = Partial<Record<CharacterId, StaticCharacterLoadoutProfile>>;
+
+export type CharacterItemCustody =
+  | { type: 'character'; characterId: CharacterId }
+  | { type: 'site'; siteId: string };
+
+export interface CharacterItemRecord {
+  instanceId: string;
+  definitionId: string;
+  ownerId: CharacterId;
+  custody: CharacterItemCustody;
+  equippedPosition?: EquipmentPosition;
+  source: 'baseline_template' | 'curated_override' | 'story_event';
 }
 
 export interface StaticCharacterRecord {
@@ -43,6 +105,8 @@ export interface StaticCharacterRecord {
   traits: string[];
   spouseIds: CharacterId[];
   relations: Array<{ kind: string; target_id: string }>;
+  titleIds?: string[];
+  titles?: string[];
   hasDna: boolean;
   source: { file: string; line: number };
 }
@@ -106,15 +170,23 @@ export type CharacterEvent =
   | { type: 'MARRY'; spouseId: CharacterId; reason?: string }
   | { type: 'DIVORCE'; spouseId: CharacterId; reason?: string }
   | { type: 'GRANT_TITLE'; titleId: string }
-  | { type: 'REVOKE_TITLE'; titleId: string };
+  | { type: 'REVOKE_TITLE'; titleId: string }
+  | { type: 'ITEM_ACQUIRE'; item: CharacterItemRecord }
+  | { type: 'ITEM_EQUIP'; instanceId: string; position: EquipmentPosition }
+  | { type: 'ITEM_UNEQUIP'; instanceId: string }
+  | { type: 'ITEM_TRANSFER_OUT'; instanceId: string }
+  | { type: 'ITEM_TRANSFER_IN'; item: CharacterItemRecord }
+  | { type: 'ITEM_LOSE'; instanceId: string };
 
 export interface ResolvedCharacter extends StaticCharacterRecord {
   attributes: LordAttributes;
   locationId?: string;
+  titleIds: string[];
   titles: string[];
   wounds: string[];
   woundLevels: Partial<Record<BodyZoneKey, WoundLevel>>;
   relationships: CharacterRelationship[];
   memories: CharacterMemory[];
   knowledge: CharacterKnowledge[];
+  items: CharacterItemRecord[];
 }

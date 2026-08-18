@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Hourglass, Search } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { ITEM_CATALOG } from '../../data/itemDefinitions';
 import { getItemDefinition } from '../../features/items/catalog';
 import { DEFAULT_CARRIED_CAPACITY, getUsedCarryUnits } from '../../features/items/custody';
@@ -87,7 +87,7 @@ function durableValue(label: string): number {
 }
 
 export const ItemManagementPanel: React.FC = () => {
-  const { gameState, pendingItemActions, queueItemAction, isStreaming } = useGameStore();
+  const { gameState, pendingItemActions, queueItemAction, cancelItemAction, isStreaming } = useGameStore();
   const { lord } = gameState;
   const state = lord.items;
   const [activeTab, setActiveTab] = useState<CustodyTab>('carried');
@@ -177,15 +177,6 @@ export const ItemManagementPanel: React.FC = () => {
   return (
     <>
     <section className="space-y-3" data-item-management>
-      {pendingItemActions.length > 0 && (
-        <div className="queue-banner" role="status">
-          <Hourglass className="h-3.5 w-3.5 shrink-0 text-gold" />
-          <span>
-            <strong className="font-bold">{pendingItemActions.length} 项物品动作待生效</strong>
-            <span className="text-parchment-dim"> · 下一次成功对话后结算,可在主页御令栏上方撤销</span>
-          </span>
-        </div>
-      )}
       <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-4" role="tablist" aria-label="物品保管位置">
         {CUSTODY_TABS.map((tab) => (
           <button key={tab.id} type="button" role="tab" data-custody-tab={tab.id} aria-selected={activeTab === tab.id} onClick={() => setActiveTab(tab.id)} className={`border px-2 py-2 text-left transition-colors ${activeTab === tab.id ? 'border-gold bg-gold-deep/15 text-gold-bright' : 'border-hairline bg-ink-3/40 text-parchment-dim hover:border-gold-deep'}`}>
@@ -216,7 +207,19 @@ export const ItemManagementPanel: React.FC = () => {
 
       {cards.length > 0 ? (
         <div className="grid gap-2 xl:grid-cols-2">
-          {cards.map((card) => <ItemCard key={card.key} item={card} pendingNote={pendingByInstance.get(card.instanceId)?.label} onAction={queueCardAction} />)}
+          {cards.map((card) => {
+            const pending = pendingByInstance.get(card.instanceId);
+            return (
+              <ItemCard
+                key={card.key}
+                item={card}
+                pendingNote={pending?.label}
+                onCancelPending={pending ? () => cancelItemAction(pending.id) : undefined}
+                pendingCancellationDisabled={isStreaming}
+                onAction={queueCardAction}
+              />
+            );
+          })}
         </div>
       ) : (
         <div className="border border-dashed border-hairline py-10 text-center font-serif text-[11.5px] text-parchment-dim">此页没有符合条件的物品</div>

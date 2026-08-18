@@ -1,0 +1,1627 @@
+{
+  "agot:Allyrion_6": {
+    "pageTitle": "Daemon Sand",
+    "score": 110,
+    "source": "automatic"
+  },
+  "agot:Ambrose_3": {
+    "pageTitle": "Alyn Ambrose",
+    "score": 155,
+    "source": "automatic"
+  },
+  "agot:Arryn_3": {
+    "pageTitle": "Jon Arryn",
+    "score": 150,
+    "source": "automatic"
+  },
+  "agot:Arryn_6": {
+    "pageTitle": "Rowena Arryn",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Arryn_8": {
+    "pageTitle": "Robert Arryn",
+    "score": 180,
+    "source": "automatic"
+  },
+  "agot:Ball_3": {
+    "pageTitle": "Quentyn Ball",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Baratheon_1": {
+    "pageTitle": "Steffon Baratheon",
+    "score": 140,
+    "source": "automatic"
+  },
+  "agot:Baratheon_13": {
+    "pageTitle": "Shireen Baratheon",
+    "score": 180,
+    "source": "automatic"
+  },
+  "agot:Baratheon_2": {
+    "pageTitle": "Robert I Baratheon",
+    "score": 130,
+    "source": "automatic"
+  },
+  "agot:Baratheon_3": {
+    "pageTitle": "Stannis Baratheon",
+    "score": 130,
+    "source": "automatic"
+  },
+  "agot:Baratheon_4": {
+    "pageTitle": "Renly Baratheon",
+    "score": 180,
+    "source": "automatic"
+  },
+  "agot:Baratheon_5": {
+    "pageTitle": "Joffrey Baratheon",
+    "score": 130,
+    "source": "automatic"
+  },
+  "agot:Baratheon_7": {
+    "pageTitle": "Tommen Baratheon",
+    "score": 130,
+    "source": "automatic"
+  },
+  "agot:Baratheon_8": {
+    "pageTitle": "Edric Storm",
+    "score": 140,
+    "source": "automatic"
+  },
+  "agot:Beesbury_4": {
+    "pageTitle": "Beony Beesbury",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Beesbury_5": {
+    "pageTitle": "Bertram Beesbury",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Belgrave_5": {
+    "pageTitle": "Gyles Belgrave",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Belmore_3": {
+    "pageTitle": "Benedar Belmore",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Blackwood_11": {
+    "pageTitle": "Lucas Blackwood",
+    "score": 150,
+    "source": "automatic"
+  },
+  "agot:Blackwood_6": {
+    "pageTitle": "Tytos Blackwood",
+    "score": 120,
+    "source": "automatic"
+  },
+  "agot:Botley_18": {
+    "pageTitle": "Wex Pyke",
+    "score": 120,
+    "source": "automatic"
+  },
+  "agot:Botley_2": {
+    "pageTitle": "Maron Botley",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Bracken_3": {
+    "pageTitle": "Jonos Bracken",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Bracken_9": {
+    "pageTitle": "Harry Rivers",
+    "score": 95,
+    "source": "automatic"
+  },
+  "agot:Brune_31": {
+    "pageTitle": "Bernarr Brune",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Buckwell_2": {
+    "pageTitle": "Jarman Buckwell",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Byrch_2": {
+    "pageTitle": "Balman Byrch",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Byrne_6": {
+    "pageTitle": "Brendel Byrne",
+    "score": 90,
+    "source": "automatic"
+  },
+  "agot:Bywater_5": {
+    "pageTitle": "Jacelyn Bywater",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Caron_5": {
+    "pageTitle": "Bryce Caron",
+    "score": 150,
+    "source": "automatic"
+  },
+  "agot:Caron_6": {
+    "pageTitle": "Rolland Storm",
+    "score": 95,
+    "source": "automatic"
+  },
+  "agot:Caron_9": {
+    "pageTitle": "Ellyn Caron",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Cassel_5": {
+    "pageTitle": "Beth Cassel",
+    "score": 95,
+    "source": "automatic"
+  },
+  "agot:Cerwyn_2": {
+    "pageTitle": "Jonelle Cerwyn",
+    "score": 160,
+    "source": "automatic"
+  },
+  "agot:Cerwyn_3": {
+    "pageTitle": "Cley Cerwyn",
+    "score": 150,
+    "source": "automatic"
+  },
+  "agot:Chester_1": {
+    "pageTitle": "Moribald Chester",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Cole_21": {
+    "pageTitle": "Dick Cole",
+    "score": 90,
+    "source": "automatic"
+  },
+  "agot:Condon_1": {
+    "pageTitle": "Kyle Condon",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Connington_4": {
+    "pageTitle": "Jon Connington",
+    "score": 150,
+    "source": "automatic"
+  },
+  "agot:Connington_6": {
+    "pageTitle": "Ronnet Connington",
+    "score": 160,
+    "source": "automatic"
+  },
+  "agot:Crabb_11": {
+    "pageTitle": "Dick Crabb",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Crakehall_8": {
+    "pageTitle": "Lyle Crakehall",
+    "score": 135,
+    "source": "automatic"
+  },
+  "agot:Crane_2": {
+    "pageTitle": "Melara Crane",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Crane_5": {
+    "pageTitle": "Parmen Crane",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Crane_6": {
+    "pageTitle": "Meredyth Crane",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Crossing_1": {
+    "pageTitle": "Walder Rivers",
+    "score": 95,
+    "source": "automatic"
+  },
+  "agot:Crossing_4": {
+    "pageTitle": "Walda Rivers (daughter of Aemon)",
+    "score": 85,
+    "source": "automatic"
+  },
+  "agot:Cuy_3": {
+    "pageTitle": "Emmon Cuy",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:D_han_84_B": {
+    "pageTitle": "Denzo D'han",
+    "score": 90,
+    "source": "automatic"
+  },
+  "agot:Dalt_3": {
+    "pageTitle": "Andrey Dalt",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Darry_60": {
+    "pageTitle": "Willem Darry",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Dayne_4": {
+    "pageTitle": "Ashara Dayne",
+    "score": 130,
+    "source": "automatic"
+  },
+  "agot:Dayne_6": {
+    "pageTitle": "Allyria Dayne",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Deem_1": {
+    "pageTitle": "Allar Deem",
+    "score": 90,
+    "source": "automatic"
+  },
+  "agot:Dondarrion_2": {
+    "pageTitle": "Beric Dondarrion",
+    "score": 130,
+    "source": "automatic"
+  },
+  "agot:Dustin_1": {
+    "pageTitle": "Willam Dustin",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Edoryen_1": {
+    "pageTitle": "Gorys Edoryen",
+    "score": 90,
+    "source": "automatic"
+  },
+  "agot:Egen_3": {
+    "pageTitle": "Vardis Egen",
+    "score": 130,
+    "source": "automatic"
+  },
+  "agot:Errol_1": {
+    "pageTitle": "Shyra Errol",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Estermont_7": {
+    "pageTitle": "Andrew Estermont",
+    "score": 135,
+    "source": "automatic"
+  },
+  "agot:Farring_3": {
+    "pageTitle": "Gilbert Farring",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Farring_5": {
+    "pageTitle": "Godry Farring",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Flint_9": {
+    "pageTitle": "Torghen Flint",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Foote_6": {
+    "pageTitle": "Philip Foote",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Forel_51_A": {
+    "pageTitle": "Syrio Forel",
+    "score": 90,
+    "source": "automatic"
+  },
+  "agot:Fowler_2": {
+    "pageTitle": "Jeyne Fowler",
+    "score": 140,
+    "source": "automatic"
+  },
+  "agot:Fowler_3": {
+    "pageTitle": "Jennelyn Fowler",
+    "score": 140,
+    "source": "automatic"
+  },
+  "agot:Frey_13": {
+    "pageTitle": "Walda Frey (daughter of Walton)",
+    "score": 170,
+    "source": "automatic"
+  },
+  "agot:Frey_151": {
+    "pageTitle": "Franklyn Frey",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Frey_52": {
+    "pageTitle": "Walda Frey (daughter of Merrett)",
+    "score": 170,
+    "source": "automatic"
+  },
+  "agot:Frey_73": {
+    "pageTitle": "Walder Frey (son of Jammos)",
+    "score": 180,
+    "source": "automatic"
+  },
+  "agot:Frey_82": {
+    "pageTitle": "Roslin Frey",
+    "score": 170,
+    "source": "automatic"
+  },
+  "agot:Frey_83": {
+    "pageTitle": "Della Frey",
+    "score": 180,
+    "source": "automatic"
+  },
+  "agot:Frey_84": {
+    "pageTitle": "Osmund Frey",
+    "score": 180,
+    "source": "automatic"
+  },
+  "agot:Frey_89": {
+    "pageTitle": "Elmar Frey",
+    "score": 180,
+    "source": "automatic"
+  },
+  "agot:Frey_93": {
+    "pageTitle": "Martyn Rivers",
+    "score": 95,
+    "source": "automatic"
+  },
+  "agot:Frey_94": {
+    "pageTitle": "Ryger Rivers",
+    "score": 95,
+    "source": "automatic"
+  },
+  "agot:Glover_5": {
+    "pageTitle": "Robett Glover",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Goodbrother_1": {
+    "pageTitle": "Gorold Goodbrother",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Goodbrother_14": {
+    "pageTitle": "Greydon Goodbrother",
+    "score": 140,
+    "source": "automatic"
+  },
+  "agot:Goodbrother_15": {
+    "pageTitle": "Gormond Goodbrother",
+    "score": 140,
+    "source": "automatic"
+  },
+  "agot:Goodbrother_16": {
+    "pageTitle": "Gran Goodbrother",
+    "score": 140,
+    "source": "automatic"
+  },
+  "agot:Graceford_3": {
+    "pageTitle": "Alyce Graceford",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Grafton_3": {
+    "pageTitle": "Gerold Grafton",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Greenfield_3": {
+    "pageTitle": "Preston Greenfield",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Grell_5": {
+    "pageTitle": "Desmond Grell",
+    "score": 130,
+    "source": "automatic"
+  },
+  "agot:Grey_3": {
+    "pageTitle": "Garibald Grey",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Greyjoy_13": {
+    "pageTitle": "Asha Greyjoy",
+    "score": 170,
+    "source": "automatic"
+  },
+  "agot:Greyjoy_14": {
+    "pageTitle": "Theon Greyjoy",
+    "score": 170,
+    "source": "automatic"
+  },
+  "agot:Greyjoy_17": {
+    "pageTitle": "Vickon Greyjoy",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Greyjoy_18": {
+    "pageTitle": "Loron Greyjoy (lord)",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Hawick_4": {
+    "pageTitle": "Bellena Hawick",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Heddle_1": {
+    "pageTitle": "Masha Heddle",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Heddle_4": {
+    "pageTitle": "Jeyne Heddle",
+    "score": 130,
+    "source": "automatic"
+  },
+  "agot:Heddle_5": {
+    "pageTitle": "Willow Heddle",
+    "score": 140,
+    "source": "automatic"
+  },
+  "agot:Hetherspoon_3": {
+    "pageTitle": "Melara Hetherspoon",
+    "score": 160,
+    "source": "automatic"
+  },
+  "agot:Hewett_11": {
+    "pageTitle": "Falia Flowers",
+    "score": 110,
+    "source": "automatic"
+  },
+  "agot:Hewett_3": {
+    "pageTitle": "Humfrey Hewett",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Hightower_137": {
+    "pageTitle": "Lymond Hightower",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Hightower_5": {
+    "pageTitle": "Leyton Hightower",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Hightower_7": {
+    "pageTitle": "Baelor Hightower",
+    "score": 135,
+    "source": "automatic"
+  },
+  "agot:Hightower_8": {
+    "pageTitle": "Malora Hightower",
+    "score": 135,
+    "source": "automatic"
+  },
+  "agot:Hightower_9": {
+    "pageTitle": "Alerie Hightower",
+    "score": 140,
+    "source": "automatic"
+  },
+  "agot:Hoat_1": {
+    "pageTitle": "Vargo Hoat",
+    "score": 90,
+    "source": "automatic"
+  },
+  "agot:Hogg_1": {
+    "pageTitle": "Roger Hogg",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Hollard_10": {
+    "pageTitle": "Dontos Hollard",
+    "score": 150,
+    "source": "automatic"
+  },
+  "agot:Hornwood_2": {
+    "pageTitle": "Halys Hornwood",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Horpe_1": {
+    "pageTitle": "Harys Horpe",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Horpe_3": {
+    "pageTitle": "Richard Horpe",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Hotah_1_B": {
+    "pageTitle": "Areo Hotah",
+    "score": 95,
+    "source": "automatic"
+  },
+  "agot:Hunter_1": {
+    "pageTitle": "Eon Hunter",
+    "score": 120,
+    "source": "automatic"
+  },
+  "agot:Hunter_2": {
+    "pageTitle": "Gilwood Hunter",
+    "score": 150,
+    "source": "automatic"
+  },
+  "agot:Ironmaker_1": {
+    "pageTitle": "Erik Ironmaker",
+    "score": 140,
+    "source": "automatic"
+  },
+  "agot:Jayn_47": {
+    "pageTitle": "Malo Jayn",
+    "score": 90,
+    "source": "automatic"
+  },
+  "agot:Karstark_19": {
+    "pageTitle": "Alys Karstark",
+    "score": 95,
+    "source": "automatic"
+  },
+  "agot:Kettleblack_2": {
+    "pageTitle": "Osmund Kettleblack",
+    "score": 135,
+    "source": "automatic"
+  },
+  "agot:Kettleblack_4": {
+    "pageTitle": "Osney Kettleblack",
+    "score": 135,
+    "source": "automatic"
+  },
+  "agot:Ladybright_6": {
+    "pageTitle": "Jayne Ladybright",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Lannister_1": {
+    "pageTitle": "Tywin Lannister",
+    "score": 180,
+    "source": "automatic"
+  },
+  "agot:Lannister_12": {
+    "pageTitle": "Janei Lannister",
+    "score": 170,
+    "source": "automatic"
+  },
+  "agot:Lannister_129": {
+    "pageTitle": "Tytos Lannister",
+    "score": 130,
+    "source": "automatic"
+  },
+  "agot:Lannister_13": {
+    "pageTitle": "Tyrek Lannister",
+    "score": 180,
+    "source": "automatic"
+  },
+  "agot:Lannister_130": {
+    "pageTitle": "Jason Lannister (son of Gerold)",
+    "score": 140,
+    "source": "automatic"
+  },
+  "agot:Lannister_14": {
+    "pageTitle": "Joy Hill",
+    "score": 140,
+    "source": "automatic"
+  },
+  "agot:Lannister_15": {
+    "pageTitle": "Lynora Hill",
+    "score": 110,
+    "source": "automatic"
+  },
+  "agot:Lannister_18": {
+    "pageTitle": "Stafford Lannister",
+    "score": 160,
+    "source": "automatic"
+  },
+  "agot:Lannister_2": {
+    "pageTitle": "Kevan Lannister",
+    "score": 180,
+    "source": "automatic"
+  },
+  "agot:Lannister_23": {
+    "pageTitle": "Damion Lannister",
+    "score": 160,
+    "source": "automatic"
+  },
+  "agot:Lannister_25": {
+    "pageTitle": "Cerenna Lannister",
+    "score": 160,
+    "source": "automatic"
+  },
+  "agot:Lannister_26": {
+    "pageTitle": "Myrielle Lannister",
+    "score": 160,
+    "source": "automatic"
+  },
+  "agot:Lannister_3": {
+    "pageTitle": "Genna Lannister",
+    "score": 180,
+    "source": "automatic"
+  },
+  "agot:Lannister_5": {
+    "pageTitle": "Gerion Lannister",
+    "score": 180,
+    "source": "automatic"
+  },
+  "agot:Lannister_6": {
+    "pageTitle": "Cersei Lannister",
+    "score": 180,
+    "source": "automatic"
+  },
+  "agot:Lannister_7": {
+    "pageTitle": "Jaime Lannister",
+    "score": 180,
+    "source": "automatic"
+  },
+  "agot:Lannister_8": {
+    "pageTitle": "Tyrion Lannister",
+    "score": 180,
+    "source": "automatic"
+  },
+  "agot:Lannister_9": {
+    "pageTitle": "Lancel Lannister",
+    "score": 180,
+    "source": "automatic"
+  },
+  "agot:Lefford_2": {
+    "pageTitle": "Myranda Lefford",
+    "score": 120,
+    "source": "automatic"
+  },
+  "agot:Liddle_3": {
+    "pageTitle": "Morgan Liddle",
+    "score": 135,
+    "source": "automatic"
+  },
+  "agot:Locke_1": {
+    "pageTitle": "Ondrew Locke",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Long_22": {
+    "pageTitle": "Lucifer Long",
+    "score": 90,
+    "source": "automatic"
+  },
+  "agot:Lorch_2": {
+    "pageTitle": "Amory Lorch",
+    "score": 120,
+    "source": "automatic"
+  },
+  "agot:Lothston_22": {
+    "pageTitle": "Jon Lothston",
+    "score": 90,
+    "source": "automatic"
+  },
+  "agot:Lychester_1": {
+    "pageTitle": "Lymond Lychester",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Maar_1": {
+    "pageTitle": "Lysono Maar",
+    "score": 90,
+    "source": "automatic"
+  },
+  "agot:Mallister_3": {
+    "pageTitle": "Desmond Mallister",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Mallister_4": {
+    "pageTitle": "Jason Mallister",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Mallister_7": {
+    "pageTitle": "Patrek Mallister",
+    "score": 135,
+    "source": "automatic"
+  },
+  "agot:Manderly_10": {
+    "pageTitle": "Wylla Manderly",
+    "score": 180,
+    "source": "automatic"
+  },
+  "agot:Manderly_12": {
+    "pageTitle": "Donella Hornwood",
+    "score": 80,
+    "source": "automatic"
+  },
+  "agot:Manderly_2": {
+    "pageTitle": "Medrick Manderly",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Manderly_6": {
+    "pageTitle": "Wyman Manderly",
+    "score": 140,
+    "source": "automatic"
+  },
+  "agot:Manderly_7": {
+    "pageTitle": "Wylis Manderly",
+    "score": 140,
+    "source": "automatic"
+  },
+  "agot:Mandrake_29": {
+    "pageTitle": "Marq Mandrake",
+    "score": 90,
+    "source": "automatic"
+  },
+  "agot:Manwoody_2": {
+    "pageTitle": "Dagos Manwoody",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Marbrand_4": {
+    "pageTitle": "Addam Marbrand",
+    "score": 135,
+    "source": "automatic"
+  },
+  "agot:Martell_10": {
+    "pageTitle": "Quentyn Martell",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Martell_11": {
+    "pageTitle": "Trystane Martell",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Martell_16": {
+    "pageTitle": "Elia Sand",
+    "score": 105,
+    "source": "automatic"
+  },
+  "agot:Martell_17": {
+    "pageTitle": "Dorea Sand",
+    "score": 105,
+    "source": "automatic"
+  },
+  "agot:Martell_18": {
+    "pageTitle": "Obella Sand",
+    "score": 105,
+    "source": "automatic"
+  },
+  "agot:Martell_19": {
+    "pageTitle": "Loreza Sand",
+    "score": 105,
+    "source": "automatic"
+  },
+  "agot:Martell_9": {
+    "pageTitle": "Arianne Martell",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Massey_4": {
+    "pageTitle": "Justin Massey",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Massey_74": {
+    "pageTitle": "Alarra Massey",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Merryweather_3": {
+    "pageTitle": "Orton Merryweather",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Mollen_3": {
+    "pageTitle": "Hallis Mollen",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Moore_2": {
+    "pageTitle": "Mandon Moore",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Mooton_2": {
+    "pageTitle": "William Mooton",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Mopatis_1": {
+    "pageTitle": "Illyrio Mopatis",
+    "score": 90,
+    "source": "automatic"
+  },
+  "agot:Mormont_3": {
+    "pageTitle": "Jorah Mormont",
+    "score": 150,
+    "source": "automatic"
+  },
+  "agot:Mormont_6": {
+    "pageTitle": "Alysane Mormont",
+    "score": 150,
+    "source": "automatic"
+  },
+  "agot:Mormont_7": {
+    "pageTitle": "Lyra Mormont",
+    "score": 140,
+    "source": "automatic"
+  },
+  "agot:Mormont_8": {
+    "pageTitle": "Jorelle Mormont",
+    "score": 140,
+    "source": "automatic"
+  },
+  "agot:Mormont_9": {
+    "pageTitle": "Lyanna Mormont",
+    "score": 160,
+    "source": "automatic"
+  },
+  "agot:Morrigen_4": {
+    "pageTitle": "Guyard Morrigen",
+    "score": 120,
+    "source": "automatic"
+  },
+  "agot:Myrakis_31": {
+    "pageTitle": "Myrio Myrakis",
+    "score": 90,
+    "source": "automatic"
+  },
+  "agot:Nestoris_54": {
+    "pageTitle": "Tycho Nestoris",
+    "score": 90,
+    "source": "automatic"
+  },
+  "agot:Norrey_1": {
+    "pageTitle": "Brandon Norrey",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Noye_1": {
+    "pageTitle": "Donal Noye",
+    "score": 95,
+    "source": "automatic"
+  },
+  "agot:Oakheart_4": {
+    "pageTitle": "Arys Oakheart",
+    "score": 150,
+    "source": "automatic"
+  },
+  "agot:Otherys_BP_5": {
+    "pageTitle": "Bellegere Otherys (courtesan)",
+    "score": 135,
+    "source": "automatic"
+  },
+  "agot:Payne_16": {
+    "pageTitle": "Podrick Payne",
+    "score": 130,
+    "source": "automatic"
+  },
+  "agot:Payne_6": {
+    "pageTitle": "Ilyn Payne",
+    "score": 120,
+    "source": "automatic"
+  },
+  "agot:Peake_3": {
+    "pageTitle": "Laswell Peake",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Peake_4": {
+    "pageTitle": "Pykewood Peake",
+    "score": 90,
+    "source": "automatic"
+  },
+  "agot:Peake_5": {
+    "pageTitle": "Torman Peake",
+    "score": 90,
+    "source": "automatic"
+  },
+  "agot:Pease_1": {
+    "pageTitle": "Lymond Pease",
+    "score": 90,
+    "source": "automatic"
+  },
+  "agot:Peckledon_5": {
+    "pageTitle": "Josmyn Peckledon",
+    "score": 130,
+    "source": "automatic"
+  },
+  "agot:Piper_1": {
+    "pageTitle": "Clement Piper",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Piper_6": {
+    "pageTitle": "Marq Piper",
+    "score": 135,
+    "source": "automatic"
+  },
+  "agot:Poole_3": {
+    "pageTitle": "Jeyne Poole",
+    "score": 160,
+    "source": "automatic"
+  },
+  "agot:Prester_48": {
+    "pageTitle": "Marla Prester",
+    "score": 120,
+    "source": "automatic"
+  },
+  "agot:Redfort_1": {
+    "pageTitle": "Horton Redfort",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Redwyne_2": {
+    "pageTitle": "Olenna Tyrell",
+    "score": 120,
+    "source": "automatic"
+  },
+  "agot:Redwyne_7": {
+    "pageTitle": "Desmera Redwyne",
+    "score": 180,
+    "source": "automatic"
+  },
+  "agot:Reed_1": {
+    "pageTitle": "Howland Reed",
+    "score": 120,
+    "source": "automatic"
+  },
+  "agot:Reed_2": {
+    "pageTitle": "Meera Reed",
+    "score": 180,
+    "source": "automatic"
+  },
+  "agot:Reed_3": {
+    "pageTitle": "Jojen Reed",
+    "score": 170,
+    "source": "automatic"
+  },
+  "agot:Rhegan_33": {
+    "pageTitle": "Gylo Rhegan",
+    "score": 90,
+    "source": "automatic"
+  },
+  "agot:Rosby_4": {
+    "pageTitle": "Gyles Rosby",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Rowan_1": {
+    "pageTitle": "Mathis Rowan",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Royce_5": {
+    "pageTitle": "Robar Royce",
+    "score": 160,
+    "source": "automatic"
+  },
+  "agot:Royce_6": {
+    "pageTitle": "Waymar Royce",
+    "score": 150,
+    "source": "automatic"
+  },
+  "agot:Royce_79": {
+    "pageTitle": "Rhea Royce",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Royce_81": {
+    "pageTitle": "Jeyne Royce",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Ryger_4": {
+    "pageTitle": "Robin Ryger",
+    "score": 130,
+    "source": "automatic"
+  },
+  "agot:Rykker_3": {
+    "pageTitle": "Jaremy Rykker",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Ryswell_3": {
+    "pageTitle": "Rodrik Ryswell",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Ryswell_4": {
+    "pageTitle": "Barbrey Dustin",
+    "score": 100,
+    "source": "automatic"
+  },
+  "agot:Ryswell_6": {
+    "pageTitle": "Roger Ryswell",
+    "score": 135,
+    "source": "automatic"
+  },
+  "agot:Ryswell_7": {
+    "pageTitle": "Rickard Ryswell",
+    "score": 135,
+    "source": "automatic"
+  },
+  "agot:Ryswell_8": {
+    "pageTitle": "Roose Ryswell",
+    "score": 135,
+    "source": "automatic"
+  },
+  "agot:Saan_2": {
+    "pageTitle": "Salladhor Saan",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Satmantes_1": {
+    "pageTitle": "Khorane Sathmantes",
+    "score": 90,
+    "source": "automatic"
+  },
+  "agot:Seaworth_2": {
+    "pageTitle": "Dale Seaworth",
+    "score": 90,
+    "source": "automatic"
+  },
+  "agot:Seaworth_3": {
+    "pageTitle": "Allard Seaworth",
+    "score": 90,
+    "source": "automatic"
+  },
+  "agot:Seaworth_4": {
+    "pageTitle": "Matthos Seaworth",
+    "score": 90,
+    "source": "automatic"
+  },
+  "agot:Seaworth_5": {
+    "pageTitle": "Maric Seaworth",
+    "score": 90,
+    "source": "automatic"
+  },
+  "agot:Seaworth_6": {
+    "pageTitle": "Devan Seaworth",
+    "score": 180,
+    "source": "automatic"
+  },
+  "agot:Seaworth_7": {
+    "pageTitle": "Stannis Seaworth",
+    "score": 170,
+    "source": "automatic"
+  },
+  "agot:Seaworth_8": {
+    "pageTitle": "Steffon Seaworth",
+    "score": 180,
+    "source": "automatic"
+  },
+  "agot:Selmy_3": {
+    "pageTitle": "Barristan Selmy",
+    "score": 150,
+    "source": "automatic"
+  },
+  "agot:Serry_4": {
+    "pageTitle": "Talbert Serry",
+    "score": 135,
+    "source": "automatic"
+  },
+  "agot:Slynt_1": {
+    "pageTitle": "Janos Slynt",
+    "score": 140,
+    "source": "automatic"
+  },
+  "agot:Smallwood_7": {
+    "pageTitle": "Thoren Smallwood",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Spicer_4": {
+    "pageTitle": "Sybell Spicer",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Spicer_5": {
+    "pageTitle": "Rolph Spicer",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Stackspear_25": {
+    "pageTitle": "Willam Stackspear",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Stark_1": {
+    "pageTitle": "Rickard Stark",
+    "score": 140,
+    "source": "automatic"
+  },
+  "agot:Stark_11": {
+    "pageTitle": "Rickon Stark",
+    "score": 180,
+    "source": "automatic"
+  },
+  "agot:Stark_2": {
+    "pageTitle": "Brandon Stark",
+    "score": 180,
+    "source": "automatic"
+  },
+  "agot:Stark_3": {
+    "pageTitle": "Eddard Stark",
+    "score": 180,
+    "source": "automatic"
+  },
+  "agot:Stark_4": {
+    "pageTitle": "Benjen Stark",
+    "score": 180,
+    "source": "automatic"
+  },
+  "agot:Stark_6": {
+    "pageTitle": "Robb Stark",
+    "score": 130,
+    "source": "automatic"
+  },
+  "agot:Stark_7": {
+    "pageTitle": "Jon Snow",
+    "score": 1000,
+    "source": "override"
+  },
+  "agot:Stark_8": {
+    "pageTitle": "Sansa Stark",
+    "score": 180,
+    "source": "automatic"
+  },
+  "agot:Stark_9": {
+    "pageTitle": "Arya Stark",
+    "score": 180,
+    "source": "automatic"
+  },
+  "agot:Stark_hh_5": {
+    "pageTitle": "Harwin",
+    "score": 85,
+    "source": "automatic"
+  },
+  "agot:Staunton_2": {
+    "pageTitle": "Sefton Staunton",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Stillwood_3": {
+    "pageTitle": "Joss Stilwood",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Stokeworth_5": {
+    "pageTitle": "Falyse Stokeworth",
+    "score": 160,
+    "source": "automatic"
+  },
+  "agot:Stonehouse_5": {
+    "pageTitle": "Ralf Stonehouse",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Stormcrows_1": {
+    "pageTitle": "Daario Naharis",
+    "score": 95,
+    "source": "automatic"
+  },
+  "agot:Stormcrows_3": {
+    "pageTitle": "Prendahl na Ghezn",
+    "score": 90,
+    "source": "automatic"
+  },
+  "agot:Stout_2": {
+    "pageTitle": "Harwood Stout",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Straw_3": {
+    "pageTitle": "Dick Straw",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Strickland_1": {
+    "pageTitle": "Harry Strickland",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Strong_64": {
+    "pageTitle": "Denys Strong",
+    "score": 90,
+    "source": "automatic"
+  },
+  "agot:Sunderland_1": {
+    "pageTitle": "Triston Sunderland",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Sunglass_2": {
+    "pageTitle": "Guncer Sunglass",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Swann_4": {
+    "pageTitle": "Donnel Swann",
+    "score": 135,
+    "source": "automatic"
+  },
+  "agot:Swann_8": {
+    "pageTitle": "Corenna Swann",
+    "score": 120,
+    "source": "automatic"
+  },
+  "agot:Swyft_4": {
+    "pageTitle": "Dorna Swyft",
+    "score": 140,
+    "source": "automatic"
+  },
+  "agot:Tallhart_1": {
+    "pageTitle": "Helman Tallhart",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Tallhart_2": {
+    "pageTitle": "Benfred Tallhart",
+    "score": 150,
+    "source": "automatic"
+  },
+  "agot:Tallhart_3": {
+    "pageTitle": "Eddara Tallhart",
+    "score": 150,
+    "source": "automatic"
+  },
+  "agot:Tallhart_4": {
+    "pageTitle": "Leobald Tallhart",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Tarbeck_33": {
+    "pageTitle": "Tion Tarbeck",
+    "score": 180,
+    "source": "automatic"
+  },
+  "agot:Tarbeck_34": {
+    "pageTitle": "Rohanne Tarbeck",
+    "score": 180,
+    "source": "automatic"
+  },
+  "agot:Targaryen_110": {
+    "pageTitle": "Maekar I Targaryen",
+    "score": 90,
+    "source": "automatic"
+  },
+  "agot:Targaryen_118": {
+    "pageTitle": "Daeron Targaryen (son of Maekar I)",
+    "score": 180,
+    "source": "automatic"
+  },
+  "agot:Targaryen_119": {
+    "pageTitle": "Aerion Targaryen",
+    "score": 170,
+    "source": "automatic"
+  },
+  "agot:Targaryen_120": {
+    "pageTitle": "Aemon Targaryen (son of Maekar I)",
+    "score": 180,
+    "source": "automatic"
+  },
+  "agot:Targaryen_121": {
+    "pageTitle": "Daella Targaryen (daughter of Maekar I)",
+    "score": 180,
+    "source": "automatic"
+  },
+  "agot:Targaryen_122": {
+    "pageTitle": "Aegon V Targaryen",
+    "score": 130,
+    "source": "automatic"
+  },
+  "agot:Targaryen_123": {
+    "pageTitle": "Rhae Targaryen",
+    "score": 170,
+    "source": "automatic"
+  },
+  "agot:Targaryen_2": {
+    "pageTitle": "Rhaella Targaryen",
+    "score": 140,
+    "source": "automatic"
+  },
+  "agot:Targaryen_3": {
+    "pageTitle": "Rhaegar Targaryen",
+    "score": 180,
+    "source": "automatic"
+  },
+  "agot:Targaryen_4": {
+    "pageTitle": "Shaena Targaryen",
+    "score": 180,
+    "source": "automatic"
+  },
+  "agot:Targaryen_8": {
+    "pageTitle": "Viserys Targaryen",
+    "score": 180,
+    "source": "automatic"
+  },
+  "agot:Targaryen_9": {
+    "pageTitle": "Daenerys Targaryen",
+    "score": 130,
+    "source": "automatic"
+  },
+  "agot:Tarly_1": {
+    "pageTitle": "Randyll Tarly",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Tarly_2": {
+    "pageTitle": "Samwell Tarly",
+    "score": 180,
+    "source": "automatic"
+  },
+  "agot:Tarly_6": {
+    "pageTitle": "Dickon Tarly",
+    "score": 170,
+    "source": "automatic"
+  },
+  "agot:Tarth_1": {
+    "pageTitle": "Selwyn Tarth",
+    "score": 130,
+    "source": "automatic"
+  },
+  "agot:Tarth_2": {
+    "pageTitle": "Endrew Tarth",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Tarth_3": {
+    "pageTitle": "Galladon Tarth",
+    "score": 150,
+    "source": "automatic"
+  },
+  "agot:Tarth_4": {
+    "pageTitle": "Arianne Tarth",
+    "score": 135,
+    "source": "automatic"
+  },
+  "agot:Tarth_5": {
+    "pageTitle": "Alysanne Tarth",
+    "score": 135,
+    "source": "automatic"
+  },
+  "agot:Tarth_6": {
+    "pageTitle": "Brienne Tarth",
+    "score": 160,
+    "source": "automatic"
+  },
+  "agot:Templeton_1": {
+    "pageTitle": "Symond Templeton",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Thenn_2": {
+    "pageTitle": "Sigorn",
+    "score": 95,
+    "source": "automatic"
+  },
+  "agot:Thorne_26": {
+    "pageTitle": "Rickard Thorne",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Thorne_3": {
+    "pageTitle": "Alliser Thorne",
+    "score": 120,
+    "source": "automatic"
+  },
+  "agot:Toland_4": {
+    "pageTitle": "Valena Toland",
+    "score": 135,
+    "source": "automatic"
+  },
+  "agot:Tollett_6": {
+    "pageTitle": "Eddison Tollett",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Trant_2": {
+    "pageTitle": "Meryn Trant",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Tully_4": {
+    "pageTitle": "Catelyn Stark",
+    "score": 130,
+    "source": "automatic"
+  },
+  "agot:Tully_6": {
+    "pageTitle": "Lysa Arryn",
+    "score": 130,
+    "source": "automatic"
+  },
+  "agot:Tully_67": {
+    "pageTitle": "Edmyn Tully",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Tully_7": {
+    "pageTitle": "Edmure Tully",
+    "score": 160,
+    "source": "automatic"
+  },
+  "agot:Tyrell_11": {
+    "pageTitle": "Willas Tyrell",
+    "score": 160,
+    "source": "automatic"
+  },
+  "agot:Tyrell_12": {
+    "pageTitle": "Garlan Tyrell",
+    "score": 180,
+    "source": "automatic"
+  },
+  "agot:Tyrell_13": {
+    "pageTitle": "Loras Tyrell",
+    "score": 180,
+    "source": "automatic"
+  },
+  "agot:Tyrell_18": {
+    "pageTitle": "Leo Tyrell (son of Moryn)",
+    "score": 135,
+    "source": "automatic"
+  },
+  "agot:Tyrell_22": {
+    "pageTitle": "Elinor Tyrell",
+    "score": 180,
+    "source": "automatic"
+  },
+  "agot:Tyrell_29": {
+    "pageTitle": "Alla Tyrell",
+    "score": 170,
+    "source": "automatic"
+  },
+  "agot:Tyrell_38": {
+    "pageTitle": "Megga Tyrell",
+    "score": 170,
+    "source": "automatic"
+  },
+  "agot:Tyrell_8": {
+    "pageTitle": "Mace Tyrell",
+    "score": 180,
+    "source": "automatic"
+  },
+  "agot:Tyrell_96": {
+    "pageTitle": "Harlan Tyrell",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Uller_6": {
+    "pageTitle": "Ellaria Sand",
+    "score": 95,
+    "source": "automatic"
+  },
+  "agot:Umber_11": {
+    "pageTitle": "Jon Umber (son of Jon)",
+    "score": 135,
+    "source": "automatic"
+  },
+  "agot:Umber_4": {
+    "pageTitle": "Hother Umber",
+    "score": 140,
+    "source": "automatic"
+  },
+  "agot:Vaith_110": {
+    "pageTitle": "Cassella Vaith",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Velaryon_3": {
+    "pageTitle": "Monterys Velaryon",
+    "score": 160,
+    "source": "automatic"
+  },
+  "agot:Velaryon_5": {
+    "pageTitle": "Aurane Waters",
+    "score": 90,
+    "source": "automatic"
+  },
+  "agot:Votyris_86_B": {
+    "pageTitle": "Byan Votyris",
+    "score": 90,
+    "source": "automatic"
+  },
+  "agot:Vypren_1": {
+    "pageTitle": "Lucias Vypren",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Waynwood_19": {
+    "pageTitle": "Donnel Waynwood",
+    "score": 150,
+    "source": "automatic"
+  },
+  "agot:Waynwood_22": {
+    "pageTitle": "Roland Waynwood",
+    "score": 140,
+    "source": "automatic"
+  },
+  "agot:Waynwood_4": {
+    "pageTitle": "Marsella Waynwood",
+    "score": 130,
+    "source": "automatic"
+  },
+  "agot:Westerling_1": {
+    "pageTitle": "Gawen Westerling",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Westerling_2": {
+    "pageTitle": "Jeyne Westerling",
+    "score": 180,
+    "source": "automatic"
+  },
+  "agot:Westerling_3": {
+    "pageTitle": "Eleyna Westerling",
+    "score": 180,
+    "source": "automatic"
+  },
+  "agot:Westerling_4": {
+    "pageTitle": "Raynald Westerling",
+    "score": 160,
+    "source": "automatic"
+  },
+  "agot:Whent_5": {
+    "pageTitle": "Oswell Whent",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Whent_6": {
+    "pageTitle": "Minisa Tully",
+    "score": 80,
+    "source": "automatic"
+  },
+  "agot:Whent_8": {
+    "pageTitle": "Wynafrei Whent",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Wull_2": {
+    "pageTitle": "Hugo Wull",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Wull_4": {
+    "pageTitle": "Theo Wull",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Wythers_8": {
+    "pageTitle": "Ottyn Wythers",
+    "score": 140,
+    "source": "automatic"
+  },
+  "agot:Xho_1": {
+    "pageTitle": "Jalabhar Xho",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Yarwyck_4": {
+    "pageTitle": "Othell Yarwyck",
+    "score": 115,
+    "source": "automatic"
+  },
+  "agot:Yronwood_2": {
+    "pageTitle": "Anders Yronwood",
+    "score": 135,
+    "source": "automatic"
+  },
+  "agot:Yronwood_7": {
+    "pageTitle": "Archibald Yronwood",
+    "score": 140,
+    "source": "automatic"
+  }
+}

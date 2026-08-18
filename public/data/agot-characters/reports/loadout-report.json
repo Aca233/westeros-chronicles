@@ -1,0 +1,18 @@
+{
+  "assigned": 7676,
+  "eligibleLiving": 7676,
+  "templates": {
+    "child": 842,
+    "dornish": 420,
+    "infant": 171,
+    "ironborn": 256,
+    "maester": 85,
+    "nights_watch": 73,
+    "northern_common": 338,
+    "northern_noble": 91,
+    "septon": 26,
+    "southern_common": 4190,
+    "southern_noble": 1184
+  },
+  "unassigned": 0
+}

@@ -94,6 +94,16 @@ for (const icon of ['trait-brave.webp', 'trait-education-martial.webp', 'trait-i
   }
 }
 
+
+const creatorEarlyReturnIndex = creator.indexOf('if (!isCreatorOpen) return null');
+const creatorEffectIndex = creator.indexOf('useEffect(() =>');
+if (creatorEffectIndex < 0 || creatorEarlyReturnIndex < 0 || creatorEffectIndex > creatorEarlyReturnIndex) failures.push('人物创建器在条件返回之后调用 Hook，打开新局会触发 Hook 顺序错误。');
+
+if (creator.includes('PRESET_SCENARIOS') || creator.includes('经典原著剧本') || creator.includes("tab === 'preset'")) failures.push('开局创建器仍保留固定剧本预设。');
+for (const marker of ['data-existing-character-start', 'data-recommended-characters', 'RECOMMENDED_CHARACTER_IDS', '<CharacterSearch', 'aliveOnly', '自定义统治者']) {
+  if (!creator.includes(marker)) failures.push(`现成人物开局缺少 ${marker}。`);
+}
+
 if (failures.length) {
   console.error(failures.join('\n'));
   process.exit(1);

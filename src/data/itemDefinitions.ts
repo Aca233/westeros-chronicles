@@ -1,5 +1,6 @@
 import { createItemCatalog } from '../features/items/catalog';
-import type { ItemCategory, ItemDefinition, ItemImageRef } from '../features/items/types';
+import type { EquipmentPosition, ItemCategory, ItemDefinition, ItemImageRef } from '../features/items/types';
+import { AGOT_ARTIFACT_DEFINITIONS } from './generated/agotArtifactDefinitions';
 
 const defineItem = (definition: ItemDefinition): ItemDefinition => definition;
 
@@ -36,6 +37,24 @@ function expandedItem(input: ExpandedItemInput): ItemDefinition {
     equippable: input.equippable ?? false,
     allowedPositions: input.allowedPositions ?? [],
     baseValue: input.baseValue ?? 5,
+  });
+}
+
+function dailyClothing(input: {
+  id: string; name: string; description: string; tags: string[]; material: string; position: EquipmentPosition;
+  origin: string; quality?: ItemDefinition['baseQuality']; value?: number; outerwear?: boolean;
+}): ItemDefinition {
+  return expandedItem({
+    id: input.id, name: input.name, description: input.description,
+    roleplayText: '这是一件为日常起居准备的实用衣物，磨损、污迹和修补都会反映穿戴者真实的生活。',
+    category: 'clothing', subcategory: input.outerwear ? 'outerwear' : input.position.group === 'legs' && input.position.layer === 'footwear' ? 'footwear' : 'daily_wear',
+    tags: ['daily_wear', ...input.tags], material: input.material, baseQuality: input.quality ?? 'common',
+    image: input.position.group === 'legs' && input.position.layer === 'footwear'
+      ? { type: 'library', iconName: 'footwear' }
+      : { type: 'game', icon: input.outerwear ? 'gear-cloak' : 'gear-armor' },
+    equippable: true, allowedPositions: [input.position], baseValue: input.value ?? 5,
+    effects: [{ kind: 'narrative', directive: `${input.name}适合其原本的气候、身份与日常活动，但不能替代战甲或专业防护。` }],
+    provenance: { origin: input.origin },
   });
 }
 
@@ -846,6 +865,23 @@ export const ITEM_DEFINITIONS: readonly ItemDefinition[] = [
     effects: [{ kind: 'social', contextTags: ['faith', 'seven', 'sept'], value: 1, stackGroup: 'identity.faith', cap: 2, label: '公开信仰标记' }, { kind: 'narrative', directive: '祈祷牌能表明信仰并承载个人安慰，但不会凭空产生神迹或强迫他人信服。' }],
     provenance: { origin: '七神圣堂' },
   }),
+  dailyClothing({ id: 'clothing.common_linen_tunic', name: '朴素亚麻束腰衣', description: '未染色亚麻裁成的常见日常上衣，袖口便于卷起劳作。', tags: ['commoner', 'temperate'], material: '粗亚麻与羊毛线', position: { group: 'torso', layer: 'garment' }, origin: '当地裁缝铺' }),
+  dailyClothing({ id: 'clothing.ironborn_wool_coat', name: '铁群岛厚羊毛短衣', description: '紧束的深色羊毛短衣便于在湿滑甲板和强风中活动。', tags: ['ironborn', 'maritime'], material: '油浸羊毛与海兽皮', position: { group: 'torso', layer: 'garment' }, origin: '铁群岛港镇' }),
+  dailyClothing({ id: 'clothing.southern_noble_doublet', name: '南方贵族绣纹紧身衣', description: '细羊毛与亚麻内衬制成的合体衣装，领口和袖缘带有克制绣纹。', tags: ['noble', 'court'], material: '细羊毛、亚麻与丝线', position: { group: 'torso', layer: 'garment' }, origin: '南方城堡裁缝间', quality: 'fine', value: 22 }),
+  dailyClothing({ id: 'clothing.child_wool_tunic', name: '儿童羊毛短衣', description: '按成长余量放宽裁剪的柔软短衣，接缝牢固且方便反复修改尺寸。', tags: ['child'], material: '柔软羊毛与亚麻', position: { group: 'torso', layer: 'garment' }, origin: '家庭针线间' }),
+  dailyClothing({ id: 'clothing.infant_swaddling_wrap', name: '婴儿襁褓', description: '柔软亚麻与薄羊毛叠成的襁褓，用布带稳妥包裹幼儿。', tags: ['infant'], material: '软亚麻与薄羊毛', position: { group: 'torso', layer: 'garment' }, origin: '家庭针线间' }),
+  dailyClothing({ id: 'clothing.maester_robe', name: '学士灰袍', description: '便于书写、诊疗和在城堡内行走的灰色长袍，袖口不易拖入墨水。', tags: ['maester', 'scholar'], material: '灰羊毛与亚麻', position: { group: 'torso', layer: 'garment' }, origin: '学城配发处' }),
+  dailyClothing({ id: 'clothing.septon_robe', name: '七神教士素袍', description: '剪裁庄重的素色长袍，只有领缘细线暗示七芒星纹样。', tags: ['faith', 'seven'], material: '漂白羊毛与亚麻', position: { group: 'torso', layer: 'garment' }, origin: '圣堂针线房' }),
+  dailyClothing({ id: 'legwear.plain_wool_breeches', name: '朴素羊毛马裤', description: '七国各地常见的耐穿马裤，膝部留有便于劳作和骑乘的余量。', tags: ['commoner', 'legwear'], material: '粗羊毛与亚麻线', position: { group: 'legs', layer: 'legwear' }, origin: '当地裁缝铺' }),
+  dailyClothing({ id: 'legwear.child_wool_leggings', name: '儿童羊毛裤', description: '柔软耐洗的儿童长裤，裤腰与裤脚可以随成长重新放宽。', tags: ['child', 'legwear'], material: '柔软羊毛', position: { group: 'legs', layer: 'legwear' }, origin: '家庭针线间' }),
+  dailyClothing({ id: 'legwear.light_linen_trousers', name: '轻薄亚麻长裤', description: '适合南方温暖气候的宽松长裤，能在炎热天气中保持通风。', tags: ['warm_weather', 'legwear'], material: '细亚麻', position: { group: 'legs', layer: 'legwear' }, origin: '南方裁缝铺' }),
+  dailyClothing({ id: 'footwear.leather_turnshoes', name: '缝底皮鞋', description: '柔韧熟皮翻缝成的常见低帮鞋，适合城镇、城堡和寻常道路。', tags: ['commoner', 'footwear'], material: '熟牛皮', position: { group: 'legs', layer: 'footwear' }, origin: '当地鞋匠铺' }),
+  dailyClothing({ id: 'footwear.child_soft_shoes', name: '儿童软皮鞋', description: '鞋头留有成长余量的柔软皮鞋，系带简单且鞋底容易更换。', tags: ['child', 'footwear'], material: '软羊皮', position: { group: 'legs', layer: 'footwear' }, origin: '家庭鞋匠铺' }),
+  dailyClothing({ id: 'footwear.dornish_sandals', name: '多恩皮凉鞋', description: '多道熟皮带固定脚背的透气凉鞋，适合燥热庭院和沙石道路。', tags: ['dorne', 'warm_weather', 'footwear'], material: '鞣制山羊皮', position: { group: 'legs', layer: 'footwear' }, origin: '多恩鞋匠铺' }),
+  dailyClothing({ id: 'footwear.ironborn_sea_boots', name: '铁民防滑海靴', description: '经过油脂处理的中帮皮靴，粗糙鞋底能抓住湿滑木板。', tags: ['ironborn', 'maritime', 'footwear'], material: '油浸熟皮与麻线', position: { group: 'legs', layer: 'footwear' }, origin: '铁群岛港镇' }),
+  dailyClothing({ id: 'clothing.plain_wool_cloak', name: '朴素羊毛斗篷', description: '用木扣固定的普通羊毛斗篷，可遮挡凉风和短时小雨。', tags: ['outerwear', 'travel'], material: '厚羊毛与木扣', position: { group: 'torso', layer: 'outerwear' }, origin: '当地裁缝铺', outerwear: true }),
+  dailyClothing({ id: 'clothing.northern_fur_cloak', name: '北境毛皮外披', description: '羊毛底布缝上保暖毛皮的厚外披，适合北境庭院和冬季道路。', tags: ['northern', 'cold_weather', 'outerwear'], material: '羊毛与兔皮', position: { group: 'torso', layer: 'outerwear' }, origin: '北境皮匠与裁缝间', quality: 'fine', value: 18, outerwear: true }),
+  ...AGOT_ARTIFACT_DEFINITIONS,
 ];
 
 export const ITEM_CATALOG = createItemCatalog(ITEM_DEFINITIONS);

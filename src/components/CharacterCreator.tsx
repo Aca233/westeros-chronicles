@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   BookOpen,
   Check,
@@ -17,11 +17,18 @@ import {
   X,
 } from 'lucide-react';
 import { useGameStore } from '../store/useGameStore';
-import { PRESET_SCENARIOS, PresetScenario } from '../data/presets';
 import { HOUSES } from '../data/houses';
 import { LordAttributes, LordProfile, createDefaultBody } from '../types/game';
 import { createCustomRulerItemState } from '../data/itemPresetState';
 import { GameIcon, getHouseIconId } from './GameIcon';
+import { CharacterSearch } from './CharacterSearch';
+import { CharacterPortrait } from './CharacterPortrait';
+import { dossierRepository } from '../features/characters/useCharacterDossier';
+import { resolveCharacter } from '../features/characters/characterProjector';
+import { characterDatasetYear, formatCharacterCulture, formatCharacterFaith } from '../features/characters/characterDossier';
+import type { CharacterId, ResolvedCharacter } from '../features/characters/types';
+import { createLordFromExistingCharacter } from '../features/characters/existingCharacterStart';
+import { createInitialAgotArtifactWorldState } from '../features/items/worldArtifacts';
 import { CoatOfArms } from './CoatOfArms';
 import { stripEmoji } from '../services/textSanitizer';
 import { CK3_SKILLS, getCk3SkillRank } from '../data/ck3Skills';
@@ -39,6 +46,7 @@ import {
   formatTraitRuleEffects,
   getHouseIdentity,
 } from '../data/characterTraits';
+import { filterImportedCharacterTraits } from '../data/importedCharacterTraitPolicy';
 import {
   CoatOfArmsDesign,
   DEFAULT_COAT_OF_ARMS,
@@ -68,9 +76,17 @@ const CUSTOM_HOUSE_BASE_ATTRIBUTES: LordAttributes = {
   prowess: 10,
 };
 
+const RECOMMENDED_CHARACTER_IDS: CharacterId[] = [
+  'agot:Stark_3', 'agot:Baratheon_2', 'agot:Lannister_6', 'agot:Lannister_8',
+  'agot:Stark_7', 'agot:Targaryen_9', 'agot:Stark_8', 'agot:Stark_9',
+];
+
 export const CharacterCreator: React.FC = () => {
   const { isCreatorOpen, closeCreator, startNewGame } = useGameStore();
-  const [tab, setTab] = useState<'preset' | 'custom'>('preset');
+  const [tab, setTab] = useState<'existing' | 'custom'>('existing');
+  const [recommendedCharacters, setRecommendedCharacters] = useState<ResolvedCharacter[]>([]);
+  const [existingError, setExistingError] = useState<string | null>(null);
+  const [startingCharacterId, setStartingCharacterId] = useState<CharacterId | null>(null);
   const [houseMode, setHouseMode] = useState<'preset' | 'custom'>('preset');
   const [selectedHouseId, setSelectedHouseId] = useState(HOUSES[0].id);
   const [customName, setCustomName] = useState('维斯特洛新星');
@@ -105,10 +121,11 @@ export const CharacterCreator: React.FC = () => {
   const visibleTraits = useMemo(() => {
     const query = traitSearch.trim().toLowerCase();
     return CHARACTER_TRAITS.filter((trait) => {
+      if (!filterImportedCharacterTraits([trait.id], customAge).visibleTraitIds.includes(trait.id)) return false;
       if (!query) return trait.category === activeTraitCategory;
       return `${trait.name} ${trait.description} ${formatTraitModifiers(trait.modifiers)} ${formatTraitRuleEffects(trait.rules).join(' ')}`.toLowerCase().includes(query);
     });
-  }, [activeTraitCategory, traitSearch]);
+  }, [activeTraitCategory, customAge, traitSearch]);
   const finalAttributes = useMemo(
     () => calculateFinalAttributes(customAttributes, selectedTraitIds),
     [customAttributes, selectedTraitIds]
@@ -120,8 +137,6 @@ export const CharacterCreator: React.FC = () => {
     effectiveHouseName && effectiveDynastyName && effectiveHouseWords && effectiveSeat && effectiveCulture && effectiveFaith
   );
   const canComplete = !isOverBudget && hasValidHouse && customName.trim().length > 0 && customTitle.trim().length > 0;
-
-  if (!isCreatorOpen) return null;
 
   const handleStatChange = (key: keyof LordAttributes, delta: number) => {
     const current = customAttributes[key];
@@ -190,7 +205,56 @@ export const CharacterCreator: React.FC = () => {
     return personalityCount >= MAX_PERSONALITY_TRAITS && !willReplaceSelected;
   };
 
-  const handleStartPreset = (preset: PresetScenario) => startNewGame(preset.initialLord, preset.initialOpening);
+  useEffect(() => {
+    setSelectedTraitIds((current) => current.filter((traitId) => (
+      filterImportedCharacterTraits([traitId], customAge).visibleTraitIds.includes(traitId)
+    )));
+  }, [customAge]);
+
+  useEffect(() => {
+    if (!isCreatorOpen || tab !== 'existing') return;
+    let cancelled = false;
+    Promise.all(RECOMMENDED_CHARACTER_IDS.map(async (id) => {
+      const record = await dossierRepository.get(id);
+      if (!record || !record.born || !record.alive || record.canonTier === 'genealogy') return undefined;
+      const profile = await dossierRepository.getLoadoutProfile(id);
+      return resolveCharacter(record, [], {
+        datasetVersion: 'agot-local-dataset',
+        currentYear: characterDatasetYear(298, record.birthDate),
+        loadoutProfile: profile,
+      });
+    })).then((characters) => {
+      if (!cancelled) setRecommendedCharacters(characters.filter((entry): entry is ResolvedCharacter => Boolean(entry)));
+    }).catch((error: unknown) => {
+      if (!cancelled) setExistingError(error instanceof Error ? error.message : '人物数据读取失败');
+    });
+    return () => { cancelled = true; };
+  }, [isCreatorOpen, tab]);
+
+  if (!isCreatorOpen) return null;
+
+  const handleStartExisting = async (characterId: CharacterId) => {
+    setStartingCharacterId(characterId);
+    setExistingError(null);
+    try {
+      const record = await dossierRepository.get(characterId);
+      if (!record || !record.born || !record.alive || record.canonTier === 'genealogy') throw new Error('该人物不能用于当前开局');
+      const profile = await dossierRepository.getLoadoutProfile(characterId);
+      const resolved = resolveCharacter(record, [], {
+        datasetVersion: 'agot-local-dataset', currentYear: characterDatasetYear(298, record.birthDate), loadoutProfile: profile,
+      });
+      const lord = createLordFromExistingCharacter(resolved, createInitialAgotArtifactWorldState(), 298);
+      await startNewGame(lord, {
+        think: `${lord.name}的故事从既定历史尚未分岔之处开始。`,
+        narrate: `征服历二百九十八年，${lord.name}身处${lord.location}。旧有关系、身份与责任都已存在，但从这一刻起，接下来的选择将由你作出。`,
+        branches: ['查看当前处境与身边人物', '处理眼前最紧迫的事务', '了解自己的关系、装备与资产'],
+      }, { startDate: { year: 298, month: 5, day: 10 }, season: '暮春', canonicalCharacterId: characterId });
+    } catch (error) {
+      setExistingError(error instanceof Error ? error.message : '无法以该人物开始游戏');
+    } finally {
+      setStartingCharacterId(null);
+    }
+  };
 
   const handleStartCustom = () => {
     if (!canComplete) return;
@@ -248,37 +312,33 @@ export const CharacterCreator: React.FC = () => {
               <p className="eyebrow hidden sm:block">Registrum Domini · 御前册封议事</p>
               <div className="flex items-center gap-2.5 mt-1 text-gold-bright font-serif font-bold text-base md:text-xl">
                 <Crown className="w-5 h-5 text-gold" />
-                <span>{tab === 'custom' ? '统治者设计器' : '开启维斯特洛新传奇'}</span>
+                <span>{tab === 'custom' ? '统治者设计器' : '选择现成人物'}</span>
               </div>
             </div>
             <button onClick={closeCreator} aria-label="关闭人物创建器" className="btn-ghost"><X className="w-4 h-4" /></button>
           </div>
           <div className="flex gap-1 mt-3 overflow-x-auto">
-            <button onClick={() => setTab('preset')} className={`flex shrink-0 items-center gap-1.5 px-4 py-2 text-xs font-serif font-bold tracking-wider border-b transition-colors ${tab === 'preset' ? 'border-gold text-gold-bright' : 'border-transparent text-parchment-faint hover:text-parchment-dim'}`}><Swords className="w-3.5 h-3.5" />经典原著剧本</button>
+            <button onClick={() => setTab('existing')} className={`flex shrink-0 items-center gap-1.5 px-4 py-2 text-xs font-serif font-bold tracking-wider border-b transition-colors ${tab === 'existing' ? 'border-gold text-gold-bright' : 'border-transparent text-parchment-faint hover:text-parchment-dim'}`}><Users className="w-3.5 h-3.5" />选择现成人物</button>
             <button onClick={() => setTab('custom')} className={`flex shrink-0 items-center gap-1.5 px-4 py-2 text-xs font-serif font-bold tracking-wider border-b transition-colors ${tab === 'custom' ? 'border-gold text-gold-bright' : 'border-transparent text-parchment-faint hover:text-parchment-dim'}`}><UserPlus className="w-3.5 h-3.5" />自定义统治者</button>
           </div>
         </header>
 
-        {tab === 'preset' && (
-          <div className="flex-1 overflow-y-auto p-4 md:p-6 bg-ink">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {PRESET_SCENARIOS.map((preset) => (
-                <article key={preset.id} className="bg-ink-2 border border-hairline hover:border-gold-deep p-5 flex flex-col justify-between transition-colors group">
-                  <div>
-                    <div className="flex items-start gap-3 mb-3">
-                      <div className="w-14 h-14 shrink-0 border border-hairline-bright bg-ink p-1.5"><GameIcon icon={getHouseIconId(preset.avatarIcon)} className="w-full h-full" /></div>
-                      <div className="min-w-0"><h3 className="text-gold font-serif font-bold text-base leading-tight group-hover:text-gold-bright transition-colors">{preset.title}</h3><p className="text-[10px] text-parchment-faint mt-1">{preset.subtitle}</p></div>
-                    </div>
-                    <div className="hairline mb-3" />
-                    <p className="text-xs text-parchment font-bold">{preset.characterName}</p>
-                    <p className="text-[10px] text-parchment-faint mt-1">{preset.houseName}</p>
-                    <p className="text-[11px] text-parchment-dim leading-relaxed mt-3">{preset.backgroundStory}</p>
-                    <p className="text-[10px] italic text-gold-deep mt-3">{preset.tagline}</p>
-                  </div>
-                  <button type="button" onClick={() => handleStartPreset(preset)} className="btn-ghost w-full justify-center mt-5 font-serif font-bold tracking-wider">选择此剧本</button>
+        {tab === 'existing' && (
+          <div className="flex-1 overflow-y-auto bg-ink p-4 md:p-6" data-existing-character-start>
+            <div className="mb-4 flex items-end justify-between gap-3">
+              <div><p className="eyebrow">推荐角色</p><p className="mt-1 font-serif text-[11px] text-parchment-faint">推荐项直接引用完整人物档案，不是固定属性预设。</p></div>
+            </div>
+            {existingError && <p className="mb-3 border border-rubric/60 px-3 py-2 text-[11px] text-rubric">{existingError}</p>}
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4" data-recommended-characters>
+              {recommendedCharacters.map((character) => (
+                <article key={character.id} className="flex flex-col border border-hairline bg-ink-2 p-4 hover:border-gold-deep">
+                  <div className="flex items-center gap-3"><CharacterPortrait characterId={character.id} houseIcon={getHouseIconId((character.dynastyId ?? '').replace(/^dynn_/i, '').toLowerCase())} alt={`${character.name}的肖像`} deceased={!character.alive} className="h-12 w-12 shrink-0 border border-hairline-bright" /><div className="min-w-0"><h3 className="truncate font-serif text-sm font-bold text-gold">{character.name}</h3><p className="truncate text-[10px] text-parchment-faint">{character.titles[0] ?? '未持有封地'}</p></div></div>
+                  <p className="mt-3 line-clamp-2 min-h-8 font-serif text-[10.5px] text-parchment-dim">{formatCharacterCulture(character.cultureId)} · {formatCharacterFaith(character.faithId)}</p>
+                  <button type="button" disabled={startingCharacterId !== null} onClick={() => void handleStartExisting(character.id)} className="btn-ghost mt-3 w-full justify-center">{startingCharacterId === character.id ? '正在载入' : '以此人物开局'}</button>
                 </article>
               ))}
             </div>
+            <div className="mt-5 border-t border-hairline pt-4"><p className="eyebrow mb-2">查找其他人物</p><CharacterSearch onSelectCharacter={(id) => void handleStartExisting(id)} aliveOnly /></div>
           </div>
         )}
 

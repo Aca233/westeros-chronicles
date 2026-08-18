@@ -18,6 +18,7 @@ export interface CharacterEventEnvelope extends CharacterEventInput {
 
 export interface CharacterEventProjection extends StaticCharacterRecord {
   locationId?: string;
+  titleIds: string[];
   titles: string[];
   wounds: string[];
   woundLevels: Partial<Record<BodyZoneKey, WoundLevel>>;
@@ -105,16 +106,20 @@ export function projectCharacterEvents(
   envelopes: readonly CharacterEventEnvelope[],
 ): CharacterEventProjection {
   const dynamicBase = base as StaticCharacterRecord & {
+    titleIds?: string[];
     titles?: string[];
     wounds?: string[];
     woundLevels?: Partial<Record<BodyZoneKey, WoundLevel>>;
     relationships?: CharacterRelationship[];
   };
+  const initialTitles = [...(dynamicBase.titles ?? [])];
+  const initialTitleIds = [...(dynamicBase.titleIds ?? initialTitles)];
   let projected: CharacterEventProjection = {
     ...base,
     traits: [...base.traits],
     spouseIds: [...base.spouseIds],
-    titles: [...(dynamicBase.titles ?? [])],
+    titleIds: initialTitleIds,
+    titles: initialTitles,
     wounds: [...(dynamicBase.wounds ?? [])],
     woundLevels: { ...(dynamicBase.woundLevels ?? {}) },
     relationships: [...(dynamicBase.relationships ?? [])],
@@ -137,10 +142,25 @@ export function projectCharacterEvents(
       projected = { ...projected, spouseIds: [...projected.spouseIds, event.spouseId] };
     } else if (event.type === 'DIVORCE') {
       projected = { ...projected, spouseIds: projected.spouseIds.filter((spouseId) => spouseId !== event.spouseId) };
-    } else if (event.type === 'GRANT_TITLE' && !projected.titles.includes(event.titleId)) {
-      projected = { ...projected, titles: [...projected.titles, event.titleId] };
+    } else if (event.type === 'GRANT_TITLE'
+      && !projected.titleIds.includes(event.titleId)
+      && !projected.titles.includes(event.titleId)) {
+      projected = {
+        ...projected,
+        titleIds: [...projected.titleIds, event.titleId],
+        titles: [...projected.titles, event.titleId],
+      };
     } else if (event.type === 'REVOKE_TITLE') {
-      projected = { ...projected, titles: projected.titles.filter((titleId) => titleId !== event.titleId) };
+      const idIndex = projected.titleIds.indexOf(event.titleId);
+      const titleIndex = projected.titles.indexOf(event.titleId);
+      const removeIndex = idIndex >= 0 ? idIndex : titleIndex;
+      if (removeIndex >= 0) {
+        projected = {
+          ...projected,
+          titleIds: projected.titleIds.filter((_, index) => index !== removeIndex),
+          titles: projected.titles.filter((_, index) => index !== removeIndex),
+        };
+      }
     } else if (event.type === 'INJURE') {
       projected = {
         ...projected,

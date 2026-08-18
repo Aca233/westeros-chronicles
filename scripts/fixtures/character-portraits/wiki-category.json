@@ -1,0 +1,9 @@
+{
+  "batchcomplete": true,
+  "query": {
+    "categorymembers": [
+      {"pageid": 1616, "ns": 0, "title": "Jon Snow"},
+      {"pageid": 100, "ns": 0, "title": "Eddard Stark"}
+    ]
+  }
+}

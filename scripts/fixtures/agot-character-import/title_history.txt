@@ -1,0 +1,33 @@
+h_the_test_realm = {
+    8280.1.1 = { holder = Hero_1 }
+}
+e_the_north = {
+    8290.1.1 = { holder = Old_1 }
+    8298.1.1 = {
+        holder = Hero_1
+        effect = { holder = Wrong_1 }
+    }
+    8299.1.1 = { holder = Future_1 }
+}
+k_winterfell = {
+    8297.1.1 = { holder = Hero_1 }
+}
+d_winterfell = {
+    8297.1.1 = { holder = Hero_1 }
+}
+c_cleared = {
+    8290.1.1 = { holder = Hero_1 }
+    8298.1.1 = { holder = 0 }
+}
+c_same_day = {
+    8298.1.1 = {
+        holder = Old_1
+        holder = Final_1
+    }
+}
+b_future = {
+    8299.1.1 = { holder = Future_1 }
+}
+c_missing_localization = {
+    8290.1.1 = { holder = Fallback_1 }
+}

@@ -1,0 +1,14 @@
+{
+  "counts": {
+    "accepted": 325,
+    "ambiguous": 223,
+    "automatic": 324,
+    "failed": 0,
+    "no_image": 560,
+    "overrides": 1,
+    "rejected": 0,
+    "unmatched": 10342
+  },
+  "datasetHash": "1a9a5561070e3edb3b55b8cbfeeeca6c1042d87f98b496062cb4a72fe8e9e63c",
+  "schemaVersion": 1
+}

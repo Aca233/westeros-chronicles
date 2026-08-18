@@ -39,6 +39,7 @@ export type ItemBodyZone = 'head' | 'torso' | 'arms' | 'legs';
 export type ItemImageRef =
   | { type: 'game'; icon: string }
   | { type: 'wiki'; path: string; fallbackIcon: string }
+  | { type: 'asset'; path: string; fallbackIcon: string }
   | { type: 'library'; iconName: string };
 
 export interface ItemEffectCondition {
@@ -86,6 +87,18 @@ export interface ItemDefinition {
     origin?: string;
     createdAt?: string;
     boundHouse?: string;
+  };
+  contentSource?: {
+    workshopId: string;
+    modName: string;
+    sourceId: string;
+    nameKey: string;
+    descriptionKey: string;
+    visualKey: string;
+    templateKey?: string | null;
+    modifierKey?: string | null;
+    imageSha256: string;
+    visualVariants: Array<{ workshopId: string; modName: string; sourceId: string; visualKey: string }>;
   };
 }
 

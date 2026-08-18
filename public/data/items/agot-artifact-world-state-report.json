@@ -1,0 +1,196 @@
+{
+  "counts": {
+    "issuesByKind": {
+      "missing_definition": 18,
+      "non_unique_effect": 4,
+      "unsupported_condition": 7,
+      "unsupported_helper_effect": 1
+    },
+    "resolvedArtifacts": 72,
+    "unresolvedIssues": 30
+  },
+  "datasetHash": "d85abea740bf52c3182f4bc7642a96a845536e9761ffa88852bd1f4feea1d8fa",
+  "issues": [
+    {
+      "detail": "agot_create_artifact_dondarrion_message_effect",
+      "file": "00_agot_scenario_artifacts_effects.txt",
+      "kind": "missing_definition",
+      "line": 250
+    },
+    {
+      "detail": "agot_create_artifact_elenei_cloak_effect",
+      "file": "00_agot_scenario_artifacts_effects.txt",
+      "kind": "missing_definition",
+      "line": 242
+    },
+    {
+      "detail": "agot_create_artifact_flaying_knife_effect",
+      "file": "00_agot_scenario_artifacts_effects.txt",
+      "kind": "missing_definition",
+      "line": 258
+    },
+    {
+      "detail": "agot_create_artifact_florys_cloak_01_effect",
+      "file": "00_agot_scenario_artifacts_effects.txt",
+      "kind": "missing_definition",
+      "line": 201
+    },
+    {
+      "detail": "agot_create_artifact_florys_cloak_02_effect",
+      "file": "00_agot_scenario_artifacts_effects.txt",
+      "kind": "missing_definition",
+      "line": 209
+    },
+    {
+      "detail": "agot_create_artifact_florys_cloak_03_effect",
+      "file": "00_agot_scenario_artifacts_effects.txt",
+      "kind": "missing_definition",
+      "line": 217
+    },
+    {
+      "detail": "agot_create_artifact_foss_bow_effect",
+      "file": "00_agot_scenario_artifacts_effects.txt",
+      "kind": "missing_definition",
+      "line": 225
+    },
+    {
+      "detail": "agot_create_artifact_glass_candle_effect",
+      "file": "00_agot_scenario_artifacts_effects.txt",
+      "kind": "missing_definition",
+      "line": 562
+    },
+    {
+      "detail": "agot_create_artifact_glass_candle_effect",
+      "file": "00_agot_scenario_artifacts_effects.txt",
+      "kind": "missing_definition",
+      "line": 566
+    },
+    {
+      "detail": "agot_create_artifact_glass_candle_effect",
+      "file": "00_agot_scenario_artifacts_effects.txt",
+      "kind": "missing_definition",
+      "line": 570
+    },
+    {
+      "detail": "agot_create_artifact_glass_candle_effect",
+      "file": "00_agot_scenario_artifacts_effects.txt",
+      "kind": "missing_definition",
+      "line": 574
+    },
+    {
+      "detail": "agot_create_artifact_green_hand_tabard_effect",
+      "file": "00_agot_scenario_artifacts_effects.txt",
+      "kind": "missing_definition",
+      "line": 290
+    },
+    {
+      "detail": "agot_create_artifact_herndons_horn_effect",
+      "file": "00_agot_scenario_artifacts_effects.txt",
+      "kind": "missing_definition",
+      "line": 193
+    },
+    {
+      "detail": "agot_create_artifact_horns_of_the_wood_effect",
+      "file": "00_agot_scenario_artifacts_effects.txt",
+      "kind": "missing_definition",
+      "line": 282
+    },
+    {
+      "detail": "agot_create_artifact_marsh_king_mount_effect",
+      "file": "00_agot_scenario_artifacts_effects.txt",
+      "kind": "missing_definition",
+      "line": 274
+    },
+    {
+      "detail": "agot_create_artifact_redbeard_axe_effect",
+      "file": "00_agot_scenario_artifacts_effects.txt",
+      "kind": "missing_definition",
+      "line": 5979
+    },
+    {
+      "detail": "agot_create_artifact_stone_skin_club_effect",
+      "file": "00_agot_scenario_artifacts_effects.txt",
+      "kind": "missing_definition",
+      "line": 185
+    },
+    {
+      "detail": "agot_create_smugglers_fingers_effect",
+      "file": "00_agot_scenario_artifacts_effects.txt",
+      "kind": "missing_definition",
+      "line": 546
+    },
+    {
+      "detail": "agot_create_artifact_bors_skull_effect",
+      "file": "00_agot_scenario_artifacts_effects.txt",
+      "kind": "non_unique_effect",
+      "line": 177
+    },
+    {
+      "detail": "agot_create_artifact_falcon_knight_helm_effect",
+      "file": "00_agot_scenario_artifacts_effects.txt",
+      "kind": "non_unique_effect",
+      "line": 266
+    },
+    {
+      "detail": "agot_create_artifact_gold_leaves_effect",
+      "file": "00_agot_scenario_artifacts_effects.txt",
+      "kind": "non_unique_effect",
+      "line": 169
+    },
+    {
+      "detail": "agot_create_artifact_seahorse_statue_effect",
+      "file": "00_agot_scenario_artifacts_effects.txt",
+      "kind": "non_unique_effect",
+      "line": 63
+    },
+    {
+      "detail": "agot_realm_narrow_sea_enabled",
+      "file": "00_agot_scenario_artifacts_effects.txt",
+      "kind": "unsupported_condition",
+      "line": 1592
+    },
+    {
+      "detail": "agot_realm_narrow_sea_enabled",
+      "file": "00_agot_scenario_artifacts_effects.txt",
+      "kind": "unsupported_condition",
+      "line": 3832
+    },
+    {
+      "detail": "agot_realm_narrow_sea_enabled",
+      "file": "00_agot_scenario_artifacts_effects.txt",
+      "kind": "unsupported_condition",
+      "line": 4110
+    },
+    {
+      "detail": "agot_realm_narrow_sea_enabled",
+      "file": "00_agot_scenario_artifacts_effects.txt",
+      "kind": "unsupported_condition",
+      "line": 5108
+    },
+    {
+      "detail": "agot_realm_narrow_sea_enabled",
+      "file": "00_agot_scenario_artifacts_effects.txt",
+      "kind": "unsupported_condition",
+      "line": 5632
+    },
+    {
+      "detail": "exists house:house_KenningK.house_head",
+      "file": "00_agot_scenario_artifacts_effects.txt",
+      "kind": "unsupported_condition",
+      "line": 338
+    },
+    {
+      "detail": "has_game_rule",
+      "file": "00_agot_scenario_artifacts_effects.txt",
+      "kind": "unsupported_condition",
+      "line": 4232
+    },
+    {
+      "detail": "agot_assign_starting_dragon_eggs_effect",
+      "file": "00_agot_scenario_artifacts_effects.txt",
+      "kind": "unsupported_helper_effect",
+      "line": 616
+    }
+  ],
+  "startDate": "8298.1.1"
+}

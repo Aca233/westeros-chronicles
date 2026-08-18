@@ -54,14 +54,19 @@ export function useCharacterDossier(selectedCharacterId: CharacterId | null): Ch
     const load = async () => {
       const record = await dossierRepository.get(selectedCharacterId);
       if (!record) throw new Error('没有找到这个人物的稳定 AGOT 档案');
-      const events = worldCharacters
-        ? await dossierEventStore.eventsForCharacter(worldCharacters.runId, selectedCharacterId)
-        : [];
+      const [events, kinship, loadoutProfile] = await Promise.all([
+        worldCharacters
+          ? dossierEventStore.eventsForCharacter(worldCharacters.runId, selectedCharacterId)
+          : Promise.resolve([]),
+        dossierRepository.getKinship(selectedCharacterId),
+        dossierRepository.getLoadoutProfile(selectedCharacterId),
+      ]);
       const resolved = resolveCharacter(record, events, {
         datasetVersion: worldCharacters?.datasetHash ?? 'agot-local-dataset',
         currentYear: characterDatasetYear(currentYear, record.birthDate),
+        loadoutProfile,
       });
-      const nextDossier = createNpcDossier(resolved, currentYear);
+      const nextDossier = createNpcDossier(resolved, currentYear, kinship);
       const relatives = await dossierRepository.getMany(relatedCharacterIds(nextDossier));
       if (cancelled) return;
       setDossier(nextDossier);

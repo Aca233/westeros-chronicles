@@ -7,6 +7,7 @@ import { GameIcon, isGameIconId } from './GameIcon';
 import { stripEmoji } from '../services/textSanitizer';
 import { OpeningCeremony } from './OpeningCeremony';
 import type { CharacterId } from '../features/characters/types';
+import type { WorldEventFact } from '../features/world/worldHistory';
 
 export interface StoryFeedProps {
   onSelectCharacter?: (characterId: CharacterId) => void;
@@ -167,6 +168,7 @@ export const StoryFeed: React.FC<StoryFeedProps> = ({ onSelectCharacter = () => 
               key={turn.id}
               turn={turn}
               isFirst={index === 0}
+              facts={gameState.worldHistory.turns.find((entry) => entry.turn === turn.turnNumber)?.facts ?? []}
               onSelectCharacter={onSelectCharacter}
             />
           ))}
@@ -217,10 +219,12 @@ function SceneDivider({ label, pulsing = false }: { label: string; pulsing?: boo
 function SceneBlock({
   turn,
   isFirst,
+  facts,
   onSelectCharacter,
 }: {
   turn: StoryTurn;
   isFirst: boolean;
+  facts: readonly WorldEventFact[];
   onSelectCharacter: (characterId: CharacterId) => void;
 }) {
   const [isThinkOpen, setIsThinkOpen] = useState(false);
@@ -327,6 +331,24 @@ function SceneBlock({
       {turn.diceCheck && (
         <Reveal delay={140}>
           <DiceLedger check={turn.diceCheck} />
+        </Reveal>
+      )}
+
+      {facts.length > 0 && (
+        <Reveal delay={160}>
+          <aside className="mb-7 border-l border-gold-deep/60 pl-3" data-story-world-facts>
+            <p className="eyebrow mb-1.5">本回合已确认事实</p>
+            {facts.map((fact) => (
+              <div key={fact.id} className="mb-1 text-[10.5px] leading-relaxed text-parchment-faint last:mb-0">
+                <span className="text-parchment-dim">{fact.title}</span>
+                {fact.participantIds.map((characterId) => (
+                  <button key={characterId} type="button" onClick={() => onSelectCharacter(characterId)} className="ml-2 text-gold-dim underline decoration-gold-deep/50 underline-offset-2 hover:text-gold" data-story-fact-character={characterId}>
+                    查看人物
+                  </button>
+                ))}
+              </div>
+            ))}
+          </aside>
         </Reveal>
       )}
 

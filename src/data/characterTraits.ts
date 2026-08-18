@@ -3,6 +3,7 @@ import type { LordAttributes } from '../types/game';
 import { CK3_TRAIT_DESCRIPTIONS } from './ck3TraitDescriptions';
 import { AGOT_TRAIT_DESCRIPTIONS } from './agotTraitDescriptions';
 import { CHARACTER_TRAIT_RULES } from './characterTraitEffects';
+import { IMPORTED_CHARACTER_TRAIT_DEFINITIONS } from './importedCharacterTraitDefinitions';
 import {
   AggregatedTraitEffects,
   TraitCheckDomain,
@@ -32,7 +33,7 @@ export interface CharacterTraitDefinition {
   rules: TraitRuleSet;
 }
 
-type BaseCharacterTraitDefinition = Omit<CharacterTraitDefinition, 'rules'>;
+export type BaseCharacterTraitDefinition = Omit<CharacterTraitDefinition, 'rules'>;
 
 export interface HouseIdentity {
   culture: string;
@@ -337,6 +338,7 @@ const CHARACTER_TRAIT_DEFINITIONS: readonly BaseCharacterTraitDefinition[] = [
     description: '掌控间谍网的大师。', modifiers: { diplomacy: 2, intrigue: 2 } },
   { id: 'dragonrider', name: '驭龙者', category: 'fame', cost: 200, icon: 'trait-agot-dragonrider',
     description: '极少数能够驯服并驾驭巨龙的人。', modifiers: { martial: 1 } },
+  ...IMPORTED_CHARACTER_TRAIT_DEFINITIONS,
 ];
 
 export const CHARACTER_TRAITS: readonly CharacterTraitDefinition[] = CHARACTER_TRAIT_DEFINITIONS.map((trait) => {
@@ -371,8 +373,7 @@ export function getTraitCheckContributions(
 
 export function formatTraitRuleEffects(rules: TraitRuleSet): string[] {
   const multiplierLabels = {
-    goldGain: '金币获得', prestigeGain: '威仪获得', dreadGain: '恶名获得', stressGain: '压力获得',
-    recoverySpeed: '恢复速度', fertility: '生育力',
+    goldGain: '金币获得', prestigeGain: '威仪获得', dreadGain: '恶名获得',
   } as const;
   const resistanceLabels = { injury: '受伤抗性', disease: '疾病抗性', poison: '中毒抗性', bleeding: '失血抗性' } as const;
   const checkLabels: Record<TraitCheckDomain, string> = {

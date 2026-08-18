@@ -44,11 +44,31 @@ for (const prop of ['selectedCharacterId', 'onSelectCharacter', 'onBack', 'onRet
 }
 if (!windowSource.includes('useCharacterDossier')) failures.push('人物窗口没有接入通用玩家/NPC 档案加载器。');
 if (!windowSource.includes('data-character-card')) failures.push('关系人物卡尚不能打开对应人物档案。');
+if (!windowSource.includes('data-character-children')) failures.push('关系页缺少完整子女分组。');
+if (!windowSource.includes('data-character-siblings')) failures.push('关系页缺少完整兄弟姐妹分组。');
+if (!windowSource.includes("group: 'sibling'")) failures.push('人物关系卡没有兄弟姐妹分组。');
+if (!windowSource.includes('canonicalCharacterId: lord.canonicalCharacterId')) failures.push('现成人物关系没有使用稳定人物 ID。');
+if (!windowSource.includes('当前时间线未公开')) failures.push('琼恩的未公开母亲关系缺少时间线安全文案。');
+if (!windowSource.includes('显示全部子女')) failures.push('大量子女没有展开入口。');
+if (windowSource.includes('return cards.slice(0, 8)')) failures.push('NPC 关系仍被八张卡片上限截断。');
 if (!windowSource.includes('<CharacterSearch')) failures.push('关系页缺少全人物档案检索入口。');
 if (!windowSource.includes('data-npc-health')) failures.push('NPC 人物栏缺少独立健康视图。');
+if (!windowSource.includes('data-npc-equipment-state')) failures.push('NPC 健康页缺少实际穿戴状态区域。');
+if (!windowSource.includes('projectNpcEquipment')) failures.push('NPC 健康页没有合并普通物品与特殊物品的实际穿戴。');
+if (!windowSource.includes('data-character-world-facts')) failures.push('NPC 经历页没有读取统一世界历史事实。');
+if (!windowSource.includes('当前没有记录此人实际穿戴的装备')) failures.push('NPC 健康页没有明确区分实际穿戴与物品归属。');
+if (windowSource.includes('listCharacterRecordedEquipment')) failures.push('NPC 健康页不应把归属人物的世界装备当作实际穿戴。');
+if (windowSource.includes('data-npc-recorded-items') || windowSource.includes('data-recorded-equipment') || windowSource.includes('>未穿戴<')) failures.push('NPC 健康页仍在显示未穿戴的归属物品。');
 if (!windowSource.includes('data-npc-inventory')) failures.push('NPC 人物栏缺少独立物品空状态。');
+if (!windowSource.includes('projectNpcAssets')) failures.push('NPC 物品与资产页没有合并普通物品与特殊物品的归属和保管记录。');
+if (!windowSource.includes('data-npc-assets')) failures.push('NPC 物品与资产页缺少资产记录区域。');
+if (!windowSource.includes('dossier.character.items')) failures.push('NPC 人物卷宗没有读取人物投影后的普通物品。');
+if (!windowSource.includes('不等同于随身携带或实际穿戴')) failures.push('NPC 物品与资产页没有区分归属、保管和穿戴。');
+if (windowSource.includes("id: 'inventory', label: '随身物品'")) failures.push('人物卷宗页签不应再命名为“随身物品”。');
+if (!windowSource.includes('data-npc-status')) failures.push('NPC 人物栏缺少三项状态栏标记。');
+if (windowSource.includes('value={dossier.titles.length} label="头衔"')) failures.push('NPC 状态栏不应重复显示头衔数量。');
 if (!windowSource.includes("dossier.kind === 'player' ? <CharacterSheet embedded")) failures.push('玩家专属健康装备功能没有与 NPC 只读资料隔离。');
-for (const tab of ['关系与家族', '健康与装备', '记忆与经历', '随身物品']) {
+for (const tab of ['关系与家族', '健康与装备', '记忆与经历', '物品与资产']) {
   if (!windowSource.includes(tab)) failures.push(`缺少页签：${tab}`);
 }
 if (!windowSource.includes('data-character-lower-tabs')) failures.push('四个功能页签没有放在人物概览下方。');

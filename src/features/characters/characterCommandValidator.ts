@@ -1,7 +1,9 @@
 import type { BodyZoneKey, WoundLevel } from '../../types/game';
+import { ITEM_CATALOG } from '../../data/itemDefinitions';
+import type { EquipmentPosition } from '../items/types';
 import { normalizeRelationship } from './characterRelationships';
 import { isCharacterId } from './characterIds';
-import type { CharacterId, CharacterRelationship, KnowledgeVisibility } from './types';
+import type { CharacterId, CharacterItemRecord, CharacterRelationship, KnowledgeVisibility } from './types';
 import {
   type CharacterCommandContext,
   type CharacterState,
@@ -33,6 +35,11 @@ const COMMAND_TYPES = new Set([
   'ADD_CHARACTER_MEMORY',
   'GRANT_CHARACTER_TITLE',
   'REVOKE_CHARACTER_TITLE',
+  'CHARACTER_ITEM_ACQUIRE',
+  'CHARACTER_ITEM_EQUIP',
+  'CHARACTER_ITEM_UNEQUIP',
+  'CHARACTER_ITEM_TRANSFER',
+  'CHARACTER_ITEM_LOSE',
 ]);
 const PRESENCE_REQUIRED_COMMANDS = new Set([
   'MOVE_CHARACTER',
@@ -95,6 +102,40 @@ function validateRelationshipShape(value: unknown, label: string, requireIds = f
   return undefined;
 }
 
+function isEquipmentPosition(value: unknown): value is EquipmentPosition {
+  if (!isRecord(value) || typeof value.group !== 'string') return false;
+  if (value.group === 'head' || value.group === 'mainhand' || value.group === 'offhand') {
+    return Object.keys(value).every((key) => key === 'group');
+  }
+  if (value.group === 'torso') return (value.layer === 'garment' || value.layer === 'armor' || value.layer === 'outerwear');
+  if (value.group === 'legs') return value.layer === 'legwear' || value.layer === 'footwear';
+  if (value.group === 'accessories') return value.index === 0 || value.index === 1 || value.index === 2;
+  return false;
+}
+
+function samePosition(left: EquipmentPosition, right: EquipmentPosition): boolean {
+  if (left.group !== right.group) return false;
+  if (left.group === 'torso' && right.group === 'torso') return left.layer === right.layer;
+  if (left.group === 'legs' && right.group === 'legs') return left.layer === right.layer;
+  if (left.group === 'accessories' && right.group === 'accessories') return left.index === right.index;
+  return left.group === 'head' || left.group === 'mainhand' || left.group === 'offhand';
+}
+
+function validateCharacterItemRecord(value: unknown): value is CharacterItemRecord {
+  if (!isRecord(value)) return false;
+  if (typeof value.instanceId !== 'string' || !value.instanceId.trim()) return false;
+  if (typeof value.definitionId !== 'string' || !value.definitionId.trim()) return false;
+  if (!isRuntimeCharacterId(value.ownerId)) return false;
+  if (!isRecord(value.custody) || typeof value.custody.type !== 'string') return false;
+  if (value.custody.type === 'character') {
+    if (!isRuntimeCharacterId(value.custody.characterId)) return false;
+  } else if (value.custody.type === 'site') {
+    if (typeof value.custody.siteId !== 'string' || !value.custody.siteId.trim()) return false;
+  } else return false;
+  if (value.equippedPosition !== undefined && !isEquipmentPosition(value.equippedPosition)) return false;
+  return value.source === 'baseline_template' || value.source === 'curated_override' || value.source === 'story_event';
+}
+
 function validateCharacterState(value: unknown, label: string): value is CharacterState {
   if (!isRecord(value)) return false;
   if (!isRuntimeCharacterId(value.id) || typeof value.alive !== 'boolean') return false;
@@ -109,6 +150,10 @@ function validateCharacterState(value: unknown, label: string): value is Charact
     ['wounds', '人物伤势', false],
   ] as const) {
     if (hasOwn(value, key) && value[key] !== undefined && validateStringArray(value[key], `${label}.${name}`, ids)) return false;
+  }
+  if (hasOwn(value, 'items') && value.items !== undefined) {
+    if (!Array.isArray(value.items) || value.items.some((item) => !validateCharacterItemRecord(item))) return false;
+    if (new Set(value.items.map((item) => item.instanceId)).size !== value.items.length) return false;
   }
   if (hasOwn(value, 'relationships') && value.relationships !== undefined) {
     if (!Array.isArray(value.relationships)) return false;
@@ -239,6 +284,22 @@ function titlesOf(character: CharacterState): string[] {
   return character.titles ?? character.titleIds ?? [];
 }
 
+function itemOf(character: CharacterState, instanceId: string): CharacterItemRecord | undefined {
+  return (character.items ?? []).find((item) => item.instanceId === instanceId);
+}
+
+function requireItemInCustody(character: CharacterState, instanceId: unknown): CharacterItemRecord | string {
+  if (typeof instanceId !== 'string' || !instanceId.trim()) return '物品实例 ID 必须是非空字符串';
+  const item = itemOf(character, instanceId);
+  if (!item) return '物品实例不存在';
+  if (item.custody.type !== 'character' || item.custody.characterId !== character.id) return '物品不在该人物手中保管';
+  return item;
+}
+
+function itemInstanceExists(context: ValidatedContext, instanceId: string): boolean {
+  return context.characters.some((character) => (character.items ?? []).some((item) => item.instanceId === instanceId));
+}
+
 function normalizeZone(zone: unknown): BodyZoneKey | undefined {
   return typeof zone === 'string' ? ZONE_ALIASES[zone] : undefined;
 }
@@ -307,6 +368,34 @@ function validateCharacterCommandUnsafe(commandInput: unknown, context: Validate
     })]);
   }
 
+  if (commandInput.type === 'CHARACTER_ITEM_TRANSFER') {
+    const source = requireCharacter(context, commandInput.fromCharacterId);
+    const target = requireCharacter(context, commandInput.toCharacterId);
+    if (typeof source === 'string') return fail(source);
+    if (typeof target === 'string') return fail(target);
+    if (source.id === target.id) return fail('不能把物品转移给同一人物');
+    const dead = requireAlive(source) ?? requireAlive(target);
+    if (dead) return fail(dead);
+    const absent = requirePresent([source, target], context);
+    if (absent) return fail(absent);
+    const item = requireItemInCustody(source, commandInput.instanceId);
+    if (typeof item === 'string') return fail(item);
+    if (itemInstanceExists({ ...context, characters: context.characters.filter((character) => character.id !== source.id) }, item.instanceId)) {
+      return fail(`目标人物已有相同物品实例 ${item.instanceId}`);
+    }
+    const transferred: CharacterItemRecord = {
+      ...item,
+      ownerId: target.id,
+      custody: { type: 'character', characterId: target.id },
+      source: 'story_event',
+    };
+    delete transferred.equippedPosition;
+    return success([
+      eventInput(commandInput as CharacterStateCommand, context, source.id, { type: 'ITEM_TRANSFER_OUT', instanceId: item.instanceId }, '0'),
+      eventInput(commandInput as CharacterStateCommand, context, target.id, { type: 'ITEM_TRANSFER_IN', item: transferred }, '1'),
+    ]);
+  }
+
   const subject = requireCharacter(context, commandInput.characterId);
   if (typeof subject === 'string') return fail(subject);
   const dead = requireAlive(subject);
@@ -318,6 +407,51 @@ function validateCharacterCommandUnsafe(commandInput: unknown, context: Validate
   }
 
   switch (commandInput.type) {
+    case 'CHARACTER_ITEM_ACQUIRE': {
+      const definitionId = requiredString(commandInput, 'definitionId', '物品定义 ID');
+      const instanceId = requiredString(commandInput, 'instanceId', '物品实例 ID');
+      if (!definitionId) return fail('物品定义 ID 必须是非空字符串');
+      if (!instanceId) return fail('物品实例 ID 必须是非空字符串');
+      if (!ITEM_CATALOG.has(definitionId)) return fail(`物品定义 ${definitionId} 不存在`);
+      if (itemInstanceExists(context, instanceId)) return fail(`物品实例 ${instanceId} 已经存在，不能重复获得`);
+      return success([eventInput(commandInput as CharacterStateCommand, context, subject.id, {
+        type: 'ITEM_ACQUIRE',
+        item: {
+          instanceId,
+          definitionId,
+          ownerId: subject.id,
+          custody: { type: 'character', characterId: subject.id },
+          source: 'story_event',
+        },
+      })]);
+    }
+    case 'CHARACTER_ITEM_EQUIP': {
+      const item = requireItemInCustody(subject, commandInput.instanceId);
+      if (typeof item === 'string') return fail(item);
+      if (!isEquipmentPosition(commandInput.position)) return fail('装备位置结构不合法');
+      const definition = ITEM_CATALOG.get(item.definitionId);
+      if (!definition) return fail(`物品定义 ${item.definitionId} 不存在`);
+      if (!definition.equippable || !definition.allowedPositions.some((position) => samePosition(position, commandInput.position as EquipmentPosition))) {
+        return fail(`物品不能装备到指定槽位`);
+      }
+      const occupied = (subject.items ?? []).find((candidate) => candidate.instanceId !== item.instanceId
+        && candidate.equippedPosition && samePosition(candidate.equippedPosition, commandInput.position as EquipmentPosition));
+      if (occupied) return fail(`装备槽位已被物品 ${occupied.instanceId} 占用`);
+      return success([eventInput(commandInput as CharacterStateCommand, context, subject.id, {
+        type: 'ITEM_EQUIP', instanceId: item.instanceId, position: { ...commandInput.position } as EquipmentPosition,
+      })]);
+    }
+    case 'CHARACTER_ITEM_UNEQUIP': {
+      const item = requireItemInCustody(subject, commandInput.instanceId);
+      if (typeof item === 'string') return fail(item);
+      if (!item.equippedPosition) return fail('物品当前未穿戴');
+      return success([eventInput(commandInput as CharacterStateCommand, context, subject.id, { type: 'ITEM_UNEQUIP', instanceId: item.instanceId })]);
+    }
+    case 'CHARACTER_ITEM_LOSE': {
+      const item = requireItemInCustody(subject, commandInput.instanceId);
+      if (typeof item === 'string') return fail(item);
+      return success([eventInput(commandInput as CharacterStateCommand, context, subject.id, { type: 'ITEM_LOSE', instanceId: item.instanceId })]);
+    }
     case 'MOVE_CHARACTER': {
       const locationId = requiredString(commandInput, 'locationId', '目标地点');
       if (!locationId) return fail('目标地点必须是非空字符串');

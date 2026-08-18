@@ -6,6 +6,7 @@ import { ActionDock } from './components/ActionDock';
 import { DiceModal } from './components/DiceModal';
 import { SettingsModal } from './components/SettingsModal';
 import { CharacterCreator } from './components/CharacterCreator';
+import { TvTimelineModal } from './components/TvTimelineModal';
 import { AmbientCanvas } from './components/AmbientCanvas';
 import { CursorGlow } from './components/CursorGlow';
 import { useGameStore } from './store/useGameStore';
@@ -15,7 +16,7 @@ import { useCharacterNavigation } from './features/characters/useCharacterNaviga
 import type { CharacterId } from './features/characters/types';
 
 export const App: React.FC = () => {
-  const { changesLog } = useGameStore();
+  const { changesLog, isTvTimelineOpen, closeTvTimeline } = useGameStore();
   const [isDossierOpen, setDossierOpen] = useState(false);
   const [booted, setBooted] = useState(false);
   const characterNavigation = useCharacterNavigation();
@@ -139,6 +140,7 @@ export const App: React.FC = () => {
       <DiceModal />
       <SettingsModal />
       <CharacterCreator />
+      <TvTimelineModal isOpen={isTvTimelineOpen} onClose={closeTvTimeline} />
     </div>
   );
 };

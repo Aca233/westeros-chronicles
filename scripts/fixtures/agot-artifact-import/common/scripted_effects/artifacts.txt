@@ -1,0 +1,21 @@
+create_test_crown_effect = {
+  set_artifact_rarity_illustrious = yes
+  hidden_effect = {
+    create_artifact = {
+      name = test_crown_name
+      description = test_crown_description
+      type = helmet
+      visuals = test_crown_visuals
+      template = test_crown_template
+      modifier = test_crown_modifier
+    }
+  }
+}
+create_dynamic_effect = {
+  create_artifact = {
+    name = $NAME$
+    description = test_crown_description
+    type = sword
+    visuals = test_sword_visuals
+  }
+}

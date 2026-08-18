@@ -1,0 +1,6 @@
+test_crown_modifier = {
+  diplomacy = 2
+  monthly_prestige = 0.1
+  vassal_opinion = 5
+  unknown_ck3_value = 99
+}

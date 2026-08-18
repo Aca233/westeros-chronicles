@@ -11,13 +11,7 @@ export type TraitCheckDomain =
   | 'seduction'
   | 'resistFear';
 
-export type TraitMultiplierTarget =
-  | 'goldGain'
-  | 'prestigeGain'
-  | 'dreadGain'
-  | 'stressGain'
-  | 'recoverySpeed'
-  | 'fertility';
+export type TraitMultiplierTarget = 'goldGain' | 'prestigeGain' | 'dreadGain';
 
 export type TraitResistanceTarget = 'injury' | 'disease' | 'poison' | 'bleeding';
 
@@ -25,7 +19,6 @@ export interface TraitRuleSet {
   multipliers?: Partial<Record<TraitMultiplierTarget, number>>;
   resistances?: Partial<Record<TraitResistanceTarget, number>>;
   checkModifiers?: Partial<Record<TraitCheckDomain, number>>;
-  eventWeights?: Record<string, number>;
   roleplayDirectives?: string[];
 }
 
@@ -33,7 +26,6 @@ export interface AggregatedTraitEffects {
   multipliers: Partial<Record<TraitMultiplierTarget, number>>;
   resistances: Partial<Record<TraitResistanceTarget, number>>;
   checkModifiers: Partial<Record<TraitCheckDomain, number>>;
-  eventWeights: Record<string, number>;
   roleplayDirectives: string[];
 }
 
@@ -44,7 +36,6 @@ export function aggregateTraitRuleEffects(rules: readonly TraitRuleSet[]): Aggre
     multipliers: {},
     resistances: {},
     checkModifiers: {},
-    eventWeights: {},
     roleplayDirectives: [],
   };
 
@@ -57,9 +48,6 @@ export function aggregateTraitRuleEffects(rules: readonly TraitRuleSet[]): Aggre
     }
     for (const [domain, value] of Object.entries(rule.checkModifiers ?? {}) as Array<[TraitCheckDomain, number]>) {
       result.checkModifiers[domain] = clamp((result.checkModifiers[domain] ?? 0) + value, -10, 10);
-    }
-    for (const [event, weight] of Object.entries(rule.eventWeights ?? {})) {
-      result.eventWeights[event] = clamp((result.eventWeights[event] ?? 1) * weight, 0.1, 5);
     }
     for (const directive of rule.roleplayDirectives ?? []) {
       if (!result.roleplayDirectives.includes(directive)) result.roleplayDirectives.push(directive);
