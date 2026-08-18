@@ -76,3 +76,36 @@ class MapLocationRecord:
     tags: tuple[str, ...]
     description: str | None = None
     icon: str | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class RouteNodeRecord:
+    id: str
+    location_id: str
+    map_x: int
+    map_y: int
+    province_id: int
+    region_id: str
+    is_port: bool
+
+
+@dataclass(frozen=True, slots=True)
+class RouteEdgeRecord:
+    id: str
+    from_id: str
+    to_id: str
+    distance: float
+    road_level: str
+    crossing: str
+    allowed_modes: tuple[str, ...]
+    base_days: float
+    base_cost: float
+    risk: float
+    season_tags: tuple[str, ...]
+
+
+@dataclass(frozen=True, slots=True)
+class RouteGraphRecord:
+    nodes: tuple[RouteNodeRecord, ...]
+    edges: tuple[RouteEdgeRecord, ...]
+    dataset_hash: str

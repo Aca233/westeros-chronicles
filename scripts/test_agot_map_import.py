@@ -7,11 +7,13 @@ import os
 from pathlib import Path
 
 from PIL import Image
+from shapely.geometry import box
 
 from scripts.agot_map_import.geometry import extract_province_geometry
 from scripts.agot_map_import.locations import build_locations
-from scripts.agot_map_import.models import MapImportError
+from scripts.agot_map_import.models import MapImportError, MapLocationRecord, ProvinceGeometry
 from scripts.agot_map_import.regions import expand_region, parse_regions
+from scripts.agot_map_import.routes import build_route_graph
 from scripts.agot_map_import.source import MapSource, parse_definition
 from scripts.agot_map_import.titles import parse_title_hierarchy
 
@@ -154,6 +156,101 @@ class MapLocationTests(unittest.TestCase):
                 {},
                 {"b_winterfell": {"id": "b_fake_winterfell"}},
             )
+
+
+class RouteGraphTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.geometries = {
+            1: ProvinceGeometry(1, "b_one", 1, 1, (0, 0, 4, 4), 16, box(0, 0, 4, 4), terrain="plains", is_coastal=True),
+            2: ProvinceGeometry(2, "b_two", 6, 1, (4, 0, 8, 4), 16, box(4, 0, 8, 4), terrain="hills"),
+            3: ProvinceGeometry(3, "b_three", 11, 1, (10, 0, 14, 4), 16, box(10, 0, 14, 4), terrain="coastal", is_coastal=True),
+        }
+        self.locations = [
+            self._location("b_one", 1, 1, 1, is_port=True),
+            self._location("b_two", 2, 6, 1),
+            self._location("b_three", 3, 11, 1, is_port=True),
+        ]
+        self.road_mask = Image.new("L", (14, 4), 0)
+        for x in range(1, 7):
+            self.road_mask.putpixel((x, 1), 255)
+        self.rivers = Image.new("P", (14, 4), 254)
+
+    @staticmethod
+    def _location(location_id: str, province_id: int, map_x: int, map_y: int, is_port: bool = False) -> MapLocationRecord:
+        return MapLocationRecord(
+            id=location_id, name=location_id, english_name=None, type="port" if is_port else "castle",
+            map_x=map_x, map_y=map_y, province_id=province_id, barony_id=location_id,
+            county_id=None, duchy_id=None, kingdom_id=None, region_id="world_westeros",
+            terrain="plains", is_coastal=is_port, is_port=is_port, importance=20, tags=(),
+        )
+
+    def test_builds_mirrored_land_and_river_edges_with_road_modes(self) -> None:
+        graph = build_route_graph(
+            self.locations,
+            self.geometries,
+            [{"From": "1", "To": "2", "Type": "river_large", "Through": "9"}],
+            self.road_mask,
+            self.rivers,
+            set(),
+        )
+        forward = next(edge for edge in graph.edges if edge.from_id == "b_one" and edge.to_id == "b_two")
+        reverse = next(edge for edge in graph.edges if edge.from_id == "b_two" and edge.to_id == "b_one")
+        self.assertEqual(forward.crossing, "river")
+        self.assertEqual(forward.road_level, "major")
+        self.assertIn("carriage", forward.allowed_modes)
+        self.assertNotIn("ship", forward.allowed_modes)
+        self.assertEqual(forward.distance, reverse.distance)
+        self.assertEqual(forward.base_days, reverse.base_days)
+
+    def test_sea_routes_require_ports_and_allow_only_ships(self) -> None:
+        graph = build_route_graph(
+            self.locations,
+            self.geometries,
+            [{"From": "1", "To": "3", "Type": "sea", "Through": "-1"}],
+            self.road_mask,
+            self.rivers,
+            set(),
+        )
+        sea = next(edge for edge in graph.edges if edge.from_id == "b_one" and edge.to_id == "b_three")
+        self.assertEqual(sea.crossing, "sea")
+        self.assertEqual(sea.allowed_modes, ("ship",))
+        with self.assertRaisesRegex(MapImportError, "港口"):
+            build_route_graph(
+                self.locations,
+                self.geometries,
+                [{"From": "2", "To": "3", "Type": "sea", "Through": "-1"}],
+                self.road_mask,
+                self.rivers,
+                set(),
+            )
+
+    def test_impassable_land_and_roadless_carriage_are_excluded(self) -> None:
+        graph = build_route_graph(
+            self.locations,
+            self.geometries,
+            [],
+            Image.new("L", (14, 4), 0),
+            self.rivers,
+            set(),
+        )
+        land = next(edge for edge in graph.edges if edge.from_id == "b_one" and edge.to_id == "b_two")
+        self.assertNotIn("carriage", land.allowed_modes)
+        blocked = build_route_graph(
+            self.locations,
+            self.geometries,
+            [],
+            self.road_mask,
+            self.rivers,
+            {2},
+        )
+        self.assertFalse(any({edge.from_id, edge.to_id} == {"b_one", "b_two"} for edge in blocked.edges))
+
+    def test_output_order_and_hash_are_deterministic(self) -> None:
+        first = build_route_graph(self.locations, self.geometries, [], self.road_mask, self.rivers, set())
+        second = build_route_graph(list(reversed(self.locations)), self.geometries, [], self.road_mask, self.rivers, set())
+        self.assertEqual(first, second)
+        self.assertEqual(list(first.nodes), sorted(first.nodes, key=lambda node: node.id))
+        self.assertEqual(list(first.edges), sorted(first.edges, key=lambda edge: edge.id))
 
 
 if __name__ == "__main__":
