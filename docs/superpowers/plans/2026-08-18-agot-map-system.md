@@ -162,7 +162,7 @@ Expected: FAIL，原因是 `scripts.agot_map_import` 不存在。
 
 ```text
 Pillow==12.3.0
-numpy==2.3.2
+numpy==2.2.6
 rasterio==1.4.3
 shapely==2.1.1
 mapbox-vector-tile==2.2.0

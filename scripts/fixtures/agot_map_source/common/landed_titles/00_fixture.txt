@@ -1,0 +1,12 @@
+k_westeros = {
+    d_winterfell = {
+        c_winterfell = {
+            b_winterfell = { province = 1 }
+        }
+    }
+    d_kings_landing = {
+        c_kings_landing = {
+            b_kings_landing = { province = 2 }
+        }
+    }
+}

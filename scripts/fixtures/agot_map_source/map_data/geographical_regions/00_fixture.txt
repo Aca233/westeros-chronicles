@@ -1,0 +1,18 @@
+the_north = {
+    provinces = {
+        b_winterfell
+    }
+}
+
+the_crownlands = {
+    provinces = {
+        b_kings_landing
+    }
+}
+
+world_westeros = {
+    regions = {
+        the_north
+        the_crownlands
+    }
+}
