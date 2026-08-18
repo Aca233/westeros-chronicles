@@ -20,6 +20,7 @@ from scripts.agot_map_import.geometry import extract_province_geometry
 from scripts.agot_map_import.locations import build_locations
 from scripts.agot_map_import.models import MapImportError, MapLocationRecord, ProvinceGeometry
 from scripts.agot_map_import.regions import expand_region, parse_regions
+from scripts.agot_map_import.province_history import holding_to_location_type, parse_province_holdings
 from scripts.agot_map_import.routes import build_route_graph
 from scripts.agot_map_import.source import MapSource, parse_definition
 from scripts.agot_map_import.titles import parse_title_hierarchy
@@ -106,6 +107,25 @@ class MapRegionTests(unittest.TestCase):
                 expand_region("a", regions)
             with self.assertRaisesRegex(MapImportError, "不存在"):
                 expand_region("missing", regions)
+
+
+class ProvinceHistoryTests(unittest.TestCase):
+    def test_resolves_holding_at_298_and_maps_location_types(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="agot-map-", dir=FAST_TMP_ROOT) as directory:
+            path = Path(directory) / "history.txt"
+            path.write_text(
+                "1 = { holding = castle_holding 8299.1.1 = { holding = city_holding } }\n"
+                "2 = { holding = none 8290.1.1 = { holding = city_holding } }\n"
+                "3 = { holding = church_holding }\n",
+                encoding="utf-8",
+            )
+            holdings = parse_province_holdings(path.parent)
+            self.assertEqual(holdings, {1: "castle_holding", 2: "city_holding", 3: "church_holding"})
+            self.assertEqual(holding_to_location_type(holdings[1]), "castle")
+            self.assertEqual(holding_to_location_type(holdings[2]), "city")
+            self.assertEqual(holding_to_location_type(holdings[3]), "town")
+            self.assertEqual(holding_to_location_type("none"), "village")
+            self.assertEqual(holding_to_location_type("ruin_holding"), "ruin")
 
 
 class MapGeometryTests(unittest.TestCase):

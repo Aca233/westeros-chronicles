@@ -17,6 +17,7 @@ from .dem import build_dem_tiles
 from .geometry import extract_province_geometry
 from .locations import build_locations
 from .models import MapImportError, MapLocationRecord, ProvinceGeometry
+from .province_history import holding_to_location_type, parse_province_holdings
 from .regions import expand_region, parse_regions
 from .routes import build_route_graph, parse_adjacencies
 from .source import MapSource, parse_definition
@@ -154,6 +155,7 @@ def _source_hashes(source: MapSource) -> dict[str, str]:
     ]
     paths.extend(sorted(source.geographical_regions.glob("*.txt")))
     paths.extend(sorted(source.landed_titles.glob("*.txt")))
+    paths.extend(sorted((source.root / "history/provinces").glob("*.txt")))
     return {path.relative_to(source.root).as_posix(): _sha256(path) for path in paths if path.is_file()}
 
 
@@ -189,9 +191,14 @@ def build_map(args: argparse.Namespace) -> dict[str, object]:
         record["name"] = localization.get(str(record["id"]), record["name"])
     overrides = json.loads((Path(__file__).with_name("overrides.json")).read_text(encoding="utf-8"))
     locations = build_locations(geometries, titles, localization, overrides)
+    province_holdings = parse_province_holdings(source.root / "history/provinces")
     locations = [
-        replace(location, is_port=True, is_coastal=True)
-        if location.province_id in sea_provinces else location
+        replace(
+            location,
+            type=(location.type if "type" in overrides.get(location.id, {}) else holding_to_location_type(province_holdings.get(location.province_id))),
+            is_port=(location.is_port or location.province_id in sea_provinces),
+            is_coastal=(location.is_coastal or location.province_id in sea_provinces),
+        )
         for location in locations
     ]
     default_text = (source.root / "map_data/default.map").read_text(encoding="utf-8-sig", errors="replace")
