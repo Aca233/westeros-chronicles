@@ -1,6 +1,10 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from shapely.geometry.base import BaseGeometry
 
 
 class MapImportError(ValueError):
@@ -28,3 +32,47 @@ class RegionDefinition:
     regions: tuple[str, ...]
     source: str
     line: int
+
+
+@dataclass(frozen=True, slots=True)
+class ProvinceGeometry:
+    province_id: int
+    barony_id: str
+    map_x: int
+    map_y: int
+    bbox: tuple[int, int, int, int]
+    pixel_count: int
+    geometry: "BaseGeometry"
+    region_id: str = "world_westeros"
+    terrain: str = "unknown"
+    is_coastal: bool = False
+
+
+@dataclass(frozen=True, slots=True)
+class TitleAncestors:
+    county_id: str | None = None
+    duchy_id: str | None = None
+    kingdom_id: str | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class MapLocationRecord:
+    id: str
+    name: str
+    english_name: str | None
+    type: str
+    map_x: int
+    map_y: int
+    province_id: int
+    barony_id: str | None
+    county_id: str | None
+    duchy_id: str | None
+    kingdom_id: str | None
+    region_id: str
+    terrain: str
+    is_coastal: bool
+    is_port: bool
+    importance: int
+    tags: tuple[str, ...]
+    description: str | None = None
+    icon: str | None = None

@@ -1,0 +1,15 @@
+{
+  "b_winterfell": {"name": "临冬城", "type": "castle", "importance": 100, "tags": ["capital", "stark"], "description": "北境史塔克家族的古老城堡，围绕天然温泉修筑。"},
+  "b_the_red_keep": {"name": "君临·红堡", "type": "city", "importance": 100, "tags": ["capital", "royal"], "description": "七大王国的王都与铁王座所在。"},
+  "b_casterly_rock": {"name": "凯岩城", "type": "castle", "importance": 95, "tags": ["capital", "lannister"], "description": "建于巨岩之中的西境首府。"},
+  "b_the_eyrie": {"name": "鹰巢城", "type": "castle", "importance": 95, "tags": ["capital", "arryn"], "description": "坐落于巨人之枪山巅的谷地堡垒。"},
+  "b_riverrun": {"name": "奔流城", "type": "castle", "importance": 95, "tags": ["capital", "tully"], "description": "位于腾石河与红叉河交汇处的河间地要塞。"},
+  "b_highgarden": {"name": "高庭", "type": "castle", "importance": 95, "tags": ["capital", "reach"], "description": "河湾地的中心，以花园、骑士与富庶土地闻名。"},
+  "b_storms_end": {"name": "风息堡", "type": "castle", "importance": 95, "tags": ["capital", "baratheon"], "description": "抵御破船湾风暴的古老堡垒。"},
+  "b_sunspear": {"name": "阳戟城", "type": "castle", "importance": 95, "tags": ["capital", "martell"], "description": "多恩马泰尔家族的海滨宫堡。"},
+  "b_pyke": {"name": "派克城", "type": "castle", "importance": 95, "tags": ["capital", "greyjoy"], "description": "建立在海蚀巨岩上的铁群岛首府。"},
+  "b_dragonstone": {"name": "龙石岛", "type": "castle", "importance": 95, "tags": ["capital", "targaryen"], "description": "由瓦雷利亚石工建成的火山岛堡垒。"},
+  "b_castle_black": {"name": "黑城堡", "type": "castle", "importance": 90, "tags": ["wall", "nights_watch"], "description": "守夜人军团的主要驻地。"},
+  "b_the_shadow_tower": {"name": "影子塔", "type": "castle", "importance": 80, "tags": ["wall", "nights_watch"], "description": "长城西端仍有人驻守的重要堡垒。"},
+  "b_eastwatch_by_the_sea": {"name": "东海望", "type": "port", "importance": 80, "tags": ["wall", "nights_watch", "port"], "description": "长城东端的守夜人港口。"}
+}
