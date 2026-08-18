@@ -4,6 +4,8 @@ import shutil
 import tempfile
 import unittest
 import os
+import json
+from dataclasses import replace
 
 import mapbox_vector_tile
 import numpy as np
@@ -13,6 +15,7 @@ from PIL import Image
 from shapely.geometry import box, mapping
 
 from scripts.agot_map_import.dem import build_dem_tiles, encode_terrain_rgb
+from scripts.agot_map_import.audit import audit_map_records
 from scripts.agot_map_import.geometry import extract_province_geometry
 from scripts.agot_map_import.locations import build_locations
 from scripts.agot_map_import.models import MapImportError, MapLocationRecord, ProvinceGeometry
@@ -21,6 +24,8 @@ from scripts.agot_map_import.routes import build_route_graph
 from scripts.agot_map_import.source import MapSource, parse_definition
 from scripts.agot_map_import.titles import parse_title_hierarchy
 from scripts.agot_map_import.tiles import build_terrain_tiles, build_vector_tiles
+from scripts.agot_map_import.writer import write_map_dataset
+from scripts.agot_map_import.cli import main as map_import_main
 
 
 FIXTURE_ROOT = Path(__file__).parent / "fixtures" / "agot_map_source"
@@ -325,6 +330,96 @@ class TileBuilderTests(unittest.TestCase):
         with Image.open(tile) as rendered:
             self.assertEqual(rendered.mode, "RGB")
             self.assertEqual(rendered.size, (16, 16))
+
+
+class MapWriterTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.temp_dir = tempfile.TemporaryDirectory(prefix="agot-map-", dir=FAST_TMP_ROOT)
+        self.root = Path(self.temp_dir.name)
+        route_tests = RouteGraphTests()
+        route_tests.setUp()
+        self.locations = route_tests.locations
+        self.graph = build_route_graph(
+            self.locations,
+            route_tests.geometries,
+            [{"From": "1", "To": "3", "Type": "sea", "Through": "-1"}],
+            route_tests.road_mask,
+            route_tests.rivers,
+            set(),
+        )
+
+    def tearDown(self) -> None:
+        self.temp_dir.cleanup()
+
+    def _write(self, output: Path):
+        return write_map_dataset(
+            output=output,
+            locations=self.locations,
+            route_graph=self.graph,
+            regions=[{"id": "world_westeros", "name": "维斯特洛", "provinceCount": 3}],
+            political=[{"baronyId": location.id, "provinceId": location.province_id} for location in self.locations],
+            source_hashes={"map_data/provinces.png": "a" * 64},
+            map_size=(9216, 6144),
+            westeros_bounds=(0, 0, 14, 4),
+            tile_counts={"terrain": 1, "vector": 1, "dem": 1},
+            min_zoom=0,
+            max_zoom=6,
+        )
+
+    def test_writes_deterministic_manifest_shards_and_search_index(self) -> None:
+        first = self._write(self.root / "first")
+        second = self._write(self.root / "second")
+        self.assertEqual(first["datasetHash"], second["datasetHash"])
+        self.assertEqual(first["sourceId"], "2962333032")
+        self.assertEqual(first["counts"]["locations"], 3)
+        self.assertTrue((self.root / "first/locations/world_westeros.json").is_file())
+        search = json.loads((self.root / "first/location-search-index.json").read_text())
+        self.assertEqual([entry["id"] for entry in search], ["b_one", "b_three", "b_two"])
+        serialized = json.dumps(first, ensure_ascii=False)
+        self.assertNotIn("/mnt/c/agot/2962333032", serialized)
+        self.assertNotIn("http://", serialized)
+
+    def test_audit_rejects_dangling_route_and_preserves_previous_output(self) -> None:
+        output = self.root / "published"
+        output.mkdir()
+        (output / "marker.txt").write_text("old", encoding="utf-8")
+        broken_edge = replace(self.graph.edges[0], to_id="b_missing")
+        broken_graph = replace(self.graph, edges=(broken_edge,) + self.graph.edges[1:])
+        with self.assertRaisesRegex(MapImportError, "路线端点"):
+            audit_map_records(self.locations, broken_graph, (9216, 6144), (0, 0, 14, 4))
+        self.assertEqual((output / "marker.txt").read_text(encoding="utf-8"), "old")
+
+
+class MapCliTests(unittest.TestCase):
+    def test_fixture_cli_writes_complete_data_without_tiles(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="agot-map-", dir=FAST_TMP_ROOT) as directory:
+            root = Path(directory)
+            source = root / "2962333032"
+            shutil.copytree(FIXTURE_ROOT, source)
+            map_data = source / "map_data"
+            provinces = Image.new("RGB", (8, 6), (10, 20, 30))
+            for x in range(4, 8):
+                for y in range(6):
+                    provinces.putpixel((x, y), (40, 50, 60))
+            provinces.save(map_data / "provinces.png")
+            Image.new("I;16", (8, 6), 32000).save(map_data / "heightmap.png")
+            Image.new("P", (8, 6), 254).save(map_data / "rivers.png")
+            Image.new("RGBA", (8, 6), (255, 255, 255, 255)).save(map_data / "mask-baronyroad.png")
+            data_output = root / "data"
+            asset_output = root / "assets"
+            result = map_import_main([
+                "--source", str(source),
+                "--data-output", str(data_output),
+                "--asset-output", str(asset_output),
+                "--expected-size", "8", "6",
+                "--max-vector-zoom", "0",
+                "--skip-tiles",
+            ])
+            self.assertEqual(result, 0)
+            manifest = json.loads((data_output / "manifest.json").read_text())
+            self.assertEqual(manifest["counts"]["locations"], 2)
+            self.assertEqual(manifest["counts"]["terrainTiles"], 0)
+            self.assertTrue((data_output / "reports/audit.json").is_file())
 
 
 if __name__ == "__main__":

@@ -76,7 +76,10 @@
     "import:character-portraits": "python3 -m scripts.character_portrait_import.cli",
     "test:npc-loadout-templates": "node scripts/test-npc-loadout-templates.mjs",
     "test:existing-character-start": "node scripts/test-existing-character-start.mjs",
-    "test:map-schema": "node --experimental-strip-types scripts/test-map-schema.mjs"
+    "test:map-schema": "node --experimental-strip-types scripts/test-map-schema.mjs",
+    "test:agot-map-import": "python3 -m unittest scripts.test_agot_map_import -v",
+    "import:agot-map": "python3 -m scripts.agot_map_import.cli --source /mnt/c/agot/2962333032 --data-output public/data/agot-map --asset-output public/assets/agot-map",
+    "check:map-data": "node scripts/audit-agot-map.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",

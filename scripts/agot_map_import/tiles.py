@@ -4,6 +4,7 @@ import os
 import shutil
 import tempfile
 import uuid
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, Mapping, Sequence
 
@@ -12,6 +13,7 @@ from PIL import Image
 from shapely import make_valid
 from shapely.geometry import box, mapping, shape
 from shapely.geometry.base import BaseGeometry
+from shapely.strtree import STRtree
 
 from .models import MapImportError, TileReport
 
@@ -122,17 +124,36 @@ def _feature_geometry(feature: Mapping[str, object]) -> BaseGeometry:
     return make_valid(geometry)
 
 
+@dataclass(frozen=True, slots=True)
+class _PreparedLayer:
+    name: str
+    features: tuple[Mapping[str, object], ...]
+    geometries: tuple[BaseGeometry, ...]
+    tree: STRtree
+
+
+def _prepare_layers(layers: Mapping[str, Sequence[Mapping[str, object]]]) -> tuple[_PreparedLayer, ...]:
+    prepared: list[_PreparedLayer] = []
+    for layer_name in sorted(layers):
+        features = tuple(layers[layer_name])
+        geometries = tuple(_feature_geometry(feature) for feature in features)
+        if geometries:
+            prepared.append(_PreparedLayer(layer_name, features, geometries, STRtree(geometries)))
+    return tuple(prepared)
+
+
 def _tile_layers(
-    layers: Mapping[str, Sequence[Mapping[str, object]]],
+    layers: Sequence[_PreparedLayer],
     tile_bounds: MapBoundsTuple,
     tolerance: float,
 ) -> list[dict[str, object]]:
     clipping_box = box(*tile_bounds)
     encoded_layers: list[dict[str, object]] = []
-    for layer_name in sorted(layers):
+    for layer in layers:
         features: list[dict[str, object]] = []
-        for feature in layers[layer_name]:
-            geometry = _feature_geometry(feature)
+        for feature_index in layer.tree.query(clipping_box, predicate="intersects"):
+            feature = layer.features[int(feature_index)]
+            geometry = layer.geometries[int(feature_index)]
             if geometry.is_empty or not geometry.intersects(clipping_box):
                 continue
             clipped = make_valid(geometry.intersection(clipping_box))
@@ -149,7 +170,7 @@ def _tile_layers(
                 encoded["id"] = feature_id
             features.append(encoded)
         if features:
-            encoded_layers.append({"name": layer_name, "features": features})
+            encoded_layers.append({"name": layer.name, "features": features})
     return encoded_layers
 
 
@@ -161,6 +182,7 @@ def build_vector_tiles(
 ) -> TileReport:
     bounds = _validate_bounds(bounds)
     zoom_values = _validated_zooms(zooms)
+    prepared_layers = _prepare_layers(layers)
     staging = _staging_directory(output)
     files: list[str] = []
     try:
@@ -173,7 +195,7 @@ def build_vector_tiles(
                         (tile_bounds[2] - tile_bounds[0]) / 8192,
                         (tile_bounds[3] - tile_bounds[1]) / 8192,
                     )
-                    encoded_layers = _tile_layers(layers, tile_bounds, tolerance)
+                    encoded_layers = _tile_layers(prepared_layers, tile_bounds, tolerance)
                     if not encoded_layers:
                         continue
                     data = mapbox_vector_tile.encode(
