@@ -79,7 +79,9 @@
     "test:map-schema": "node --experimental-strip-types scripts/test-map-schema.mjs",
     "test:agot-map-import": "python3 -m unittest scripts.test_agot_map_import -v",
     "import:agot-map": "python3 -m scripts.agot_map_import.cli --source /mnt/c/agot/2962333032 --data-output public/data/agot-map --asset-output public/assets/agot-map",
-    "check:map-data": "node scripts/audit-agot-map.mjs"
+    "check:map-data": "node scripts/audit-agot-map.mjs",
+    "test:map-runtime": "node --experimental-strip-types scripts/test-map-runtime.mjs",
+    "check:map-drawer": "node scripts/check-map-drawer.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",

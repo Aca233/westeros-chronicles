@@ -42,6 +42,45 @@ export interface MapLocation extends MapPixelPoint {
   tags: string[]
 }
 
+export interface MapLocationSearchEntry extends MapPixelPoint {
+  id: string
+  name: string
+  englishName?: string
+  type: MapLocationType
+  importance: number
+  regionId: string
+}
+
+export interface MapRouteNode {
+  id: string
+  locationId: string
+  mapX: number
+  mapY: number
+  provinceId: number
+  regionId: string
+  isPort: boolean
+}
+
+export interface MapRouteEdge {
+  id: string
+  from: string
+  to: string
+  distance: number
+  roadLevel: 'major' | 'minor' | 'none'
+  crossing: 'land' | 'river' | 'sea'
+  allowedModes: TravelMode[]
+  baseDays: number
+  baseCost: number
+  risk: number
+  seasonTags: string[]
+}
+
+export interface MapRouteShard {
+  nodes: MapRouteNode[]
+  edges: MapRouteEdge[]
+  graphHash: string
+}
+
 export interface MapManifest {
   schemaVersion: 1
   sourceId: '2962333032'
