@@ -109,3 +109,12 @@ class RouteGraphRecord:
     nodes: tuple[RouteNodeRecord, ...]
     edges: tuple[RouteEdgeRecord, ...]
     dataset_hash: str
+
+
+@dataclass(frozen=True, slots=True)
+class TileReport:
+    kind: str
+    tile_count: int
+    min_zoom: int
+    max_zoom: int
+    files: tuple[str, ...]

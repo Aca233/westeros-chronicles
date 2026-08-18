@@ -4,11 +4,15 @@ import shutil
 import tempfile
 import unittest
 import os
+
+import mapbox_vector_tile
+import numpy as np
 from pathlib import Path
 
 from PIL import Image
-from shapely.geometry import box
+from shapely.geometry import box, mapping
 
+from scripts.agot_map_import.dem import build_dem_tiles, encode_terrain_rgb
 from scripts.agot_map_import.geometry import extract_province_geometry
 from scripts.agot_map_import.locations import build_locations
 from scripts.agot_map_import.models import MapImportError, MapLocationRecord, ProvinceGeometry
@@ -16,6 +20,7 @@ from scripts.agot_map_import.regions import expand_region, parse_regions
 from scripts.agot_map_import.routes import build_route_graph
 from scripts.agot_map_import.source import MapSource, parse_definition
 from scripts.agot_map_import.titles import parse_title_hierarchy
+from scripts.agot_map_import.tiles import build_terrain_tiles, build_vector_tiles
 
 
 FIXTURE_ROOT = Path(__file__).parent / "fixtures" / "agot_map_source"
@@ -251,6 +256,75 @@ class RouteGraphTests(unittest.TestCase):
         self.assertEqual(first, second)
         self.assertEqual(list(first.nodes), sorted(first.nodes, key=lambda node: node.id))
         self.assertEqual(list(first.edges), sorted(first.edges, key=lambda edge: edge.id))
+
+
+class TileBuilderTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.temp_dir = tempfile.TemporaryDirectory(prefix="agot-map-", dir=FAST_TMP_ROOT)
+        self.root = Path(self.temp_dir.name)
+
+    def tearDown(self) -> None:
+        self.temp_dir.cleanup()
+
+    def test_builds_single_local_webp_terrain_tile_at_zoom_zero(self) -> None:
+        flatmap = Image.new("RGB", (1024, 512), (38, 62, 45))
+        report = build_terrain_tiles(flatmap, (0, 0, 1024, 512), self.root / "terrain", (0,))
+        tile = self.root / "terrain" / "0" / "0" / "0.webp"
+        self.assertEqual(report.tile_count, 1)
+        self.assertTrue(tile.is_file())
+        with Image.open(tile) as rendered:
+            self.assertEqual(rendered.size, (512, 512))
+            self.assertEqual(rendered.format, "WEBP")
+
+    def test_vector_tile_contains_all_runtime_layers(self) -> None:
+        layer_names = ("provinces", "borders", "roads", "routes", "locations", "labels")
+        layers = {
+            name: [{
+                "id": index + 1,
+                "geometry": mapping(box(100 + index, 100, 120 + index, 120)),
+                "properties": {"name": name},
+            }]
+            for index, name in enumerate(layer_names)
+        }
+        report = build_vector_tiles(layers, (0, 0, 1024, 512), self.root / "vector", (0,))
+        tile = self.root / "vector" / "0" / "0" / "0.pbf"
+        decoded = mapbox_vector_tile.decode(tile.read_bytes(), default_options={"y_coord_down": True})
+        self.assertEqual(report.tile_count, 1)
+        self.assertEqual(set(decoded), set(layer_names))
+        self.assertTrue(all(decoded[name]["extent"] == 4096 for name in layer_names))
+
+    def test_terrain_rgb_formula_is_reversible_with_point_one_precision(self) -> None:
+        heights = np.asarray([[0.0, 100.0, 1000.0]], dtype=np.float64)
+        encoded = encode_terrain_rgb(heights)
+        packed = (
+            encoded[:, :, 0].astype(np.uint32) * 65536
+            + encoded[:, :, 1].astype(np.uint32) * 256
+            + encoded[:, :, 2].astype(np.uint32)
+        )
+        decoded = -10000 + packed * 0.1
+        np.testing.assert_allclose(decoded, heights, atol=0.1)
+
+    def test_builds_dem_png_and_atomically_removes_stale_tiles(self) -> None:
+        output = self.root / "dem"
+        output.mkdir()
+        (output / "stale.png").write_bytes(b"stale")
+        heightmap = Image.fromarray(np.asarray([[0, 65535], [32768, 16384]], dtype=np.uint16))
+        report = build_dem_tiles(
+            heightmap,
+            (0, 0, 2, 2),
+            output,
+            (0,),
+            tile_size=16,
+            min_elevation=0,
+            max_elevation=1000,
+        )
+        tile = output / "0" / "0" / "0.png"
+        self.assertEqual(report.tile_count, 1)
+        self.assertTrue(tile.is_file())
+        self.assertFalse((output / "stale.png").exists())
+        with Image.open(tile) as rendered:
+            self.assertEqual(rendered.mode, "RGB")
+            self.assertEqual(rendered.size, (16, 16))
 
 
 if __name__ == "__main__":
