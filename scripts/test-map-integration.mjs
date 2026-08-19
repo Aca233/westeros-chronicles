@@ -182,6 +182,7 @@ test('镜头、zoomend 和 moveend 监听在地图销毁时完整解绑', () => 
   assert.match(source, /cameraCleanup\(\)/)
   assert.match(source, /map\.off\('sourcedata'/)
   assert.match(source, /terrainSurfaceController\.destroy\(\)/)
+  assert.match(source, /wheelCameraController\.destroy\(\)/)
   assert.match(source, /mediaQuery\.removeEventListener/)
 })
 

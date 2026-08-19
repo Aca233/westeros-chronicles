@@ -46,6 +46,10 @@ import {
   createTerrainSurfaceController,
   type TerrainSurfaceController,
 } from './terrainSurfaceController.ts'
+import {
+  createWheelCameraController,
+  type WheelCameraController,
+} from './wheelCameraController.ts'
 import type {
   MapBounds,
   MapManifest,
@@ -244,6 +248,7 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
   const selectedLocationRef = useRef(selectedLocationId)
   const reducedMotionRef = useRef(false)
   const terrainControllerRef = useRef<TerrainController | null>(null)
+  const wheelCameraControllerRef = useRef<WheelCameraController | null>(null)
   const topDownLockedRef = useRef(topDownLocked)
   const terrainAvailableRef = useRef(true)
 
@@ -260,6 +265,11 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
     available: terrainAvailableRef.current,
     terrainWasEnabled: zoom >= TERRAIN_ENTER_ZOOM,
   }).pitch
+
+  const wheelCameraInput = () => ({
+    reducedMotion: reducedMotionRef.current,
+    targetPitch: targetTerrainPitch,
+  })
 
   const refreshSemanticSubjects = useCallback((pixelBounds?: MapBounds): void => {
     const map = mapRef.current
@@ -310,11 +320,13 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
   useEffect(() => {
     modeRef.current = mode
     terrainControllerRef.current?.requestSync(terrainInput(), true)
+    wheelCameraControllerRef.current?.update(wheelCameraInput())
   }, [mode])
 
   useEffect(() => {
     topDownLockedRef.current = topDownLocked
     terrainControllerRef.current?.requestSync(terrainInput(), true)
+    wheelCameraControllerRef.current?.update(wheelCameraInput())
   }, [topDownLocked])
 
   useEffect(() => {
@@ -372,6 +384,7 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
         cameraCleanup()
         cameraCleanup = configureCk3Camera(mapRef.current, event.matches, targetTerrainPitch)
         terrainControllerRef.current?.requestSync(terrainInput(), true)
+        wheelCameraControllerRef.current?.update(wheelCameraInput())
       }
     }
     mediaQuery.addEventListener('change', handleReducedMotionChange)
@@ -403,6 +416,8 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
     setInitializationError(false)
     mapRef.current = map
     cameraCleanup = configureCk3Camera(map, reducedMotionRef.current, targetTerrainPitch)
+    const wheelCameraController = createWheelCameraController(map, wheelCameraInput())
+    wheelCameraControllerRef.current = wheelCameraController
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'bottom-right')
     map.addControl(new maplibregl.AttributionControl({ compact: true }), 'bottom-left')
 
@@ -582,6 +597,8 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
       if (terrainSurfaceController) terrainSurfaceController.destroy()
       if (terrainController) terrainController.destroy()
       terrainControllerRef.current = null
+      wheelCameraController.destroy()
+      wheelCameraControllerRef.current = null
       map.stop()
       map.remove()
       mapRef.current = null

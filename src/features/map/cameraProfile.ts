@@ -77,9 +77,7 @@ export function configureCk3Camera(
   reducedMotion: boolean,
   targetPitch: (zoom: number) => number = () => 0,
 ): () => void {
-  map.scrollZoom.enable()
-  map.scrollZoom.setWheelZoomRate(1 / 600)
-  map.scrollZoom.setZoomRate(1 / 160)
+  map.scrollZoom.disable()
   map.touchZoomRotate.enable()
   map.doubleClickZoom.disable()
   map.dragRotate.disable()

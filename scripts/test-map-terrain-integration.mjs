@@ -24,6 +24,15 @@ test('近景材质控制器监听来源就绪并在销毁前完整解绑', () =>
   assert.match(canvas, /terrainSurfaceController\?\.requestSync\(map\.getZoom\(\)\)/)
 })
 
+test('桌面滚轮控制器在地图生命周期内只创建一次并随状态更新', () => {
+  assert.match(canvas, /createWheelCameraController/)
+  assert.match(canvas, /wheelCameraControllerRef\.current\?\.update/)
+  assert.match(canvas, /wheelCameraController\.destroy\(\)/)
+  assert.match(canvas, /const handleZoomEnd[\s\S]*?requestSync\(terrainInput\(\), true\)/)
+  const continuous = canvas.match(/const handleTerrainZoom = \(\) => \{[\s\S]*?\n\s*\}/)?.[0] ?? ''
+  assert.doesNotMatch(continuous, /setPitch|easeTo/)
+})
+
 test('近景材质失败只回退远景，不关闭 DEM 或整个地图', () => {
   const branch = canvas.match(/if \(terrainEvent\.sourceId === MATERIAL_TERRAIN_SOURCE[\s\S]*?\n\s*\}/)?.[0] ?? ''
   assert.match(branch, /disable\('近景地形材质不可用'\)/)

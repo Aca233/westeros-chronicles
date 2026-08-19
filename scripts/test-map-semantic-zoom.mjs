@@ -85,9 +85,7 @@ test('镜头配置使用 MapLibre 安全的维斯特洛边界并完整清理自�
   const listeners = new Map()
   const map = {
     scrollZoom: {
-      enable: () => calls.push('scroll-enable'),
-      setWheelZoomRate: (rate) => calls.push(['wheel', rate]),
-      setZoomRate: (rate) => calls.push(['zoom', rate]),
+      disable: () => calls.push('scroll-disable'),
     },
     doubleClickZoom: { disable: () => calls.push('double-disable') },
     dragRotate: { disable: () => calls.push('drag-rotate-disable') },
@@ -107,8 +105,7 @@ test('镜头配置使用 MapLibre 安全的维斯特洛边界并完整清理自�
     },
   }
   const teardown = configureCk3Camera(map, false, (zoom) => zoom * 10)
-  assert.ok(calls.some((value) => Array.isArray(value) && value[0] === 'wheel' && value[1] === 1 / 600))
-  assert.ok(calls.some((value) => Array.isArray(value) && value[0] === 'zoom' && value[1] === 1 / 160))
+  assert.ok(calls.includes('scroll-disable'))
   assert.ok(calls.includes('double-disable'))
   listeners.get('dblclick')({ lngLat: { lng: 12, lat: 34 }, preventDefault() {} })
   const ease = calls.find((value) => Array.isArray(value) && value[0] === 'ease')
