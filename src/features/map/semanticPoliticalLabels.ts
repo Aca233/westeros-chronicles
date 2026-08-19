@@ -22,7 +22,7 @@ interface PoliticalHouseLabelProperties {
   politicalHolderId: string | null
 }
 
-interface PoliticalHouseLabelInput {
+export interface PoliticalHouseLabelInput {
   rank: SemanticRank
   titles: readonly SemanticTitle[]
   states: readonly PoliticalFeatureState[]

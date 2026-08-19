@@ -5,6 +5,7 @@ import {
   addDynamicMapSubjectLayers,
   applyMapMode,
   MODE_VISIBILITY,
+  syncPoliticalHouseLabels,
   syncDynamicMapSubjects,
 } from '../src/features/map/mapLayers.ts'
 import { createLocalMapStyle } from '../src/features/map/mapStyle.ts'
@@ -162,4 +163,39 @@ test('中景只发送聚合，细节交叉区同时发送聚合和个体', () =>
   })
   assert.equal(sources.get('agot-character-aggregate-source').data.features.length, 1)
   assert.equal(sources.get('agot-character-point-source').data.features.length, 1)
+})
+
+test('政治副标题跳过无关变化，投影失败只清空自身来源', () => {
+  const subtitleCalls = []
+  const routeData = { routeId: 'route-kept' }
+  const sourceById = new Map([
+    ['agot-political-house-label-source', { setData: (data) => subtitleCalls.push(data) }],
+    ['agot-active-journey-route', { data: routeData }],
+  ])
+  const visibility = new Map()
+  const map = {
+    getSource: (id) => sourceById.get(id),
+    getLayer: (id) => id === 'agot-political-house-labels' ? {} : undefined,
+    setLayoutProperty: (id, property, value) => visibility.set(`${id}:${property}`, value),
+  }
+  const input = {
+    rank: 'county',
+    titles: [{ featureId: 1, titleId: 'c_winterfell', rank: 'county', name: '临冬城伯爵领', mapX: 1200, mapY: 900, importance: 60, regionId: 'the_north' }],
+    states: [{ titleId: 'b_winterfell', provinceId: 1, effectiveTitleId: 'c_winterfell', holderId: 'agot:Ned_1', houseId: 'stark', houseLabel: '史塔克家族', color: '#6f7f75' }],
+    memberships: [{ locationId: 'b_winterfell', baronyId: 'b_winterfell', countyId: 'c_winterfell', duchyId: 'd_winterfell', realmId: 'the_north' }],
+    pixelBounds: { minX: 1000, minY: 700, maxX: 1400, maxY: 1100 },
+    manifest: manifestV2,
+  }
+  assert.equal(syncPoliticalHouseLabels(map, input, new Set(['c_unrelated'])), 'skipped')
+  assert.equal(subtitleCalls.length, 0)
+  assert.equal(syncPoliticalHouseLabels(map, input, new Set(['c_winterfell'])), 'updated')
+  assert.equal(subtitleCalls.length, 1)
+
+  const brokenTitle = { ...input.titles[0] }
+  Object.defineProperty(brokenTitle, 'mapX', { get: () => { throw new Error('broken projection') } })
+  assert.equal(syncPoliticalHouseLabels(map, { ...input, titles: [brokenTitle] }), 'failed')
+  assert.equal(subtitleCalls.length, 2)
+  assert.equal(subtitleCalls[1].features.length, 0)
+  assert.equal(visibility.get('agot-political-house-labels:visibility'), 'none')
+  assert.equal(sourceById.get('agot-active-journey-route').data, routeData)
 })

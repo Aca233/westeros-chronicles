@@ -10,6 +10,10 @@ import type { RegisteredMapIntelType, VisibleMapSubject } from './intelligence.t
 import type { PoliticalFeatureState } from './politicalProjection.ts'
 import { semanticDetailOpacityExpression, type SemanticZoomState } from './semanticZoom.ts'
 import { aggregateAssetPoints, aggregateCharacterPoints, type SemanticSubjectAggregate } from './semanticAggregation.ts'
+import {
+  buildPoliticalHouseLabelCollection,
+  type PoliticalHouseLabelInput,
+} from './semanticPoliticalLabels.ts'
 import type {
   MapBounds,
   MapLocationSearchEntry,
@@ -378,6 +382,40 @@ export function applyMapMode(map: MapLibreMap, mode: MapMode): void {
     if (map.getLayer(layerId)) {
       map.setLayoutProperty(layerId, 'visibility', visible ? 'visible' : 'none')
     }
+  }
+}
+
+type PoliticalHouseLabelMap = Pick<MapLibreMap, 'getSource' | 'getLayer' | 'setLayoutProperty'>
+
+export function syncPoliticalHouseLabels(
+  map: PoliticalHouseLabelMap,
+  input: PoliticalHouseLabelInput,
+  affectedTitleIds?: ReadonlySet<string>,
+): 'updated' | 'skipped' | 'failed' {
+  if (affectedTitleIds && !input.titles.some((title) =>
+    title.rank === input.rank
+    && affectedTitleIds.has(title.titleId)
+    && title.mapX >= input.pixelBounds.minX
+    && title.mapX <= input.pixelBounds.maxX
+    && title.mapY >= input.pixelBounds.minY
+    && title.mapY <= input.pixelBounds.maxY)) {
+    return 'skipped'
+  }
+  const source = map.getSource(POLITICAL_HOUSE_LABEL_SOURCE) as GeoJSONSource | undefined
+  if (!source) return 'skipped'
+  try {
+    source.setData(buildPoliticalHouseLabelCollection(input))
+    return 'updated'
+  } catch {
+    try {
+      source.setData({ type: 'FeatureCollection', features: [] })
+    } catch {
+      // The source itself is broken; layer isolation below still prevents stale labels.
+    }
+    if (map.getLayer(POLITICAL_HOUSE_LABEL_LAYER)) {
+      map.setLayoutProperty(POLITICAL_HOUSE_LABEL_LAYER, 'visibility', 'none')
+    }
+    return 'failed'
   }
 }
 

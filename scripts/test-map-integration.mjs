@@ -161,3 +161,24 @@ test('移动端地点详情和旅程面板是地图内部底部抽屉', () => {
   assert.match(css, /\.map-journey-panel\.with-details/)
   assert.match(css, /\.map-drawer-panel\s*\{\s*width:\s*100vw/s)
 })
+
+test('MapCanvas 只在稳定边界或权威状态变化时刷新动态语义源', () => {
+  const source = readFileSync('src/features/map/MapCanvas.tsx', 'utf8')
+  assert.match(source, /semanticZoomState\(map\.getZoom\(\)\)/)
+  assert.match(source, /map\.on\('zoomend'/)
+  assert.match(source, /refreshPoliticalHouseLabels/)
+  assert.doesNotMatch(source, /map\.on\('zoom',\s*refresh(?:Political|Semantic)/)
+})
+
+test('缩放不修改地图模式，旅程路线仍只来自原 routePlan', () => {
+  const source = readFileSync('src/features/map/MapCanvas.tsx', 'utf8')
+  assert.doesNotMatch(source, /setMapMode|useMapUiStore/)
+  assert.match(source, /syncJourneyLayers\(map, manifest, routeRef\.current\.routePlan/)
+})
+
+test('镜头、zoomend 和 moveend 监听在地图销毁时完整解绑', () => {
+  const source = readFileSync('src/features/map/MapCanvas.tsx', 'utf8')
+  for (const event of ['zoomend', 'moveend']) assert.match(source, new RegExp(`map\\.off\\('${event}'`))
+  assert.match(source, /cameraCleanup\(\)/)
+  assert.match(source, /mediaQuery\.removeEventListener/)
+})

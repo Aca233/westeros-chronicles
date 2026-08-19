@@ -135,8 +135,8 @@ export function createLocalMapStyle(manifest: MapManifest): StyleSpecification {
         'source-layer': 'roads',
         paint: {
           'line-color': '#9b7646',
-          'line-opacity': ['interpolate', ['linear'], ['zoom'], 0, 0.2, 4.1, 0.35, 4.4, 0.72, 6, 0.86],
-          'line-width': ['interpolate', ['linear'], ['zoom'], 0, 0.25, 4.1, 0.55, 4.4, 1.1, 6, 1.8],
+          'line-opacity': ['interpolate', ['linear'], ['zoom'], 0, 0, 1.09, 0, 1.1, 0.18, 4.1, 0.35, 4.4, 0.72, 6, 0.86],
+          'line-width': ['interpolate', ['linear'], ['zoom'], 0, 0.2, 1.1, 0.25, 4.1, 0.55, 4.4, 1.1, 6, 1.8],
         },
       },
       {
@@ -226,7 +226,7 @@ export function createLocalMapStyle(manifest: MapManifest): StyleSpecification {
           visibility: 'none',
           'text-field': ['get', 'politicalHouseLabel'],
           'text-font': ['Noto Sans CJK SC Regular'],
-          'text-size': 12,
+          'text-size': ['interpolate', ['linear'], ['zoom'], 0, 11, 6, 13],
           'text-allow-overlap': false,
           'text-ignore-placement': false,
         },
