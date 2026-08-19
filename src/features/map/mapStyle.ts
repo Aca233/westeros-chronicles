@@ -1,6 +1,12 @@
 import type { StyleSpecification } from 'maplibre-gl'
 
 import { semanticLabelSizeExpression, semanticRankOpacityExpression } from './semanticZoom.ts'
+import {
+  FAR_MAP_LAYER,
+  FAR_MAP_SOURCE,
+  MATERIAL_TERRAIN_LAYER,
+  MATERIAL_TERRAIN_SOURCE,
+} from './mapLayers.ts'
 import type { MapManifest } from './types'
 
 export function createLocalMapStyle(manifest: MapManifest): StyleSpecification {
@@ -8,13 +14,21 @@ export function createLocalMapStyle(manifest: MapManifest): StyleSpecification {
     version: 8,
     name: '维斯特洛离线地图',
     sources: {
-      'agot-terrain': {
+      [FAR_MAP_SOURCE]: {
         type: 'raster',
         tiles: [manifest.paths.terrain],
         tileSize: manifest.tileSize,
         minzoom: manifest.minZoom,
         maxzoom: 4,
         attribution: 'AGOT 离线地图资料',
+      },
+      [MATERIAL_TERRAIN_SOURCE]: {
+        type: 'raster',
+        tiles: [manifest.paths.materialTerrain],
+        tileSize: manifest.tileSize,
+        minzoom: manifest.minZoom,
+        maxzoom: 5,
+        attribution: 'AGOT 离线地形材质',
       },
       'agot-vector': {
         type: 'vector',
@@ -48,10 +62,26 @@ export function createLocalMapStyle(manifest: MapManifest): StyleSpecification {
         paint: { 'background-color': '#101611' },
       },
       {
-        id: 'agot-terrain',
+        id: FAR_MAP_LAYER,
         type: 'raster',
-        source: 'agot-terrain',
-        paint: { 'raster-saturation': -0.18, 'raster-contrast': 0.1 },
+        source: FAR_MAP_SOURCE,
+        paint: {
+          'raster-opacity': 1,
+          'raster-saturation': 0,
+          'raster-brightness-max': 1,
+          'raster-contrast': 0.1,
+        },
+      },
+      {
+        id: MATERIAL_TERRAIN_LAYER,
+        type: 'raster',
+        source: MATERIAL_TERRAIN_SOURCE,
+        paint: {
+          'raster-opacity': 0,
+          'raster-saturation': 0,
+          'raster-brightness-max': 1,
+          'raster-contrast': 0.06,
+        },
       },
       {
         id: 'agot-hillshade',

@@ -84,6 +84,8 @@ test('五种模式切换不会写入 zoom 且完整控制新增图层', () => {
   const allLayers = new Set(Object.keys(MODE_VISIBILITY.terrain))
   for (const layerId of [
     ...semanticLayerIds,
+    'agot-flatmap',
+    'agot-material-terrain',
     'agot-political-house-labels',
     'agot-character-aggregates',
     'agot-character-aggregate-counts',
@@ -101,6 +103,7 @@ test('五种模式切换不会写入 zoom 且完整控制新增图层', () => {
         assert.equal(property, 'visibility')
         visibility.set(layerId, value)
       },
+      setPaintProperty: () => {},
       setZoom: (...args) => zoomCalls.push(args),
       easeTo: (...args) => zoomCalls.push(args),
     }

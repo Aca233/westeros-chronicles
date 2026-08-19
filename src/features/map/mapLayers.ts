@@ -101,6 +101,10 @@ export const COUNTY_HIT_LAYER = 'agot-county-hit-areas'
 export const SELECTED_COUNTY_OUTLINE_LAYER = 'agot-selected-county-outline'
 export const SELECTED_COUNTY_LOCATION_SOURCE = 'agot-selected-county-location-source'
 export const SELECTED_COUNTY_LOCATION_LAYER = 'agot-selected-county-locations'
+export const FAR_MAP_SOURCE = 'agot-flatmap'
+export const FAR_MAP_LAYER = 'agot-flatmap'
+export const MATERIAL_TERRAIN_SOURCE = 'agot-material-terrain'
+export const MATERIAL_TERRAIN_LAYER = 'agot-material-terrain'
 
 const GENERIC_COUNTY_LOCATION_ICONS = {
   castle: '/assets/map-icons/location-castle.webp',
@@ -131,7 +135,8 @@ const SEMANTIC_VISIBILITY = {
 } as const
 
 const COMMON_VISIBILITY = {
-  'agot-terrain': true,
+  [FAR_MAP_LAYER]: true,
+  [MATERIAL_TERRAIN_LAYER]: true,
   'agot-hillshade': true,
   [COUNTY_HIT_LAYER]: true,
   ...SEMANTIC_VISIBILITY,
@@ -405,6 +410,16 @@ export function applyMapMode(map: MapLibreMap, mode: MapMode): void {
     if (map.getLayer(layerId)) {
       map.setLayoutProperty(layerId, 'visibility', visible ? 'visible' : 'none')
     }
+  }
+  const surfacePaint = mode === 'terrain'
+    ? { saturation: 0, brightness: 1 }
+    : mode === 'political'
+      ? { saturation: -0.12, brightness: 0.9 }
+      : { saturation: -0.28, brightness: 0.78 }
+  for (const layerId of [FAR_MAP_LAYER, MATERIAL_TERRAIN_LAYER]) {
+    if (!map.getLayer(layerId)) continue
+    map.setPaintProperty(layerId, 'raster-saturation', surfacePaint.saturation)
+    map.setPaintProperty(layerId, 'raster-brightness-max', surfacePaint.brightness)
   }
 }
 
