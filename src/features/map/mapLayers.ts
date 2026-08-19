@@ -1,9 +1,33 @@
 import type { GeoJSONSource, Map as MapLibreMap } from 'maplibre-gl'
 
-import { mapPixelToLngLat } from './coordinates'
+import { mapPixelToLngLat } from './coordinates.ts'
+import type { RegisteredMapIntelType, VisibleMapSubject } from './intelligence.ts'
 import type { MapLocationSearchEntry, MapManifest } from './types'
 
 export type MapMode = 'terrain' | 'political' | 'characters' | 'travel' | 'assets'
+
+const INTELLIGENCE_TYPES_BY_MODE: Record<MapMode, ReadonlySet<RegisteredMapIntelType>> = {
+  terrain: new Set(),
+  political: new Set(['garrison', 'event']),
+  characters: new Set(['character-location', 'identity', 'death']),
+  travel: new Set(['road-closure']),
+  assets: new Set(['asset']),
+}
+
+export function visibleMapSubjectsForMode(
+  mode: MapMode,
+  subjects: readonly unknown[],
+): VisibleMapSubject[] {
+  const allowedTypes = INTELLIGENCE_TYPES_BY_MODE[mode]
+  return subjects.filter((subject): subject is VisibleMapSubject => {
+    if (!subject || typeof subject !== 'object') return false
+    const candidate = subject as Partial<VisibleMapSubject>
+    return typeof candidate.id === 'string'
+      && typeof candidate.type === 'string'
+      && allowedTypes.has(candidate.type as RegisteredMapIntelType)
+      && (candidate.intelLevel === 'confirmed' || candidate.intelLevel === 'rumored' || candidate.intelLevel === 'stale')
+  })
+}
 
 export const JOURNEY_ROUTE_SOURCE = 'agot-active-journey-route'
 export const JOURNEY_PROGRESS_SOURCE = 'agot-active-journey-progress'

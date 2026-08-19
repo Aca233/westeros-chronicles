@@ -56,9 +56,26 @@ test('未知动态情报不会进入地点详情', () => {
   assert.equal(view.routeEstimate?.days, 4.5)
 })
 
+test('旧地点投影中的传闻也会移除精确身份，只保留定性描述', () => {
+  const view = buildLocationView(winterfell, {
+    ruler: {
+      id: 'char_secret_ruler',
+      label: '秘密占领者真名',
+      characterId: 'char_secret_ruler',
+      knowledge: 'rumored',
+      regionId: 'world_westeros_the_north',
+      qualitativeDescription: '据说此地已经换了主人',
+    },
+  })
+  assert.equal(view.ruler?.label, '据说此地已经换了主人')
+  assert.equal(view.ruler?.characterId, undefined)
+  assert.equal(JSON.stringify(view).includes('秘密占领者真名'), false)
+})
+
 test('地图 UI 不提供尚未实现的战争和建设入口', () => {
   const source = [
     'src/features/map/LocationDetails.tsx',
+    'src/features/map/TravelPlanner.tsx',
     'src/features/map/MapToolbar.tsx',
   ].map((path) => readFileSync(path, 'utf8')).join('\n')
   assert.doesNotMatch(source, /宣战|征服|建设/)

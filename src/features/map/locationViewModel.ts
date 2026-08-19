@@ -1,4 +1,10 @@
 import type { KnowledgeLevel, MapLocation, MapLocationType } from './types'
+import {
+  filterMapIntelligence,
+  type MapIntelRecord,
+  type MapIntelSubject,
+  type VisibleMapSubject,
+} from './intelligence.ts'
 
 export interface KnownLocationItem {
   id: string
@@ -6,6 +12,9 @@ export interface KnownLocationItem {
   knowledge: KnowledgeLevel
   characterId?: string
   lastKnownDate?: string
+  regionId?: string
+  qualitativeDescription?: string
+  stale?: true
 }
 
 export interface LocationRouteEstimate {
@@ -20,6 +29,15 @@ export interface LocationKnowledgeProjection {
   assets?: KnownLocationItem[]
   events?: KnownLocationItem[]
   routeEstimate?: LocationRouteEstimate
+  intelligence?: Array<{
+    subject: MapIntelSubject
+    knowledge: MapIntelRecord
+  }>
+}
+
+export interface LocationViewContext {
+  now: string
+  debugIntelligence?: boolean
 }
 
 export interface LocationHierarchyEntry {
@@ -49,6 +67,7 @@ export interface LocationViewModel {
   characters: KnownLocationItem[]
   assets: KnownLocationItem[]
   events: KnownLocationItem[]
+  intelligence: VisibleMapSubject[]
   routeEstimate?: LocationRouteEstimate
 }
 
@@ -106,7 +125,17 @@ function displayStableId(id: string): string {
 }
 
 function visible(items: KnownLocationItem[] | undefined): KnownLocationItem[] {
-  return (items ?? []).filter((item) => item.knowledge !== 'unknown')
+  return (items ?? []).flatMap((item) => {
+    if (item.knowledge === 'unknown') return []
+    if (item.knowledge === 'rumored') return [{
+      id: item.id,
+      label: item.qualitativeDescription ?? '未经证实的消息',
+      knowledge: item.knowledge,
+      ...(item.regionId ? { regionId: item.regionId } : {}),
+      ...(item.qualitativeDescription ? { qualitativeDescription: item.qualitativeDescription } : {}),
+    }]
+    return [{ ...item, ...(item.knowledge === 'stale' ? { stale: true as const } : {}) }]
+  })
 }
 
 export function minimumLocationImportance(zoom: number): number {
@@ -124,12 +153,22 @@ export function shouldShowLocation(location: Pick<MapLocation, 'importance'>, zo
 export function buildLocationView(
   location: MapLocation,
   projection: LocationKnowledgeProjection = {},
+  context: LocationViewContext = { now: '未记录' },
 ): LocationViewModel {
   const hierarchy = HIERARCHY_META.flatMap(([field, rank, rankLabel]) => {
     const id = location[field]
     return id ? [{ rank, rankLabel, id, label: displayStableId(id) }] : []
   })
-  const ruler = projection.ruler?.knowledge === 'unknown' ? undefined : projection.ruler
+  const ruler = visible(projection.ruler ? [projection.ruler] : [])[0]
+  const intelligence = (projection.intelligence ?? []).flatMap(({ subject, knowledge }) => {
+    const visibleSubject = filterMapIntelligence(
+      subject,
+      knowledge,
+      context.now,
+      context.debugIntelligence === true,
+    )
+    return visibleSubject ? [visibleSubject] : []
+  })
 
   return {
     id: location.id,
@@ -148,6 +187,7 @@ export function buildLocationView(
     characters: visible(projection.characters),
     assets: visible(projection.assets),
     events: visible(projection.events),
+    intelligence,
     routeEstimate: projection.routeEstimate,
   }
 }
