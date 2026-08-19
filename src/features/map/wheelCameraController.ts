@@ -24,6 +24,8 @@ export type WheelCameraMapAdapter = Pick<
 >
 
 const WHEEL_ZOOM_DIVISOR = 360
+const WHEEL_EASE_ID = 'agot-wheel-camera'
+const linearEasing = (progress: number): number => progress
 const WHEEL_LISTENER_OPTIONS: AddEventListenerOptions = { passive: false }
 
 export function normalizeWheelDelta(
@@ -71,6 +73,8 @@ export function createWheelCameraController(
       pitch: input.targetPitch(targetZoom),
       around: map.unproject([event.offsetX, event.offsetY]),
       duration: input.reducedMotion ? 0 : 90,
+      easing: linearEasing,
+      easeId: WHEEL_EASE_ID,
       essential: !input.reducedMotion,
     }, { agotWheelCamera: true })
   }

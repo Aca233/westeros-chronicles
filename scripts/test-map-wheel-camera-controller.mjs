@@ -65,14 +65,18 @@ test('一次滚轮用同一 easeTo 连续提交缩放、倾角和指针锚点', 
   })
   assert.equal(state.scrollDisabled, 1)
   assert.equal(state.wheel(-120), true)
-  assert.deepEqual(state.cameraCalls[0], {
+  const { easing, ...cameraCall } = state.cameraCalls[0]
+  assert.deepEqual(cameraCall, {
     zoom: 10 / 3,
     pitch: 100 / 3,
     around: { lng: 12, lat: 8 },
     duration: 90,
     essential: true,
+    easeId: 'agot-wheel-camera',
     eventData: { agotWheelCamera: true },
   })
+  assert.equal(easing(0.25), 0.25)
+  assert.equal(easing(0.75), 0.75)
   controller.destroy()
 })
 
@@ -85,6 +89,10 @@ test('上一段滚轮动画被新输入取消时不会把累计目标重置到�
   state.wheel(-120)
   state.wheel(-120)
   state.wheel(-120)
+  assert.deepEqual(
+    state.cameraCalls.map((call) => call.easeId),
+    ['agot-wheel-camera', 'agot-wheel-camera', 'agot-wheel-camera'],
+  )
   const expectedZooms = [10 / 3, 11 / 3, 4]
   state.cameraCalls.forEach((call, index) => {
     assert.ok(Math.abs(call.zoom - expectedZooms[index]) < 1e-9)
