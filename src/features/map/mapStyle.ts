@@ -1,5 +1,6 @@
 import type { StyleSpecification } from 'maplibre-gl'
 
+import { semanticLabelSizeExpression, semanticRankOpacityExpression } from './semanticZoom.ts'
 import type { MapManifest } from './types'
 
 export function createLocalMapStyle(manifest: MapManifest): StyleSpecification {
@@ -28,6 +29,16 @@ export function createLocalMapStyle(manifest: MapManifest): StyleSpecification {
         minzoom: manifest.minZoom,
         maxzoom: 4,
         encoding: 'mapbox',
+      },
+      'agot-semantic': {
+        type: 'vector',
+        tiles: [manifest.paths.semantic],
+        minzoom: manifest.minZoom,
+        maxzoom: manifest.maxZoom,
+      },
+      'agot-political-house-label-source': {
+        type: 'geojson',
+        data: { type: 'FeatureCollection', features: [] },
       },
     },
     layers: [
@@ -82,15 +93,39 @@ export function createLocalMapStyle(manifest: MapManifest): StyleSpecification {
         },
       },
       {
-        id: 'agot-borders',
+        id: 'agot-realm-boundaries',
         type: 'line',
-        source: 'agot-vector',
-        'source-layer': 'borders',
-        minzoom: 2,
+        source: 'agot-semantic',
+        'source-layer': 'realm_boundaries',
         paint: {
-          'line-color': '#cfbd8d',
-          'line-opacity': 0.42,
-          'line-width': ['interpolate', ['linear'], ['zoom'], 2, 0.35, 6, 1.1],
+          'line-color': '#d9c99d',
+          'line-opacity': semanticRankOpacityExpression('realm'),
+          'line-width': ['interpolate', ['linear'], ['zoom'], 0, 1.8, 1.4, 3.2],
+          'line-blur': 0.45,
+        },
+      },
+      {
+        id: 'agot-duchy-boundaries',
+        type: 'line',
+        source: 'agot-semantic',
+        'source-layer': 'duchy_boundaries',
+        paint: {
+          'line-color': '#c2ad78',
+          'line-opacity': semanticRankOpacityExpression('duchy'),
+          'line-width': ['interpolate', ['linear'], ['zoom'], 1.1, 1.2, 2.8, 2.6],
+          'line-blur': 0.4,
+        },
+      },
+      {
+        id: 'agot-county-boundaries',
+        type: 'line',
+        source: 'agot-semantic',
+        'source-layer': 'county_boundaries',
+        paint: {
+          'line-color': '#aa9160',
+          'line-opacity': semanticRankOpacityExpression('county'),
+          'line-width': ['interpolate', ['linear'], ['zoom'], 2.5, 0.8, 6, 2],
+          'line-blur': 0.3,
         },
       },
       {
@@ -98,11 +133,10 @@ export function createLocalMapStyle(manifest: MapManifest): StyleSpecification {
         type: 'line',
         source: 'agot-vector',
         'source-layer': 'roads',
-        minzoom: 3,
         paint: {
           'line-color': '#9b7646',
-          'line-opacity': 0.72,
-          'line-width': ['interpolate', ['linear'], ['zoom'], 3, 0.55, 6, 1.8],
+          'line-opacity': ['interpolate', ['linear'], ['zoom'], 0, 0.2, 4.1, 0.35, 4.4, 0.72, 6, 0.86],
+          'line-width': ['interpolate', ['linear'], ['zoom'], 0, 0.25, 4.1, 0.55, 4.4, 1.1, 6, 1.8],
         },
       },
       {
@@ -119,11 +153,95 @@ export function createLocalMapStyle(manifest: MapManifest): StyleSpecification {
         },
       },
       {
+        id: 'agot-realm-labels',
+        type: 'symbol',
+        source: 'agot-semantic',
+        'source-layer': 'title_labels',
+        filter: ['==', ['get', 'rank'], 'realm'],
+        layout: {
+          'text-field': ['get', 'name'],
+          'text-font': ['Noto Sans CJK SC Regular'],
+          'text-size': semanticLabelSizeExpression('realm'),
+          'text-letter-spacing': 0.14,
+          'text-allow-overlap': false,
+          'text-ignore-placement': false,
+          'symbol-sort-key': ['-', 100, ['get', 'importance']],
+        },
+        paint: {
+          'text-color': '#eadcb6',
+          'text-halo-color': '#17130d',
+          'text-halo-width': 2.2,
+          'text-opacity': semanticRankOpacityExpression('realm'),
+        },
+      },
+      {
+        id: 'agot-duchy-labels',
+        type: 'symbol',
+        source: 'agot-semantic',
+        'source-layer': 'title_labels',
+        filter: ['==', ['get', 'rank'], 'duchy'],
+        layout: {
+          'text-field': ['get', 'name'],
+          'text-font': ['Noto Sans CJK SC Regular'],
+          'text-size': semanticLabelSizeExpression('duchy'),
+          'text-letter-spacing': 0.08,
+          'text-allow-overlap': false,
+          'text-ignore-placement': false,
+          'symbol-sort-key': ['-', 100, ['get', 'importance']],
+        },
+        paint: {
+          'text-color': '#eadcb6',
+          'text-halo-color': '#17130d',
+          'text-halo-width': 1.5,
+          'text-opacity': semanticRankOpacityExpression('duchy'),
+        },
+      },
+      {
+        id: 'agot-county-labels',
+        type: 'symbol',
+        source: 'agot-semantic',
+        'source-layer': 'title_labels',
+        filter: ['==', ['get', 'rank'], 'county'],
+        layout: {
+          'text-field': ['get', 'name'],
+          'text-font': ['Noto Sans CJK SC Regular'],
+          'text-size': semanticLabelSizeExpression('county'),
+          'text-letter-spacing': 0.08,
+          'text-allow-overlap': false,
+          'text-ignore-placement': false,
+          'symbol-sort-key': ['-', 100, ['get', 'importance']],
+        },
+        paint: {
+          'text-color': '#eadcb6',
+          'text-halo-color': '#17130d',
+          'text-halo-width': 1.5,
+          'text-opacity': semanticRankOpacityExpression('county'),
+        },
+      },
+      {
+        id: 'agot-political-house-labels',
+        type: 'symbol',
+        source: 'agot-political-house-label-source',
+        layout: {
+          visibility: 'none',
+          'text-field': ['get', 'politicalHouseLabel'],
+          'text-font': ['Noto Sans CJK SC Regular'],
+          'text-size': 12,
+          'text-allow-overlap': false,
+          'text-ignore-placement': false,
+        },
+        paint: {
+          'text-color': '#c9b784',
+          'text-halo-color': '#17130d',
+          'text-halo-width': 1.25,
+        },
+      },
+      {
         id: 'agot-locations',
         type: 'circle',
         source: 'agot-vector',
         'source-layer': 'locations',
-        filter: ['>=', ['get', 'importance'], ['interpolate', ['linear'], ['zoom'], 0, 72, 3, 30, 6, 0]],
+        filter: ['>=', ['get', 'importance'], ['interpolate', ['linear'], ['zoom'], 0, 85, 1.4, 60, 2.8, 35, 4.1, 20, 4.4, 0, 6, 0]],
         paint: {
           'circle-radius': ['interpolate', ['linear'], ['zoom'], 0, 2.4, 6, 5.2],
           'circle-color': '#ead9a7',

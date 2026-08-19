@@ -74,59 +74,86 @@ export const CHARACTER_POINT_SOURCE = 'agot-character-point-source'
 export const CHARACTER_POINT_LAYER = 'agot-character-points'
 export const ASSET_POINT_SOURCE = 'agot-asset-point-source'
 export const ASSET_POINT_LAYER = 'agot-asset-points'
+export const POLITICAL_HOUSE_LABEL_SOURCE = 'agot-political-house-label-source'
+export const POLITICAL_HOUSE_LABEL_LAYER = 'agot-political-house-labels'
 
 export const LOCATION_CLUSTER_SOURCE = 'agot-location-cluster-source'
 export const LOCATION_CLUSTER_LAYER = 'agot-location-clusters'
 export const LOCATION_POINT_LAYER = 'agot-location-points'
 
-const MODE_VISIBILITY: Record<MapMode, Record<string, boolean>> = {
+const SEMANTIC_VISIBILITY = {
+  'agot-realm-boundaries': true,
+  'agot-duchy-boundaries': true,
+  'agot-county-boundaries': true,
+  'agot-realm-labels': true,
+  'agot-duchy-labels': true,
+  'agot-county-labels': true,
+} as const
+
+const COMMON_VISIBILITY = {
+  'agot-terrain': true,
+  'agot-hillshade': true,
+  ...SEMANTIC_VISIBILITY,
+} as const
+
+export const MODE_VISIBILITY: Record<MapMode, Record<string, boolean>> = {
   terrain: {
-    'agot-terrain': true,
-    'agot-hillshade': true,
+    ...COMMON_VISIBILITY,
     'agot-provinces': false,
-    'agot-borders': true,
+    [POLITICAL_HOUSE_LABEL_LAYER]: false,
     'agot-roads': true,
     'agot-routes': false,
+    [JOURNEY_ROUTE_SOURCE]: false,
+    [JOURNEY_PROGRESS_SOURCE]: false,
+    [JOURNEY_POSITION_SOURCE]: false,
     [CHARACTER_POINT_LAYER]: false,
     [ASSET_POINT_LAYER]: false,
   },
   political: {
-    'agot-terrain': true,
-    'agot-hillshade': true,
+    ...COMMON_VISIBILITY,
     'agot-provinces': true,
-    'agot-borders': true,
+    [POLITICAL_HOUSE_LABEL_LAYER]: true,
     'agot-roads': false,
     'agot-routes': false,
+    [JOURNEY_ROUTE_SOURCE]: false,
+    [JOURNEY_PROGRESS_SOURCE]: false,
+    [JOURNEY_POSITION_SOURCE]: false,
     [CHARACTER_POINT_LAYER]: false,
     [ASSET_POINT_LAYER]: false,
   },
   characters: {
-    'agot-terrain': true,
-    'agot-hillshade': true,
+    ...COMMON_VISIBILITY,
     'agot-provinces': false,
-    'agot-borders': true,
+    [POLITICAL_HOUSE_LABEL_LAYER]: false,
     'agot-roads': false,
     'agot-routes': false,
+    [JOURNEY_ROUTE_SOURCE]: false,
+    [JOURNEY_PROGRESS_SOURCE]: false,
+    [JOURNEY_POSITION_SOURCE]: false,
     [CHARACTER_POINT_LAYER]: true,
     [ASSET_POINT_LAYER]: false,
   },
   travel: {
-    'agot-terrain': true,
-    'agot-hillshade': true,
+    ...COMMON_VISIBILITY,
     'agot-provinces': false,
-    'agot-borders': true,
+    [POLITICAL_HOUSE_LABEL_LAYER]: false,
     'agot-roads': true,
     'agot-routes': true,
+    [JOURNEY_ROUTE_SOURCE]: true,
+    [JOURNEY_PROGRESS_SOURCE]: true,
+    [JOURNEY_POSITION_SOURCE]: true,
     [CHARACTER_POINT_LAYER]: false,
     [ASSET_POINT_LAYER]: false,
   },
   assets: {
-    'agot-terrain': true,
-    'agot-hillshade': true,
+    ...COMMON_VISIBILITY,
     'agot-provinces': false,
-    'agot-borders': true,
+    [POLITICAL_HOUSE_LABEL_LAYER]: false,
     'agot-roads': false,
     'agot-routes': false,
+    [JOURNEY_ROUTE_SOURCE]: false,
+    [JOURNEY_PROGRESS_SOURCE]: false,
+    [JOURNEY_POSITION_SOURCE]: false,
     [CHARACTER_POINT_LAYER]: false,
     [ASSET_POINT_LAYER]: true,
   },
@@ -252,7 +279,7 @@ export function addLocationClusterLayers(
     type: 'geojson',
     data,
     cluster: true,
-    clusterMaxZoom: 4,
+    clusterMaxZoom: 4.4,
     clusterRadius: 70,
     clusterProperties: {
       maxImportance: ['max', ['get', 'importance']],
@@ -265,7 +292,7 @@ export function addLocationClusterLayers(
     filter: [
       'all',
       ['has', 'point_count'],
-      ['>=', ['get', 'maxImportance'], ['interpolate', ['linear'], ['zoom'], 0, 72, 1, 55, 2.5, 30, 4, 20]],
+      ['>=', ['get', 'maxImportance'], ['interpolate', ['linear'], ['zoom'], 0, 85, 1.4, 60, 2.8, 35, 4.1, 20, 4.4, 0]],
     ],
     paint: {
       'circle-color': '#c6aa68',
@@ -282,7 +309,7 @@ export function addLocationClusterLayers(
     filter: [
       'all',
       ['!', ['has', 'point_count']],
-      ['>=', ['get', 'importance'], ['interpolate', ['linear'], ['zoom'], 0, 72, 1, 55, 2.5, 30, 4, 20, 5.5, 0]],
+      ['>=', ['get', 'importance'], ['interpolate', ['linear'], ['zoom'], 0, 85, 1.4, 60, 2.8, 35, 4.1, 20, 4.4, 0, 6, 0]],
     ],
     paint: {
       'circle-radius': ['interpolate', ['linear'], ['zoom'], 0, 3.2, 6, 6.2],
