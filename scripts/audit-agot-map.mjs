@@ -33,12 +33,13 @@ function runtimeRelative(path) {
 }
 
 const manifest = json('manifest.json')
-assert.equal(manifest.schemaVersion, 2)
+assert.equal(manifest.schemaVersion, 3)
 assert.equal(manifest.sourceId, '2962333032')
 assert.deepEqual(manifest.mapSize, { width: 9216, height: 6144 })
 assert.deepEqual(manifest.paths, {
   dem: '/assets/agot-map/dem/{z}/{x}/{y}.png',
   locations: '/data/agot-map/locations',
+  materialTerrain: '/assets/agot-map/material-terrain/{z}/{x}/{y}.webp',
   routes: '/data/agot-map/routes',
   searchIndex: '/data/agot-map/location-search-index.json',
   semantic: '/assets/agot-map/semantic/{z}/{x}/{y}.pbf',
@@ -73,6 +74,7 @@ for (const edge of edges) {
 const political = json('political/titles.json')
 for (const record of political) assert.ok(byId.has(record.baronyId), `政治地点不存在：${record.baronyId}`)
 assert.equal(files(resolve(assetRoot, 'terrain'), '.webp').length, manifest.counts.terrainTiles)
+assert.equal(files(resolve(assetRoot, 'material-terrain'), '.webp').length, manifest.counts.materialTerrainTiles)
 assert.equal(files(resolve(assetRoot, 'vector'), '.pbf').length, manifest.counts.vectorTiles)
 assert.equal(files(resolve(assetRoot, 'dem'), '.png').length, manifest.counts.demTiles)
 

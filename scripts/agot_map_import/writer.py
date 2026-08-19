@@ -180,13 +180,14 @@ def stage_map_dataset(
     dataset_hash, data_file_hashes = _hash_runtime_files(output)
     min_x, min_y, max_x, max_y = westeros_bounds
     manifest: dict[str, object] = {
-        "schemaVersion": 2, "sourceId": "2962333032",
+        "schemaVersion": 3, "sourceId": "2962333032",
         "sourceHashes": dict(sorted(source_hashes.items())),
         "mapSize": {"width": map_size[0], "height": map_size[1]},
         "westerosBounds": {"minX": min_x, "minY": min_y, "maxX": max_x, "maxY": max_y},
         "tileSize": 512, "minZoom": min_zoom, "maxZoom": max_zoom,
         "paths": {
             "terrain": "/assets/agot-map/terrain/{z}/{x}/{y}.webp",
+            "materialTerrain": "/assets/agot-map/material-terrain/{z}/{x}/{y}.webp",
             "vector": "/assets/agot-map/vector/{z}/{x}/{y}.pbf",
             "dem": "/assets/agot-map/dem/{z}/{x}/{y}.png",
             "semantic": "/assets/agot-map/semantic/{z}/{x}/{y}.pbf",
@@ -199,6 +200,7 @@ def stage_map_dataset(
             "regions": len(regions), "provinces": len({item.province_id for item in locations}),
             "locations": len(locations), "routeEdges": len(route_graph.edges),
             "terrainTiles": int(tile_counts.get("terrain", 0)),
+            "materialTerrainTiles": int(tile_counts.get("materialTerrain", 0)),
             "vectorTiles": int(tile_counts.get("vector", 0)), "demTiles": int(tile_counts.get("dem", 0)),
             "semanticTiles": int(tile_counts.get("semantic", 0)),
             "semanticRealms": semantic_counts["realms"], "semanticDuchies": semantic_counts["duchies"],

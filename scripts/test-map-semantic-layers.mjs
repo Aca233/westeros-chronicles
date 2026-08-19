@@ -11,8 +11,8 @@ import {
 import { createLocalMapStyle } from '../src/features/map/mapStyle.ts'
 import { semanticZoomState } from '../src/features/map/semanticZoom.ts'
 
-const manifestV2 = {
-  schemaVersion: 2,
+const manifestV3 = {
+  schemaVersion: 3,
   sourceId: '2962333032',
   sourceHashes: { source: 'a'.repeat(64) },
   mapSize: { width: 9216, height: 6144 },
@@ -22,6 +22,7 @@ const manifestV2 = {
   maxZoom: 6,
   paths: {
     terrain: '/assets/agot-map/terrain/{z}/{x}/{y}.webp',
+    materialTerrain: '/assets/agot-map/material-terrain/{z}/{x}/{y}.webp',
     vector: '/assets/agot-map/vector/{z}/{x}/{y}.pbf',
     dem: '/assets/agot-map/dem/{z}/{x}/{y}.png',
     semantic: '/assets/agot-map/semantic/{z}/{x}/{y}.pbf',
@@ -33,7 +34,7 @@ const manifestV2 = {
   },
   counts: {
     regions: 9, provinces: 1200, locations: 800, routeEdges: 2400,
-    terrainTiles: 85, vectorTiles: 85, demTiles: 85, semanticTiles: 85,
+    terrainTiles: 85, materialTerrainTiles: 1365, vectorTiles: 85, demTiles: 85, semanticTiles: 85,
     semanticRealms: 9, semanticDuchies: 30, semanticCounties: 120,
     semanticLabels: 159, missingSemanticLocalizations: 0,
   },
@@ -48,8 +49,8 @@ const semanticLayerIds = [
 ]
 
 test('样式只包含三级可见边界和三级中文主标签', () => {
-  const style = createLocalMapStyle(manifestV2)
-  assert.deepEqual(style.sources['agot-semantic'].tiles, [manifestV2.paths.semantic])
+  const style = createLocalMapStyle(manifestV3)
+  assert.deepEqual(style.sources['agot-semantic'].tiles, [manifestV3.paths.semantic])
   for (const rank of ['realm', 'duchy', 'county']) {
     const boundary = style.layers.find((layer) => layer.id === `agot-${rank}-boundaries`)
     const label = style.layers.find((layer) => layer.id === `agot-${rank}-labels`)
@@ -66,7 +67,7 @@ test('样式只包含三级可见边界和三级中文主标签', () => {
 })
 
 test('政治填色无缩放门槛且道路细节随缩放连续增加', () => {
-  const style = createLocalMapStyle(manifestV2)
+  const style = createLocalMapStyle(manifestV3)
   const provinces = style.layers.find((layer) => layer.id === 'agot-provinces')
   const roads = style.layers.find((layer) => layer.id === 'agot-roads')
   assert.equal(provinces.minzoom, undefined)
@@ -156,12 +157,12 @@ test('中景只发送聚合，细节交叉区同时发送聚合和个体', () =>
     memberships: [{ locationId: 'b_winterfell', baronyId: 'b_winterfell', countyId: 'c_winterfell', duchyId: 'd_winterfell', realmId: 'the_north' }],
   }
   const bounds = { minX: 1000, minY: 700, maxX: 1400, maxY: 1100 }
-  syncDynamicMapSubjects(map, manifestV2, characters, assets, bounds, {
+  syncDynamicMapSubjects(map, manifestV3, characters, assets, bounds, {
     ...semanticContext, zoomState: semanticZoomState(3),
   })
   assert.equal(sources.get('agot-character-aggregate-source').data.features.length, 1)
   assert.equal(sources.get('agot-character-point-source').data.features.length, 0)
-  syncDynamicMapSubjects(map, manifestV2, characters, assets, bounds, {
+  syncDynamicMapSubjects(map, manifestV3, characters, assets, bounds, {
     ...semanticContext, zoomState: semanticZoomState(4.2),
   })
   assert.equal(sources.get('agot-character-aggregate-source').data.features.length, 1)
@@ -187,7 +188,7 @@ test('政治副标题跳过无关变化，投影失败只清空自身来源', ()
     states: [{ titleId: 'b_winterfell', provinceId: 1, effectiveTitleId: 'c_winterfell', holderId: 'agot:Ned_1', houseId: 'stark', houseLabel: '史塔克家族', color: '#6f7f75' }],
     memberships: [{ locationId: 'b_winterfell', baronyId: 'b_winterfell', countyId: 'c_winterfell', duchyId: 'd_winterfell', realmId: 'the_north' }],
     pixelBounds: { minX: 1000, minY: 700, maxX: 1400, maxY: 1100 },
-    manifest: manifestV2,
+    manifest: manifestV3,
   }
   assert.equal(syncPoliticalHouseLabels(map, input, new Set(['c_unrelated'])), 'skipped')
   assert.equal(subtitleCalls.length, 0)

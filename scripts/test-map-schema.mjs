@@ -10,8 +10,8 @@ import {
   parseSemanticTitles,
 } from '../src/features/map/schemas.ts'
 
-const manifestV2 = {
-  schemaVersion: 2,
+const manifestV3 = {
+  schemaVersion: 3,
   sourceId: '2962333032',
   sourceHashes: { 'map_data/provinces.png': 'a'.repeat(64) },
   mapSize: { width: 9216, height: 6144 },
@@ -21,6 +21,7 @@ const manifestV2 = {
   maxZoom: 7,
   paths: {
     terrain: '/assets/agot-map/terrain/{z}/{x}/{y}.webp',
+    materialTerrain: '/assets/agot-map/material-terrain/{z}/{x}/{y}.webp',
     vector: '/assets/agot-map/vector/{z}/{x}/{y}.pbf',
     dem: '/assets/agot-map/dem/{z}/{x}/{y}.png',
     semantic: '/assets/agot-map/semantic/{z}/{x}/{y}.pbf',
@@ -36,6 +37,7 @@ const manifestV2 = {
     locations: 800,
     routeEdges: 2400,
     terrainTiles: 85,
+    materialTerrainTiles: 1365,
     vectorTiles: 85,
     demTiles: 85,
     semanticTiles: 85,
@@ -49,7 +51,7 @@ const manifestV2 = {
   semanticHash: 'c'.repeat(64),
 }
 
-const manifest = manifestV2
+const manifest = manifestV3
 const semanticTitle = {
   featureId: 1,
   titleId: 'the_north',
@@ -74,13 +76,17 @@ const membership = {
   realmId: 'the_north',
 }
 
-test('地图清单只接受版本二并要求全部语义路径与计数', () => {
-  assert.equal(parseMapManifest(manifestV2).schemaVersion, 2)
-  assert.throws(() => parseMapManifest({ ...manifestV2, schemaVersion: 1 }), /地图清单格式无效/)
+test('地图清单只接受版本三并要求近景材质路径与计数', () => {
+  assert.equal(parseMapManifest(manifestV3).schemaVersion, 3)
+  assert.throws(() => parseMapManifest({ ...manifestV3, schemaVersion: 2 }), /地图清单格式无效/)
   assert.throws(() => parseMapManifest({
-    ...manifestV2,
-    paths: { ...manifestV2.paths, semantic: 'https://example.test/{z}.pbf' },
+    ...manifestV3,
+    paths: { ...manifestV3.paths, materialTerrain: 'https://example.test/{z}.webp' },
   }), /项目内 AGOT 地图资源路径/)
+  const { materialTerrain: _path, ...pathsWithoutMaterial } = manifestV3.paths
+  assert.throws(() => parseMapManifest({ ...manifestV3, paths: pathsWithoutMaterial }), /地图清单格式无效/)
+  const { materialTerrainTiles: _count, ...countsWithoutMaterial } = manifestV3.counts
+  assert.throws(() => parseMapManifest({ ...manifestV3, counts: countsWithoutMaterial }), /地图清单格式无效/)
 })
 
 test('语义标题与 membership 拒绝重复和悬空层级', () => {

@@ -41,7 +41,7 @@ from scripts.agot_map_import.semantic import build_semantic_dataset
 from scripts.agot_map_import.titles import TitleIndex, parse_title_hierarchy
 from scripts.agot_map_import.tiles import build_semantic_tiles, build_terrain_tiles, build_vector_tiles
 from scripts.agot_map_import.writer import publish_map_pair, write_map_dataset
-from scripts.agot_map_import.cli import main as map_import_main
+from scripts.agot_map_import.cli import _source_hashes, main as map_import_main
 
 
 FIXTURE_ROOT = Path(__file__).parent / "fixtures" / "agot_map_source"
@@ -70,6 +70,7 @@ class MapSourceTests(unittest.TestCase):
             '{\n{ id = "plains" diffuse = "plains_diffuse.dds" tile_factor = 16 }\n}\n',
             encoding="utf-8",
         )
+        Image.new("RGB", (2, 2), (40, 80, 40)).save(terrain / "plains_diffuse.dds")
 
     def tearDown(self) -> None:
         self.temp_dir.cleanup()
@@ -117,6 +118,15 @@ class MapSourceTests(unittest.TestCase):
         duplicate.write_text("1;10;20;30;b_one;x\n2;10;20;30;b_two;x\n")
         with self.assertRaisesRegex(MapImportError, "颜色重复"):
             parse_definition(duplicate)
+
+    def test_source_hashes_include_material_maps_and_resolved_diffuse_without_absolute_paths(self) -> None:
+        source = MapSource.open(self.root, expected_size=(8, 6))
+        hashes = _source_hashes(source, self.root, include_material_textures=True)
+        self.assertIn("gfx/map/terrain/detail_index.tga", hashes)
+        self.assertIn("gfx/map/terrain/detail_intensity.tga", hashes)
+        self.assertIn("gfx/map/terrain/materials.settings", hashes)
+        self.assertIn("agot/gfx/map/terrain/plains_diffuse.dds", hashes)
+        self.assertFalse(any(str(self.root) in key for key in hashes))
 
 
 class MaterialCatalogTests(unittest.TestCase):
@@ -849,7 +859,7 @@ class MapWriterTests(unittest.TestCase):
         self.assertNotIn("/mnt/c/agot/2962333032", serialized)
         self.assertNotIn("http://", serialized)
 
-        self.assertEqual(first["schemaVersion"], 2)
+        self.assertEqual(first["schemaVersion"], 3)
         self.assertEqual(first["paths"]["semantic"], "/assets/agot-map/semantic/{z}/{x}/{y}.pbf")
         self.assertEqual(first["counts"]["semanticRealms"], 1)
         self.assertEqual(first["counts"]["semanticDuchies"], 1)
@@ -928,8 +938,9 @@ class MapCliTests(unittest.TestCase):
             self.assertEqual(result, 0)
             manifest = json.loads((data_output / "manifest.json").read_text())
             self.assertEqual(manifest["counts"]["locations"], 2)
-            self.assertEqual(manifest["schemaVersion"], 2)
+            self.assertEqual(manifest["schemaVersion"], 3)
             self.assertEqual(manifest["counts"]["terrainTiles"], 0)
+            self.assertEqual(manifest["counts"]["materialTerrainTiles"], 0)
             self.assertEqual(manifest["counts"]["semanticTiles"], 0)
             self.assertGreater(manifest["counts"]["semanticCounties"], 0)
             self.assertTrue((data_output / "semantic/titles.json").is_file())

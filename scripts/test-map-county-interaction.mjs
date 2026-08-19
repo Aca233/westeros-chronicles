@@ -26,7 +26,7 @@ const semantic = {
 }
 
 const manifest = {
-  schemaVersion: 2,
+  schemaVersion: 3,
   sourceId: '2962333032',
   sourceHashes: { source: 'a'.repeat(64) },
   mapSize: { width: 9216, height: 6144 },
@@ -36,6 +36,7 @@ const manifest = {
   maxZoom: 6,
   paths: {
     terrain: '/assets/agot-map/terrain/{z}/{x}/{y}.webp',
+    materialTerrain: '/assets/agot-map/material-terrain/{z}/{x}/{y}.webp',
     vector: '/assets/agot-map/vector/{z}/{x}/{y}.pbf',
     dem: '/assets/agot-map/dem/{z}/{x}/{y}.png',
     semantic: '/assets/agot-map/semantic/{z}/{x}/{y}.pbf',
@@ -47,7 +48,7 @@ const manifest = {
   },
   counts: {
     regions: 1, provinces: 4, locations: 4, routeEdges: 0,
-    terrainTiles: 1, vectorTiles: 1, demTiles: 1, semanticTiles: 1,
+    terrainTiles: 1, materialTerrainTiles: 1, vectorTiles: 1, demTiles: 1, semanticTiles: 1,
     semanticRealms: 1, semanticDuchies: 2, semanticCounties: 2, semanticLabels: 5,
     missingSemanticLocalizations: 0,
   },

@@ -17,7 +17,7 @@ from .dem import build_dem_tiles
 from .geometry import extract_province_geometry
 from .locations import build_locations
 from .material_catalog import parse_material_catalog
-from .material_sources import MaterialSourceRoots
+from .material_sources import MaterialSourceRoots, resolve_diffuse
 from .material_tiles import build_material_terrain_tiles
 from .models import MapImportError, MapLocationRecord, ProvinceGeometry
 from .province_history import holding_to_location_type, parse_province_holdings
@@ -150,17 +150,36 @@ def _vector_layers(
     }
 
 
-def _source_hashes(source: MapSource) -> dict[str, str]:
+def _source_hashes(
+    source: MapSource,
+    ck3_source: Path | None = None,
+    include_material_textures: bool = False,
+) -> dict[str, str]:
     paths = [
         source.default_files["definitions"], source.default_files["provinces"],
         source.default_files["rivers"], source.default_files["adjacencies"],
         source.heightmap, source.road_mask, source.root / "map_data/default.map",
         source.root / "gfx/map/terrain/flat_maps/flatmap.dds",
+        source.terrain_materials.index_map,
+        source.terrain_materials.intensity_map,
+        source.terrain_materials.settings,
     ]
     paths.extend(sorted(source.geographical_regions.glob("*.txt")))
     paths.extend(sorted(source.landed_titles.glob("*.txt")))
     paths.extend(sorted((source.root / "history/provinces").glob("*.txt")))
-    return {path.relative_to(source.root).as_posix(): _sha256(path) for path in paths if path.is_file()}
+    hashes = {path.relative_to(source.root).as_posix(): _sha256(path) for path in paths if path.is_file()}
+    if include_material_textures:
+        if ck3_source is None:
+            raise MapImportError("地形材质源哈希需要 --ck3-source")
+        roots = MaterialSourceRoots(agot=source.root, ck3=ck3_source)
+        for material in parse_material_catalog(source.terrain_materials.settings, default_tile_factor=64):
+            path = resolve_diffuse(material, roots)
+            try:
+                key = f"agot/{path.relative_to(source.root.resolve()).as_posix()}"
+            except ValueError:
+                key = f"ck3/{path.relative_to(ck3_source.resolve()).as_posix()}"
+            hashes[key] = _sha256(path)
+    return dict(sorted(hashes.items()))
 
 
 def build_map(args: argparse.Namespace) -> dict[str, object]:
@@ -265,7 +284,9 @@ def build_map(args: argparse.Namespace) -> dict[str, object]:
             route_graph=route_graph,
             regions=region_records,
             political=political,
-            source_hashes=_source_hashes(source),
+            source_hashes=_source_hashes(
+                source, args.ck3_source, include_material_textures=not args.skip_tiles,
+            ),
             map_size=source.map_size,
             westeros_bounds=bounds,
             tile_counts=tile_counts,

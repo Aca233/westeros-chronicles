@@ -37,7 +37,7 @@ const mapBoundsSchema = z.object({
 const nonNegativeInteger = z.number().int().nonnegative()
 
 export const mapManifestSchema = z.object({
-  schemaVersion: z.literal(2),
+  schemaVersion: z.literal(3),
   sourceId: mapSourceIdSchema,
   sourceHashes: z.record(z.string().min(1), sha256Schema),
   mapSize: z.object({
@@ -50,6 +50,7 @@ export const mapManifestSchema = z.object({
   maxZoom: nonNegativeInteger,
   paths: z.object({
     terrain: localMapPathSchema,
+    materialTerrain: localMapPathSchema,
     vector: localMapPathSchema,
     dem: localMapPathSchema,
     semantic: localMapPathSchema,
@@ -65,6 +66,7 @@ export const mapManifestSchema = z.object({
     locations: nonNegativeInteger,
     routeEdges: nonNegativeInteger,
     terrainTiles: nonNegativeInteger,
+    materialTerrainTiles: nonNegativeInteger,
     vectorTiles: nonNegativeInteger,
     demTiles: nonNegativeInteger,
     semanticTiles: nonNegativeInteger,

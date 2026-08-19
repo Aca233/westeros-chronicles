@@ -4,13 +4,14 @@ import test from 'node:test'
 import { createLocalMapStyle } from '../src/features/map/mapStyle.ts'
 import { MapRepository } from '../src/features/map/repository.ts'
 
-const manifestV2 = {
-  schemaVersion: 2, sourceId: '2962333032', sourceHashes: { source: 'a'.repeat(64) },
+const manifestV3 = {
+  schemaVersion: 3, sourceId: '2962333032', sourceHashes: { source: 'a'.repeat(64) },
   mapSize: { width: 9216, height: 6144 },
   westerosBounds: { minX: 168, minY: 6, maxX: 2335, maxY: 4305 },
   tileSize: 512, minZoom: 0, maxZoom: 6,
   paths: {
     terrain: '/assets/agot-map/terrain/{z}/{x}/{y}.webp',
+    materialTerrain: '/assets/agot-map/material-terrain/{z}/{x}/{y}.webp',
     vector: '/assets/agot-map/vector/{z}/{x}/{y}.pbf',
     dem: '/assets/agot-map/dem/{z}/{x}/{y}.png',
     semantic: '/assets/agot-map/semantic/{z}/{x}/{y}.pbf',
@@ -21,20 +22,20 @@ const manifestV2 = {
   },
   counts: {
     regions: 12, provinces: 6094, locations: 6094, routeEdges: 31724,
-    terrainTiles: 341, vectorTiles: 3474, demTiles: 341, semanticTiles: 3474,
+    terrainTiles: 341, materialTerrainTiles: 1365, vectorTiles: 3474, demTiles: 341, semanticTiles: 3474,
     semanticRealms: 9, semanticDuchies: 30, semanticCounties: 120,
     semanticLabels: 159, missingSemanticLocalizations: 0,
   },
   datasetHash: 'b'.repeat(64),
   semanticHash: 'c'.repeat(64),
 }
-const manifest = manifestV2
+const manifest = manifestV3
 
 test('仓储按清单路径缓存语义标题和 membership', async () => {
   const requested = []
   const repository = new MapRepository(async (url) => {
     requested.push(String(url))
-    if (String(url).endsWith('manifest.json')) return { ok: true, json: async () => manifestV2 }
+    if (String(url).endsWith('manifest.json')) return { ok: true, json: async () => manifestV3 }
     if (String(url).endsWith('/semantic/titles.json')) return { ok: true, json: async () => [
       { featureId: 1, titleId: 'the_north', rank: 'realm', name: '北境', mapX: 3130, mapY: 1410, importance: 100, regionId: 'the_north' },
       { featureId: 2, titleId: 'd_winterfell', rank: 'duchy', name: '临冬城公国', mapX: 3130, mapY: 1410, importance: 80, regionId: 'the_north' },

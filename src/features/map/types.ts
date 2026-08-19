@@ -114,7 +114,7 @@ export interface MapRouteShard {
 }
 
 export interface MapManifest {
-  schemaVersion: 2
+  schemaVersion: 3
   sourceId: string
   sourceHashes: Record<string, string>
   mapSize: {
@@ -127,6 +127,7 @@ export interface MapManifest {
   maxZoom: number
   paths: {
     terrain: string
+    materialTerrain: string
     vector: string
     dem: string
     semantic: string
@@ -142,6 +143,7 @@ export interface MapManifest {
     locations: number
     routeEdges: number
     terrainTiles: number
+    materialTerrainTiles: number
     vectorTiles: number
     demTiles: number
     semanticTiles: number
