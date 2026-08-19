@@ -30,7 +30,7 @@ test('近景连接唯一 DEM source 并启用旋转', () => {
   const map = fakeMap()
   const controller = createTerrainController(map, { onUnavailable() {} })
   controller.syncNow(input, true)
-  assert.deepEqual(map.calls[0], ['terrain', { source: 'agot-dem', exaggeration: 0.9 }])
+  assert.deepEqual(map.calls[0], ['terrain', { source: 'agot-dem', exaggeration: 32 }])
   assert.ok(map.calls.some(([name, value]) => name === 'ease' && value.pitch === 52 && value.bearing === 17))
   assert.ok(map.calls.some(([name, value]) => name === 'drag' && value === true))
 })

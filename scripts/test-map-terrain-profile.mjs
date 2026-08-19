@@ -20,15 +20,25 @@ test('远景保持二维，近景按模式达到推荐倾角和强度', () => {
     terrainEnabled: false,
     pitch: 0,
     maxPitch: 52,
-    terrainExaggeration: 0.9,
+    terrainExaggeration: 32,
     rotationEnabled: false,
   })
   assert.equal(profile({ zoom: 4.8, mode: 'terrain' }).pitch, 52)
   assert.equal(profile({ zoom: 4.8, mode: 'political' }).pitch, 42)
+  assert.ok(
+    profile({ zoom: 4.8, mode: 'terrain' }).terrainExaggeration >= 30,
+    '全幅 Mercator 映射需要风格化垂直比例，否则近景起伏不足一个屏幕像素',
+  )
+  assert.ok(
+    profile({ zoom: 4.8, mode: 'political' }).terrainExaggeration
+      < profile({ zoom: 4.8, mode: 'terrain' }).terrainExaggeration,
+    '政治模式应保留地形，但不能压过疆界信息',
+  )
   for (const mode of ['characters', 'travel', 'assets']) {
     const result = profile({ zoom: 4.8, mode })
     assert.equal(result.pitch, 34)
-    assert.equal(result.terrainExaggeration, 0.65)
+    assert.ok(result.terrainExaggeration >= 18)
+    assert.ok(result.terrainExaggeration < profile({ zoom: 4.8, mode: 'political' }).terrainExaggeration)
   }
 })
 

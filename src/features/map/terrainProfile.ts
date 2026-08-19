@@ -6,12 +6,18 @@ export const TERRAIN_TRANSITION_START = 3.2
 export const TERRAIN_TRANSITION_END = 4.8
 export const TERRAIN_MAX_PITCH = 55
 
+// The cropped AGOT map is projected across a complete WebMercator world, so
+// one DEM pixel spans several kilometres. Real-world 1x elevations become
+// sub-pixel relief at our playable zooms; CK3-style terrain therefore needs a
+// deliberately stylised vertical scale to remain legible.
+export const TERRAIN_VISUAL_SCALE = 32
+
 const MODE_PROFILE: Record<MapMode, { pitch: number; exaggeration: number }> = {
-  terrain: { pitch: 52, exaggeration: 0.9 },
-  political: { pitch: 42, exaggeration: 0.78 },
-  characters: { pitch: 34, exaggeration: 0.65 },
-  travel: { pitch: 34, exaggeration: 0.65 },
-  assets: { pitch: 34, exaggeration: 0.65 },
+  terrain: { pitch: 52, exaggeration: TERRAIN_VISUAL_SCALE },
+  political: { pitch: 42, exaggeration: 26 },
+  characters: { pitch: 34, exaggeration: 20 },
+  travel: { pitch: 34, exaggeration: 20 },
+  assets: { pitch: 34, exaggeration: 20 },
 }
 
 export interface TerrainProfileInput {
