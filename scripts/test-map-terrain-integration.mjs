@@ -10,6 +10,9 @@ test('MapCanvas 在 load 后创建单一地形控制器并监听连续 zoom', ()
   assert.match(canvas, /map\.on\('zoom', handleTerrainZoom\)/)
   assert.match(canvas, /map\.off\('zoom', handleTerrainZoom\)/)
   assert.match(canvas, /terrainController\.destroy\(\)/)
+  const continuous = canvas.match(/const handleTerrainZoom[^\n]*/)?.[0] ?? ''
+  assert.match(continuous, /requestSync\(terrainInput\(\)\)$/)
+  assert.match(canvas, /const handleZoomEnd[\s\S]*?requestSync\(terrainInput\(\), true\)/)
 })
 
 test('搜索飞行同时携带目标 pitch', () => {

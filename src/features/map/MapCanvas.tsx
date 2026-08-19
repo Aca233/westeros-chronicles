@@ -423,6 +423,7 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
       refreshPoliticalHouseLabels(undefined, pixelBounds)
     }
     const handleZoomEnd = () => {
+      terrainControllerRef.current?.requestSync(terrainInput(), true)
       const semantic = semanticRef.current
       if (!semantic) return
       const state = semanticZoomState(map.getZoom())
@@ -469,7 +470,7 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
     const showPointer = () => { map.getCanvas().style.cursor = 'pointer' }
     const clearPointer = () => { map.getCanvas().style.cursor = '' }
     let terrainController: TerrainController | null = null
-    const handleTerrainZoom = () => terrainController?.requestSync(terrainInput(), true)
+    const handleTerrainZoom = () => terrainController?.requestSync(terrainInput())
 
     map.on('error', handleMapError)
     map.on('moveend', handleMoveEnd)

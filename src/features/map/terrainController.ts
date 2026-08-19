@@ -3,6 +3,7 @@ import { terrainCameraAnimation, terrainCameraProfile } from './terrainProfile.t
 
 export interface TerrainMapAdapter {
   getZoom(): number
+  getBearing(): number
   getSource(id: string): unknown
   setTerrain(value: { source: string; exaggeration: number } | null): void
   setPitch(value: number): void
@@ -56,14 +57,23 @@ export function createTerrainController(
   let pendingForcePitch = false
 
   const setGestures = (enabled: boolean): void => {
-    if (enabled) {
-      map.dragRotate.enable()
-      map.touchZoomRotate.enableRotation()
-      map.touchPitch.enable()
-    } else {
-      map.dragRotate.disable()
-      map.touchZoomRotate.disableRotation()
-      map.touchPitch.disable()
+    const actions = enabled
+      ? [
+          () => map.dragRotate.enable(),
+          () => map.touchZoomRotate.enableRotation(),
+          () => map.touchPitch.enable(),
+        ]
+      : [
+          () => map.dragRotate.disable(),
+          () => map.touchZoomRotate.disableRotation(),
+          () => map.touchPitch.disable(),
+        ]
+    for (const action of actions) {
+      try {
+        action()
+      } catch {
+        // Gesture handlers are optional visual controls; map rendering stays usable.
+      }
     }
   }
 
@@ -81,8 +91,16 @@ export function createTerrainController(
     }
     terrainAttached = false
     lastExaggeration = null
-    map.setPitch(0)
-    map.setBearing(0)
+    try {
+      map.setPitch(0)
+    } catch {
+      // Ignore a broken camera while preserving the surrounding application.
+    }
+    try {
+      map.setBearing(0)
+    } catch {
+      // Ignore a broken camera while preserving the surrounding application.
+    }
     setGestures(false)
     callbacks.onUnavailable(reason)
   }
@@ -131,11 +149,12 @@ export function createTerrainController(
     }
 
     setGestures(profile.rotationEnabled)
-    if (!profile.rotationEnabled) {
-      map.setPitch(0)
-      map.setBearing(0)
-    } else if (forceRecommendedPitch) {
-      map.setPitch(profile.pitch)
+    if (forceRecommendedPitch) {
+      map.easeTo({
+        pitch: profile.pitch,
+        bearing: profile.rotationEnabled ? map.getBearing() : 0,
+        ...terrainCameraAnimation(input.reducedMotion, 'automatic'),
+      })
     }
   }
 

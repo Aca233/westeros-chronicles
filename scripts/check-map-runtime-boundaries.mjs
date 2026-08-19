@@ -42,8 +42,18 @@ test('运行时不在连续 zoom 事件重建政治、人物或资产 GeoJSON', 
   assert.doesNotMatch(runtimeSource, /map\.on\(['"]zoom['"][\s\S]{0,300}(?:setData|syncDynamicMapSubjects)/)
 })
 
-test('语义地图保持二维且没有远程字体或地图回退', () => {
-  assert.doesNotMatch(runtimeSource, /setTerrain|pitch:\s*[1-9]|glyphs:\s*['"]https?:|fallback.*https?:/i)
+test('语义地图只使用原生本地 DEM 三维且没有远程字体或第二渲染器', () => {
+  assert.match(runtimeSource, /setTerrain/)
+  assert.match(runtimeSource, /source:\s*['"]agot-dem['"]/)
+  assert.doesNotMatch(runtimeSource, /three(?:\.module)?\.js|@react-three|new\s+THREE\.|<canvas[^>]+terrain/i)
+  assert.doesNotMatch(runtimeSource, /glyphs:\s*['"]https?:|fallback.*https?:/i)
+})
+
+test('连续缩放处理只更新地形镜头', () => {
+  const canvas = readFileSync('src/features/map/MapCanvas.tsx', 'utf8')
+  const handler = canvas.match(/const handleTerrainZoom[^\n]*\n/)?.[0] ?? ''
+  assert.match(handler, /requestSync/)
+  assert.doesNotMatch(handler, /fetch\(|loadSemanticIndex|syncDynamicMapSubjects|syncPoliticalHouseLabels/)
 })
 
 test('完整地图验证包含全部语义测试且不触发真实导入', () => {
@@ -53,4 +63,12 @@ test('完整地图验证包含全部语义测试且不触发真实导入', () =>
   assert.match(verifyMap, /test:map-semantic-projection/)
   assert.match(verifyMap, /test:map-semantic-layers/)
   assert.match(verifyMap, /test:map-narrative-context/)
+  for (const command of [
+    'test:map-terrain-profile',
+    'test:map-terrain-controller',
+    'test:map-terrain-ui',
+    'test:map-terrain-integration',
+  ]) {
+    assert.match(verifyMap, new RegExp(command))
+  }
 })
