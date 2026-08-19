@@ -1,4 +1,6 @@
 import { getItemDefinition } from './catalog';
+import { sameWorldLocation } from '../map/locationResolver';
+import type { WorldLocationRef } from '../map/types';
 import type {
   ItemBulk,
   ItemCatalog,
@@ -162,18 +164,10 @@ export function canContainerAccept(
   }
 }
 
-function locationRoot(location: string): string {
-  return location.split('·', 1)[0].trim();
-}
-
-function isAtCurrentLocation(containerLocation: string, currentLocation: string): boolean {
-  return locationRoot(containerLocation) === locationRoot(currentLocation);
-}
-
 export function assertPlacementAccessible(
   state: ItemSystemState,
   placement: ItemPlacement,
-  currentLocation: string,
+  currentLocation: WorldLocationRef,
   role: '来源' | '目标',
 ): void {
   switch (placement.type) {
@@ -182,7 +176,7 @@ export function assertPlacementAccessible(
     case 'site': {
       const site = state.sites[placement.siteId];
       if (!site) throw new Error(`${role}据点不存在：${placement.siteId}`);
-      if (!isAtCurrentLocation(site.location, currentLocation)) {
+      if (!sameWorldLocation(site.location, currentLocation)) {
         throw new Error(`${role}据点不在当前地点`);
       }
       return;
@@ -190,7 +184,7 @@ export function assertPlacementAccessible(
     case 'vehicle': {
       const vehicle = state.vehicles[placement.vehicleId];
       if (!vehicle) throw new Error(`${role}运输工具不存在：${placement.vehicleId}`);
-      if (!isAtCurrentLocation(vehicle.location, currentLocation)) {
+      if (!sameWorldLocation(vehicle.location, currentLocation)) {
         throw new Error(`${role}运输工具不在当前地点`);
       }
       return;
@@ -207,7 +201,7 @@ export function assertPlacementAccessible(
 }
 
 export interface TransferOptions {
-  currentLocation: string;
+  currentLocation: WorldLocationRef;
   quantity?: number;
   newInstanceId?: string;
 }
@@ -223,8 +217,8 @@ function cloneState(state: ItemSystemState): ItemSystemState {
       ...placement,
       ...(placement.type === 'equipped' ? { position: { ...placement.position } } : {}),
     }] as [string, ItemPlacement])),
-    sites: Object.fromEntries(Object.entries(state.sites).map(([id, site]) => [id, { ...site }])),
-    vehicles: Object.fromEntries(Object.entries(state.vehicles).map(([id, vehicle]) => [id, { ...vehicle }])),
+    sites: Object.fromEntries(Object.entries(state.sites).map(([id, site]) => [id, { ...site, location: { ...site.location } }])),
+    vehicles: Object.fromEntries(Object.entries(state.vehicles).map(([id, vehicle]) => [id, { ...vehicle, location: { ...vehicle.location } }])),
   };
 }
 

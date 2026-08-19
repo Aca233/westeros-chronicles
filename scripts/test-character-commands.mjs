@@ -22,8 +22,8 @@ const { resolveCharacter } = await bundleModule('src/features/characters/charact
 const ARYA = 'agot:Arya_1';
 const SANSA = 'agot:Sansa_1';
 const JON = 'save:run_1:Jon_1';
-const WINTERFELL = 'winterfell';
-const RIVERLANDS = 'riverlands';
+const WINTERFELL = 'b_winterfell';
+const RIVERLANDS = 'b_riverlands';
 
 function character(id, overrides = {}) {
   return {
@@ -44,6 +44,7 @@ function context(overrides = {}) {
     characters: [character(ARYA), character(SANSA), character(JON)],
     currentLocationId: WINTERFELL,
     presentCharacterIds: new Set([ARYA, SANSA]),
+    knownLocationIds: new Set([WINTERFELL, RIVERLANDS]),
     currentTurn: 1,
     commandSequence: 0,
     ...overrides,
@@ -228,6 +229,7 @@ test('允许合法移动并生成一个稳定人物事件', () => {
     type: 'MOVE_CHARACTER',
     characterId: ARYA,
     locationId: RIVERLANDS,
+    sceneLocation: '渡口营地',
     reason: '奉命前往河间地',
   }, context());
 
@@ -236,7 +238,7 @@ test('允许合法移动并生成一个稳定人物事件', () => {
   assert.deepEqual(result.events, [{
     id: '1:0:0',
     characterId: ARYA,
-    event: { type: 'MOVE', locationId: RIVERLANDS, reason: '奉命前往河间地' },
+    event: { type: 'MOVE', locationId: RIVERLANDS, sceneLocation: '渡口营地', reason: '奉命前往河间地' },
   }]);
 });
 
@@ -352,6 +354,18 @@ test('畸形的 location、trait、memory、cause 输入返回拒绝而不是抛
     assert.doesNotThrow(() => { result = validateCharacterCommand(command, context()); });
     assertRejected(result, reason);
   }
+});
+
+test('人物移动拒绝自由文本地点、非法地点 ID 与未知地点 ID', () => {
+  assertRejected(validateCharacterCommand({
+    type: 'MOVE_CHARACTER', characterId: ARYA, location: '河间地', locationId: RIVERLANDS,
+  }, context()), /自由文本|地图地点 ID/);
+  assertRejected(validateCharacterCommand({
+    type: 'MOVE_CHARACTER', characterId: ARYA, locationId: '河间地',
+  }, context()), /地图地点 ID/);
+  assertRejected(validateCharacterCommand({
+    type: 'MOVE_CHARACTER', characterId: ARYA, locationId: 'b_missing_location',
+  }, context()), /不存在/);
 });
 
 test('快照仍存活但事件历史已有 DIE 时拒绝重复死亡', () => {

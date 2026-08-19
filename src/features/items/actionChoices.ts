@@ -1,4 +1,6 @@
 import { getItemDefinition } from './catalog';
+import { sameWorldLocation } from '../map/locationResolver';
+import type { WorldLocationRef } from '../map/types';
 import type {
   EquipmentPosition,
   ItemCatalog,
@@ -27,14 +29,6 @@ export interface TransferDestinationChoice {
   detail: string;
 }
 
-function locationRoot(location: string): string {
-  return location.split('·', 1)[0].trim();
-}
-
-function sameLocation(left: string, right: string): boolean {
-  return locationRoot(left) === locationRoot(right);
-}
-
 function positionsEqual(left: EquipmentPosition, right: EquipmentPosition): boolean {
   if (left.group !== right.group) return false;
   if (left.group === 'torso') return right.group === 'torso' && left.layer === right.layer;
@@ -51,15 +45,15 @@ function samePlacement(left: ItemPlacement, right: ItemPlacement): boolean {
   return false;
 }
 
-function accessibleLocationLabel(state: ItemSystemState, placement: ItemPlacement, currentLocation: string): string | undefined {
+function accessibleLocationLabel(state: ItemSystemState, placement: ItemPlacement, currentLocation: WorldLocationRef): string | undefined {
   if (placement.type === 'carried') return '随身携带';
   if (placement.type === 'site') {
     const site = state.sites[placement.siteId];
-    return site && sameLocation(site.location, currentLocation) ? `${site.name} · ${site.location}` : undefined;
+    return site && sameWorldLocation(site.location, currentLocation) ? `${site.name} · ${site.locationLabel}` : undefined;
   }
   if (placement.type === 'vehicle') {
     const vehicle = state.vehicles[placement.vehicleId];
-    return vehicle && sameLocation(vehicle.location, currentLocation) ? `${vehicle.name} · ${vehicle.location}` : undefined;
+    return vehicle && sameWorldLocation(vehicle.location, currentLocation) ? `${vehicle.name} · ${vehicle.locationLabel}` : undefined;
   }
   return undefined;
 }
@@ -83,7 +77,7 @@ export function getEquipmentReplacementChoices({
 }: {
   state: ItemSystemState;
   catalog: ItemCatalog;
-  currentLocation: string;
+  currentLocation: WorldLocationRef;
   positions: readonly EquipmentPosition[];
   excludedIds: readonly string[];
 }): EquipmentReplacementChoice[] {
@@ -125,7 +119,7 @@ export function getTransferDestinationChoices({
   from,
 }: {
   state: ItemSystemState;
-  currentLocation: string;
+  currentLocation: WorldLocationRef;
   from: ItemPlacement;
 }): TransferDestinationChoice[] {
   const choices: TransferDestinationChoice[] = [
@@ -137,24 +131,24 @@ export function getTransferDestinationChoices({
       detail: '由角色随身保管，可在行动中直接取用。',
     },
     ...Object.values(state.sites)
-      .filter((site) => sameLocation(site.location, currentLocation))
+      .filter((site) => sameWorldLocation(site.location, currentLocation))
       .sort((left, right) => left.name.localeCompare(right.name, 'zh-CN') || left.id.localeCompare(right.id))
       .map((site): TransferDestinationChoice => ({
         id: `site:${site.id}`,
         kind: 'site',
         placement: { type: 'site', siteId: site.id },
         label: site.name,
-        detail: `${site.location} · ${site.description}`,
+        detail: `${site.locationLabel} · ${site.description}`,
       })),
     ...Object.values(state.vehicles)
-      .filter((vehicle) => sameLocation(vehicle.location, currentLocation))
+      .filter((vehicle) => sameWorldLocation(vehicle.location, currentLocation))
       .sort((left, right) => left.name.localeCompare(right.name, 'zh-CN') || left.id.localeCompare(right.id))
       .map((vehicle): TransferDestinationChoice => ({
         id: `vehicle:${vehicle.id}`,
         kind: 'vehicle',
         placement: { type: 'vehicle', vehicleId: vehicle.id },
         label: vehicle.name,
-        detail: `${vehicle.location} · 容量 ${vehicle.capacity} · ${vehicle.description}`,
+        detail: `${vehicle.locationLabel} · 容量 ${vehicle.capacity} · ${vehicle.description}`,
       })),
   ];
   return choices.filter((choice) => !samePlacement(choice.placement, from));

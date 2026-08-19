@@ -7,6 +7,7 @@ import type {
   ItemSystemState,
   ItemTransport,
 } from '../features/items/types';
+import { UNKNOWN_WESTEROS_LOCATION_ID } from '../features/map/locationResolver';
 
 interface PresetEntry {
   instanceId: string;
@@ -21,8 +22,8 @@ function createPreset(
   vehicles: readonly ItemTransport[] = [],
 ): ItemSystemState {
   const state = createEmptyItemSystem();
-  for (const site of sites) state.sites[site.id] = { ...site };
-  for (const vehicle of vehicles) state.vehicles[vehicle.id] = { ...vehicle };
+  for (const site of sites) state.sites[site.id] = { ...site, location: { ...site.location } };
+  for (const vehicle of vehicles) state.vehicles[vehicle.id] = { ...vehicle, location: { ...vehicle.location } };
   for (const entry of entries) {
     state.instances[entry.instanceId] = createItemInstance(
       ITEM_CATALOG,
@@ -52,8 +53,8 @@ export function createNedItemState(): ItemSystemState {
     { instanceId: 'ned.staunching_herbs', definitionId: 'medicine.maester_staunching_herbs', placement: { type: 'carried' }, overrides: { charges: 3 } },
     { instanceId: 'ned.poppy_milk', definitionId: 'medicine.milk_of_the_poppy', placement: { type: 'site', siteId: 'winterfell_room' }, overrides: { charges: 4 } },
   ], [
-    { id: 'winterfell_armory', name: '临冬城军械库', type: 'armory', location: '临冬城', description: '由军械师和侍从共同看守的武器、防具储藏处。', capacity: 80 },
-    { id: 'winterfell_room', name: '临冬城领主起居室', type: 'room', location: '临冬城', description: '存放日常衣物、文书和少量药品。', capacity: 30 },
+    { id: 'winterfell_armory', name: '临冬城军械库', type: 'armory', location: { locationId: 'b_winterfell' }, locationLabel: '临冬城', description: '由军械师和侍从共同看守的武器、防具储藏处。', capacity: 80 },
+    { id: 'winterfell_room', name: '临冬城领主起居室', type: 'room', location: { locationId: 'b_winterfell' }, locationLabel: '临冬城', description: '存放日常衣物、文书和少量药品。', capacity: 30 },
   ]);
 }
 
@@ -68,8 +69,8 @@ export function createJonItemState(): ItemSystemState {
     { instanceId: 'jon.spirits', definitionId: 'supply.nights_watch_spirits', placement: { type: 'carried' }, overrides: { charges: 4 } },
     { instanceId: 'jon.staunching_herbs', definitionId: 'medicine.maester_staunching_herbs', placement: { type: 'site', siteId: 'castle_black_quarters' }, overrides: { charges: 2 } },
   ], [
-    { id: 'castle_black_armory', name: '黑城堡军械库', type: 'armory', location: '黑城堡', description: '守夜人公共军械库，取用较大装备需要遵守值守规定。', capacity: 100 },
-    { id: 'castle_black_quarters', name: '黑城堡住处', type: 'room', location: '黑城堡', description: '狭窄住处里的木箱、墙钩和铺位。', capacity: 16 },
+    { id: 'castle_black_armory', name: '黑城堡军械库', type: 'armory', location: { locationId: 'b_castle_black' }, locationLabel: '黑城堡', description: '守夜人公共军械库，取用较大装备需要遵守值守规定。', capacity: 100 },
+    { id: 'castle_black_quarters', name: '黑城堡住处', type: 'room', location: { locationId: 'b_castle_black' }, locationLabel: '黑城堡', description: '狭窄住处里的木箱、墙钩和铺位。', capacity: 16 },
   ]);
 }
 
@@ -84,7 +85,7 @@ export function createDaenerysItemState(): ItemSystemState {
     { instanceId: 'daenerys.cream_gold_egg', definitionId: 'artifact.petrified_dragon_egg_cream_gold', placement: { type: 'site', siteId: 'pentos_guest_room' }, overrides: { lawfulControllerId: 'char_daenerys', renown: 40 } },
     { instanceId: 'daenerys.house_seal', definitionId: 'keepsake.house_seal', placement: { type: 'site', siteId: 'pentos_guest_room' }, overrides: { customName: '三首龙旧印', lawfulControllerId: 'house_targaryen' } },
   ], [
-    { id: 'pentos_guest_room', name: '潘托斯总督宅邸客房', type: 'room', location: '潘托斯总督宅邸', description: '客房内的衣箱、梳妆柜和有锁木匣。', capacity: 24 },
+    { id: 'pentos_guest_room', name: '潘托斯总督宅邸客房', type: 'room', location: { locationId: UNKNOWN_WESTEROS_LOCATION_ID, sceneLocation: '潘托斯 · 伊利里欧宅邸' }, locationLabel: '所在地未查明 · 潘托斯 · 伊利里欧宅邸', description: '客房内的衣箱、梳妆柜和有锁木匣。', capacity: 24 },
   ]);
 }
 
@@ -98,8 +99,8 @@ export function createCustomRulerItemState(): ItemSystemState {
     { instanceId: 'custom.castle_sword', definitionId: 'weapon.castle_bastard_sword', placement: { type: 'carried' } },
     { instanceId: 'custom.staunching_herbs', definitionId: 'medicine.maester_staunching_herbs', placement: { type: 'carried' }, overrides: { charges: 2 } },
   ], [
-    { id: 'custom_ruler_room', name: '领主起居室', type: 'room', location: '当前据点', description: '自建人物在当前据点可直接取用的私人储藏空间。', capacity: 24 },
+    { id: 'custom_ruler_room', name: '领主起居室', type: 'room', location: { locationId: UNKNOWN_WESTEROS_LOCATION_ID, sceneLocation: '当前据点' }, locationLabel: '所在地未查明 · 当前据点', description: '自建人物在当前据点可直接取用的私人储藏空间。', capacity: 24 },
   ], [
-    { id: 'custom_packhorse', name: '驮马', type: 'packhorse', location: '当前据点', capacity: 12, description: '可随队移动并装载中型或大型行李。' },
+    { id: 'custom_packhorse', name: '驮马', type: 'packhorse', location: { locationId: UNKNOWN_WESTEROS_LOCATION_ID, sceneLocation: '当前据点' }, locationLabel: '所在地未查明 · 当前据点', capacity: 12, description: '可随队移动并装载中型或大型行李。' },
   ]);
 }

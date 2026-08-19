@@ -1,4 +1,5 @@
 import type { TraitCheckDomain } from '../../services/traitEffectEngine';
+import type { WorldLocationRef } from '../map/types';
 
 export type ItemCategory =
   | 'weapon'
@@ -129,7 +130,8 @@ export interface ItemStorageSite {
   id: string;
   name: string;
   type: 'armory' | 'wardrobe' | 'room' | 'warehouse' | 'stable' | 'camp' | 'other';
-  location: string;
+  location: WorldLocationRef;
+  locationLabel: string;
   description: string;
   capacity?: number;
 }
@@ -138,7 +140,8 @@ export interface ItemTransport {
   id: string;
   name: string;
   type: 'packhorse' | 'wagon' | 'ship' | 'other';
-  location: string;
+  location: WorldLocationRef;
+  locationLabel: string;
   capacity: number;
   description: string;
 }

@@ -97,7 +97,7 @@ function stateWith(definitionIds) {
   return state;
 }
 
-const options = { currentLocation: '临冬城', displacedTo: { type: 'carried' } };
+const options = { currentLocation: { locationId: 'b_winterfell' }, displacedTo: { type: 'carried' } };
 
 test('装备只暴露六个常态分组和规定的隐藏位置', () => {
   assert.deepEqual(EQUIPMENT_GROUPS, ['head', 'torso', 'mainhand', 'offhand', 'legs', 'accessories']);
@@ -161,7 +161,7 @@ test('装备与卸下在容量失败时保持原状态', () => {
     /大型物品不能普通随身携带/,
   );
   assert.throws(
-    () => unequipItem(state, catalog, 'armor_plate', { type: 'carried' }, { currentLocation: '临冬城' }),
+    () => unequipItem(state, catalog, 'armor_plate', { type: 'carried' }, { currentLocation: { locationId: 'b_winterfell' } }),
     /大型物品不能普通随身携带/,
   );
   assert.deepEqual(state.placements.armor_plate, { type: 'equipped', position: { group: 'torso', layer: 'armor' } });

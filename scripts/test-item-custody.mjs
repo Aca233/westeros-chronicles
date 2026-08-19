@@ -141,9 +141,9 @@ test('药囊只扩展药物容量，不能替武器扩容', () => {
 
 test('大型物品不能随身但可占用运输工具四格', () => {
   const state = stateWith([[instance('plate', 'armor.plate_harness'), { type: 'site', siteId: 'armory' }]]);
-  state.sites.armory = { id: 'armory', name: '军械库', type: 'armory', location: '临冬城', description: '', capacity: 4 };
-  state.vehicles.wagon = { id: 'wagon', name: '辎重马车', type: 'wagon', location: '临冬城', capacity: 8, description: '' };
-  assert.throws(() => transferItem(state, catalog, 'plate', { type: 'carried' }, { currentLocation: '临冬城' }), /大型物品不能普通随身携带/);
+  state.sites.armory = { id: 'armory', name: '军械库', type: 'armory', location: { locationId: 'b_winterfell' }, locationLabel: '临冬城', description: '', capacity: 4 };
+  state.vehicles.wagon = { id: 'wagon', name: '辎重马车', type: 'wagon', location: { locationId: 'b_winterfell' }, locationLabel: '临冬城', capacity: 8, description: '' };
+  assert.throws(() => transferItem(state, catalog, 'plate', { type: 'carried' }, { currentLocation: { locationId: 'b_winterfell' } }), /大型物品不能普通随身携带/);
   assert.equal(canContainerAccept(state, catalog, { type: 'site', siteId: 'armory' }), true);
   state.instances.rope = instance('rope', 'tool.rope');
   state.placements.rope = { type: 'site', siteId: 'armory' };
@@ -151,21 +151,21 @@ test('大型物品不能随身但可占用运输工具四格', () => {
   delete state.instances.rope;
   delete state.placements.rope;
 
-  const moved = transferItem(state, catalog, 'plate', { type: 'vehicle', vehicleId: 'wagon' }, { currentLocation: '临冬城' });
+  const moved = transferItem(state, catalog, 'plate', { type: 'vehicle', vehicleId: 'wagon' }, { currentLocation: { locationId: 'b_winterfell' } });
   assert.deepEqual(moved.placements.plate, { type: 'vehicle', vehicleId: 'wagon' });
 });
 
 test('转移会验证地点、装备目标与堆叠拆分 ID', () => {
   const state = stateWith([[instance('herbs', 'medicine.herbs', { quantity: 4 }), { type: 'carried' }]]);
-  state.sites.armory = { id: 'armory', name: '临冬城军械库', type: 'armory', location: '临冬城', description: '' };
-  const moved = transferItem(state, catalog, 'herbs', { type: 'site', siteId: 'armory' }, { currentLocation: '临冬城', quantity: 2, newInstanceId: 'herbs_stored' });
+  state.sites.armory = { id: 'armory', name: '临冬城军械库', type: 'armory', location: { locationId: 'b_winterfell' }, locationLabel: '临冬城', description: '' };
+  const moved = transferItem(state, catalog, 'herbs', { type: 'site', siteId: 'armory' }, { currentLocation: { locationId: 'b_winterfell' }, quantity: 2, newInstanceId: 'herbs_stored' });
   assert.equal(state.instances.herbs.quantity, 4);
   assert.equal(state.instances.herbs_stored, undefined);
   assert.equal(moved.instances.herbs.quantity, 2);
   assert.equal(moved.instances.herbs_stored.quantity, 2);
   assert.deepEqual(moved.placements.herbs_stored, { type: 'site', siteId: 'armory' });
-  assert.throws(() => transferItem(state, catalog, 'herbs', { type: 'equipped', position: { group: 'mainhand' } }, { currentLocation: '临冬城' }), /装备位置只能通过装备规则写入/);
-  assert.throws(() => transferItem(state, catalog, 'herbs', { type: 'site', siteId: 'armory' }, { currentLocation: '君临' }), /目标据点不在当前地点/);
+  assert.throws(() => transferItem(state, catalog, 'herbs', { type: 'equipped', position: { group: 'mainhand' } }, { currentLocation: { locationId: 'b_winterfell' } }), /装备位置只能通过装备规则写入/);
+  assert.throws(() => transferItem(state, catalog, 'herbs', { type: 'site', siteId: 'armory' }, { currentLocation: { locationId: 'b_red_keep' } }), /目标据点不在当前地点/);
 });
 
 test('实例与位置键必须完全一致', () => {

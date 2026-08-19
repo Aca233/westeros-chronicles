@@ -30,7 +30,7 @@ const {
 
 const lord = structuredClone(PRESET_SCENARIOS[0].initialLord);
 const gameState = {
-  saveFormatVersion: 6,
+  saveFormatVersion: 7,
   currentYear: 298, currentMonth: 5, currentDay: 10, currentSeason: '暮春', turnCount: 1,
   lord, turns: [],
   worldCharacters: { runId: 'run_test', datasetHash: 'f'.repeat(64), revision: 0 },
@@ -42,12 +42,12 @@ const ARYA = 'agot:Arya_1';
 const SANSA = 'agot:Sansa_1';
 const context = {
   characters: [
-    { id: ARYA, alive: true, locationId: 'winterfell', traits: [], spouseIds: [], titles: [], wounds: [] },
-    { id: SANSA, alive: true, locationId: 'elsewhere', traits: [], spouseIds: [], titles: [], wounds: [] },
+    { id: ARYA, alive: true, locationId: 'b_winterfell', traits: [], spouseIds: [], titles: [], wounds: [] },
+    { id: SANSA, alive: true, locationId: 'b_red_keep', traits: [], spouseIds: [], titles: [], wounds: [] },
   ],
-  currentLocationId: 'winterfell',
+  currentLocationId: 'b_winterfell',
   presentCharacterIds: [ARYA],
-  knownLocationIds: ['winterfell', 'elsewhere'],
+  knownLocationIds: ['b_winterfell', 'b_red_keep'],
 };
 const settled = settleTurnDraft({
   gameState,

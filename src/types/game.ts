@@ -6,6 +6,7 @@ import type { ItemStateCommand, ItemSystemState } from '../features/items/types'
 import type { WorldArtifactState } from '../features/items/worldArtifacts';
 import type { WorldHistoryState } from '../features/world/worldHistory';
 import type { CharacterId } from '../features/characters/types';
+import type { WorldLocationRef } from '../features/map/types';
 
 // CK3 同款六项角色能力。常见角色通常位于 0 - 30 区间，数值允许因加成继续提高。
 export interface LordAttributes {
@@ -56,7 +57,9 @@ export interface LordProfile {
   gender: string;
   culture?: string;
   faith?: string;
-  location: string;
+  location: WorldLocationRef;
+  /** Resolved display cache. Access rules must never compare this label. */
+  locationLabel: string;
   
   // 身体部位与体魄
   body: LordBodyCondition;
@@ -91,7 +94,7 @@ export type StateCommand =
   | { type: 'MODIFY_PRESTIGE'; delta: number }
   | { type: 'MODIFY_DREAD'; delta: number }
   | { type: 'ADD_TRAIT'; trait: string }
-  | { type: 'CHANGE_LOCATION'; location: string }
+  | { type: 'CHANGE_LOCATION'; locationId: string; sceneLocation?: string }
   | { type: 'CHANGE_TITLE'; title: string }
   | { type: 'ADVANCE_TIME'; days?: number; months?: number; years?: number; season?: string; reason?: string }
   | { type: 'SET_DATE'; year?: number; month?: number; day?: number; season?: string; reason?: string }
@@ -150,7 +153,7 @@ export interface WorldCharacterStateRef {
 
 // 游戏全局状态
 export interface GameState {
-  saveFormatVersion: 6;
+  saveFormatVersion: 7;
   currentYear: number;
   currentMonth: number;
   currentDay: number;

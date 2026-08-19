@@ -17,6 +17,8 @@ import {
   type ItemCardModel,
 } from '../../features/items/viewModel';
 import { getEquipmentReplacementChoices } from '../../features/items/actionChoices';
+import { sameWorldLocation } from '../../features/map/locationResolver';
+import type { WorldLocationRef } from '../../features/map/types';
 import { useGameStore } from '../../store/useGameStore';
 import type { BodyZoneKey, LordBodyCondition } from '../../types/game';
 import { ItemCard } from './ItemCard';
@@ -43,18 +45,10 @@ const WOUND_LABELS = {
   critical: '危重',
 } as const;
 
-function locationRoot(location: string): string {
-  return location.split('·', 1)[0].trim();
-}
-
-function atLocation(containerLocation: string, currentLocation: string): boolean {
-  return locationRoot(containerLocation) === locationRoot(currentLocation);
-}
-
-function localStorageDestination(state: ItemSystemState, currentLocation: string): ItemPlacement {
-  const site = Object.values(state.sites).find((entry) => atLocation(entry.location, currentLocation));
+function localStorageDestination(state: ItemSystemState, currentLocation: WorldLocationRef): ItemPlacement {
+  const site = Object.values(state.sites).find((entry) => sameWorldLocation(entry.location, currentLocation));
   if (site) return { type: 'site', siteId: site.id };
-  const vehicle = Object.values(state.vehicles).find((entry) => atLocation(entry.location, currentLocation));
+  const vehicle = Object.values(state.vehicles).find((entry) => sameWorldLocation(entry.location, currentLocation));
   if (vehicle) return { type: 'vehicle', vehicleId: vehicle.id };
   return { type: 'carried' };
 }

@@ -8,9 +8,23 @@ import type { LordProfile } from '../../types/game';
 import { createDefaultBody } from '../../types/game';
 import { characterAgeAtYear, dynastySlug, formatCharacterCulture, formatCharacterFaith, formatDynastyName } from './characterDossier';
 import type { ResolvedCharacter } from './types';
+import {
+  UNKNOWN_WESTEROS_LOCATION_ID,
+  createWorldLocationRef,
+  fallbackLocationLabel,
+} from '../map/locationResolver';
 
 export function createLordFromExistingCharacter(character: ResolvedCharacter, artifacts: WorldArtifactState, currentYear = 298): LordProfile {
   const items = createEmptyItemSystem();
+  const slug = dynastySlug(character.dynastyId);
+  const house = HOUSES.find((entry) => entry.id.toLowerCase() === slug.toLowerCase());
+  const location = createWorldLocationRef(
+    character.locationId ?? UNKNOWN_WESTEROS_LOCATION_ID,
+    character.locationId ? undefined : house?.seat,
+  );
+  const locationLabel = character.locationId
+    ? (house?.seat ?? fallbackLocationLabel(location))
+    : fallbackLocationLabel(location);
   const add = (instanceId: string, definitionId: string, placement: any) => {
     if (items.instances[instanceId] || !ITEM_CATALOG.has(definitionId)) return;
     items.instances[instanceId] = createItemInstance(ITEM_CATALOG, definitionId, instanceId);
@@ -24,14 +38,12 @@ export function createLordFromExistingCharacter(character: ResolvedCharacter, ar
   for (const artifact of Object.values(artifacts.artifacts)) {
     if (artifact.placement.type !== 'character' || artifact.placement.characterId !== character.id) continue;
     if (!artifact.equipped && !items.sites[holdingSiteId]) items.sites[holdingSiteId] = {
-      id: holdingSiteId, name: '人物保管处', type: 'room', location: character.locationId ?? '所在地未记录',
+      id: holdingSiteId, name: '人物保管处', type: 'room', location: { ...location }, locationLabel,
       description: '开局时由该人物保管、但并未实际穿戴的物品。', capacity: 40,
     };
     add(artifact.instanceId, artifact.definitionId, artifact.equipped ? { type: 'equipped', position: { group: 'mainhand' } } : { type: 'site', siteId: holdingSiteId });
   }
   validateItemSystem(items, ITEM_CATALOG);
-  const slug = dynastySlug(character.dynastyId);
-  const house = HOUSES.find((entry) => entry.id.toLowerCase() === slug.toLowerCase());
   const age = characterAgeAtYear(character.birthDate, currentYear, character.deathDate, character.alive) ?? 18;
   const importedTraits = filterImportedCharacterTraits(character.traits, age);
   const traits = resolveCharacterTraits(importedTraits.visibleTraitIds, []);
@@ -47,7 +59,8 @@ export function createLordFromExistingCharacter(character: ResolvedCharacter, ar
     gender: '性别未记录',
     culture: formatCharacterCulture(character.cultureId),
     faith: formatCharacterFaith(character.faithId),
-    location: character.locationId ?? house?.seat ?? '所在地未记录',
+    location,
+    locationLabel,
     body: createDefaultBody(),
     overallStatus: '强健',
     items,

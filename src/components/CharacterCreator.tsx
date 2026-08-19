@@ -246,7 +246,7 @@ export const CharacterCreator: React.FC = () => {
       const lord = createLordFromExistingCharacter(resolved, createInitialAgotArtifactWorldState(), 298);
       await startNewGame(lord, {
         think: `${lord.name}的故事从既定历史尚未分岔之处开始。`,
-        narrate: `征服历二百九十八年，${lord.name}身处${lord.location}。旧有关系、身份与责任都已存在，但从这一刻起，接下来的选择将由你作出。`,
+        narrate: `征服历二百九十八年，${lord.name}身处${lord.locationLabel}。旧有关系、身份与责任都已存在，但从这一刻起，接下来的选择将由你作出。`,
         branches: ['查看当前处境与身边人物', '处理眼前最紧迫的事务', '了解自己的关系、装备与资产'],
       }, { startDate: { year: 298, month: 5, day: 10 }, season: '暮春', canonicalCharacterId: characterId });
     } catch (error) {
@@ -260,11 +260,17 @@ export const CharacterCreator: React.FC = () => {
     if (!canComplete) return;
     const chosenTraitNames = selectedTraits.map((trait) => trait.name);
     const customItems = createCustomRulerItemState();
+    const customLocation = { locationId: 'b_unknown_westeros', sceneLocation: `${effectiveSeat} · 大厅` };
+    const customLocationLabel = `所在地未查明 · ${effectiveSeat} · 大厅`;
     for (const site of Object.values(customItems.sites)) {
-      site.location = effectiveSeat;
+      site.location = { ...customLocation };
+      site.locationLabel = customLocationLabel;
       if (site.id === 'custom_ruler_room') site.name = `${effectiveSeat}领主起居室`;
     }
-    for (const vehicle of Object.values(customItems.vehicles)) vehicle.location = effectiveSeat;
+    for (const vehicle of Object.values(customItems.vehicles)) {
+      vehicle.location = { ...customLocation };
+      vehicle.locationLabel = customLocationLabel;
+    }
     const customLord: LordProfile = {
       items: customItems,
       name: stripEmoji(customName) || '维斯特洛新星',
@@ -278,7 +284,8 @@ export const CharacterCreator: React.FC = () => {
       gender: customGender,
       culture: effectiveCulture,
       faith: effectiveFaith,
-      location: `${effectiveSeat} · 大厅`,
+      location: customLocation,
+      locationLabel: customLocationLabel,
       body: createDefaultBody(),
       overallStatus: '强健',
       goldDragons: 300,

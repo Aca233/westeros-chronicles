@@ -27,7 +27,7 @@ test('更换返回全部可接触的兼容装备而不是直接取第一个', ()
   const state = createNedItemState();
   state.instances['ned.spare_sword'] = createItemInstance(ITEM_CATALOG, 'weapon.castle_bastard_sword', 'ned.spare_sword', { customName: '备用临冬城长名称骑行佩剑' });
   state.placements['ned.spare_sword'] = { type: 'carried' };
-  state.sites.remote_armory = { id: 'remote_armory', name: '君临军械库', type: 'armory', location: '君临', description: '远方据点' };
+  state.sites.remote_armory = { id: 'remote_armory', name: '君临军械库', type: 'armory', location: { locationId: 'b_red_keep' }, locationLabel: '君临 · 红堡', description: '远方据点' };
   state.instances['ned.remote_sword'] = createItemInstance(ITEM_CATALOG, 'weapon.castle_bastard_sword', 'ned.remote_sword');
   state.placements['ned.remote_sword'] = { type: 'site', siteId: 'remote_armory' };
   state.instances['ned.broken_sword'] = createItemInstance(ITEM_CATALOG, 'weapon.castle_bastard_sword', 'ned.broken_sword', { durability: 0 });
@@ -36,7 +36,7 @@ test('更换返回全部可接触的兼容装备而不是直接取第一个', ()
   const choices = getEquipmentReplacementChoices({
     state,
     catalog: ITEM_CATALOG,
-    currentLocation: '临冬城·领主厅',
+    currentLocation: { locationId: 'b_winterfell', sceneLocation: '领主厅' },
     positions: [{ group: 'mainhand' }],
     excludedIds: ['ned.ice'],
   });
@@ -49,12 +49,12 @@ test('更换返回全部可接触的兼容装备而不是直接取第一个', ()
 
 test('转移返回所有本地目的地并排除当前位置', () => {
   const state = createNedItemState();
-  state.vehicles.winterfell_wagon = { id: 'winterfell_wagon', name: '临冬城随行辎重马车', type: 'wagon', location: '临冬城', capacity: 24, description: '本地运输' };
-  state.vehicles.remote_wagon = { id: 'remote_wagon', name: '君临马车', type: 'wagon', location: '君临', capacity: 24, description: '远方运输' };
+  state.vehicles.winterfell_wagon = { id: 'winterfell_wagon', name: '临冬城随行辎重马车', type: 'wagon', location: { locationId: 'b_winterfell' }, locationLabel: '临冬城', capacity: 24, description: '本地运输' };
+  state.vehicles.remote_wagon = { id: 'remote_wagon', name: '君临马车', type: 'wagon', location: { locationId: 'b_red_keep' }, locationLabel: '君临 · 红堡', capacity: 24, description: '远方运输' };
 
   const choices = getTransferDestinationChoices({
     state,
-    currentLocation: '临冬城·领主厅',
+    currentLocation: { locationId: 'b_winterfell', sceneLocation: '领主厅' },
     from: { type: 'site', siteId: 'winterfell_armory' },
   });
 

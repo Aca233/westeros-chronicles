@@ -39,9 +39,10 @@ const repository = {
 };
 const characterEvents = new Map();
 const eventStore = { eventsForCharacter: async (_runId, id) => characterEvents.get(id) ?? [] };
+const mapLocationRepository = { loadSearchIndex: async () => [{ id: 'b_winterfell' }, { id: 'b_red_keep' }] };
 const gameState = {
   currentYear: 298, currentMonth: 5, currentDay: 10, currentSeason: '暮春', turnCount: 2,
-  lord: { canonicalCharacterId: 'agot:player_1', location: '临冬城', items: { instances: {}, placements: {}, sites: {}, vehicles: {} } },
+  lord: { canonicalCharacterId: 'agot:player_1', location: { locationId: 'b_winterfell' }, locationLabel: '临冬城', items: { instances: {}, placements: {}, sites: {}, vehicles: {} } },
   worldCharacters: { runId: 'run_fixture', datasetHash: 'fixture', revision: 1 },
   worldArtifacts: {
     artifacts: {
@@ -72,7 +73,7 @@ const timeline = [{
   id: 'due', date: { year: 298, month: 5, day: 15 }, title: '将要发生', summary: '压力', region: '北境', category: 'intrigue',
   participants: [{ name: '时间线人物', characterId: 'agot:due_1' }], fatalities: [], consequences: [],
 }];
-const context = await buildWorldTurnContext({ gameState, actionText: '与劳勃交谈', repository, eventStore, timeline });
+const context = await buildWorldTurnContext({ gameState, actionText: '与劳勃交谈', repository, eventStore, mapLocationRepository, timeline });
 const selectedIds = [...context.selection.full, ...context.selection.compact].map((entry) => entry.id);
 for (const id of ['agot:named_1', 'agot:relative_1', 'agot:recent_1', 'agot:due_1']) {
   assert.ok(selectedIds.includes(id), `${id} should be selected`);
@@ -109,7 +110,7 @@ characterEvents.set('agot:named_1', [
     type: 'ITEM_EQUIP', instanceId: 'story:named:cloak', position: { group: 'torso', layer: 'outerwear' },
   } },
 ]);
-const updatedContext = await buildWorldTurnContext({ gameState, actionText: '与劳勃交谈', repository, eventStore, timeline });
+const updatedContext = await buildWorldTurnContext({ gameState, actionText: '与劳勃交谈', repository, eventStore, mapLocationRepository, timeline });
 assert.ok(updatedContext.visibleWorldEquipment.some((item) => item.instanceId === 'story:named:cloak'));
 assert.equal(updatedContext.visibleWorldAssets.some((item) => item.instanceId === 'story:named:cloak'), false, '已经穿戴的物品不得在正文资产段重复');
 

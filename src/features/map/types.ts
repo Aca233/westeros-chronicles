@@ -12,6 +12,11 @@ export type TravelMode = 'walk' | 'horse' | 'carriage' | 'ship'
 export type RoutePreference = 'fastest' | 'safest' | 'cheapest'
 export type KnowledgeLevel = 'confirmed' | 'rumored' | 'stale' | 'unknown'
 
+export interface WorldLocationRef {
+  locationId: string
+  sceneLocation?: string
+}
+
 export interface MapPixelPoint {
   mapX: number
   mapY: number

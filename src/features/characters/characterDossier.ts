@@ -149,7 +149,7 @@ export function createPlayerDossier(lord: LordProfile): PlayerCharacterDossier {
     gender: identifiedLord.gender,
     culture: formatCharacterCulture(identifiedLord.culture),
     faith: formatCharacterFaith(identifiedLord.faith),
-    location: identifiedLord.location,
+    location: identifiedLord.locationLabel,
     alive: identifiedLord.overallStatus !== '阵亡',
     deathReason: identifiedLord.overallStatus === '阵亡' ? '人物已经死亡' : undefined,
     attributes: identifiedLord.attributes,

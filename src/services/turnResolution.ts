@@ -26,6 +26,8 @@ import {
 import { stripEmoji } from './textSanitizer';
 import { buildChatMessages, type DicePromptContext } from './promptBuilder';
 import { extractJsonArrayFromXml, requestTurnResolutionCompletion } from './api';
+import { createWorldLocationRef, validateWorldLocationRef } from '../features/map/locationResolver';
+import type { WorldLocationRef } from '../features/map/types';
 
 export interface TurnResolutionDraft {
   outcomeSummary: string;
@@ -129,7 +131,20 @@ function factSource(command: StateCommand): WorldEventFact['source'] {
   return 'player';
 }
 
-function commandFacts(commands: readonly StateCommand[], turn: number, date: WorldDate, playerId?: CharacterId): WorldEventFact[] {
+function commandFactLocation(command: StateCommand, currentLocation: WorldLocationRef): WorldLocationRef {
+  if (command.type === 'CHANGE_LOCATION' || command.type === 'MOVE_CHARACTER') {
+    return createWorldLocationRef(command.locationId, command.sceneLocation);
+  }
+  return { ...currentLocation };
+}
+
+function commandFacts(
+  commands: readonly StateCommand[],
+  turn: number,
+  date: WorldDate,
+  currentLocation: WorldLocationRef,
+  playerId?: CharacterId,
+): WorldEventFact[] {
   return commands
     .filter((command) => command.type !== 'ADVANCE_TIME' && command.type !== 'SET_DATE')
     .map((command, index) => ({
@@ -142,6 +157,7 @@ function commandFacts(commands: readonly StateCommand[], turn: number, date: Wor
       summary: `程序已接受并结算 ${command.type}。`,
       participantIds: commandParticipantIds(command).length ? commandParticipantIds(command) : playerId ? [playerId] : [],
       commandTypes: [command.type],
+      location: commandFactLocation(command, currentLocation),
     }));
 }
 
@@ -171,6 +187,24 @@ export function settleTurnDraft(input: SettleTurnDraftInput): SettledTurn {
     type: entry.command.type,
     reason: stripEmoji(entry.reason),
   }));
+  const knownLocationIds = input.characterContext?.knownLocationIds
+    ? new Set(input.characterContext.knownLocationIds)
+    : undefined;
+  stateCommands.forEach((command, index) => {
+    if (command.type !== 'CHANGE_LOCATION') return;
+    const raw = command as unknown as Record<string, unknown>;
+    const ref = { locationId: raw.locationId, sceneLocation: raw.sceneLocation };
+    if ('location' in raw) {
+      rejectedSequences.add(index);
+      rejectedCommands.push({ type: command.type, reason: '地点变更必须使用地图地点 ID，不能使用自由文本地点' });
+    } else if (!knownLocationIds) {
+      rejectedSequences.add(index);
+      rejectedCommands.push({ type: command.type, reason: '缺少地图地点索引，地点变更未执行' });
+    } else if (!validateWorldLocationRef(ref, knownLocationIds)) {
+      rejectedSequences.add(index);
+      rejectedCommands.push({ type: command.type, reason: '目标地图地点不存在或具体场景不合法' });
+    }
+  });
   const currentDate: WorldDate = {
     year: gameState.currentYear,
     month: gameState.currentMonth,
@@ -201,7 +235,7 @@ export function settleTurnDraft(input: SettleTurnDraftInput): SettledTurn {
   const acceptedCommands = stateCommands.filter((command, index) => !rejectedSequences.has(index) && command !== rejectedTemporal);
   const lordCommands = acceptedCommands.filter((command) => !isCharacterStateCommand(command));
   const { updatedLord, changesLog, isFatalDeath } = applyStateCommands(gameState.lord, lordCommands);
-  const facts = commandFacts(acceptedCommands, input.nextTurnNumber, nextDate, gameState.lord.canonicalCharacterId);
+  const facts = commandFacts(acceptedCommands, input.nextTurnNumber, nextDate, gameState.lord.location, gameState.lord.canonicalCharacterId);
   const allKnownFacts = [...gameState.worldHistory.turns.flatMap((turn) => turn.facts), ...facts];
   const canonicalResolution = resolveDueCanonicalEvents(
     gameState.worldHistory,

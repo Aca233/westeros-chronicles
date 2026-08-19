@@ -10,6 +10,7 @@ import { applyItemActions, type ItemActionContext } from '../features/items/acti
 import { ITEM_CATALOG } from '../data/itemDefinitions';
 import type { ItemAction, ItemStateCommand } from '../features/items/types';
 import { aggregateEquippedItemEffects, getZoneProtection, mitigateWoundLevel } from '../features/items/effects';
+import { createWorldLocationRef, fallbackLocationLabel, sameWorldLocation } from '../features/map/locationResolver';
 
 
 // 重新计算领主综合身体状态
@@ -89,18 +90,13 @@ function inferDamageTags(text: string): string[] {
   return [...tags];
 }
 
-function locationRoot(location: string): string {
-  return location.split('·', 1)[0].trim();
-}
-
 function createItemActionContext(lord: LordProfile): ItemActionContext {
-  const root = locationRoot(lord.location);
   return {
     actorId: `lord:${lord.name}`,
     actorLocation: lord.location,
     gameDate: '当前回合',
-    accessibleSiteIds: new Set(Object.values(lord.items.sites).filter((site) => locationRoot(site.location) === root).map((site) => site.id)),
-    accessibleVehicleIds: new Set(Object.values(lord.items.vehicles).filter((vehicle) => locationRoot(vehicle.location) === root).map((vehicle) => vehicle.id)),
+    accessibleSiteIds: new Set(Object.values(lord.items.sites).filter((site) => sameWorldLocation(site.location, lord.location)).map((site) => site.id)),
+    accessibleVehicleIds: new Set(Object.values(lord.items.vehicles).filter((vehicle) => sameWorldLocation(vehicle.location, lord.location)).map((vehicle) => vehicle.id)),
   };
 }
 
@@ -290,8 +286,9 @@ export function applyStateCommands(
       }
 
       case 'CHANGE_LOCATION': {
-        next.location = stripEmoji(cmd.location);
-        changesLog.push(` 抵达地点: 【${cmd.location}】`);
+        next.location = createWorldLocationRef(cmd.locationId, cmd.sceneLocation ? stripEmoji(cmd.sceneLocation) : undefined);
+        next.locationLabel = fallbackLocationLabel(next.location);
+        changesLog.push(` 抵达地点: 【${next.locationLabel}】`);
         break;
       }
 
@@ -339,7 +336,7 @@ export interface CharacterCommandBatchResult {
 
 function applyEventToCharacter(character: CharacterState, event: CharacterEvent): CharacterState {
   switch (event.type) {
-    case 'MOVE': return { ...character, locationId: event.locationId };
+    case 'MOVE': return { ...character, locationId: event.locationId, sceneLocation: event.sceneLocation };
     case 'DIE': return { ...character, alive: false, deathReason: event.cause };
     case 'ADD_TRAIT': return { ...character, traits: [...new Set([...(character.traits ?? []), event.traitId])] };
     case 'REMOVE_TRAIT': return { ...character, traits: (character.traits ?? []).filter((id) => id !== event.traitId) };

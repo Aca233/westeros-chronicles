@@ -16,6 +16,8 @@ import type { CharacterCommandBatchBaseContext } from '../../services/stateReduc
 import type { CanonicalTimelineEvent } from './canonicalTimeline';
 import { advanceWorldDate, compareWorldDates, type WorldDate } from './worldHistory';
 import { projectNpcAssets, projectNpcEquipment, type NpcItemRelation } from './worldHistoryProjection';
+import { mapRepository } from '../map/repository';
+import { UNKNOWN_WESTEROS_LOCATION_ID } from '../map/locationResolver';
 
 export interface WorldTurnContextRepository {
   loadManifest(): Promise<{ datasetHash: string }>;
@@ -34,6 +36,7 @@ export interface BuildWorldTurnContextInput {
   actionText: string;
   repository?: WorldTurnContextRepository;
   eventStore?: WorldTurnContextEventStore;
+  mapLocationRepository?: { loadSearchIndex(): Promise<Array<{ id: string }>> };
   timeline?: readonly CanonicalTimelineEvent[];
 }
 
@@ -136,14 +139,16 @@ function visibleCharacterItems(
 export async function buildWorldTurnContext(input: BuildWorldTurnContextInput): Promise<WorldTurnContext> {
   const repository = input.repository ?? defaultRepository;
   const eventStore = input.eventStore ?? defaultEventStore;
+  const locationRepository = input.mapLocationRepository ?? mapRepository;
   const timeline = input.timeline ?? CANONICAL_TIMELINE;
   const { gameState } = input;
   const currentDate = { year: gameState.currentYear, month: gameState.currentMonth, day: gameState.currentDay };
   const playerId = gameState.lord.canonicalCharacterId;
-  const [manifest, playerRecord, mentioned] = await Promise.all([
+  const [manifest, playerRecord, mentioned, mapLocations] = await Promise.all([
     repository.loadManifest(),
     playerId ? repository.get(playerId) : Promise.resolve(undefined),
     repository.findMentioned(input.actionText, { alive: true, canonTiers: ['canon', 'semicanon'], limit: 24 }),
+    locationRepository.loadSearchIndex(),
   ]);
   const directlyNamedIds = uniqueIds(mentioned.filter((hit) => hit.canonTier !== 'genealogy').map((hit) => hit.id));
   const strongRelationshipIds = relationIds(playerRecord);
@@ -204,9 +209,12 @@ export async function buildWorldTurnContext(input: BuildWorldTurnContextInput): 
   const presentCharacterIds = uniqueIds([
     ...directlyNamedIds,
     ...recentInteractionIds,
-    ...resolved.filter((character) => character.locationId === gameState.lord.location).map((character) => character.id),
+    ...resolved.filter((character) => character.locationId === gameState.lord.location.locationId).map((character) => character.id),
   ]).filter((id) => selectedIds.has(id));
-  const knownLocationIds = [...new Set(resolved.map((character) => character.locationId).filter((value): value is string => Boolean(value)))];
+  const knownLocationIds = [...new Set([
+    ...mapLocations.map((location) => location.id),
+    UNKNOWN_WESTEROS_LOCATION_ID,
+  ])];
   const visibleItems = visibleCharacterItems(resolved, selectedIds, gameState);
 
   return {
@@ -220,7 +228,7 @@ export async function buildWorldTurnContext(input: BuildWorldTurnContextInput): 
     visibleWorldAssets: visibleItems.assets,
     characterCommandContext: {
       characters: resolved,
-      currentLocationId: gameState.lord.location,
+      currentLocationId: gameState.lord.location.locationId,
       presentCharacterIds,
       knownLocationIds,
     },

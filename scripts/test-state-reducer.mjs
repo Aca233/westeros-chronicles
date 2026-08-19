@@ -18,7 +18,8 @@ const moduleUrl = `data:text/javascript;base64,${Buffer.from(bundle.outputFiles[
 const { applyStateCommands, createNedItemState } = await import(moduleUrl);
 
 const createLord = (traitIds = []) => ({
-  name: '测试角色', house: '测试家族', houseWords: '测试箴言', houseSigil: 'house-stark', title: '测试领主', age: 24, gender: '男', location: '临冬城', overallStatus: '强健',
+  name: '测试角色', house: '测试家族', houseWords: '测试箴言', houseSigil: 'house-stark', title: '测试领主', age: 24, gender: '男',
+  location: { locationId: 'b_winterfell' }, locationLabel: '临冬城', overallStatus: '强健',
   body: {
     head: { key: 'head', name: '头部与咽喉', level: 'intact', wounds: [], isFatalZone: true },
     torso: { key: 'torso', name: '胸膛与躯干', level: 'intact', wounds: [], isFatalZone: true },
@@ -65,7 +66,8 @@ test('当前据点的战斗装备无需额外整备即可穿上', () => {
 
 test('只能从角色当前所在据点取用大件装备', () => {
   const lord = createLord();
-  lord.location = '君临 · 红堡';
+  lord.location = { locationId: 'b_red_keep', sceneLocation: '王座厅' };
+  lord.locationLabel = '君临 · 红堡 · 王座厅';
   const result = applyStateCommands(lord, [chainmailEquip]);
   assert.deepEqual(result.updatedLord.items.placements['ned.chainmail'], { type: 'site', siteId: 'winterfell_armory' });
   assert.match(result.changesLog.join('\n'), /批次未结算|不在当前地点/);

@@ -41,14 +41,14 @@ const catalog = createItemCatalog([
   definition({ id: 'weapon.unique', name: '祖传剑', category: 'weapon', subcategory: 'sword', unique: true, equippable: true, allowedPositions: [{ group: 'mainhand' }], handedness: 'one' }),
 ]);
 const context = {
-  actorId: 'lord_player', actorLocation: '临冬城', gameDate: '298.1.2',
+  actorId: 'lord_player', actorLocation: { locationId: 'b_winterfell' }, gameDate: '298.1.2',
   accessibleSiteIds: new Set(['armory']), accessibleVehicleIds: new Set(['wagon']),
 };
 
 function baseState() {
   const state = createEmptyItemSystem();
-  state.sites.armory = { id: 'armory', name: '军械库', type: 'armory', location: '临冬城', description: '', capacity: 20 };
-  state.vehicles.wagon = { id: 'wagon', name: '马车', type: 'wagon', location: '临冬城', description: '', capacity: 20 };
+  state.sites.armory = { id: 'armory', name: '军械库', type: 'armory', location: { locationId: 'b_winterfell' }, locationLabel: '临冬城', description: '', capacity: 20 };
+  state.vehicles.wagon = { id: 'wagon', name: '马车', type: 'wagon', location: { locationId: 'b_winterfell' }, locationLabel: '临冬城', description: '', capacity: 20 };
   const entries = [
     [instance('rope', 'tool.rope'), { type: 'carried' }],
     [instance('herbs_a', 'medicine.herbs', { quantity: 4 }), { type: 'carried' }],

@@ -18,8 +18,8 @@ const { buildItemCardModels, buildEquipmentGroupModels, createNedItemState, ITEM
 
 function stateWithEveryCustodyTab() {
   const state = createNedItemState();
-  state.sites.remote_vault = { id: 'remote_vault', name: '君临旧宅', type: 'room', location: '君临', description: '远方储藏' };
-  state.vehicles.supply_wagon = { id: 'supply_wagon', name: '随行辎重车', type: 'wagon', location: '临冬城', capacity: 24, description: '随行运输' };
+  state.sites.remote_vault = { id: 'remote_vault', name: '君临旧宅', type: 'room', location: { locationId: 'b_red_keep' }, locationLabel: '君临 · 红堡', description: '远方储藏' };
+  state.vehicles.supply_wagon = { id: 'supply_wagon', name: '随行辎重车', type: 'wagon', location: { locationId: 'b_winterfell' }, locationLabel: '临冬城', capacity: 24, description: '随行运输' };
   state.placements['ned.poppy_milk'] = { type: 'site', siteId: 'remote_vault' };
   state.placements['ned.castle_sword'] = { type: 'vehicle', vehicleId: 'supply_wagon' };
   return state;
@@ -29,7 +29,7 @@ const tabs = ['carried', 'current-site', 'vehicle', 'remote-site'];
 
 test('每个收纳实例只出现在一个保管页签且远方据点独立', () => {
   const state = stateWithEveryCustodyTab();
-  const byTab = Object.fromEntries(tabs.map((tab) => [tab, buildItemCardModels({ state, catalog: ITEM_CATALOG, currentLocation: '临冬城·领主厅', pendingActions: [], tab })]));
+  const byTab = Object.fromEntries(tabs.map((tab) => [tab, buildItemCardModels({ state, catalog: ITEM_CATALOG, currentLocation: { locationId: 'b_winterfell', sceneLocation: '领主厅' }, pendingActions: [], tab })]));
   const ids = tabs.flatMap((tab) => byTab[tab].map((card) => card.instanceId));
   assert.equal(ids.length, new Set(ids).size);
   assert.ok(byTab['current-site'].every((card) => !card.locationLabel.includes('君临')));

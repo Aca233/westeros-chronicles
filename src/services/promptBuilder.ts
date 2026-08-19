@@ -10,6 +10,7 @@ import { getItemDefinition } from '../features/items/catalog';
 import { aggregateEquippedItemEffects, formatItemNarrativeDirectives, getEquipmentBurden, getUnlockedItemActions } from '../features/items/effects';
 import { getUsedCarryUnits } from '../features/items/custody';
 import { formatPendingItemPrompt } from '../features/items/itemActionQueue';
+import { sameWorldLocation } from '../features/map/locationResolver';
 
 // 权游核心大宪章系统提示词 (长篇严肃小说体裁 + 对白全融合 + 沉浸深度文学)
 export const GOT_CONSTITUTION_PROMPT = `
@@ -107,7 +108,8 @@ export const GOT_CONSTITUTION_PROMPT = `
   // { "type": "HEAL_ZONE", "zone": "arms", "clearWound": "右臂格挡划伤" },
   // { "type": "SET_BLEEDING", "value": false },
   // { "type": "MODIFY_GOLD", "goldDragons": 100, "reason": "国王劳勃的丰厚赏赐" },
-  // { "type": "CHANGE_LOCATION", "location": "临冬城 · 主堡大门" }
+  // { "type": "CHANGE_LOCATION", "locationId": "b_winterfell", "sceneLocation": "主堡大门" }
+  // locationId 只能引用状态切片提供的地图地点 ID，不得编造自由文本目的地。
 ]
 </state_cmd>
 `;
@@ -117,7 +119,6 @@ export function buildStateSlice(gameState: GameState): string {
   const { lord, currentYear, currentMonth, currentDay, currentSeason, turnCount } = gameState;
   const body = lord.body;
   const itemState = lord.items;
-  const rootLocation = lord.location.split('·', 1)[0].trim();
   const itemEntries = Object.values(itemState.instances).map((instance) => ({
     instance,
     definition: getItemDefinition(ITEM_CATALOG, instance.definitionId),
@@ -126,8 +127,14 @@ export function buildStateSlice(gameState: GameState): string {
   const equippedEntries = itemEntries.filter((entry) => entry.placement.type === 'equipped');
   const accessibleEntries = itemEntries.filter((entry) => {
     if (entry.placement.type === 'carried') return true;
-    if (entry.placement.type === 'site') return itemState.sites[entry.placement.siteId]?.location.split('·', 1)[0].trim() === rootLocation;
-    if (entry.placement.type === 'vehicle') return itemState.vehicles[entry.placement.vehicleId]?.location.split('·', 1)[0].trim() === rootLocation;
+    if (entry.placement.type === 'site') {
+      const site = itemState.sites[entry.placement.siteId];
+      return Boolean(site && sameWorldLocation(site.location, lord.location));
+    }
+    if (entry.placement.type === 'vehicle') {
+      const vehicle = itemState.vehicles[entry.placement.vehicleId];
+      return Boolean(vehicle && sameWorldLocation(vehicle.location, lord.location));
+    }
     return false;
   });
   const formatEntry = (entry: typeof itemEntries[number]) => {
@@ -177,7 +184,8 @@ export function buildStateSlice(gameState: GameState): string {
 - 领主身份: ${lord.house} · ${lord.name} (${lord.title})
 - 宗族与箴言: ${lord.dynastyName || lord.house} · ${lord.houseWords}
 - 文化与信仰: ${lord.culture || '未指定'} · ${lord.faith || '未指定'}
-- 当前地点: ${lord.location}
+- 当前地图地点 ID: ${lord.location.locationId}
+- 当前地点: ${lord.locationLabel}
 - 整体体魄: 【${lord.overallStatus}】 (异常体态: ${statusList.length > 0 ? statusList.join(', ') : '无'})
 - 部位伤情: ${bodySummary}
 - 当前装备（唯一真实穿戴状态）: ${equippedSummary}

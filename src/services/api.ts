@@ -4,6 +4,7 @@ import { stripEmoji } from './textSanitizer';
 import { ITEM_CATALOG } from '../data/itemDefinitions';
 import { getItemDefinition } from '../features/items/catalog';
 import type { EquipmentPosition, ItemPlacement } from '../features/items/types';
+import { sameWorldLocation } from '../features/map/locationResolver';
 
 // 解析模型输出的 XML 结构化标签 (小说流全融合 + 深度思考全捕获)
 export function parseModelOutput(
@@ -129,7 +130,6 @@ export function generateOfflineDemoResponse(
   let dynamicNarrate = '';
   const think = `AI 幕后推演 (Turn ${turnNumber}): 领主下达指令【${playerInput}】。系统判定其行动意图，并动态推演战备变化与封臣反应。`;
 
-  const rootLocation = gameState?.lord.location.split('·', 1)[0].trim() ?? '';
   const availableItems = gameState
     ? Object.values(gameState.lord.items.instances).flatMap((instance) => {
         const placement = gameState.lord.items.placements[instance.instanceId];
@@ -137,19 +137,19 @@ export function generateOfflineDemoResponse(
         let label = '随身行囊';
         if (placement.type === 'site') {
           const site = gameState.lord.items.sites[placement.siteId];
-          if (!site || site.location.split('·', 1)[0].trim() !== rootLocation) return [];
+          if (!site || !sameWorldLocation(site.location, gameState.lord.location)) return [];
           label = site.name;
         }
         if (placement.type === 'vehicle') {
           const vehicle = gameState.lord.items.vehicles[placement.vehicleId];
-          if (!vehicle || vehicle.location.split('·', 1)[0].trim() !== rootLocation) return [];
+          if (!vehicle || !sameWorldLocation(vehicle.location, gameState.lord.location)) return [];
           label = vehicle.name;
         }
         return [{ instance, definition: getItemDefinition(ITEM_CATALOG, instance.definitionId), placement, label }];
       })
     : [];
   const localSite = gameState
-    ? Object.values(gameState.lord.items.sites).find((site) => site.location.split('·', 1)[0].trim() === rootLocation)
+    ? Object.values(gameState.lord.items.sites).find((site) => sameWorldLocation(site.location, gameState.lord.location))
     : undefined;
   const displacedTo: ItemPlacement = localSite ? { type: 'site', siteId: localSite.id } : { type: 'carried' };
 

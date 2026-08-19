@@ -1,4 +1,6 @@
 import type { PendingItemAction } from './itemActionQueue';
+import { sameWorldLocation } from '../map/locationResolver';
+import type { WorldLocationRef } from '../map/types';
 import { getItemDefinition } from './catalog';
 import {
   ACCESSORY_INDICES,
@@ -88,14 +90,6 @@ const EFFECT_KIND_LABELS: Record<ItemEffect['kind'], string> = {
   narrative: '叙事',
 };
 
-function locationRoot(location: string): string {
-  return location.split('·', 1)[0].trim();
-}
-
-function sameLocation(left: string, right: string): boolean {
-  return locationRoot(left) === locationRoot(right);
-}
-
 function positionKey(position: EquipmentPosition): string {
   if (position.group === 'torso') return `torso:${position.layer}`;
   if (position.group === 'legs') return `legs:${position.layer}`;
@@ -123,11 +117,11 @@ function locationLabel(state: ItemSystemState, placement: ItemPlacement): string
     case 'carried': return '随身携带';
     case 'site': {
       const site = state.sites[placement.siteId];
-      return site ? `${site.name} · ${site.location}` : '未知据点';
+      return site ? `${site.name} · ${site.locationLabel}` : '未知据点';
     }
     case 'vehicle': {
       const vehicle = state.vehicles[placement.vehicleId];
-      return vehicle ? `${vehicle.name} · ${vehicle.location}` : '未知运输工具';
+      return vehicle ? `${vehicle.name} · ${vehicle.locationLabel}` : '未知运输工具';
     }
     case 'equipped': return `已装备 · ${positionLabel(placement.position)}`;
     case 'character': return `由人物持有 · ${placement.characterId}`;
@@ -212,27 +206,27 @@ function buildCard(
 function belongsToTab(
   state: ItemSystemState,
   placement: ItemPlacement,
-  currentLocation: string,
+  currentLocation: WorldLocationRef,
   tab: CustodyTab,
 ): boolean {
   if (tab === 'carried') return placement.type === 'carried';
   if (tab === 'vehicle') {
     if (placement.type !== 'vehicle') return false;
     const vehicle = state.vehicles[placement.vehicleId];
-    return Boolean(vehicle && sameLocation(vehicle.location, currentLocation));
+    return Boolean(vehicle && sameWorldLocation(vehicle.location, currentLocation));
   }
   if (placement.type !== 'site') return false;
   const site = state.sites[placement.siteId];
   if (!site) return false;
   return tab === 'current-site'
-    ? sameLocation(site.location, currentLocation)
-    : !sameLocation(site.location, currentLocation);
+    ? sameWorldLocation(site.location, currentLocation)
+    : !sameWorldLocation(site.location, currentLocation);
 }
 
 export function buildItemCardModels(input: {
   state: ItemSystemState;
   catalog: ItemCatalog;
-  currentLocation: string;
+  currentLocation: WorldLocationRef;
   pendingActions: readonly PendingItemAction[];
   tab: CustodyTab;
 }): ItemCardModel[] {

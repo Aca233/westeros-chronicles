@@ -18,6 +18,7 @@ export interface CharacterEventEnvelope extends CharacterEventInput {
 
 export interface CharacterEventProjection extends StaticCharacterRecord {
   locationId?: string;
+  sceneLocation?: string;
   titleIds: string[];
   titles: string[];
   wounds: string[];
@@ -126,7 +127,11 @@ export function projectCharacterEvents(
   };
   for (const envelope of [...envelopes].sort((a, b) => a.turn - b.turn || a.sequence - b.sequence)) {
     const event = envelope.event;
-    if (event.type === 'MOVE') projected = { ...projected, locationId: event.locationId };
+    if (event.type === 'MOVE') projected = {
+      ...projected,
+      locationId: event.locationId,
+      sceneLocation: event.sceneLocation,
+    };
     else if (event.type === 'DIE') projected = { ...projected, alive: false, deathReason: event.cause, killerId: event.killerId };
     else if (event.type === 'ADD_TRAIT' && !projected.traits.includes(event.traitId)) {
       projected = { ...projected, traits: [...projected.traits, event.traitId] };

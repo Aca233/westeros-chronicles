@@ -1,6 +1,7 @@
 import { getItemDefinition } from './catalog';
 import { assertPlacementAccessible } from './custody';
 import { validateItemSystem } from './state';
+import type { WorldLocationRef } from '../map/types';
 import type {
   AccessoryIndex,
   EquipmentGroup,
@@ -32,12 +33,12 @@ export interface EquipmentGroupView {
 }
 
 export interface EquipOptions {
-  currentLocation: string;
+  currentLocation: WorldLocationRef;
   displacedTo: ItemPlacement;
 }
 
 export interface UnequipOptions {
-  currentLocation: string;
+  currentLocation: WorldLocationRef;
 }
 
 function positionsEqual(left: EquipmentPosition, right: EquipmentPosition): boolean {
@@ -135,8 +136,8 @@ function cloneState(state: ItemSystemState): ItemSystemState {
     placements: Object.fromEntries(Object.entries(state.placements).map(([id, placement]) => [id, placement.type === 'equipped'
       ? { type: 'equipped', position: { ...placement.position } }
       : { ...placement }])),
-    sites: Object.fromEntries(Object.entries(state.sites).map(([id, site]) => [id, { ...site }])),
-    vehicles: Object.fromEntries(Object.entries(state.vehicles).map(([id, vehicle]) => [id, { ...vehicle }])),
+    sites: Object.fromEntries(Object.entries(state.sites).map(([id, site]) => [id, { ...site, location: { ...site.location } }])),
+    vehicles: Object.fromEntries(Object.entries(state.vehicles).map(([id, vehicle]) => [id, { ...vehicle, location: { ...vehicle.location } }])),
   };
 }
 

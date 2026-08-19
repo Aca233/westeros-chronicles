@@ -15,6 +15,7 @@ export interface CharacterState {
   id: CharacterId;
   alive: boolean;
   locationId?: string | null;
+  sceneLocation?: string | null;
   traits?: string[];
   spouseIds?: CharacterId[];
   titles?: string[];
@@ -39,7 +40,7 @@ export type CharacterStateCommand =
   | { type: 'SET_CHARACTER_RELATIONSHIP'; sourceCharacterId: CharacterId; targetCharacterId: CharacterId; relationship: Omit<CharacterRelationship, 'sourceId' | 'targetId'>; commandId?: CharacterCommandId }
   | { type: 'ADD_CHARACTER_TRAIT'; characterId: CharacterId; traitId: string; commandId?: CharacterCommandId }
   | { type: 'REMOVE_CHARACTER_TRAIT'; characterId: CharacterId; traitId: string; commandId?: CharacterCommandId }
-  | { type: 'MOVE_CHARACTER'; characterId: CharacterId; locationId: string; reason?: string; commandId?: CharacterCommandId }
+  | { type: 'MOVE_CHARACTER'; characterId: CharacterId; locationId: string; sceneLocation?: string; reason?: string; commandId?: CharacterCommandId }
   | { type: 'INJURE_CHARACTER'; characterId: CharacterId; zone: BodyZoneKey | 'arm' | 'leg'; level: WoundLevel; woundText: string; commandId?: CharacterCommandId }
   | { type: 'HEAL_CHARACTER'; characterId: CharacterId; zone?: BodyZoneKey | 'all'; level?: WoundLevel; clearWound?: string; commandId?: CharacterCommandId }
   | { type: 'KILL_CHARACTER'; characterId: CharacterId; cause: string; killerId?: CharacterId; commandId?: CharacterCommandId }

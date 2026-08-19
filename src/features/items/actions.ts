@@ -2,6 +2,7 @@ import { getItemDefinition } from './catalog';
 import { transferItem } from './custody';
 import { equipItem, unequipItem } from './equipment';
 import { validateItemSystem } from './state';
+import type { WorldLocationRef } from '../map/types';
 import type {
   ItemAction,
   ItemCatalog,
@@ -13,7 +14,7 @@ import type {
 
 export interface ItemActionContext {
   actorId: string;
-  actorLocation: string;
+  actorLocation: WorldLocationRef;
   gameDate: string;
   accessibleSiteIds: ReadonlySet<string>;
   accessibleVehicleIds: ReadonlySet<string>;
@@ -38,8 +39,8 @@ function cloneState(state: ItemSystemState): ItemSystemState {
     placements: Object.fromEntries(Object.entries(state.placements).map(([id, placement]) => [id, placement.type === 'equipped'
       ? { type: 'equipped', position: { ...placement.position } }
       : { ...placement }])),
-    sites: Object.fromEntries(Object.entries(state.sites).map(([id, site]) => [id, { ...site }])),
-    vehicles: Object.fromEntries(Object.entries(state.vehicles).map(([id, vehicle]) => [id, { ...vehicle }])),
+    sites: Object.fromEntries(Object.entries(state.sites).map(([id, site]) => [id, { ...site, location: { ...site.location } }])),
+    vehicles: Object.fromEntries(Object.entries(state.vehicles).map(([id, vehicle]) => [id, { ...vehicle, location: { ...vehicle.location } }])),
   };
 }
 

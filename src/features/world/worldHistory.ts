@@ -1,4 +1,5 @@
 import type { CharacterId } from '../characters/types';
+import type { WorldLocationRef } from '../map/types';
 import type { StateCommand } from '../../types/game';
 
 export interface WorldDate {
@@ -32,6 +33,7 @@ export interface WorldEventFact {
   summary: string;
   participantIds: CharacterId[];
   commandTypes: string[];
+  location?: WorldLocationRef;
   canonicalEventId?: string;
 }
 

@@ -1,6 +1,7 @@
 import type { BodyZoneKey, WoundLevel } from '../../types/game';
 import { ITEM_CATALOG } from '../../data/itemDefinitions';
 import type { EquipmentPosition } from '../items/types';
+import { createWorldLocationRef } from '../map/locationResolver';
 import { normalizeRelationship } from './characterRelationships';
 import { isCharacterId } from './characterIds';
 import type { CharacterId, CharacterItemRecord, CharacterRelationship, KnowledgeVisibility } from './types';
@@ -453,8 +454,18 @@ function validateCharacterCommandUnsafe(commandInput: unknown, context: Validate
       return success([eventInput(commandInput as CharacterStateCommand, context, subject.id, { type: 'ITEM_LOSE', instanceId: item.instanceId })]);
     }
     case 'MOVE_CHARACTER': {
-      const locationId = requiredString(commandInput, 'locationId', '目标地点');
-      if (!locationId) return fail('目标地点必须是非空字符串');
+      if (hasOwn(commandInput, 'location')) return fail('人物移动必须使用地图地点 ID，不能使用自由文本地点');
+      const rawLocationId = requiredString(commandInput, 'locationId', '目标地点');
+      if (!rawLocationId) return fail('目标地点必须是非空字符串');
+      const sceneLocation = optionalString(commandInput, 'sceneLocation', '具体场景');
+      if (sceneLocation === null) return fail('具体场景必须是非空字符串');
+      let locationRef;
+      try {
+        locationRef = createWorldLocationRef(rawLocationId, sceneLocation);
+      } catch {
+        return fail('目标地点必须是合法的地图地点 ID');
+      }
+      const { locationId } = locationRef;
       const reason = optionalString(commandInput, 'reason', '移动原因');
       if (reason === null) return fail('移动原因必须是非空字符串');
       if (context.knownLocationIds) {
@@ -463,7 +474,12 @@ function validateCharacterCommandUnsafe(commandInput: unknown, context: Validate
           : [...context.knownLocationIds].includes(locationId);
         if (!known) return fail(`目标地点 ${locationId} 不存在`);
       }
-      return success([eventInput(commandInput as CharacterStateCommand, context, subject.id, { type: 'MOVE', locationId, ...(reason === undefined ? {} : { reason }) })]);
+      return success([eventInput(commandInput as CharacterStateCommand, context, subject.id, {
+        type: 'MOVE',
+        locationId,
+        ...(locationRef.sceneLocation === undefined ? {} : { sceneLocation: locationRef.sceneLocation }),
+        ...(reason === undefined ? {} : { reason }),
+      })]);
     }
     case 'ADD_CHARACTER_TRAIT': {
       const traitId = requiredString(commandInput, 'traitId', '特质 ID');

@@ -347,7 +347,7 @@ test('raw characterContext 会清除 Emoji 并拆散保留协议标签', () => {
 test('领主状态切片只暴露当前装备与可访问物品的稳定 ID 和确定性代价', () => {
   const state = structuredClone(PRESET_SCENARIOS.find((preset) => preset.id === 'ned_stark').initialLord);
   state.items.placements['ned.chainmail'] = { type: 'equipped', position: { group: 'torso', layer: 'armor' } };
-  state.items.sites.remote_vault = { id: 'remote_vault', name: '远方密库', type: 'warehouse', location: '君临', description: '', capacity: 20 };
+  state.items.sites.remote_vault = { id: 'remote_vault', name: '远方密库', type: 'warehouse', location: { locationId: 'b_red_keep' }, locationLabel: '君临 · 红堡', description: '', capacity: 20 };
   state.items.instances.remote_secret = { instanceId: 'remote_secret', definitionId: 'jewelry.simple_silver_ring', quantity: 1, durability: 100, quality: 'fine', customName: '不可泄漏远方戒指', renown: 0, isHeirloom: false, history: [] };
   state.items.placements.remote_secret = { type: 'site', siteId: 'remote_vault' };
   const gameState = {

@@ -159,7 +159,7 @@ export interface CharacterRelationship {
 }
 
 export type CharacterEvent =
-  | { type: 'MOVE'; locationId: string; reason?: string }
+  | { type: 'MOVE'; locationId: string; sceneLocation?: string; reason?: string }
   | { type: 'DIE'; cause: string; killerId?: CharacterId }
   | { type: 'ADD_TRAIT'; traitId: string }
   | { type: 'REMOVE_TRAIT'; traitId: string }
@@ -181,6 +181,7 @@ export type CharacterEvent =
 export interface ResolvedCharacter extends StaticCharacterRecord {
   attributes: LordAttributes;
   locationId?: string;
+  sceneLocation?: string;
   titleIds: string[];
   titles: string[];
   wounds: string[];

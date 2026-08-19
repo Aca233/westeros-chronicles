@@ -13,13 +13,14 @@ const [dbSource, settingsSource, presetsSource, creatorSource] = await Promise.a
   readFile('src/components/CharacterCreator.tsx', 'utf8'),
 ]);
 
-test('物品存档格式固定为版本 6 并明确拒绝旧版本', () => {
-  assert.equal(ITEM_SAVE_FORMAT_VERSION, 6);
+test('物品存档格式固定为版本 7 并明确拒绝版本 6', () => {
+  assert.equal(ITEM_SAVE_FORMAT_VERSION, 7);
   assert.throws(() => assertSupportedSaveEnvelope({ version: 5, snapshots: [] }), /测试版存档格式已更新.*重置/);
-  assert.doesNotThrow(() => assertSupportedSaveEnvelope({ version: 6, snapshots: [] }));
+  assert.throws(() => assertSupportedSaveEnvelope({ version: 6, snapshots: [] }), /测试版存档格式已更新.*重置/);
+  assert.doesNotThrow(() => assertSupportedSaveEnvelope({ version: 7, snapshots: [] }));
   assert.throws(() => assertSupportedGameState({ saveFormatVersion: 5 }), /测试版存档格式已更新.*重置/);
   assert.throws(() => assertSupportedGameState({ saveFormatVersion: 6, lord: { items: { schemaVersion: 1 } } }), /重置/);
-  assert.doesNotThrow(() => assertSupportedGameState({ saveFormatVersion: 6, lord: { items: { schemaVersion: 1 } }, worldHistory: { schemaVersion: 1, startDate: { year: 298, month: 5, day: 10 }, canonical: {}, turns: [] } }));
+  assert.doesNotThrow(() => assertSupportedGameState({ saveFormatVersion: 7, lord: { location: { locationId: 'b_winterfell' }, locationLabel: '临冬城', items: { schemaVersion: 1, sites: {}, vehicles: {} } }, worldHistory: { schemaVersion: 1, startDate: { year: 298, month: 5, day: 10 }, canonical: {}, turns: [] } }));
 });
 
 test('数据库不迁移旧物品并在事务前校验版本', () => {

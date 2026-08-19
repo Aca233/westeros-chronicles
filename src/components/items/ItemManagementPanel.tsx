@@ -15,6 +15,8 @@ import {
   type ItemCardModel,
 } from '../../features/items/viewModel';
 import { getTransferDestinationChoices } from '../../features/items/actionChoices';
+import { sameWorldLocation } from '../../features/map/locationResolver';
+import type { WorldLocationRef } from '../../features/map/types';
 import { useGameStore } from '../../store/useGameStore';
 import { ItemCard } from './ItemCard';
 import { ItemChoiceDialog } from './ItemChoiceDialog';
@@ -34,16 +36,10 @@ const CATEGORY_LABELS: Record<ItemCategory, string> = {
 const QUALITY_ORDER = { rough: 0, common: 1, fine: 2, masterwork: 3, legendary: 4 } as const;
 type SortMode = 'location' | 'category' | 'quality' | 'durability' | 'name';
 
-function locationRoot(location: string): string {
-  return location.split('·', 1)[0].trim();
-}
-function sameLocation(left: string, right: string): boolean {
-  return locationRoot(left) === locationRoot(right);
-}
-function preferredStorage(state: ReturnType<typeof useGameStore.getState>['gameState']['lord']['items'], currentLocation: string): ItemPlacement {
-  const site = Object.values(state.sites).find((entry) => sameLocation(entry.location, currentLocation));
+function preferredStorage(state: ReturnType<typeof useGameStore.getState>['gameState']['lord']['items'], currentLocation: WorldLocationRef): ItemPlacement {
+  const site = Object.values(state.sites).find((entry) => sameWorldLocation(entry.location, currentLocation));
   if (site) return { type: 'site', siteId: site.id };
-  const vehicle = Object.values(state.vehicles).find((entry) => sameLocation(entry.location, currentLocation));
+  const vehicle = Object.values(state.vehicles).find((entry) => sameWorldLocation(entry.location, currentLocation));
   if (vehicle) return { type: 'vehicle', vehicleId: vehicle.id };
   return { type: 'carried' };
 }

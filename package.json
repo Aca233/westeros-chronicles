@@ -82,7 +82,8 @@
     "check:map-data": "node scripts/audit-agot-map.mjs",
     "test:map-runtime": "node --experimental-strip-types scripts/test-map-runtime.mjs",
     "check:map-drawer": "node --experimental-strip-types scripts/check-map-drawer.mjs",
-    "test:map-location-view": "node --experimental-strip-types scripts/test-map-location-view.mjs"
+    "test:map-location-view": "node --experimental-strip-types scripts/test-map-location-view.mjs",
+    "test:location-authority": "node --experimental-strip-types scripts/test-location-authority.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",
