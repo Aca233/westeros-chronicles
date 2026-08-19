@@ -6,6 +6,10 @@ import {
   resolveSemanticPoliticalHouse,
   semanticTitlesAffectedByChanges,
 } from '../src/features/map/semanticPoliticalLabels.ts'
+import {
+  aggregateAssetPoints,
+  aggregateCharacterPoints,
+} from '../src/features/map/semanticAggregation.ts'
 
 const countyTitle = {
   featureId: 3, titleId: 'c_winterfell', rank: 'county', name: '临冬城伯爵领',
@@ -73,4 +77,78 @@ test('内部地点变化只影响其伯爵领、公国和战略区域', () => {
   )
   assert.equal(semanticTitlesAffectedByChanges(['c_winterfell'], memberships).has('c_winterfell'), true)
   assert.equal(semanticTitlesAffectedByChanges(['b_one'], memberships).has('c_dreadfort'), false)
+})
+
+const aggregationTitles = [
+  { ...countyTitle, mapX: 120, mapY: 90 },
+  { ...countyTitle, featureId: 5, titleId: 'd_the_neck', rank: 'duchy', name: '颈泽公国', mapX: 180, mapY: 140 },
+]
+const aggregationMemberships = [
+  { locationId: 'b_winterfell', baronyId: 'b_winterfell', countyId: 'c_winterfell', duchyId: 'd_winterfell', realmId: 'the_north' },
+  { locationId: 'b_godswood', baronyId: 'b_godswood', countyId: 'c_winterfell', duchyId: 'd_winterfell', realmId: 'the_north' },
+  { locationId: 'b_greywater', baronyId: 'b_greywater', duchyId: 'd_the_neck', realmId: 'the_north' },
+]
+const characterPoints = [
+  { id: 'character:agot:Ned_1', characterId: 'agot:Ned_1', locationId: 'b_winterfell', mapX: 110, mapY: 85 },
+  { id: 'character:agot:Arya_1', characterId: 'agot:Arya_1', locationId: 'b_godswood', mapX: 125, mapY: 95 },
+  { id: 'character:agot:Howland_1', characterId: 'agot:Howland_1', locationId: 'b_greywater', mapX: 180, mapY: 140 },
+]
+const aggregationBounds = { minX: 0, minY: 0, maxX: 300, maxY: 200 }
+
+test('人物中景按伯爵领聚合，缺少伯爵领时回退公国', () => {
+  const groups = aggregateCharacterPoints({
+    points: characterPoints,
+    memberships: aggregationMemberships,
+    titles: aggregationTitles,
+    pixelBounds: aggregationBounds,
+  })
+  assert.deepEqual(groups, [
+    {
+      id: 'characters:county:c_winterfell', kind: 'characters', rank: 'county',
+      scopeId: 'c_winterfell', mapX: 120, mapY: 90, count: 2,
+      memberIds: ['agot:Arya_1', 'agot:Ned_1'],
+    },
+    {
+      id: 'characters:duchy:d_the_neck', kind: 'characters', rank: 'duchy',
+      scopeId: 'd_the_neck', mapX: 180, mapY: 140, count: 1,
+      memberIds: ['agot:Howland_1'],
+    },
+  ])
+})
+
+test('资产先按地点聚合，县内超过八个地点时提升为伯爵领聚合', () => {
+  const denseMemberships = Array.from({ length: 9 }, (_, index) => ({
+    locationId: `b_dense_${index}`, baronyId: `b_dense_${index}`,
+    countyId: 'c_winterfell', duchyId: 'd_winterfell', realmId: 'the_north',
+  }))
+  const denseAssets = denseMemberships.map((membership, index) => ({
+    id: `asset:site:${index}`, assetId: `site-${index}`, locationId: membership.locationId,
+    mapX: 100 + index, mapY: 80 + index,
+  }))
+  const groups = aggregateAssetPoints({
+    points: denseAssets,
+    memberships: denseMemberships,
+    titles: aggregationTitles,
+    pixelBounds: aggregationBounds,
+  })
+  assert.equal(groups[0].id, 'assets:county:c_winterfell')
+  assert.equal(groups[0].count, denseAssets.length)
+})
+
+test('反向输入、重复输入和视野外输入不会改变聚合结果', () => {
+  const base = {
+    points: characterPoints,
+    memberships: aggregationMemberships,
+    titles: aggregationTitles,
+    pixelBounds: aggregationBounds,
+  }
+  const reversedDuplicatedAndOffscreen = {
+    ...base,
+    points: [
+      { ...characterPoints[0], id: 'character:agot:Offscreen_1', characterId: 'agot:Offscreen_1', mapX: 900, mapY: 900 },
+      ...characterPoints.toReversed(),
+      characterPoints[0],
+    ],
+  }
+  assert.deepEqual(aggregateCharacterPoints(base), aggregateCharacterPoints(reversedDuplicatedAndOffscreen))
 })

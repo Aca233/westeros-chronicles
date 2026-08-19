@@ -8,6 +8,7 @@ import {
   projectKnownCharacterMapPoints,
 } from '../src/features/map/dynamicMapSubjects.ts'
 import { assertSupportedGameState } from '../src/features/items/saveVersion.ts'
+import { aggregateCharacterPoints } from '../src/features/map/semanticAggregation.ts'
 
 const locations = [
   { id: 'b_winterfell', name: '临冬城', mapX: 100, mapY: 100, regionId: 'world_westeros_the_north' },
@@ -39,6 +40,21 @@ test('人物位置只投影玩家和统一世界状态中已知的有效地点�
   assert.equal(points.find((point) => point.characterId === 'agot:Arya_1').locationId, 'b_winterfell')
   assert.equal(points.some((point) => point.characterId === 'agot:Hidden_1'), false)
   assert.equal(points.some((point) => point.characterId === 'agot:Dead_1'), false)
+  const aggregates = aggregateCharacterPoints({
+    points,
+    memberships: [
+      { locationId: 'b_winterfell', baronyId: 'b_winterfell', countyId: 'c_winterfell', duchyId: 'd_winterfell', realmId: 'the_north' },
+      { locationId: 'b_riverrun', baronyId: 'b_riverrun', countyId: 'c_riverrun', duchyId: 'd_riverrun', realmId: 'the_riverlands' },
+    ],
+    titles: [
+      { featureId: 1, titleId: 'c_winterfell', rank: 'county', name: '临冬城伯爵领', mapX: 100, mapY: 100, importance: 60, regionId: 'the_north' },
+      { featureId: 2, titleId: 'c_riverrun', rank: 'county', name: '奔流城伯爵领', mapX: 300, mapY: 220, importance: 60, regionId: 'the_riverlands' },
+    ],
+    pixelBounds: { minX: 0, minY: 0, maxX: 500, maxY: 500 },
+  })
+  const memberIds = aggregates.flatMap((aggregate) => aggregate.memberIds)
+  assert.equal(memberIds.includes('agot:Dead_1'), false)
+  assert.equal(memberIds.includes('agot:Hidden_1'), false)
 })
 
 test('资产模式显示有权威地点的据点和运输工具，并统计其中物品', () => {
@@ -93,6 +109,8 @@ test('人物和资产图层已接入地图，人物可打开卷宗，地点详�
   assert.match(canvas, /onSelectCharacter/)
   assert.match(layers, /agot-character-points/)
   assert.match(layers, /agot-asset-points/)
+  assert.match(layers, /agot-character-aggregates/)
+  assert.match(layers, /agot-asset-aggregates/)
   assert.doesNotMatch(drawer, /等待统一世界状态接入/)
   assert.match(drawer, /projectKnownCharacterMapPoints/)
   assert.match(drawer, /projectKnownAssetMapPoints/)

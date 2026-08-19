@@ -1,4 +1,4 @@
-import type { GeoJSONSource, Map as MapLibreMap } from 'maplibre-gl'
+import type { ExpressionSpecification, GeoJSONSource, Map as MapLibreMap } from 'maplibre-gl'
 
 import { mapPixelToLngLat } from './coordinates.ts'
 import {
@@ -8,7 +8,15 @@ import {
 } from './dynamicMapSubjects.ts'
 import type { RegisteredMapIntelType, VisibleMapSubject } from './intelligence.ts'
 import type { PoliticalFeatureState } from './politicalProjection.ts'
-import type { MapBounds, MapLocationSearchEntry, MapManifest } from './types'
+import { semanticDetailOpacityExpression, type SemanticZoomState } from './semanticZoom.ts'
+import { aggregateAssetPoints, aggregateCharacterPoints, type SemanticSubjectAggregate } from './semanticAggregation.ts'
+import type {
+  MapBounds,
+  MapLocationSearchEntry,
+  MapManifest,
+  SemanticMembership,
+  SemanticTitle,
+} from './types'
 
 export type MapMode = 'terrain' | 'political' | 'characters' | 'travel' | 'assets'
 
@@ -72,8 +80,14 @@ export const JOURNEY_PROGRESS_SOURCE = 'agot-active-journey-progress'
 export const JOURNEY_POSITION_SOURCE = 'agot-active-journey-position'
 export const CHARACTER_POINT_SOURCE = 'agot-character-point-source'
 export const CHARACTER_POINT_LAYER = 'agot-character-points'
+export const CHARACTER_AGGREGATE_SOURCE = 'agot-character-aggregate-source'
+export const CHARACTER_AGGREGATE_LAYER = 'agot-character-aggregates'
+export const CHARACTER_AGGREGATE_COUNT_LAYER = 'agot-character-aggregate-counts'
 export const ASSET_POINT_SOURCE = 'agot-asset-point-source'
 export const ASSET_POINT_LAYER = 'agot-asset-points'
+export const ASSET_AGGREGATE_SOURCE = 'agot-asset-aggregate-source'
+export const ASSET_AGGREGATE_LAYER = 'agot-asset-aggregates'
+export const ASSET_AGGREGATE_COUNT_LAYER = 'agot-asset-aggregate-counts'
 export const POLITICAL_HOUSE_LABEL_SOURCE = 'agot-political-house-label-source'
 export const POLITICAL_HOUSE_LABEL_LAYER = 'agot-political-house-labels'
 
@@ -107,7 +121,11 @@ export const MODE_VISIBILITY: Record<MapMode, Record<string, boolean>> = {
     [JOURNEY_PROGRESS_SOURCE]: false,
     [JOURNEY_POSITION_SOURCE]: false,
     [CHARACTER_POINT_LAYER]: false,
+    [CHARACTER_AGGREGATE_LAYER]: false,
+    [CHARACTER_AGGREGATE_COUNT_LAYER]: false,
     [ASSET_POINT_LAYER]: false,
+    [ASSET_AGGREGATE_LAYER]: false,
+    [ASSET_AGGREGATE_COUNT_LAYER]: false,
   },
   political: {
     ...COMMON_VISIBILITY,
@@ -119,7 +137,11 @@ export const MODE_VISIBILITY: Record<MapMode, Record<string, boolean>> = {
     [JOURNEY_PROGRESS_SOURCE]: false,
     [JOURNEY_POSITION_SOURCE]: false,
     [CHARACTER_POINT_LAYER]: false,
+    [CHARACTER_AGGREGATE_LAYER]: false,
+    [CHARACTER_AGGREGATE_COUNT_LAYER]: false,
     [ASSET_POINT_LAYER]: false,
+    [ASSET_AGGREGATE_LAYER]: false,
+    [ASSET_AGGREGATE_COUNT_LAYER]: false,
   },
   characters: {
     ...COMMON_VISIBILITY,
@@ -131,7 +153,11 @@ export const MODE_VISIBILITY: Record<MapMode, Record<string, boolean>> = {
     [JOURNEY_PROGRESS_SOURCE]: false,
     [JOURNEY_POSITION_SOURCE]: false,
     [CHARACTER_POINT_LAYER]: true,
+    [CHARACTER_AGGREGATE_LAYER]: true,
+    [CHARACTER_AGGREGATE_COUNT_LAYER]: true,
     [ASSET_POINT_LAYER]: false,
+    [ASSET_AGGREGATE_LAYER]: false,
+    [ASSET_AGGREGATE_COUNT_LAYER]: false,
   },
   travel: {
     ...COMMON_VISIBILITY,
@@ -143,7 +169,11 @@ export const MODE_VISIBILITY: Record<MapMode, Record<string, boolean>> = {
     [JOURNEY_PROGRESS_SOURCE]: true,
     [JOURNEY_POSITION_SOURCE]: true,
     [CHARACTER_POINT_LAYER]: false,
+    [CHARACTER_AGGREGATE_LAYER]: false,
+    [CHARACTER_AGGREGATE_COUNT_LAYER]: false,
     [ASSET_POINT_LAYER]: false,
+    [ASSET_AGGREGATE_LAYER]: false,
+    [ASSET_AGGREGATE_COUNT_LAYER]: false,
   },
   assets: {
     ...COMMON_VISIBILITY,
@@ -155,7 +185,11 @@ export const MODE_VISIBILITY: Record<MapMode, Record<string, boolean>> = {
     [JOURNEY_PROGRESS_SOURCE]: false,
     [JOURNEY_POSITION_SOURCE]: false,
     [CHARACTER_POINT_LAYER]: false,
+    [CHARACTER_AGGREGATE_LAYER]: false,
+    [CHARACTER_AGGREGATE_COUNT_LAYER]: false,
     [ASSET_POINT_LAYER]: true,
+    [ASSET_AGGREGATE_LAYER]: true,
+    [ASSET_AGGREGATE_COUNT_LAYER]: true,
   },
 }
 
@@ -198,10 +232,85 @@ function dynamicPointCollection(
   }
 }
 
+function dynamicAggregateCollection(
+  aggregates: readonly SemanticSubjectAggregate[],
+  manifest: MapManifest,
+): GeoJSON.FeatureCollection {
+  return {
+    type: 'FeatureCollection',
+    features: aggregates.map((aggregate) => ({
+      type: 'Feature',
+      id: aggregate.id,
+      geometry: { type: 'Point', coordinates: mapPixelToLngLat(aggregate, manifest) },
+      properties: {
+        id: aggregate.id,
+        kind: aggregate.kind,
+        rank: aggregate.rank,
+        scopeId: aggregate.scopeId,
+        count: aggregate.count,
+        memberIds: aggregate.memberIds,
+      },
+    })),
+  }
+}
+
 export function addDynamicMapSubjectLayers(map: MapLibreMap): void {
   const empty = { type: 'FeatureCollection' as const, features: [] }
   if (!map.getSource(CHARACTER_POINT_SOURCE)) map.addSource(CHARACTER_POINT_SOURCE, { type: 'geojson', data: empty })
   if (!map.getSource(ASSET_POINT_SOURCE)) map.addSource(ASSET_POINT_SOURCE, { type: 'geojson', data: empty })
+  if (!map.getSource(CHARACTER_AGGREGATE_SOURCE)) map.addSource(CHARACTER_AGGREGATE_SOURCE, { type: 'geojson', data: empty })
+  if (!map.getSource(ASSET_AGGREGATE_SOURCE)) map.addSource(ASSET_AGGREGATE_SOURCE, { type: 'geojson', data: empty })
+  const aggregateOpacity: ExpressionSpecification = ['-', 1, semanticDetailOpacityExpression]
+  if (!map.getLayer(CHARACTER_AGGREGATE_LAYER)) map.addLayer({
+    id: CHARACTER_AGGREGATE_LAYER,
+    type: 'circle',
+    source: CHARACTER_AGGREGATE_SOURCE,
+    layout: { visibility: 'none' },
+    paint: {
+      'circle-radius': ['interpolate', ['linear'], ['get', 'count'], 1, 8, 12, 16, 80, 24],
+      'circle-color': '#d8c38b',
+      'circle-stroke-color': '#302516',
+      'circle-stroke-width': 2,
+      'circle-opacity': aggregateOpacity,
+    },
+  })
+  if (!map.getLayer(CHARACTER_AGGREGATE_COUNT_LAYER)) map.addLayer({
+    id: CHARACTER_AGGREGATE_COUNT_LAYER,
+    type: 'symbol',
+    source: CHARACTER_AGGREGATE_SOURCE,
+    layout: {
+      visibility: 'none',
+      'text-field': ['to-string', ['get', 'count']],
+      'text-size': 11,
+      'text-allow-overlap': true,
+    },
+    paint: { 'text-color': '#241b10', 'text-opacity': aggregateOpacity },
+  })
+  if (!map.getLayer(ASSET_AGGREGATE_LAYER)) map.addLayer({
+    id: ASSET_AGGREGATE_LAYER,
+    type: 'circle',
+    source: ASSET_AGGREGATE_SOURCE,
+    layout: { visibility: 'none' },
+    paint: {
+      'circle-radius': ['interpolate', ['linear'], ['get', 'count'], 1, 8, 12, 16, 80, 24],
+      'circle-color': '#8db8c4',
+      'circle-stroke-color': '#1e3034',
+      'circle-stroke-width': 2,
+      'circle-opacity': aggregateOpacity,
+    },
+  })
+  if (!map.getLayer(ASSET_AGGREGATE_COUNT_LAYER)) map.addLayer({
+    id: ASSET_AGGREGATE_COUNT_LAYER,
+    type: 'symbol',
+    source: ASSET_AGGREGATE_SOURCE,
+    layout: {
+      visibility: 'none',
+      'text-field': ['to-string', ['get', 'count']],
+      'text-size': 11,
+      'text-allow-overlap': true,
+    },
+    paint: { 'text-color': '#13252a', 'text-opacity': aggregateOpacity },
+  })
   if (!map.getLayer(CHARACTER_POINT_LAYER)) map.addLayer({
     id: CHARACTER_POINT_LAYER,
     type: 'circle',
@@ -212,7 +321,7 @@ export function addDynamicMapSubjectLayers(map: MapLibreMap): void {
       'circle-color': '#d8c38b',
       'circle-stroke-color': '#302516',
       'circle-stroke-width': 2,
-      'circle-opacity': 0.96,
+      'circle-opacity': ['*', 0.96, semanticDetailOpacityExpression],
     },
   })
   if (!map.getLayer(ASSET_POINT_LAYER)) map.addLayer({
@@ -225,9 +334,15 @@ export function addDynamicMapSubjectLayers(map: MapLibreMap): void {
       'circle-color': '#8db8c4',
       'circle-stroke-color': '#1e3034',
       'circle-stroke-width': 2,
-      'circle-opacity': 0.94,
+      'circle-opacity': ['*', 0.94, semanticDetailOpacityExpression],
     },
   })
+}
+
+export interface SemanticSubjectContext {
+  titles: readonly SemanticTitle[]
+  memberships: readonly SemanticMembership[]
+  zoomState: SemanticZoomState
 }
 
 export function syncDynamicMapSubjects(
@@ -236,14 +351,26 @@ export function syncDynamicMapSubjects(
   characters: readonly MapCharacterPoint[],
   assets: readonly MapAssetPoint[],
   pixelBounds: MapBounds,
+  semanticContext?: SemanticSubjectContext,
 ): void {
   if (!map.isStyleLoaded()) return
   addDynamicMapSubjectLayers(map)
-  const visibleCharacters = filterMapPointsByPixelBounds(characters, pixelBounds)
-  const visibleAssets = filterMapPointsByPixelBounds(assets, pixelBounds)
+  const zoom = semanticContext?.zoomState.zoom
+  const sendsAggregates = zoom !== undefined && zoom >= 2.5 && zoom <= 4.4
+  const sendsPoints = zoom === undefined || zoom >= 4.1
+  const visibleCharacters = sendsPoints ? filterMapPointsByPixelBounds(characters, pixelBounds) : []
+  const visibleAssets = sendsPoints ? filterMapPointsByPixelBounds(assets, pixelBounds) : []
+  const characterAggregates = sendsAggregates && semanticContext
+    ? aggregateCharacterPoints({ points: characters, pixelBounds, ...semanticContext })
+    : []
+  const assetAggregates = sendsAggregates && semanticContext
+    ? aggregateAssetPoints({ points: assets, pixelBounds, ...semanticContext })
+    : []
   const collections = dynamicPointCollection(visibleCharacters, visibleAssets, manifest)
   ;(map.getSource(CHARACTER_POINT_SOURCE) as GeoJSONSource).setData(collections.characters)
   ;(map.getSource(ASSET_POINT_SOURCE) as GeoJSONSource).setData(collections.assets)
+  ;(map.getSource(CHARACTER_AGGREGATE_SOURCE) as GeoJSONSource).setData(dynamicAggregateCollection(characterAggregates, manifest))
+  ;(map.getSource(ASSET_AGGREGATE_SOURCE) as GeoJSONSource).setData(dynamicAggregateCollection(assetAggregates, manifest))
 }
 
 export function applyMapMode(map: MapLibreMap, mode: MapMode): void {

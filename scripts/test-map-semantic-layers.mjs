@@ -1,8 +1,14 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 
-import { applyMapMode, MODE_VISIBILITY } from '../src/features/map/mapLayers.ts'
+import {
+  addDynamicMapSubjectLayers,
+  applyMapMode,
+  MODE_VISIBILITY,
+  syncDynamicMapSubjects,
+} from '../src/features/map/mapLayers.ts'
 import { createLocalMapStyle } from '../src/features/map/mapStyle.ts'
+import { semanticZoomState } from '../src/features/map/semanticZoom.ts'
 
 const manifestV2 = {
   schemaVersion: 2,
@@ -71,7 +77,14 @@ test('政治填色无缩放门槛且道路细节随缩放连续增加', () => {
 
 test('五种模式切换不会写入 zoom 且完整控制新增图层', () => {
   const allLayers = new Set(Object.keys(MODE_VISIBILITY.terrain))
-  for (const layerId of [...semanticLayerIds, 'agot-political-house-labels']) {
+  for (const layerId of [
+    ...semanticLayerIds,
+    'agot-political-house-labels',
+    'agot-character-aggregates',
+    'agot-character-aggregate-counts',
+    'agot-asset-aggregates',
+    'agot-asset-aggregate-counts',
+  ]) {
     for (const mode of modes) assert.equal(layerId in MODE_VISIBILITY[mode], true, `${mode}:${layerId}`)
   }
   for (const mode of modes) {
@@ -93,4 +106,60 @@ test('五种模式切换不会写入 zoom 且完整控制新增图层', () => {
     assert.equal(visibility.get('agot-routes'), mode === 'travel' ? 'visible' : 'none')
     for (const layerId of semanticLayerIds) assert.equal(visibility.get(layerId), 'visible')
   }
+})
+
+test('人物与资产聚合层和个体层只在伯爵领细节区连续交叉', () => {
+  const sources = new Map()
+  const layers = new Map()
+  const map = {
+    getSource: (id) => sources.get(id),
+    addSource: (id, source) => sources.set(id, source),
+    getLayer: (id) => layers.get(id),
+    addLayer: (layer) => layers.set(layer.id, layer),
+  }
+  addDynamicMapSubjectLayers(map)
+  for (const id of ['agot-character-aggregates', 'agot-asset-aggregates']) {
+    assert.match(JSON.stringify(layers.get(id).paint['circle-opacity']), /4\.1.*4\.4/)
+    assert.match(JSON.stringify(layers.get(id).paint['circle-opacity']), /"-",1/)
+  }
+  for (const id of ['agot-character-points', 'agot-asset-points']) {
+    assert.match(JSON.stringify(layers.get(id).paint['circle-opacity']), /4\.1.*4\.4/)
+  }
+})
+
+test('中景只发送聚合，细节交叉区同时发送聚合和个体', () => {
+  const sources = new Map()
+  const layers = new Map()
+  const map = {
+    isStyleLoaded: () => true,
+    getSource: (id) => sources.get(id),
+    addSource: (id, definition) => sources.set(id, {
+      definition,
+      data: definition.data,
+      setData(value) { this.data = value },
+    }),
+    getLayer: (id) => layers.get(id),
+    addLayer: (layer) => layers.set(layer.id, layer),
+  }
+  const characters = [{
+    id: 'character:agot:Ned_1', characterId: 'agot:Ned_1', name: '艾德·史塔克',
+    locationId: 'b_winterfell', locationName: '临冬城', regionId: 'the_north',
+    mapX: 1200, mapY: 900, knowledge: 'confirmed',
+  }]
+  const assets = []
+  const semanticContext = {
+    titles: [{ featureId: 1, titleId: 'c_winterfell', rank: 'county', name: '临冬城伯爵领', mapX: 1200, mapY: 900, importance: 60, regionId: 'the_north' }],
+    memberships: [{ locationId: 'b_winterfell', baronyId: 'b_winterfell', countyId: 'c_winterfell', duchyId: 'd_winterfell', realmId: 'the_north' }],
+  }
+  const bounds = { minX: 1000, minY: 700, maxX: 1400, maxY: 1100 }
+  syncDynamicMapSubjects(map, manifestV2, characters, assets, bounds, {
+    ...semanticContext, zoomState: semanticZoomState(3),
+  })
+  assert.equal(sources.get('agot-character-aggregate-source').data.features.length, 1)
+  assert.equal(sources.get('agot-character-point-source').data.features.length, 0)
+  syncDynamicMapSubjects(map, manifestV2, characters, assets, bounds, {
+    ...semanticContext, zoomState: semanticZoomState(4.2),
+  })
+  assert.equal(sources.get('agot-character-aggregate-source').data.features.length, 1)
+  assert.equal(sources.get('agot-character-point-source').data.features.length, 1)
 })
