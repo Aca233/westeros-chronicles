@@ -34,6 +34,7 @@ export interface PoliticalFeatureState {
   holderName?: string
   dynastyId?: string
   houseId?: string
+  houseLabel?: string
   color: string
   sigil?: string
 }
@@ -118,14 +119,16 @@ function deterministicPoliticalColor(identity: string): string {
   return hslToHex(hue, saturation, lightness)
 }
 
-function holderStyle(holder: PoliticalCharacter | undefined, holderId: CharacterId | undefined): Pick<PoliticalFeatureState, 'holderName' | 'dynastyId' | 'houseId' | 'color' | 'sigil'> {
+function holderStyle(holder: PoliticalCharacter | undefined, holderId: CharacterId | undefined): Pick<PoliticalFeatureState, 'holderName' | 'dynastyId' | 'houseId' | 'houseLabel' | 'color' | 'sigil'> {
   if (!holderId) return { color: '#555952' }
   const houseId = normalizeHouseId(holder)
   const localHouse = houseId ? HOUSE_BY_ID.get(houseId) : undefined
+  const houseLabel = localHouse && /[\u3400-\u9fff]/u.test(localHouse.name) ? localHouse.name : undefined
   return {
     ...(holder?.name ? { holderName: holder.name } : {}),
     ...(holder?.dynastyId ? { dynastyId: holder.dynastyId } : {}),
     ...(houseId ? { houseId } : {}),
+    ...(houseLabel ? { houseLabel } : {}),
     color: holder?.houseColor
       ?? (houseId ? MAJOR_HOUSE_COLORS[houseId] : undefined)
       ?? deterministicPoliticalColor(houseId ?? holderId),
@@ -256,6 +259,7 @@ function stateFingerprint(state: PoliticalFeatureState | undefined): string {
     state.holderId ?? '',
     state.dynastyId ?? '',
     state.houseId ?? '',
+    state.houseLabel ?? '',
     state.color,
     state.sigil ?? '',
   ].join('|')

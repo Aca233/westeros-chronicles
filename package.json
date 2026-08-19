@@ -79,6 +79,7 @@
     "test:map-schema": "node --experimental-strip-types scripts/test-map-schema.mjs",
     "test:map-semantic-zoom": "node --experimental-strip-types scripts/test-map-semantic-zoom.mjs",
     "test:map-semantic-layers": "node --experimental-strip-types scripts/test-map-semantic-layers.mjs",
+    "test:map-semantic-projection": "node --experimental-strip-types scripts/test-map-semantic-projection.mjs",
     "test:agot-map-import": "python3 -m unittest scripts.test_agot_map_import -v",
     "import:agot-map": "python3 -m scripts.agot_map_import.cli --source /mnt/c/agot/2962333032 --data-output public/data/agot-map --asset-output public/assets/agot-map",
     "check:map-data": "node scripts/audit-agot-map.mjs",
