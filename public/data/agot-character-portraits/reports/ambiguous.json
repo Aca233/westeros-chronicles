@@ -2,6 +2,9 @@
   "agot:ArrynGT_4": [
     "Humfrey Wagstaff"
   ],
+  "agot:Arryn_6": [
+    "Rowena Arryn"
+  ],
   "agot:Arryn_7": [
     "Jeyne Royce"
   ],
@@ -37,9 +40,6 @@
   ],
   "agot:Blacktyde_7": [
     "Beron Blacktyde"
-  ],
-  "agot:Blackwater_1": [
-    "Bronn"
   ],
   "agot:Boddy_60": [
     "Meribald"
@@ -119,6 +119,9 @@
   "agot:Castle_Black_7": [
     "Grenn"
   ],
+  "agot:Cerwyn_2": [
+    "Jonelle Cerwyn"
+  ],
   "agot:Chester_3": [
     "Jon Lychester"
   ],
@@ -136,9 +139,6 @@
   ],
   "agot:Citadel_44": [
     "Lorcas"
-  ],
-  "agot:Clegane_hh_5": [
-    "Jon Connington"
   ],
   "agot:Coldwater_1": [
     "Royce Coldwater"
@@ -207,8 +207,7 @@
     "Ygon Farwynd"
   ],
   "agot:FarwyndLL_4": [
-    "Yohn Farwynd",
-    "Yohn Royce"
+    "Yohn Farwynd"
   ],
   "agot:Festering_70": [
     "Luceon Frey"
@@ -249,6 +248,12 @@
   "agot:Frey_8": [
     "Walder of Woodmere"
   ],
+  "agot:Frey_83": [
+    "Della Frey"
+  ],
+  "agot:Frey_84": [
+    "Osmund Frey"
+  ],
   "agot:Garrish_rs_57": [
     "Lythene Frey"
   ],
@@ -278,6 +283,9 @@
   ],
   "agot:Grey_39": [
     "Squinty Jeyne"
+  ],
+  "agot:Greyjoy_18": [
+    "Loron Greyjoy (lord)"
   ],
   "agot:Greyjoy_19": [
     "Quenton Greyjoy (cousin)"
@@ -310,11 +318,20 @@
   "agot:Harlton_hh_1": [
     "Ethan Glover"
   ],
+  "agot:Heddle_4": [
+    "Jeyne Heddle"
+  ],
+  "agot:Heddle_5": [
+    "Willow Heddle"
+  ],
   "agot:Hide_92": [
     "Kyra"
   ],
   "agot:Hornwood_1": [
     "Daryn Hornwood"
+  ],
+  "agot:Hornwood_2": [
+    "Halys Hornwood"
   ],
   "agot:Hornwood_3": [
     "Daryn Hornwood"
@@ -338,18 +355,6 @@
     "Jon Bulwer",
     "Jon Fossoway"
   ],
-  "agot:Karstark_16": [
-    "Harrion Karstark"
-  ],
-  "agot:Karstark_17": [
-    "Eddard Karstark"
-  ],
-  "agot:Karstark_18": [
-    "Torrhen Karstark"
-  ],
-  "agot:Karstark_2": [
-    "Arnolf Karstark"
-  ],
   "agot:Knight_Kings_Landing_3": [
     "Gregor Clegane"
   ],
@@ -369,14 +374,26 @@
     "Gerold III Lannister",
     "Gerold Lannister (king)"
   ],
+  "agot:Lannister_25": [
+    "Cerenna Lannister"
+  ],
+  "agot:Lannister_26": [
+    "Myrielle Lannister"
+  ],
   "agot:Lannister_rs_1": [
     "Briony"
   ],
   "agot:Lanster_34": [
     "Briony"
   ],
+  "agot:Lefford_2": [
+    "Myranda Lefford"
+  ],
   "agot:Litchmore_rs_79": [
     "Bethany Rosby"
+  ],
+  "agot:Locke_1": [
+    "Ondrew Locke"
   ],
   "agot:Locke_5": [
     "Sybelle Glover"
@@ -394,23 +411,14 @@
   "agot:Lowborn_Braavos_8": [
     "Talea"
   ],
-  "agot:Lowborn_Kings_Landing_1": [
-    "Shae"
-  ],
   "agot:Lowborn_Kings_Landing_7": [
     "Chataya"
-  ],
-  "agot:Lowborn_Reach_3": [
-    "Satin"
-  ],
-  "agot:Lowborn_Wildling_1": [
-    "Ygritte"
   ],
   "agot:Lugus_5": [
     "Ben"
   ],
-  "agot:Madduc_79": [
-    "Shae"
+  "agot:Mallister_3": [
+    "Desmond Mallister"
   ],
   "agot:Marbrand_1": [
     "Damon Marbrand"
@@ -445,6 +453,12 @@
   "agot:Mooton_7": [
     "Myles Mooton"
   ],
+  "agot:Mormont_7": [
+    "Lyra Mormont"
+  ],
+  "agot:Mormont_8": [
+    "Jorelle Mormont"
+  ],
   "agot:Most_Devout_20": [
     "Humfrey Wagstaff"
   ],
@@ -478,9 +492,6 @@
   "agot:Prester_4": [
     "Kyra"
   ],
-  "agot:Pycelle_1": [
-    "Pycelle"
-  ],
   "agot:Redsteel_rs_1": [
     "Jeyne Marbrand"
   ],
@@ -493,11 +504,11 @@
   "agot:Rowan_5": [
     "Rhonda Rowan"
   ],
+  "agot:Royce_81": [
+    "Jeyne Royce"
+  ],
   "agot:Sarwyck_rs_1": [
     "Dorna Swyft"
-  ],
-  "agot:Seaworth_1": [
-    "Davos Seaworth"
   ],
   "agot:ShettGT_3": [
     "Uther Shett"
@@ -516,13 +527,6 @@
   ],
   "agot:Staedmon_74": [
     "Alesander Staedmon"
-  ],
-  "agot:Stark_10": [
-    "Brandon Stark (father of Walton)",
-    "Brandon Stark (the Boisterous)",
-    "Brandon Stark (the Daughterless)",
-    "Brandon IX Stark",
-    "Brandon Stark (Bad)"
   ],
   "agot:Stark_hh_10": [
     "Calon"
@@ -557,27 +561,25 @@
   "agot:Sunglass_1": [
     "Triston of Tally Hill"
   ],
-  "agot:Swann_38": [
-    "Balon Swann"
-  ],
   "agot:Swann_5": [
     "Ravella Smallwood"
   ],
-  "agot:Swann_6": [
-    "Balon Swann"
-  ],
-  "agot:Targaryen_1": [
-    "Aerys I Targaryen",
-    "Aerys II Targaryen",
-    "Aerys II Targaryen's last mistress"
+  "agot:Tallhart_1": [
+    "Helman Tallhart"
   ],
   "agot:Targaryen_12": [
     "Aegon Targaryen (Young Griff)",
     "Aegon Targaryen (son of Rhaegar)",
     "Aegon Targaryen (son of Aerys II)"
   ],
-  "agot:Thenn_1": [
-    "Styr"
+  "agot:Tarth_3": [
+    "Galladon Tarth"
+  ],
+  "agot:Tarth_4": [
+    "Arianne Tarth"
+  ],
+  "agot:Tarth_5": [
+    "Alysanne Tarth"
   ],
   "agot:Toland_5": [
     "Teora Toland"
@@ -602,9 +604,6 @@
   ],
   "agot:Uller_8": [
     "Harmen Uller"
-  ],
-  "agot:Umber_hh_1": [
-    "Hother Umber"
   ],
   "agot:Vance_Atranta_2": [
     "Ronald Vance",
@@ -639,17 +638,8 @@
   "agot:Waynwood_13": [
     "Carolei Waynwood"
   ],
-  "agot:Waynwood_15": [
-    "Anya Waynwood"
-  ],
   "agot:Waynwood_18": [
     "Carolei Waynwood"
-  ],
-  "agot:Waynwood_23": [
-    "Anya Waynwood"
-  ],
-  "agot:Waynwood_5": [
-    "Anya Waynwood"
   ],
   "agot:Wensington_56": [
     "Rickard Stark"

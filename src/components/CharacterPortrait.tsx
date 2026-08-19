@@ -60,7 +60,7 @@ export const CharacterPortrait: React.FC<CharacterPortraitProps> = ({
           src={portrait.assetPath}
           alt={alt}
           loading={priority ? 'eager' : 'lazy'}
-          fetchPriority={priority ? 'high' : 'auto'}
+          {...({ fetchpriority: priority ? 'high' : 'auto' } as React.ImgHTMLAttributes<HTMLImageElement>)}
           onError={() => setFailed(true)}
           className="absolute inset-0 h-full w-full object-cover"
           style={{ objectPosition: portrait.focalPoint ?? '50% 20%' }}

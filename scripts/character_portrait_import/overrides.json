@@ -1,6 +1,589 @@
 {
+  "agot:Baratheon_10": {
+    "evidence": {
+      "birth": "c. 279-280 AC",
+      "dynasty": "Bastard of Robert Baratheon in the Vale",
+      "name": "Mya Stone",
+      "parents": "Father: Robert I Baratheon"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:Heliotropa_Mya_Stone.jpg",
+    "pageTitle": "Mya Stone"
+  },
+  "agot:Baratheon_9": {
+    "evidence": {
+      "birth": "284 AC",
+      "dynasty": "Bastard of King Robert I Baratheon",
+      "name": "Gendry",
+      "parents": "Father: Robert I Baratheon"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:Gendry Amoka.png",
+    "pageTitle": "Gendry"
+  },
+  "agot:Blackwater_1": {
+    "evidence": {
+      "dynasty": "Sellsword / House Blackwater",
+      "name": "Bronn",
+      "relations": "Sworn sword to Tyrion Lannister"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:Bronn by Amok.jpg",
+    "pageTitle": "Bronn"
+  },
+  "agot:Brotherhood_8": {
+    "evidence": {
+      "dynasty": "Red Priest of Myr / Brotherhood Without Banners",
+      "name": "Thoros of Myr",
+      "relations": "Priest of R'hllor, courtier to Robert I, co-founder of Brotherhood Without Banners"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:Thoros of Myr TheMico.jpg",
+    "pageTitle": "Thoros"
+  },
+  "agot:Connington_4": {
+    "evidence": {
+      "birth": "c. 260 AC",
+      "dynasty": "House Connington of Griffin's Roost",
+      "name": "Jon Connington (Griff)",
+      "relations": "Former Hand of the King to Aerys II, Golden Company leader, guardian of Aegon Targaryen"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:Jon connington.png",
+    "pageTitle": "Jon Connington"
+  },
+  "agot:Eunuch_1": {
+    "evidence": {
+      "birth": "c. 248-262 AC",
+      "dynasty": "Small Council Master of Whisperers",
+      "name": "Varys (the Spider)",
+      "relations": "Master of Whisperers for Aerys II and Robert I"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:Varys_by_Amoka.jpg",
+    "pageTitle": "Varys"
+  },
+  "agot:Forel_51_A": {
+    "evidence": {
+      "dynasty": "House Forel of Braavos",
+      "name": "Syrio Forel",
+      "relations": "Former First Sword of Braavos, water dancing master to Arya Stark in King's Landing"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:Syrio Forel.jpg",
+    "pageTitle": "Syrio Forel"
+  },
+  "agot:Greenfield_3": {
+    "evidence": {
+      "dynasty": "House Greenfield of the Westerlands",
+      "name": "Preston Greenfield",
+      "relations": "Knight of the Kingsguard under Robert I and Joffrey I"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:Preston Greenfield by Jason Engle.png",
+    "pageTitle": "Preston Greenfield"
+  },
+  "agot:Hotah_1_B": {
+    "evidence": {
+      "dynasty": "Norvos / Sunspear guard",
+      "name": "Areo Hotah",
+      "relations": "Captain of the Guards to Prince Doran Martell of Sunspear"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:Areo Hotah by henning.jpg",
+    "pageTitle": "Areo Hotah"
+  },
+  "agot:Karstark_16": {
+    "evidence": {
+      "birth": "c. 280 AC",
+      "dynasty": "House Karstark of Karhold",
+      "name": "Harrion Karstark",
+      "parents": "Father: Lord Rickard Karstark of Karhold"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:Harrion Karstark TheMico.jpg",
+    "pageTitle": "Harrion Karstark"
+  },
+  "agot:Karstark_17": {
+    "evidence": {
+      "dynasty": "House Karstark of Karhold",
+      "name": "Eddard Karstark",
+      "parents": "Father: Lord Rickard Karstark of Karhold"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:Eddard Karstark TheMico.jpg",
+    "pageTitle": "Eddard Karstark"
+  },
+  "agot:Karstark_18": {
+    "evidence": {
+      "dynasty": "House Karstark of Karhold",
+      "name": "Torrhen Karstark",
+      "parents": "Father: Lord Rickard Karstark of Karhold"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:Torrhen Karstark TheMico.jpg",
+    "pageTitle": "Torrhen Karstark"
+  },
+  "agot:Karstark_2": {
+    "evidence": {
+      "birth": "c. 235-245 AC",
+      "dynasty": "House Karstark of Karhold",
+      "name": "Arnolf Karstark",
+      "relations": "Castellan of Karhold, uncle to Lord Rickard Karstark"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:Arnolf_Karstark.jpg",
+    "pageTitle": "Arnolf Karstark"
+  },
+  "agot:Kettleblack_2": {
+    "evidence": {
+      "birth": "c. 270 AC",
+      "dynasty": "House Kettleblack",
+      "name": "Osmund Kettleblack",
+      "relations": "Knight of the Kingsguard under Joffrey I and Tommen I, brother of Osfryd and Osney"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:Osmund Kettleblack.jpg",
+    "pageTitle": "Osmund Kettleblack"
+  },
+  "agot:Kettleblack_3": {
+    "evidence": {
+      "birth": "c. 272 AC",
+      "dynasty": "House Kettleblack",
+      "name": "Osfryd Kettleblack",
+      "relations": "Commander of the City Watch of King's Landing, brother of Osmund and Osney"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:Osfryd_Kettleblack.jpg",
+    "pageTitle": "Osfryd Kettleblack"
+  },
+  "agot:Lowborn_Kings_Landing_1": {
+    "evidence": {
+      "birth": "c. 281 AC",
+      "dynasty": "Camp follower in the Riverlands / King's Landing",
+      "name": "Shae",
+      "relations": "Lover of Tyrion Lannister"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:Shae by Amoka.jpg",
+    "pageTitle": "Shae"
+  },
+  "agot:Lowborn_Reach_3": {
+    "evidence": {
+      "birth": "c. 280-282 AC",
+      "dynasty": "Night's Watch recruit from Oldtown",
+      "name": "Satin",
+      "relations": "Steward to Lord Commander Jon Snow"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:A Maricia Geroge-Bogdan Satin.JPG",
+    "pageTitle": "Satin"
+  },
+  "agot:Lowborn_Wildling_1": {
+    "evidence": {
+      "birth": "279 AC",
+      "dynasty": "Free Folk spearwife beyond the Wall",
+      "name": "Ygritte",
+      "relations": "Companion and lover of Jon Snow"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:Ygritte by steamey.jpg",
+    "pageTitle": "Ygritte"
+  },
+  "agot:Maester_Kings_Landing_2": {
+    "evidence": {
+      "dynasty": "Disgraced Maester / Brave Companions / Small Council",
+      "name": "Qyburn",
+      "relations": "Former maester, necromancer, served Roose Bolton and Cersei Lannister"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:Qyburn by Mauro Dal Bo.png",
+    "pageTitle": "Qyburn"
+  },
+  "agot:Martell_10": {
+    "evidence": {
+      "birth": "281 AC",
+      "dynasty": "House Nymeros Martell of Sunspear",
+      "name": "Quentyn Martell",
+      "parents": "Father: Prince Doran Martell, Mother: Lady Mellario of Norvos"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:Quentyn martell by kim sokol.jpg",
+    "pageTitle": "Quentyn Martell"
+  },
+  "agot:Martell_11": {
+    "evidence": {
+      "birth": "287 AC",
+      "dynasty": "House Nymeros Martell of Sunspear",
+      "name": "Trystane Martell",
+      "parents": "Father: Prince Doran Martell, Mother: Lady Mellario of Norvos"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:Tiziano Baracchi Trystane Martell.jpg",
+    "pageTitle": "Trystane Martell"
+  },
+  "agot:Martell_12": {
+    "evidence": {
+      "birth": "272 AC",
+      "dynasty": "Sand Snakes of Dorne",
+      "name": "Obara Sand",
+      "parents": "Father: Prince Oberyn Martell"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:Obara-Sand-eldritch-historian.png",
+    "pageTitle": "Obara Sand"
+  },
+  "agot:Martell_13": {
+    "evidence": {
+      "birth": "275 AC",
+      "dynasty": "Sand Snakes of Dorne",
+      "name": "Nymeria Sand (Lady Nym)",
+      "parents": "Father: Prince Oberyn Martell"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:Nymeria-Sand-eldritch-historian.png",
+    "pageTitle": "Nymeria Sand"
+  },
+  "agot:Martell_14": {
+    "evidence": {
+      "birth": "276-277 AC",
+      "dynasty": "Sand Snakes of Dorne",
+      "name": "Tyene Sand",
+      "parents": "Father: Prince Oberyn Martell"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:Bella Bergolts Tyene Sand.jpg",
+    "pageTitle": "Tyene Sand"
+  },
+  "agot:Martell_15": {
+    "evidence": {
+      "birth": "278-279 AC",
+      "dynasty": "Sand Snakes of Dorne",
+      "name": "Sarella Sand",
+      "parents": "Father: Prince Oberyn Martell"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:Sarella Sand by Rae Lavergne.jpg",
+    "pageTitle": "Sarella Sand"
+  },
+  "agot:Martell_16": {
+    "evidence": {
+      "birth": "284 AC",
+      "dynasty": "Sand Snakes of Dorne",
+      "name": "Elia Sand (Lady Lance)",
+      "parents": "Father: Prince Oberyn Martell, Mother: Ellaria Sand"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:Elia SandCV II.jpg",
+    "pageTitle": "Elia Sand"
+  },
+  "agot:Martell_17": {
+    "evidence": {
+      "birth": "290 AC",
+      "dynasty": "Sand Snakes of Dorne",
+      "name": "Dorea Sand",
+      "parents": "Father: Prince Oberyn Martell, Mother: Ellaria Sand"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:DoreaSand by Beelphazoar.png",
+    "pageTitle": "Dorea Sand"
+  },
+  "agot:Martell_18": {
+    "evidence": {
+      "birth": "286 AC",
+      "dynasty": "Sand Snakes of Dorne",
+      "name": "Obella Sand",
+      "parents": "Father: Prince Oberyn Martell, Mother: Ellaria Sand"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:Tiziano Baracchi Obella Sand.jpg",
+    "pageTitle": "Obella Sand"
+  },
+  "agot:Martell_19": {
+    "evidence": {
+      "birth": "291 AC",
+      "dynasty": "Sand Snakes of Dorne",
+      "name": "Loreza Sand",
+      "parents": "Father: Prince Oberyn Martell, Mother: Ellaria Sand"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:LorezaSand by Beelphazoar.png",
+    "pageTitle": "Loreza Sand"
+  },
+  "agot:Martell_4": {
+    "evidence": {
+      "birth": "248 AC",
+      "dynasty": "House Nymeros Martell of Sunspear",
+      "name": "Doran Martell",
+      "relations": "Prince of Dorne, Lord of Sunspear, brother of Oberyn and Elia"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:Doran martell by bellabergolts.jpg",
+    "pageTitle": "Doran Martell"
+  },
+  "agot:Martell_6": {
+    "evidence": {
+      "birth": "256-257 AC",
+      "dynasty": "House Nymeros Martell of Sunspear",
+      "name": "Elia Martell",
+      "relations": "Princess of Dorne, sister of Doran and Oberyn, wife of Prince Rhaegar Targaryen"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:Elia Martell by Hylora.png",
+    "pageTitle": "Elia Martell"
+  },
+  "agot:Martell_8": {
+    "evidence": {
+      "birth": "258 AC",
+      "dynasty": "House Nymeros Martell of Sunspear",
+      "name": "Oberyn Martell (the Red Viper)",
+      "relations": "Prince of Dorne, younger brother of Prince Doran Martell"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:MagaliVilleneuve Prince Oberyn Nymeros Martell.jpg",
+    "pageTitle": "Oberyn Martell"
+  },
+  "agot:Martell_9": {
+    "evidence": {
+      "birth": "276 AC",
+      "dynasty": "House Nymeros Martell of Sunspear",
+      "name": "Arianne Martell",
+      "parents": "Father: Prince Doran Martell, Mother: Lady Mellario of Norvos"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:Ariannemartell1200 tizianobaracchi by thaldir-d8zs5u8.jpg",
+    "pageTitle": "Arianne Martell"
+  },
+  "agot:Melisandre_1": {
+    "evidence": {
+      "dynasty": "Red Priestess of R'hllor",
+      "name": "Melisandre of Asshai",
+      "relations": "Counselor and shadowbinder to Stannis Baratheon on Dragonstone"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:John Picacio Melisandre of Asshai.jpg",
+    "pageTitle": "Melisandre"
+  },
+  "agot:Moore_2": {
+    "evidence": {
+      "dynasty": "House Moore of the Vale",
+      "name": "Mandon Moore",
+      "relations": "Knight of the Kingsguard under Robert I and Joffrey I"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:Alexandre Dainche Ser Mandon Moore.jpg",
+    "pageTitle": "Mandon Moore"
+  },
+  "agot:Mormont_2": {
+    "evidence": {
+      "birth": "230 AC",
+      "dynasty": "House Mormont of Bear Island / Night's Watch",
+      "name": "Jeor Mormont (the Old Bear)",
+      "relations": "Former Lord of Bear Island, 997th Lord Commander of the Night's Watch, father of Jorah"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:Jeor Mormont.jpg",
+    "pageTitle": "Jeor Mormont"
+  },
+  "agot:Mormont_4": {
+    "evidence": {
+      "birth": "c. 240-255 AC",
+      "dynasty": "House Mormont of Bear Island",
+      "name": "Maege Mormont",
+      "relations": "Lady of Bear Island, sister of Jeor Mormont, mother of Dacey"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:Emile Denis maege mormont.jpg",
+    "pageTitle": "Maege Mormont"
+  },
+  "agot:Mormont_5": {
+    "evidence": {
+      "birth": "c. 270-275 AC",
+      "dynasty": "House Mormont of Bear Island",
+      "name": "Dacey Mormont",
+      "parents": "Father: Unknown, Mother: Lady Maege Mormont of Bear Island"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:Dacey by quickreaver.jpg",
+    "pageTitle": "Dacey Mormont"
+  },
+  "agot:Oakheart_4": {
+    "evidence": {
+      "dynasty": "House Oakheart of Old Oak",
+      "name": "Arys Oakheart",
+      "relations": "Knight of the Kingsguard, sworn shield to Princess Myrcella Baratheon in Dorne"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:Ser arys oakheart by bendavisart-FFG.jpg",
+    "pageTitle": "Arys Oakheart"
+  },
+  "agot:Pycelle_1": {
+    "evidence": {
+      "birth": "216 AC",
+      "dynasty": "Citadel / Small Council",
+      "name": "Pycelle (Grand Maester)",
+      "relations": "Grand Maester of the realm under Robert I"
+    },
+    "focalPoint": "50% 18%",
+    "imageTitle": "File:Grand Maester Pycelle.jpg",
+    "pageTitle": "Pycelle"
+  },
+  "agot:Rayder_1": {
+    "evidence": {
+      "dynasty": "King-Beyond-the-Wall",
+      "name": "Mance Rayder",
+      "relations": "Former brother of the Night's Watch turned King-Beyond-the-Wall"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:Diego_Gisbert_Llorens_Mance_Rayder.jpg",
+    "pageTitle": "Mance Rayder"
+  },
+  "agot:Redwyne_2": {
+    "evidence": {
+      "birth": "228 AC",
+      "dynasty": "House Redwyne of the Arbor / House Tyrell of Highgarden",
+      "name": "Olenna Redwyne (Queen of Thorns)",
+      "relations": "Widow of Lord Luthor Tyrell, mother of Lord Mace Tyrell"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:Jeff Lee Johnson Queen of Thornes.png",
+    "pageTitle": "Olenna Tyrell"
+  },
+  "agot:Royce_1": {
+    "evidence": {
+      "birth": "c. 240-250 AC",
+      "dynasty": "House Royce of Runestone",
+      "name": "Yohn Royce (Bronze Yohn)",
+      "relations": "Lord of Runestone, father of Andar, Robar, and Waymar Royce"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:Yohn-royce.png",
+    "pageTitle": "Yohn Royce"
+  },
+  "agot:Seaworth_1": {
+    "evidence": {
+      "dynasty": "House Seaworth of Cape Wrath",
+      "name": "Davos Seaworth (the Onion Knight)",
+      "relations": "Sworn knight, smuggler-turned-advisor to Lord Stannis Baratheon"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:Davos Seaworth.jpg",
+    "pageTitle": "Davos Seaworth"
+  },
+  "agot:Stark_10": {
+    "evidence": {
+      "birth": "290 AC",
+      "dynasty": "House Stark of Winterfell",
+      "name": "Bran Stark (Brandon Stark)",
+      "parents": "Father: Eddard Stark, Mother: Catelyn Tully"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:Bran stark dreams by teiiku.jpg",
+    "pageTitle": "Bran Stark"
+  },
   "agot:Stark_7": {
-    "pageTitle": "Jon Snow",
-    "focalPoint": "50% 18%"
+    "evidence": {
+      "birth": "283 AC",
+      "dynasty": "House Stark affiliation (bastard of Winterfell)",
+      "name": "Jon Snow",
+      "parents": "Father: Eddard Stark"
+    },
+    "focalPoint": "50% 18%",
+    "pageTitle": "Jon Snow"
+  },
+  "agot:Swann_6": {
+    "evidence": {
+      "birth": "c. 270-275 AC",
+      "dynasty": "House Swann of Stonehelm",
+      "name": "Balon Swann",
+      "parents": "Father: Lord Gulian Swann of Stonehelm"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:Balon Swann by Denis Maznev.jpg",
+    "pageTitle": "Balon Swann"
+  },
+  "agot:Targaryen_1": {
+    "evidence": {
+      "birth": "244 AC",
+      "dynasty": "House Targaryen of King's Landing",
+      "name": "Aerys II Targaryen (the Mad King)",
+      "parents": "Father: King Jaehaerys II Targaryen"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:AERYS II.jpg",
+    "pageTitle": "Aerys II Targaryen"
+  },
+  "agot:Tarth_6": {
+    "evidence": {
+      "birth": "280 AC",
+      "dynasty": "House Tarth of Evenfall Hall",
+      "name": "Brienne Tarth (Brienne of Tarth)",
+      "parents": "Father: Lord Selwyn Tarth of Evenfall Hall"
+    },
+    "focalPoint": "50% 18%",
+    "imageTitle": "File:Chris Dien Brienne.jpg",
+    "pageTitle": "Brienne Tarth"
+  },
+  "agot:Thenn_1": {
+    "evidence": {
+      "dynasty": "Magnar of Thenn",
+      "name": "Styr",
+      "relations": "Ruler and war leader of the Thenns beyond the Wall"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:Styr by Mike S Miller.jpg",
+    "pageTitle": "Styr"
+  },
+  "agot:Trant_2": {
+    "evidence": {
+      "dynasty": "House Trant of Gallowsgrey",
+      "name": "Meryn Trant",
+      "relations": "Knight of the Kingsguard under Robert I, Joffrey I, and Tommen I"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:Meryn Trant by Jason Engle.png",
+    "pageTitle": "Meryn Trant"
+  },
+  "agot:Uller_6": {
+    "evidence": {
+      "dynasty": "Bastard of House Uller of the Hellholt",
+      "name": "Ellaria Sand",
+      "parents": "Father: Lord Harmen Uller of the Hellholt",
+      "relations": "Paramour of Prince Oberyn Martell, mother of four Sand Snakes"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:Ellaria Sand.jpg",
+    "pageTitle": "Ellaria Sand"
+  },
+  "agot:Umber_8": {
+    "evidence": {
+      "birth": "c. 250-260 AC",
+      "dynasty": "House Umber of Last Hearth",
+      "name": "Jon Umber (the Greatjon)",
+      "relations": "Lord of Last Hearth, bannerman to Robb Stark"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:Greatjon Umber by amoka.jpg",
+    "pageTitle": "Jon Umber"
+  },
+  "agot:Umber_hh_1": {
+    "evidence": {
+      "dynasty": "House Umber of Last Hearth",
+      "name": "Hother Umber (Whoresbane)",
+      "relations": "Uncle to Lord Jon 'Greatjon' Umber of Last Hearth"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:HotherUmber.jpg",
+    "pageTitle": "Hother Umber"
+  },
+  "agot:Waynwood_5": {
+    "evidence": {
+      "dynasty": "House Waynwood of Ironoaks",
+      "name": "Anya Waynwood",
+      "relations": "Lady of Ironoaks, mother of Morton and Donnel Waynwood"
+    },
+    "focalPoint": "50% 20%",
+    "imageTitle": "File:Anya Waynwood by mirabritart.png",
+    "pageTitle": "Anya Waynwood"
   }
 }

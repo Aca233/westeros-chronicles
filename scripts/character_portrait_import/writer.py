@@ -20,6 +20,7 @@ ALLOWED_MIME = frozenset({"image/png", "image/jpeg", "image/webp"})
 FORBIDDEN_IMAGE_TERMS = (
     "coat of arms", "house sigil", "map of", "weapon illustration", "sword illustration",
     "hbo", "played by", "portrayed by", "television series", "tv series", "season screenshot",
+    "actor", "actress", "promo still", "promotional still",
 )
 
 
@@ -80,6 +81,18 @@ def _convert_to_webp(data: bytes) -> bytes:
         raise ValueError("invalid image bytes") from error
 
 
+def _safe_rmtree(path: Path) -> None:
+    for attempt in range(5):
+        try:
+            if path.exists():
+                shutil.rmtree(path)
+            return
+        except OSError:
+            if attempt == 4:
+                raise
+            time.sleep(0.5 * (attempt + 1))
+
+
 def write_portrait_dataset(
     matches: PortraitMatchResult,
     output_data_root: Path,
@@ -98,6 +111,11 @@ def write_portrait_dataset(
     no_image: list[str] = []
     failed: dict[str, str] = {}
 
+    seen_page_titles: dict[str, str] = {}
+    seen_attribution_ids: dict[str, str] = {}
+    seen_original_urls: dict[str, str] = {}
+    seen_content_hashes: dict[str, str] = {}
+
     try:
         for character_id, match in sorted(matches.accepted.items()):
             page = match.page
@@ -111,15 +129,35 @@ def write_portrait_dataset(
             if rejection:
                 rejected[character_id] = rejection
                 continue
+
+            norm_page = page.title.strip().lower()
+            if norm_page in seen_page_titles:
+                raise ValueError(f"同一个 Wiki 页面被绑定给多个人物：{page.title} (已绑定 {seen_page_titles[norm_page]}，新请求 {character_id})")
+            seen_page_titles[norm_page] = character_id
+
+            if image.url in seen_original_urls:
+                raise ValueError(f"重复原图 URL：{image.url} (已绑定 {seen_original_urls[image.url]}，新请求 {character_id})")
+            seen_original_urls[image.url] = character_id
+
             try:
                 webp = _convert_to_webp(fetch_bytes(image.url))
             except Exception as error:
                 failed[character_id] = str(error)
                 continue
-            digest = hashlib.sha256(webp).hexdigest()[:12]
+
+            content_hash = hashlib.sha256(webp).hexdigest()
+            if content_hash in seen_content_hashes:
+                raise ValueError(f"重复图片内容哈希：{content_hash} (已存在于 {seen_content_hashes[content_hash]}，新人物 {character_id})")
+            seen_content_hashes[content_hash] = character_id
+
+            digest = content_hash[:12]
             filename = f"{_slug(character_id)}-{digest}.webp"
             (temporary_assets / filename).write_bytes(webp)
             attribution_id = _attribution_id(page.title)
+            if attribution_id in seen_attribution_ids:
+                raise ValueError(f"同一个 Wiki 页面被绑定给多个人物：{attribution_id} (已绑定 {seen_attribution_ids[attribution_id]}，新请求 {character_id})")
+            seen_attribution_ids[attribution_id] = character_id
+
             ref = {
                 "characterId": character_id,
                 "assetPath": f"/assets/character-portraits/{filename}",
@@ -171,7 +209,12 @@ def write_portrait_dataset(
         reports.mkdir()
         (reports / "import-report.json").write_bytes(_json_bytes(asdict(report), pretty=True))
         (reports / "accepted.json").write_bytes(_json_bytes({
-            character_id: {"pageTitle": match.page.title, "score": match.score, "source": match.source}
+            character_id: {
+                "pageTitle": match.page.title,
+                "score": match.score,
+                "source": match.source,
+                **({"evidence": match.evidence} if match.evidence else {}),
+            }
             for character_id, match in sorted(matches.accepted.items()) if character_id in refs
         }, pretty=True))
         (reports / "ambiguous.json").write_bytes(_json_bytes(matches.ambiguous, pretty=True))
@@ -180,10 +223,8 @@ def write_portrait_dataset(
         (reports / "no-image.json").write_bytes(_json_bytes(sorted(no_image), pretty=True))
         (reports / "failed.json").write_bytes(_json_bytes(failed, pretty=True))
 
-        if output_data_root.exists():
-            shutil.rmtree(output_data_root)
-        if output_asset_root.exists():
-            shutil.rmtree(output_asset_root)
+        _safe_rmtree(output_data_root)
+        _safe_rmtree(output_asset_root)
         shutil.move(str(temporary_data), str(output_data_root))
         shutil.move(str(temporary_assets), str(output_asset_root))
         return report

@@ -1593,6 +1593,57 @@ hr.hairline {
 /* 特质牌:悬停浮起 */
 .trait-chip { transition: color 0.2s ease, transform 0.25s var(--ease-spring); }
 .trait-chip:hover { transform: translateY(-2px); }
+/* 簇首(性格/其他组的第一枚):左侧发丝线作分组标记,随芯片流动不孤立 */
+.trait-chip--cluster-start {
+  border-left: 1px solid rgb(var(--hairline) / 0.75);
+  margin-left: 4px;
+  padding-left: 6px;
+}
+
+/* 族谱人物牌:双列紧凑,悬停墨痕扫过 */
+.relation-tile {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border: 1px solid rgb(var(--hairline) / 0.55);
+  background: rgb(var(--ink-2) / 0.35);
+  text-align: left;
+  transition: border-color 0.2s ease;
+}
+.relation-tile::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(90deg, rgb(var(--gold) / 0.10), transparent 72%);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s var(--ease-fluid);
+}
+.relation-tile:hover { border-color: rgb(var(--gold-deep) / 0.75); }
+.relation-tile:hover::before { transform: scaleX(1); }
+.relation-tile:hover .relation-name { color: rgb(var(--gold-bright)); }
+
+/* 空关系注记:合并为一行小字 */
+.relation-empty {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 10px;
+  font-family: "Noto Serif SC", serif;
+  font-size: 10.5px;
+  color: rgb(var(--parchment-faint));
+}
+.relation-empty-label {
+  letter-spacing: 0.12em;
+  color: rgb(var(--gold-deep));
+  font-size: 9.5px;
+}
 
 /* 铸币侧面肖像:古币圆章 + 胸像浮雕 + 雕版刻线 */
 .cameo { display: block; width: 152px; height: 152px; }

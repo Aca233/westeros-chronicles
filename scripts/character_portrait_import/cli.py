@@ -75,10 +75,21 @@ def run_import(
 ) -> PortraitImportReport:
     records = _load_record_shards(character_root)
     kinship = _load_mapping_shards(character_root, "kinship")
-    catalog = client.build_catalog()
+    extra_titles = [
+        (entry.get("pageTitle") if isinstance(entry, dict) else entry).strip()
+        for entry in overrides.values()
+        if (entry.get("pageTitle") if isinstance(entry, dict) else entry)
+    ]
+    extra_images = [
+        entry.get("imageTitle").strip()
+        for entry in overrides.values()
+        if isinstance(entry, dict) and entry.get("imageTitle")
+    ]
+    catalog = client.build_catalog(extra_titles=extra_titles, extra_images=extra_images)
     if limit is not None:
         catalog = catalog[:max(0, limit)]
-    matches = match_characters(records, kinship, catalog, overrides)
+    images_map = getattr(client, "images", {})
+    matches = match_characters(records, kinship, catalog, overrides, images=images_map)
     return write_portrait_dataset(matches, output_data_root, output_asset_root, fetch_bytes)
 
 

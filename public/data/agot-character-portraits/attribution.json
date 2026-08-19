@@ -10,6 +10,17 @@
     "pageTitle": "Addam Marbrand",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Addam_Marbrand"
   },
+  "awoiaf:Aegon_Frey_son_of_Stevron": {
+    "author": "",
+    "caption": "Aegon by Lopata Four",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Aegon_Frey_(son_of_Stevron)_by_Lopata_Four.jpg",
+    "id": "awoiaf:Aegon_Frey_son_of_Stevron",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/7/72/Aegon_Frey_%28son_of_Stevron%29_by_Lopata_Four.jpg",
+    "pageTitle": "Aegon Frey (son of Stevron)",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Aegon_Frey_(son_of_Stevron)"
+  },
   "awoiaf:Aegon_V_Targaryen": {
     "author": "",
     "caption": "Aegon V, by Amok \u00a9",
@@ -32,6 +43,17 @@
     "pageTitle": "Aemon Targaryen (son of Maekar I)",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Aemon_Targaryen_(son_of_Maekar_I)"
   },
+  "awoiaf:Aenys_Frey": {
+    "author": "",
+    "caption": "Aenys by Lopata Four \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Aenys_Frey_by_Lopata_4.jpg",
+    "id": "awoiaf:Aenys_Frey",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/5/58/Aenys_Frey_by_Lopata_4.jpg",
+    "pageTitle": "Aenys Frey",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Aenys_Frey"
+  },
   "awoiaf:Aerion_Targaryen": {
     "author": "",
     "caption": "Aerion Targaryen, by Mathia Arkoniel \u00a9",
@@ -43,6 +65,28 @@
     "pageTitle": "Aerion Targaryen",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Aerion_Targaryen"
   },
+  "awoiaf:Aerys_II_Targaryen": {
+    "author": "",
+    "caption": "Aerys II by [http://en.amokanet.ru/gallery/martin/ Amok] \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:AERYS_II.jpg",
+    "id": "awoiaf:Aerys_II_Targaryen",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/c/c0/AERYS_II.jpg",
+    "pageTitle": "Aerys II Targaryen",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Aerys_II_Targaryen"
+  },
+  "awoiaf:Aladale_Wynch": {
+    "author": "",
+    "caption": "Aladale by Lopata Four",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Aladale_Wynch_by_Lopata_Four.jpg",
+    "id": "awoiaf:Aladale_Wynch",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/3/39/Aladale_Wynch_by_Lopata_Four.jpg",
+    "pageTitle": "Aladale Wynch",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Aladale_Wynch"
+  },
   "awoiaf:Alarra_Massey": {
     "author": "",
     "caption": "Alarra Massey, by [https://riotarttherite.tumblr.com/ Riotarttherite] \u00a9",
@@ -53,6 +97,17 @@
     "originalUrl": "https://awoiaf.westeros.org/images/b/ba/Alarra_Massey_by_Riotarttherite.png",
     "pageTitle": "Alarra Massey",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Alarra_Massey"
+  },
+  "awoiaf:Alayaya": {
+    "author": "",
+    "caption": "Chataya and Alayaya by [http://en.amokanet.ru/gallery/martin/martin.html Amok] \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Chataya_and_Alayaya.jpg",
+    "id": "awoiaf:Alayaya",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/f/fb/Chataya_and_Alayaya.jpg",
+    "pageTitle": "Alayaya",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Alayaya"
   },
   "awoiaf:Alerie_Hightower": {
     "author": "",
@@ -164,16 +219,49 @@
     "pageTitle": "Alysane Mormont",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Alysane_Mormont"
   },
-  "awoiaf:Alysanne_Tarth": {
+  "awoiaf:Alysanne_Hightower": {
     "author": "",
-    "caption": "Alysanne and her siblings Galladon, Arianne, and Brienne by coldraindropsss",
-    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Galladon_Arianne_Alysanne_and_Brienne_by_coldraindropsss.png",
-    "id": "awoiaf:Alysanne_Tarth",
+    "caption": "Alysanne Hightower by Laura Avellino",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Alysanne_Hightower_by_Laura_Avellino.jpg",
+    "id": "awoiaf:Alysanne_Hightower",
     "licenseName": "",
     "licenseUrl": "",
-    "originalUrl": "https://awoiaf.westeros.org/images/3/38/Galladon_Arianne_Alysanne_and_Brienne_by_coldraindropsss.png",
-    "pageTitle": "Alysanne Tarth",
-    "pageUrl": "https://awoiaf.westeros.org/index.php/Alysanne_Tarth"
+    "originalUrl": "https://awoiaf.westeros.org/images/7/74/Alysanne_Hightower_by_Laura_Avellino.jpg",
+    "pageTitle": "Alysanne Hightower",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Alysanne_Hightower"
+  },
+  "awoiaf:Alyse_Ladybright": {
+    "author": "",
+    "caption": "Alyse by Amuelia",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Alyse_Ladybright_by_Amuelia.jpg",
+    "id": "awoiaf:Alyse_Ladybright",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/e/e8/Alyse_Ladybright_by_Amuelia.jpg",
+    "pageTitle": "Alyse Ladybright",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Alyse_Ladybright"
+  },
+  "awoiaf:Alyx_Frey": {
+    "author": "",
+    "caption": "Alyx by Lopata Four",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Alyx_Frey_by_Lopata_Four.jpg",
+    "id": "awoiaf:Alyx_Frey",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/b/ba/Alyx_Frey_by_Lopata_Four.jpg",
+    "pageTitle": "Alyx Frey",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Alyx_Frey"
+  },
+  "awoiaf:Amerei_Frey": {
+    "author": "",
+    "caption": "Amerei by Lopata Four",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Amerei_Frey_by_Lopata_4.jpg",
+    "id": "awoiaf:Amerei_Frey",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/f/f8/Amerei_Frey_by_Lopata_4.jpg",
+    "pageTitle": "Amerei Frey",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Amerei_Frey"
   },
   "awoiaf:Amory_Lorch": {
     "author": "",
@@ -219,6 +307,17 @@
     "pageTitle": "Andrey Dalt",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Andrey_Dalt"
   },
+  "awoiaf:Anya_Waynwood": {
+    "author": "",
+    "caption": "Anya Waynwood by mirabritart \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Anya_Waynwood_by_mirabritart.png",
+    "id": "awoiaf:Anya_Waynwood",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/7/7a/Anya_Waynwood_by_mirabritart.png",
+    "pageTitle": "Anya Waynwood",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Anya_Waynwood"
+  },
   "awoiaf:Archibald_Yronwood": {
     "author": "",
     "caption": "Archibald Yronwood, by Aleksander Karcz \u00a9 Fantasy Flight Games",
@@ -252,16 +351,60 @@
     "pageTitle": "Arianne Martell",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Arianne_Martell"
   },
-  "awoiaf:Arianne_Tarth": {
+  "awoiaf:Arnolf_Karstark": {
     "author": "",
-    "caption": "Arianne and her siblings Galladon, Alysanne, and Brienne by coldraindropsss",
-    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Galladon_Arianne_Alysanne_and_Brienne_by_coldraindropsss.png",
-    "id": "awoiaf:Arianne_Tarth",
+    "caption": "Arnolf Karstark by [https://www.deviantart.com/dragonman14x Robert O'Leary]",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Arnolf_Karstark.jpg",
+    "id": "awoiaf:Arnolf_Karstark",
     "licenseName": "",
     "licenseUrl": "",
-    "originalUrl": "https://awoiaf.westeros.org/images/3/38/Galladon_Arianne_Alysanne_and_Brienne_by_coldraindropsss.png",
-    "pageTitle": "Arianne Tarth",
-    "pageUrl": "https://awoiaf.westeros.org/index.php/Arianne_Tarth"
+    "originalUrl": "https://awoiaf.westeros.org/images/0/08/Arnolf_Karstark.jpg",
+    "pageTitle": "Arnolf Karstark",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Arnolf_Karstark"
+  },
+  "awoiaf:Aron_Santagar": {
+    "author": "",
+    "caption": "",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Ser_Aron_Santagar_TheMico.jpg",
+    "id": "awoiaf:Aron_Santagar",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/7/7a/Ser_Aron_Santagar_TheMico.jpg",
+    "pageTitle": "Aron Santagar",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Aron_Santagar"
+  },
+  "awoiaf:Arron_Qorgyle": {
+    "author": "",
+    "caption": "Arron by Lopata Four",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Arron_Qorgyle_by_Lopata_Four.jpg",
+    "id": "awoiaf:Arron_Qorgyle",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/7/76/Arron_Qorgyle_by_Lopata_Four.jpg",
+    "pageTitle": "Arron Qorgyle",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Arron_Qorgyle"
+  },
+  "awoiaf:Arthur_Dayne": {
+    "author": "",
+    "caption": "Arthur Dayne with Dawn, by Bella Bergolts \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Arthur_dayne_by_bellabergolts.jpg",
+    "id": "awoiaf:Arthur_Dayne",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/f/fd/Arthur_dayne_by_bellabergolts.jpg",
+    "pageTitle": "Arthur Dayne",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Arthur_Dayne"
+  },
+  "awoiaf:Arwyn_Frey": {
+    "author": "",
+    "caption": "Arwyn by Lopata Four",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Arwyn_Frey_by_Lopata_4.jpg",
+    "id": "awoiaf:Arwyn_Frey",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/0/0b/Arwyn_Frey_by_Lopata_4.jpg",
+    "pageTitle": "Arwyn Frey",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Arwyn_Frey"
   },
   "awoiaf:Arya_Stark": {
     "author": "",
@@ -340,6 +483,17 @@
     "pageTitle": "Balman Byrch",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Balman_Byrch"
   },
+  "awoiaf:Balon_Swann": {
+    "author": "",
+    "caption": "Balon Swann, by Denis Maznev \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Balon_Swann_by_Denis_Maznev.jpg",
+    "id": "awoiaf:Balon_Swann",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/8/8f/Balon_Swann_by_Denis_Maznev.jpg",
+    "pageTitle": "Balon Swann",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Balon_Swann"
+  },
   "awoiaf:Barbrey_Dustin": {
     "author": "",
     "caption": "Barbrey Dustin, by eluas \u00a9",
@@ -384,6 +538,17 @@
     "pageTitle": "Bellena Hawick",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Bellena_Hawick"
   },
+  "awoiaf:Bellonara_Otherys": {
+    "author": "",
+    "caption": "Bellonara Otherys, generated with Stable Diffusion",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Bellonara_Otherys.png",
+    "id": "awoiaf:Bellonara_Otherys",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/8/81/Bellonara_Otherys.png",
+    "pageTitle": "Bellonara Otherys",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Bellonara_Otherys"
+  },
   "awoiaf:Benedar_Belmore": {
     "author": "",
     "caption": "Benedar Belmore by Amuelia",
@@ -405,6 +570,17 @@
     "originalUrl": "https://awoiaf.westeros.org/images/6/63/Benfred_Tallhart.jpg",
     "pageTitle": "Benfred Tallhart",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Benfred_Tallhart"
+  },
+  "awoiaf:Benfrey_Frey": {
+    "author": "",
+    "caption": "Benfrey by Lopata Four",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Benfrey_Frey_by_Lopata_4.jpg",
+    "id": "awoiaf:Benfrey_Frey",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/c/c2/Benfrey_Frey_by_Lopata_4.jpg",
+    "pageTitle": "Benfrey Frey",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Benfrey_Frey"
   },
   "awoiaf:Benjen_Stark": {
     "author": "",
@@ -472,6 +648,61 @@
     "pageTitle": "Beth Cassel",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Beth_Cassel"
   },
+  "awoiaf:Boremund_Harlaw": {
+    "author": "",
+    "caption": "Boremund by Lopata Four",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Boremund_Harlaw_by_Lopata_Four.jpg",
+    "id": "awoiaf:Boremund_Harlaw",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/0/0a/Boremund_Harlaw_by_Lopata_Four.jpg",
+    "pageTitle": "Boremund Harlaw",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Boremund_Harlaw"
+  },
+  "awoiaf:Boros_Blount": {
+    "author": "",
+    "caption": "Boros Blount, by Henning Ludvigsen \u00a9 Fantasy Flight Games",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Boros_Blount.jpg",
+    "id": "awoiaf:Boros_Blount",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/c/cd/Boros_Blount.jpg",
+    "pageTitle": "Boros Blount",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Boros_Blount"
+  },
+  "awoiaf:Bowen_Marsh": {
+    "author": "",
+    "caption": "Bowen Marsh, by Debustee \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Bowen_Marsh_by_Debustee.png",
+    "id": "awoiaf:Bowen_Marsh",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/7/7d/Bowen_Marsh_by_Debustee.png",
+    "pageTitle": "Bowen Marsh",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Bowen_Marsh"
+  },
+  "awoiaf:Bradamar_Frey": {
+    "author": "",
+    "caption": "Bradamar by Lopata Four",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Bradamar_Frey_by_Lopata_Four.jpg",
+    "id": "awoiaf:Bradamar_Frey",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/c/cf/Bradamar_Frey_by_Lopata_Four.jpg",
+    "pageTitle": "Bradamar Frey",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Bradamar_Frey"
+  },
+  "awoiaf:Bran_Stark": {
+    "author": "",
+    "caption": "Bran with Summer, by teiiku \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Bran_stark_dreams_by_teiiku.jpg",
+    "id": "awoiaf:Bran_Stark",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/7/79/Bran_stark_dreams_by_teiiku.jpg",
+    "pageTitle": "Bran Stark",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Bran_Stark"
+  },
   "awoiaf:Brandon_Norrey": {
     "author": "",
     "caption": "Brandon Norrey by SquisherKing",
@@ -508,13 +739,24 @@
   "awoiaf:Brienne_Tarth": {
     "author": "",
     "caption": "Brienne the Blue, of the Rainbow Guard, by quickreaver \u00a9",
-    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Brienne_by_quickreaver.jpg",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Chris_Dien_Brienne.jpg",
     "id": "awoiaf:Brienne_Tarth",
     "licenseName": "",
     "licenseUrl": "",
-    "originalUrl": "https://awoiaf.westeros.org/images/0/07/Brienne_by_quickreaver.jpg",
+    "originalUrl": "https://awoiaf.westeros.org/images/3/33/Chris_Dien_Brienne.jpg",
     "pageTitle": "Brienne Tarth",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Brienne_Tarth"
+  },
+  "awoiaf:Bronn": {
+    "author": "",
+    "caption": "Bronn, by [http://en.amokanet.ru/gallery/martin/ Amok\u00a9]",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Bronn_by_Amok.jpg",
+    "id": "awoiaf:Bronn",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/6/60/Bronn_by_Amok.jpg",
+    "pageTitle": "Bronn",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Bronn"
   },
   "awoiaf:Bryce_Caron": {
     "author": "",
@@ -560,16 +802,16 @@
     "pageTitle": "Catelyn Stark",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Catelyn_Stark"
   },
-  "awoiaf:Cerenna_Lannister": {
+  "awoiaf:Cersei_Frey": {
     "author": "",
-    "caption": "Myranda Lefford and her daughters, Cerenna and Myrielle Lannister by coldraindropsss",
-    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Myranda_Lefford_Cerenna_Lannister_and_Myrielle_Lannister_by_coldraindropsss.jpg",
-    "id": "awoiaf:Cerenna_Lannister",
+    "caption": "Cersei by Lopata Four",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Cersei_Frey_by_Lopata_Four.jpg",
+    "id": "awoiaf:Cersei_Frey",
     "licenseName": "",
     "licenseUrl": "",
-    "originalUrl": "https://awoiaf.westeros.org/images/7/7f/Myranda_Lefford_Cerenna_Lannister_and_Myrielle_Lannister_by_coldraindropsss.jpg",
-    "pageTitle": "Cerenna Lannister",
-    "pageUrl": "https://awoiaf.westeros.org/index.php/Cerenna_Lannister"
+    "originalUrl": "https://awoiaf.westeros.org/images/7/75/Cersei_Frey_by_Lopata_Four.jpg",
+    "pageTitle": "Cersei Frey",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Cersei_Frey"
   },
   "awoiaf:Cersei_Lannister": {
     "author": "",
@@ -582,6 +824,17 @@
     "pageTitle": "Cersei Lannister",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Cersei_Lannister"
   },
+  "awoiaf:Clayton_Suggs": {
+    "author": "",
+    "caption": "Ser Clayton Suggs - by Kevin McCoy \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:SerClaytonSuggs_by_KevinMcCoy.jpg",
+    "id": "awoiaf:Clayton_Suggs",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/a/ad/SerClaytonSuggs_by_KevinMcCoy.jpg",
+    "pageTitle": "Clayton Suggs",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Clayton_Suggs"
+  },
   "awoiaf:Clement_Piper": {
     "author": "",
     "caption": "Clement Piper by TheMarkyGallery \u00a9",
@@ -592,6 +845,17 @@
     "originalUrl": "https://awoiaf.westeros.org/images/b/be/Clement_Piper_by_marky.jpg",
     "pageTitle": "Clement Piper",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Clement_Piper"
+  },
+  "awoiaf:Cleos_Frey": {
+    "author": "",
+    "caption": "Cleos by Lopata Four \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Cleos_Frey_by_Lopata_Four.jpg",
+    "id": "awoiaf:Cleos_Frey",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/c/c2/Cleos_Frey_by_Lopata_Four.jpg",
+    "pageTitle": "Cleos Frey",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Cleos_Frey"
   },
   "awoiaf:Cley_Cerwyn": {
     "author": "",
@@ -615,6 +879,39 @@
     "pageTitle": "Corenna Swann",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Corenna_Swann"
   },
+  "awoiaf:Cregan_Karstark": {
+    "author": "",
+    "caption": "Cregan Karstark",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Cregan_Karstark.png",
+    "id": "awoiaf:Cregan_Karstark",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/7/7b/Cregan_Karstark.png",
+    "pageTitle": "Cregan Karstark",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Cregan_Karstark"
+  },
+  "awoiaf:Creighton_Longbough": {
+    "author": "",
+    "caption": "Creighton Longbough by SquisherKing",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Creighton_Longbough2.png",
+    "id": "awoiaf:Creighton_Longbough",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/4/42/Creighton_Longbough2.png",
+    "pageTitle": "Creighton Longbough",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Creighton_Longbough"
+  },
+  "awoiaf:Cynthea_Frey": {
+    "author": "",
+    "caption": "Cynthea by Lopata Four",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Cynthea_Frey_by_Lopata_Four.jpg",
+    "id": "awoiaf:Cynthea_Frey",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/0/02/Cynthea_Frey_by_Lopata_Four.jpg",
+    "pageTitle": "Cynthea Frey",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Cynthea_Frey"
+  },
   "awoiaf:Daario_Naharis": {
     "author": "",
     "caption": "Daario Naharis, by [https://www.deviantart.com/steamey Steamey] \u00a9",
@@ -625,6 +922,17 @@
     "originalUrl": "https://awoiaf.westeros.org/images/7/7a/Daario_naharis.jpg",
     "pageTitle": "Daario Naharis",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Daario_Naharis"
+  },
+  "awoiaf:Dacey_Mormont": {
+    "author": "",
+    "caption": "Dacey, by [https://www.deviantart.com/quickreaver quickreaver] \u00a9 FFG",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Dacey_by_quickreaver.jpg",
+    "id": "awoiaf:Dacey_Mormont",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/2/23/Dacey_by_quickreaver.jpg",
+    "pageTitle": "Dacey Mormont",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Dacey_Mormont"
   },
   "awoiaf:Daella_Targaryen_daughter_of_Maekar_I": {
     "author": "",
@@ -703,16 +1011,49 @@
     "pageTitle": "Damion Lannister",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Damion_Lannister"
   },
-  "awoiaf:Della_Frey": {
+  "awoiaf:Danwell_Frey": {
     "author": "",
-    "caption": "Della and her brother by luxmundi-i \u00a9",
-    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Osmund_and_Della_Frey_by_luxmundi-i.jpg",
-    "id": "awoiaf:Della_Frey",
+    "caption": "Danwell by Lopata 4",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Danwell_Frey_by_Lopata_4.jpg",
+    "id": "awoiaf:Danwell_Frey",
     "licenseName": "",
     "licenseUrl": "",
-    "originalUrl": "https://awoiaf.westeros.org/images/6/60/Osmund_and_Della_Frey_by_luxmundi-i.jpg",
-    "pageTitle": "Della Frey",
-    "pageUrl": "https://awoiaf.westeros.org/index.php/Della_Frey"
+    "originalUrl": "https://awoiaf.westeros.org/images/2/2a/Danwell_Frey_by_Lopata_4.jpg",
+    "pageTitle": "Danwell Frey",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Danwell_Frey"
+  },
+  "awoiaf:Davos_Seaworth": {
+    "author": "",
+    "caption": "Davos Seaworth by Amok\u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Davos_Seaworth.jpg",
+    "id": "awoiaf:Davos_Seaworth",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/f/f5/Davos_Seaworth.jpg",
+    "pageTitle": "Davos Seaworth",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Davos_Seaworth"
+  },
+  "awoiaf:Deana_Hardyng": {
+    "author": "",
+    "caption": "Deana Hardyng, by dyannawynnedayne \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Deana_Hardyng_by_asoiafsmackdown.png",
+    "id": "awoiaf:Deana_Hardyng",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/f/f8/Deana_Hardyng_by_asoiafsmackdown.png",
+    "pageTitle": "Deana Hardyng",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Deana_Hardyng"
+  },
+  "awoiaf:Denys_Harte": {
+    "author": "",
+    "caption": "Denys by Lopata Four",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Denys_Harte_by_Lopata_Four.jpg",
+    "id": "awoiaf:Denys_Harte",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/0/00/Denys_Harte_by_Lopata_Four.jpg",
+    "pageTitle": "Denys Harte",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Denys_Harte"
   },
   "awoiaf:Denys_Strong": {
     "author": "",
@@ -724,6 +1065,17 @@
     "originalUrl": "https://awoiaf.westeros.org/images/7/7d/Denys_Strong_TheMico.jpg",
     "pageTitle": "Denys Strong",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Denys_Strong"
+  },
+  "awoiaf:Denyse_Hightower": {
+    "author": "",
+    "caption": "Denyse Hightower by Laura Avellino",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Denyse_Hightower_by_Laura_Avellino.jpg",
+    "id": "awoiaf:Denyse_Hightower",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/9/91/Denyse_Hightower_by_Laura_Avellino.jpg",
+    "pageTitle": "Denyse Hightower",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Denyse_Hightower"
   },
   "awoiaf:Denzo_D_han": {
     "author": "",
@@ -757,17 +1109,6 @@
     "originalUrl": "https://awoiaf.westeros.org/images/d/d2/Jeff_Lee_Johnson_Ser_Desmond_Grell.png",
     "pageTitle": "Desmond Grell",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Desmond_Grell"
-  },
-  "awoiaf:Desmond_Mallister": {
-    "author": "",
-    "caption": "Loron Grejoy and Desmond Mallister by coldraindropsss",
-    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Loron_Greyjoy_and_Desmond_Mallister_by_coldraindropsss.jpg",
-    "id": "awoiaf:Desmond_Mallister",
-    "licenseName": "",
-    "licenseUrl": "",
-    "originalUrl": "https://awoiaf.westeros.org/images/5/53/Loron_Greyjoy_and_Desmond_Mallister_by_coldraindropsss.jpg",
-    "pageTitle": "Desmond Mallister",
-    "pageUrl": "https://awoiaf.westeros.org/index.php/Desmond_Mallister"
   },
   "awoiaf:Devan_Seaworth": {
     "author": "",
@@ -824,6 +1165,17 @@
     "pageTitle": "Dickon Tarly",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Dickon_Tarly"
   },
+  "awoiaf:Domeric_Bolton": {
+    "author": "",
+    "caption": "Domeric Bolton - by [https://www.deviantart.com/bellabergolts Bella Bergolts] \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Domeric_bolton_by_berghots.jpg",
+    "id": "awoiaf:Domeric_Bolton",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/c/cb/Domeric_bolton_by_berghots.jpg",
+    "pageTitle": "Domeric Bolton",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Domeric_Bolton"
+  },
   "awoiaf:Donal_Noye": {
     "author": "",
     "caption": "Donal Noye by [http://en.amokanet.ru/gallery/martin/martin.html Amok\u00a9]",
@@ -879,6 +1231,17 @@
     "pageTitle": "Dontos Hollard",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Dontos_Hollard"
   },
+  "awoiaf:Doran_Martell": {
+    "author": "",
+    "caption": "Doran Martell, art by Bella Bergolts \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Doran_martell_by_bellabergolts.jpg",
+    "id": "awoiaf:Doran_Martell",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/b/b8/Doran_martell_by_bellabergolts.jpg",
+    "pageTitle": "Doran Martell",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Doran_Martell"
+  },
   "awoiaf:Dorea_Sand": {
     "author": "",
     "caption": "Art by Beelphazoar \u00a9",
@@ -901,6 +1264,28 @@
     "pageTitle": "Dorna Swyft",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Dorna_Swyft"
   },
+  "awoiaf:Dykk_Harlaw": {
+    "author": "",
+    "caption": "Dykk by Lopata Four",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Dykk_Harlaw_by_Lopata_Four.jpg",
+    "id": "awoiaf:Dykk_Harlaw",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/f/f8/Dykk_Harlaw_by_Lopata_Four.jpg",
+    "pageTitle": "Dykk Harlaw",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Dykk_Harlaw"
+  },
+  "awoiaf:Earl_Harlaw": {
+    "author": "",
+    "caption": "Earl by Lopata Four \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Earl_Harlaw_by_Lopata_Four.jpg",
+    "id": "awoiaf:Earl_Harlaw",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/7/75/Earl_Harlaw_by_Lopata_Four.jpg",
+    "pageTitle": "Earl Harlaw",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Earl_Harlaw"
+  },
   "awoiaf:Eddara_Tallhart": {
     "author": "",
     "caption": "Eddara Tallhart with Eddard Stark and Eddard Karstark by Amuelia",
@@ -911,6 +1296,17 @@
     "originalUrl": "https://awoiaf.westeros.org/images/5/51/Eddard_Stark_Eddard_Karstark_and_Eddara_Tallhart_by_Amuelia.png",
     "pageTitle": "Eddara Tallhart",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Eddara_Tallhart"
+  },
+  "awoiaf:Eddard_Karstark": {
+    "author": "",
+    "caption": "Eddard Karstark, by [http://themicos.blogspot.com/ The Mico / Тхе Мичо]",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Eddard_Karstark_TheMico.jpg",
+    "id": "awoiaf:Eddard_Karstark",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/0/01/Eddard_Karstark_TheMico.jpg",
+    "pageTitle": "Eddard Karstark",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Eddard_Karstark"
   },
   "awoiaf:Eddard_Stark": {
     "author": "",
@@ -967,6 +1363,17 @@
     "pageTitle": "Edric Storm",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Edric_Storm"
   },
+  "awoiaf:Eldon_Estermont": {
+    "author": "",
+    "caption": "Eldon Estermont, by Lopata Four \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Eldon_Estermont_by_Lopata_Four.jpg",
+    "id": "awoiaf:Eldon_Estermont",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/3/3a/Eldon_Estermont_by_Lopata_Four.jpg",
+    "pageTitle": "Eldon Estermont",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Eldon_Estermont"
+  },
   "awoiaf:Eleyna_Westerling": {
     "author": "",
     "caption": "Art by [https://thethreehares.tumblr.com/ TheThreeHares] \u00a9",
@@ -977,6 +1384,17 @@
     "originalUrl": "https://awoiaf.westeros.org/images/a/a2/Eleyna_Westerling.jpg",
     "pageTitle": "Eleyna Westerling",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Eleyna_Westerling"
+  },
+  "awoiaf:Elia_Martell": {
+    "author": "",
+    "caption": "Elia Martell, by Hylora \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Elia_Martell_by_Hylora.png",
+    "id": "awoiaf:Elia_Martell",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/e/ed/Elia_Martell_by_Hylora.png",
+    "pageTitle": "Elia Martell",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Elia_Martell"
   },
   "awoiaf:Elia_Sand": {
     "author": "",
@@ -1033,6 +1451,17 @@
     "pageTitle": "Elmar Frey",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Elmar_Frey"
   },
+  "awoiaf:Elwood_Harte": {
+    "author": "",
+    "caption": "Elwood by Lopata Four",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Elwood_Harte_by_Lopata_Four.jpg",
+    "id": "awoiaf:Elwood_Harte",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/8/80/Elwood_Harte_by_Lopata_Four.jpg",
+    "pageTitle": "Elwood Harte",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Elwood_Harte"
+  },
   "awoiaf:Emmon_Cuy": {
     "author": "",
     "caption": "Emmon by Jason Engle \u00a9 Fantasy Flight Games",
@@ -1043,6 +1472,17 @@
     "originalUrl": "https://awoiaf.westeros.org/images/f/fa/Emmon_Cuy.jpg",
     "pageTitle": "Emmon Cuy",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Emmon_Cuy"
+  },
+  "awoiaf:Emmon_Frey": {
+    "author": "",
+    "caption": "Emmon by Lopata Four",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Emmon_Frey_by_Lopata_4.jpg",
+    "id": "awoiaf:Emmon_Frey",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/c/c1/Emmon_Frey_by_Lopata_4.jpg",
+    "pageTitle": "Emmon Frey",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Emmon_Frey"
   },
   "awoiaf:Endrew_Tarth": {
     "author": "",
@@ -1099,6 +1539,17 @@
     "pageTitle": "Falyse Stokeworth",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Falyse_Stokeworth"
   },
+  "awoiaf:Forley_Prester": {
+    "author": "",
+    "caption": "Forley Prester, by SquisherKing",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Forley_Prester.png",
+    "id": "awoiaf:Forley_Prester",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/f/fb/Forley_Prester.png",
+    "pageTitle": "Forley Prester",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Forley_Prester"
+  },
   "awoiaf:Franklyn_Frey": {
     "author": "",
     "caption": "Franklyn Frey, by Mike S. Miller",
@@ -1110,16 +1561,16 @@
     "pageTitle": "Franklyn Frey",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Franklyn_Frey"
   },
-  "awoiaf:Galladon_Tarth": {
+  "awoiaf:Galbart_Glover": {
     "author": "",
-    "caption": "Galladon and his sisters Arianne, Alysanne, and Brienne by coldraindropsss",
-    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Galladon_Arianne_Alysanne_and_Brienne_by_coldraindropsss.png",
-    "id": "awoiaf:Galladon_Tarth",
+    "caption": "Galbart Glover by Nacho Molina \u00a9 Fantasy Flight Games",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Nacho_Molina_G_Glover.jpg",
+    "id": "awoiaf:Galbart_Glover",
     "licenseName": "",
     "licenseUrl": "",
-    "originalUrl": "https://awoiaf.westeros.org/images/3/38/Galladon_Arianne_Alysanne_and_Brienne_by_coldraindropsss.png",
-    "pageTitle": "Galladon Tarth",
-    "pageUrl": "https://awoiaf.westeros.org/index.php/Galladon_Tarth"
+    "originalUrl": "https://awoiaf.westeros.org/images/9/91/Nacho_Molina_G_Glover.jpg",
+    "pageTitle": "Galbart Glover",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Galbart_Glover"
   },
   "awoiaf:Garibald_Grey": {
     "author": "",
@@ -1143,6 +1594,17 @@
     "pageTitle": "Garlan Tyrell",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Garlan_Tyrell"
   },
+  "awoiaf:Garth_Hightower": {
+    "author": "",
+    "caption": "Garth Hightower by Laura Avellino",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Garth_Hightower_by_Laura_Avellino.png",
+    "id": "awoiaf:Garth_Hightower",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/a/a8/Garth_Hightower_by_Laura_Avellino.png",
+    "pageTitle": "Garth Hightower",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Garth_Hightower"
+  },
   "awoiaf:Gawen_Westerling": {
     "author": "",
     "caption": "Gawen Westerling by TheMarkyGallery \u00a9",
@@ -1154,6 +1616,17 @@
     "pageTitle": "Gawen Westerling",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Gawen_Westerling"
   },
+  "awoiaf:Gendry": {
+    "author": "",
+    "caption": "Gendry, by [http://en.amokanet.ru/gallery/martin/ Amok] \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Gendry_Amoka.png",
+    "id": "awoiaf:Gendry",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/8/81/Gendry_Amoka.png",
+    "pageTitle": "Gendry",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Gendry"
+  },
   "awoiaf:Genna_Lannister": {
     "author": "",
     "caption": "Genna Lannister, by Rae Lavergne \u00a9",
@@ -1164,6 +1637,28 @@
     "originalUrl": "https://awoiaf.westeros.org/images/7/7a/Genna_Lannister_by_Lady_Rae.jpg",
     "pageTitle": "Genna Lannister",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Genna_Lannister"
+  },
+  "awoiaf:Gerald_Gower": {
+    "author": "",
+    "caption": "Gerald by Lopata 4",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Gerald_Gower_by_Lopata_4.jpg",
+    "id": "awoiaf:Gerald_Gower",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/b/be/Gerald_Gower_by_Lopata_4.jpg",
+    "pageTitle": "Gerald Gower",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Gerald_Gower"
+  },
+  "awoiaf:Geremy_Frey": {
+    "author": "",
+    "caption": "Geremy by Lopata Four",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Geremy_Frey_by_Lopata_4.jpg",
+    "id": "awoiaf:Geremy_Frey",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/e/ea/Geremy_Frey_by_Lopata_4.jpg",
+    "pageTitle": "Geremy Frey",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Geremy_Frey"
   },
   "awoiaf:Gerion_Lannister": {
     "author": "",
@@ -1186,6 +1681,17 @@
     "originalUrl": "https://awoiaf.westeros.org/images/8/8b/Gerold_Grafton_Marky.jpg",
     "pageTitle": "Gerold Grafton",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Gerold_Grafton"
+  },
+  "awoiaf:Gevin_Harlaw": {
+    "author": "",
+    "caption": "Gevin by Lopata Four \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Gevin_Harlaw_by_Lopata_Four.jpg",
+    "id": "awoiaf:Gevin_Harlaw",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/8/81/Gevin_Harlaw_by_Lopata_Four.jpg",
+    "pageTitle": "Gevin Harlaw",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Gevin_Harlaw"
   },
   "awoiaf:Gilbert_Farring": {
     "author": "",
@@ -1275,6 +1781,17 @@
     "pageTitle": "Greydon Goodbrother",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Greydon_Goodbrother"
   },
+  "awoiaf:Gulian_Qorgyle": {
+    "author": "",
+    "caption": "Gulian by Lopata Four",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Gulian_Qorgyle_by_Lopata_Four.jpg",
+    "id": "awoiaf:Gulian_Qorgyle",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/2/22/Gulian_Qorgyle_by_Lopata_Four.jpg",
+    "pageTitle": "Gulian Qorgyle",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Gulian_Qorgyle"
+  },
   "awoiaf:Guncer_Sunglass": {
     "author": "",
     "caption": "Guncer Sunglass by Lopata Four",
@@ -1286,6 +1803,17 @@
     "pageTitle": "Guncer Sunglass",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Guncer_Sunglass"
   },
+  "awoiaf:Gunthor_Hightower": {
+    "author": "",
+    "caption": "Gunthor Hightower by Laura Avellino",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Gunthor_Hightower_by_Laura_Avellino.jpg",
+    "id": "awoiaf:Gunthor_Hightower",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/3/3b/Gunthor_Hightower_by_Laura_Avellino.jpg",
+    "pageTitle": "Gunthor Hightower",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Gunthor_Hightower"
+  },
   "awoiaf:Guyard_Morrigen": {
     "author": "",
     "caption": "Guyard by Tiziano Baracchi \u00a9 Fantasy Flight Games",
@@ -1296,6 +1824,17 @@
     "originalUrl": "https://awoiaf.westeros.org/images/0/05/Serguyardmorrigen_1200_tizianobaracchi_by_thaldir-d8tux1u.jpg",
     "pageTitle": "Guyard Morrigen",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Guyard_Morrigen"
+  },
+  "awoiaf:Gwyneth_Yronwood": {
+    "author": "",
+    "caption": "Gwyneth Yronwood at her needlework.",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Gwyneth_Yronwood_01.png",
+    "id": "awoiaf:Gwyneth_Yronwood",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/8/8b/Gwyneth_Yronwood_01.png",
+    "pageTitle": "Gwyneth Yronwood",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Gwyneth_Yronwood"
   },
   "awoiaf:Gyles_Belgrave": {
     "author": "",
@@ -1341,17 +1880,6 @@
     "pageTitle": "Hallis Mollen",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Hallis_Mollen"
   },
-  "awoiaf:Halys_Hornwood": {
-    "author": "",
-    "caption": "Helman Tallhart, Roose Bolton, Halys Hornwood, and Medger Cerwyn by Amuelia",
-    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Helman_Tallhart_Roose_Bolton_Halys_Hornwood_Medger_Cerwyn_by_Amuelia.png",
-    "id": "awoiaf:Halys_Hornwood",
-    "licenseName": "",
-    "licenseUrl": "",
-    "originalUrl": "https://awoiaf.westeros.org/images/a/a3/Helman_Tallhart_Roose_Bolton_Halys_Hornwood_Medger_Cerwyn_by_Amuelia.png",
-    "pageTitle": "Halys Hornwood",
-    "pageUrl": "https://awoiaf.westeros.org/index.php/Halys_Hornwood"
-  },
   "awoiaf:Harlan_Tyrell": {
     "author": "",
     "caption": "Harlan Tyrell as depicted in Game of Thrones: Histories & Lore.",
@@ -1362,6 +1890,17 @@
     "originalUrl": "https://awoiaf.westeros.org/images/c/c7/Harlen.png",
     "pageTitle": "Harlan Tyrell",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Harlan_Tyrell"
+  },
+  "awoiaf:Harrion_Karstark": {
+    "author": "",
+    "caption": "Harrion by The Mico \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Harrion_Karstark_TheMico.jpg",
+    "id": "awoiaf:Harrion_Karstark",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/8/8a/Harrion_Karstark_TheMico.jpg",
+    "pageTitle": "Harrion Karstark",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Harrion_Karstark"
   },
   "awoiaf:Harry_Rivers": {
     "author": "",
@@ -1418,16 +1957,38 @@
     "pageTitle": "Harys Horpe",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Harys_Horpe"
   },
-  "awoiaf:Helman_Tallhart": {
+  "awoiaf:Harys_Swyft": {
     "author": "",
-    "caption": "Helman Tallhart, Roose Bolton, Halys Hornwood, and Medger Cerwyn by Amuelia",
-    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Helman_Tallhart_Roose_Bolton_Halys_Hornwood_Medger_Cerwyn_by_Amuelia.png",
-    "id": "awoiaf:Helman_Tallhart",
+    "caption": "Harys by Nicole Cardiff \u00a9 Fantasy Flight Games",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:970110_1331202195900_full.jpg",
+    "id": "awoiaf:Harys_Swyft",
     "licenseName": "",
     "licenseUrl": "",
-    "originalUrl": "https://awoiaf.westeros.org/images/a/a3/Helman_Tallhart_Roose_Bolton_Halys_Hornwood_Medger_Cerwyn_by_Amuelia.png",
-    "pageTitle": "Helman Tallhart",
-    "pageUrl": "https://awoiaf.westeros.org/index.php/Helman_Tallhart"
+    "originalUrl": "https://awoiaf.westeros.org/images/6/6a/970110_1331202195900_full.jpg",
+    "pageTitle": "Harys Swyft",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Harys_Swyft"
+  },
+  "awoiaf:Hobber_Redwyne": {
+    "author": "",
+    "caption": "Hobber Redwyne, by Laura Avellino",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Hobber_Redwyne_by_Laura_Avellino.jpg",
+    "id": "awoiaf:Hobber_Redwyne",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/6/6e/Hobber_Redwyne_by_Laura_Avellino.jpg",
+    "pageTitle": "Hobber Redwyne",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Hobber_Redwyne"
+  },
+  "awoiaf:Horas_Redwyne": {
+    "author": "",
+    "caption": "Horas Redwyne, by Laura Avellino",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Horas_Redwyne_by_Laura_Avellino.jpg",
+    "id": "awoiaf:Horas_Redwyne",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/d/d7/Horas_Redwyne_by_Laura_Avellino.jpg",
+    "pageTitle": "Horas Redwyne",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Horas_Redwyne"
   },
   "awoiaf:Horton_Redfort": {
     "author": "",
@@ -1440,6 +2001,17 @@
     "pageTitle": "Horton Redfort",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Horton_Redfort"
   },
+  "awoiaf:Hosteen_Frey": {
+    "author": "",
+    "caption": "Hosteen by Lopata Four",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Hosteen_Frey_by_Lopata_Four.jpg",
+    "id": "awoiaf:Hosteen_Frey",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/7/75/Hosteen_Frey_by_Lopata_Four.jpg",
+    "pageTitle": "Hosteen Frey",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Hosteen_Frey"
+  },
   "awoiaf:Hother_Umber": {
     "author": "",
     "caption": "Hother Umber Drawing by [http://dragonman14x.deviantart.com/art/Hother-Umber-347099781 Robert O'Leary]",
@@ -1451,6 +2023,17 @@
     "pageTitle": "Hother Umber",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Hother_Umber"
   },
+  "awoiaf:Hotho_Harlaw": {
+    "author": "",
+    "caption": "Hotho by Lopata Four \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Hotho_Harlaw_by_Lopata_Four.jpg",
+    "id": "awoiaf:Hotho_Harlaw",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/2/24/Hotho_Harlaw_by_Lopata_Four.jpg",
+    "pageTitle": "Hotho Harlaw",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Hotho_Harlaw"
+  },
   "awoiaf:Howland_Reed": {
     "author": "",
     "caption": "Howland Reed, by Sir Heartsalot \u00a9",
@@ -1461,6 +2044,17 @@
     "originalUrl": "https://awoiaf.westeros.org/images/2/2f/Howland_Reed_by_Sir_Heartsalot.jpg",
     "pageTitle": "Howland Reed",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Howland_Reed"
+  },
+  "awoiaf:Hubard_Rambton": {
+    "author": "",
+    "caption": "Hubard by Lopata Four",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Hubard_Rambton_by_Lopata_4.jpg",
+    "id": "awoiaf:Hubard_Rambton",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/3/30/Hubard_Rambton_by_Lopata_4.jpg",
+    "pageTitle": "Hubard Rambton",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Hubard_Rambton"
   },
   "awoiaf:Hugo_Wull": {
     "author": "",
@@ -1483,6 +2077,28 @@
     "originalUrl": "https://awoiaf.westeros.org/images/d/d7/A_Feast_for_a_Crow.jpg",
     "pageTitle": "Humfrey Hewett",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Humfrey_Hewett"
+  },
+  "awoiaf:Humfrey_Hightower": {
+    "author": "",
+    "caption": "Humfrey Hightower by Laura Avellino",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Humfrey_Hightower_by_Laura_Avellino.jpg",
+    "id": "awoiaf:Humfrey_Hightower",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/9/94/Humfrey_Hightower_by_Laura_Avellino.jpg",
+    "pageTitle": "Humfrey Hightower",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Humfrey_Hightower"
+  },
+  "awoiaf:Hyle_Hunt": {
+    "author": "",
+    "caption": "Hyle by Swordmaid",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Hyle_Hunt_by_swordmaid.png",
+    "id": "awoiaf:Hyle_Hunt",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/0/0f/Hyle_Hunt_by_swordmaid.png",
+    "pageTitle": "Hyle Hunt",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Hyle_Hunt"
   },
   "awoiaf:Illyrio_Mopatis": {
     "author": "",
@@ -1517,6 +2133,17 @@
     "pageTitle": "Jacelyn Bywater",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Jacelyn_Bywater"
   },
+  "awoiaf:Jack_Bulwer": {
+    "author": "",
+    "caption": "Jack by Lopata Four",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Jack_Bulwer_by_Lopata_Four.jpg",
+    "id": "awoiaf:Jack_Bulwer",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/1/10/Jack_Bulwer_by_Lopata_Four.jpg",
+    "pageTitle": "Jack Bulwer",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Jack_Bulwer"
+  },
   "awoiaf:Jaime_Lannister": {
     "author": "",
     "caption": "Ser Jaime Lannister, by Mathia Arkoniel",
@@ -1539,6 +2166,17 @@
     "pageTitle": "Jalabhar Xho",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Jalabhar_Xho"
   },
+  "awoiaf:Jammos_Frey": {
+    "author": "",
+    "caption": "Jammos by Lopata 4",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Jammos_Frey_by_Lopata_4.jpg",
+    "id": "awoiaf:Jammos_Frey",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/c/cf/Jammos_Frey_by_Lopata_4.jpg",
+    "pageTitle": "Jammos Frey",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Jammos_Frey"
+  },
   "awoiaf:Janei_Lannister": {
     "author": "",
     "caption": "Janei Lannister, by Wolfhertz \u00a9",
@@ -1560,6 +2198,17 @@
     "originalUrl": "https://awoiaf.westeros.org/images/7/77/Janos_Slynt_by_henning.jpg",
     "pageTitle": "Janos Slynt",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Janos_Slynt"
+  },
+  "awoiaf:Jared_Frey": {
+    "author": "",
+    "caption": "Jared by Lopata Four \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Jared_Frey_by_Lopata_4.jpg",
+    "id": "awoiaf:Jared_Frey",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/c/c7/Jared_Frey_by_Lopata_4.jpg",
+    "pageTitle": "Jared Frey",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Jared_Frey"
   },
   "awoiaf:Jaremy_Rykker": {
     "author": "",
@@ -1627,6 +2276,17 @@
     "pageTitle": "Jennelyn Fowler",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Jennelyn_Fowler"
   },
+  "awoiaf:Jeor_Mormont": {
+    "author": "",
+    "caption": "Jeor Mormont, by Amok \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Jeor_Mormont.jpg",
+    "id": "awoiaf:Jeor_Mormont",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/6/6b/Jeor_Mormont.jpg",
+    "pageTitle": "Jeor Mormont",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Jeor_Mormont"
+  },
   "awoiaf:Jeyne_Fowler": {
     "author": "",
     "caption": "The Fowler twins, art by Borja Pindado.",
@@ -1638,16 +2298,16 @@
     "pageTitle": "Jeyne Fowler",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Jeyne_Fowler"
   },
-  "awoiaf:Jeyne_Heddle": {
+  "awoiaf:Jeyne_Lydden": {
     "author": "",
-    "caption": "Jeyne Heddle (left) and Willow Heddle by coldraindropsss",
-    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Jeyne_Heddle_and_Willow_Heddle_by_coldraindropsss.jpg",
-    "id": "awoiaf:Jeyne_Heddle",
+    "caption": "Jeyne by dyannawynnedayne",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Jeyne_Lydden_by_asoiafsmackdown.png",
+    "id": "awoiaf:Jeyne_Lydden",
     "licenseName": "",
     "licenseUrl": "",
-    "originalUrl": "https://awoiaf.westeros.org/images/f/f1/Jeyne_Heddle_and_Willow_Heddle_by_coldraindropsss.jpg",
-    "pageTitle": "Jeyne Heddle",
-    "pageUrl": "https://awoiaf.westeros.org/index.php/Jeyne_Heddle"
+    "originalUrl": "https://awoiaf.westeros.org/images/c/ca/Jeyne_Lydden_by_asoiafsmackdown.png",
+    "pageTitle": "Jeyne Lydden",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Jeyne_Lydden"
   },
   "awoiaf:Jeyne_Poole": {
     "author": "",
@@ -1660,17 +2320,6 @@
     "pageTitle": "Jeyne Poole",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Jeyne_Poole"
   },
-  "awoiaf:Jeyne_Royce": {
-    "author": "",
-    "caption": "Jeyne Royce, Rowena Arryn and Lysa Tully by coldraindropsss",
-    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Jeyne_Royce_Rowena_Arryn_and_Lysa_Tully_by_coldraindropsss.jpg",
-    "id": "awoiaf:Jeyne_Royce",
-    "licenseName": "",
-    "licenseUrl": "",
-    "originalUrl": "https://awoiaf.westeros.org/images/f/f2/Jeyne_Royce_Rowena_Arryn_and_Lysa_Tully_by_coldraindropsss.jpg",
-    "pageTitle": "Jeyne Royce",
-    "pageUrl": "https://awoiaf.westeros.org/index.php/Jeyne_Royce"
-  },
   "awoiaf:Jeyne_Westerling": {
     "author": "",
     "caption": "Jeyne Westerling, by Eluas\u00a9",
@@ -1681,6 +2330,17 @@
     "originalUrl": "https://awoiaf.westeros.org/images/b/b0/Jeyne_westerling_by_eluas.png",
     "pageTitle": "Jeyne Westerling",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Jeyne_Westerling"
+  },
+  "awoiaf:Joanna_Lannister": {
+    "author": "",
+    "caption": "Joanna Lannister, by Hylora \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Joanna_Lannister_by_Hylora.jpg",
+    "id": "awoiaf:Joanna_Lannister",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/3/30/Joanna_Lannister_by_Hylora.jpg",
+    "pageTitle": "Joanna Lannister",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Joanna_Lannister"
   },
   "awoiaf:Joffrey_Baratheon": {
     "author": "",
@@ -1726,6 +2386,17 @@
     "pageTitle": "Jon Connington",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Jon_Connington"
   },
+  "awoiaf:Jon_Florent": {
+    "author": "",
+    "caption": "Jon by Lopata Four",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Jon_Florent_by_Lopata_Four.jpg",
+    "id": "awoiaf:Jon_Florent",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/6/69/Jon_Florent_by_Lopata_Four.jpg",
+    "pageTitle": "Jon Florent",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Jon_Florent"
+  },
   "awoiaf:Jon_Lothston": {
     "author": "",
     "caption": "Jon, by TheMico",
@@ -1748,6 +2419,17 @@
     "pageTitle": "Jon Snow",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Jon_Snow"
   },
+  "awoiaf:Jon_Umber": {
+    "author": "",
+    "caption": "Greatjon Umber by amok\u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Greatjon_Umber_by_amoka.jpg",
+    "id": "awoiaf:Jon_Umber",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/9/96/Greatjon_Umber_by_amoka.jpg",
+    "pageTitle": "Jon Umber",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Jon_Umber"
+  },
   "awoiaf:Jon_Umber_son_of_Jon": {
     "author": "",
     "caption": "Smalljon, by Nacho Molina \u00a9 FFG",
@@ -1758,17 +2440,6 @@
     "originalUrl": "https://awoiaf.westeros.org/images/6/68/Nacho_Molina_Smalljon.jpg",
     "pageTitle": "Jon Umber (son of Jon)",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Jon_Umber_(son_of_Jon)"
-  },
-  "awoiaf:Jonelle_Cerwyn": {
-    "author": "",
-    "caption": "Jonelle Cerwyn, Ondrew Locke, and Arnolf Karstark by Amuelia",
-    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Jonelle_Cerwyn_Ondrew_Locke_and_Arnolf_Karstark_by_Amuelia.jpg",
-    "id": "awoiaf:Jonelle_Cerwyn",
-    "licenseName": "",
-    "licenseUrl": "",
-    "originalUrl": "https://awoiaf.westeros.org/images/2/2e/Jonelle_Cerwyn_Ondrew_Locke_and_Arnolf_Karstark_by_Amuelia.jpg",
-    "pageTitle": "Jonelle Cerwyn",
-    "pageUrl": "https://awoiaf.westeros.org/index.php/Jonelle_Cerwyn"
   },
   "awoiaf:Jonos_Bracken": {
     "author": "",
@@ -1781,6 +2452,17 @@
     "pageTitle": "Jonos Bracken",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Jonos_Bracken"
   },
+  "awoiaf:Jonos_Frey": {
+    "author": "",
+    "caption": "Jonos by dyannawynnedayne \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Jonos_Frey_by_dyannawynnedayne.jpg",
+    "id": "awoiaf:Jonos_Frey",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/5/5f/Jonos_Frey_by_dyannawynnedayne.jpg",
+    "pageTitle": "Jonos Frey",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Jonos_Frey"
+  },
   "awoiaf:Jorah_Mormont": {
     "author": "",
     "caption": "Jorah Mormont, by Amok \u00a9",
@@ -1791,17 +2473,6 @@
     "originalUrl": "https://awoiaf.westeros.org/images/a/af/Jorah_Mormont.jpg",
     "pageTitle": "Jorah Mormont",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Jorah_Mormont"
-  },
-  "awoiaf:Jorelle_Mormont": {
-    "author": "",
-    "caption": "Jorelle Mormont (far left) and her family by coldraindropsss",
-    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Mormont_Family_by_coldraindropsss.png",
-    "id": "awoiaf:Jorelle_Mormont",
-    "licenseName": "",
-    "licenseUrl": "",
-    "originalUrl": "https://awoiaf.westeros.org/images/f/f4/Mormont_Family_by_coldraindropsss.png",
-    "pageTitle": "Jorelle Mormont",
-    "pageUrl": "https://awoiaf.westeros.org/index.php/Jorelle_Mormont"
   },
   "awoiaf:Josmyn_Peckledon": {
     "author": "",
@@ -1835,6 +2506,28 @@
     "originalUrl": "https://awoiaf.westeros.org/images/9/94/Joy_Hill_by_Wolfhertz.png",
     "pageTitle": "Joy Hill",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Joy_Hill"
+  },
+  "awoiaf:Joy_Penrose": {
+    "author": "",
+    "caption": "Joy by \u00a9 [https://riotarttherite.tumblr.com/ Riotarttherite]",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Joy_Penrose_by_Riotarttherite.jpg",
+    "id": "awoiaf:Joy_Penrose",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/4/4d/Joy_Penrose_by_Riotarttherite.jpg",
+    "pageTitle": "Joy Penrose",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Joy_Penrose"
+  },
+  "awoiaf:Joyeuse_Erenford": {
+    "author": "",
+    "caption": "Joyeuse Erenford, by Helaenarts \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Joyeuse_Erenford_by_Helaenarts.jpeg",
+    "id": "awoiaf:Joyeuse_Erenford",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/3/35/Joyeuse_Erenford_by_Helaenarts.jpeg",
+    "pageTitle": "Joyeuse Erenford",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Joyeuse_Erenford"
   },
   "awoiaf:Justin_Massey": {
     "author": "",
@@ -1880,6 +2573,28 @@
     "pageTitle": "Kyle Condon",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Kyle_Condon"
   },
+  "awoiaf:Kyra_Frey": {
+    "author": "",
+    "caption": "Kyra by Lopata Four",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Kyra_Frey_by_Lopata_Four.jpg",
+    "id": "awoiaf:Kyra_Frey",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/c/cd/Kyra_Frey_by_Lopata_Four.jpg",
+    "pageTitle": "Kyra Frey",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Kyra_Frey"
+  },
+  "awoiaf:Lambert_Turnberry": {
+    "author": "",
+    "caption": "Lambert by Lopata Four",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Lambert_Turnberry_by_Lopata_Four.jpg",
+    "id": "awoiaf:Lambert_Turnberry",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/0/09/Lambert_Turnberry_by_Lopata_Four.jpg",
+    "pageTitle": "Lambert Turnberry",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Lambert_Turnberry"
+  },
   "awoiaf:Lancel_Lannister": {
     "author": "",
     "caption": "Artwork by Amok \u00a9",
@@ -1924,6 +2639,28 @@
     "pageTitle": "Leobald Tallhart",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Leobald_Tallhart"
   },
+  "awoiaf:Lewis_Lanster": {
+    "author": "",
+    "caption": "Lewis Lanster",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Lewis_Lanster_01.png",
+    "id": "awoiaf:Lewis_Lanster",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/5/5f/Lewis_Lanster_01.png",
+    "pageTitle": "Lewis Lanster",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Lewis_Lanster"
+  },
+  "awoiaf:Leyla_Hightower": {
+    "author": "",
+    "caption": "Leyla Hightower by Laura Avellino",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Leyla_Hightower_by_Laura_Avellino.jpg",
+    "id": "awoiaf:Leyla_Hightower",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/5/5c/Leyla_Hightower_by_Laura_Avellino.jpg",
+    "pageTitle": "Leyla Hightower",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Leyla_Hightower"
+  },
   "awoiaf:Leyton_Hightower": {
     "author": "",
     "caption": "Leyton Hightower by Anna Christenson \u00a9 Fantasy Flight Games",
@@ -1934,6 +2671,17 @@
     "originalUrl": "https://awoiaf.westeros.org/images/7/7b/Leyton_Hightower.jpg",
     "pageTitle": "Leyton Hightower",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Leyton_Hightower"
+  },
+  "awoiaf:Lollys_Stokeworth": {
+    "author": "",
+    "caption": "Lollys Stokeworth, by Effemar \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Lollys_Stokeworth_by_Effemar.png",
+    "id": "awoiaf:Lollys_Stokeworth",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/f/f5/Lollys_Stokeworth_by_Effemar.png",
+    "pageTitle": "Lollys Stokeworth",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Lollys_Stokeworth"
   },
   "awoiaf:Loras_Tyrell": {
     "author": "",
@@ -1957,16 +2705,16 @@
     "pageTitle": "Loreza Sand",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Loreza_Sand"
   },
-  "awoiaf:Loron_Greyjoy_lord": {
+  "awoiaf:Lothar_Frey": {
     "author": "",
-    "caption": "Loron Grejoy and Desmond Mallister by coldraindropsss",
-    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Loron_Greyjoy_and_Desmond_Mallister_by_coldraindropsss.jpg",
-    "id": "awoiaf:Loron_Greyjoy_lord",
+    "caption": "Lothar by Lopata Four \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Lothar_Frey_by_Lopata_Four.jpg",
+    "id": "awoiaf:Lothar_Frey",
     "licenseName": "",
     "licenseUrl": "",
-    "originalUrl": "https://awoiaf.westeros.org/images/5/53/Loron_Greyjoy_and_Desmond_Mallister_by_coldraindropsss.jpg",
-    "pageTitle": "Loron Greyjoy (lord)",
-    "pageUrl": "https://awoiaf.westeros.org/index.php/Loron_Greyjoy_(lord)"
+    "originalUrl": "https://awoiaf.westeros.org/images/8/83/Lothar_Frey_by_Lopata_Four.jpg",
+    "pageTitle": "Lothar Frey",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Lothar_Frey"
   },
   "awoiaf:Lucas_Blackwood": {
     "author": "",
@@ -1978,6 +2726,17 @@
     "originalUrl": "https://awoiaf.westeros.org/images/6/65/Lucas_Blackwood.jpg",
     "pageTitle": "Lucas Blackwood",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Lucas_Blackwood"
+  },
+  "awoiaf:Luceon_Frey": {
+    "author": "",
+    "caption": "Luceon by Lopata Four",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Luceon_Frey_by_Lopata_4.jpg",
+    "id": "awoiaf:Luceon_Frey",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/8/8b/Luceon_Frey_by_Lopata_4.jpg",
+    "pageTitle": "Luceon Frey",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Luceon_Frey"
   },
   "awoiaf:Lucias_Vypren": {
     "author": "",
@@ -2001,6 +2760,17 @@
     "pageTitle": "Lucifer Long",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Lucifer_Long"
   },
+  "awoiaf:Luthor_Tyrell": {
+    "author": "",
+    "caption": "Luthor by Laura Avellino",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Luthor_Tyrell_by_Laura_Avellino.jpg",
+    "id": "awoiaf:Luthor_Tyrell",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/9/9b/Luthor_Tyrell_by_Laura_Avellino.jpg",
+    "pageTitle": "Luthor Tyrell",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Luthor_Tyrell"
+  },
   "awoiaf:Lyanna_Mormont": {
     "author": "",
     "caption": "Lyanna Mormont by [http://vinciruz.deviantart.com/art/Lyanna-Mormont-616376417 vinciruz\u00a9]",
@@ -2011,6 +2781,17 @@
     "originalUrl": "https://awoiaf.westeros.org/images/d/d5/Lyanna_mormont_by_vinciruz-da6z335.jpg",
     "pageTitle": "Lyanna Mormont",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Lyanna_Mormont"
+  },
+  "awoiaf:Lyanna_Stark": {
+    "author": "",
+    "caption": "Lyanna Stark by ildraws",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Lyanna_Stark_by_ildraws.jpg",
+    "id": "awoiaf:Lyanna_Stark",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/b/b4/Lyanna_Stark_by_ildraws.jpg",
+    "pageTitle": "Lyanna Stark",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Lyanna_Stark"
   },
   "awoiaf:Lyle_Crakehall": {
     "author": "",
@@ -2056,6 +2837,17 @@
     "pageTitle": "Lymond Pease",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Lymond_Pease"
   },
+  "awoiaf:Lynesse_Hightower": {
+    "author": "",
+    "caption": "Lynesse Hightower by Eluas \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Lynesse_hightower_by_eluas.png",
+    "id": "awoiaf:Lynesse_Hightower",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/7/70/Lynesse_hightower_by_eluas.png",
+    "pageTitle": "Lynesse Hightower",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Lynesse_Hightower"
+  },
   "awoiaf:Lynora_Hill": {
     "author": "",
     "caption": "Lynora Hill with Joy Hill and Briony by coldraindropsss",
@@ -2066,17 +2858,6 @@
     "originalUrl": "https://awoiaf.westeros.org/images/4/43/Briony_Joy_Hill_and_Lynora_Hill_by_coldraindropsss.jpg",
     "pageTitle": "Lynora Hill",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Lynora_Hill"
-  },
-  "awoiaf:Lyra_Mormont": {
-    "author": "",
-    "caption": "Lyra Mormont (second from left) and her family by coldraindropsss",
-    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Mormont_Family_by_coldraindropsss.png",
-    "id": "awoiaf:Lyra_Mormont",
-    "licenseName": "",
-    "licenseUrl": "",
-    "originalUrl": "https://awoiaf.westeros.org/images/f/f4/Mormont_Family_by_coldraindropsss.png",
-    "pageTitle": "Lyra Mormont",
-    "pageUrl": "https://awoiaf.westeros.org/index.php/Lyra_Mormont"
   },
   "awoiaf:Lysa_Arryn": {
     "author": "",
@@ -2100,6 +2881,17 @@
     "pageTitle": "Lysono Maar",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Lysono_Maar"
   },
+  "awoiaf:Lythene_Frey": {
+    "author": "",
+    "caption": "Lythene by Lopata 4",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Lythene_Frey_by_Lopata_4.jpg",
+    "id": "awoiaf:Lythene_Frey",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/3/37/Lythene_Frey_by_Lopata_4.jpg",
+    "pageTitle": "Lythene Frey",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Lythene_Frey"
+  },
   "awoiaf:Mace_Tyrell": {
     "author": "",
     "caption": "Mace Tyrell by [http://en.amokanet.ru/gallery/martin/martin.html Amok\u00a9].",
@@ -2111,6 +2903,28 @@
     "pageTitle": "Mace Tyrell",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Mace_Tyrell"
   },
+  "awoiaf:Maege_Mormont": {
+    "author": "",
+    "caption": "Maege by Emile Denis \u00a9 Fantasy Flight Games",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Emile_Denis_maege_mormont.jpg",
+    "id": "awoiaf:Maege_Mormont",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/e/e5/Emile_Denis_maege_mormont.jpg",
+    "pageTitle": "Maege Mormont",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Maege_Mormont"
+  },
+  "awoiaf:Maegelle_Frey": {
+    "author": "",
+    "caption": "Maegelle by Lopata Four \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Maegelle_Frey_by_Lopata_Four.jpg",
+    "id": "awoiaf:Maegelle_Frey",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/d/d1/Maegelle_Frey_by_Lopata_Four.jpg",
+    "pageTitle": "Maegelle Frey",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Maegelle_Frey"
+  },
   "awoiaf:Maekar_I_Targaryen": {
     "author": "",
     "caption": "Maekar I by [http://en.amokanet.ru/gallery/martin/ Amok \u00a9]",
@@ -2121,6 +2935,17 @@
     "originalUrl": "https://awoiaf.westeros.org/images/4/4f/Maekar_Targaryen_by_Amok.jpg",
     "pageTitle": "Maekar I Targaryen",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Maekar_I_Targaryen"
+  },
+  "awoiaf:Mallador_Locke": {
+    "author": "",
+    "caption": "Mallador by Lopata Four",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Mallador_Locke_by_Lopata_Four.jpg",
+    "id": "awoiaf:Mallador_Locke",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/e/e3/Mallador_Locke_by_Lopata_Four.jpg",
+    "pageTitle": "Mallador Locke",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Mallador_Locke"
   },
   "awoiaf:Malo_Jayn": {
     "author": "",
@@ -2144,6 +2969,28 @@
     "pageTitle": "Malora Hightower",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Malora_Hightower"
   },
+  "awoiaf:Malwyn_Frey": {
+    "author": "",
+    "caption": "Malwyn by Lopata Four",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Malwyn_Frey_by_Lopata_Four.jpg",
+    "id": "awoiaf:Malwyn_Frey",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/3/31/Malwyn_Frey_by_Lopata_Four.jpg",
+    "pageTitle": "Malwyn Frey",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Malwyn_Frey"
+  },
+  "awoiaf:Mance_Rayder": {
+    "author": "",
+    "caption": "Mance Rayder by Gisbert Llorens\u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Diego_Gisbert_Llorens_Mance_Rayder.jpg",
+    "id": "awoiaf:Mance_Rayder",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/d/d2/Diego_Gisbert_Llorens_Mance_Rayder.jpg",
+    "pageTitle": "Mance Rayder",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Mance_Rayder"
+  },
   "awoiaf:Mandon_Moore": {
     "author": "",
     "caption": "Mandon by Alexandre Dainche \u00a9 Fantasy Flight Games",
@@ -2154,6 +3001,17 @@
     "originalUrl": "https://awoiaf.westeros.org/images/0/06/Alexandre_Dainche_Ser_Mandon_Moore.jpg",
     "pageTitle": "Mandon Moore",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Mandon_Moore"
+  },
+  "awoiaf:Margaery_Tyrell": {
+    "author": "",
+    "caption": "Margaery Tyrell, by Bella Bergolts \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:MargaeryTyrell_by_BellaBergolts.jpg",
+    "id": "awoiaf:Margaery_Tyrell",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/d/dd/MargaeryTyrell_by_BellaBergolts.jpg",
+    "pageTitle": "Margaery Tyrell",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Margaery_Tyrell"
   },
   "awoiaf:Maric_Seaworth": {
     "author": "",
@@ -2166,6 +3024,28 @@
     "pageTitle": "Maric Seaworth",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Maric_Seaworth"
   },
+  "awoiaf:Marissa_Frey": {
+    "author": "",
+    "caption": "Marissa by Lopata Four",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Marissa_Frey_by_Lopata_Four.jpg",
+    "id": "awoiaf:Marissa_Frey",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/1/1e/Marissa_Frey_by_Lopata_Four.jpg",
+    "pageTitle": "Marissa Frey",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Marissa_Frey"
+  },
+  "awoiaf:Mark_Mullendore": {
+    "author": "",
+    "caption": "",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Ser_Mark_Mullendore_TheMico.jpg",
+    "id": "awoiaf:Mark_Mullendore",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/b/bf/Ser_Mark_Mullendore_TheMico.jpg",
+    "pageTitle": "Mark Mullendore",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Mark_Mullendore"
+  },
   "awoiaf:Marla_Prester": {
     "author": "",
     "caption": "Joanna Lannister, Marla Prester and Lynora Hill by coldraindropsss",
@@ -2177,6 +3057,17 @@
     "pageTitle": "Marla Prester",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Marla_Prester"
   },
+  "awoiaf:Marlon_Manderly": {
+    "author": "",
+    "caption": "Marlon by SquisherKing",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Marlon_Manderly.png",
+    "id": "awoiaf:Marlon_Manderly",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/e/e5/Marlon_Manderly.png",
+    "pageTitle": "Marlon Manderly",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Marlon_Manderly"
+  },
   "awoiaf:Maron_Botley": {
     "author": "",
     "caption": "Rafal Hrynkiewicz \u00a9 Fantasy Flight Games",
@@ -2187,6 +3078,17 @@
     "originalUrl": "https://awoiaf.westeros.org/images/5/5f/Fishwhiskers.jpg",
     "pageTitle": "Maron Botley",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Maron_Botley"
+  },
+  "awoiaf:Maron_Greyjoy": {
+    "author": "",
+    "caption": "Maron by Shebsart",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Maron_Greyjoy_by_Shebsart.png",
+    "id": "awoiaf:Maron_Greyjoy",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/1/1f/Maron_Greyjoy_by_Shebsart.png",
+    "pageTitle": "Maron Greyjoy",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Maron_Greyjoy"
   },
   "awoiaf:Marq_Mandrake": {
     "author": "",
@@ -2231,6 +3133,17 @@
     "originalUrl": "https://awoiaf.westeros.org/images/c/cd/Martyn_Rivers_by_marky.jpg",
     "pageTitle": "Martyn Rivers",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Martyn_Rivers"
+  },
+  "awoiaf:Mary_Mertyns": {
+    "author": "",
+    "caption": "Mary by Lopata 4",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Mary_Mertyns_by_Lopata_4.jpg",
+    "id": "awoiaf:Mary_Mertyns",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/d/d0/Mary_Mertyns_by_Lopata_4.jpg",
+    "pageTitle": "Mary Mertyns",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Mary_Mertyns"
   },
   "awoiaf:Masha_Heddle": {
     "author": "",
@@ -2320,6 +3233,28 @@
     "pageTitle": "Melara Hetherspoon",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Melara_Hetherspoon"
   },
+  "awoiaf:Melesa_Crakehall": {
+    "author": "",
+    "caption": "Melesa by dyannawynnedayne \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Melesa_Crakehall_by_dyannawynnedayne.jpg",
+    "id": "awoiaf:Melesa_Crakehall",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/9/9f/Melesa_Crakehall_by_dyannawynnedayne.jpg",
+    "pageTitle": "Melesa Crakehall",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Melesa_Crakehall"
+  },
+  "awoiaf:Melisandre": {
+    "author": "",
+    "caption": "Melisandre of Asshai, by John Picacio \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:John_Picacio_Melisandre_of_Asshai.jpg",
+    "id": "awoiaf:Melisandre",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/5/5f/John_Picacio_Melisandre_of_Asshai.jpg",
+    "pageTitle": "Melisandre",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Melisandre"
+  },
   "awoiaf:Meredyth_Crane": {
     "author": "",
     "caption": "Meredyth Crane, Janna Fossoway and Leonette Fossoway by coldraindropsss",
@@ -2330,6 +3265,28 @@
     "originalUrl": "https://awoiaf.westeros.org/images/4/41/Meredyth_Crane_Janna_Fossoway_Leonette_Fossoway_by_coldraindropsss.jpg",
     "pageTitle": "Meredyth Crane",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Meredyth_Crane"
+  },
+  "awoiaf:Merrell_Florent": {
+    "author": "",
+    "caption": "Merrell by Lopata Four",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Merrell_Florent_by_Lopata_Four.jpg",
+    "id": "awoiaf:Merrell_Florent",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/0/04/Merrell_Florent_by_Lopata_Four.jpg",
+    "pageTitle": "Merrell Florent",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Merrell_Florent"
+  },
+  "awoiaf:Merrett_Frey": {
+    "author": "",
+    "caption": "Merrett by Lopata Four",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Merrett_Frey_by_Lopata_Four.jpg",
+    "id": "awoiaf:Merrett_Frey",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/b/bc/Merrett_Frey_by_Lopata_Four.jpg",
+    "pageTitle": "Merrett Frey",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Merrett_Frey"
   },
   "awoiaf:Meryn_Trant": {
     "author": "",
@@ -2386,27 +3343,71 @@
     "pageTitle": "Moribald Chester",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Moribald_Chester"
   },
-  "awoiaf:Myranda_Lefford": {
+  "awoiaf:Morros_Slynt": {
     "author": "",
-    "caption": "Myranda Lefford and her daughters, Cerenna and Myrielle Lannister by coldraindropsss",
-    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Myranda_Lefford_Cerenna_Lannister_and_Myrielle_Lannister_by_coldraindropsss.jpg",
-    "id": "awoiaf:Myranda_Lefford",
+    "caption": "Morros Slynt by SquisherKing",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Morros_Slynt.png",
+    "id": "awoiaf:Morros_Slynt",
     "licenseName": "",
     "licenseUrl": "",
-    "originalUrl": "https://awoiaf.westeros.org/images/7/7f/Myranda_Lefford_Cerenna_Lannister_and_Myrielle_Lannister_by_coldraindropsss.jpg",
-    "pageTitle": "Myranda Lefford",
-    "pageUrl": "https://awoiaf.westeros.org/index.php/Myranda_Lefford"
+    "originalUrl": "https://awoiaf.westeros.org/images/a/a9/Morros_Slynt.png",
+    "pageTitle": "Morros Slynt",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Morros_Slynt"
   },
-  "awoiaf:Myrielle_Lannister": {
+  "awoiaf:Morya_Frey": {
     "author": "",
-    "caption": "Myranda Lefford and her daughters, Cerenna and Myrielle Lannister by coldraindropsss",
-    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Myranda_Lefford_Cerenna_Lannister_and_Myrielle_Lannister_by_coldraindropsss.jpg",
-    "id": "awoiaf:Myrielle_Lannister",
+    "caption": "Morya by Lopata Four",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Morya_Frey_by_Lopata_4.jpg",
+    "id": "awoiaf:Morya_Frey",
     "licenseName": "",
     "licenseUrl": "",
-    "originalUrl": "https://awoiaf.westeros.org/images/7/7f/Myranda_Lefford_Cerenna_Lannister_and_Myrielle_Lannister_by_coldraindropsss.jpg",
-    "pageTitle": "Myrielle Lannister",
-    "pageUrl": "https://awoiaf.westeros.org/index.php/Myrielle_Lannister"
+    "originalUrl": "https://awoiaf.westeros.org/images/5/58/Morya_Frey_by_Lopata_4.jpg",
+    "pageTitle": "Morya Frey",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Morya_Frey"
+  },
+  "awoiaf:Mya_Stone": {
+    "author": "",
+    "caption": "Mya Stone, by Heliotropa \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Heliotropa_Mya_Stone.jpg",
+    "id": "awoiaf:Mya_Stone",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/0/08/Heliotropa_Mya_Stone.jpg",
+    "pageTitle": "Mya Stone",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Mya_Stone"
+  },
+  "awoiaf:Mychel_Redfort": {
+    "author": "",
+    "caption": "Mychel by SquisherKing",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Mychel_Redfort.png",
+    "id": "awoiaf:Mychel_Redfort",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/3/32/Mychel_Redfort.png",
+    "pageTitle": "Mychel Redfort",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Mychel_Redfort"
+  },
+  "awoiaf:Mylenda_Caron": {
+    "author": "",
+    "caption": "Mylenda Caron, by dyannawynnedayne \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Mylenda_Caron_by_asoiafsmackdown.png",
+    "id": "awoiaf:Mylenda_Caron",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/f/f0/Mylenda_Caron_by_asoiafsmackdown.png",
+    "pageTitle": "Mylenda Caron",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Mylenda_Caron"
+  },
+  "awoiaf:Myrcella_Baratheon": {
+    "author": "",
+    "caption": "Myrcella Baratheon, by Sacha Angel Diener \u00a9 Fantasy Flight Games.",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Sacha_Angel_Diener_MyrcellaIII.jpg",
+    "id": "awoiaf:Myrcella_Baratheon",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/1/18/Sacha_Angel_Diener_MyrcellaIII.jpg",
+    "pageTitle": "Myrcella Baratheon",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Myrcella_Baratheon"
   },
   "awoiaf:Myrio_Myrakis": {
     "author": "",
@@ -2419,6 +3420,28 @@
     "pageTitle": "Myrio Myrakis",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Myrio_Myrakis"
   },
+  "awoiaf:Nymeria_Sand": {
+    "author": "",
+    "caption": "Nymeria Sand, by Eldritch-historian\u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Nymeria-Sand-eldritch-historian.png",
+    "id": "awoiaf:Nymeria_Sand",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/6/6c/Nymeria-Sand-eldritch-historian.png",
+    "pageTitle": "Nymeria Sand",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Nymeria_Sand"
+  },
+  "awoiaf:Obara_Sand": {
+    "author": "",
+    "caption": "Obara Sand by Eldritch-historian\u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Obara-Sand-eldritch-historian.png",
+    "id": "awoiaf:Obara_Sand",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/9/9b/Obara-Sand-eldritch-historian.png",
+    "pageTitle": "Obara Sand",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Obara_Sand"
+  },
   "awoiaf:Obella_Sand": {
     "author": "",
     "caption": "Art by Tiziano Baracchi. \u00a9 FFG",
@@ -2430,27 +3453,38 @@
     "pageTitle": "Obella Sand",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Obella_Sand"
   },
+  "awoiaf:Oberyn_Martell": {
+    "author": "",
+    "caption": "Oberyn Martell by Magali Villeneuve \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:MagaliVilleneuve_Prince_Oberyn_Nymeros_Martell.jpg",
+    "id": "awoiaf:Oberyn_Martell",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/f/fc/MagaliVilleneuve_Prince_Oberyn_Nymeros_Martell.jpg",
+    "pageTitle": "Oberyn Martell",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Oberyn_Martell"
+  },
   "awoiaf:Olenna_Tyrell": {
     "author": "",
     "caption": "Olenna Tyrell, the Queen of Thorns, by Borja Pindado \u00a9 Fantasy Flight Games",
-    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Borja_Pindado_thequeenofthorns.jpg",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Jeff_Lee_Johnson_Queen_of_Thornes.png",
     "id": "awoiaf:Olenna_Tyrell",
     "licenseName": "",
     "licenseUrl": "",
-    "originalUrl": "https://awoiaf.westeros.org/images/2/22/Borja_Pindado_thequeenofthorns.jpg",
+    "originalUrl": "https://awoiaf.westeros.org/images/4/4a/Jeff_Lee_Johnson_Queen_of_Thornes.png",
     "pageTitle": "Olenna Tyrell",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Olenna_Tyrell"
   },
-  "awoiaf:Ondrew_Locke": {
+  "awoiaf:Olyvar_Frey": {
     "author": "",
-    "caption": "Jonelle Cerwyn, Ondrew Locke, and Arnolf Karstark by Amuelia",
-    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Jonelle_Cerwyn_Ondrew_Locke_and_Arnolf_Karstark_by_Amuelia.jpg",
-    "id": "awoiaf:Ondrew_Locke",
+    "caption": "Olyvar by Lopata Four",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Olyvar_Frey_by_Lopata_4.jpg",
+    "id": "awoiaf:Olyvar_Frey",
     "licenseName": "",
     "licenseUrl": "",
-    "originalUrl": "https://awoiaf.westeros.org/images/2/2e/Jonelle_Cerwyn_Ondrew_Locke_and_Arnolf_Karstark_by_Amuelia.jpg",
-    "pageTitle": "Ondrew Locke",
-    "pageUrl": "https://awoiaf.westeros.org/index.php/Ondrew_Locke"
+    "originalUrl": "https://awoiaf.westeros.org/images/9/91/Olyvar_Frey_by_Lopata_4.jpg",
+    "pageTitle": "Olyvar Frey",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Olyvar_Frey"
   },
   "awoiaf:Orton_Merryweather": {
     "author": "",
@@ -2463,16 +3497,16 @@
     "pageTitle": "Orton Merryweather",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Orton_Merryweather"
   },
-  "awoiaf:Osmund_Frey": {
+  "awoiaf:Osfryd_Kettleblack": {
     "author": "",
-    "caption": "Osmund and his sister by luxmundi-i \u00a9",
-    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Osmund_and_Della_Frey_by_luxmundi-i.jpg",
-    "id": "awoiaf:Osmund_Frey",
+    "caption": "Osfryd Kettleblack, by Pojypojy \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Osfryd_Kettleblack.jpg",
+    "id": "awoiaf:Osfryd_Kettleblack",
     "licenseName": "",
     "licenseUrl": "",
-    "originalUrl": "https://awoiaf.westeros.org/images/6/60/Osmund_and_Della_Frey_by_luxmundi-i.jpg",
-    "pageTitle": "Osmund Frey",
-    "pageUrl": "https://awoiaf.westeros.org/index.php/Osmund_Frey"
+    "originalUrl": "https://awoiaf.westeros.org/images/8/85/Osfryd_Kettleblack.jpg",
+    "pageTitle": "Osfryd Kettleblack",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Osfryd_Kettleblack"
   },
   "awoiaf:Osmund_Kettleblack": {
     "author": "",
@@ -2495,6 +3529,17 @@
     "originalUrl": "https://awoiaf.westeros.org/images/8/88/Osney_Kettleblack.jpg",
     "pageTitle": "Osney Kettleblack",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Osney_Kettleblack"
+  },
+  "awoiaf:Ossifer_Lipps": {
+    "author": "",
+    "caption": "Ossifer by Lopata Four \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Ossifer_Lipps_by_Lopata_Four.jpg",
+    "id": "awoiaf:Ossifer_Lipps",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/b/b1/Ossifer_Lipps_by_Lopata_Four.jpg",
+    "pageTitle": "Ossifer Lipps",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Ossifer_Lipps"
   },
   "awoiaf:Oswell_Whent": {
     "author": "",
@@ -2551,6 +3596,50 @@
     "pageTitle": "Patrek Mallister",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Patrek_Mallister"
   },
+  "awoiaf:Perra_Frey": {
+    "author": "",
+    "caption": "Perra Frey, by dyannawynnedayne \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Perra_Frey_by_asoiafsmackdown.png",
+    "id": "awoiaf:Perra_Frey",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/3/3e/Perra_Frey_by_asoiafsmackdown.png",
+    "pageTitle": "Perra Frey",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Perra_Frey"
+  },
+  "awoiaf:Perriane_Frey": {
+    "author": "",
+    "caption": "Perriane by Lopata Four",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Perianne_Frey_by_Lopata_4.jpg",
+    "id": "awoiaf:Perriane_Frey",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/0/0d/Perianne_Frey_by_Lopata_4.jpg",
+    "pageTitle": "Perriane Frey",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Perriane_Frey"
+  },
+  "awoiaf:Perwyn_Frey": {
+    "author": "",
+    "caption": "Perwyn by Lopata 4",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Perwyn_Frey_by_Lopata_4.jpg",
+    "id": "awoiaf:Perwyn_Frey",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/7/70/Perwyn_Frey_by_Lopata_4.jpg",
+    "pageTitle": "Perwyn Frey",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Perwyn_Frey"
+  },
+  "awoiaf:Petyr_Frey": {
+    "author": "",
+    "caption": "Petyr by Lopata Four \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Petyr_Frey_by_Lopata_Four.jpg",
+    "id": "awoiaf:Petyr_Frey",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/9/9e/Petyr_Frey_by_Lopata_Four.jpg",
+    "pageTitle": "Petyr Frey",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Petyr_Frey"
+  },
   "awoiaf:Philip_Foote": {
     "author": "",
     "caption": "Philip Foote by TheMarkyGallery \u00a9",
@@ -2595,6 +3684,17 @@
     "pageTitle": "Preston Greenfield",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Preston_Greenfield"
   },
+  "awoiaf:Pycelle": {
+    "author": "",
+    "caption": "Grand Maester Pycelle, by Amok \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Grand_Maester_Pycelle.jpg",
+    "id": "awoiaf:Pycelle",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/c/c4/Grand_Maester_Pycelle.jpg",
+    "pageTitle": "Pycelle",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Pycelle"
+  },
   "awoiaf:Pykewood_Peake": {
     "author": "",
     "caption": "",
@@ -2605,6 +3705,28 @@
     "originalUrl": "https://awoiaf.westeros.org/images/1/15/Pykewood_Peake_TheMico.jpg",
     "pageTitle": "Pykewood Peake",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Pykewood_Peake"
+  },
+  "awoiaf:Qarlton_Chelsted": {
+    "author": "",
+    "caption": "Qarlton by Lopata Four \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Qarlton_Chelsted_by_Lopata_4.jpg",
+    "id": "awoiaf:Qarlton_Chelsted",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/7/79/Qarlton_Chelsted_by_Lopata_4.jpg",
+    "pageTitle": "Qarlton Chelsted",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Qarlton_Chelsted"
+  },
+  "awoiaf:Quellon_Greyjoy": {
+    "author": "",
+    "caption": "Quellon by gotheyjoy",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Quellon_Greyjoy_by_gotheyjoy.jpg",
+    "id": "awoiaf:Quellon_Greyjoy",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/f/f1/Quellon_Greyjoy_by_gotheyjoy.jpg",
+    "pageTitle": "Quellon Greyjoy",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Quellon_Greyjoy"
   },
   "awoiaf:Quentyn_Ball": {
     "author": "",
@@ -2628,6 +3750,28 @@
     "pageTitle": "Quentyn Martell",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Quentyn_Martell"
   },
+  "awoiaf:Quentyn_Qorgyle": {
+    "author": "",
+    "caption": "Quentyn by Lopata Four",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Quentyn_Qorgyle_by_Lopata_Four.jpg",
+    "id": "awoiaf:Quentyn_Qorgyle",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/5/57/Quentyn_Qorgyle_by_Lopata_Four.jpg",
+    "pageTitle": "Quentyn Qorgyle",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Quentyn_Qorgyle"
+  },
+  "awoiaf:Qyburn": {
+    "author": "",
+    "caption": "Qyburn, by Mauro Dal Bo \u00a9 Fantasy Flight Games",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Qyburn_by_Mauro_Dal_Bo.png",
+    "id": "awoiaf:Qyburn",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/9/9a/Qyburn_by_Mauro_Dal_Bo.png",
+    "pageTitle": "Qyburn",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Qyburn"
+  },
   "awoiaf:Ralf_Stonehouse": {
     "author": "",
     "caption": "Ralf Stonehouse captains the Red Jester from atop its prow. \u00a9 Fantasy Flight Games",
@@ -2639,6 +3783,17 @@
     "pageTitle": "Ralf Stonehouse",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Ralf_Stonehouse"
   },
+  "awoiaf:Ramsay_Snow": {
+    "author": "",
+    "caption": "Ramsay Bolton, by Amok \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Ramsay_Bolton.jpg",
+    "id": "awoiaf:Ramsay_Snow",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/5/5f/Ramsay_Bolton.jpg",
+    "pageTitle": "Ramsay Snow",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Ramsay_Snow"
+  },
   "awoiaf:Randyll_Tarly": {
     "author": "",
     "caption": "Randyll Tarly - by Sardag \u00a9",
@@ -2649,6 +3804,17 @@
     "originalUrl": "https://awoiaf.westeros.org/images/2/20/Sardag_randyll_tarly.jpg",
     "pageTitle": "Randyll Tarly",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Randyll_Tarly"
+  },
+  "awoiaf:Raymund_Frey": {
+    "author": "",
+    "caption": "Raymund by Lopata 4",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Raymund_Frey_by_Lopata_4.jpg",
+    "id": "awoiaf:Raymund_Frey",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/6/62/Raymund_Frey_by_Lopata_4.jpg",
+    "pageTitle": "Raymund Frey",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Raymund_Frey"
   },
   "awoiaf:Raynald_Westerling": {
     "author": "",
@@ -2683,6 +3849,17 @@
     "pageTitle": "Rhae Targaryen",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Rhae_Targaryen"
   },
+  "awoiaf:Rhaegar_Frey": {
+    "author": "",
+    "caption": "Rhaegar by Lopata Four",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Rhaegar_Frey_by_Lopata_Four.jpg",
+    "id": "awoiaf:Rhaegar_Frey",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/c/c2/Rhaegar_Frey_by_Lopata_Four.jpg",
+    "pageTitle": "Rhaegar Frey",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Rhaegar_Frey"
+  },
   "awoiaf:Rhaegar_Targaryen": {
     "author": "",
     "caption": "Rhaegar Targaryen, as depicted by Karla Ortiz in The World of Ice & Fire",
@@ -2704,6 +3881,17 @@
     "originalUrl": "https://awoiaf.westeros.org/images/6/6e/Rhaella_targaryen_by_berghots.jpg",
     "pageTitle": "Rhaella Targaryen",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Rhaella_Targaryen"
+  },
+  "awoiaf:Rhea_Florent": {
+    "author": "",
+    "caption": "Rhea Florent by Laura Avellino",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Rhea_Florent_by_Laura_Avellino.jpg",
+    "id": "awoiaf:Rhea_Florent",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/a/a9/Rhea_Florent_by_Laura_Avellino.jpg",
+    "pageTitle": "Rhea Florent",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Rhea_Florent"
   },
   "awoiaf:Rhea_Royce": {
     "author": "",
@@ -2804,6 +3992,39 @@
     "pageTitle": "Robert Arryn",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Robert_Arryn"
   },
+  "awoiaf:Robert_Brax_son_of_Flement": {
+    "author": "",
+    "caption": "Robert by Lopata Four",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Robert_Brax_(son_of_Flement)_by_Lopata_Four.jpg",
+    "id": "awoiaf:Robert_Brax_son_of_Flement",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/a/af/Robert_Brax_%28son_of_Flement%29_by_Lopata_Four.jpg",
+    "pageTitle": "Robert Brax (son of Flement)",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Robert_Brax_(son_of_Flement)"
+  },
+  "awoiaf:Robert_Frey_son_of_Raymund": {
+    "author": "",
+    "caption": "Robert by Lopata Four",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Robert_Frey_by_Lopata_Four.jpg",
+    "id": "awoiaf:Robert_Frey_son_of_Raymund",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/d/da/Robert_Frey_by_Lopata_Four.jpg",
+    "pageTitle": "Robert Frey (son of Raymund)",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Robert_Frey_(son_of_Raymund)"
+  },
+  "awoiaf:Robert_Frey_son_of_Rhaegar": {
+    "author": "",
+    "caption": "Robert by dyannawynnedayne \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Robert_Frey_by_dyannawynnedayne.jpg",
+    "id": "awoiaf:Robert_Frey_son_of_Rhaegar",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/9/92/Robert_Frey_by_dyannawynnedayne.jpg",
+    "pageTitle": "Robert Frey (son of Rhaegar)",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Robert_Frey_(son_of_Rhaegar)"
+  },
   "awoiaf:Robert_I_Baratheon": {
     "author": "",
     "caption": "Robert on the Iron Throne, by Antonio José Manzanedo \u00a9 Fantasy Flight Games",
@@ -2826,6 +4047,17 @@
     "pageTitle": "Robett Glover",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Robett_Glover"
   },
+  "awoiaf:Robin_Potter": {
+    "author": "",
+    "caption": "Robin Potter by SquisherKing",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Robin_Potter.png",
+    "id": "awoiaf:Robin_Potter",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/7/7c/Robin_Potter.png",
+    "pageTitle": "Robin Potter",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Robin_Potter"
+  },
   "awoiaf:Robin_Ryger": {
     "author": "",
     "caption": "Robin Ryger by TheMarkyGallery \u00a9",
@@ -2836,6 +4068,17 @@
     "originalUrl": "https://awoiaf.westeros.org/images/2/23/Robin_ryger.jpg",
     "pageTitle": "Robin Ryger",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Robin_Ryger"
+  },
+  "awoiaf:Rodrik_Greyjoy": {
+    "author": "",
+    "caption": "Rodrik and Balon Greyjoy by Shebsart",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Balon_and_Rodrik_Greyjoy_by_Shebsart.png",
+    "id": "awoiaf:Rodrik_Greyjoy",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/7/78/Balon_and_Rodrik_Greyjoy_by_Shebsart.png",
+    "pageTitle": "Rodrik Greyjoy",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Rodrik_Greyjoy"
   },
   "awoiaf:Rodrik_Ryswell": {
     "author": "",
@@ -2903,6 +4146,17 @@
     "pageTitle": "Rolland Storm",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Rolland_Storm"
   },
+  "awoiaf:Rolland_Uffering": {
+    "author": "",
+    "caption": "Rolland by Lopata Four",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Rolland_Uffering_by_Lopata_4.jpg",
+    "id": "awoiaf:Rolland_Uffering",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/e/e4/Rolland_Uffering_by_Lopata_4.jpg",
+    "pageTitle": "Rolland Uffering",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Rolland_Uffering"
+  },
   "awoiaf:Rolph_Spicer": {
     "author": "",
     "caption": "Rolph, by TheMico",
@@ -2914,6 +4168,17 @@
     "pageTitle": "Rolph Spicer",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Rolph_Spicer"
   },
+  "awoiaf:Ronnel_Harclay": {
+    "author": "",
+    "caption": "Ronnel by Lopata Four",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Ronnel_Harclay_by_Lopata_Four.jpg",
+    "id": "awoiaf:Ronnel_Harclay",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/8/86/Ronnel_Harclay_by_Lopata_Four.jpg",
+    "pageTitle": "Ronnel Harclay",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Ronnel_Harclay"
+  },
   "awoiaf:Ronnet_Connington": {
     "author": "",
     "caption": "Ser Ronnet Connington by Sardag \u00a9",
@@ -2924,6 +4189,17 @@
     "originalUrl": "https://awoiaf.westeros.org/images/9/9d/Sardag_Red_Ronnet.jpg",
     "pageTitle": "Ronnet Connington",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Ronnet_Connington"
+  },
+  "awoiaf:Roose_Bolton": {
+    "author": "",
+    "caption": "Roose Bolton by Bella Bergolts \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Roose_bolton_by_berghots.jpg",
+    "id": "awoiaf:Roose_Bolton",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/4/40/Roose_bolton_by_berghots.jpg",
+    "pageTitle": "Roose Bolton",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Roose_Bolton"
   },
   "awoiaf:Roose_Ryswell": {
     "author": "",
@@ -2947,16 +4223,16 @@
     "pageTitle": "Roslin Frey",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Roslin_Frey"
   },
-  "awoiaf:Rowena_Arryn": {
+  "awoiaf:Rupert_Brax": {
     "author": "",
-    "caption": "Jeyne Royce, Rowena Arryn and Lysa Tully by coldraindropsss",
-    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Jeyne_Royce_Rowena_Arryn_and_Lysa_Tully_by_coldraindropsss.jpg",
-    "id": "awoiaf:Rowena_Arryn",
+    "caption": "Rupert by Lopata Four",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Rupert_Brax_by_Lopata_Four.jpg",
+    "id": "awoiaf:Rupert_Brax",
     "licenseName": "",
     "licenseUrl": "",
-    "originalUrl": "https://awoiaf.westeros.org/images/f/f2/Jeyne_Royce_Rowena_Arryn_and_Lysa_Tully_by_coldraindropsss.jpg",
-    "pageTitle": "Rowena Arryn",
-    "pageUrl": "https://awoiaf.westeros.org/index.php/Rowena_Arryn"
+    "originalUrl": "https://awoiaf.westeros.org/images/6/6f/Rupert_Brax_by_Lopata_Four.jpg",
+    "pageTitle": "Rupert Brax",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Rupert_Brax"
   },
   "awoiaf:Ryger_Rivers": {
     "author": "",
@@ -2968,6 +4244,17 @@
     "originalUrl": "https://awoiaf.westeros.org/images/4/4d/Walder_Rivers.png",
     "pageTitle": "Ryger Rivers",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Ryger_Rivers"
+  },
+  "awoiaf:Ryman_Frey": {
+    "author": "",
+    "caption": "Ryman by Lopata Four",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Ryman_Frey_by_Lopata_Four.jpg",
+    "id": "awoiaf:Ryman_Frey",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/5/55/Ryman_Frey_by_Lopata_Four.jpg",
+    "pageTitle": "Ryman Frey",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Ryman_Frey"
   },
   "awoiaf:Salladhor_Saan": {
     "author": "",
@@ -2991,6 +4278,17 @@
     "pageTitle": "Samwell Tarly",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Samwell_Tarly"
   },
+  "awoiaf:Sandor_Frey": {
+    "author": "",
+    "caption": "Sandor by Lopata Four",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Sandor_Frey_by_Lopata_Four.jpg",
+    "id": "awoiaf:Sandor_Frey",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/8/83/Sandor_Frey_by_Lopata_Four.jpg",
+    "pageTitle": "Sandor Frey",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Sandor_Frey"
+  },
   "awoiaf:Sansa_Stark": {
     "author": "",
     "caption": "Sansa Stark, by Vanessa Cole \u00a9",
@@ -3001,6 +4299,50 @@
     "originalUrl": "https://awoiaf.westeros.org/images/1/1e/Sansa_Stark_by_Vanessa_Cole.jpg",
     "pageTitle": "Sansa Stark",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Sansa_Stark"
+  },
+  "awoiaf:Sarella_Sand": {
+    "author": "",
+    "caption": "Sarella Sand, by Rae Lavergne \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Sarella_Sand_by_Rae_Lavergne.jpg",
+    "id": "awoiaf:Sarella_Sand",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/1/10/Sarella_Sand_by_Rae_Lavergne.jpg",
+    "pageTitle": "Sarella Sand",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Sarella_Sand"
+  },
+  "awoiaf:Sarra_Frey": {
+    "author": "",
+    "caption": "Sarra by Lopata Four",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Sarra_Frey_by_Lopata_Four.jpg",
+    "id": "awoiaf:Sarra_Frey",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/5/5b/Sarra_Frey_by_Lopata_Four.jpg",
+    "pageTitle": "Sarra Frey",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Sarra_Frey"
+  },
+  "awoiaf:Sarya_Whent": {
+    "author": "",
+    "caption": "Sarya Whent, by Helaenarts \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Sarya_Whent_by_Helaenarts.jpeg",
+    "id": "awoiaf:Sarya_Whent",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/f/f4/Sarya_Whent_by_Helaenarts.jpeg",
+    "pageTitle": "Sarya Whent",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Sarya_Whent"
+  },
+  "awoiaf:Satin": {
+    "author": "",
+    "caption": "Satin, by Marcia George-Bogdan \u00a9 Fantasy Flight Games",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:A_Maricia_Geroge-Bogdan_Satin.JPG",
+    "id": "awoiaf:Satin",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/1/19/A_Maricia_Geroge-Bogdan_Satin.JPG",
+    "pageTitle": "Satin",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Satin"
   },
   "awoiaf:Sefton_Staunton": {
     "author": "",
@@ -3024,6 +4366,28 @@
     "pageTitle": "Selwyn Tarth",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Selwyn_Tarth"
   },
+  "awoiaf:Serra_Frey": {
+    "author": "",
+    "caption": "Serra by Lopata Four",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Serra_Frey_by_Lopata_Four.jpg",
+    "id": "awoiaf:Serra_Frey",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/1/14/Serra_Frey_by_Lopata_Four.jpg",
+    "pageTitle": "Serra Frey",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Serra_Frey"
+  },
+  "awoiaf:Shae": {
+    "author": "",
+    "caption": "Art by Amok \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Shae_by_Amoka.jpg",
+    "id": "awoiaf:Shae",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/a/a9/Shae_by_Amoka.jpg",
+    "pageTitle": "Shae",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Shae"
+  },
   "awoiaf:Shaena_Targaryen": {
     "author": "",
     "caption": "Shaena Targaryen by RLandH",
@@ -3045,6 +4409,17 @@
     "originalUrl": "https://awoiaf.westeros.org/images/0/03/Shireen_Baratheon.jpg",
     "pageTitle": "Shireen Baratheon",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Shireen_Baratheon"
+  },
+  "awoiaf:Shirei_Frey": {
+    "author": "",
+    "caption": "Shirei by Lopata 4",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Shirei_Frey_by_Lopata_4.jpg",
+    "id": "awoiaf:Shirei_Frey",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/1/17/Shirei_Frey_by_Lopata_4.jpg",
+    "pageTitle": "Shirei Frey",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Shirei_Frey"
   },
   "awoiaf:Shyra_Errol": {
     "author": "",
@@ -3123,6 +4498,28 @@
     "pageTitle": "Steffon Seaworth",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Steffon_Seaworth"
   },
+  "awoiaf:Stevron_Frey": {
+    "author": "",
+    "caption": "Stevron by Lopata Four \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Stevron_Frey_by_Lopata_4.jpg",
+    "id": "awoiaf:Stevron_Frey",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/0/0b/Stevron_Frey_by_Lopata_4.jpg",
+    "pageTitle": "Stevron Frey",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Stevron_Frey"
+  },
+  "awoiaf:Styr": {
+    "author": "",
+    "caption": "Styr, by Mike S Miller \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Styr_by_Mike_S_Miller.jpg",
+    "id": "awoiaf:Styr",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/0/0c/Styr_by_Mike_S_Miller.jpg",
+    "pageTitle": "Styr",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Styr"
+  },
   "awoiaf:Sybell_Spicer": {
     "author": "",
     "caption": "Sybell Spicer by Amuelia",
@@ -3133,6 +4530,28 @@
     "originalUrl": "https://awoiaf.westeros.org/images/4/4e/Sybell_Spicer_by_Amuelia.jpg",
     "pageTitle": "Sybell Spicer",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Sybell_Spicer"
+  },
+  "awoiaf:Sylva_Santagar": {
+    "author": "",
+    "caption": "Sylva Santagar, by Rae Lavergne \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Sylva_Santagar_by_Rae_Lavergne.jpg",
+    "id": "awoiaf:Sylva_Santagar",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/f/f8/Sylva_Santagar_by_Rae_Lavergne.jpg",
+    "pageTitle": "Sylva Santagar",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Sylva_Santagar"
+  },
+  "awoiaf:Symond_Frey": {
+    "author": "",
+    "caption": "Symond by Lopata 4",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Symond_Frey_by_Lopata_4.jpg",
+    "id": "awoiaf:Symond_Frey",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/d/d0/Symond_Frey_by_Lopata_4.jpg",
+    "pageTitle": "Symond Frey",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Symond_Frey"
   },
   "awoiaf:Symond_Templeton": {
     "author": "",
@@ -3200,6 +4619,28 @@
     "pageTitle": "Thoren Smallwood",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Thoren_Smallwood"
   },
+  "awoiaf:Thoros": {
+    "author": "",
+    "caption": "Thoros of Myr, art by Matt Olson \u00a9.",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Thoros_of_Myr_TheMico.jpg",
+    "id": "awoiaf:Thoros",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/6/6d/Thoros_of_Myr_TheMico.jpg",
+    "pageTitle": "Thoros",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Thoros"
+  },
+  "awoiaf:Tion_Frey": {
+    "author": "",
+    "caption": "Tion by Lopata Four \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Tion_Frey_by_Lopata_Four.jpg",
+    "id": "awoiaf:Tion_Frey",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/4/4f/Tion_Frey_by_Lopata_Four.jpg",
+    "pageTitle": "Tion Frey",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Tion_Frey"
+  },
   "awoiaf:Tion_Tarbeck": {
     "author": "",
     "caption": "Tion's death, as depicted in Game of Thrones: Histories & Lore.",
@@ -3244,6 +4685,28 @@
     "pageTitle": "Torman Peake",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Torman_Peake"
   },
+  "awoiaf:Torrhen_Karstark": {
+    "author": "",
+    "caption": "",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Torrhen_Karstark_TheMico.jpg",
+    "id": "awoiaf:Torrhen_Karstark",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/8/89/Torrhen_Karstark_TheMico.jpg",
+    "pageTitle": "Torrhen Karstark",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Torrhen_Karstark"
+  },
+  "awoiaf:Tristifer_Botley": {
+    "author": "",
+    "caption": "Tristifer by Tiziano Baracci \u00a9 Fantasy Flight Games",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Trisbotley_by_tizianobaracchi.jpg",
+    "id": "awoiaf:Tristifer_Botley",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/6/63/Trisbotley_by_tizianobaracchi.jpg",
+    "pageTitle": "Tristifer Botley",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Tristifer_Botley"
+  },
   "awoiaf:Triston_Sunderland": {
     "author": "",
     "caption": "Ursula Upcliff, Triston Sunderland, and Gella by coldraindropsss",
@@ -3277,6 +4740,28 @@
     "pageTitle": "Tycho Nestoris",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Tycho_Nestoris"
   },
+  "awoiaf:Tyene_Sand": {
+    "author": "",
+    "caption": "Tyene Sand by Bella Bergolts",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Bella_Bergolts_Tyene_Sand.jpg",
+    "id": "awoiaf:Tyene_Sand",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/c/c2/Bella_Bergolts_Tyene_Sand.jpg",
+    "pageTitle": "Tyene Sand",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Tyene_Sand"
+  },
+  "awoiaf:Tygett_Lannister": {
+    "author": "",
+    "caption": "Tygett, by TheMico \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Tygett_Lannister_TheMico.jpg",
+    "id": "awoiaf:Tygett_Lannister",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/b/bf/Tygett_Lannister_TheMico.jpg",
+    "pageTitle": "Tygett Lannister",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Tygett_Lannister"
+  },
   "awoiaf:Tyrek_Lannister": {
     "author": "",
     "caption": "Tyrek Lannister and Ermesande Hayford, by Amuelia \u00a9",
@@ -3299,6 +4784,17 @@
     "pageTitle": "Tyrion Lannister",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Tyrion_Lannister"
   },
+  "awoiaf:Tyta_Frey": {
+    "author": "",
+    "caption": "Tyta by Lopata Four",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Tyta_Frey_by_Lopata_4.jpg",
+    "id": "awoiaf:Tyta_Frey",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/d/da/Tyta_Frey_by_Lopata_4.jpg",
+    "pageTitle": "Tyta Frey",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Tyta_Frey"
+  },
   "awoiaf:Tytos_Blackwood": {
     "author": "",
     "caption": "Tytos Blackwood by Vanessa Cole \u00a9",
@@ -3309,6 +4805,17 @@
     "originalUrl": "https://awoiaf.westeros.org/images/7/7f/Tytos_Blackwood_by_Vanessa_Cole.jpg",
     "pageTitle": "Tytos Blackwood",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Tytos_Blackwood"
+  },
+  "awoiaf:Tytos_Frey": {
+    "author": "",
+    "caption": "Tytos by Lopata Four",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Tytos_Frey_by_Lopata_Four.jpg",
+    "id": "awoiaf:Tytos_Frey",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/c/c2/Tytos_Frey_by_Lopata_Four.jpg",
+    "pageTitle": "Tytos Frey",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Tytos_Frey"
   },
   "awoiaf:Tytos_Lannister": {
     "author": "",
@@ -3365,6 +4872,17 @@
     "pageTitle": "Vargo Hoat",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Vargo_Hoat"
   },
+  "awoiaf:Varys": {
+    "author": "",
+    "caption": "Varys by Amok\u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Varys_by_Amoka.jpg",
+    "id": "awoiaf:Varys",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/1/14/Varys_by_Amoka.jpg",
+    "pageTitle": "Varys",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Varys"
+  },
   "awoiaf:Vickon_Greyjoy": {
     "author": "",
     "caption": "Vickon, as depicted in Game of Thrones: Histories and Lore.",
@@ -3387,6 +4905,17 @@
     "pageTitle": "Viserys Targaryen",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Viserys_Targaryen"
   },
+  "awoiaf:Walda_Frey_daughter_of_Edwyn": {
+    "author": "",
+    "caption": "Walda Frey, by dyannawynnedayne \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Walda_Frey_(daughter_of_Edwyn)_by_asoiafsmackdown.png",
+    "id": "awoiaf:Walda_Frey_daughter_of_Edwyn",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/3/30/Walda_Frey_%28daughter_of_Edwyn%29_by_asoiafsmackdown.png",
+    "pageTitle": "Walda Frey (daughter of Edwyn)",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Walda_Frey_(daughter_of_Edwyn)"
+  },
   "awoiaf:Walda_Frey_daughter_of_Merrett": {
     "author": "",
     "caption": "Walda Frey, by Elia Fernandez \u00a9",
@@ -3397,6 +4926,17 @@
     "originalUrl": "https://awoiaf.westeros.org/images/8/8a/Walda_frey_by_elia_illustration-d5bfjer.jpg",
     "pageTitle": "Walda Frey (daughter of Merrett)",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Walda_Frey_(daughter_of_Merrett)"
+  },
+  "awoiaf:Walda_Frey_daughter_of_Rhaegar": {
+    "author": "",
+    "caption": "Walda by dyannawynnedayne \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:White_Walda_Frey_by_dyannawynnedayne.jpg",
+    "id": "awoiaf:Walda_Frey_daughter_of_Rhaegar",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/1/1c/White_Walda_Frey_by_dyannawynnedayne.jpg",
+    "pageTitle": "Walda Frey (daughter of Rhaegar)",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Walda_Frey_(daughter_of_Rhaegar)"
   },
   "awoiaf:Walda_Frey_daughter_of_Walton": {
     "author": "",
@@ -3420,6 +4960,17 @@
     "pageTitle": "Walda Rivers (daughter of Aemon)",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Walda_Rivers_(daughter_of_Aemon)"
   },
+  "awoiaf:Walder_Frey_son_of_Emmon": {
+    "author": "",
+    "caption": "Red Walder by Lopata Four \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Red_Walder_Frey_by_Lopata_Four.jpg",
+    "id": "awoiaf:Walder_Frey_son_of_Emmon",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/d/d1/Red_Walder_Frey_by_Lopata_Four.jpg",
+    "pageTitle": "Walder Frey (son of Emmon)",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Walder_Frey_(son_of_Emmon)"
+  },
   "awoiaf:Walder_Frey_son_of_Jammos": {
     "author": "",
     "caption": "",
@@ -3431,6 +4982,17 @@
     "pageTitle": "Walder Frey (son of Jammos)",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Walder_Frey_(son_of_Jammos)"
   },
+  "awoiaf:Walder_Frey_son_of_Merrett": {
+    "author": "",
+    "caption": "Little Walder by Lopata Four \u00a9",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Little_Walder_Frey_by_Lopata_Four.jpg",
+    "id": "awoiaf:Walder_Frey_son_of_Merrett",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/0/0d/Little_Walder_Frey_by_Lopata_Four.jpg",
+    "pageTitle": "Walder Frey (son of Merrett)",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Walder_Frey_(son_of_Merrett)"
+  },
   "awoiaf:Walder_Rivers": {
     "author": "",
     "caption": "Walder Rivers by [http://cloudninja9.deviantart.com/ cloudninja9]\u00a9",
@@ -3441,6 +5003,28 @@
     "originalUrl": "https://awoiaf.westeros.org/images/9/98/Walder_Rivers_by_cloudninja9.jpg",
     "pageTitle": "Walder Rivers",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Walder_Rivers"
+  },
+  "awoiaf:Walderan_Tarbeck": {
+    "author": "",
+    "caption": "Walderan (left), alongside Ellyn & Roger Reyne by Lopata 4",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Walderan_Tarbeck,_Ellyn_Reyne,_and_Roger_Reyne_by_Lopata_4.jpg",
+    "id": "awoiaf:Walderan_Tarbeck",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/4/43/Walderan_Tarbeck%2C_Ellyn_Reyne%2C_and_Roger_Reyne_by_Lopata_4.jpg",
+    "pageTitle": "Walderan Tarbeck",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Walderan_Tarbeck"
+  },
+  "awoiaf:Walton_Frey": {
+    "author": "",
+    "caption": "Walton by Lopata Four",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Walton_Frey_by_Lopata_Four.jpg",
+    "id": "awoiaf:Walton_Frey",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/7/76/Walton_Frey_by_Lopata_Four.jpg",
+    "pageTitle": "Walton Frey",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Walton_Frey"
   },
   "awoiaf:Waymar_Royce": {
     "author": "",
@@ -3464,6 +5048,17 @@
     "pageTitle": "Wex Pyke",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Wex_Pyke"
   },
+  "awoiaf:Whalen_Frey": {
+    "author": "",
+    "caption": "Whalen by Lopata 4",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Whalen_Frey_by_Lopata_4.jpg",
+    "id": "awoiaf:Whalen_Frey",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/9/92/Whalen_Frey_by_Lopata_4.jpg",
+    "pageTitle": "Whalen Frey",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Whalen_Frey"
+  },
   "awoiaf:Willam_Dustin": {
     "author": "",
     "caption": "Willam Dustin, by TheMico \u00a9",
@@ -3485,6 +5080,17 @@
     "originalUrl": "https://awoiaf.westeros.org/images/d/dc/Willam_Stackspear_by_Paolo_Puggioni_%28The_Rise_of_the_Dragon%29.jpg",
     "pageTitle": "Willam Stackspear",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Willam_Stackspear"
+  },
+  "awoiaf:Willamen_Frey": {
+    "author": "",
+    "caption": "Willamen by Lopata 4",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Willamen_Frey_by_Lopata_4.jpg",
+    "id": "awoiaf:Willamen_Frey",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/4/4b/Willamen_Frey_by_Lopata_4.jpg",
+    "pageTitle": "Willamen Frey",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Willamen_Frey"
   },
   "awoiaf:Willas_Tyrell": {
     "author": "",
@@ -3518,17 +5124,6 @@
     "originalUrl": "https://awoiaf.westeros.org/images/4/4d/William_Mooton_by_marky.jpg",
     "pageTitle": "William Mooton",
     "pageUrl": "https://awoiaf.westeros.org/index.php/William_Mooton"
-  },
-  "awoiaf:Willow_Heddle": {
-    "author": "",
-    "caption": "Jeyne Heddle and Willow Heddle (right) by coldraindropsss",
-    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Jeyne_Heddle_and_Willow_Heddle_by_coldraindropsss.jpg",
-    "id": "awoiaf:Willow_Heddle",
-    "licenseName": "",
-    "licenseUrl": "",
-    "originalUrl": "https://awoiaf.westeros.org/images/f/f1/Jeyne_Heddle_and_Willow_Heddle_by_coldraindropsss.jpg",
-    "pageTitle": "Willow Heddle",
-    "pageUrl": "https://awoiaf.westeros.org/index.php/Willow_Heddle"
   },
   "awoiaf:Wylis_Manderly": {
     "author": "",
@@ -3573,5 +5168,49 @@
     "originalUrl": "https://awoiaf.westeros.org/images/5/55/Wynafrei_Whent_by_ellemnopie.jpg",
     "pageTitle": "Wynafrei Whent",
     "pageUrl": "https://awoiaf.westeros.org/index.php/Wynafrei_Whent"
+  },
+  "awoiaf:Wynafryd_Manderly": {
+    "author": "",
+    "caption": "Wynafryd Manderly, by [http://eluas.deviantart.com/ Eluas]",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Wynafryd_manderly_by_eluas.png",
+    "id": "awoiaf:Wynafryd_Manderly",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/0/0b/Wynafryd_manderly_by_eluas.png",
+    "pageTitle": "Wynafryd Manderly",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Wynafryd_Manderly"
+  },
+  "awoiaf:Ygritte": {
+    "author": "",
+    "caption": "Ygritte by [http://steamey.deviantart.com Steamey\u00a9]",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Ygritte_by_steamey.jpg",
+    "id": "awoiaf:Ygritte",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/9/97/Ygritte_by_steamey.jpg",
+    "pageTitle": "Ygritte",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Ygritte"
+  },
+  "awoiaf:Yohn_Royce": {
+    "author": "",
+    "caption": "Bronze Yohn Royce, by Even Mehl Amundsen \u00a9 FFG",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Yohn-royce.png",
+    "id": "awoiaf:Yohn_Royce",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/b/b5/Yohn-royce.png",
+    "pageTitle": "Yohn Royce",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Yohn_Royce"
+  },
+  "awoiaf:Zhoe_Blanetree": {
+    "author": "",
+    "caption": "Zhoe by Lopata 4",
+    "descriptionUrl": "https://awoiaf.westeros.org/index.php/File:Zhoe_Blanetree_by_Lopata_4.jpg",
+    "id": "awoiaf:Zhoe_Blanetree",
+    "licenseName": "",
+    "licenseUrl": "",
+    "originalUrl": "https://awoiaf.westeros.org/images/d/d3/Zhoe_Blanetree_by_Lopata_4.jpg",
+    "pageTitle": "Zhoe Blanetree",
+    "pageUrl": "https://awoiaf.westeros.org/index.php/Zhoe_Blanetree"
   }
 }

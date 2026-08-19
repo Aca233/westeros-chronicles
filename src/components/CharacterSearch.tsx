@@ -59,7 +59,7 @@ export const CharacterSearch: React.FC<CharacterSearchProps> = ({ onSelectCharac
         type="button"
         data-character-search-trigger
         onClick={() => setOpen(true)}
-        className="btn-ghost w-full justify-center !py-2 text-[10px]"
+        className="flex w-full items-center justify-center gap-2 border border-dashed border-hairline-bright/70 py-2.5 font-serif text-[10.5px] tracking-[0.16em] text-parchment-faint transition-colors hover:border-gold hover:text-gold"
       >
         <Search className="h-3.5 w-3.5" />
         查找人物档案

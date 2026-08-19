@@ -89,7 +89,15 @@ def _image_filename(value: str) -> str:
     file_link = re.search(r"\[\[(?:File|Image):([^]|]+)", value, flags=re.IGNORECASE)
     filename = file_link.group(1) if file_link else value
     filename = re.sub(r"<!--.*?-->", "", filename, flags=re.DOTALL).strip()
-    return re.sub(r"^(?:File|Image):", "", filename, flags=re.IGNORECASE).strip()
+    filename = re.sub(r"^(?:File|Image):", "", filename, flags=re.IGNORECASE).strip()
+    if "|" in filename:
+        filename = filename.split("|", 1)[0].strip()
+    return filename
+
+
+def _normalize_image_key(filename: str) -> str:
+    clean = _image_filename(filename)
+    return re.sub(r"[_\s]+", "_", clean.strip().lower())
 
 
 def _clean_wiki(value: str) -> str:
@@ -128,6 +136,7 @@ class AwoiafClient:
         self.cache_dir = cache_dir
         self.offline_cache_only = offline_cache_only
         self.fetch_json = fetch_json or self._default_fetch
+        self.images: dict[str, WikiImageInfo] = {}
 
     def _default_fetch(self, params: Mapping[str, str]) -> Mapping[str, Any]:
         query = {"action": "query", "format": "json", "formatversion": "2", "maxlag": "5", **params}
@@ -183,8 +192,47 @@ class AwoiafClient:
         for index in range(0, len(values), size):
             yield values[index:index + size]
 
-    def build_catalog(self) -> list[WikiCharacterPage]:
-        titles = self.list_character_titles()
+    def fetch_image_info(self, filenames: Iterable[str]) -> dict[str, WikiImageInfo]:
+        cleaned = [_image_filename(name) for name in filenames if name and _image_filename(name)]
+        if not cleaned:
+            return {}
+        images: dict[str, WikiImageInfo] = {}
+        for batch in self._batches(sorted(set(cleaned))):
+            payload = self.fetch_json({
+                "prop": "imageinfo",
+                "iiprop": "url|size|mime|extmetadata",
+                "titles": "|".join(f"File:{name}" for name in batch),
+            })
+            for page in payload.get("query", {}).get("pages", []):
+                info_rows = page.get("imageinfo") or []
+                if not info_rows:
+                    continue
+                info = info_rows[0]
+                filename = str(page.get("title", "")).removeprefix("File:")
+                metadata = info.get("extmetadata") or {}
+                img_info = WikiImageInfo(
+                    filename=filename,
+                    url=str(info.get("url", "")),
+                    description_url=str(info.get("descriptionurl", "")),
+                    width=int(info.get("width", 0)),
+                    height=int(info.get("height", 0)),
+                    mime=str(info.get("mime", "")),
+                    author=_metadata_value(metadata, "Artist"),
+                    license_name=_metadata_value(metadata, "LicenseShortName"),
+                    license_url=_metadata_value(metadata, "LicenseUrl"),
+                )
+                images[filename] = img_info
+                images[_normalize_image_key(filename)] = img_info
+                images[filename.replace(" ", "_")] = img_info
+                images[filename.replace("_", " ")] = img_info
+        return images
+
+    def build_catalog(
+        self,
+        extra_titles: Iterable[str] = (),
+        extra_images: Iterable[str] = (),
+    ) -> list[WikiCharacterPage]:
+        titles = sorted(set(self.list_character_titles()) | {t.strip() for t in extra_titles if t and t.strip()})
         raw_pages: list[Mapping[str, Any]] = []
         for batch in self._batches(titles):
             payload = self.fetch_json({
@@ -201,41 +249,25 @@ class AwoiafClient:
             revisions = page.get("revisions") or []
             fields = _infobox_fields(str(revisions[0].get("content", ""))) if revisions else {}
             if not fields:
-                continue
+                if str(page.get("title", "")) in set(extra_titles):
+                    title_str = str(page.get("title", ""))
+                    parts = title_str.split(" ", 1)
+                    fields = {"firstname": parts[0], "lastname": parts[1] if len(parts) > 1 else ""}
+                else:
+                    continue
             parsed_pages.append((page, fields))
             image_name = _image_filename(fields.get("image", ""))
             if image_name:
                 image_names.append(image_name)
 
-        images: dict[str, WikiImageInfo] = {}
-        for batch in self._batches(sorted(set(image_names))):
-            payload = self.fetch_json({
-                "prop": "imageinfo",
-                "iiprop": "url|size|mime|extmetadata",
-                "titles": "|".join(f"File:{name}" for name in batch),
-            })
-            for page in payload.get("query", {}).get("pages", []):
-                info_rows = page.get("imageinfo") or []
-                if not info_rows:
-                    continue
-                info = info_rows[0]
-                filename = str(page.get("title", "")).removeprefix("File:")
-                metadata = info.get("extmetadata") or {}
-                images[filename] = WikiImageInfo(
-                    filename=filename,
-                    url=str(info.get("url", "")),
-                    description_url=str(info.get("descriptionurl", "")),
-                    width=int(info.get("width", 0)),
-                    height=int(info.get("height", 0)),
-                    mime=str(info.get("mime", "")),
-                    author=_metadata_value(metadata, "Artist"),
-                    license_name=_metadata_value(metadata, "LicenseShortName"),
-                    license_url=_metadata_value(metadata, "LicenseUrl"),
-                )
+        image_names.extend(_image_filename(name) for name in extra_images if name and _image_filename(name))
+        images = self.fetch_image_info(image_names)
+        self.images.update(images)
 
         catalog = []
         for page, fields in parsed_pages:
             image_name = _image_filename(fields.get("image", ""))
+            img_info = images.get(image_name) or images.get(_normalize_image_key(image_name)) if image_name else None
             catalog.append(WikiCharacterPage(
                 title=str(page["title"]),
                 page_url=str(page.get("fullurl", "")),
@@ -247,6 +279,6 @@ class AwoiafClient:
                 mother=_clean_wiki(fields.get("mother", "")),
                 birth_year=_birth_year(fields.get("date_of_birth", "")),
                 image_caption=_clean_wiki(fields.get("image_caption", "")),
-                image=images.get(image_name),
+                image=img_info,
             ))
         return sorted(catalog, key=lambda page: page.title)

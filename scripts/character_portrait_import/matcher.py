@@ -3,10 +3,10 @@ from __future__ import annotations
 
 import re
 import unicodedata
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from typing import Any, Iterable, Mapping
 
-from .wiki import WikiCharacterPage
+from .wiki import WikiCharacterPage, WikiImageInfo, _image_filename, _normalize_image_key
 
 
 MINIMUM_SCORE = 80
@@ -40,6 +40,7 @@ class MatchedPortrait:
     score: int
     source: str
     focal_point: str | None = None
+    evidence: Mapping[str, str] | None = None
 
 
 @dataclass
@@ -100,6 +101,7 @@ def match_characters(
     kinship: Mapping[str, Mapping[str, Any]],
     pages: Iterable[WikiCharacterPage],
     overrides: Mapping[str, Any],
+    images: Mapping[str, WikiImageInfo] | None = None,
 ) -> PortraitMatchResult:
     del kinship  # Parent pointers are already present on static records.
     record_list = sorted((dict(record) for record in records), key=lambda record: record["id"])
@@ -112,23 +114,49 @@ def match_characters(
 
     result = PortraitMatchResult()
     reserved_pages: set[str] = set()
+    reserved_images: set[str] = set()
+
     for character_id, raw_override in sorted(overrides.items()):
         if character_id not in records_by_id:
             raise ValueError(f"头像覆盖引用不存在人物：{character_id}")
         override = {"pageTitle": raw_override} if isinstance(raw_override, str) else dict(raw_override)
-        page_title = str(override.get("pageTitle", ""))
+        page_title = str(override.get("pageTitle", "")).strip()
         page = pages_by_title.get(page_title)
         if page is None:
             raise ValueError(f"头像覆盖引用不存在页面：{page_title}")
         if page_title in reserved_pages:
             raise ValueError(f"头像覆盖重复使用页面：{page_title}")
         reserved_pages.add(page_title)
+
+        image_title = str(override.get("imageTitle", "")).strip() if override.get("imageTitle") else None
+        if image_title:
+            img_name = _image_filename(image_title)
+            img_key = _normalize_image_key(img_name)
+            if img_key in reserved_images:
+                raise ValueError(f"头像覆盖重复使用图片：{image_title}")
+            reserved_images.add(img_key)
+
+            img_info: WikiImageInfo | None = None
+            if images:
+                img_info = images.get(img_name) or images.get(img_key) or images.get(img_name.replace(" ", "_"))
+            if img_info is None and page.image and _normalize_image_key(page.image.filename) == img_key:
+                img_info = page.image
+            if img_info is None:
+                raise ValueError(f"头像覆盖引用不存在图片：{image_title}")
+            page = replace(page, image=img_info)
+        elif page.image:
+            img_key = _normalize_image_key(page.image.filename)
+            if img_key in reserved_images:
+                raise ValueError(f"头像覆盖重复使用图片：{page.image.filename}")
+            reserved_images.add(img_key)
+
         result.accepted[character_id] = MatchedPortrait(
             character_id=character_id,
             page=page,
             score=1000,
             source="override",
             focal_point=override.get("focalPoint"),
+            evidence=override.get("evidence") if isinstance(override.get("evidence"), dict) else None,
         )
 
     tentative: dict[str, tuple[WikiCharacterPage, int]] = {}
@@ -140,6 +168,8 @@ def match_characters(
         name = normalize(record.get("nameKey") or record.get("name"))
         for page in pages_by_name.get(name, []):
             if page.title in reserved_pages:
+                continue
+            if page.image and _normalize_image_key(page.image.filename) in reserved_images:
                 continue
             score = _score_page(record, page, records_by_id)
             if score is not None:
@@ -156,14 +186,26 @@ def match_characters(
         tentative[character_id] = (top_page, top_score)
 
     characters_by_page: dict[str, list[str]] = {}
+    characters_by_image: dict[str, list[str]] = {}
     for character_id, (page, _) in tentative.items():
         characters_by_page.setdefault(page.title, []).append(character_id)
+        if page.image:
+            img_key = _normalize_image_key(page.image.filename)
+            characters_by_image.setdefault(img_key, []).append(character_id)
+
     for character_id, (page, score) in sorted(tentative.items()):
         collisions = sorted(characters_by_page[page.title])
         if len(collisions) > 1:
             result.ambiguous[character_id] = [page.title]
             result.conflicts[character_id] = collisions
             continue
+        if page.image:
+            img_key = _normalize_image_key(page.image.filename)
+            img_collisions = sorted(characters_by_image[img_key])
+            if len(img_collisions) > 1:
+                result.ambiguous[character_id] = [page.title]
+                result.conflicts[character_id] = img_collisions
+                continue
         result.accepted[character_id] = MatchedPortrait(
             character_id=character_id,
             page=page,

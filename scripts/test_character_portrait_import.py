@@ -83,6 +83,83 @@ class PortraitMatcherTests(unittest.TestCase):
         self.assertEqual(match.source, "override")
         self.assertEqual(match.focal_point, "50% 20%")
 
+    def test_old_overrides_format_compatibility(self) -> None:
+        string_override_result = match_characters(
+            self.records, {}, self.pages,
+            {"agot:Stark_7": "Jon Snow"},
+        )
+        self.assertEqual(string_override_result.accepted["agot:Stark_7"].page.title, "Jon Snow")
+
+        dict_override_result = match_characters(
+            self.records, {}, self.pages,
+            {"agot:Stark_7": {"pageTitle": "Jon Snow", "focalPoint": "50% 18%"}},
+        )
+        self.assertEqual(dict_override_result.accepted["agot:Stark_7"].focal_point, "50% 18%")
+
+    def test_manual_image_title_override_uses_specified_image_and_evidence(self) -> None:
+        custom_image = WikiImageInfo(
+            filename="Custom_Jon.png", url="https://images.test/custom_jon.png",
+            description_url="https://awoiaf.westeros.org/index.php/File:Custom_Jon.png",
+            width=500, height=700, mime="image/png", author="Custom Artist",
+            license_name="Fair use", license_url="",
+        )
+        images = {"Custom_Jon.png": custom_image}
+        result = match_characters(
+            self.records, {}, self.pages,
+            {
+                "agot:Stark_7": {
+                    "pageTitle": "Jon Snow",
+                    "imageTitle": "File:Custom_Jon.png",
+                    "focalPoint": "50% 25%",
+                    "evidence": {
+                        "name": "Jon",
+                        "dynasty": "Stark allegiance",
+                        "birth": "283",
+                        "parents": "Ned Stark",
+                    },
+                }
+            },
+            images=images,
+        )
+        match = result.accepted["agot:Stark_7"]
+        self.assertEqual(match.page.image.filename, "Custom_Jon.png")
+        self.assertEqual(match.evidence["name"], "Jon")
+        self.assertEqual(match.focal_point, "50% 25%")
+
+    def test_nonexistent_image_title_raises_error(self) -> None:
+        with self.assertRaises(ValueError):
+            match_characters(
+                self.records, {}, self.pages,
+                {"agot:Stark_7": {"pageTitle": "Jon Snow", "imageTitle": "File:Nonexistent_Image.png"}},
+            )
+
+    def test_duplicate_override_page_title_raises_error(self) -> None:
+        with self.assertRaises(ValueError):
+            match_characters(
+                self.records, {}, self.pages,
+                {
+                    "agot:Stark_3": {"pageTitle": "Eddard Stark"},
+                    "agot:Stark_1": {"pageTitle": "Eddard Stark"},
+                },
+            )
+
+    def test_duplicate_override_image_title_raises_error(self) -> None:
+        custom_image = WikiImageInfo(
+            filename="Shared.png", url="https://images.test/shared.png",
+            description_url="https://awoiaf.westeros.org/index.php/File:Shared.png",
+            width=500, height=700, mime="image/png",
+        )
+        images = {"Shared.png": custom_image}
+        with self.assertRaises(ValueError):
+            match_characters(
+                self.records, {}, self.pages,
+                {
+                    "agot:Stark_3": {"pageTitle": "Eddard Stark", "imageTitle": "Shared.png"},
+                    "agot:Stark_7": {"pageTitle": "Jon Snow", "imageTitle": "Shared.png"},
+                },
+                images=images,
+            )
+
     def test_family_and_birth_conflicts_are_not_accepted(self) -> None:
         wrong_pages = [page("Eddard Tallhart", "Eddard", "Tallhart", "House Tallhart", 100)]
         result = match_characters(self.records, {}, wrong_pages, {})
@@ -108,9 +185,9 @@ class PortraitWriterTests(unittest.TestCase):
         self.assertEqual(json.loads(payload)["caption"], "Artist © Publisher")
 
     @staticmethod
-    def image_bytes(size=(192, 192), image_format="PNG") -> bytes:
+    def image_bytes(size=(192, 192), image_format="PNG", color=(80, 60, 40)) -> bytes:
         output = BytesIO()
-        Image.new("RGB", size, (80, 60, 40)).save(output, format=image_format)
+        Image.new("RGB", size, color).save(output, format=image_format)
         return output.getvalue()
 
     def test_caps_large_source_dimensions_during_webp_conversion(self) -> None:
@@ -122,14 +199,14 @@ class PortraitWriterTests(unittest.TestCase):
             self.assertLessEqual(image.height, 800)
 
     @staticmethod
-    def illustrated_page(title="Eddard Stark", caption="Eddard Stark, by Artist"):
+    def illustrated_page(title="Eddard Stark", caption="Eddard Stark, by Artist", image_url=None):
         return WikiCharacterPage(
             title=title, page_url=f"https://awoiaf.westeros.org/index.php/{title.replace(' ', '_')}",
             firstname=title.split()[0], lastname=title.split()[-1], aliases="", allegiance="House Stark",
             father="", mother="", birth_year=263, image_caption=caption,
             image=WikiImageInfo(
-                filename=f"{title}.png", url=f"https://images.test/{title}.png",
-                description_url=f"https://awoiaf.westeros.org/index.php/File:{title}.png",
+                filename=f"{title}.png", url=image_url or f"https://images.test/{title.replace(' ', '_')}.png",
+                description_url=f"https://awoiaf.westeros.org/index.php/File:{title.replace(' ', '_')}.png",
                 width=900, height=1200, mime="image/png", author="Artist", license_name="Fair use",
                 license_url="https://example.test/license",
             ),
@@ -166,15 +243,45 @@ class PortraitWriterTests(unittest.TestCase):
             self.assertEqual(len(list((root / "data" / "shards").glob("*.json"))), 256)
 
     def test_rejects_television_and_non_character_images(self) -> None:
-        rejected = MatchedPortrait(
-            "agot:Stark_3", self.illustrated_page(caption="HBO television series screenshot"), 140, "automatic"
+        for forbidden in ("HBO television series screenshot", "House Sigil", "Map of the North", "Weapon illustration", "Actor promo still"):
+            rejected = MatchedPortrait(
+                "agot:Stark_3", self.illustrated_page(caption=forbidden), 140, "automatic"
+            )
+            result = PortraitMatchResult(accepted={"agot:Stark_3": rejected})
+            with tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                report = write_portrait_dataset(result, root / "data", root / "assets", lambda _: self.image_bytes())
+                self.assertEqual(report.accepted, 0)
+                self.assertEqual(report.rejected, 1)
+
+    def test_duplicate_original_url_raises_error(self) -> None:
+        page1 = self.illustrated_page("Jon Snow", image_url="https://images.test/same.png")
+        page2 = self.illustrated_page("Robb Stark", image_url="https://images.test/same.png")
+        result = PortraitMatchResult(
+            accepted={
+                "agot:Stark_7": MatchedPortrait("agot:Stark_7", page1, 100, "automatic"),
+                "agot:Stark_6": MatchedPortrait("agot:Stark_6", page2, 100, "automatic"),
+            }
         )
-        result = PortraitMatchResult(accepted={"agot:Stark_3": rejected})
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            report = write_portrait_dataset(result, root / "data", root / "assets", lambda _: self.image_bytes())
-            self.assertEqual(report.accepted, 0)
-            self.assertEqual(report.rejected, 1)
+            with self.assertRaises(ValueError):
+                write_portrait_dataset(result, root / "data", root / "assets", lambda _: self.image_bytes())
+
+    def test_duplicate_image_content_hash_raises_error(self) -> None:
+        page1 = self.illustrated_page("Jon Snow", image_url="https://images.test/jon.png")
+        page2 = self.illustrated_page("Robb Stark", image_url="https://images.test/robb.png")
+        result = PortraitMatchResult(
+            accepted={
+                "agot:Stark_7": MatchedPortrait("agot:Stark_7", page1, 100, "automatic"),
+                "agot:Stark_6": MatchedPortrait("agot:Stark_6", page2, 100, "automatic"),
+            }
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            # Returning identical bytes for different URLs
+            with self.assertRaises(ValueError):
+                write_portrait_dataset(result, root / "data", root / "assets", lambda _: self.image_bytes())
 
 
 class PortraitCliTests(unittest.TestCase):
@@ -197,13 +304,17 @@ class PortraitCliTests(unittest.TestCase):
                 character_root=characters,
                 output_data_root=root / "portrait-data",
                 output_asset_root=root / "portrait-assets",
-                client=type("FixtureClient", (), {"build_catalog": lambda self: catalog})(),
+                client=type("FixtureClient", (), {
+                    "build_catalog": lambda self, extra_titles=(), extra_images=(): catalog,
+                    "images": {},
+                })(),
                 fetch_bytes=lambda _: PortraitWriterTests.image_bytes(),
                 overrides={},
             )
 
             self.assertEqual(report.accepted, 1)
             self.assertTrue((root / "portrait-data" / "manifest.json").exists())
+            self.assertEqual(len(list((root / "portrait-data" / "shards").glob("*.json"))), 256)
 
 
 if __name__ == "__main__":

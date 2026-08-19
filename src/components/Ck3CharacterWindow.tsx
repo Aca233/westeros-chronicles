@@ -145,7 +145,6 @@ export const Ck3CharacterWindow: React.FC<Ck3CharacterWindowProps> = ({
               {activeTab === 'relations' && (
                 <RelationsTab
                   dossier={dossier}
-                  houseIcon={houseIcon}
                   relatedRecords={relatedRecords}
                   onSelectCharacter={onSelectCharacter}
                 />
@@ -248,7 +247,14 @@ function IdentityHeader({
           <p className="mt-3 font-serif text-[12px] font-semibold leading-relaxed text-gold">
             {dossier.title}
             {dossier.age !== undefined && <span className="ml-2 font-mono text-[10px] font-normal text-parchment-faint">{dossier.age} 岁</span>}
-            {!dossier.alive && <span className="ml-2 text-[10px] font-bold text-rubric">已故</span>}
+            {dossier.kind === 'npc' ? (
+              <span data-npc-status className={`ml-2 inline-flex items-center gap-1 text-[10px] font-semibold ${dossier.alive ? 'text-emerald-700' : 'text-rubric'}`}>
+                <span className={`h-1 w-1 rounded-full ${dossier.alive ? 'bg-emerald-700' : 'bg-rubric'}`} aria-hidden="true" />
+                {dossier.alive ? '在世' : '已故'}
+              </span>
+            ) : (
+              !dossier.alive && <span className="ml-2 text-[10px] font-bold text-rubric">已故</span>
+            )}
           </p>
           <div className="mt-2.5 flex flex-col items-start gap-1 text-[10px] text-parchment-faint">
             <span>{dossier.house}</span>
@@ -303,29 +309,40 @@ function OverviewTab({
           <span className="font-mono text-[9px] text-parchment-faint">{displayedTraits.length} 项 · 教育优先</span>
         </div>
         {displayedTraits.length > 0 ? (
-          <div className="flex gap-1 overflow-x-auto pb-1" aria-label="人物特质列表">
-            {displayedTraits.map((trait, index) => {
-              const active = activeTraitId === trait.id;
-              return (
-                <button
-                  key={trait.id}
-                  type="button"
-                  onClick={() => onTraitSelect(active ? null : trait.id)}
-                  aria-pressed={active}
-                  title={`${trait.name}:${formatTraitDescription(trait.description, dossier.name)}`}
-                  className={`trait-chip relative flex w-[70px] shrink-0 flex-col items-center px-1 pb-1 pt-1.5 ${
-                    active ? 'text-gold' : 'text-parchment-dim hover:text-parchment'
-                  }`}
-                >
-                  {index === 0 && trait.category === 'education' && (
-                    <span className="absolute left-0.5 top-0.5 z-10 bg-rubric px-1 text-[7px] leading-3 text-[#f6efdd]">教育</span>
-                  )}
-                  <GameIcon icon={trait.icon} className="h-11 w-11 shrink-0" />
-                  <span className="mt-0.5 w-full truncate text-[9.5px] font-bold">{trait.name}</span>
-                  {active && <span className="absolute inset-x-3 bottom-0 h-[1.5px] bg-gold" aria-hidden="true" />}
-                </button>
-              );
-            })}
+          <div className="flex flex-wrap items-start gap-x-0.5 gap-y-1.5" aria-label="人物特质列表">
+            {(['education', 'personality', 'other'] as const)
+              .map((bucket) => displayedTraits.filter((trait) =>
+                bucket === 'other' ? trait.category !== 'education' && trait.category !== 'personality' : trait.category === bucket))
+              .filter((cluster) => cluster.length > 0)
+              .map((cluster, clusterIndex) => (
+                <React.Fragment key={clusterIndex}>
+                  {cluster.map((trait, traitIndex) => {
+                    const active = activeTraitId === trait.id;
+                    const clusterStart = clusterIndex > 0 && traitIndex === 0;
+                    return (
+                      <button
+                        key={trait.id}
+                        type="button"
+                        onClick={() => onTraitSelect(active ? null : trait.id)}
+                        aria-pressed={active}
+                        title={`${trait.name}:${formatTraitDescription(trait.description, dossier.name)}`}
+                        className={`trait-chip relative flex w-[52px] shrink-0 flex-col items-center px-0.5 pb-1 pt-1 ${
+                          clusterStart ? 'trait-chip--cluster-start' : ''
+                        } ${
+                          active ? 'text-gold' : 'text-parchment-dim hover:text-parchment'
+                        }`}
+                      >
+                        {trait.category === 'education' && (
+                          <span className="absolute left-0 top-0 z-10 bg-rubric px-1 text-[7px] leading-3 text-[#f6efdd]">教育</span>
+                        )}
+                        <GameIcon icon={trait.icon} className="h-9 w-9 shrink-0" />
+                        <span className="mt-0.5 w-full truncate text-[9px] font-bold">{trait.name}</span>
+                        {active && <span className="absolute inset-x-2.5 bottom-0 h-[1.5px] bg-gold" aria-hidden="true" />}
+                      </button>
+                    );
+                  })}
+                </React.Fragment>
+              ))}
           </div>
         ) : (
           <EmptyState label="尚未记录人物特质" />
@@ -352,18 +369,12 @@ function OverviewTab({
         <hr className="hairline mt-2" aria-hidden="true" />
       </section>
 
-      {dossier.kind === 'player' ? (
+      {dossier.kind === 'player' && (
         <section className="grid grid-cols-4" aria-label="资源与状态">
           <ResourceCell icon={<Coins className="h-3.5 w-3.5 text-gold-deep" />} value={dossier.player.goldDragons} label="金龙" />
           <ResourceCell icon={<Crown className="h-3.5 w-3.5 text-gold" />} value={dossier.player.prestige} label="威仪" />
           <ResourceCell icon={<Skull className="h-3.5 w-3.5 text-rubric" />} value={dossier.player.dread} label="恶名" />
           <ResourceCell icon={<HeartPulse className="h-3.5 w-3.5 text-emerald-700" />} value={dossier.player.overallStatus} label="健康" textValue />
-        </section>
-      ) : (
-        <section className="grid grid-cols-3" aria-label="人物状态" data-npc-status>
-          <ResourceCell icon={<HeartPulse className="h-3.5 w-3.5 text-emerald-700" />} value={dossier.alive ? '在世' : '已故'} label="状态" textValue />
-          <ResourceCell icon={<Shield className="h-3.5 w-3.5 text-gold-deep" />} value={dossier.wounds.length} label="伤势" />
-          <ResourceCell icon={<BookOpen className="h-3.5 w-3.5 text-gold-deep" />} value={dossier.memories.length} label="记忆" />
         </section>
       )}
     </div>
@@ -372,12 +383,10 @@ function OverviewTab({
 
 function RelationsTab({
   dossier,
-  houseIcon,
   relatedRecords,
   onSelectCharacter,
 }: {
   dossier: CharacterDossier;
-  houseIcon: ReturnType<typeof getHouseIconId>;
   relatedRecords: ReadonlyMap<CharacterId, StaticCharacterRecord>;
   onSelectCharacter: (characterId: CharacterId) => void;
 }) {
@@ -388,73 +397,97 @@ function RelationsTab({
   const relationshipCards = dossier.kind === 'player'
     ? playerRelationshipCards(family)
     : npcRelationshipCards(dossier, relatedRecords);
-  const spouseCards = relationshipCards.filter((card) => card.group === 'spouse');
-  const childCards = relationshipCards.filter((card) => card.group === 'child');
-  const siblingCards = relationshipCards.filter((card) => card.group === 'sibling');
-  const parentCards = relationshipCards.filter((card) => card.group === 'parent');
-  const notableCards = relationshipCards.filter((card) => card.group === 'notable');
-  const visibleChildCards = showAllChildren ? childCards : childCards.slice(0, 8);
+  const byGroup = (group: RelationshipCard['group']) => relationshipCards.filter((card) => card.group === group);
 
-  const rows = (cards: readonly RelationshipCard[]) => (
-    <ul className="divide-y divide-hairline/60">
-      {cards.map(({ label, person, emptyText }, index) => (
-        <RelationshipRow
-          key={`${label}-${person?.id ?? index}`}
-          label={label}
-          person={person}
-          emptyText={emptyText}
-          isLoading={dossier.kind === 'player' && isLoading}
-          onSelectCharacter={onSelectCharacter}
-        />
-      ))}
-    </ul>
-  );
+  // 族谱次序:配偶 → 子女 → 父母 → 兄弟姐妹 → 重要关系
+  const groupSections: Array<{
+    key: RelationshipCard['group'];
+    title: string;
+    cards: RelationshipCard[];
+    showLabel?: boolean;
+    marker?: 'data-character-children' | 'data-character-siblings';
+  }> = [
+    { key: 'spouse', title: '配偶', cards: byGroup('spouse') },
+    { key: 'child', title: '子女', cards: byGroup('child'), marker: 'data-character-children' },
+    { key: 'parent', title: '父母', cards: byGroup('parent'), showLabel: true },
+    { key: 'sibling', title: '兄弟姐妹', cards: byGroup('sibling'), marker: 'data-character-siblings' },
+    { key: 'notable', title: '重要关系', cards: byGroup('notable'), showLabel: true },
+  ];
+
+  // 空关系合并为一行小字注记,不再每个槽位占一整行
+  const renderEmptyNotes = (cards: RelationshipCard[]) => {
+    const noted = cards.filter((card) => card.emptyText);
+    const plain = cards.filter((card) => !card.emptyText);
+    return (
+      <ul>
+        {noted.map((card) => (
+          <li key={card.label} className="relation-empty">
+            <span className="relation-empty-label">{card.label}</span>
+            <span>{card.emptyText}</span>
+          </li>
+        ))}
+        {plain.length > 0 && (
+          <li className="relation-empty">
+            <span className="relation-empty-label">{plain.map((card) => card.label).join(' · ')}</span>
+            <span>{dossier.kind === 'player' && isLoading ? '正在核对档案' : '档案未记录'}</span>
+          </li>
+        )}
+      </ul>
+    );
+  };
 
   return (
     <div className="space-y-5 px-5 py-5">
       <SectionTitle title="关系与家族" subtitle="读取稳定人物档案并叠加当前存档事件,缺少依据的关系不会猜测" />
-      <div className="flex items-center gap-3 border-y border-hairline/70 py-3">
-        <div className="ck3-heraldry-frame flex h-14 w-12 shrink-0 items-center justify-center p-1">
-          {dossier.kind === 'player' && dossier.player.coatOfArms ? <CoatOfArms design={dossier.player.coatOfArms} className="h-full" /> : <GameIcon icon={houseIcon} className="h-full w-full" />}
-        </div>
-        <div className="min-w-0">
-          <h3 className="truncate font-serif text-[15px] font-bold text-parchment">{dossier.dynastyName}</h3>
-          <p className="mt-0.5 truncate text-[10.5px] text-parchment-dim">{dossier.house}</p>
-          <p className="mt-0.5 truncate text-[9.5px] italic text-parchment-faint">“{dossier.houseWords}”</p>
-        </div>
-      </div>
-      <div className="space-y-4">
-        <section aria-label="配偶">{rows(spouseCards)}</section>
-        <section data-character-children aria-label="子女">
-          <div className="flex items-center justify-between border-b border-hairline/70 pb-1.5">
-            <p className="eyebrow">子女</p>
-            <span className="font-mono text-[9px] text-parchment-faint">{childCards.length} 人</span>
-          </div>
-          {childCards.length > 0 ? rows(visibleChildCards) : <EmptyState label={isLoading ? '正在核对子女档案' : '档案未记录子女'} />}
-          {childCards.length > 8 && (
-            <button
-              type="button"
-              onClick={() => setShowAllChildren((value) => !value)}
-              className="btn-ghost mt-1 !px-0 !text-[10px]"
-            >
-              {showAllChildren ? '收起子女' : `显示全部子女（${childCards.length}）`}
-            </button>
-          )}
-        </section>
-        <section data-character-siblings aria-label="兄弟姐妹">
-          <div className="flex items-center justify-between border-b border-hairline/70 pb-1.5">
-            <p className="eyebrow">兄弟姐妹</p>
-            <span className="font-mono text-[9px] text-parchment-faint">{siblingCards.length} 人</span>
-          </div>
-          {siblingCards.length > 0 ? rows(siblingCards) : <EmptyState label={isLoading ? '正在核对亲属档案' : '档案未记录兄弟姐妹'} />}
-        </section>
-        <section aria-label="父母">{rows(parentCards)}</section>
-        {notableCards.length > 0 && <section aria-label="重要关系">{rows(notableCards)}</section>}
+      <div className="space-y-5">
+        {groupSections.map(({ key, title, cards, showLabel, marker }) => {
+          if (key === 'notable' && cards.length === 0) return null;
+          const realCards = cards.filter((card): card is RelationshipCard & { person: StaticCharacterRecord } => Boolean(card.person));
+          const emptyCards = cards.filter((card) => !card.person);
+          const isChildren = key === 'child';
+          const shownCards = isChildren && !showAllChildren ? realCards.slice(0, 8) : realCards;
+          return (
+            <section key={key} aria-label={title} {...(marker ? { [marker]: true } : {})}>
+              <div className="flex items-center justify-between border-b border-hairline/70 pb-1.5">
+                <p className="eyebrow">{title}</p>
+                {realCards.length > 0 && <span className="font-mono text-[9.5px] text-parchment-faint">{realCards.length} 人</span>}
+              </div>
+              {realCards.length > 0 && (
+                <ul className="grid grid-cols-2 gap-1.5 pt-2">
+                  {shownCards.map(({ label, person }, index) => (
+                    <RelationshipRow
+                      key={`${label}-${person?.id ?? index}`}
+                      label={label}
+                      person={person}
+                      showLabel={showLabel}
+                      onSelectCharacter={onSelectCharacter}
+                    />
+                  ))}
+                </ul>
+              )}
+              {isChildren && realCards.length > 8 && (
+                <button
+                  type="button"
+                  onClick={() => setShowAllChildren((value) => !value)}
+                  className="btn-ghost mt-1 !px-0 !text-[10px]"
+                >
+                  {showAllChildren ? '收起子女' : `显示全部子女（${realCards.length}）`}
+                </button>
+              )}
+              {emptyCards.length > 0 && renderEmptyNotes(emptyCards)}
+              {cards.length === 0 && (
+                <EmptyState label={dossier.kind === 'player' && isLoading ? '正在核对亲属档案' : '档案未记录'} />
+              )}
+            </section>
+          );
+        })}
       </div>
       <CharacterSearch onSelectCharacter={onSelectCharacter} />
-      <EmptyState label={dossier.kind === 'player'
-        ? family.subject ? '配偶、子女、兄弟姐妹与父母来自稳定人物档案；继承人、领主和重要关系将在有可靠规则数据后显示。' : '未能与稳定人物档案可靠对齐,当前不会虚构任何关系。'
-        : '人物关系来自静态档案与当前存档事件,未记录的关系保持空白。'} />
+      <p className="border-t border-hairline/60 pt-3 text-center font-serif text-[10px] italic leading-relaxed text-parchment-faint">
+        {dossier.kind === 'player'
+          ? '亲属来自稳定人物档案,缺少依据的关系不予虚构。'
+          : '关系来自静态档案与当前存档事件,未记录的关系保持空白。'}
+      </p>
     </div>
   );
 }
@@ -552,53 +585,43 @@ function useVerifiedLordFamily(
 function RelationshipRow({
   label,
   person,
-  emptyText,
-  isLoading,
+  showLabel = false,
   onSelectCharacter,
 }: {
   label: string;
-  person?: StaticCharacterRecord;
-  emptyText?: string;
-  isLoading: boolean;
+  person: StaticCharacterRecord;
+  /** 父母(父亲/母亲)与重要关系(仇敌/恋人等)需要各自称谓;其余组与组头重复,省略 */
+  showLabel?: boolean;
   onSelectCharacter: (characterId: CharacterId) => void;
 }) {
-  const icon = person ? getDynastyHouseIcon(person.dynastyId) : null;
-  const content = (
-    <>
-      <div className="flex h-9 w-9 shrink-0 items-center justify-center">
-        {person ? (
-          <CharacterPortrait
-            characterId={person.id}
-            houseIcon={icon ?? 'artifact-crown'}
-            alt={`${person.name}的肖像`}
-            deceased={!person.alive}
-            className="h-full w-full border border-hairline-bright"
-          />
-        ) : <UserRound className="h-5 w-5 stroke-1 text-parchment-faint" />}
-      </div>
-      <div className="min-w-0 flex-1">
-        <span className="mr-2 text-[10px] tracking-wide text-gold-deep">{label}</span>
-        <span className={`font-serif text-[12.5px] font-semibold ${person ? 'text-parchment' : 'text-parchment-faint'}`}>
-          {person?.name || (isLoading ? '正在核对档案' : emptyText ?? '档案未记录')}
-        </span>
-      </div>
-      {person && (
-        <span className={`shrink-0 text-[9px] ${person.alive ? 'text-emerald-700' : 'text-parchment-faint'}`}>
-          {person.alive ? '在世' : '已故'} · 查看
-        </span>
-      )}
-    </>
-  );
-  const rowClass = 'flex w-full items-center gap-3 py-2.5 text-left transition-colors';
+  const icon = getDynastyHouseIcon(person.dynastyId);
   return (
     <li>
-      {person ? (
-        <button type="button" data-character-card onClick={() => onSelectCharacter(person.id)} className={`${rowClass} hover:bg-ink-2/70`}>
-          {content}
-        </button>
-      ) : (
-        <div className={rowClass}>{content}</div>
-      )}
+      <button
+        type="button"
+        data-character-card
+        onClick={() => onSelectCharacter(person.id)}
+        className="relation-tile group"
+        title={`查看${person.name}的人物档案`}
+      >
+        <CharacterPortrait
+          characterId={person.id}
+          houseIcon={icon ?? 'artifact-crown'}
+          alt={`${person.name}的肖像`}
+          deceased={!person.alive}
+          className="h-9 w-8 shrink-0 border border-hairline-bright transition-colors group-hover:border-gold-deep"
+        />
+        <span className="min-w-0 flex-1">
+          <span className="relation-name block truncate font-serif text-[12px] font-semibold text-parchment transition-colors">
+            {person.name}
+          </span>
+          <span className="mt-0.5 flex items-center gap-1.5 text-[9px] text-parchment-faint">
+            {showLabel && <span className="tracking-[0.1em] text-gold-deep">{label}</span>}
+            <span className={`h-1 w-1 rounded-full ${person.alive ? 'bg-emerald-700' : 'bg-parchment-faint'}`} aria-hidden="true" />
+            {person.alive ? '在世' : '已故'}
+          </span>
+        </span>
+      </button>
     </li>
   );
 }
