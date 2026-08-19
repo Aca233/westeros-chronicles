@@ -51,7 +51,7 @@ test('语义地图只使用原生本地 DEM 三维且没有远程字体或第二
 
 test('连续缩放处理只更新地形镜头', () => {
   const canvas = readFileSync('src/features/map/MapCanvas.tsx', 'utf8')
-  const handler = canvas.match(/const handleTerrainZoom[^\n]*\n/)?.[0] ?? ''
+  const handler = canvas.match(/const handleTerrainZoom = \(\) => \{[\s\S]*?\n\s*\}/)?.[0] ?? ''
   assert.match(handler, /requestSync/)
   assert.doesNotMatch(handler, /fetch\(|loadSemanticIndex|syncDynamicMapSubjects|syncPoliticalHouseLabels/)
 })

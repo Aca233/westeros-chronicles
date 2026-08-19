@@ -180,6 +180,8 @@ test('镜头、zoomend 和 moveend 监听在地图销毁时完整解绑', () => 
   const source = readFileSync('src/features/map/MapCanvas.tsx', 'utf8')
   for (const event of ['zoomend', 'moveend']) assert.match(source, new RegExp(`map\\.off\\('${event}'`))
   assert.match(source, /cameraCleanup\(\)/)
+  assert.match(source, /map\.off\('sourcedata'/)
+  assert.match(source, /terrainSurfaceController\.destroy\(\)/)
   assert.match(source, /mediaQuery\.removeEventListener/)
 })
 
@@ -192,7 +194,7 @@ test('镜头持久化只保存中心与缩放，不保存 bearing 或 pitch', ()
 
 test('连续地形 zoom 不触发政治人物资产重投影', () => {
   const source = readFileSync('src/features/map/MapCanvas.tsx', 'utf8')
-  const handler = source.match(/const handleTerrainZoom[^\n]*\n/)?.[0] ?? ''
+  const handler = source.match(/const handleTerrainZoom = \(\) => \{[\s\S]*?\n\s*\}/)?.[0] ?? ''
   assert.match(handler, /requestSync/)
   assert.doesNotMatch(handler, /syncDynamicMapSubjects|syncPoliticalHouseLabels|applyPoliticalFeatureStates/)
 })

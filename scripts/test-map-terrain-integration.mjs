@@ -10,9 +10,24 @@ test('MapCanvas 在 load 后创建单一地形控制器并监听连续 zoom', ()
   assert.match(canvas, /map\.on\('zoom', handleTerrainZoom\)/)
   assert.match(canvas, /map\.off\('zoom', handleTerrainZoom\)/)
   assert.match(canvas, /terrainController\.destroy\(\)/)
-  const continuous = canvas.match(/const handleTerrainZoom[^\n]*/)?.[0] ?? ''
-  assert.match(continuous, /requestSync\(terrainInput\(\)\)$/)
+  const continuous = canvas.match(/const handleTerrainZoom = \(\) => \{[\s\S]*?\n\s*\}/)?.[0] ?? ''
+  assert.match(continuous, /terrainController\?\.requestSync\(terrainInput\(\)\)/)
+  assert.match(continuous, /terrainSurfaceController\?\.requestSync\(map\.getZoom\(\)\)/)
   assert.match(canvas, /const handleZoomEnd[\s\S]*?requestSync\(terrainInput\(\), true\)/)
+})
+
+test('近景材质控制器监听来源就绪并在销毁前完整解绑', () => {
+  assert.match(canvas, /createTerrainSurfaceController/)
+  assert.match(canvas, /map\.on\('sourcedata'/)
+  assert.match(canvas, /map\.off\('sourcedata'/)
+  assert.match(canvas, /terrainSurfaceController\.destroy\(\)/)
+  assert.match(canvas, /terrainSurfaceController\?\.requestSync\(map\.getZoom\(\)\)/)
+})
+
+test('近景材质失败只回退远景，不关闭 DEM 或整个地图', () => {
+  const branch = canvas.match(/if \(terrainEvent\.sourceId === MATERIAL_TERRAIN_SOURCE[\s\S]*?\n\s*\}/)?.[0] ?? ''
+  assert.match(branch, /disable\('近景地形材质不可用'\)/)
+  assert.doesNotMatch(branch, /terrainControllerRef|setInitializationError|onTerrainAvailabilityChange/)
 })
 
 test('搜索飞行同时携带目标 pitch', () => {

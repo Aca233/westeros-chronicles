@@ -5,6 +5,7 @@ import maplibregl, {
   type GeoJSONSource,
   type MapLayerMouseEvent,
   type MapMouseEvent,
+  type MapSourceDataEvent,
   type Map as MapLibreMap,
 } from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
@@ -22,6 +23,7 @@ import {
   JOURNEY_PROGRESS_SOURCE,
   JOURNEY_ROUTE_SOURCE,
   loadCountyLocationIcons,
+  MATERIAL_TERRAIN_SOURCE,
   SELECTED_COUNTY_LOCATION_LAYER,
   syncSelectedCountyLocations,
   syncPoliticalHouseLabels,
@@ -40,6 +42,10 @@ import {
   type TerrainSyncInput,
 } from './terrainController.ts'
 import { TERRAIN_ENTER_ZOOM, terrainCameraProfile } from './terrainProfile.ts'
+import {
+  createTerrainSurfaceController,
+  type TerrainSurfaceController,
+} from './terrainSurfaceController.ts'
 import type {
   MapBounds,
   MapManifest,
@@ -400,9 +406,17 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'bottom-right')
     map.addControl(new maplibregl.AttributionControl({ compact: true }), 'bottom-left')
 
+    let terrainController: TerrainController | null = null
+    let terrainSurfaceController: TerrainSurfaceController | null = null
+    let materialSurfaceFailed = false
     const handleMapError = (event: MapLibreErrorEvent) => {
       const terrainEvent = event as MapLibreErrorEvent & { sourceId?: string }
       const message = event.error?.message ?? ''
+      if (terrainEvent.sourceId === MATERIAL_TERRAIN_SOURCE || /agot-material-terrain/i.test(message)) {
+        materialSurfaceFailed = true
+        terrainSurfaceController?.disable('近景地形材质不可用')
+        return
+      }
       if (terrainEvent.sourceId === 'agot-dem' || /agot-dem|terrain(?:-rgb)?\s+(?:decode|tile)/i.test(message)) {
         terrainControllerRef.current?.disable('DEM 地形不可用')
         return
@@ -469,10 +483,16 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
     }
     const showPointer = () => { map.getCanvas().style.cursor = 'pointer' }
     const clearPointer = () => { map.getCanvas().style.cursor = '' }
-    let terrainController: TerrainController | null = null
-    const handleTerrainZoom = () => terrainController?.requestSync(terrainInput())
+    const handleTerrainZoom = () => {
+      terrainController?.requestSync(terrainInput())
+      terrainSurfaceController?.requestSync(map.getZoom())
+    }
+    const handleSourceData = (event: MapSourceDataEvent) => {
+      terrainSurfaceController?.handleSourceData(event.sourceId)
+    }
 
     map.on('error', handleMapError)
+    map.on('sourcedata', handleSourceData)
     map.on('moveend', handleMoveEnd)
     map.on('zoomend', handleZoomEnd)
     map.on('click', handleBlankMapClick)
@@ -487,8 +507,13 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
       }
       terrainController = createTerrainController(map, { onUnavailable: handleTerrainUnavailable })
       terrainControllerRef.current = terrainController
+      terrainSurfaceController = createTerrainSurfaceController(map, {
+        onUnavailable: (reason) => callbacksRef.current.onWarning(`${reason}，已保留远景地图`),
+      })
       map.on('zoom', handleTerrainZoom)
       terrainController.syncNow(terrainInput(), true)
+      if (materialSurfaceFailed) terrainSurfaceController.disable('近景地形材质不可用')
+      else terrainSurfaceController.syncNow(map.getZoom())
       addSelectedCountyLocationLayers(map)
       map.on('click', SELECTED_COUNTY_LOCATION_LAYER, handleExpandedLocationClick)
       map.on('mouseenter', SELECTED_COUNTY_LOCATION_LAYER, showPointer)
@@ -536,6 +561,7 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
       mediaQuery.removeEventListener('change', handleReducedMotionChange)
       cameraCleanup()
       map.off('error', handleMapError)
+      map.off('sourcedata', handleSourceData)
       map.off('zoom', handleTerrainZoom)
       map.off('moveend', handleMoveEnd)
       map.off('zoomend', handleZoomEnd)
@@ -553,6 +579,7 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
       map.off('mouseenter', ASSET_POINT_LAYER, showPointer)
       map.off('mouseleave', ASSET_POINT_LAYER, clearPointer)
       map.off('load', initializeLocationLayers)
+      if (terrainSurfaceController) terrainSurfaceController.destroy()
       if (terrainController) terrainController.destroy()
       terrainControllerRef.current = null
       map.stop()
