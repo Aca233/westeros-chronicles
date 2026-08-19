@@ -102,7 +102,15 @@ test('地图不再渲染男爵领点并提供全伯爵领透明点击层', () =>
   assert.match(layers, /agot-selected-county-locations/)
   assert.match(layers, /minzoom:\s*3\.5/)
   assert.match(layers, /location-winterfell\.webp/)
+  const iconManifest = JSON.parse(readFileSync('public/assets/map-icons/manifest.json', 'utf8'))
+  assert.equal(iconManifest.sourceId, '2962333032')
   for (const type of ['castle', 'city', 'town', 'village', 'port', 'ruin', 'landmark', 'region']) {
     assert.ok(statSync(`public/assets/map-icons/location-${type}.webp`).size > 0, `缺少 ${type} 地点图标`)
+    assert.match(
+      iconManifest.icons[type],
+      /^gfx\/interface\/icons\/building_types\/[^/]+\.dds$/,
+      `${type} 必须来自离线导入的 AGOT 中世纪建筑图标`,
+    )
   }
+  assert.doesNotMatch(JSON.stringify(iconManifest), /Building2|Store|high-?rise|skyscraper/i)
 })

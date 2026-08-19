@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "2962333032",
+  "style": "agot-medieval-silhouette",
+  "icons": {
+    "castle": "gfx/interface/icons/building_types/icon_building_fort.dds",
+    "city": "gfx/interface/icons/building_types/icon_structure_tyrosh.dds",
+    "town": "gfx/interface/icons/building_types/icon_building_tribal.dds",
+    "village": "gfx/interface/icons/building_types/icon_building_inn.dds",
+    "port": "gfx/interface/icons/building_types/icon_fleetport.dds",
+    "ruin": "gfx/interface/icons/building_types/icon_structure_castamere.dds",
+    "landmark": "gfx/interface/icons/building_types/icon_structure_tree_of_crowns.dds",
+    "region": "gfx/interface/icons/building_types/icon_structure_dragonmont.dds"
+  }
+}
