@@ -17,6 +17,41 @@ function hasValidContainerLocations(items: Record<string, unknown>): boolean {
     && Boolean(container.locationLabel.trim()));
 }
 
+
+function hasValidActiveJourney(value: unknown): boolean {
+  if (value === undefined) return true;
+  if (!isRecord(value)
+    || !isRecord(value.routePlan)
+    || !Array.isArray(value.routePlan.legs)
+    || !validateWorldLocationRef({ locationId: value.routePlan.from })
+    || !validateWorldLocationRef({ locationId: value.routePlan.to })
+    || !Number.isInteger(value.currentLeg)
+    || (value.currentLeg as number) < 0
+    || (value.currentLeg as number) > value.routePlan.legs.length
+    || typeof value.progressDays !== 'number'
+    || !Number.isFinite(value.progressDays)
+    || value.progressDays < 0
+    || !['planned', 'travelling', 'paused', 'interrupted', 'arrived'].includes(String(value.status))
+    || !Array.isArray(value.companions)
+    || !value.companions.every((id) => typeof id === 'string' && Boolean(id))
+    || !Array.isArray(value.vehicleIds)
+    || !value.vehicleIds.every((id) => typeof id === 'string' && Boolean(id))
+    || !isRecord(value.startedAt)
+    || !Number.isInteger(value.startedAt.year)
+    || !Number.isInteger(value.startedAt.month)
+    || !Number.isInteger(value.startedAt.day)) return false;
+  if (value.interruptedBy !== undefined && (typeof value.interruptedBy !== 'string' || !value.interruptedBy.trim())) return false;
+  if (value.locationLabels !== undefined && (!isRecord(value.locationLabels)
+    || !Object.values(value.locationLabels).every((label) => typeof label === 'string' && Boolean(label.trim())))) return false;
+  return value.routePlan.legs.every((leg, index) => isRecord(leg)
+    && leg.index === index
+    && validateWorldLocationRef({ locationId: leg.from })
+    && validateWorldLocationRef({ locationId: leg.to })
+    && typeof leg.days === 'number'
+    && Number.isFinite(leg.days)
+    && leg.days > 0);
+}
+
 export function assertSupportedGameState(value: unknown): asserts value is {
   saveFormatVersion: 7;
   lord: { items: { schemaVersion: 1 } };
@@ -31,6 +66,7 @@ export function assertSupportedGameState(value: unknown): asserts value is {
     || !isRecord(value.lord.items)
     || value.lord.items.schemaVersion !== 1
     || !hasValidContainerLocations(value.lord.items)
+    || !hasValidActiveJourney(value.activeJourney)
     || !isRecord(value.worldHistory)
     || value.worldHistory.schemaVersion !== 1) {
     throw new Error(RESET_REQUIRED_MESSAGE);

@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Map as MapIcon } from 'lucide-react'
 import maplibregl, {
   type ErrorEvent as MapLibreErrorEvent,
+  type GeoJSONSource,
   type MapLayerMouseEvent,
   type Map as MapLibreMap,
 } from 'maplibre-gl'
@@ -19,6 +20,8 @@ import {
 import { createLocalMapStyle } from './mapStyle'
 import { mapRepository } from './repository'
 import type { MapManifest } from './types'
+import type { RoutePlan } from './routing/types'
+import type { ActiveJourney } from './travel/types'
 import type { MapViewport } from './mapUiStore'
 
 interface MapCanvasProps {
@@ -29,6 +32,118 @@ interface MapCanvasProps {
   onViewportChange: (viewport: MapViewport) => void
   onWarning: (message: string | null) => void
   mode: MapMode
+  routePlan?: RoutePlan | null
+  journey?: ActiveJourney
+}
+
+const JOURNEY_ROUTE_SOURCE = 'agot-active-journey-route'
+const JOURNEY_PROGRESS_SOURCE = 'agot-active-journey-progress'
+const JOURNEY_POSITION_SOURCE = 'agot-active-journey-position'
+
+function emptyFeatureCollection(): GeoJSON.FeatureCollection {
+  return { type: 'FeatureCollection', features: [] }
+}
+
+function routeCoordinates(routePlan: RoutePlan, manifest: MapManifest): [number, number][] {
+  if (!routePlan.legs.length) return []
+  return [
+    mapPixelToLngLat(routePlan.legs[0].fromPoint, manifest),
+    ...routePlan.legs.map((leg) => mapPixelToLngLat(leg.toPoint, manifest)),
+  ]
+}
+
+function progressCoordinates(
+  routePlan: RoutePlan,
+  journey: ActiveJourney | undefined,
+  manifest: MapManifest,
+): [number, number][] {
+  if (!journey || journey.routePlan.id !== routePlan.id || !routePlan.legs.length) return []
+  const completed = routePlan.legs.slice(0, journey.currentLeg)
+  const coordinates: [number, number][] = [mapPixelToLngLat(routePlan.legs[0].fromPoint, manifest)]
+  completed.forEach((leg) => coordinates.push(mapPixelToLngLat(leg.toPoint, manifest)))
+  const current = routePlan.legs[journey.currentLeg]
+  if (current && journey.progressDays > 0) {
+    const ratio = Math.min(1, Math.max(0, journey.progressDays / current.days))
+    coordinates.push(mapPixelToLngLat({
+      mapX: current.fromPoint.mapX + (current.toPoint.mapX - current.fromPoint.mapX) * ratio,
+      mapY: current.fromPoint.mapY + (current.toPoint.mapY - current.fromPoint.mapY) * ratio,
+    }, manifest))
+  }
+  return coordinates
+}
+
+function lineCollection(coordinates: [number, number][]): GeoJSON.FeatureCollection {
+  if (coordinates.length < 2) return emptyFeatureCollection()
+  return {
+    type: 'FeatureCollection',
+    features: [{
+      type: 'Feature',
+      properties: {},
+      geometry: { type: 'LineString', coordinates },
+    }],
+  }
+}
+
+function pointCollection(coordinates: [number, number][]): GeoJSON.FeatureCollection {
+  const point = coordinates.length ? coordinates[coordinates.length - 1] : undefined
+  if (!point) return emptyFeatureCollection()
+  return {
+    type: 'FeatureCollection',
+    features: [{ type: 'Feature', properties: {}, geometry: { type: 'Point', coordinates: point } }],
+  }
+}
+
+function ensureJourneyLayers(map: MapLibreMap): void {
+  if (!map.getSource(JOURNEY_ROUTE_SOURCE)) map.addSource(JOURNEY_ROUTE_SOURCE, { type: 'geojson', data: emptyFeatureCollection() })
+  if (!map.getSource(JOURNEY_PROGRESS_SOURCE)) map.addSource(JOURNEY_PROGRESS_SOURCE, { type: 'geojson', data: emptyFeatureCollection() })
+  if (!map.getSource(JOURNEY_POSITION_SOURCE)) map.addSource(JOURNEY_POSITION_SOURCE, { type: 'geojson', data: emptyFeatureCollection() })
+  if (!map.getLayer(JOURNEY_ROUTE_SOURCE)) map.addLayer({
+    id: JOURNEY_ROUTE_SOURCE,
+    type: 'line',
+    source: JOURNEY_ROUTE_SOURCE,
+    paint: {
+      'line-color': '#bca765',
+      'line-width': ['interpolate', ['linear'], ['zoom'], 0, 1.4, 5, 3.2],
+      'line-opacity': 0.78,
+      'line-dasharray': [2, 1.25],
+    },
+  })
+  if (!map.getLayer(JOURNEY_PROGRESS_SOURCE)) map.addLayer({
+    id: JOURNEY_PROGRESS_SOURCE,
+    type: 'line',
+    source: JOURNEY_PROGRESS_SOURCE,
+    paint: {
+      'line-color': '#f0d58a',
+      'line-width': ['interpolate', ['linear'], ['zoom'], 0, 2.6, 5, 5],
+      'line-opacity': 0.96,
+    },
+  })
+  if (!map.getLayer(JOURNEY_POSITION_SOURCE)) map.addLayer({
+    id: JOURNEY_POSITION_SOURCE,
+    type: 'circle',
+    source: JOURNEY_POSITION_SOURCE,
+    paint: {
+      'circle-radius': ['interpolate', ['linear'], ['zoom'], 0, 4, 5, 7],
+      'circle-color': '#f0d58a',
+      'circle-stroke-color': '#19150d',
+      'circle-stroke-width': 2,
+    },
+  })
+}
+
+function syncJourneyLayers(
+  map: MapLibreMap,
+  manifest: MapManifest,
+  routePlan: RoutePlan | null | undefined,
+  journey: ActiveJourney | undefined,
+): void {
+  if (!map.isStyleLoaded()) return
+  ensureJourneyLayers(map)
+  const route = routePlan ? routeCoordinates(routePlan, manifest) : []
+  const progress = routePlan ? progressCoordinates(routePlan, journey, manifest) : []
+  ;(map.getSource(JOURNEY_ROUTE_SOURCE) as GeoJSONSource).setData(lineCollection(route))
+  ;(map.getSource(JOURNEY_PROGRESS_SOURCE) as GeoJSONSource).setData(lineCollection(progress))
+  ;(map.getSource(JOURNEY_POSITION_SOURCE) as GeoJSONSource).setData(pointCollection(progress))
 }
 
 export const MapCanvas: React.FC<MapCanvasProps> = ({
@@ -39,12 +154,15 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
   onViewportChange,
   onWarning,
   mode,
+  routePlan,
+  journey,
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null)
   const mapRef = useRef<MapLibreMap | null>(null)
   const [initializationError, setInitializationError] = useState(false)
   const callbacksRef = useRef({ onSelectLocation, onViewportChange, onWarning })
   const modeRef = useRef(mode)
+  const routeRef = useRef({ routePlan, journey })
 
   useEffect(() => {
     callbacksRef.current = { onSelectLocation, onViewportChange, onWarning }
@@ -53,6 +171,12 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
   useEffect(() => {
     modeRef.current = mode
   }, [mode])
+
+  useEffect(() => {
+    routeRef.current = { routePlan, journey }
+    const map = mapRef.current
+    if (map?.isStyleLoaded()) syncJourneyLayers(map, manifest, routePlan, journey)
+  }, [journey, manifest, routePlan])
 
   useEffect(() => {
     if (!containerRef.current) return
@@ -123,6 +247,7 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
     map.on('mouseleave', 'agot-locations', clearPointer)
     const initializeLocationLayers = () => {
       applyMapMode(map, modeRef.current)
+      syncJourneyLayers(map, manifest, routeRef.current.routePlan, routeRef.current.journey)
       mapRepository.loadSearchIndex()
         .then((entries) => {
           if (mapRef.current !== map) return

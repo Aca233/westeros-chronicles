@@ -84,7 +84,9 @@
     "check:map-drawer": "node --experimental-strip-types scripts/check-map-drawer.mjs",
     "test:map-location-view": "node --experimental-strip-types scripts/test-map-location-view.mjs",
     "test:location-authority": "node --experimental-strip-types scripts/test-location-authority.mjs",
-    "test:map-routing": "node --experimental-strip-types scripts/test-map-routing.mjs"
+    "test:map-routing": "node --experimental-strip-types scripts/test-map-routing.mjs",
+    "test:map-travel": "node --experimental-strip-types scripts/test-map-travel.mjs",
+    "check:map-travel-ui": "node --experimental-strip-types scripts/check-map-travel-ui.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",

@@ -27,6 +27,10 @@ const CHARACTER_COMMAND_TYPES = new Set([
   'GRANT_CHARACTER_TITLE', 'REVOKE_CHARACTER_TITLE',
 ]);
 
+const TRAVEL_COMMAND_TYPES = new Set([
+  'START_TRAVEL', 'REROUTE_TRAVEL', 'RETURN_TRAVEL', 'ADVANCE_TRAVEL',
+]);
+
 function sameDate(
   left: { year: number; month: number; day: number },
   right: { year: number; month: number; day: number },
@@ -87,8 +91,13 @@ export function assertTurnCommitConsistency(
   if (characterEvents !== undefined) {
     const acceptedCharacterCommands = latestHistory?.acceptedCommands
       .filter((command) => CHARACTER_COMMAND_TYPES.has(command.type)) ?? [];
-    if ((acceptedCharacterCommands.length === 0) !== (characterEvents.length === 0)) {
+    const hasTravelCommand = latestHistory?.acceptedCommands
+      .some((command) => TRAVEL_COMMAND_TYPES.has(command.type)) ?? false;
+    if (acceptedCharacterCommands.length > 0 && characterEvents.length === 0) {
       throw new Error('人物事件与世界账本中的人物命令不一致');
+    }
+    if (acceptedCharacterCommands.length === 0 && characterEvents.length > 0 && !hasTravelCommand) {
+      throw new Error('人物事件缺少对应的人物或旅行命令');
     }
     const identityPrefix = `${gameState.turnCount}:`;
     const identities = new Set<string>();

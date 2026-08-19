@@ -27,6 +27,7 @@ import { CANONICAL_TIMELINE } from '../data/generated/canonicalTimeline';
 import { initializeCanonicalStates } from '../features/world/canonicalTimeline';
 import type { CharacterId } from '../features/characters/types';
 import { buildWorldTurnContext, formatWorldTurnContext } from '../features/world/worldTurnContext';
+import type { TravelStateCommand } from '../features/map/travel/types';
 
 export interface CharacterTurnContext extends CharacterCommandBatchBaseContext { promptContext?: string; }
 
@@ -45,6 +46,7 @@ interface GameStore {
   activeDiceCheck: D20Check | null;
   changesLog: string[];
   pendingItemActions: PendingItemAction[];
+  pendingTravelCommand: TravelStateCommand | null;
   characterTurnContext: CharacterTurnContext | null;
   
   // 模态弹窗状态
@@ -65,6 +67,8 @@ interface GameStore {
   closeDiceModal: () => void;
   queueItemAction: (action: ItemAction) => void;
   cancelItemAction: (actionId: string) => void;
+  queueTravelCommand: (command: TravelStateCommand) => void;
+  cancelTravelCommand: () => void;
   setCharacterTurnContext: (context: CharacterTurnContext | null) => void;
 
   // 游戏核心流程
@@ -148,6 +152,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
   activeDiceCheck: null,
   changesLog: [],
   pendingItemActions: [],
+  pendingTravelCommand: null,
   characterTurnContext: null,
   isDiceModalOpen: false,
   isSettingsOpen: false,
@@ -199,6 +204,14 @@ export const useGameStore = create<GameStore>((set, get) => ({
     if (get().isStreaming) return;
     set((state) => ({ pendingItemActions: cancelQueuedItemAction(state.pendingItemActions, actionId) }));
   },
+  queueTravelCommand: (command) => {
+    if (get().isStreaming) return;
+    set({ pendingTravelCommand: structuredClone(command) });
+  },
+  cancelTravelCommand: () => {
+    if (get().isStreaming) return;
+    set({ pendingTravelCommand: null });
+  },
 
   // 开启新剧本
   startNewGame: async (lord, opening, worldSetup) => {
@@ -245,17 +258,19 @@ export const useGameStore = create<GameStore>((set, get) => ({
       streamingText: '',
       isStreaming: false,
       pendingItemActions: [],
+      pendingTravelCommand: null,
       characterTurnContext: null,
     });
   },
 
   // 提交领主行动
   submitAction: async (actionText: string, diceMode: DiceMode = 'auto') => {
-    const { gameState, apiConfig, isStreaming, pendingItemActions, characterTurnContext } = get();
+    const { gameState, apiConfig, isStreaming, pendingItemActions, pendingTravelCommand, characterTurnContext } = get();
     const safeActionText = stripEmoji(actionText);
     if (isStreaming || gameState.isGameOver || !safeActionText) return;
 
     const submittedItemActions = [...pendingItemActions];
+    const submittedTravelCommand = pendingTravelCommand ? structuredClone(pendingTravelCommand) : null;
     let diceCheck: D20Check | undefined = undefined;
 
     // 1. 只有存在真实风险的行动才进行 D20 检定；叙事模式永不隐藏掷骰。
@@ -314,6 +329,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
         nextTurnNumber,
         draft,
         pendingItemActions: submittedItemActions,
+        pendingTravelCommands: submittedTravelCommand ? [submittedTravelCommand] : [],
         characterContext: effectiveCharacterContext,
         diceCheck,
       });
@@ -356,6 +372,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
         turns: [...gameState.turns, finalTurn],
         worldCharacters: { ...currentWorldRef, revision: currentWorldRef.revision + 1 },
         worldHistory: settled.worldHistory,
+        activeJourney: settled.activeJourney,
         isGameOver: settled.isFatalDeath,
         deathReason: settled.isFatalDeath ? '要害遭受致命创伤，领主陨落于维斯特洛的残酷权谋之中' : undefined,
       });
@@ -371,6 +388,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
         isStreaming: false,
         streamingText: '',
         pendingItemActions: removeSubmittedItemActions(get().pendingItemActions, submittedItemActions),
+        pendingTravelCommand: null,
         characterTurnContext: characterTurnContext
           ? { ...settled.characterContext, promptContext: characterTurnContext.promptContext }
           : null,
@@ -401,6 +419,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
         gameState: restoredState,
         changesLog: ['时光倒流: 已回退到上一回合决策点'],
         pendingItemActions: [],
+        pendingTravelCommand: null,
         characterTurnContext: null,
       });
     } else {

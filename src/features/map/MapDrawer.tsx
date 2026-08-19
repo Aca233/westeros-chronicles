@@ -14,6 +14,7 @@ export const MapDrawer: React.FC = () => {
   const selectedLocationId = useMapUiStore((state) => state.selectedLocationId)
   const lastViewport = useMapUiStore((state) => state.lastViewport)
   const mapMode = useMapUiStore((state) => state.mapMode)
+  const routePreview = useMapUiStore((state) => state.routePreview)
   const closeDrawer = useMapUiStore((state) => state.closeDrawer)
   const selectLocation = useMapUiStore((state) => state.selectLocation)
   const rememberViewport = useMapUiStore((state) => state.rememberViewport)
@@ -24,6 +25,12 @@ export const MapDrawer: React.FC = () => {
   const [reloadKey, setReloadKey] = useState(0)
   const routeOriginId = useGameStore((state) => state.gameState.lord.location.locationId)
   const currentSeason = useGameStore((state) => state.gameState.currentSeason)
+  const activeJourney = useGameStore((state) => state.gameState.activeJourney)
+  const pendingTravelCommand = useGameStore((state) => state.pendingTravelCommand)
+  const pendingRoutePlan = pendingTravelCommand && 'routePlan' in pendingTravelCommand
+    ? pendingTravelCommand.routePlan ?? null
+    : null
+  const displayedRoute = routePreview ?? pendingRoutePlan ?? activeJourney?.routePlan ?? null
 
   useEffect(() => {
     if (activeDrawer !== 'map') return
@@ -81,6 +88,8 @@ export const MapDrawer: React.FC = () => {
               onViewportChange={rememberViewport}
               onWarning={setWarning}
               mode={mapMode}
+              routePlan={displayedRoute}
+              journey={activeJourney?.routePlan.id === displayedRoute?.id ? activeJourney : undefined}
             />
           ) : loadError ? (
             <div className="map-load-state" role="alert">

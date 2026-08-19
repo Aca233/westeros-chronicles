@@ -21,6 +21,7 @@ test('物品存档格式固定为版本 7 并明确拒绝版本 6', () => {
   assert.throws(() => assertSupportedGameState({ saveFormatVersion: 5 }), /测试版存档格式已更新.*重置/);
   assert.throws(() => assertSupportedGameState({ saveFormatVersion: 6, lord: { items: { schemaVersion: 1 } } }), /重置/);
   assert.doesNotThrow(() => assertSupportedGameState({ saveFormatVersion: 7, lord: { location: { locationId: 'b_winterfell' }, locationLabel: '临冬城', items: { schemaVersion: 1, sites: {}, vehicles: {} } }, worldHistory: { schemaVersion: 1, startDate: { year: 298, month: 5, day: 10 }, canonical: {}, turns: [] } }));
+  assert.throws(() => assertSupportedGameState({ saveFormatVersion: 7, lord: { location: { locationId: 'b_winterfell' }, locationLabel: '临冬城', items: { schemaVersion: 1, sites: {}, vehicles: {} } }, activeJourney: { status: 'travelling', currentLeg: -1 }, worldHistory: { schemaVersion: 1, startDate: { year: 298, month: 5, day: 10 }, canonical: {}, turns: [] } }), /重置/);
 });
 
 test('数据库不迁移旧物品并在事务前校验版本', () => {

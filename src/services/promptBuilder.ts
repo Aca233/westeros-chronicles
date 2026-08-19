@@ -110,6 +110,8 @@ export const GOT_CONSTITUTION_PROMPT = `
   // { "type": "MODIFY_GOLD", "goldDragons": 100, "reason": "国王劳勃的丰厚赏赐" },
   // { "type": "CHANGE_LOCATION", "locationId": "b_winterfell", "sceneLocation": "主堡大门" }
   // locationId 只能引用状态切片提供的地图地点 ID，不得编造自由文本目的地。
+  // 已开始的旅程由世界时间自动推进，不要重复输出 ADVANCE_TRAVEL。若一次已确认的障碍确实迫使队伍停下，可输出：
+  // { "type": "PAUSE_TRAVEL", "reason": "渡口因洪水封闭" }
 ]
 </state_cmd>
 `;
@@ -176,6 +178,10 @@ export function buildStateSlice(gameState: GameState): string {
   const ruleSummary = formatTraitRuleEffects(traitEffects).join(' · ') || '无额外规则效果';
   const roleplaySummary = traitEffects.roleplayDirectives.slice(0, 10)
     .map((directive) => formatTraitDescription(directive, lord.name)).join('；') || '无额外人物倾向';
+  const journey = gameState.activeJourney;
+  const journeySummary = !journey
+    ? '无'
+    : `${journey.status}；路线 ${journey.routePlan.from} -> ${journey.routePlan.to}；分段 ${journey.currentLeg + 1}/${Math.max(1, journey.routePlan.legs.length)}；本段已行 ${journey.progressDays} 天${journey.interruptedBy ? `；中断原因 ${journey.interruptedBy}` : ''}`;
 
   return stripEmoji(`
 ---
@@ -186,6 +192,7 @@ export function buildStateSlice(gameState: GameState): string {
 - 文化与信仰: ${lord.culture || '未指定'} · ${lord.faith || '未指定'}
 - 当前地图地点 ID: ${lord.location.locationId}
 - 当前地点: ${lord.locationLabel}
+- 当前旅程: ${journeySummary}
 - 整体体魄: 【${lord.overallStatus}】 (异常体态: ${statusList.length > 0 ? statusList.join(', ') : '无'})
 - 部位伤情: ${bodySummary}
 - 当前装备（唯一真实穿戴状态）: ${equippedSummary}

@@ -7,6 +7,7 @@ import type { WorldArtifactState } from '../features/items/worldArtifacts';
 import type { WorldHistoryState } from '../features/world/worldHistory';
 import type { CharacterId } from '../features/characters/types';
 import type { WorldLocationRef } from '../features/map/types';
+import type { ActiveJourney, TravelStateCommand } from '../features/map/travel/types';
 
 // CK3 同款六项角色能力。常见角色通常位于 0 - 30 区间，数值允许因加成继续提高。
 export interface LordAttributes {
@@ -99,7 +100,8 @@ export type StateCommand =
   | { type: 'ADVANCE_TIME'; days?: number; months?: number; years?: number; season?: string; reason?: string }
   | { type: 'SET_DATE'; year?: number; month?: number; day?: number; season?: string; reason?: string }
   | ItemStateCommand
-  | CharacterStateCommand;
+  | CharacterStateCommand
+  | TravelStateCommand;
 
 // D20 跑团检定定义
 export interface D20Check {
@@ -164,6 +166,7 @@ export interface GameState {
   worldCharacters?: WorldCharacterStateRef;
   worldArtifacts: WorldArtifactState;
   worldHistory: WorldHistoryState;
+  activeJourney?: ActiveJourney;
   worldFlags: Record<string, boolean | string | number>;
   isGameOver: boolean;
   deathReason?: string;

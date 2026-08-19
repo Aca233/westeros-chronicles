@@ -130,12 +130,36 @@ function resetAtCanonBoundary() {
     streamingText: '',
     changesLog: [],
     pendingItemActions: [],
+    pendingTravelCommand: null,
     characterTurnContext: null,
     activeDiceCheck: null,
     isDiceModalOpen: false,
   });
   useGameStore.getState().setCharacterTurnContext(sceneContext());
   return structuredClone(state);
+}
+
+function travelRoute(from, to = 'b_test_destination') {
+  return {
+    ok: true,
+    id: `route_${from}_${to}`,
+    from,
+    to,
+    preference: 'fastest',
+    travelMode: 'horse',
+    via: [],
+    season: 'summer',
+    legs: [{
+      index: 0, edgeId: `${from}>${to}`, from, to, distance: 40, days: 1, cost: 1, risk: 0.05,
+      roadLevel: 'major', crossing: 'land', seasonTags: [],
+      fromPoint: { mapX: 0, mapY: 0 }, toPoint: { mapX: 1, mapY: 0 },
+    }],
+    totalDistance: 40,
+    totalDays: 1,
+    totalCost: 1,
+    totalRisk: 0.05,
+    graphHash: 'a'.repeat(64),
+  };
 }
 
 function relationshipCommand() {
@@ -229,6 +253,56 @@ test('人物普通物品事件随成功回合原子提交并推进人物修订�
       custody: { type: 'character', characterId: ARYA }, source: 'story_event',
     },
   });
+});
+
+test('排队出发只在下一次成功对话后建立旅程', async () => {
+  const before = resetAtCanonBoundary();
+  const origin = before.lord.location.locationId;
+  useGameStore.getState().setCharacterTurnContext({
+    ...sceneContext(),
+    currentLocationId: origin,
+    knownLocationIds: new Set([origin, 'b_test_destination']),
+  });
+  useGameStore.getState().queueTravelCommand({
+    type: 'START_TRAVEL',
+    routePlan: travelRoute(origin),
+    companions: [],
+    vehicleIds: [],
+  });
+  assert.equal(useGameStore.getState().gameState.activeJourney, undefined, '点击出发不能立即移动世界状态');
+
+  await useGameStore.getState().submitAction('召集队伍，准备沿大道启程', 'off');
+
+  const current = useGameStore.getState();
+  assert.equal(current.pendingTravelCommand, null);
+  assert.equal(current.gameState.activeJourney.status, 'travelling');
+  assert.equal(current.gameState.activeJourney.routePlan.to, 'b_test_destination');
+  assert.equal(current.gameState.lord.location.locationId, origin, '没有时间流逝时仍停留在起点');
+  assert.ok(current.gameState.worldHistory.turns[0].acceptedCommands.some((command) => command.type === 'START_TRAVEL'));
+});
+
+test('正文失败时保留排队出发且不建立旅程', async () => {
+  const before = resetAtCanonBoundary();
+  const origin = before.lord.location.locationId;
+  useGameStore.getState().setCharacterTurnContext({
+    ...sceneContext(),
+    currentLocationId: origin,
+    knownLocationIds: new Set([origin, 'b_test_destination']),
+  });
+  const command = { type: 'START_TRAVEL', routePlan: travelRoute(origin), companions: [], vehicleIds: [] };
+  useGameStore.getState().queueTravelCommand(command);
+  globalThis.__unifiedNarrativeFails = true;
+  const originalError = console.error;
+  console.error = () => {};
+  try {
+    await useGameStore.getState().submitAction('召集队伍，准备沿大道启程', 'off');
+  } finally {
+    console.error = originalError;
+  }
+
+  assert.deepEqual(useGameStore.getState().gameState, before);
+  assert.deepEqual(useGameStore.getState().pendingTravelCommand, command);
+  assert.equal(globalThis.__unifiedSnapshots.length, 1);
 });
 
 test('正文失败不产生快照、人物事件或队列消费', async () => {

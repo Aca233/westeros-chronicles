@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 
 import type { MapMode } from './mapLayers'
+import type { RoutePlan } from './routing/types'
 
 export type ActiveDrawer = 'map' | 'character' | null
 
@@ -15,6 +16,7 @@ interface MapUiState {
   selectedLocationId: string | null
   lastViewport: MapViewport | null
   mapMode: MapMode
+  routePreview: RoutePlan | null
   openMap: (locationId?: string) => void
   openCharacterDrawer: () => void
   closeDrawer: () => void
@@ -23,6 +25,7 @@ interface MapUiState {
   selectLocation: (id: string | null) => void
   rememberViewport: (viewport: MapViewport) => void
   setMapMode: (mode: MapMode) => void
+  previewRoute: (route: RoutePlan | null) => void
 }
 
 export const useMapUiStore = create<MapUiState>((set) => ({
@@ -30,6 +33,7 @@ export const useMapUiStore = create<MapUiState>((set) => ({
   selectedLocationId: null,
   lastViewport: null,
   mapMode: 'terrain',
+  routePreview: null,
   openMap: (locationId) => set((state) => ({
     activeDrawer: 'map',
     selectedLocationId: locationId ?? state.selectedLocationId,
@@ -41,4 +45,5 @@ export const useMapUiStore = create<MapUiState>((set) => ({
   selectLocation: (id) => set({ selectedLocationId: id }),
   rememberViewport: (viewport) => set({ lastViewport: viewport }),
   setMapMode: (mapMode) => set({ mapMode }),
+  previewRoute: (routePreview) => set({ routePreview }),
 }))
