@@ -7,6 +7,7 @@ import { MapToolbar } from './MapToolbar'
 import { useMapUiStore } from './mapUiStore'
 import { mapRepository } from './repository'
 import type { MapManifest } from './types'
+import { useGameStore } from '../../store/useGameStore'
 
 export const MapDrawer: React.FC = () => {
   const activeDrawer = useMapUiStore((state) => state.activeDrawer)
@@ -21,6 +22,8 @@ export const MapDrawer: React.FC = () => {
   const [loadError, setLoadError] = useState(false)
   const [warning, setWarning] = useState<string | null>(null)
   const [reloadKey, setReloadKey] = useState(0)
+  const routeOriginId = useGameStore((state) => state.gameState.lord.location.locationId)
+  const currentSeason = useGameStore((state) => state.gameState.currentSeason)
 
   useEffect(() => {
     if (activeDrawer !== 'map') return
@@ -105,7 +108,12 @@ export const MapDrawer: React.FC = () => {
             </div>
           )}
           {manifest && !loadError && selectedLocationId && (
-            <LocationDetails locationId={selectedLocationId} onClose={() => selectLocation(null)} />
+            <LocationDetails
+              locationId={selectedLocationId}
+              routeOriginId={routeOriginId}
+              season={currentSeason}
+              onClose={() => selectLocation(null)}
+            />
           )}
           {warning && manifest && (
             <div className="map-warning" role="status">{warning}</div>
