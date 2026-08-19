@@ -23,7 +23,7 @@ export type WheelCameraMapAdapter = Pick<
   | 'off'
 >
 
-const WHEEL_ZOOM_DIVISOR = 600
+const WHEEL_ZOOM_DIVISOR = 360
 const WHEEL_LISTENER_OPTIONS: AddEventListenerOptions = { passive: false }
 
 export function normalizeWheelDelta(
@@ -52,8 +52,8 @@ export function createWheelCameraController(
   let targetZoom = map.getZoom()
   let destroyed = false
 
-  const resetTargetZoom = (): void => {
-    if (!destroyed) targetZoom = map.getZoom()
+  const resetTargetZoom = (event?: { agotWheelCamera?: boolean }): void => {
+    if (!destroyed && !event?.agotWheelCamera) targetZoom = map.getZoom()
   }
 
   const handleWheel = (event: WheelEvent): void => {
@@ -70,9 +70,9 @@ export function createWheelCameraController(
       zoom: targetZoom,
       pitch: input.targetPitch(targetZoom),
       around: map.unproject([event.offsetX, event.offsetY]),
-      duration: input.reducedMotion ? 0 : 220,
+      duration: input.reducedMotion ? 0 : 90,
       essential: !input.reducedMotion,
-    })
+    }, { agotWheelCamera: true })
   }
 
   map.scrollZoom.disable()

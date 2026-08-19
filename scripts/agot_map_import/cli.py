@@ -3,7 +3,6 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import re
 import shutil
 from dataclasses import replace
 from pathlib import Path
@@ -28,10 +27,9 @@ from .source import MapSource, parse_definition
 from .tiles import _staging_directory, build_semantic_tiles, build_terrain_tiles, build_vector_tiles
 from .titles import TitleIndex, parse_title_hierarchy
 from .writer import publish_map_pair, stage_map_dataset
-
-
-RANGE_PATTERN = re.compile(r"^\s*{key}\s*=\s*RANGE\s*\{{\s*(\d+)\s+(\d+)\s*\}}", re.MULTILINE)
-LIST_PATTERN = re.compile(r"^\s*{key}\s*=\s*LIST\s*\{{([^}}]+)\}}", re.MULTILINE)
+from .water_coloring import (
+    colorize_material_terrain_tiles, parse_province_set, parse_water_province_sets,
+)
 
 
 def _sha256(path: Path) -> str:
@@ -41,14 +39,6 @@ def _sha256(path: Path) -> str:
             digest.update(chunk)
     return digest.hexdigest()
 
-
-def _province_set(text: str, key: str) -> set[int]:
-    values: set[int] = set()
-    for start, stop in re.findall(RANGE_PATTERN.pattern.format(key=re.escape(key)), text, re.MULTILINE):
-        values.update(range(int(start), int(stop) + 1))
-    for block in re.findall(LIST_PATTERN.pattern.format(key=re.escape(key)), text, re.MULTILINE):
-        values.update(int(value) for value in re.findall(r"\d+", block))
-    return values
 
 
 def _title_member_index(titles: TitleIndex) -> dict[str, set[int]]:
@@ -225,7 +215,7 @@ def build_map(args: argparse.Namespace) -> dict[str, object]:
         for location in locations
     ]
     default_text = (source.root / "map_data/default.map").read_text(encoding="utf-8-sig", errors="replace")
-    impassable = _province_set(default_text, "impassable_mountains") | _province_set(default_text, "impassable_seas")
+    impassable = parse_province_set(default_text, "impassable_mountains") | parse_province_set(default_text, "impassable_seas")
     route_graph = build_route_graph(
         locations, geometries, adjacency_rows, source.road_mask,
         source.default_files["rivers"], impassable,
@@ -270,6 +260,16 @@ def build_map(args: argparse.Namespace) -> dict[str, object]:
                 bounds, source.map_size, asset_stage / "material-terrain",
                 material_zooms, args.tile_size,
             )
+            colored_tile_count = colorize_material_terrain_tiles(
+                asset_stage / "material-terrain",
+                source.default_files["provinces"],
+                source.default_files["rivers"],
+                definitions,
+                parse_water_province_sets(default_text),
+                bounds, material_zooms, args.tile_size,
+            )
+            if colored_tile_count != material_terrain.tile_count:
+                raise MapImportError("水体着色后的地形材质瓦片数量不一致")
             semantic_tiles = build_semantic_tiles(
                 semantic, bounds, asset_stage / "semantic", vector_zooms, args.tile_size,
             )

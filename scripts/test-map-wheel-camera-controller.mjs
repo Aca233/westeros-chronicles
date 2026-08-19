@@ -6,7 +6,7 @@ import {
   normalizeWheelDelta,
 } from '../src/features/map/wheelCameraController.ts'
 
-function fixture({ zoom = 3, minZoom = 0, maxZoom = 6 } = {}) {
+function fixture({ zoom = 3, minZoom = 0, maxZoom = 6, cancelPreviousEase = false } = {}) {
   const cameraCalls = []
   const added = []
   const removed = []
@@ -25,7 +25,13 @@ function fixture({ zoom = 3, minZoom = 0, maxZoom = 6 } = {}) {
     getMinZoom: () => minZoom,
     getMaxZoom: () => maxZoom,
     unproject: ([x, y]) => ({ lng: x / 10, lat: y / 10 }),
-    easeTo: (options) => cameraCalls.push(options),
+    easeTo: (options, eventData) => {
+      cameraCalls.push({ ...options, eventData })
+      if (cancelPreviousEase) {
+        currentZoom += 0.01
+        mapListeners.get('zoomend')?.(eventData)
+      }
+    },
     on: (event, listener) => mapListeners.set(event, listener),
     off: (event, listener) => {
       if (mapListeners.get(event) === listener) mapListeners.delete(event)
@@ -60,11 +66,28 @@ test('一次滚轮用同一 easeTo 连续提交缩放、倾角和指针锚点', 
   assert.equal(state.scrollDisabled, 1)
   assert.equal(state.wheel(-120), true)
   assert.deepEqual(state.cameraCalls[0], {
-    zoom: 3.2,
-    pitch: 32,
+    zoom: 10 / 3,
+    pitch: 100 / 3,
     around: { lng: 12, lat: 8 },
-    duration: 220,
+    duration: 90,
     essential: true,
+    eventData: { agotWheelCamera: true },
+  })
+  controller.destroy()
+})
+
+test('上一段滚轮动画被新输入取消时不会把累计目标重置到中间帧', () => {
+  const state = fixture({ cancelPreviousEase: true })
+  const controller = createWheelCameraController(state.map, {
+    reducedMotion: false,
+    targetPitch: (zoom) => zoom,
+  })
+  state.wheel(-120)
+  state.wheel(-120)
+  state.wheel(-120)
+  const expectedZooms = [10 / 3, 11 / 3, 4]
+  state.cameraCalls.forEach((call, index) => {
+    assert.ok(Math.abs(call.zoom - expectedZooms[index]) < 1e-9)
   })
   controller.destroy()
 })

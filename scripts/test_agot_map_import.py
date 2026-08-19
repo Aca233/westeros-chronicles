@@ -30,7 +30,7 @@ from scripts.agot_map_import.material_compositor import (
 from scripts.agot_map_import.material_catalog import TerrainMaterialInputs
 from scripts.agot_map_import.material_tiles import build_material_terrain_tiles
 from scripts.agot_map_import.models import (
-    MapImportError, MapLocationRecord, ProvinceGeometry, RegionDefinition,
+    MapImportError, MapLocationRecord, ProvinceDefinition, ProvinceGeometry, RegionDefinition,
     SemanticBoundaryRecord, SemanticDataset, SemanticMembershipRecord, SemanticTitleRecord,
     TitleAncestors,
 )
@@ -42,6 +42,9 @@ from scripts.agot_map_import.semantic import build_semantic_dataset
 from scripts.agot_map_import.titles import TitleIndex, parse_title_hierarchy
 from scripts.agot_map_import.tiles import build_semantic_tiles, build_terrain_tiles, build_vector_tiles
 from scripts.agot_map_import.writer import publish_map_pair, write_map_dataset
+from scripts.agot_map_import.water_coloring import (
+    colorize_material_terrain_tiles, parse_water_province_sets,
+)
 from scripts.agot_map_import.cli import _source_hashes, main as map_import_main
 
 
@@ -385,6 +388,95 @@ class MaterialTileTests(unittest.TestCase):
                     output, (0,), tile_size=8,
                 )
         self.assertEqual((output / "sentinel.txt").read_text(encoding="utf-8"), "old")
+
+class WaterColoringTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.temp_dir = tempfile.TemporaryDirectory(prefix="agot-map-water-", dir=FAST_TMP_ROOT)
+        self.root = Path(self.temp_dir.name)
+        self.output = self.root / "material-terrain"
+        tile_path = self.output / "0" / "0" / "0.webp"
+        tile_path.parent.mkdir(parents=True)
+        Image.new("RGB", (60, 60), (150, 105, 65)).save(tile_path, format="WEBP", lossless=True)
+        (self.output / "sentinel.txt").write_text("old", encoding="utf-8")
+
+        self.provinces = self.root / "provinces.png"
+        province_image = Image.new("RGB", (6, 1))
+        definitions = {}
+        for province_id, red in enumerate((10, 20, 30, 40, 50, 60), start=1):
+            province_image.putpixel((province_id - 1, 0), (red, red + 1, red + 2))
+            definitions[province_id] = ProvinceDefinition(
+                province_id, red, red + 1, red + 2, f"province_{province_id}",
+            )
+        province_image.save(self.provinces)
+        self.definitions = definitions
+
+        self.rivers = self.root / "rivers.png"
+        river_image = Image.new("P", (6, 1), 255)
+        river_image.putpalette([channel for value in range(256) for channel in (value, value, value)])
+        river_image.putdata((254, 255, 254, 0, 254, 255))
+        river_image.save(self.rivers)
+        self.water = parse_water_province_sets('''
+            sea_zones = RANGE { 1 1 }
+            sea_zones = LIST { 61 62 }
+            lakes = RANGE { 2 2 }
+            lakes = LIST { 68 }
+            river_provinces = RANGE { 3 3 }
+            river_provinces = LIST { 69 70 }
+        ''')
+
+    def tearDown(self) -> None:
+        self.temp_dir.cleanup()
+
+    def test_parses_all_repeated_range_and_list_blocks(self) -> None:
+        self.assertEqual(self.water.seas, frozenset({1, 61, 62}))
+        self.assertEqual(self.water.lakes, frozenset({2, 68}))
+        self.assertEqual(self.water.rivers, frozenset({3, 69, 70}))
+
+    def test_colors_sea_lake_major_and_small_river_without_touching_land(self) -> None:
+        count = colorize_material_terrain_tiles(
+            self.output, self.provinces, self.rivers, self.definitions, self.water,
+            (0, 0, 6, 1), (0,), tile_size=60,
+        )
+        self.assertEqual(count, 1)
+        self.assertEqual(len(list(self.output.rglob("*.webp"))), 1)
+        self.assertEqual((self.output / "sentinel.txt").read_text(encoding="utf-8"), "old")
+        with Image.open(self.output / "0" / "0" / "0.webp") as tile:
+            pixels = [tile.convert("RGB").getpixel((x, 30)) for x in (5, 15, 25, 35, 45, 55)]
+        sea, lake, major_river, small_river, land_254, land_255 = pixels
+        self.assertGreater(sea[2], sea[0])
+        self.assertGreater(lake[1], sea[1])
+        self.assertGreater(major_river[1], lake[1])
+        self.assertGreater(small_river[1], major_river[1])
+        self.assertGreater(land_254[0], land_254[1])
+        self.assertGreater(land_254[1], land_254[2])
+        self.assertGreater(land_255[0], land_255[1])
+        self.assertGreater(land_255[1], land_255[2])
+
+    def test_background_river_indices_254_and_255_do_not_color_land(self) -> None:
+        colorize_material_terrain_tiles(
+            self.output, self.provinces, self.rivers, self.definitions, self.water,
+            (0, 0, 6, 1), (0,), tile_size=60,
+        )
+        with Image.open(self.output / "0" / "0" / "0.webp") as tile:
+            rgb = tile.convert("RGB")
+            lands = (rgb.getpixel((45, 30)), rgb.getpixel((55, 30)))
+        for land in lands:
+            self.assertLess(
+                sum(abs(channel - original) for channel, original in zip(land, (150, 105, 65))),
+                20,
+            )
+
+    def test_failure_keeps_previous_tiles(self) -> None:
+        original = (self.output / "0" / "0" / "0.webp").read_bytes()
+        with mock.patch("PIL.Image.Image.save", side_effect=OSError("save failed")):
+            with self.assertRaisesRegex(OSError, "save failed"):
+                colorize_material_terrain_tiles(
+                    self.output, self.provinces, self.rivers, self.definitions, self.water,
+                    (0, 0, 6, 1), (0,), tile_size=60,
+                )
+        self.assertEqual((self.output / "0" / "0" / "0.webp").read_bytes(), original)
+        self.assertEqual((self.output / "sentinel.txt").read_text(encoding="utf-8"), "old")
+
 
 class MapRegionTests(unittest.TestCase):
     def test_expands_nested_westeros_region(self) -> None:
