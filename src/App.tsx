@@ -154,7 +154,7 @@ export const App: React.FC = () => {
         </div>
       )}
 
-      <MapDrawer />
+      <MapDrawer onSelectCharacter={openStoryCharacter} />
 
       {/* 模态弹窗系统 */}
       <DiceModal />

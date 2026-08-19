@@ -12,9 +12,10 @@ const stableIdSchema = z.string().trim().min(1).max(160).regex(/^[a-z0-9][a-z0-9
 const sha256Schema = z.string().regex(/^[a-f0-9]{64}$/i)
 const localMapPathSchema = z.string().refine((value) => {
   const isAllowedRoot = value.startsWith('/data/agot-map/') || value.startsWith('/assets/agot-map/')
-  const hasUnsafeContent = /(?:https?:|\\|2962333032|\.\.)/i.test(value)
+  const hasUnsafeContent = /(?:https?:|\\|\.\.)/i.test(value)
   return isAllowedRoot && !hasUnsafeContent
 }, '必须使用项目内 AGOT 地图资源路径')
+const mapSourceIdSchema = z.string().trim().min(1).max(80).regex(/^[a-z0-9][a-z0-9_.:-]*$/i)
 
 const mapBoundsSchema = z.object({
   minX: z.number().finite().min(0).max(9216),
@@ -34,7 +35,7 @@ const nonNegativeInteger = z.number().int().nonnegative()
 
 export const mapManifestSchema = z.object({
   schemaVersion: z.literal(1),
-  sourceId: z.literal('2962333032'),
+  sourceId: mapSourceIdSchema,
   sourceHashes: z.record(z.string().min(1), sha256Schema),
   mapSize: z.object({
     width: z.literal(9216),

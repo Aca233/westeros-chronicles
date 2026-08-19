@@ -89,7 +89,7 @@ export interface MapRouteShard {
 
 export interface MapManifest {
   schemaVersion: 1
-  sourceId: '2962333032'
+  sourceId: string
   sourceHashes: Record<string, string>
   mapSize: {
     width: 9216

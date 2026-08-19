@@ -102,6 +102,12 @@ export class StaticCharacterRepository {
     });
   }
 
+  async getSearchHits(ids: readonly CharacterId[]): Promise<CharacterSearchHit[]> {
+    const wanted = new Set(ids);
+    if (wanted.size === 0) return [];
+    return (await this.loadIndex()).filter((hit) => wanted.has(hit.id));
+  }
+
   private loadShard(shard: string): Promise<Map<CharacterId, StaticCharacterRecord>> {
     let pending = this.shardPromises.get(shard);
     if (!pending) {

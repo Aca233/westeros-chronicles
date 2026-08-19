@@ -1,10 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import {
   Castle,
+  Crown,
+  Boxes,
   Landmark,
   MapPin,
   Navigation,
   Ship,
+  UserRound,
   Waves,
   X,
 } from 'lucide-react'
@@ -13,11 +16,18 @@ import { buildLocationView, type LocationViewModel } from './locationViewModel'
 import { mapRepository } from './repository'
 import { TravelPlanner } from './TravelPlanner'
 import type { MapLocation, MapLocationType } from './types'
+import type { MapAssetPoint, MapCharacterPoint } from './dynamicMapSubjects.ts'
+import type { PoliticalFeatureState } from './politicalProjection.ts'
+import type { CharacterId } from '../characters/types'
 
 interface LocationDetailsProps {
   locationId: string
   routeOriginId: string
   season: string
+  knownCharacters: readonly MapCharacterPoint[]
+  knownAssets: readonly MapAssetPoint[]
+  politicalState?: PoliticalFeatureState
+  onSelectCharacter: (characterId: CharacterId) => void
   onClose: () => void
 }
 
@@ -41,7 +51,16 @@ function TypeIcon({ type }: { type: MapLocationType }) {
   return <MapPin className={className} />
 }
 
-export const LocationDetails: React.FC<LocationDetailsProps> = ({ locationId, routeOriginId, season, onClose }) => {
+export const LocationDetails: React.FC<LocationDetailsProps> = ({
+  locationId,
+  routeOriginId,
+  season,
+  knownCharacters,
+  knownAssets,
+  politicalState,
+  onSelectCharacter,
+  onClose,
+}) => {
   const [location, setLocation] = useState<MapLocation | null>(null)
   const [failed, setFailed] = useState(false)
 
@@ -59,7 +78,25 @@ export const LocationDetails: React.FC<LocationDetailsProps> = ({ locationId, ro
     return () => { cancelled = true }
   }, [locationId])
 
-  const view = useMemo<LocationViewModel | null>(() => location ? buildLocationView(location) : null, [location])
+  const view = useMemo<LocationViewModel | null>(() => location ? buildLocationView(location, {
+    ruler: politicalState?.holderId ? {
+      id: politicalState.holderId,
+      label: politicalState.holderName ?? politicalState.holderId,
+      characterId: politicalState.holderId,
+      knowledge: 'confirmed',
+    } : undefined,
+    characters: knownCharacters.map((character) => ({
+      id: character.characterId,
+      label: character.name,
+      characterId: character.characterId,
+      knowledge: character.knowledge,
+    })),
+    assets: knownAssets.map((asset) => ({
+      id: asset.assetId,
+      label: `${asset.name} · ${asset.itemCount} 件物品`,
+      knowledge: asset.knowledge,
+    })),
+  }) : null, [knownAssets, knownCharacters, location, politicalState])
 
   return (
     <aside className="map-location-details" aria-label="地点详情">
@@ -119,9 +156,36 @@ export const LocationDetails: React.FC<LocationDetailsProps> = ({ locationId, ro
             </div>
           </section>
 
-          <section className="map-details-section map-projection-note">
-            <h3>当地情报</h3>
-            <p>人物、持有人、事件与资产只读取统一世界状态；当前尚未接入的数据不会在此伪造。</p>
+          <section className="map-details-section map-local-intelligence">
+            <h3>当地人物</h3>
+            <div className="map-intel-list">
+              {view.ruler && (
+                <button type="button" onClick={() => view.ruler?.characterId && onSelectCharacter(view.ruler.characterId as CharacterId)} disabled={!view.ruler.characterId}>
+                  <Crown />
+                  <span><small>公开统治者</small><strong>{view.ruler.label}</strong></span>
+                </button>
+              )}
+              {view.characters.filter((character) => character.id !== view.ruler?.id).map((character) => (
+                <button key={character.id} type="button" onClick={() => character.characterId && onSelectCharacter(character.characterId as CharacterId)} disabled={!character.characterId}>
+                  <UserRound />
+                  <span><small>已知位于此地</small><strong>{character.label}</strong></span>
+                </button>
+              ))}
+              {!view.ruler && view.characters.length === 0 && <p>没有已确认的人物位置情报。</p>}
+            </div>
+          </section>
+
+          <section className="map-details-section map-local-intelligence">
+            <h3>当地资产</h3>
+            <div className="map-intel-list">
+              {view.assets.map((asset) => (
+                <div key={asset.id}>
+                  <Boxes />
+                  <span><small>据点或运输工具</small><strong>{asset.label}</strong></span>
+                </div>
+              ))}
+              {view.assets.length === 0 && <p>没有已确认的据点或运输工具。</p>}
+            </div>
           </section>
 
           <TravelPlanner destinationId={locationId} originId={routeOriginId} season={season} />

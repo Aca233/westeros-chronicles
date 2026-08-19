@@ -33,12 +33,15 @@ const manifest = {
   datasetHash: 'b'.repeat(64),
 }
 
-test('地图清单只接受固定 AGOT 来源和项目内资源路径', () => {
+test('地图清单接受稳定来源标识并只允许项目内资源路径', () => {
   assert.equal(parseMapManifest(manifest).sourceId, '2962333032')
-  assert.throws(
-    () => parseMapManifest({ ...manifest, sourceId: '529340' }),
-    /地图清单格式无效/,
-  )
+  assert.equal(parseMapManifest({ ...manifest, sourceId: 'agot-map-fixture-v1' }).sourceId, 'agot-map-fixture-v1')
+  for (const sourceId of ['', '../workshop', '/mnt/mod-source', 'https://mods.example.test/map']) {
+    assert.throws(
+      () => parseMapManifest({ ...manifest, sourceId }),
+      /地图清单格式无效/,
+    )
+  }
   assert.throws(
     () => parseMapManifest({
       ...manifest,

@@ -1,9 +1,14 @@
 import type { GeoJSONSource, Map as MapLibreMap } from 'maplibre-gl'
 
 import { mapPixelToLngLat } from './coordinates.ts'
+import {
+  filterMapPointsByPixelBounds,
+  type MapAssetPoint,
+  type MapCharacterPoint,
+} from './dynamicMapSubjects.ts'
 import type { RegisteredMapIntelType, VisibleMapSubject } from './intelligence.ts'
 import type { PoliticalFeatureState } from './politicalProjection.ts'
-import type { MapLocationSearchEntry, MapManifest } from './types'
+import type { MapBounds, MapLocationSearchEntry, MapManifest } from './types'
 
 export type MapMode = 'terrain' | 'political' | 'characters' | 'travel' | 'assets'
 
@@ -65,6 +70,10 @@ export function applyPoliticalFeatureStates(
 export const JOURNEY_ROUTE_SOURCE = 'agot-active-journey-route'
 export const JOURNEY_PROGRESS_SOURCE = 'agot-active-journey-progress'
 export const JOURNEY_POSITION_SOURCE = 'agot-active-journey-position'
+export const CHARACTER_POINT_SOURCE = 'agot-character-point-source'
+export const CHARACTER_POINT_LAYER = 'agot-character-points'
+export const ASSET_POINT_SOURCE = 'agot-asset-point-source'
+export const ASSET_POINT_LAYER = 'agot-asset-points'
 
 export const LOCATION_CLUSTER_SOURCE = 'agot-location-cluster-source'
 export const LOCATION_CLUSTER_LAYER = 'agot-location-clusters'
@@ -78,6 +87,8 @@ const MODE_VISIBILITY: Record<MapMode, Record<string, boolean>> = {
     'agot-borders': true,
     'agot-roads': true,
     'agot-routes': false,
+    [CHARACTER_POINT_LAYER]: false,
+    [ASSET_POINT_LAYER]: false,
   },
   political: {
     'agot-terrain': true,
@@ -86,6 +97,8 @@ const MODE_VISIBILITY: Record<MapMode, Record<string, boolean>> = {
     'agot-borders': true,
     'agot-roads': false,
     'agot-routes': false,
+    [CHARACTER_POINT_LAYER]: false,
+    [ASSET_POINT_LAYER]: false,
   },
   characters: {
     'agot-terrain': true,
@@ -94,6 +107,8 @@ const MODE_VISIBILITY: Record<MapMode, Record<string, boolean>> = {
     'agot-borders': true,
     'agot-roads': false,
     'agot-routes': false,
+    [CHARACTER_POINT_LAYER]: true,
+    [ASSET_POINT_LAYER]: false,
   },
   travel: {
     'agot-terrain': true,
@@ -102,6 +117,8 @@ const MODE_VISIBILITY: Record<MapMode, Record<string, boolean>> = {
     'agot-borders': true,
     'agot-roads': true,
     'agot-routes': true,
+    [CHARACTER_POINT_LAYER]: false,
+    [ASSET_POINT_LAYER]: false,
   },
   assets: {
     'agot-terrain': true,
@@ -110,7 +127,96 @@ const MODE_VISIBILITY: Record<MapMode, Record<string, boolean>> = {
     'agot-borders': true,
     'agot-roads': false,
     'agot-routes': false,
+    [CHARACTER_POINT_LAYER]: false,
+    [ASSET_POINT_LAYER]: true,
   },
+}
+
+function dynamicPointCollection(
+  characters: readonly MapCharacterPoint[],
+  assets: readonly MapAssetPoint[],
+  manifest: MapManifest,
+): { characters: GeoJSON.FeatureCollection; assets: GeoJSON.FeatureCollection } {
+  return {
+    characters: {
+      type: 'FeatureCollection',
+      features: characters.map((point) => ({
+        type: 'Feature',
+        id: point.id,
+        geometry: { type: 'Point', coordinates: mapPixelToLngLat(point, manifest) },
+        properties: {
+          id: point.id,
+          characterId: point.characterId,
+          name: point.name,
+          locationId: point.locationId,
+        },
+      })),
+    },
+    assets: {
+      type: 'FeatureCollection',
+      features: assets.map((point) => ({
+        type: 'Feature',
+        id: point.id,
+        geometry: { type: 'Point', coordinates: mapPixelToLngLat(point, manifest) },
+        properties: {
+          id: point.id,
+          assetId: point.assetId,
+          assetType: point.assetType,
+          name: point.name,
+          locationId: point.locationId,
+          itemCount: point.itemCount,
+        },
+      })),
+    },
+  }
+}
+
+export function addDynamicMapSubjectLayers(map: MapLibreMap): void {
+  const empty = { type: 'FeatureCollection' as const, features: [] }
+  if (!map.getSource(CHARACTER_POINT_SOURCE)) map.addSource(CHARACTER_POINT_SOURCE, { type: 'geojson', data: empty })
+  if (!map.getSource(ASSET_POINT_SOURCE)) map.addSource(ASSET_POINT_SOURCE, { type: 'geojson', data: empty })
+  if (!map.getLayer(CHARACTER_POINT_LAYER)) map.addLayer({
+    id: CHARACTER_POINT_LAYER,
+    type: 'circle',
+    source: CHARACTER_POINT_SOURCE,
+    layout: { visibility: 'none' },
+    paint: {
+      'circle-radius': ['interpolate', ['linear'], ['zoom'], 0, 5, 6, 9],
+      'circle-color': '#d8c38b',
+      'circle-stroke-color': '#302516',
+      'circle-stroke-width': 2,
+      'circle-opacity': 0.96,
+    },
+  })
+  if (!map.getLayer(ASSET_POINT_LAYER)) map.addLayer({
+    id: ASSET_POINT_LAYER,
+    type: 'circle',
+    source: ASSET_POINT_SOURCE,
+    layout: { visibility: 'none' },
+    paint: {
+      'circle-radius': ['interpolate', ['linear'], ['zoom'], 0, 4.5, 6, 8],
+      'circle-color': '#8db8c4',
+      'circle-stroke-color': '#1e3034',
+      'circle-stroke-width': 2,
+      'circle-opacity': 0.94,
+    },
+  })
+}
+
+export function syncDynamicMapSubjects(
+  map: MapLibreMap,
+  manifest: MapManifest,
+  characters: readonly MapCharacterPoint[],
+  assets: readonly MapAssetPoint[],
+  pixelBounds: MapBounds,
+): void {
+  if (!map.isStyleLoaded()) return
+  addDynamicMapSubjectLayers(map)
+  const visibleCharacters = filterMapPointsByPixelBounds(characters, pixelBounds)
+  const visibleAssets = filterMapPointsByPixelBounds(assets, pixelBounds)
+  const collections = dynamicPointCollection(visibleCharacters, visibleAssets, manifest)
+  ;(map.getSource(CHARACTER_POINT_SOURCE) as GeoJSONSource).setData(collections.characters)
+  ;(map.getSource(ASSET_POINT_SOURCE) as GeoJSONSource).setData(collections.assets)
 }
 
 export function applyMapMode(map: MapLibreMap, mode: MapMode): void {

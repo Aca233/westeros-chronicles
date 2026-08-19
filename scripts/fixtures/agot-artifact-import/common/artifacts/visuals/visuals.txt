@@ -1,0 +1,2 @@
+test_crown_visuals = { icon = "test_crown.dds" }
+test_sword_visuals = { icon = "test_sword.dds" }

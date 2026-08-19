@@ -8,16 +8,19 @@ import maplibregl, {
 } from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
 
-import { mapPixelToLngLat } from './coordinates'
+import { lngLatToMapPixel, mapPixelToLngLat } from './coordinates'
 import {
   addLocationClusterLayers,
   applyPoliticalFeatureStates,
   applyMapMode,
+  ASSET_POINT_LAYER,
+  CHARACTER_POINT_LAYER,
   LOCATION_CLUSTER_LAYER,
   LOCATION_POINT_LAYER,
   JOURNEY_POSITION_SOURCE,
   JOURNEY_PROGRESS_SOURCE,
   JOURNEY_ROUTE_SOURCE,
+  syncDynamicMapSubjects,
   zoomToCluster,
   type MapMode,
 } from './mapLayers'
@@ -28,6 +31,8 @@ import type { MapManifest } from './types'
 import type { RoutePlan } from './routing/types'
 import type { ActiveJourney } from './travel/types'
 import type { MapViewport } from './mapUiStore'
+import type { MapAssetPoint, MapCharacterPoint } from './dynamicMapSubjects.ts'
+import type { CharacterId } from '../characters/types'
 
 interface MapCanvasProps {
   manifest: MapManifest
@@ -40,6 +45,21 @@ interface MapCanvasProps {
   routePlan?: RoutePlan | null
   journey?: ActiveJourney
   politicalStates?: readonly PoliticalFeatureState[]
+  characterPoints?: readonly MapCharacterPoint[]
+  assetPoints?: readonly MapAssetPoint[]
+  onSelectCharacter: (characterId: CharacterId) => void
+}
+
+function viewportPixelBounds(map: MapLibreMap, manifest: MapManifest) {
+  const bounds = map.getBounds()
+  const first = lngLatToMapPixel([bounds.getWest(), bounds.getNorth()], manifest)
+  const second = lngLatToMapPixel([bounds.getEast(), bounds.getSouth()], manifest)
+  return {
+    minX: Math.min(first.mapX, second.mapX),
+    minY: Math.min(first.mapY, second.mapY),
+    maxX: Math.max(first.mapX, second.mapX),
+    maxY: Math.max(first.mapY, second.mapY),
+  }
 }
 
 
@@ -162,18 +182,22 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
   routePlan,
   journey,
   politicalStates = [],
+  characterPoints = [],
+  assetPoints = [],
+  onSelectCharacter,
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null)
   const mapRef = useRef<MapLibreMap | null>(null)
   const [initializationError, setInitializationError] = useState(false)
-  const callbacksRef = useRef({ onSelectLocation, onViewportChange, onWarning })
+  const callbacksRef = useRef({ onSelectLocation, onSelectCharacter, onViewportChange, onWarning })
   const modeRef = useRef(mode)
   const routeRef = useRef({ routePlan, journey })
   const politicalRef = useRef<readonly PoliticalFeatureState[]>(politicalStates)
+  const dynamicRef = useRef({ characterPoints, assetPoints })
 
   useEffect(() => {
-    callbacksRef.current = { onSelectLocation, onViewportChange, onWarning }
-  }, [onSelectLocation, onViewportChange, onWarning])
+    callbacksRef.current = { onSelectLocation, onSelectCharacter, onViewportChange, onWarning }
+  }, [onSelectCharacter, onSelectLocation, onViewportChange, onWarning])
 
   useEffect(() => {
     modeRef.current = mode
@@ -193,6 +217,15 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
       applyPoliticalFeatureStates(map, politicalStates, changedTitleIds(previous, politicalStates), previous)
     }
   }, [politicalStates])
+
+  useEffect(() => {
+    dynamicRef.current = { characterPoints, assetPoints }
+    const map = mapRef.current
+    if (map?.isStyleLoaded()) {
+      syncDynamicMapSubjects(map, manifest, characterPoints, assetPoints, viewportPixelBounds(map, manifest))
+      applyMapMode(map, modeRef.current)
+    }
+  }, [assetPoints, characterPoints, manifest])
 
   useEffect(() => {
     if (!containerRef.current) return
@@ -241,6 +274,14 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
         latitude: center.lat,
         zoom: map.getZoom(),
       })
+      syncDynamicMapSubjects(
+        map,
+        manifest,
+        dynamicRef.current.characterPoints,
+        dynamicRef.current.assetPoints,
+        viewportPixelBounds(map, manifest),
+      )
+      applyMapMode(map, modeRef.current)
     }
     const handleLocationClick = (event: MapLayerMouseEvent) => {
       const locationId = event.features?.[0]?.properties?.id
@@ -253,6 +294,16 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
       if (typeof clusterId !== 'number' || !coordinates) return
       void zoomToCluster(map, clusterId, [Number(coordinates[0]), Number(coordinates[1])])
     }
+    const handleCharacterClick = (event: MapLayerMouseEvent) => {
+      const characterId = event.features?.[0]?.properties?.characterId
+      if (typeof characterId === 'string' && (characterId.startsWith('agot:') || characterId.startsWith('save:'))) {
+        callbacksRef.current.onSelectCharacter(characterId as CharacterId)
+      }
+    }
+    const handleAssetClick = (event: MapLayerMouseEvent) => {
+      const locationId = event.features?.[0]?.properties?.locationId
+      if (typeof locationId === 'string') callbacksRef.current.onSelectLocation(locationId)
+    }
     const showPointer = () => { map.getCanvas().style.cursor = 'pointer' }
     const clearPointer = () => { map.getCanvas().style.cursor = '' }
 
@@ -262,9 +313,22 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
     map.on('mouseenter', 'agot-locations', showPointer)
     map.on('mouseleave', 'agot-locations', clearPointer)
     const initializeLocationLayers = () => {
-      applyMapMode(map, modeRef.current)
       applyPoliticalFeatureStates(map, politicalRef.current)
+      syncDynamicMapSubjects(
+        map,
+        manifest,
+        dynamicRef.current.characterPoints,
+        dynamicRef.current.assetPoints,
+        viewportPixelBounds(map, manifest),
+      )
       syncJourneyLayers(map, manifest, routeRef.current.routePlan, routeRef.current.journey)
+      applyMapMode(map, modeRef.current)
+      map.on('click', CHARACTER_POINT_LAYER, handleCharacterClick)
+      map.on('click', ASSET_POINT_LAYER, handleAssetClick)
+      map.on('mouseenter', CHARACTER_POINT_LAYER, showPointer)
+      map.on('mouseleave', CHARACTER_POINT_LAYER, clearPointer)
+      map.on('mouseenter', ASSET_POINT_LAYER, showPointer)
+      map.on('mouseleave', ASSET_POINT_LAYER, clearPointer)
       mapRepository.loadSearchIndex()
         .then((entries) => {
           if (mapRef.current !== map) return
@@ -293,6 +357,12 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
       map.off('click', 'agot-locations', handleLocationClick)
       map.off('mouseenter', 'agot-locations', showPointer)
       map.off('mouseleave', 'agot-locations', clearPointer)
+      map.off('click', CHARACTER_POINT_LAYER, handleCharacterClick)
+      map.off('click', ASSET_POINT_LAYER, handleAssetClick)
+      map.off('mouseenter', CHARACTER_POINT_LAYER, showPointer)
+      map.off('mouseleave', CHARACTER_POINT_LAYER, clearPointer)
+      map.off('mouseenter', ASSET_POINT_LAYER, showPointer)
+      map.off('mouseleave', ASSET_POINT_LAYER, clearPointer)
       map.off('load', initializeLocationLayers)
       map.stop()
       map.remove()

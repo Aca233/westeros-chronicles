@@ -29,6 +29,7 @@ assert.ok(storySource.includes('data-story-world-facts'), '正文没有展示统
 assert.ok(storySource.includes('data-story-fact-character'), '回合事实中的人物不能打开人物卷宗。');
 assert.ok(storySource.includes('onSelectCharacter(entityToHover.characterId!)'), '文章高亮人物没有调用人物栏导航');
 assert.ok(appSource.includes('<StoryFeed onSelectCharacter={openStoryCharacter} />'), 'App 没有把人物导航传给文章');
-assert.ok(appSource.includes("window.matchMedia('(max-width: 1023px)').matches"), '移动端点击人物后不会自动打开人物抽屉');
+assert.ok(appSource.includes('openCharacterDrawer();'), '点击人物后不会切换到人物抽屉');
+assert.ok(appSource.includes('<MapDrawer onSelectCharacter={openStoryCharacter} />'), '地图人物点没有复用人物卷宗导航');
 
 console.log(`Validated ${characterEntities.length} clickable story character links against the AGOT dataset.`);

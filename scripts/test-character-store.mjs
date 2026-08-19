@@ -76,12 +76,12 @@ function sceneContext() {
   return {
     promptContext: 'CHARACTER_SAFE_CONTEXT',
     characters: [
-      { id: ARYA, alive: true, locationId: 'winterfell', traits: [], spouseIds: [], titles: [], wounds: [] },
-      { id: SANSA, alive: true, locationId: 'winterfell', traits: [], spouseIds: [], titles: [], wounds: [] },
+      { id: ARYA, alive: true, locationId: 'b_winterfell', traits: [], spouseIds: [], titles: [], wounds: [] },
+      { id: SANSA, alive: true, locationId: 'b_winterfell', traits: [], spouseIds: [], titles: [], wounds: [] },
     ],
-    currentLocationId: 'winterfell',
+    currentLocationId: 'b_winterfell',
     presentCharacterIds: new Set([ARYA, SANSA]),
-    knownLocationIds: new Set(['winterfell', 'riverlands']),
+    knownLocationIds: new Set(['b_winterfell', 'b_riverrun']),
     eventHistory: [],
   };
 }
@@ -90,7 +90,7 @@ test('成功响应逐条验证人物命令，并与回合一起提交后才更�
   reset();
   useGameStore.getState().setCharacterTurnContext(sceneContext());
   globalThis.__characterStoreCommands = [
-    { type: 'MOVE_CHARACTER', characterId: ARYA, locationId: 'riverlands' },
+    { type: 'MOVE_CHARACTER', characterId: ARYA, locationId: 'b_riverrun' },
     { type: 'KILL_CHARACTER', characterId: ARYA, cause: '不应发生' },
   ];
   const before = useGameStore.getState().gameState;
@@ -102,7 +102,7 @@ test('成功响应逐条验证人物命令，并与回合一起提交后才更�
   assert.equal(after.gameState.turnCount, before.turnCount + 1);
   assert.equal(after.gameState.worldCharacters.revision, before.worldCharacters.revision + 1);
   assert.ok(after.changesLog.some((line) => /KILL_CHARACTER/.test(line) && /不在场/.test(line)));
-  assert.equal(after.characterTurnContext.characters.find((c) => c.id === ARYA).locationId, 'riverlands');
+  assert.equal(after.characterTurnContext.characters.find((c) => c.id === ARYA).locationId, 'b_riverrun');
   const markerCount = globalThis.__characterStoreMessages.flatMap((m) => m.content.match(/CHARACTER_SAFE_CONTEXT/g) || []).length;
   assert.equal(markerCount, 1);
 });
@@ -127,7 +127,7 @@ test('API 或原子提交失败时不推进回合、不写人物事件且不清�
 
   globalThis.__characterStoreApiFails = false;
   globalThis.__characterStoreCommitFails = true;
-  globalThis.__characterStoreCommands = [{ type: 'MOVE_CHARACTER', characterId: ARYA, locationId: 'riverlands' }];
+  globalThis.__characterStoreCommands = [{ type: 'MOVE_CHARACTER', characterId: ARYA, locationId: 'b_riverrun' }];
   useGameStore.getState().setCharacterTurnContext(sceneContext());
   await useGameStore.getState().submitAction('提交失败', 'narrative');
   console.error = oldError;
