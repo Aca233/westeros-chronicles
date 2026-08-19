@@ -63,7 +63,7 @@ test('减少动态效果关闭长动画并保留语义跳转时长', () => {
   assert.deepEqual(cameraAnimation(false, 'semantic'), { duration: 420, essential: true })
 })
 
-test('镜头配置使用维斯特洛边界并完整清理自有双击监听', () => {
+test('镜头配置使用 MapLibre 安全的维斯特洛边界并完整清理自有双击监听', () => {
   const options = createCk3MapOptions(manifest, true)
   assert.equal(options.zoomSnap, 0)
   assert.equal(options.minZoom, 0)
@@ -72,8 +72,11 @@ test('镜头配置使用维斯特洛边界并完整清理自有双击监听', ()
   assert.equal(options.dragRotate, false)
   assert.equal(options.touchPitch, false)
   assert.equal(options.renderWorldCopies, false)
-  assert.deepEqual(options.maxBounds[0][0], -180)
-  assert.deepEqual(options.maxBounds[1][0], 180)
+  assert.ok(options.maxBounds[0][0] > -180)
+  assert.ok(options.maxBounds[0][0] < -179.999)
+  assert.ok(options.maxBounds[1][0] < 180)
+  assert.ok(options.maxBounds[1][0] > 179.999)
+  assert.ok(options.maxBounds[1][0] - options.maxBounds[0][0] > 359)
   assert.ok(Math.abs(options.maxBounds[0][1] + 85.05112878) < 1e-8)
   assert.ok(Math.abs(options.maxBounds[1][1] - 85.05112878) < 1e-8)
 

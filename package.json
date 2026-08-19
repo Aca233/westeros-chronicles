@@ -94,7 +94,7 @@
     "test:map-political-projection": "node --experimental-strip-types scripts/test-map-political-projection.mjs",
     "test:map-integration": "node --experimental-strip-types scripts/test-map-integration.mjs",
     "check:map-runtime-boundaries": "node --experimental-strip-types scripts/check-map-runtime-boundaries.mjs",
-    "verify:map": "npm run test:agot-map-import && npm run test:map-schema && npm run test:map-runtime && npm run test:map-location-view && npm run test:location-authority && npm run test:map-routing && npm run test:map-travel && npm run test:map-intelligence && npm run test:map-political-projection && npm run test:map-integration && npm run check:map-drawer && npm run check:map-travel-ui && npm run check:map-runtime-boundaries && npm run check:map-data"
+    "verify:map": "npm run test:agot-map-import && npm run test:map-schema && npm run test:map-semantic-zoom && npm run test:map-runtime && npm run test:map-location-view && npm run test:location-authority && npm run test:map-routing && npm run test:map-travel && npm run test:map-intelligence && npm run test:map-political-projection && npm run test:map-integration && npm run check:map-drawer && npm run check:map-travel-ui && npm run check:map-runtime-boundaries && npm run check:map-data"
   },
   "dependencies": {
     "clsx": "^2.1.1",

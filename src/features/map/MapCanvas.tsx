@@ -320,9 +320,10 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
           url: url.startsWith('/') ? new URL(url, window.location.href).href : url,
         }),
       })
-    } catch {
+    } catch (error) {
       mediaQuery.removeEventListener('change', handleReducedMotionChange)
       setInitializationError(true)
+      console.error('[MapCanvas] 地图画布初始化失败', error)
       callbacksRef.current.onWarning('地图画布无法初始化，正文与人物卷宗不受影响')
       return
     }

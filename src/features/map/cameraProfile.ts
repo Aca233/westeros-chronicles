@@ -10,6 +10,9 @@ import { nextSemanticZoom } from './semanticZoom.ts'
 import type { MapManifest } from './types'
 
 export type CameraAnimationKind = 'search' | 'semantic'
+
+const MAPLIBRE_MAX_BOUND_LONGITUDE = 180 - 1e-10
+
 export type Ck3MapOptions = Pick<
   MapOptions,
   | 'zoomSnap'
@@ -45,7 +48,13 @@ export function createCk3MapOptions(
     mapX: manifest.westerosBounds.maxX,
     mapY: manifest.westerosBounds.minY,
   }, manifest)
-  const maxBounds: LngLatBoundsLike = [southWest, northEast]
+  // MapLibre wraps both -180 and 180 to the same world coordinate. Passing
+  // those exact endpoints collapses the longitude span and makes its camera
+  // projection matrix singular during the first resize.
+  const maxBounds: LngLatBoundsLike = [
+    [Math.max(southWest[0], -MAPLIBRE_MAX_BOUND_LONGITUDE), southWest[1]],
+    [Math.min(northEast[0], MAPLIBRE_MAX_BOUND_LONGITUDE), northEast[1]],
+  ]
 
   return {
     zoomSnap: 0,
