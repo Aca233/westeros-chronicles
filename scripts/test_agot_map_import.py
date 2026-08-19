@@ -19,7 +19,10 @@ from scripts.agot_map_import.dem import build_dem_tiles, encode_terrain_rgb
 from scripts.agot_map_import.audit import audit_map_records, audit_semantic_records
 from scripts.agot_map_import.geometry import extract_province_geometry
 from scripts.agot_map_import.locations import build_locations
-from scripts.agot_map_import.material_catalog import parse_material_catalog
+from scripts.agot_map_import.material_catalog import TerrainMaterial, parse_material_catalog
+from scripts.agot_map_import.material_sources import (
+    MaterialSourceRoots, MaterialTextureCache, resolve_diffuse,
+)
 from scripts.agot_map_import.models import (
     MapImportError, MapLocationRecord, ProvinceGeometry, RegionDefinition,
     SemanticBoundaryRecord, SemanticDataset, SemanticMembershipRecord, SemanticTitleRecord,
@@ -158,6 +161,63 @@ class MaterialCatalogTests(unittest.TestCase):
                 self.write(text)
                 with self.assertRaisesRegex(MapImportError, message):
                     parse_material_catalog(self.path, default_tile_factor=8)
+
+
+class MaterialSourceTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.temp_dir = tempfile.TemporaryDirectory(prefix="agot-material-source-", dir=FAST_TMP_ROOT)
+        self.root = Path(self.temp_dir.name)
+        self.agot = self.root / "agot"
+        self.ck3 = self.root / "ck3"
+        for root in (self.agot, self.ck3):
+            (root / "gfx" / "map" / "terrain").mkdir(parents=True)
+        self.roots = MaterialSourceRoots(self.agot, self.ck3)
+
+    def tearDown(self) -> None:
+        self.temp_dir.cleanup()
+
+    def material(self, index: int, name: str) -> TerrainMaterial:
+        return TerrainMaterial(index, name, f"{name}.dds", 8)
+
+    def write_dds(self, root: Path, name: str, colour: tuple[int, int, int]) -> Path:
+        path = root / "gfx" / "map" / "terrain" / f"{name}.dds"
+        Image.new("RGB", (2, 2), colour).save(path)
+        return path
+
+    def test_agot_overrides_ck3_and_missing_material_is_rejected(self) -> None:
+        material = self.material(0, "shared")
+        agot_path = self.write_dds(self.agot, "shared", (100, 0, 0))
+        ck3_path = self.write_dds(self.ck3, "shared", (0, 100, 0))
+        self.assertEqual(resolve_diffuse(material, self.roots), agot_path.resolve())
+        agot_path.unlink()
+        self.assertEqual(resolve_diffuse(material, self.roots), ck3_path.resolve())
+        ck3_path.unlink()
+        with self.assertRaisesRegex(MapImportError, "shared"):
+            resolve_diffuse(material, self.roots)
+
+    def test_cache_decodes_rgb_reuses_entries_and_evicts_lru(self) -> None:
+        materials = [self.material(index, name) for index, name in enumerate(("a", "b", "c"))]
+        for material, colour in zip(materials, ((10, 20, 30), (40, 50, 60), (70, 80, 90))):
+            self.write_dds(self.agot, material.id, colour)
+        with mock.patch("scripts.agot_map_import.material_sources.Image.open", wraps=Image.open) as opened:
+            cache = MaterialTextureCache(self.roots, max_bytes=24)
+            self.assertEqual(cache.get(materials[0]).mode, "RGB")
+            self.assertIs(cache.get(materials[0]), cache.get(materials[0]))
+            cache.get(materials[1])
+            cache.get(materials[0])
+            cache.get(materials[2])
+            cache.get(materials[1])
+            self.assertEqual(opened.call_count, 4)
+            cache.close()
+
+    def test_cache_rejects_unreadable_dds(self) -> None:
+        material = self.material(0, "broken")
+        path = self.agot / "gfx" / "map" / "terrain" / "broken.dds"
+        path.write_bytes(b"not a dds")
+        cache = MaterialTextureCache(self.roots)
+        with self.assertRaisesRegex(MapImportError, "broken.dds"):
+            cache.get(material)
+        cache.close()
 
 class MapRegionTests(unittest.TestCase):
     def test_expands_nested_westeros_region(self) -> None:
