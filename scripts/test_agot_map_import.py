@@ -25,6 +25,7 @@ from scripts.agot_map_import.material_sources import (
 )
 from scripts.agot_map_import.material_compositor import (
     linear_to_srgb, normalize_weights, render_material_tile, srgb_to_linear,
+    validate_material_index_weights,
 )
 from scripts.agot_map_import.material_catalog import TerrainMaterialInputs
 from scripts.agot_map_import.material_tiles import build_material_terrain_tiles
@@ -270,12 +271,43 @@ class MaterialCompositorTests(unittest.TestCase):
 
     def test_rejects_active_out_of_range_material_index(self) -> None:
         with self.assertRaisesRegex(MapImportError, "材质索引"):
-            render_material_tile(
+            validate_material_index_weights(
                 Image.new("RGBA", (1, 1), (9, 0, 0, 0)),
                 Image.new("RGBA", (1, 1), (255, 0, 0, 0)),
-                self.materials(1), self.TextureFixture(((10, 20, 30),)),
-                (0, 0, 1, 1), (1, 1), 1,
+                material_count=1,
             )
+
+    def test_accepts_zero_weight_sentinel_material_indices(self) -> None:
+        validate_material_index_weights(
+            Image.new("RGBA", (1, 1), (0, 255, 255, 255)),
+            Image.new("RGBA", (1, 1), (255, 0, 0, 0)),
+            material_count=1,
+        )
+
+    def test_preserves_rgb_weight_channels_when_alpha_weight_is_zero(self) -> None:
+        indices = Image.new("RGBA", (2, 2))
+        intensities = Image.new("RGBA", (2, 2))
+        for y in range(2):
+            indices.putpixel((0, y), (0, 255, 255, 255))
+            indices.putpixel((1, y), (0, 1, 255, 255))
+            intensities.putpixel((0, y), (255, 0, 0, 0))
+            intensities.putpixel((1, y), (0, 255, 0, 0))
+        rendered = render_material_tile(
+            indices, intensities, self.materials(2),
+            self.TextureFixture(((255, 0, 0), (0, 255, 0))),
+            (0, 0, 2, 2), (2, 2), 8,
+        )
+        self.assertEqual(rendered.getpixel((0, 0)), (255, 0, 0))
+        self.assertEqual(rendered.getpixel((7, 0)), (0, 255, 0))
+
+    def test_ignores_sentinel_weight_created_by_bilinear_sampling(self) -> None:
+        rendered = render_material_tile(
+            Image.new("RGBA", (1, 1), (0, 255, 255, 255)),
+            Image.new("RGBA", (1, 1), (200, 55, 0, 0)),
+            self.materials(1), self.TextureFixture(((30, 90, 30),)),
+            (0, 0, 1, 1), (1, 1), 1,
+        )
+        self.assertEqual(rendered.getpixel((0, 0)), (30, 90, 30))
 
     def test_global_uv_matches_one_render_across_adjacent_tiles(self) -> None:
         texture = Image.new("RGB", (4, 1))
@@ -333,6 +365,11 @@ class MaterialTileTests(unittest.TestCase):
         for path in files:
             with Image.open(path) as tile:
                 self.assertEqual((tile.format, tile.size), ("WEBP", (8, 8)))
+        with Image.open(output / "0" / "0" / "0.webp") as tile:
+            red, green, blue = tile.convert("RGB").getpixel((4, 4))
+            self.assertGreater(red, 60)
+            self.assertGreater(blue, 30)
+            self.assertGreater(green, 100)
 
     def test_failure_keeps_previous_output(self) -> None:
         output = self.root / "material-terrain"

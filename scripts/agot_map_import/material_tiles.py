@@ -7,7 +7,7 @@ from typing import Iterable
 from PIL import Image
 
 from .material_catalog import TerrainMaterial, TerrainMaterialInputs
-from .material_compositor import render_material_tile
+from .material_compositor import render_material_tile, validate_material_index_weights
 from .material_sources import MaterialSourceRoots, MaterialTextureCache
 from .models import MapImportError, TileReport
 from .tiles import (
@@ -34,12 +34,15 @@ def build_material_terrain_tiles(
     files: list[str] = []
     index_image: Image.Image | None = None
     intensity_image: Image.Image | None = None
+    intensity_source_channels: tuple[Image.Image, ...] = ()
     textures = MaterialTextureCache(roots)
     try:
         index_image = Image.open(inputs.index_map)
         intensity_image = Image.open(inputs.intensity_map)
         if index_image.mode != "RGBA" or intensity_image.mode != "RGBA":
             raise MapImportError("地形材质索引图与权重图必须为 RGBA")
+        validate_material_index_weights(index_image, intensity_image, len(materials))
+        intensity_source_channels = intensity_image.split()
         for zoom in zoom_values:
             count = 1 << zoom
             for tile_x in range(count):
@@ -49,10 +52,16 @@ def build_material_terrain_tiles(
                         (tile_size, tile_size), Image.Transform.EXTENT, source_bounds,
                         Image.Resampling.NEAREST,
                     )
-                    intensity_tile = intensity_image.transform(
-                        (tile_size, tile_size), Image.Transform.EXTENT, source_bounds,
-                        Image.Resampling.BILINEAR,
-                    )
+                    intensity_tile_channels = [
+                        channel.transform(
+                            (tile_size, tile_size), Image.Transform.EXTENT, source_bounds,
+                            Image.Resampling.BILINEAR,
+                        )
+                        for channel in intensity_source_channels
+                    ]
+                    intensity_tile = Image.merge("RGBA", intensity_tile_channels)
+                    for channel in intensity_tile_channels:
+                        channel.close()
                     tile = render_material_tile(
                         index_tile, intensity_tile, materials, textures,
                         source_bounds, map_size, tile_size,
@@ -76,4 +85,6 @@ def build_material_terrain_tiles(
             index_image.close()
         if intensity_image is not None:
             intensity_image.close()
+        for channel in intensity_source_channels:
+            channel.close()
     return TileReport("materialTerrain", len(files), zoom_values[0], zoom_values[-1], tuple(files))

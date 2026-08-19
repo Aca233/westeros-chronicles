@@ -13,6 +13,31 @@ class TextureProvider(Protocol):
     def get(self, material: TerrainMaterial) -> Image.Image: ...
 
 
+def validate_material_index_weights(
+    index_image: Image.Image,
+    intensity_image: Image.Image,
+    material_count: int,
+    chunk_rows: int = 256,
+) -> None:
+    if material_count <= 0:
+        raise MapImportError("地形材质目录不能为空")
+    if index_image.size != intensity_image.size:
+        raise MapImportError("地形材质索引图与权重图尺寸必须一致")
+    if chunk_rows <= 0:
+        raise MapImportError("地形材质校验分块高度必须为正整数")
+    width, height = index_image.size
+    for top in range(0, height, chunk_rows):
+        box = (0, top, width, min(height, top + chunk_rows))
+        with index_image.crop(box).convert("RGBA") as index_chunk:
+            indices = np.asarray(index_chunk, dtype=np.uint8)
+        with intensity_image.crop(box).convert("RGBA") as intensity_chunk:
+            weights = np.asarray(intensity_chunk, dtype=np.uint8)
+        invalid_active = (indices >= material_count) & (weights > 0)
+        if np.any(invalid_active):
+            invalid_index = int(indices[invalid_active].max())
+            raise MapImportError(f"地形材质索引越界：{invalid_index} >= {material_count}")
+
+
 def normalize_weights(weights: np.ndarray) -> np.ndarray:
     values = np.asarray(weights, dtype=np.float64)
     if values.shape[-1] != 4:
@@ -33,6 +58,18 @@ def srgb_to_linear(values: np.ndarray) -> np.ndarray:
 def linear_to_srgb(values: np.ndarray) -> np.ndarray:
     colours = np.clip(np.asarray(values, dtype=np.float64), 0.0, 1.0)
     return np.where(colours <= 0.0031308, colours * 12.92, 1.055 * colours ** (1 / 2.4) - 0.055)
+
+
+def _resize_weight_channels(image: Image.Image, size: tuple[int, int]) -> np.ndarray:
+    rgba = image.convert("RGBA")
+    resized: list[Image.Image] = []
+    try:
+        resized = [channel.resize(size, Image.Resampling.BILINEAR) for channel in rgba.split()]
+        return np.stack([np.asarray(channel, dtype=np.uint8) for channel in resized], axis=-1)
+    finally:
+        for channel in resized:
+            channel.close()
+        rgba.close()
 
 
 def _sample_wrapped(
@@ -82,14 +119,14 @@ def render_material_tile(
         index_crop.convert("RGBA").resize((tile_size, tile_size), Image.Resampling.NEAREST),
         dtype=np.uint8,
     )
-    weights = normalize_weights(np.asarray(
-        intensity_crop.convert("RGBA").resize((tile_size, tile_size), Image.Resampling.BILINEAR),
-        dtype=np.uint8,
-    ))
-    active = weights > 0
+    sampled_weights = _resize_weight_channels(intensity_crop, (tile_size, tile_size))
+    valid_channels = indices < len(materials)
+    weights = normalize_weights(np.where(valid_channels, sampled_weights, 0))
+    zero_valid_weight = np.sum(np.where(valid_channels, sampled_weights, 0), axis=-1) <= 0
+    if np.any(zero_valid_weight):
+        indices[..., 0] = np.where(zero_valid_weight, 0, indices[..., 0])
+    active = (weights > 0) & (indices < len(materials))
     active_indices = indices[active]
-    if active_indices.size and int(active_indices.max()) >= len(materials):
-        raise MapImportError(f"地形材质索引越界：{int(active_indices.max())} >= {len(materials)}")
 
     output = np.zeros((tile_size, tile_size, 3), dtype=np.float64)
     for material_index in np.unique(active_indices):
