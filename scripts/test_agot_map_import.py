@@ -19,6 +19,7 @@ from scripts.agot_map_import.dem import build_dem_tiles, encode_terrain_rgb
 from scripts.agot_map_import.audit import audit_map_records, audit_semantic_records
 from scripts.agot_map_import.geometry import extract_province_geometry
 from scripts.agot_map_import.locations import build_locations
+from scripts.agot_map_import.material_catalog import parse_material_catalog
 from scripts.agot_map_import.models import (
     MapImportError, MapLocationRecord, ProvinceGeometry, RegionDefinition,
     SemanticBoundaryRecord, SemanticDataset, SemanticMembershipRecord, SemanticTitleRecord,
@@ -53,6 +54,14 @@ class MapSourceTests(unittest.TestCase):
         Image.new("I;16", (8, 6), 32000).save(map_data / "heightmap.png")
         Image.new("P", (8, 6), 254).save(map_data / "rivers.png")
         Image.new("RGBA", (8, 6), (0, 0, 0, 255)).save(map_data / "mask-baronyroad.png")
+        terrain = self.root / "gfx" / "map" / "terrain"
+        terrain.mkdir(parents=True, exist_ok=True)
+        Image.new("RGBA", (8, 6), (0, 1, 0, 0)).save(terrain / "detail_index.tga")
+        Image.new("RGBA", (8, 6), (255, 0, 0, 0)).save(terrain / "detail_intensity.tga")
+        (terrain / "materials.settings").write_text(
+            '{\n{ id = "plains" diffuse = "plains_diffuse.dds" tile_factor = 16 }\n}\n',
+            encoding="utf-8",
+        )
 
     def tearDown(self) -> None:
         self.temp_dir.cleanup()
@@ -62,6 +71,7 @@ class MapSourceTests(unittest.TestCase):
         self.assertEqual(source.source_id, "2962333032")
         self.assertEqual(source.map_size, (8, 6))
         self.assertEqual(source.default_files["provinces"].name, "provinces.png")
+        self.assertEqual(source.terrain_materials.index_map.name, "detail_index.tga")
 
     def test_rejects_missing_required_image(self) -> None:
         (self.root / "map_data" / "provinces.png").unlink()
@@ -82,6 +92,15 @@ class MapSourceTests(unittest.TestCase):
         with self.assertRaisesRegex(MapImportError, "8x6"):
             MapSource.open(self.root, expected_size=(8, 6))
 
+    def test_rejects_missing_or_invalid_material_maps(self) -> None:
+        terrain = self.root / "gfx" / "map" / "terrain"
+        (terrain / "detail_index.tga").unlink()
+        with self.assertRaisesRegex(MapImportError, "detail_index.tga"):
+            MapSource.open(self.root, expected_size=(8, 6))
+        Image.new("RGB", (8, 6)).save(terrain / "detail_index.tga")
+        with self.assertRaisesRegex(MapImportError, "RGBA"):
+            MapSource.open(self.root, expected_size=(8, 6))
+
     def test_definition_requires_unique_ids_and_colours(self) -> None:
         definitions = parse_definition(self.root / "map_data" / "definition.csv")
         self.assertEqual(definitions[1].name, "b_winterfell")
@@ -91,6 +110,54 @@ class MapSourceTests(unittest.TestCase):
         with self.assertRaisesRegex(MapImportError, "颜色重复"):
             parse_definition(duplicate)
 
+
+class MaterialCatalogTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.temp_dir = tempfile.TemporaryDirectory(prefix="agot-materials-", dir=FAST_TMP_ROOT)
+        self.path = Path(self.temp_dir.name) / "materials.settings"
+
+    def tearDown(self) -> None:
+        self.temp_dir.cleanup()
+
+    def write(self, text: str) -> None:
+        self.path.write_text(text, encoding="utf-8")
+
+    def test_preserves_live_declaration_order_and_defaults(self) -> None:
+        self.write('''
+        {
+            # { id = "disabled" diffuse = "disabled.dds" }
+            {
+                name = "Plains"
+                diffuse = "plains_diffuse.dds"
+                id = "plains"
+                tile_factor = 16
+            }
+            { id = "snow" diffuse = "snow_diffuse.dds" }
+        }
+        { { id = "rock" diffuse = "rock_diffuse.dds" tile_factor = 4 } }
+        ''')
+        materials = parse_material_catalog(self.path, default_tile_factor=8)
+        self.assertEqual(
+            [(item.index, item.id) for item in materials],
+            [(0, "plains"), (1, "snow"), (2, "rock")],
+        )
+        self.assertEqual(
+            [item.diffuse for item in materials],
+            ["plains_diffuse.dds", "snow_diffuse.dds", "rock_diffuse.dds"],
+        )
+        self.assertEqual([item.tile_factor for item in materials], [16.0, 8.0, 4.0])
+
+    def test_rejects_duplicate_missing_and_invalid_records(self) -> None:
+        cases = [
+            ('{ { id = "same" diffuse = "a.dds" } { id = "same" diffuse = "b.dds" } }', "重复"),
+            ('{ { id = "missing" } }', "diffuse"),
+            ('{ { id = "bad" diffuse = "bad.dds" tile_factor = 0 } }', "tile_factor"),
+        ]
+        for text, message in cases:
+            with self.subTest(message=message):
+                self.write(text)
+                with self.assertRaisesRegex(MapImportError, message):
+                    parse_material_catalog(self.path, default_tile_factor=8)
 
 class MapRegionTests(unittest.TestCase):
     def test_expands_nested_westeros_region(self) -> None:
@@ -661,6 +728,13 @@ class MapCliTests(unittest.TestCase):
             Image.new("I;16", (8, 6), 32000).save(map_data / "heightmap.png")
             Image.new("P", (8, 6), 254).save(map_data / "rivers.png")
             Image.new("RGBA", (8, 6), (255, 255, 255, 255)).save(map_data / "mask-baronyroad.png")
+            terrain = source / "gfx" / "map" / "terrain"
+            terrain.mkdir(parents=True, exist_ok=True)
+            Image.new("RGBA", (8, 6), (0, 0, 0, 0)).save(terrain / "detail_index.tga")
+            Image.new("RGBA", (8, 6), (255, 0, 0, 0)).save(terrain / "detail_intensity.tga")
+            (terrain / "materials.settings").write_text(
+                '{ { id = "plains" diffuse = "plains.dds" } }', encoding="utf-8",
+            )
             data_output = root / "data"
             asset_output = root / "assets"
             result = map_import_main([

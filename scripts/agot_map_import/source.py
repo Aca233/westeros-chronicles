@@ -7,6 +7,7 @@ from pathlib import Path
 
 from PIL import Image
 
+from .material_catalog import TerrainMaterialInputs
 from .models import MapImportError, ProvinceDefinition
 
 
@@ -28,6 +29,7 @@ class MapSource:
     road_mask: Path
     geographical_regions: Path
     landed_titles: Path
+    terrain_materials: TerrainMaterialInputs
 
     @classmethod
     def open(
@@ -62,11 +64,23 @@ class MapSource:
         if not any(landed_titles.glob("*.txt")):
             raise MapImportError("AGOT 地图源缺少 common/landed_titles 文本")
 
+        terrain_root = root / "gfx" / "map" / "terrain"
+        terrain_materials = TerrainMaterialInputs(
+            index_map=terrain_root / "detail_index.tga",
+            intensity_map=terrain_root / "detail_intensity.tga",
+            settings=terrain_root / "materials.settings",
+        )
+        for path in (terrain_materials.index_map, terrain_materials.intensity_map, terrain_materials.settings):
+            if not path.is_file():
+                raise MapImportError(f"AGOT 地图源缺少 gfx/map/terrain/{path.name}")
+
         required_size = expected_size or REAL_MAP_SIZE
         _validate_image(default_files["provinces"], required_size, {"RGB"}, "省份图必须为 RGB")
         _validate_image(map_data / "heightmap.png", required_size, {"I;16", "I;16B"}, "高度图必须为 16 位")
         _validate_image(default_files["rivers"], required_size, {"P", "RGB", "RGBA"}, "河流图模式不受支持")
         _validate_image(map_data / "mask-baronyroad.png", required_size, {"L", "P", "RGB", "RGBA"}, "道路遮罩模式不受支持")
+        _validate_image(terrain_materials.index_map, required_size, {"RGBA"}, "必须为 RGBA")
+        _validate_image(terrain_materials.intensity_map, required_size, {"RGBA"}, "必须为 RGBA")
         parse_definition(default_files["definitions"])
 
         return cls(
@@ -78,6 +92,7 @@ class MapSource:
             road_mask=map_data / "mask-baronyroad.png",
             geographical_regions=geographical_regions,
             landed_titles=landed_titles,
+            terrain_materials=terrain_materials,
         )
 
 
