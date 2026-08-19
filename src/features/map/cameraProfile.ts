@@ -7,6 +7,7 @@ import type {
 
 import { mapPixelToLngLat } from './coordinates.ts'
 import { nextSemanticZoom } from './semanticZoom.ts'
+import { TERRAIN_MAX_PITCH } from './terrainProfile.ts'
 import type { MapManifest } from './types'
 
 export type CameraAnimationKind = 'search' | 'semantic'
@@ -60,8 +61,8 @@ export function createCk3MapOptions(
     zoomSnap: 0,
     minZoom: 0,
     maxZoom: 6,
-    maxPitch: 0,
-    pitchWithRotate: false,
+    maxPitch: TERRAIN_MAX_PITCH,
+    pitchWithRotate: true,
     dragRotate: false,
     touchPitch: false,
     renderWorldCopies: false,
@@ -74,6 +75,7 @@ export function createCk3MapOptions(
 export function configureCk3Camera(
   map: MapLibreMap,
   reducedMotion: boolean,
+  targetPitch: (zoom: number) => number = () => 0,
 ): () => void {
   map.scrollZoom.enable()
   map.scrollZoom.setWheelZoomRate(1 / 600)
@@ -87,8 +89,10 @@ export function configureCk3Camera(
 
   const onDoubleClick = (event: MapMouseEvent): void => {
     event.preventDefault()
+    const targetZoom = nextSemanticZoom(map.getZoom())
     map.easeTo({
-      zoom: nextSemanticZoom(map.getZoom()),
+      zoom: targetZoom,
+      pitch: targetPitch(targetZoom),
       around: event.lngLat,
       ...cameraAnimation(reducedMotion, 'semantic'),
     })
