@@ -73,6 +73,21 @@ npm run import:agot-map
 npm run check:map-data
 ```
 
+### CK3 式语义地图
+
+地图清单固定使用 schema version 2。运行时只读取已经提交的离线文件：
+
+- `public/data/agot-map/semantic/titles.json`：战略区域、公国和伯爵领的中文标题与标签锚点
+- `public/data/agot-map/semantic/membership.json`：具体地点到三级可见行政层的归属关系
+- `public/assets/agot-map/semantic/{z}/{x}/{y}.pbf`：三级边界与中文标签矢量瓦片
+
+开发者只有在更新地图资料时才显式执行 `npm run import:agot-map`。自动验证不会读取
+`/mnt/c/agot/2962333032`、Steam Workshop 或任何网络地图服务。
+
+地图可见行政层固定为战略区域、公国和伯爵领；`baronyId` 只作为程序内部的地点兼容键，不形成可见层级。相机与语义控制器不持有政治、人物、物品、旅行或时间线的权威状态。后续三维地形只能替换近景地形渲染层，不得改写 `semanticZoomState()`、语义归属、政治投影或旅行队列接口。
+
+提供给 LLM 的地点上下文只包含经过验证的具体地点、伯爵领、公国和战略区域中文名，不包含 `baronyId` 或 `b_` 地点键；地点变化和旅程进度只由地图旅行系统与统一回合结算。
+
 ## 数据说明
 
 `public/data/agot-characters` 包含项目运行所需的预处理人物数据；`public/data/agot-map` 与 `public/assets/agot-map` 包含地图运行时数据。关系页可按姓名打开任意稳定人物档案；NPC 的身份、特质、属性、亲属、伤势、头衔和记忆会叠加当前存档事件，未记录的装备与物品保持未知，不会复制玩家物品。原始 AGOT Workshop 文件、音频资源、构建产物和本地分析缓存不会提交到仓库。

@@ -68,8 +68,9 @@ test('地点详情和旅程面板在移动端堆叠为内部底部抽屉', () =>
   assert.match(details, /TravelPlanner/)
 })
 
-test('正文状态切片包含权威旅程且障碍可中断', () => {
+test('正文状态切片只描述权威旅程且不向模型开放旅行命令', () => {
   assert.match(prompt, /当前旅程/)
-  assert.match(prompt, /PAUSE_TRAVEL/)
-  assert.match(prompt, /不要重复输出 ADVANCE_TRAVEL/)
+  assert.match(prompt, /地图旅行系统与统一回合结算/)
+  assert.doesNotMatch(prompt, /不要重复输出 ADVANCE_TRAVEL/)
+  assert.doesNotMatch(prompt, /type[^\n]+(?:PAUSE_TRAVEL|ADVANCE_TRAVEL)/)
 })

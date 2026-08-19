@@ -133,7 +133,7 @@ test('地图图层只接收已经过滤且与模式匹配的可见主题', () =>
   assert.deepEqual(visibleMapSubjectsForMode('terrain', subjects), [])
 })
 
-test('未知动态情报不影响公开海岸、道路、七国区域和著名城堡', () => {
+test('未知动态情报不影响公开海岸、道路、三级行政区域和著名城堡', () => {
   const winterfell = {
     id: 'b_winterfell', name: '临冬城', englishName: 'Winterfell', type: 'castle',
     mapX: 1360, mapY: 1447, provinceId: 42, baronyId: 'b_winterfell', countyId: 'c_winterfell',
@@ -151,6 +151,9 @@ test('未知动态情报不影响公开海岸、道路、七国区域和著名�
   const styleSource = readFileSync('src/features/map/mapStyle.ts', 'utf8')
   assert.match(styleSource, /agot-terrain/)
   assert.match(styleSource, /agot-roads/)
-  assert.match(styleSource, /agot-borders/)
+  assert.match(styleSource, /agot-realm-boundaries/)
+  assert.match(styleSource, /agot-duchy-boundaries/)
+  assert.match(styleSource, /agot-county-boundaries/)
+  assert.doesNotMatch(styleSource, /agot-borders|barony-boundaries/)
   assert.match(styleSource, /agot-locations/)
 })
