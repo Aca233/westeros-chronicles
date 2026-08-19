@@ -149,7 +149,8 @@ test('未知动态情报不影响公开海岸、道路、三级行政区域和�
   assert.deepEqual(view.intelligence, [])
 
   const styleSource = readFileSync('src/features/map/mapStyle.ts', 'utf8')
-  assert.match(styleSource, /agot-terrain/)
+  assert.match(styleSource, /FAR_MAP_SOURCE/)
+  assert.match(styleSource, /MATERIAL_TERRAIN_SOURCE/)
   assert.match(styleSource, /agot-roads/)
   assert.match(styleSource, /agot-realm-boundaries/)
   assert.match(styleSource, /agot-duchy-boundaries/)
