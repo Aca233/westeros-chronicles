@@ -16,6 +16,8 @@ interface MapUiState {
   selectedLocationId: string | null
   lastViewport: MapViewport | null
   mapMode: MapMode
+  topDownLocked: boolean
+  northResetRequestId: number
   routePreview: RoutePlan | null
   travelIntent: 'reroute' | null
   openMap: (locationId?: string) => void
@@ -26,6 +28,8 @@ interface MapUiState {
   selectLocation: (id: string | null) => void
   rememberViewport: (viewport: MapViewport) => void
   setMapMode: (mode: MapMode) => void
+  toggleTopDown: () => void
+  requestNorthReset: () => void
   previewRoute: (route: RoutePlan | null) => void
   beginReroute: () => void
   clearTravelIntent: () => void
@@ -36,6 +40,8 @@ export const useMapUiStore = create<MapUiState>((set) => ({
   selectedLocationId: null,
   lastViewport: null,
   mapMode: 'terrain',
+  topDownLocked: false,
+  northResetRequestId: 0,
   routePreview: null,
   travelIntent: null,
   openMap: (locationId) => set((state) => ({
@@ -49,6 +55,8 @@ export const useMapUiStore = create<MapUiState>((set) => ({
   selectLocation: (id) => set({ selectedLocationId: id }),
   rememberViewport: (viewport) => set({ lastViewport: viewport }),
   setMapMode: (mapMode) => set({ mapMode }),
+  toggleTopDown: () => set((state) => ({ topDownLocked: !state.topDownLocked })),
+  requestNorthReset: () => set((state) => ({ northResetRequestId: state.northResetRequestId + 1 })),
   previewRoute: (routePreview) => set({ routePreview }),
   beginReroute: () => set({ travelIntent: 'reroute', selectedLocationId: null, mapMode: 'travel' }),
   clearTravelIntent: () => set({ travelIntent: null }),

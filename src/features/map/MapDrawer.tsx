@@ -36,15 +36,19 @@ export const MapDrawer: React.FC<MapDrawerProps> = ({ onSelectCharacter }) => {
   const selectedLocationId = useMapUiStore((state) => state.selectedLocationId)
   const lastViewport = useMapUiStore((state) => state.lastViewport)
   const mapMode = useMapUiStore((state) => state.mapMode)
+  const topDownLocked = useMapUiStore((state) => state.topDownLocked)
   const routePreview = useMapUiStore((state) => state.routePreview)
   const closeDrawer = useMapUiStore((state) => state.closeDrawer)
   const selectLocation = useMapUiStore((state) => state.selectLocation)
   const rememberViewport = useMapUiStore((state) => state.rememberViewport)
   const setMapMode = useMapUiStore((state) => state.setMapMode)
+  const toggleTopDown = useMapUiStore((state) => state.toggleTopDown)
+  const requestNorthReset = useMapUiStore((state) => state.requestNorthReset)
   const [manifest, setManifest] = useState<MapManifest | null>(null)
   const [loadError, setLoadError] = useState(false)
   const [warning, setWarning] = useState<string | null>(null)
   const [reloadKey, setReloadKey] = useState(0)
+  const [terrainAvailable] = useState(true)
   const [mapLocations, setMapLocations] = useState<MapLocationSearchEntry[]>([])
   const [dynamicCharacterNames, setDynamicCharacterNames] = useState<Map<string, string>>(new Map())
   const [politicalSource, setPoliticalSource] = useState<{
@@ -236,7 +240,15 @@ export const MapDrawer: React.FC<MapDrawerProps> = ({ onSelectCharacter }) => {
             </div>
           )}
           {manifest && !loadError && (
-            <MapToolbar mode={mapMode} onModeChange={setMapMode} onSelectLocation={selectLocation} />
+            <MapToolbar
+              mode={mapMode}
+              topDownLocked={topDownLocked}
+              terrainAvailable={terrainAvailable}
+              onModeChange={setMapMode}
+              onSelectLocation={selectLocation}
+              onToggleTopDown={toggleTopDown}
+              onResetNorth={requestNorthReset}
+            />
           )}
           {manifest && !loadError && ((mapMode === 'characters' && characterPoints.length === 0)
             || (mapMode === 'assets' && assetPoints.length === 0)) && (

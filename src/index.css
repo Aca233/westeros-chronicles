@@ -985,6 +985,42 @@
 .map-mode-tabs button:hover { color: rgb(var(--parchment)); }
 .map-mode-tabs button[data-active='true'] { color: rgb(var(--gold-bright)); background: rgb(var(--gold) / 0.12); }
 
+.map-toolbar-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  pointer-events: auto;
+}
+
+.map-camera-controls {
+  display: flex;
+  gap: 4px;
+}
+
+.map-camera-controls button {
+  display: inline-flex;
+  min-width: 54px;
+  height: 30px;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 0 8px;
+  border: 1px solid rgb(var(--hairline-bright) / 0.72);
+  background: rgb(var(--ink-2) / 0.9);
+  color: rgb(var(--parchment-dim));
+  font-size: 9.5px;
+  box-shadow: 0 8px 22px rgb(var(--shadow) / 0.24);
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+}
+.map-camera-controls button:hover:not(:disabled) { color: rgb(var(--parchment)); }
+.map-camera-controls button[aria-pressed='true'] {
+  border-color: rgb(var(--gold) / 0.72);
+  background: rgb(var(--gold) / 0.12);
+  color: rgb(var(--gold));
+}
+.map-camera-controls button:disabled { cursor: not-allowed; opacity: 0.45; }
+
 .map-mode-empty {
   position: absolute;
   top: 59px;
@@ -1176,6 +1212,8 @@
   .map-location-search { width: min(258px, calc(100vw - 150px)); }
   .map-mode-tabs { overflow-x: auto; }
   .map-mode-tabs button { width: 34px; padding: 0; }
+  .map-camera-controls button { min-width: 32px; width: 32px; padding: 0; }
+  .map-camera-controls button span { display: none; }
   .map-location-details {
     top: auto;
     left: 0;
