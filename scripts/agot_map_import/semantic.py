@@ -117,7 +117,7 @@ def build_semantic_dataset(
         raise MapImportError("没有可生成语义层的省份几何")
     for province_id, geometry in sorted(geometries.items()):
         stable_barony = titles.barony_for_province(province_id)
-        if stable_barony is None or stable_barony != geometry.barony_id:
+        if stable_barony is None:
             raise MapImportError(f"省份 {province_id} 缺少唯一稳定男爵领内部键")
         ancestors = titles.ancestors(stable_barony)
         if not ancestors.county_id:
@@ -131,7 +131,7 @@ def build_semantic_dataset(
 
     for province_id, geometry in sorted(geometries.items()):
         stable_barony = titles.barony_for_province(province_id)
-        if stable_barony is None or stable_barony != geometry.barony_id:
+        if stable_barony is None:
             raise MapImportError(f"省份 {province_id} 缺少唯一稳定男爵领内部键")
         ancestors = titles.ancestors(stable_barony)
         if not ancestors.county_id:

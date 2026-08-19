@@ -123,6 +123,7 @@ class SemanticDatasetTests(unittest.TestCase):
         *,
         countyless: bool = False,
         missing_stable_barony: bool = False,
+        mismatched_definition_name: bool = False,
         outside_bounds: bool = False,
         cyclic_region: bool = False,
     ):
@@ -135,7 +136,9 @@ class SemanticDatasetTests(unittest.TestCase):
             rows.reverse()
         geometries = {
             province_id: ProvinceGeometry(
-                province_id, barony_id, 2 + 4 * index, 2,
+                province_id,
+                ("b_definition_alias" if mismatched_definition_name and province_id == 1 else barony_id),
+                2 + 4 * index, 2,
                 tuple(map(int, geometry.bounds)), 16, geometry, region_id,
             )
             for index, (province_id, barony_id, geometry, region_id) in enumerate(rows)
@@ -176,7 +179,7 @@ class SemanticDatasetTests(unittest.TestCase):
                 is_port=False, importance=100, tags=(),
             )
             for province_id, geometry in sorted(geometries.items())
-            for barony_id in [geometry.barony_id]
+            for barony_id in ["b_winterfell" if province_id == 1 else "b_kings_landing"]
         ]
         return build_semantic_dataset(
             geometries, locations, titles, regions, localization,
@@ -199,6 +202,11 @@ class SemanticDatasetTests(unittest.TestCase):
 
     def test_output_is_identical_when_input_order_is_reversed(self) -> None:
         self.assertEqual(self._dataset(), self._dataset(reverse=True))
+
+    def test_landed_title_mapping_overrides_mismatched_definition_name(self) -> None:
+        dataset = self._dataset(mismatched_definition_name=True)
+        winterfell = next(item for item in dataset.memberships if item.location_id == "b_winterfell")
+        self.assertEqual(winterfell.barony_id, "b_winterfell")
 
     def test_missing_chinese_name_keeps_boundary_but_suppresses_title(self) -> None:
         dataset = self._dataset(missing=("d_winterfell",))
