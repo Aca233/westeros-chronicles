@@ -23,6 +23,9 @@ from scripts.agot_map_import.material_catalog import TerrainMaterial, parse_mate
 from scripts.agot_map_import.material_sources import (
     MaterialSourceRoots, MaterialTextureCache, resolve_diffuse,
 )
+from scripts.agot_map_import.material_compositor import (
+    linear_to_srgb, normalize_weights, render_material_tile, srgb_to_linear,
+)
 from scripts.agot_map_import.models import (
     MapImportError, MapLocationRecord, ProvinceGeometry, RegionDefinition,
     SemanticBoundaryRecord, SemanticDataset, SemanticMembershipRecord, SemanticTitleRecord,
@@ -218,6 +221,64 @@ class MaterialSourceTests(unittest.TestCase):
         with self.assertRaisesRegex(MapImportError, "broken.dds"):
             cache.get(material)
         cache.close()
+
+
+class MaterialCompositorTests(unittest.TestCase):
+    class TextureFixture:
+        def __init__(self, colours: tuple[tuple[int, int, int], ...]) -> None:
+            self.images = {
+                index: Image.new("RGB", (4, 4), colour)
+                for index, colour in enumerate(colours)
+            }
+
+        def get(self, material: TerrainMaterial) -> Image.Image:
+            return self.images[material.index]
+
+    @staticmethod
+    def materials(count: int, tile_factor: float = 1) -> tuple[TerrainMaterial, ...]:
+        return tuple(TerrainMaterial(index, f"m{index}", f"m{index}.dds", tile_factor) for index in range(count))
+
+    def test_normalizes_zero_weights_to_first_channel(self) -> None:
+        result = normalize_weights(np.array([0, 0, 0, 0], dtype=np.uint8))
+        self.assertEqual(result.tolist(), [1.0, 0.0, 0.0, 0.0])
+
+    def test_blends_four_materials_in_linear_colour_space(self) -> None:
+        colours = ((255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 255))
+        indices = Image.new("RGBA", (1, 1), (0, 1, 2, 3))
+        intensities = Image.new("RGBA", (1, 1), (64, 64, 64, 63))
+        rendered = render_material_tile(
+            indices, intensities, self.materials(4), self.TextureFixture(colours),
+            (0, 0, 1, 1), (1, 1), 1,
+        )
+        weights = np.array([64, 64, 64, 63], dtype=np.float64) / 255
+        linear = sum(srgb_to_linear(np.asarray(colour, dtype=np.float64) / 255) * weight
+                     for colour, weight in zip(colours, weights))
+        expected = tuple(np.rint(linear_to_srgb(linear) * 255).astype(np.uint8))
+        self.assertEqual(rendered.getpixel((0, 0)), expected)
+
+    def test_rejects_active_out_of_range_material_index(self) -> None:
+        with self.assertRaisesRegex(MapImportError, "材质索引"):
+            render_material_tile(
+                Image.new("RGBA", (1, 1), (9, 0, 0, 0)),
+                Image.new("RGBA", (1, 1), (255, 0, 0, 0)),
+                self.materials(1), self.TextureFixture(((10, 20, 30),)),
+                (0, 0, 1, 1), (1, 1), 1,
+            )
+
+    def test_global_uv_matches_one_render_across_adjacent_tiles(self) -> None:
+        texture = Image.new("RGB", (4, 1))
+        for x, colour in enumerate(((0, 0, 0), (64, 0, 0), (128, 0, 0), (255, 0, 0))):
+            texture.putpixel((x, 0), colour)
+        cache = self.TextureFixture(((0, 0, 0),))
+        cache.images[0] = texture
+        materials = self.materials(1, tile_factor=1)
+        indices = Image.new("RGBA", (1, 1), (0, 0, 0, 0))
+        weights = Image.new("RGBA", (1, 1), (255, 0, 0, 0))
+        full = render_material_tile(indices, weights, materials, cache, (0, 0, 2, 1), (4, 1), 8)
+        left = render_material_tile(indices, weights, materials, cache, (0, 0, 1, 1), (4, 1), 4)
+        right = render_material_tile(indices, weights, materials, cache, (1, 0, 2, 1), (4, 1), 4)
+        joined_row = [left.getpixel((x, 0)) for x in range(4)] + [right.getpixel((x, 0)) for x in range(4)]
+        self.assertEqual(joined_row, [full.getpixel((x, 0)) for x in range(8)])
 
 class MapRegionTests(unittest.TestCase):
     def test_expands_nested_westeros_region(self) -> None:
