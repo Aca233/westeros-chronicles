@@ -16,6 +16,9 @@ from scripts.agot_character_import.localization import load_localization
 from .dem import build_dem_tiles
 from .geometry import extract_province_geometry
 from .locations import build_locations
+from .material_catalog import parse_material_catalog
+from .material_sources import MaterialSourceRoots
+from .material_tiles import build_material_terrain_tiles
 from .models import MapImportError, MapLocationRecord, ProvinceGeometry
 from .province_history import holding_to_location_type, parse_province_holdings
 from .regions import expand_region, parse_regions
@@ -225,9 +228,12 @@ def build_map(args: argparse.Namespace) -> dict[str, object]:
     data_stage = _staging_directory(args.data_output)
     try:
         if args.skip_tiles:
-            tile_counts = {"terrain": 0, "vector": 0, "dem": 0, "semantic": 0}
+            tile_counts = {"terrain": 0, "materialTerrain": 0, "vector": 0, "dem": 0, "semantic": 0}
         else:
+            if args.ck3_source is None or not (args.ck3_source / "gfx/map/terrain").is_dir():
+                raise MapImportError("生成地形材质瓦片需要有效的 --ck3-source")
             raster_zooms = range(0, args.max_raster_zoom + 1)
+            material_zooms = range(0, args.max_material_zoom + 1)
             vector_zooms = range(0, args.max_vector_zoom + 1)
             terrain = build_terrain_tiles(
                 source.root / "gfx/map/terrain/flat_maps/flatmap.dds",
@@ -238,11 +244,19 @@ def build_map(args: argparse.Namespace) -> dict[str, object]:
                 bounds, asset_stage / "vector", vector_zooms,
             )
             dem = build_dem_tiles(source.heightmap, bounds, asset_stage / "dem", raster_zooms, args.tile_size)
+            material_terrain = build_material_terrain_tiles(
+                source.terrain_materials,
+                parse_material_catalog(source.terrain_materials.settings, default_tile_factor=64),
+                MaterialSourceRoots(agot=source.root, ck3=args.ck3_source),
+                bounds, source.map_size, asset_stage / "material-terrain",
+                material_zooms, args.tile_size,
+            )
             semantic_tiles = build_semantic_tiles(
                 semantic, bounds, asset_stage / "semantic", vector_zooms, args.tile_size,
             )
             tile_counts = {
                 "terrain": terrain.tile_count, "vector": vector.tile_count,
+                "materialTerrain": material_terrain.tile_count,
                 "dem": dem.tile_count, "semantic": semantic_tiles.tile_count,
             }
         manifest = stage_map_dataset(
@@ -273,9 +287,11 @@ def build_map(args: argparse.Namespace) -> dict[str, object]:
 def parser() -> argparse.ArgumentParser:
     result = argparse.ArgumentParser(description="离线生成 AGOT 维斯特洛地图")
     result.add_argument("--source", type=Path, required=True)
+    result.add_argument("--ck3-source", type=Path)
     result.add_argument("--data-output", type=Path, required=True)
     result.add_argument("--asset-output", type=Path, required=True)
     result.add_argument("--max-raster-zoom", type=int, default=4)
+    result.add_argument("--max-material-zoom", type=int, default=5)
     result.add_argument("--max-vector-zoom", type=int, default=6)
     result.add_argument("--tile-size", type=int, default=512)
     result.add_argument("--skip-tiles", action="store_true")

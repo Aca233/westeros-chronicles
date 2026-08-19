@@ -26,6 +26,8 @@ from scripts.agot_map_import.material_sources import (
 from scripts.agot_map_import.material_compositor import (
     linear_to_srgb, normalize_weights, render_material_tile, srgb_to_linear,
 )
+from scripts.agot_map_import.material_catalog import TerrainMaterialInputs
+from scripts.agot_map_import.material_tiles import build_material_terrain_tiles
 from scripts.agot_map_import.models import (
     MapImportError, MapLocationRecord, ProvinceGeometry, RegionDefinition,
     SemanticBoundaryRecord, SemanticDataset, SemanticMembershipRecord, SemanticTitleRecord,
@@ -279,6 +281,63 @@ class MaterialCompositorTests(unittest.TestCase):
         right = render_material_tile(indices, weights, materials, cache, (1, 0, 2, 1), (4, 1), 4)
         joined_row = [left.getpixel((x, 0)) for x in range(4)] + [right.getpixel((x, 0)) for x in range(4)]
         self.assertEqual(joined_row, [full.getpixel((x, 0)) for x in range(8)])
+
+
+class MaterialTileTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.temp_dir = tempfile.TemporaryDirectory(prefix="agot-material-tiles-", dir=FAST_TMP_ROOT)
+        self.root = Path(self.temp_dir.name)
+        self.agot = self.root / "agot"
+        self.ck3 = self.root / "ck3"
+        for root in (self.agot, self.ck3):
+            (root / "gfx" / "map" / "terrain").mkdir(parents=True)
+        terrain = self.agot / "gfx" / "map" / "terrain"
+        self.index_map = terrain / "detail_index.tga"
+        self.intensity_map = terrain / "detail_intensity.tga"
+        self.settings = terrain / "materials.settings"
+        Image.new("RGBA", (16, 16), (0, 1, 0, 0)).save(self.index_map)
+        Image.new("RGBA", (16, 16), (192, 63, 0, 0)).save(self.intensity_map)
+        self.settings.write_text('{ { id = "a" diffuse = "a.dds" } { id = "b" diffuse = "b.dds" } }')
+        Image.new("RGB", (4, 4), (30, 90, 30)).save(terrain / "a.dds")
+        Image.new("RGB", (4, 4), (220, 220, 220)).save(terrain / "b.dds")
+        self.inputs = TerrainMaterialInputs(self.index_map, self.intensity_map, self.settings)
+        self.materials = (
+            TerrainMaterial(0, "a", "a.dds", 2),
+            TerrainMaterial(1, "b", "b.dds", 2),
+        )
+        self.roots = MaterialSourceRoots(self.agot, self.ck3)
+
+    def tearDown(self) -> None:
+        self.temp_dir.cleanup()
+
+    def test_builds_five_local_webp_tiles_for_zooms_zero_and_one(self) -> None:
+        output = self.root / "material-terrain"
+        report = build_material_terrain_tiles(
+            self.inputs, self.materials, self.roots, (0, 0, 16, 16), (16, 16),
+            output, (0, 1), tile_size=8,
+        )
+        files = sorted(output.rglob("*.webp"))
+        self.assertEqual((report.kind, report.tile_count, report.min_zoom, report.max_zoom),
+                         ("materialTerrain", 5, 0, 1))
+        self.assertEqual(len(files), 5)
+        for path in files:
+            with Image.open(path) as tile:
+                self.assertEqual((tile.format, tile.size), ("WEBP", (8, 8)))
+
+    def test_failure_keeps_previous_output(self) -> None:
+        output = self.root / "material-terrain"
+        output.mkdir()
+        (output / "sentinel.txt").write_text("old", encoding="utf-8")
+        with mock.patch(
+            "scripts.agot_map_import.material_tiles.render_material_tile",
+            side_effect=MapImportError("render failed"),
+        ):
+            with self.assertRaisesRegex(MapImportError, "render failed"):
+                build_material_terrain_tiles(
+                    self.inputs, self.materials, self.roots, (0, 0, 16, 16), (16, 16),
+                    output, (0,), tile_size=8,
+                )
+        self.assertEqual((output / "sentinel.txt").read_text(encoding="utf-8"), "old")
 
 class MapRegionTests(unittest.TestCase):
     def test_expands_nested_westeros_region(self) -> None:
