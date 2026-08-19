@@ -2,6 +2,8 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Map as MapIcon, RotateCcw, X } from 'lucide-react'
 
 import { MapCanvas } from './MapCanvas'
+import { LocationDetails } from './LocationDetails'
+import { MapToolbar } from './MapToolbar'
 import { useMapUiStore } from './mapUiStore'
 import { mapRepository } from './repository'
 import type { MapManifest } from './types'
@@ -10,9 +12,11 @@ export const MapDrawer: React.FC = () => {
   const activeDrawer = useMapUiStore((state) => state.activeDrawer)
   const selectedLocationId = useMapUiStore((state) => state.selectedLocationId)
   const lastViewport = useMapUiStore((state) => state.lastViewport)
+  const mapMode = useMapUiStore((state) => state.mapMode)
   const closeDrawer = useMapUiStore((state) => state.closeDrawer)
   const selectLocation = useMapUiStore((state) => state.selectLocation)
   const rememberViewport = useMapUiStore((state) => state.rememberViewport)
+  const setMapMode = useMapUiStore((state) => state.setMapMode)
   const [manifest, setManifest] = useState<MapManifest | null>(null)
   const [loadError, setLoadError] = useState(false)
   const [warning, setWarning] = useState<string | null>(null)
@@ -73,6 +77,7 @@ export const MapDrawer: React.FC = () => {
               onSelectLocation={selectLocation}
               onViewportChange={rememberViewport}
               onWarning={setWarning}
+              mode={mapMode}
             />
           ) : loadError ? (
             <div className="map-load-state" role="alert">
@@ -90,6 +95,17 @@ export const MapDrawer: React.FC = () => {
               <strong>正在展开地图</strong>
               <span>读取本地地形与地点索引</span>
             </div>
+          )}
+          {manifest && !loadError && (
+            <MapToolbar mode={mapMode} onModeChange={setMapMode} onSelectLocation={selectLocation} />
+          )}
+          {manifest && !loadError && (mapMode === 'characters' || mapMode === 'assets') && (
+            <div className="map-mode-empty" role="status">
+              {mapMode === 'characters' ? '人物位置等待统一世界状态接入' : '资产位置等待统一世界状态接入'}
+            </div>
+          )}
+          {manifest && !loadError && selectedLocationId && (
+            <LocationDetails locationId={selectedLocationId} onClose={() => selectLocation(null)} />
           )}
           {warning && manifest && (
             <div className="map-warning" role="status">{warning}</div>

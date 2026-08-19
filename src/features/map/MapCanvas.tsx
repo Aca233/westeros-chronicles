@@ -8,6 +8,14 @@ import maplibregl, {
 import 'maplibre-gl/dist/maplibre-gl.css'
 
 import { mapPixelToLngLat } from './coordinates'
+import {
+  addLocationClusterLayers,
+  applyMapMode,
+  LOCATION_CLUSTER_LAYER,
+  LOCATION_POINT_LAYER,
+  zoomToCluster,
+  type MapMode,
+} from './mapLayers'
 import { createLocalMapStyle } from './mapStyle'
 import { mapRepository } from './repository'
 import type { MapManifest } from './types'
@@ -20,6 +28,7 @@ interface MapCanvasProps {
   onSelectLocation: (locationId: string) => void
   onViewportChange: (viewport: MapViewport) => void
   onWarning: (message: string | null) => void
+  mode: MapMode
 }
 
 export const MapCanvas: React.FC<MapCanvasProps> = ({
@@ -29,15 +38,21 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
   onSelectLocation,
   onViewportChange,
   onWarning,
+  mode,
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null)
   const mapRef = useRef<MapLibreMap | null>(null)
   const [initializationError, setInitializationError] = useState(false)
   const callbacksRef = useRef({ onSelectLocation, onViewportChange, onWarning })
+  const modeRef = useRef(mode)
 
   useEffect(() => {
     callbacksRef.current = { onSelectLocation, onViewportChange, onWarning }
   }, [onSelectLocation, onViewportChange, onWarning])
+
+  useEffect(() => {
+    modeRef.current = mode
+  }, [mode])
 
   useEffect(() => {
     if (!containerRef.current) return
@@ -91,6 +106,13 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
       const locationId = event.features?.[0]?.properties?.id
       if (typeof locationId === 'string') callbacksRef.current.onSelectLocation(locationId)
     }
+    const handleClusterClick = (event: MapLayerMouseEvent) => {
+      const feature = event.features?.[0]
+      const clusterId = feature?.properties?.cluster_id
+      const coordinates = feature?.geometry.type === 'Point' ? feature.geometry.coordinates : null
+      if (typeof clusterId !== 'number' || !coordinates) return
+      void zoomToCluster(map, clusterId, [Number(coordinates[0]), Number(coordinates[1])])
+    }
     const showPointer = () => { map.getCanvas().style.cursor = 'pointer' }
     const clearPointer = () => { map.getCanvas().style.cursor = '' }
 
@@ -99,6 +121,23 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
     map.on('click', 'agot-locations', handleLocationClick)
     map.on('mouseenter', 'agot-locations', showPointer)
     map.on('mouseleave', 'agot-locations', clearPointer)
+    const initializeLocationLayers = () => {
+      applyMapMode(map, modeRef.current)
+      mapRepository.loadSearchIndex()
+        .then((entries) => {
+          if (mapRef.current !== map) return
+          addLocationClusterLayers(map, entries, manifest)
+          applyMapMode(map, modeRef.current)
+          map.on('click', LOCATION_POINT_LAYER, handleLocationClick)
+          map.on('click', LOCATION_CLUSTER_LAYER, handleClusterClick)
+          map.on('mouseenter', LOCATION_POINT_LAYER, showPointer)
+          map.on('mouseleave', LOCATION_POINT_LAYER, clearPointer)
+          map.on('mouseenter', LOCATION_CLUSTER_LAYER, showPointer)
+          map.on('mouseleave', LOCATION_CLUSTER_LAYER, clearPointer)
+        })
+        .catch(() => callbacksRef.current.onWarning('地点聚合索引未能载入，仍可浏览基础地图'))
+    }
+    map.on('load', initializeLocationLayers)
 
     const resizeObserver = typeof ResizeObserver === 'undefined'
       ? null
@@ -112,11 +151,17 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
       map.off('click', 'agot-locations', handleLocationClick)
       map.off('mouseenter', 'agot-locations', showPointer)
       map.off('mouseleave', 'agot-locations', clearPointer)
+      map.off('load', initializeLocationLayers)
       map.stop()
       map.remove()
       mapRef.current = null
     }
   }, [manifest])
+
+  useEffect(() => {
+    const map = mapRef.current
+    if (map?.isStyleLoaded()) applyMapMode(map, mode)
+  }, [mode])
 
   useEffect(() => {
     if (!selectedLocationId || !mapRef.current) return

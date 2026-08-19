@@ -85,6 +85,7 @@ export const mapLocationSchema = z.object({
   isPort: z.boolean(),
   importance: z.number().int().min(0).max(100),
   tags: z.array(stableIdSchema).max(64),
+  description: z.string().trim().min(1).max(1200).optional(),
 }).strict().superRefine((location, context) => {
   if (location.isPort && !location.isCoastal) {
     context.addIssue({ code: z.ZodIssueCode.custom, path: ['isCoastal'], message: '港口必须位于海岸' })

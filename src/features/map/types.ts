@@ -40,6 +40,7 @@ export interface MapLocation extends MapPixelPoint {
   isPort: boolean
   importance: number
   tags: string[]
+  description?: string
 }
 
 export interface MapLocationSearchEntry extends MapPixelPoint {
