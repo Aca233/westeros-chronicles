@@ -2,6 +2,8 @@ import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { resolve, relative, sep } from 'node:path'
+import { VectorTile } from '@mapbox/vector-tile'
+import Pbf from 'pbf'
 
 function option(name, fallback) {
   const index = process.argv.indexOf(name)
@@ -26,10 +28,25 @@ function files(root, suffix) {
   return output.sort()
 }
 
+function runtimeRelative(path) {
+  return relative(dataRoot, path).split(sep).join('/')
+}
+
 const manifest = json('manifest.json')
-assert.equal(manifest.schemaVersion, 1)
+assert.equal(manifest.schemaVersion, 2)
 assert.equal(manifest.sourceId, '2962333032')
 assert.deepEqual(manifest.mapSize, { width: 9216, height: 6144 })
+assert.deepEqual(manifest.paths, {
+  dem: '/assets/agot-map/dem/{z}/{x}/{y}.png',
+  locations: '/data/agot-map/locations',
+  routes: '/data/agot-map/routes',
+  searchIndex: '/data/agot-map/location-search-index.json',
+  semantic: '/assets/agot-map/semantic/{z}/{x}/{y}.pbf',
+  semanticMembership: '/data/agot-map/semantic/membership.json',
+  semanticTitles: '/data/agot-map/semantic/titles.json',
+  terrain: '/assets/agot-map/terrain/{z}/{x}/{y}.webp',
+  vector: '/assets/agot-map/vector/{z}/{x}/{y}.pbf',
+})
 const serializedManifest = JSON.stringify(manifest)
 assert.doesNotMatch(serializedManifest, /https?:|\\|\/mnt\/c\/agot\/2962333032/i)
 for (const path of Object.values(manifest.paths)) assert.match(path, /^\/(data|assets)\/agot-map\//)
@@ -59,17 +76,76 @@ assert.equal(files(resolve(assetRoot, 'terrain'), '.webp').length, manifest.coun
 assert.equal(files(resolve(assetRoot, 'vector'), '.pbf').length, manifest.counts.vectorTiles)
 assert.equal(files(resolve(assetRoot, 'dem'), '.png').length, manifest.counts.demTiles)
 
+const semanticTitles = json('semantic/titles.json')
+const semanticMembership = json('semantic/membership.json')
+assert.equal(semanticTitles.length, manifest.counts.semanticLabels)
+assert.equal(semanticMembership.length, manifest.counts.locations)
+assert.equal(new Set(semanticTitles.map((title) => title.featureId)).size, semanticTitles.length)
+assert.equal(new Set(semanticTitles.map((title) => `${title.rank}:${title.titleId}`)).size, semanticTitles.length)
+assert.equal(new Set(semanticMembership.map((entry) => entry.locationId)).size, semanticMembership.length)
+
+const rankCounts = Object.fromEntries(['realm', 'duchy', 'county'].map((rank) => [
+  rank,
+  semanticTitles.filter((title) => title.rank === rank).length,
+]))
+assert.deepEqual(rankCounts, {
+  realm: manifest.counts.semanticRealms,
+  duchy: manifest.counts.semanticDuchies,
+  county: manifest.counts.semanticCounties,
+})
+assert.ok(rankCounts.realm > 0, '战略区域语义层不能为空')
+assert.equal(semanticTitles.length, rankCounts.realm + rankCounts.duchy + rankCounts.county)
+for (const title of semanticTitles) {
+  assert.ok(Number.isInteger(title.featureId) && title.featureId > 0, `语义 featureId 无效：${title.featureId}`)
+  assert.match(title.name, /\p{Script=Han}/u, `语义标题缺少中文名：${title.rank}:${title.titleId}`)
+}
+
+const titleKeys = new Set(semanticTitles.map((title) => `${title.rank}:${title.titleId}`))
+for (const entry of semanticMembership) {
+  assert.ok(byId.has(entry.locationId), `语义地点不存在：${entry.locationId}`)
+  assert.ok(entry.countyId && titleKeys.has(`county:${entry.countyId}`), `伯爵领祖先不存在：${entry.locationId}`)
+  assert.ok(entry.duchyId && titleKeys.has(`duchy:${entry.duchyId}`), `公国祖先不存在：${entry.locationId}`)
+  assert.ok(entry.realmId && titleKeys.has(`realm:${entry.realmId}`), `战略区域祖先不存在：${entry.locationId}`)
+}
+
+const semanticTiles = files(resolve(assetRoot, 'semantic'), '.pbf')
+assert.equal(semanticTiles.length, manifest.counts.semanticTiles)
+for (const path of semanticTiles) {
+  try {
+    const tile = new VectorTile(new Pbf(readFileSync(path)))
+    for (const layer of Object.values(tile.layers)) {
+      for (let index = 0; index < layer.length; index += 1) layer.feature(index).loadGeometry()
+    }
+  } catch (error) {
+    throw new Error(`语义瓦片无法解码：${relative(assetRoot, path)}`, { cause: error })
+  }
+}
+
+const semanticDigest = createHash('sha256')
+for (const relativePath of ['semantic/titles.json', 'semantic/membership.json']) {
+  semanticDigest.update(relativePath)
+  semanticDigest.update(Buffer.from([0]))
+  semanticDigest.update(readFileSync(resolve(dataRoot, relativePath)))
+}
+for (const path of semanticTiles) {
+  const relativePath = `semantic/${relative(resolve(assetRoot, 'semantic'), path).split(sep).join('/')}`
+  semanticDigest.update(relativePath)
+  semanticDigest.update(Buffer.from([0]))
+  semanticDigest.update(readFileSync(path))
+}
+assert.equal(semanticDigest.digest('hex'), manifest.semanticHash)
+
 const runtimeFiles = files(dataRoot, '.json').filter((path) => {
-  const name = relative(dataRoot, path).split(sep).join('/')
+  const name = runtimeRelative(path)
   return name !== 'manifest.json' && !name.startsWith('reports/')
 })
 const digest = createHash('sha256')
 for (const path of runtimeFiles) {
-  const name = relative(dataRoot, path).split(sep).join('/')
+  const name = runtimeRelative(path)
   digest.update(name)
   digest.update(Buffer.from([0]))
   digest.update(readFileSync(path))
 }
 assert.equal(digest.digest('hex'), manifest.datasetHash)
 
-console.log(`AGOT 地图数据审计通过：${locations.length} 个地点，${edges.length} 条路线边，${manifest.counts.vectorTiles} 个矢量瓦片。`)
+console.log(`AGOT 地图数据审计通过：${locations.length} 个地点，${edges.length} 条路线边，${semanticTiles.length} 个语义瓦片。`)

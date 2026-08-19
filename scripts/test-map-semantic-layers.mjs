@@ -61,6 +61,8 @@ test('样式只包含三级可见边界和三级中文主标签', () => {
   const serialized = JSON.stringify(style)
   assert.doesNotMatch(serialized, /https?:|glyphs|sprite/)
   assert.doesNotMatch(serialized, /barony_boundaries|agot-barony-|agot-borders/)
+  assert.equal('terrain' in style, false)
+  assert.doesNotMatch(serialized, /fill-extrusion/)
 })
 
 test('政治填色无缩放门槛且道路细节随缩放连续增加', () => {

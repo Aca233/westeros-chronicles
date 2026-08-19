@@ -44,7 +44,6 @@ export const MapDrawer: React.FC<MapDrawerProps> = ({ onSelectCharacter }) => {
   const [loadError, setLoadError] = useState(false)
   const [warning, setWarning] = useState<string | null>(null)
   const [reloadKey, setReloadKey] = useState(0)
-  const [canvasRetryKey, setCanvasRetryKey] = useState(0)
   const [mapLocations, setMapLocations] = useState<MapLocationSearchEntry[]>([])
   const [dynamicCharacterNames, setDynamicCharacterNames] = useState<Map<string, string>>(new Map())
   const [politicalSource, setPoliticalSource] = useState<{
@@ -165,11 +164,13 @@ export const MapDrawer: React.FC<MapDrawerProps> = ({ onSelectCharacter }) => {
     return () => { cancelled = true }
   }, [activeDrawer, reloadKey])
 
-  const retry = useCallback(() => {
-    mapRepository.clear('/data/agot-map/manifest.json')
+  const retryMap = useCallback(() => {
+    mapRepository.clear()
+    setManifest(null)
+    setLoadError(false)
+    setWarning(null)
     setReloadKey((value) => value + 1)
   }, [])
-  const retryCanvas = useCallback(() => setCanvasRetryKey((value) => value + 1), [])
 
   if (activeDrawer !== 'map') return null
 
@@ -197,9 +198,9 @@ export const MapDrawer: React.FC<MapDrawerProps> = ({ onSelectCharacter }) => {
 
         <div className="relative min-h-0 flex-1 bg-[#101611]">
           {manifest && !loadError ? (
-            <MapErrorBoundary resetKey={`${reloadKey}:${canvasRetryKey}`} onRetry={retryCanvas}>
+            <MapErrorBoundary resetKey={reloadKey} onRetry={retryMap}>
               <MapCanvas
-                key={canvasRetryKey}
+                key={reloadKey}
                 manifest={manifest}
                 selectedLocationId={selectedLocationId}
                 initialViewport={lastViewport}
@@ -220,9 +221,9 @@ export const MapDrawer: React.FC<MapDrawerProps> = ({ onSelectCharacter }) => {
               <MapIcon className="h-8 w-8 text-gold" aria-hidden="true" />
               <strong>地图资料未能载入</strong>
               <span>正文与人物卷宗仍可正常使用。</span>
-              <button type="button" className="btn-ghost map-retry-button" onClick={retry}>
+              <button type="button" className="btn-ghost map-retry-button" onClick={retryMap}>
                 <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
-                重新载入
+                重新载入地图
               </button>
             </div>
           ) : (
