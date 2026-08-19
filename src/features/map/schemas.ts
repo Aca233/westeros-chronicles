@@ -213,6 +213,7 @@ const staticPoliticalTitleSchema = z.object({
   countyId: stableIdSchema.optional(),
   duchyId: stableIdSchema.optional(),
   kingdomId: stableIdSchema.optional(),
+  realmId: stableIdSchema.optional(),
   provinceId: z.number().int().positive(),
 }).strict()
 

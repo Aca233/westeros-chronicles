@@ -155,5 +155,6 @@ test('未知动态情报不影响公开海岸、道路、三级行政区域和�
   assert.match(styleSource, /agot-duchy-boundaries/)
   assert.match(styleSource, /agot-county-boundaries/)
   assert.doesNotMatch(styleSource, /agot-borders|barony-boundaries/)
-  assert.match(styleSource, /agot-locations/)
+  assert.match(styleSource, /agot-county-hit-areas/)
+  assert.doesNotMatch(styleSource, /id: 'agot-locations'/)
 })

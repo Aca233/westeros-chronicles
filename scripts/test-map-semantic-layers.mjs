@@ -73,9 +73,10 @@ test('政治填色无缩放门槛且道路细节随缩放连续增加', () => {
   assert.equal(provinces.maxzoom, undefined)
   assert.ok(Array.isArray(roads.paint['line-opacity']))
   assert.match(JSON.stringify(roads.paint['line-opacity']), /4\.1.*4\.4/)
-  const labelIndex = style.layers.findIndex((layer) => layer.id === 'agot-county-labels')
-  const locationIndex = style.layers.findIndex((layer) => layer.id === 'agot-locations')
-  assert.ok(labelIndex >= 0 && labelIndex < locationIndex)
+  const hitIndex = style.layers.findIndex((layer) => layer.id === 'agot-county-hit-areas')
+  const boundaryIndex = style.layers.findIndex((layer) => layer.id === 'agot-county-boundaries')
+  assert.ok(hitIndex >= 0 && hitIndex < boundaryIndex)
+  assert.equal(style.layers.some((layer) => layer.id === 'agot-locations'), false)
 })
 
 test('五种模式切换不会写入 zoom 且完整控制新增图层', () => {

@@ -80,6 +80,7 @@
     "test:map-semantic-zoom": "node --experimental-strip-types scripts/test-map-semantic-zoom.mjs",
     "test:map-narrative-context": "node --experimental-strip-types scripts/test-map-narrative-context.mjs",
     "test:map-semantic-layers": "node --experimental-strip-types scripts/test-map-semantic-layers.mjs",
+    "test:map-county-interaction": "node --experimental-strip-types scripts/test-map-county-interaction.mjs",
     "test:map-semantic-projection": "node --experimental-strip-types scripts/test-map-semantic-projection.mjs",
     "test:agot-map-import": "python3 -m unittest scripts.test_agot_map_import -v",
     "import:agot-map": "python3 -m scripts.agot_map_import.cli --source /mnt/c/agot/2962333032 --data-output public/data/agot-map --asset-output public/assets/agot-map",
@@ -95,7 +96,7 @@
     "test:map-political-projection": "node --experimental-strip-types scripts/test-map-political-projection.mjs",
     "test:map-integration": "node --experimental-strip-types scripts/test-map-integration.mjs",
     "check:map-runtime-boundaries": "node --experimental-strip-types scripts/check-map-runtime-boundaries.mjs",
-    "verify:map": "npm run test:agot-map-import && npm run test:map-schema && npm run test:map-runtime && npm run test:map-semantic-zoom && npm run test:map-semantic-projection && npm run test:map-semantic-layers && npm run test:map-narrative-context && npm run test:map-location-view && npm run test:location-authority && npm run test:map-routing && npm run test:map-travel && npm run test:map-intelligence && npm run test:map-political-projection && npm run test:map-integration && npm run check:map-drawer && npm run check:map-travel-ui && npm run check:map-runtime-boundaries && npm run check:map-data"
+    "verify:map": "npm run test:agot-map-import && npm run test:map-schema && npm run test:map-runtime && npm run test:map-semantic-zoom && npm run test:map-semantic-projection && npm run test:map-semantic-layers && npm run test:map-county-interaction && npm run test:map-narrative-context && npm run test:map-location-view && npm run test:location-authority && npm run test:map-routing && npm run test:map-travel && npm run test:map-intelligence && npm run test:map-political-projection && npm run test:map-integration && npm run check:map-drawer && npm run check:map-travel-ui && npm run check:map-runtime-boundaries && npm run check:map-data"
   },
   "dependencies": {
     "clsx": "^2.1.1",

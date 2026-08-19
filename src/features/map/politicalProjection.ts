@@ -6,13 +6,29 @@ import {
   type WorldDate,
   type WorldHistoryState,
 } from '../world/worldHistory.ts'
+import type { SemanticMembership } from './types.ts'
 
 export interface StaticPoliticalTitle {
   baronyId: string
   countyId?: string
   duchyId?: string
   kingdomId?: string
+  realmId?: string
   provinceId: number
+}
+
+const POLITICAL_REALM_TITLE_BY_REGION: Readonly<Record<string, string>> = {
+  world_westeros_beyond_the_wall: 'e_beyond_the_wall',
+  world_westeros_dorne: 'e_dorne',
+  world_westeros_the_crownlands: 'e_the_crownlands',
+  world_westeros_the_iron_islands: 'e_the_iron_islands',
+  world_westeros_the_north: 'e_the_north',
+  world_westeros_the_reach: 'e_the_reach',
+  world_westeros_the_riverlands: 'e_the_riverlands',
+  world_westeros_the_stormlands: 'e_the_stormlands',
+  world_westeros_the_vale: 'e_the_vale',
+  world_westeros_the_wall: 'k_the_wall',
+  world_westeros_the_westerlands: 'e_the_westerlands',
 }
 
 export interface PoliticalCharacter {
@@ -37,6 +53,12 @@ export interface PoliticalFeatureState {
   houseLabel?: string
   color: string
   sigil?: string
+  realmTitleId?: string
+  realmHolderId?: CharacterId
+  realmHouseId?: string
+  realmHouseLabel?: string
+  realmColor?: string
+  realmSigil?: string
 }
 
 type PoliticalCharacterCollection =
@@ -221,6 +243,23 @@ function hierarchy(title: StaticPoliticalTitle): string[] {
     .filter((id): id is string => Boolean(id))
 }
 
+function politicalRealmHierarchy(title: StaticPoliticalTitle): string[] {
+  const realmTitleId = title.realmId ? POLITICAL_REALM_TITLE_BY_REGION[title.realmId] : undefined
+  return [realmTitleId, title.kingdomId, title.duchyId, title.countyId, title.baronyId]
+    .filter((id): id is string => Boolean(id))
+}
+
+export function attachPoliticalRealms(
+  titles: readonly StaticPoliticalTitle[],
+  memberships: readonly SemanticMembership[],
+): StaticPoliticalTitle[] {
+  const realmIdByBaronyId = new Map(memberships.map((membership) => [membership.baronyId, membership.realmId]))
+  return titles.map((title) => {
+    const realmId = realmIdByBaronyId.get(title.baronyId)
+    return realmId ? { ...title, realmId } : { ...title }
+  })
+}
+
 export function projectPoliticalState(
   staticTitles: readonly StaticPoliticalTitle[],
   characters: PoliticalCharacterCollection,
@@ -241,12 +280,22 @@ export function projectPoliticalState(
       const effectiveTitleId = hierarchy(title).find((titleId) => holders.has(titleId))
       const holderId = effectiveTitleId ? holders.get(effectiveTitleId) : undefined
       const holder = holderId ? charactersById.get(holderId) : undefined
+      const realmTitleId = politicalRealmHierarchy(title).find((titleId) => holders.has(titleId))
+      const realmHolderId = realmTitleId ? holders.get(realmTitleId) : undefined
+      const realmHolder = realmHolderId ? charactersById.get(realmHolderId) : undefined
+      const realmStyle = holderStyle(realmHolder, realmHolderId)
       return {
         titleId: title.baronyId,
         provinceId: title.provinceId,
         ...(effectiveTitleId ? { effectiveTitleId } : {}),
         ...(holderId ? { holderId } : {}),
         ...holderStyle(holder, holderId),
+        ...(realmTitleId ? { realmTitleId } : {}),
+        ...(realmHolderId ? { realmHolderId } : {}),
+        ...(realmStyle.houseId ? { realmHouseId: realmStyle.houseId } : {}),
+        ...(realmStyle.houseLabel ? { realmHouseLabel: realmStyle.houseLabel } : {}),
+        realmColor: realmStyle.color,
+        ...(realmStyle.sigil ? { realmSigil: realmStyle.sigil } : {}),
       }
     })
 }
@@ -262,6 +311,12 @@ function stateFingerprint(state: PoliticalFeatureState | undefined): string {
     state.houseLabel ?? '',
     state.color,
     state.sigil ?? '',
+    state.realmTitleId ?? '',
+    state.realmHolderId ?? '',
+    state.realmHouseId ?? '',
+    state.realmHouseLabel ?? '',
+    state.realmColor ?? '',
+    state.realmSigil ?? '',
   ].join('|')
 }
 

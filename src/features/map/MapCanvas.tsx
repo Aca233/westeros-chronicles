@@ -10,20 +10,17 @@ import 'maplibre-gl/dist/maplibre-gl.css'
 
 import { lngLatToMapPixel, mapPixelToLngLat } from './coordinates'
 import {
-  addLocationClusterLayers,
   applyPoliticalFeatureStates,
   applyMapMode,
   ASSET_POINT_LAYER,
   CHARACTER_POINT_LAYER,
-  LOCATION_CLUSTER_LAYER,
-  LOCATION_POINT_LAYER,
+  COUNTY_HIT_LAYER,
   POLITICAL_HOUSE_LABEL_LAYER,
   JOURNEY_POSITION_SOURCE,
   JOURNEY_PROGRESS_SOURCE,
   JOURNEY_ROUTE_SOURCE,
   syncPoliticalHouseLabels,
   syncDynamicMapSubjects,
-  zoomToCluster,
   type MapMode,
 } from './mapLayers'
 import { createLocalMapStyle } from './mapStyle'
@@ -43,6 +40,7 @@ import type { ActiveJourney } from './travel/types'
 import type { MapViewport } from './mapUiStore'
 import type { MapAssetPoint, MapCharacterPoint } from './dynamicMapSubjects.ts'
 import type { CharacterId } from '../characters/types'
+import { buildCountyInteractionIndex, type CountyInteractionIndex } from './countyInteraction.ts'
 
 interface MapCanvasProps {
   manifest: MapManifest
@@ -213,6 +211,7 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
   const politicalRef = useRef<readonly PoliticalFeatureState[]>(politicalStates)
   const dynamicRef = useRef({ characterPoints, assetPoints })
   const semanticRef = useRef<SemanticRuntimeContext | null>(null)
+  const countyInteractionRef = useRef<CountyInteractionIndex | null>(null)
   const reducedMotionRef = useRef(false)
 
   const refreshSemanticSubjects = useCallback((pixelBounds?: MapBounds): void => {
@@ -358,16 +357,14 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
       refreshSemanticSubjects()
       refreshPoliticalHouseLabels()
     }
-    const handleLocationClick = (event: MapLayerMouseEvent) => {
-      const locationId = event.features?.[0]?.properties?.id
-      if (typeof locationId === 'string') callbacksRef.current.onSelectLocation(locationId)
-    }
-    const handleClusterClick = (event: MapLayerMouseEvent) => {
-      const feature = event.features?.[0]
-      const clusterId = feature?.properties?.cluster_id
-      const coordinates = feature?.geometry.type === 'Point' ? feature.geometry.coordinates : null
-      if (typeof clusterId !== 'number' || !coordinates) return
-      void zoomToCluster(map, clusterId, [Number(coordinates[0]), Number(coordinates[1])])
+    const handleCountyClick = (event: MapLayerMouseEvent) => {
+      const foregroundLayers = [CHARACTER_POINT_LAYER, ASSET_POINT_LAYER]
+        .filter((layerId) => Boolean(map.getLayer(layerId)))
+      if (foregroundLayers.length && map.queryRenderedFeatures(event.point, { layers: foregroundLayers }).length) return
+      const baronyId = event.features?.[0]?.properties?.baronyId
+      if (typeof baronyId !== 'string') return
+      const locationId = countyInteractionRef.current?.primaryLocationForBarony(baronyId)
+      if (locationId) callbacksRef.current.onSelectLocation(locationId)
     }
     const handleCharacterClick = (event: MapLayerMouseEvent) => {
       const characterId = event.features?.[0]?.properties?.characterId
@@ -385,9 +382,9 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
     map.on('error', handleMapError)
     map.on('moveend', handleMoveEnd)
     map.on('zoomend', handleZoomEnd)
-    map.on('click', 'agot-locations', handleLocationClick)
-    map.on('mouseenter', 'agot-locations', showPointer)
-    map.on('mouseleave', 'agot-locations', clearPointer)
+    map.on('click', COUNTY_HIT_LAYER, handleCountyClick)
+    map.on('mouseenter', COUNTY_HIT_LAYER, showPointer)
+    map.on('mouseleave', COUNTY_HIT_LAYER, clearPointer)
     const initializeLocationLayers = () => {
       applyPoliticalFeatureStates(map, politicalRef.current)
       syncJourneyLayers(map, manifest, routeRef.current.routePlan, routeRef.current.journey)
@@ -398,24 +395,12 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
       map.on('mouseleave', CHARACTER_POINT_LAYER, clearPointer)
       map.on('mouseenter', ASSET_POINT_LAYER, showPointer)
       map.on('mouseleave', ASSET_POINT_LAYER, clearPointer)
-      mapRepository.loadSearchIndex()
-        .then((entries) => {
-          if (mapRef.current !== map) return
-          addLocationClusterLayers(map, entries, manifest)
-          applyMapMode(map, modeRef.current)
-          map.on('click', LOCATION_POINT_LAYER, handleLocationClick)
-          map.on('click', LOCATION_CLUSTER_LAYER, handleClusterClick)
-          map.on('mouseenter', LOCATION_POINT_LAYER, showPointer)
-          map.on('mouseleave', LOCATION_POINT_LAYER, clearPointer)
-          map.on('mouseenter', LOCATION_CLUSTER_LAYER, showPointer)
-          map.on('mouseleave', LOCATION_CLUSTER_LAYER, clearPointer)
-        })
-        .catch(() => callbacksRef.current.onWarning('地点聚合索引未能载入，仍可浏览基础地图'))
-      mapRepository.loadSemanticIndex()
-        .then((semantic) => {
+      Promise.all([mapRepository.loadSearchIndex(), mapRepository.loadSemanticIndex()])
+        .then(([entries, semantic]) => {
           if (mapRef.current !== map) return
           const primaryRank = semanticZoomState(map.getZoom()).primaryRank
           semanticRef.current = { ...semantic, primaryRank }
+          countyInteractionRef.current = buildCountyInteractionIndex(entries, semantic)
           setSemanticInitializationError(false)
           applyMapMode(map, modeRef.current)
           refreshSemanticSubjects()
@@ -424,6 +409,7 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
         .catch(() => {
           if (mapRef.current !== map) return
           semanticRef.current = null
+          countyInteractionRef.current = null
           setSemanticInitializationError(true)
           callbacksRef.current.onWarning('地图语义资料未能载入，请重新载入地图')
         })
@@ -442,26 +428,21 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
       map.off('error', handleMapError)
       map.off('moveend', handleMoveEnd)
       map.off('zoomend', handleZoomEnd)
-      map.off('click', 'agot-locations', handleLocationClick)
-      map.off('mouseenter', 'agot-locations', showPointer)
-      map.off('mouseleave', 'agot-locations', clearPointer)
+      map.off('click', COUNTY_HIT_LAYER, handleCountyClick)
+      map.off('mouseenter', COUNTY_HIT_LAYER, showPointer)
+      map.off('mouseleave', COUNTY_HIT_LAYER, clearPointer)
       map.off('click', CHARACTER_POINT_LAYER, handleCharacterClick)
       map.off('click', ASSET_POINT_LAYER, handleAssetClick)
       map.off('mouseenter', CHARACTER_POINT_LAYER, showPointer)
       map.off('mouseleave', CHARACTER_POINT_LAYER, clearPointer)
       map.off('mouseenter', ASSET_POINT_LAYER, showPointer)
       map.off('mouseleave', ASSET_POINT_LAYER, clearPointer)
-      map.off('click', LOCATION_POINT_LAYER, handleLocationClick)
-      map.off('click', LOCATION_CLUSTER_LAYER, handleClusterClick)
-      map.off('mouseenter', LOCATION_POINT_LAYER, showPointer)
-      map.off('mouseleave', LOCATION_POINT_LAYER, clearPointer)
-      map.off('mouseenter', LOCATION_CLUSTER_LAYER, showPointer)
-      map.off('mouseleave', LOCATION_CLUSTER_LAYER, clearPointer)
       map.off('load', initializeLocationLayers)
       map.stop()
       map.remove()
       mapRef.current = null
       semanticRef.current = null
+      countyInteractionRef.current = null
     }
   }, [manifest, refreshPoliticalHouseLabels, refreshSemanticSubjects])
 

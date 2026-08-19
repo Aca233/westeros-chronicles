@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs'
 import test from 'node:test'
 
 import {
+  attachPoliticalRealms,
   changedTitleIds,
   projectPoliticalState,
 } from '../src/features/map/politicalProjection.ts'
@@ -12,11 +13,11 @@ import { MapRepository } from '../src/features/map/repository.ts'
 const staticTitles = [
   {
     baronyId: 'b_winterfell', countyId: 'c_winterfell', duchyId: 'd_winterfell',
-    kingdomId: 'k_winterfell', provinceId: 77,
+    kingdomId: 'k_winterfell', realmId: 'world_westeros_the_north', provinceId: 77,
   },
   {
     baronyId: 'b_pyke', countyId: 'c_pyke', duchyId: 'd_pyke',
-    kingdomId: 'k_under_islands', provinceId: 2723,
+    kingdomId: 'k_under_islands', realmId: 'world_westeros_the_iron_islands', provinceId: 2723,
   },
 ]
 
@@ -114,6 +115,33 @@ test('授予与撤销按日期折叠，并能重建旧日期', () => {
   assert.equal(titleAt(stateAt(298, 1, 5), 'b_winterfell').holderId, 'agot:Stark_3')
 })
 
+test('政治填色使用最高公开政治领主并保留当地伯爵资料', () => {
+  const beforeGrant = titleAt(stateAt(298, 1, 5), 'b_winterfell')
+  const afterGrant = titleAt(stateAt(298, 1, 15), 'b_winterfell')
+  assert.equal(afterGrant.holderId, 'agot:Bolton_4')
+  assert.equal(afterGrant.effectiveTitleId, 'c_winterfell')
+  assert.equal(afterGrant.realmTitleId, 'k_winterfell')
+  assert.equal(afterGrant.realmHolderId, 'agot:Stark_3')
+  assert.equal(afterGrant.realmHouseId, 'stark')
+  assert.equal(afterGrant.realmColor, beforeGrant.realmColor)
+  assert.notEqual(afterGrant.color, afterGrant.realmColor)
+})
+
+test('同一最高领地内由不同伯爵持有的省份共享政治填色', () => {
+  const states = projectPoliticalState([
+    { baronyId: 'b_first', countyId: 'c_first', duchyId: 'd_first', kingdomId: 'k_north', realmId: 'world_westeros_the_north', provinceId: 1 },
+    { baronyId: 'b_second', countyId: 'c_second', duchyId: 'd_second', kingdomId: 'k_north', realmId: 'world_westeros_the_north', provinceId: 2 },
+  ], [
+    { id: 'agot:King_1', dynastyId: 'dynn_Stark', titleIds: ['k_north'] },
+    { id: 'agot:Count_1', dynastyId: 'dynn_Bolton', titleIds: ['c_first'] },
+    { id: 'agot:Count_2', dynastyId: 'dynn_Manderly', titleIds: ['c_second'] },
+  ], { schemaVersion: 1, startDate: { year: 298, month: 1, day: 1 }, canonical: {}, turns: [] }, { year: 298, month: 1, day: 1 })
+  assert.notEqual(states[0].holderId, states[1].holderId)
+  assert.equal(states[0].realmHolderId, 'agot:King_1')
+  assert.equal(states[1].realmHolderId, 'agot:King_1')
+  assert.equal(states[0].realmColor, states[1].realmColor)
+})
+
 test('死亡清空持有头衔，继承和正式战争结果重新指派持有人', () => {
   assert.equal(titleAt(stateAt(298, 2, 5), 'b_winterfell').holderId, undefined)
   assert.equal(titleAt(stateAt(298, 2, 20), 'b_winterfell').holderId, 'agot:Stark_14')
@@ -155,7 +183,8 @@ test('政治图层只对变化的省份写入 MapLibre feature-state', () => {
   assert.equal(calls.length, 1)
   assert.deepEqual(calls[0].target, { source: 'agot-vector', sourceLayer: 'provinces', id: 77 })
   assert.equal(calls[0].state.politicalHolderId, 'agot:Bolton_4')
-  assert.equal(calls[0].state.politicalColor, titleAt(after, 'b_winterfell').color)
+  assert.equal(calls[0].state.politicalRealmHolderId, 'agot:Stark_3')
+  assert.equal(calls[0].state.politicalColor, titleAt(after, 'b_winterfell').realmColor)
 })
 
 test('运行时从本地资料加载基础持有人并把投影接入地图画布', async () => {
@@ -172,6 +201,8 @@ test('运行时从本地资料加载基础持有人并把投影接入地图画�
   const style = readFileSync('src/features/map/mapStyle.ts', 'utf8')
   const characters = readFileSync('src/features/characters/staticCharacterRepository.ts', 'utf8')
   assert.match(drawer, /loadPoliticalTitles/)
+  assert.match(drawer, /loadSemanticMembership/)
+  assert.match(drawer, /attachPoliticalRealms/)
   assert.match(drawer, /loadTitleHolderSummaries/)
   assert.match(drawer, /projectPoliticalState/)
   assert.match(canvas, /applyPoliticalFeatureStates/)
@@ -182,6 +213,7 @@ test('运行时从本地资料加载基础持有人并把投影接入地图画�
 
 test('生成的 6094 个本地政治图块能从 298 年人物资料解析真实持有人', () => {
   const generatedTitles = JSON.parse(readFileSync('public/data/agot-map/political/titles.json', 'utf8'))
+  const memberships = JSON.parse(readFileSync('public/data/agot-map/semantic/membership.json', 'utf8'))
   const searchIndex = JSON.parse(readFileSync('public/data/agot-characters/search-index.json', 'utf8'))
   const titleHolders = JSON.parse(readFileSync('public/data/agot-characters/title-holders.json', 'utf8'))
   const searchById = new Map(searchIndex.map((entry) => [entry.id, entry]))
@@ -192,7 +224,7 @@ test('生成的 6094 个本地政治图块能从 298 年人物资料解析真实
       titleIds: titles.map((title) => title.id),
     }] : []
   })
-  const baseline = projectPoliticalState(generatedTitles, holderCharacters, {
+  const baseline = projectPoliticalState(attachPoliticalRealms(generatedTitles, memberships), holderCharacters, {
     schemaVersion: 1,
     startDate: { year: 298, month: 1, day: 1 },
     canonical: {},
@@ -202,5 +234,7 @@ test('生成的 6094 个本地政治图块能从 298 年人物资料解析真实
   assert.equal(new Set(baseline.map((entry) => entry.titleId)).size, generatedTitles.length)
   assert.ok(baseline.filter((entry) => entry.holderId).length > 3000)
   assert.equal(titleAt(baseline, 'b_winterfell').holderId, 'agot:Stark_3')
+  assert.equal(titleAt(baseline, 'b_winterfell').realmHolderId, 'agot:Stark_3')
   assert.equal(titleAt(baseline, 'b_winterfell').sigil, 'house-stark')
+  assert.ok(new Set(baseline.map((entry) => entry.realmColor)).size <= 11)
 })

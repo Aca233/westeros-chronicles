@@ -52,6 +52,20 @@ test('战略区域无直接锚点时按公开省份多数并以稳定家族 ID �
   assert.equal(resolveSemanticPoliticalHouse(realmTitle, tiedStates, memberships).houseId, 'arryn')
 })
 
+test('战略区域优先显示最高政治领主家族而不是当地伯爵多数', () => {
+  const result = resolveSemanticPoliticalHouse(realmTitle, [
+    {
+      ...state('b_one', 'c_winterfell', 'bolton', '波顿家族', 'agot:Roose_1'),
+      realmHolderId: 'agot:Ned_1', realmHouseId: 'stark', realmHouseLabel: '史塔克家族',
+    },
+    {
+      ...state('b_two', 'c_dreadfort', 'manderly', '曼德勒家族', 'agot:Wyman_1'),
+      realmHolderId: 'agot:Ned_1', realmHouseId: 'stark', realmHouseLabel: '史塔克家族',
+    },
+  ], memberships)
+  assert.deepEqual(result, { houseId: 'stark', houseLabel: '史塔克家族', holderId: 'agot:Ned_1' })
+})
+
 test('没有公开且经过核验的家族名时不生成替代标签', () => {
   const secretOnlyStates = [state('b_one', 'c_winterfell', 'stark', undefined)]
   assert.equal(resolveSemanticPoliticalHouse(countyTitle, secretOnlyStates, memberships), undefined)

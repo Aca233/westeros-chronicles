@@ -93,6 +93,16 @@ export function createLocalMapStyle(manifest: MapManifest): StyleSpecification {
         },
       },
       {
+        id: 'agot-county-hit-areas',
+        type: 'fill',
+        source: 'agot-vector',
+        'source-layer': 'provinces',
+        paint: {
+          'fill-color': '#000000',
+          'fill-opacity': 0.001,
+        },
+      },
+      {
         id: 'agot-realm-boundaries',
         type: 'line',
         source: 'agot-semantic',
@@ -234,20 +244,6 @@ export function createLocalMapStyle(manifest: MapManifest): StyleSpecification {
           'text-color': '#c9b784',
           'text-halo-color': '#17130d',
           'text-halo-width': 1.25,
-        },
-      },
-      {
-        id: 'agot-locations',
-        type: 'circle',
-        source: 'agot-vector',
-        'source-layer': 'locations',
-        filter: ['>=', ['get', 'importance'], ['interpolate', ['linear'], ['zoom'], 0, 85, 1.4, 60, 2.8, 35, 4.1, 20, 4.4, 0, 6, 0]],
-        paint: {
-          'circle-radius': ['interpolate', ['linear'], ['zoom'], 0, 2.4, 6, 5.2],
-          'circle-color': '#ead9a7',
-          'circle-stroke-color': '#2c2013',
-          'circle-stroke-width': 1.25,
-          'circle-opacity': 0.92,
         },
       },
     ],

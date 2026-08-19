@@ -19,6 +19,7 @@ import {
   projectKnownCharacterMapPoints,
 } from './dynamicMapSubjects.ts'
 import {
+  attachPoliticalRealms,
   projectPoliticalState,
   type StaticPoliticalTitle,
 } from './politicalProjection.ts'
@@ -148,11 +149,12 @@ export const MapDrawer: React.FC<MapDrawerProps> = ({ onSelectCharacter }) => {
     let cancelled = false
     Promise.all([
       mapRepository.loadPoliticalTitles(),
+      mapRepository.loadSemanticMembership(),
       politicalCharacterRepository.loadTitleHolderSummaries(),
     ])
-      .then(([titles, characters]) => {
+      .then(([titles, memberships, characters]) => {
         if (!cancelled) {
-          setPoliticalSource({ titles, characters })
+          setPoliticalSource({ titles: attachPoliticalRealms(titles, memberships), characters })
         }
       })
       .catch(() => {

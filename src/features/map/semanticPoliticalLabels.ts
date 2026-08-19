@@ -38,6 +38,13 @@ function verifiedState(state: PoliticalFeatureState): state is PoliticalFeatureS
   return Boolean(state.houseId && state.houseLabel)
 }
 
+function verifiedRealmState(state: PoliticalFeatureState): state is PoliticalFeatureState & {
+  realmHouseId: string
+  realmHouseLabel: string
+} {
+  return Boolean(state.realmHouseId && state.realmHouseLabel)
+}
+
 function stableStateOrder(left: PoliticalFeatureState, right: PoliticalFeatureState): number {
   return (left.holderId ?? '').localeCompare(right.holderId ?? '')
     || left.titleId.localeCompare(right.titleId)
@@ -65,6 +72,24 @@ export function resolveSemanticPoliticalHouse(
   states: readonly PoliticalFeatureState[],
   memberships: readonly SemanticMembership[],
 ): SemanticPoliticalHouse | undefined {
+  if (title.rank === 'realm') {
+    const descendantBaronies = new Set(
+      memberships
+        .filter((membership) => membership.realmId === title.titleId)
+        .map((membership) => membership.baronyId),
+    )
+    const realm = states
+      .filter((state): state is PoliticalFeatureState & { realmHouseId: string; realmHouseLabel: string } =>
+        descendantBaronies.has(state.titleId) && verifiedRealmState(state))
+      .sort(stableStateOrder)[0]
+    if (realm) {
+      return {
+        houseId: realm.realmHouseId,
+        houseLabel: realm.realmHouseLabel,
+        ...(realm.realmHolderId ? { holderId: realm.realmHolderId } : {}),
+      }
+    }
+  }
   const directTitleId = title.politicalAnchorTitleId ?? title.titleId
   const direct = states
     .filter((state): state is PoliticalFeatureState & { houseId: string; houseLabel: string } =>
