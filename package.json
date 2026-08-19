@@ -102,7 +102,8 @@
     "check:map-runtime-boundaries": "node --experimental-strip-types scripts/check-map-runtime-boundaries.mjs",
     "verify:map": "npm run test:agot-map-import && npm run test:map-schema && npm run test:map-runtime && npm run test:map-semantic-zoom && npm run test:map-terrain-profile && npm run test:map-terrain-controller && npm run test:map-terrain-ui && npm run test:map-terrain-integration && npm run test:map-semantic-projection && npm run test:map-semantic-layers && npm run test:map-county-interaction && npm run test:map-narrative-context && npm run test:map-location-view && npm run test:location-authority && npm run test:map-routing && npm run test:map-travel && npm run test:map-intelligence && npm run test:map-political-projection && npm run test:map-integration && npm run check:map-drawer && npm run check:map-travel-ui && npm run check:map-runtime-boundaries && npm run check:map-data",
     "test:map-material-layers": "node --experimental-strip-types scripts/test-map-material-layers.mjs",
-    "test:map-terrain-surface-controller": "node --experimental-strip-types scripts/test-map-terrain-surface-controller.mjs"
+    "test:map-terrain-surface-controller": "node --experimental-strip-types scripts/test-map-terrain-surface-controller.mjs",
+    "test:map-wheel-camera-controller": "node --experimental-strip-types scripts/test-map-wheel-camera-controller.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",
