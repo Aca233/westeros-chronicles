@@ -11,6 +11,7 @@ import 'maplibre-gl/dist/maplibre-gl.css'
 import { mapPixelToLngLat } from './coordinates'
 import {
   addLocationClusterLayers,
+  applyPoliticalFeatureStates,
   applyMapMode,
   LOCATION_CLUSTER_LAYER,
   LOCATION_POINT_LAYER,
@@ -21,6 +22,7 @@ import {
   type MapMode,
 } from './mapLayers'
 import { createLocalMapStyle } from './mapStyle'
+import { changedTitleIds, type PoliticalFeatureState } from './politicalProjection.ts'
 import { mapRepository } from './repository'
 import type { MapManifest } from './types'
 import type { RoutePlan } from './routing/types'
@@ -37,6 +39,7 @@ interface MapCanvasProps {
   mode: MapMode
   routePlan?: RoutePlan | null
   journey?: ActiveJourney
+  politicalStates?: readonly PoliticalFeatureState[]
 }
 
 
@@ -158,6 +161,7 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
   mode,
   routePlan,
   journey,
+  politicalStates = [],
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null)
   const mapRef = useRef<MapLibreMap | null>(null)
@@ -165,6 +169,7 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
   const callbacksRef = useRef({ onSelectLocation, onViewportChange, onWarning })
   const modeRef = useRef(mode)
   const routeRef = useRef({ routePlan, journey })
+  const politicalRef = useRef<readonly PoliticalFeatureState[]>(politicalStates)
 
   useEffect(() => {
     callbacksRef.current = { onSelectLocation, onViewportChange, onWarning }
@@ -179,6 +184,15 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
     const map = mapRef.current
     if (map?.isStyleLoaded()) syncJourneyLayers(map, manifest, routePlan, journey)
   }, [journey, manifest, routePlan])
+
+  useEffect(() => {
+    const previous = politicalRef.current
+    politicalRef.current = politicalStates
+    const map = mapRef.current
+    if (map?.isStyleLoaded()) {
+      applyPoliticalFeatureStates(map, politicalStates, changedTitleIds(previous, politicalStates), previous)
+    }
+  }, [politicalStates])
 
   useEffect(() => {
     if (!containerRef.current) return
@@ -249,6 +263,7 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
     map.on('mouseleave', 'agot-locations', clearPointer)
     const initializeLocationLayers = () => {
       applyMapMode(map, modeRef.current)
+      applyPoliticalFeatureStates(map, politicalRef.current)
       syncJourneyLayers(map, manifest, routeRef.current.routePlan, routeRef.current.journey)
       mapRepository.loadSearchIndex()
         .then((entries) => {

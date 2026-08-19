@@ -23,6 +23,12 @@ export interface CanonicalEventState {
   reason?: string;
 }
 
+export type PoliticalWorldTransition =
+  | { type: 'grant-title'; titleId: string; holderId: CharacterId; visibility?: 'public' | 'secret' }
+  | { type: 'revoke-title'; titleId: string; holderId?: CharacterId; visibility?: 'public' | 'secret' }
+  | { type: 'inherit-title'; titleId: string; holderId: CharacterId; visibility?: 'public' | 'secret' }
+  | { type: 'war-result'; titleId: string; holderId: CharacterId; formal: boolean; visibility?: 'public' | 'secret' };
+
 export interface WorldEventFact {
   id: string;
   turn: number;
@@ -35,6 +41,7 @@ export interface WorldEventFact {
   commandTypes: string[];
   location?: WorldLocationRef;
   canonicalEventId?: string;
+  political?: PoliticalWorldTransition;
 }
 
 export interface RejectedWorldCommand {

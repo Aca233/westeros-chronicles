@@ -6,6 +6,7 @@ import type {
   MapManifest,
   MapRouteShard,
 } from './types'
+import type { StaticPoliticalTitle } from './politicalProjection.ts'
 
 const stableIdSchema = z.string().trim().min(1).max(160).regex(/^[a-z0-9][a-z0-9_.:-]*$/i)
 const sha256Schema = z.string().regex(/^[a-f0-9]{64}$/i)
@@ -133,6 +134,14 @@ const mapRouteShardSourceSchema = z.object({
   graphHash: sha256Schema,
 }).strict()
 
+const staticPoliticalTitleSchema = z.object({
+  baronyId: stableIdSchema,
+  countyId: stableIdSchema.optional(),
+  duchyId: stableIdSchema.optional(),
+  kingdomId: stableIdSchema.optional(),
+  provinceId: z.number().int().positive(),
+}).strict()
+
 function formatSchemaError(label: string, error: z.ZodError): Error {
   const details = error.issues
     .map((issue) => `${issue.path.join('.') || 'root'}: ${issue.message}`)
@@ -180,4 +189,10 @@ export function parseMapRouteShard(value: unknown): MapRouteShard {
       isPort: node.is_port,
     })),
   }
+}
+
+export function parseMapPoliticalTitles(value: unknown): StaticPoliticalTitle[] {
+  const result = z.array(staticPoliticalTitleSchema).safeParse(value)
+  if (!result.success) throw formatSchemaError('地图政治头衔', result.error)
+  return result.data
 }

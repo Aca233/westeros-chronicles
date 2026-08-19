@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Map as MapIcon, RotateCcw, X } from 'lucide-react'
 
 import { MapCanvas } from './MapCanvas'
@@ -9,6 +9,14 @@ import { useMapUiStore } from './mapUiStore'
 import { mapRepository } from './repository'
 import type { MapManifest } from './types'
 import { useGameStore } from '../../store/useGameStore'
+import { StaticCharacterRepository } from '../characters/staticCharacterRepository'
+import type { CharacterTitleHolderSummary } from '../characters/types'
+import {
+  projectPoliticalState,
+  type StaticPoliticalTitle,
+} from './politicalProjection.ts'
+
+const politicalCharacterRepository = new StaticCharacterRepository()
 
 export const MapDrawer: React.FC = () => {
   const activeDrawer = useMapUiStore((state) => state.activeDrawer)
@@ -24,14 +32,30 @@ export const MapDrawer: React.FC = () => {
   const [loadError, setLoadError] = useState(false)
   const [warning, setWarning] = useState<string | null>(null)
   const [reloadKey, setReloadKey] = useState(0)
+  const [politicalSource, setPoliticalSource] = useState<{
+    titles: StaticPoliticalTitle[]
+    characters: CharacterTitleHolderSummary[]
+  } | null>(null)
   const routeOriginId = useGameStore((state) => state.gameState.lord.location.locationId)
   const currentSeason = useGameStore((state) => state.gameState.currentSeason)
   const activeJourney = useGameStore((state) => state.gameState.activeJourney)
   const pendingTravelCommand = useGameStore((state) => state.pendingTravelCommand)
+  const worldHistory = useGameStore((state) => state.gameState.worldHistory)
+  const currentYear = useGameStore((state) => state.gameState.currentYear)
+  const currentMonth = useGameStore((state) => state.gameState.currentMonth)
+  const currentDay = useGameStore((state) => state.gameState.currentDay)
   const pendingRoutePlan = pendingTravelCommand && 'routePlan' in pendingTravelCommand
     ? pendingTravelCommand.routePlan ?? null
     : null
   const displayedRoute = routePreview ?? pendingRoutePlan ?? activeJourney?.routePlan ?? null
+  const politicalStates = useMemo(() => politicalSource
+    ? projectPoliticalState(
+      politicalSource.titles,
+      politicalSource.characters,
+      worldHistory,
+      { year: currentYear, month: currentMonth, day: currentDay },
+    )
+    : [], [currentDay, currentMonth, currentYear, politicalSource, worldHistory])
 
   useEffect(() => {
     if (activeDrawer !== 'map') return
@@ -45,6 +69,25 @@ export const MapDrawer: React.FC = () => {
         if (!cancelled) {
           setManifest(null)
           setLoadError(true)
+        }
+      })
+    return () => { cancelled = true }
+  }, [activeDrawer, reloadKey])
+
+  useEffect(() => {
+    if (activeDrawer !== 'map') return
+    let cancelled = false
+    Promise.all([
+      mapRepository.loadPoliticalTitles(),
+      politicalCharacterRepository.loadTitleHolderSummaries(),
+    ])
+      .then(([titles, characters]) => {
+        if (!cancelled) setPoliticalSource({ titles, characters })
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setPoliticalSource(null)
+          setWarning('政治归属资料未能载入，地形与旅行功能仍可使用')
         }
       })
     return () => { cancelled = true }
@@ -91,6 +134,7 @@ export const MapDrawer: React.FC = () => {
               mode={mapMode}
               routePlan={displayedRoute}
               journey={activeJourney?.routePlan.id === displayedRoute?.id ? activeJourney : undefined}
+              politicalStates={politicalStates}
             />
           ) : loadError ? (
             <div className="map-load-state" role="alert">

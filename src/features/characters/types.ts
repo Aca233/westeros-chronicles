@@ -124,6 +124,14 @@ export interface CharacterSearchHit {
   shard: string;
 }
 
+export interface CharacterTitleHolderSummary {
+  id: CharacterId;
+  name: string;
+  dynastyId?: string | null;
+  alive: boolean;
+  titleIds: string[];
+}
+
 export interface CharacterKnowledge {
   id: string;
   field: string;

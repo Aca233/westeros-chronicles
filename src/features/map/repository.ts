@@ -3,8 +3,10 @@ import {
   parseMapLocationSearchIndex,
   parseMapLocationShard,
   parseMapManifest,
+  parseMapPoliticalTitles,
   parseMapRouteShard,
 } from './schemas.ts'
+import type { StaticPoliticalTitle } from './politicalProjection.ts'
 import type {
   MapLocation,
   MapLocationSearchEntry,
@@ -13,6 +15,7 @@ import type {
 } from './types'
 
 const MANIFEST_PATH = '/data/agot-map/manifest.json'
+const POLITICAL_TITLES_PATH = '/data/agot-map/political/titles.json'
 
 type JsonResponse = Pick<Response, 'ok' | 'json'> & Partial<Pick<Response, 'status' | 'statusText'>>
 type MapFetcher = (input: RequestInfo | URL, init?: RequestInit) => Promise<JsonResponse>
@@ -102,6 +105,10 @@ export class MapRepository {
     const manifest = await this.loadManifest()
     const path = shardPath(manifest.paths.routes, regionId)
     return this.loadJson(path, parseMapRouteShard)
+  }
+
+  loadPoliticalTitles(): Promise<StaticPoliticalTitle[]> {
+    return this.loadJson(POLITICAL_TITLES_PATH, parseMapPoliticalTitles)
   }
 
   private loadJson<Value>(resource: string, parse: (value: unknown) => Value): Promise<Value> {

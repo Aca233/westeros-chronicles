@@ -15,6 +15,7 @@ import type {
   CharacterLoadoutShard,
   CharacterSearchHit,
   CharacterTitleHolders,
+  CharacterTitleHolderSummary,
   StaticCharacterLoadoutProfile,
   StaticCharacterRecord,
 } from './types';
@@ -84,6 +85,21 @@ export class StaticCharacterRepository {
       this.fetchJson(`${this.baseUrl}/title-holders.json`).then(parseCharacterTitleHolders),
     ]).then(([, titleHolders]) => titleHolders);
     return this.titleHoldersPromise;
+  }
+
+  async loadTitleHolderSummaries(): Promise<CharacterTitleHolderSummary[]> {
+    const [index, titleHolders] = await Promise.all([this.loadIndex(), this.loadTitleHolders()]);
+    return index.flatMap((hit) => {
+      const holdings = titleHolders[hit.id];
+      if (!holdings?.length) return [];
+      return [{
+        id: hit.id,
+        name: hit.name,
+        dynastyId: hit.dynastyId,
+        alive: hit.alive,
+        titleIds: holdings.map((title) => title.id),
+      }];
+    });
   }
 
   private loadShard(shard: string): Promise<Map<CharacterId, StaticCharacterRecord>> {

@@ -2,6 +2,7 @@ import type { GeoJSONSource, Map as MapLibreMap } from 'maplibre-gl'
 
 import { mapPixelToLngLat } from './coordinates.ts'
 import type { RegisteredMapIntelType, VisibleMapSubject } from './intelligence.ts'
+import type { PoliticalFeatureState } from './politicalProjection.ts'
 import type { MapLocationSearchEntry, MapManifest } from './types'
 
 export type MapMode = 'terrain' | 'political' | 'characters' | 'travel' | 'assets'
@@ -27,6 +28,38 @@ export function visibleMapSubjectsForMode(
       && allowedTypes.has(candidate.type as RegisteredMapIntelType)
       && (candidate.intelLevel === 'confirmed' || candidate.intelLevel === 'rumored' || candidate.intelLevel === 'stale')
   })
+}
+
+type PoliticalFeatureMap = Pick<MapLibreMap, 'getSource' | 'setFeatureState' | 'removeFeatureState'>
+
+export function applyPoliticalFeatureStates(
+  map: PoliticalFeatureMap,
+  states: readonly PoliticalFeatureState[],
+  titleIds: readonly string[] = states.map((state) => state.titleId),
+  previous: readonly PoliticalFeatureState[] = [],
+): void {
+  if (!map.getSource('agot-vector')) return
+  const currentById = new Map(states.map((state) => [state.titleId, state]))
+  const previousById = new Map(previous.map((state) => [state.titleId, state]))
+  for (const titleId of [...new Set(titleIds)].sort()) {
+    const state = currentById.get(titleId)
+    const oldState = previousById.get(titleId)
+    const provinceId = state?.provinceId ?? oldState?.provinceId
+    if (provinceId === undefined) continue
+    const target = { source: 'agot-vector', sourceLayer: 'provinces', id: provinceId }
+    if (!state) {
+      map.removeFeatureState(target)
+      continue
+    }
+    map.setFeatureState(target, {
+      politicalTitleId: state.titleId,
+      politicalEffectiveTitleId: state.effectiveTitleId ?? null,
+      politicalHolderId: state.holderId ?? null,
+      politicalHouseId: state.houseId ?? null,
+      politicalColor: state.color,
+      politicalSigil: state.sigil ?? null,
+    })
+  }
 }
 
 export const JOURNEY_ROUTE_SOURCE = 'agot-active-journey-route'
