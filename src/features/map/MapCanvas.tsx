@@ -14,6 +14,9 @@ import {
   applyMapMode,
   LOCATION_CLUSTER_LAYER,
   LOCATION_POINT_LAYER,
+  JOURNEY_POSITION_SOURCE,
+  JOURNEY_PROGRESS_SOURCE,
+  JOURNEY_ROUTE_SOURCE,
   zoomToCluster,
   type MapMode,
 } from './mapLayers'
@@ -36,9 +39,6 @@ interface MapCanvasProps {
   journey?: ActiveJourney
 }
 
-const JOURNEY_ROUTE_SOURCE = 'agot-active-journey-route'
-const JOURNEY_PROGRESS_SOURCE = 'agot-active-journey-progress'
-const JOURNEY_POSITION_SOURCE = 'agot-active-journey-position'
 
 function emptyFeatureCollection(): GeoJSON.FeatureCollection {
   return { type: 'FeatureCollection', features: [] }
@@ -141,6 +141,8 @@ function syncJourneyLayers(
   ensureJourneyLayers(map)
   const route = routePlan ? routeCoordinates(routePlan, manifest) : []
   const progress = routePlan ? progressCoordinates(routePlan, journey, manifest) : []
+  map.setPaintProperty(JOURNEY_ROUTE_SOURCE, 'line-dasharray', journey ? [1, 0] : [2, 1.25])
+  map.setPaintProperty(JOURNEY_ROUTE_SOURCE, 'line-opacity', journey ? 0.88 : 0.72)
   ;(map.getSource(JOURNEY_ROUTE_SOURCE) as GeoJSONSource).setData(lineCollection(route))
   ;(map.getSource(JOURNEY_PROGRESS_SOURCE) as GeoJSONSource).setData(lineCollection(progress))
   ;(map.getSource(JOURNEY_POSITION_SOURCE) as GeoJSONSource).setData(pointCollection(progress))

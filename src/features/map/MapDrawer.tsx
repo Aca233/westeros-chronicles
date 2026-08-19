@@ -3,6 +3,7 @@ import { Map as MapIcon, RotateCcw, X } from 'lucide-react'
 
 import { MapCanvas } from './MapCanvas'
 import { LocationDetails } from './LocationDetails'
+import { JourneyPanel } from './JourneyPanel'
 import { MapToolbar } from './MapToolbar'
 import { useMapUiStore } from './mapUiStore'
 import { mapRepository } from './repository'
@@ -122,6 +123,13 @@ export const MapDrawer: React.FC = () => {
               routeOriginId={routeOriginId}
               season={currentSeason}
               onClose={() => selectLocation(null)}
+            />
+          )}
+          {manifest && !loadError && activeJourney && activeJourney.status !== 'arrived' && activeJourney.status !== 'planned' && (
+            <JourneyPanel
+              journey={activeJourney}
+              season={currentSeason}
+              hasLocationDetails={Boolean(selectedLocationId)}
             />
           )}
           {warning && manifest && (

@@ -17,6 +17,7 @@ interface MapUiState {
   lastViewport: MapViewport | null
   mapMode: MapMode
   routePreview: RoutePlan | null
+  travelIntent: 'reroute' | null
   openMap: (locationId?: string) => void
   openCharacterDrawer: () => void
   closeDrawer: () => void
@@ -26,6 +27,8 @@ interface MapUiState {
   rememberViewport: (viewport: MapViewport) => void
   setMapMode: (mode: MapMode) => void
   previewRoute: (route: RoutePlan | null) => void
+  beginReroute: () => void
+  clearTravelIntent: () => void
 }
 
 export const useMapUiStore = create<MapUiState>((set) => ({
@@ -34,6 +37,7 @@ export const useMapUiStore = create<MapUiState>((set) => ({
   lastViewport: null,
   mapMode: 'terrain',
   routePreview: null,
+  travelIntent: null,
   openMap: (locationId) => set((state) => ({
     activeDrawer: 'map',
     selectedLocationId: locationId ?? state.selectedLocationId,
@@ -46,4 +50,6 @@ export const useMapUiStore = create<MapUiState>((set) => ({
   rememberViewport: (viewport) => set({ lastViewport: viewport }),
   setMapMode: (mapMode) => set({ mapMode }),
   previewRoute: (routePreview) => set({ routePreview }),
+  beginReroute: () => set({ travelIntent: 'reroute', selectedLocationId: null, mapMode: 'travel' }),
+  clearTravelIntent: () => set({ travelIntent: null }),
 }))

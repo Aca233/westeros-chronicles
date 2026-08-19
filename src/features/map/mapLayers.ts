@@ -5,6 +5,10 @@ import type { MapLocationSearchEntry, MapManifest } from './types'
 
 export type MapMode = 'terrain' | 'political' | 'characters' | 'travel' | 'assets'
 
+export const JOURNEY_ROUTE_SOURCE = 'agot-active-journey-route'
+export const JOURNEY_PROGRESS_SOURCE = 'agot-active-journey-progress'
+export const JOURNEY_POSITION_SOURCE = 'agot-active-journey-position'
+
 export const LOCATION_CLUSTER_SOURCE = 'agot-location-cluster-source'
 export const LOCATION_CLUSTER_LAYER = 'agot-location-clusters'
 export const LOCATION_POINT_LAYER = 'agot-location-points'
