@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 
 if TYPE_CHECKING:
     from shapely.geometry.base import BaseGeometry
@@ -76,6 +76,52 @@ class MapLocationRecord:
     tags: tuple[str, ...]
     description: str | None = None
     icon: str | None = None
+
+
+SemanticRank = Literal["realm", "duchy", "county"]
+
+
+@dataclass(frozen=True, slots=True)
+class SemanticBoundaryRecord:
+    feature_id: int
+    title_id: str
+    rank: SemanticRank
+    name: str | None
+    region_id: str
+    political_anchor_title_id: str | None
+    geometry: "BaseGeometry"
+
+
+@dataclass(frozen=True, slots=True)
+class SemanticTitleRecord:
+    feature_id: int
+    title_id: str
+    rank: SemanticRank
+    name: str
+    map_x: float
+    map_y: float
+    importance: int
+    region_id: str
+    political_anchor_title_id: str | None
+    geometry: "BaseGeometry"
+    anchor: "BaseGeometry"
+
+
+@dataclass(frozen=True, slots=True)
+class SemanticMembershipRecord:
+    location_id: str
+    barony_id: str
+    county_id: str
+    duchy_id: str
+    realm_id: str
+
+
+@dataclass(frozen=True, slots=True)
+class SemanticDataset:
+    boundaries: tuple[SemanticBoundaryRecord, ...]
+    titles: tuple[SemanticTitleRecord, ...]
+    memberships: tuple[SemanticMembershipRecord, ...]
+    missing_localizations: tuple[str, ...]
 
 
 @dataclass(frozen=True, slots=True)

@@ -18,12 +18,15 @@ from scripts.agot_map_import.dem import build_dem_tiles, encode_terrain_rgb
 from scripts.agot_map_import.audit import audit_map_records
 from scripts.agot_map_import.geometry import extract_province_geometry
 from scripts.agot_map_import.locations import build_locations
-from scripts.agot_map_import.models import MapImportError, MapLocationRecord, ProvinceGeometry
+from scripts.agot_map_import.models import (
+    MapImportError, MapLocationRecord, ProvinceGeometry, RegionDefinition, TitleAncestors,
+)
 from scripts.agot_map_import.regions import expand_region, parse_regions
 from scripts.agot_map_import.province_history import holding_to_location_type, parse_province_holdings
 from scripts.agot_map_import.routes import build_route_graph
 from scripts.agot_map_import.source import MapSource, parse_definition
-from scripts.agot_map_import.titles import parse_title_hierarchy
+from scripts.agot_map_import.semantic import build_semantic_dataset
+from scripts.agot_map_import.titles import TitleIndex, parse_title_hierarchy
 from scripts.agot_map_import.tiles import build_terrain_tiles, build_vector_tiles
 from scripts.agot_map_import.writer import write_map_dataset
 from scripts.agot_map_import.cli import main as map_import_main
@@ -107,6 +110,111 @@ class MapRegionTests(unittest.TestCase):
                 expand_region("a", regions)
             with self.assertRaisesRegex(MapImportError, "不存在"):
                 expand_region("missing", regions)
+
+
+class SemanticDatasetTests(unittest.TestCase):
+    def _dataset(
+        self,
+        reverse: bool = False,
+        missing: tuple[str, ...] = (),
+        *,
+        countyless: bool = False,
+        missing_stable_barony: bool = False,
+        outside_bounds: bool = False,
+        cyclic_region: bool = False,
+    ):
+        winterfell_geometry = box(-1, 0, 4, 4) if outside_bounds else box(0, 0, 4, 4)
+        rows = [
+            (1, "b_winterfell", winterfell_geometry, "the_north"),
+            (2, "b_kings_landing", box(4, 0, 8, 4), "the_crownlands"),
+        ]
+        if reverse:
+            rows.reverse()
+        geometries = {
+            province_id: ProvinceGeometry(
+                province_id, barony_id, 2 + 4 * index, 2,
+                tuple(map(int, geometry.bounds)), 16, geometry, region_id,
+            )
+            for index, (province_id, barony_id, geometry, region_id) in enumerate(rows)
+        }
+        titles = TitleIndex(
+            by_barony={
+                "b_winterfell": TitleAncestors(None if countyless else "c_winterfell", "d_winterfell", "k_westeros"),
+                "b_kings_landing": TitleAncestors("c_kings_landing", "d_kings_landing", "k_westeros"),
+            },
+            province_baronies={
+                **({} if missing_stable_barony else {1: "b_winterfell"}),
+                2: "b_kings_landing",
+            },
+        )
+        regions = {
+            "world_westeros": RegionDefinition("world_westeros", (), ("the_north", "the_crownlands"), "fixture", 1),
+            "the_north": RegionDefinition(
+                "the_north", ("b_winterfell",),
+                ("world_westeros",) if cyclic_region else (), "fixture", 2,
+            ),
+            "the_crownlands": RegionDefinition("the_crownlands", ("b_kings_landing",), (), "fixture", 3),
+        }
+        localization = {
+            "the_north": "北境", "b_winterfell": "临冬城", "c_winterfell": "临冬城伯爵领",
+            "d_winterfell": "临冬城公国", "the_crownlands": "王领",
+            "b_kings_landing": "君临", "c_kings_landing": "君临伯爵领", "d_kings_landing": "君临公国",
+        }
+        for key in missing:
+            localization.pop(key, None)
+        locations = [
+            MapLocationRecord(
+                id=barony_id, name=localization.get(barony_id, barony_id), english_name=None,
+                type="castle", map_x=geometry.map_x, map_y=geometry.map_y,
+                province_id=province_id, barony_id=barony_id,
+                county_id=titles.by_barony[barony_id].county_id,
+                duchy_id=titles.by_barony[barony_id].duchy_id, kingdom_id="k_westeros",
+                region_id=geometry.region_id, terrain="plains", is_coastal=False,
+                is_port=False, importance=100, tags=(),
+            )
+            for province_id, geometry in sorted(geometries.items())
+            for barony_id in [geometry.barony_id]
+        ]
+        return build_semantic_dataset(
+            geometries, locations, titles, regions, localization,
+            {"the_north": "k_the_north", "the_crownlands": "k_the_crownlands"},
+        )
+
+    def test_builds_three_visible_ranks_internal_barony_key_and_membership(self) -> None:
+        dataset = self._dataset()
+        self.assertEqual([boundary.rank for boundary in dataset.boundaries].count("realm"), 2)
+        self.assertEqual([boundary.rank for boundary in dataset.boundaries].count("duchy"), 2)
+        self.assertEqual([boundary.rank for boundary in dataset.boundaries].count("county"), 2)
+        self.assertNotIn("barony", {boundary.rank for boundary in dataset.boundaries})
+        self.assertEqual([title.feature_id for title in dataset.titles], list(range(1, 7)))
+        self.assertTrue(all(title.geometry.covers(title.anchor) for title in dataset.titles))
+        winterfell = next(item for item in dataset.memberships if item.location_id == "b_winterfell")
+        self.assertEqual(
+            (winterfell.realm_id, winterfell.duchy_id, winterfell.county_id, winterfell.barony_id),
+            ("the_north", "d_winterfell", "c_winterfell", "b_winterfell"),
+        )
+
+    def test_output_is_identical_when_input_order_is_reversed(self) -> None:
+        self.assertEqual(self._dataset(), self._dataset(reverse=True))
+
+    def test_missing_chinese_name_keeps_boundary_but_suppresses_title(self) -> None:
+        dataset = self._dataset(missing=("d_winterfell",))
+        self.assertTrue(any(item.title_id == "d_winterfell" for item in dataset.boundaries))
+        self.assertFalse(any(item.title_id == "d_winterfell" for item in dataset.titles))
+        self.assertIn("d_winterfell", dataset.missing_localizations)
+
+    def test_rejects_missing_stable_barony_and_county_hierarchy(self) -> None:
+        with self.assertRaisesRegex(MapImportError, "稳定男爵领"):
+            self._dataset(missing_stable_barony=True)
+        with self.assertRaisesRegex(MapImportError, "伯爵领"):
+            self._dataset(countyless=True)
+
+    def test_rejects_region_cycles_and_out_of_bounds_geometry(self) -> None:
+        with self.assertRaisesRegex(MapImportError, "循环引用"):
+            self._dataset(cyclic_region=True)
+        with self.assertRaisesRegex(MapImportError, "越出地图"):
+            self._dataset(outside_bounds=True)
+
 
 
 class ProvinceHistoryTests(unittest.TestCase):
