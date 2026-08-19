@@ -8,6 +8,7 @@ import {
 } from './dynamicMapSubjects.ts'
 import type { RegisteredMapIntelType, VisibleMapSubject } from './intelligence.ts'
 import type { PoliticalFeatureState } from './politicalProjection.ts'
+import type { CountyInteractionIndex } from './countyInteraction.ts'
 import { semanticDetailOpacityExpression, type SemanticZoomState } from './semanticZoom.ts'
 import { aggregateAssetPoints, aggregateCharacterPoints, type SemanticSubjectAggregate } from './semanticAggregation.ts'
 import {
@@ -97,6 +98,27 @@ export const ASSET_AGGREGATE_COUNT_LAYER = 'agot-asset-aggregate-counts'
 export const POLITICAL_HOUSE_LABEL_SOURCE = 'agot-political-house-label-source'
 export const POLITICAL_HOUSE_LABEL_LAYER = 'agot-political-house-labels'
 export const COUNTY_HIT_LAYER = 'agot-county-hit-areas'
+export const SELECTED_COUNTY_OUTLINE_LAYER = 'agot-selected-county-outline'
+export const SELECTED_COUNTY_LOCATION_SOURCE = 'agot-selected-county-location-source'
+export const SELECTED_COUNTY_LOCATION_LAYER = 'agot-selected-county-locations'
+
+const GENERIC_COUNTY_LOCATION_ICONS = {
+  castle: '/assets/map-icons/location-castle.webp',
+  city: '/assets/map-icons/location-city.webp',
+  town: '/assets/map-icons/location-town.webp',
+  village: '/assets/map-icons/location-village.webp',
+  port: '/assets/map-icons/location-port.webp',
+  ruin: '/assets/map-icons/location-ruin.webp',
+  landmark: '/assets/map-icons/location-landmark.webp',
+  region: '/assets/map-icons/location-region.webp',
+} as const
+
+const SPECIAL_COUNTY_LOCATION_ICONS: Readonly<Record<string, string>> = {
+  b_winterfell: '/assets/game-icons/location-winterfell.webp',
+  b_sunspear: '/assets/game-icons/location-sunspear.webp',
+  b_the_hightower: '/assets/game-icons/location-hightower.webp',
+  b_oldtown: '/assets/game-icons/location-hightower.webp',
+}
 
 const SEMANTIC_VISIBILITY = {
   'agot-realm-boundaries': true,
@@ -105,6 +127,7 @@ const SEMANTIC_VISIBILITY = {
   'agot-realm-labels': true,
   'agot-duchy-labels': true,
   'agot-county-labels': true,
+  [SELECTED_COUNTY_OUTLINE_LAYER]: true,
 } as const
 
 const COMMON_VISIBILITY = {
@@ -416,5 +439,94 @@ export function syncPoliticalHouseLabels(
       map.setLayoutProperty(POLITICAL_HOUSE_LABEL_LAYER, 'visibility', 'none')
     }
     return 'failed'
+  }
+}
+
+function countyLocationIconId(locationId: string, type: keyof typeof GENERIC_COUNTY_LOCATION_ICONS): string {
+  return SPECIAL_COUNTY_LOCATION_ICONS[locationId]
+    ? `agot-county-location-special-${locationId}`
+    : `agot-county-location-${type}`
+}
+
+export async function loadCountyLocationIcons(map: MapLibreMap): Promise<void> {
+  const definitions = [
+    ...Object.entries(GENERIC_COUNTY_LOCATION_ICONS)
+      .map(([type, path]) => [`agot-county-location-${type}`, path] as const),
+    ...Object.entries(SPECIAL_COUNTY_LOCATION_ICONS)
+      .map(([locationId, path]) => [`agot-county-location-special-${locationId}`, path] as const),
+  ]
+  await Promise.all(definitions.map(async ([imageId, path]) => {
+    if (map.hasImage(imageId)) return
+    const image = await map.loadImage(path)
+    if (!map.hasImage(imageId)) map.addImage(imageId, image.data)
+  }))
+}
+
+export function addSelectedCountyLocationLayers(map: MapLibreMap): void {
+  if (!map.getSource(SELECTED_COUNTY_LOCATION_SOURCE)) {
+    map.addSource(SELECTED_COUNTY_LOCATION_SOURCE, {
+      type: 'geojson',
+      data: { type: 'FeatureCollection', features: [] },
+    })
+  }
+  if (!map.getLayer(SELECTED_COUNTY_LOCATION_LAYER)) {
+    map.addLayer({
+      id: SELECTED_COUNTY_LOCATION_LAYER,
+      type: 'symbol',
+      source: SELECTED_COUNTY_LOCATION_SOURCE,
+      minzoom: 3.5,
+      layout: {
+        'icon-image': ['get', 'iconId'],
+        'icon-size': ['case', ['get', 'isPrimary'], 0.92, 0.68],
+        'icon-allow-overlap': true,
+        'icon-ignore-placement': false,
+        'symbol-sort-key': ['case', ['get', 'isPrimary'], 10, 1],
+        'text-field': ['get', 'name'],
+        'text-font': ['Noto Sans CJK SC Regular'],
+        'text-size': ['case', ['get', 'isPrimary'], 13, 11],
+        'text-offset': [0, 2.1],
+        'text-anchor': 'top',
+        'text-optional': true,
+        'text-allow-overlap': false,
+      },
+      paint: {
+        'icon-opacity': 0.98,
+        'text-color': '#f1e4bd',
+        'text-halo-color': '#17130d',
+        'text-halo-width': 1.4,
+        'text-opacity': 0.96,
+      },
+    })
+  }
+}
+
+export function syncSelectedCountyLocations(
+  map: MapLibreMap,
+  manifest: MapManifest,
+  index: CountyInteractionIndex,
+  selectedLocationId: string | null,
+): void {
+  addSelectedCountyLocationLayers(map)
+  const source = map.getSource(SELECTED_COUNTY_LOCATION_SOURCE) as GeoJSONSource | undefined
+  if (!source) return
+  const selected = selectedLocationId ? index.selectedCountyForLocation(selectedLocationId) : undefined
+  source.setData({
+    type: 'FeatureCollection',
+    features: selected?.locations.map((location) => ({
+      type: 'Feature' as const,
+      id: location.id,
+      geometry: { type: 'Point' as const, coordinates: mapPixelToLngLat(location, manifest) },
+      properties: {
+        id: location.id,
+        name: location.name,
+        type: location.type,
+        isPrimary: location.isPrimary,
+        iconId: countyLocationIconId(location.id, location.type),
+      },
+    })) ?? [],
+  })
+  if (map.getLayer(SELECTED_COUNTY_OUTLINE_LAYER)) {
+    map.setFilter(SELECTED_COUNTY_OUTLINE_LAYER, ['==', ['get', 'titleId'], selected?.countyId ?? ''])
+    map.setLayoutProperty(SELECTED_COUNTY_OUTLINE_LAYER, 'visibility', selected ? 'visible' : 'none')
   }
 }

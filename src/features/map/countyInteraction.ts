@@ -9,6 +9,17 @@ export interface CountyInteractionIndex {
   primaryLocationByCountyId: ReadonlyMap<string, string>
   countyIdByBaronyId: ReadonlyMap<string, string>
   primaryLocationForBarony: (baronyId: string) => string | undefined
+  selectedCountyForLocation: (locationId: string) => SelectedCountyLocations | undefined
+}
+
+export interface ExpandedCountyLocation extends MapLocationSearchEntry {
+  isPrimary: boolean
+}
+
+export interface SelectedCountyLocations {
+  countyId: string
+  primaryLocationId: string
+  locations: readonly ExpandedCountyLocation[]
 }
 
 type CountySemanticContext = Pick<SemanticMembershipIndex, 'titles' | 'memberships'>
@@ -58,11 +69,13 @@ export function buildCountyInteractionIndex(
   const entryById = new Map(entries.map((entry) => [entry.id, entry]))
   const titleByCountyId = countyTitles(semantic.titles)
   const countyIdByBaronyId = new Map<string, string>()
+  const countyIdByLocationId = new Map<string, string>()
   const candidatesByCountyId = new Map<string, MapLocationSearchEntry[]>()
 
   for (const membership of semantic.memberships) {
     if (!membership.countyId) continue
     countyIdByBaronyId.set(membership.baronyId, membership.countyId)
+    countyIdByLocationId.set(membership.locationId, membership.countyId)
     const entry = entryById.get(membership.locationId)
     if (!entry) continue
     const candidates = candidatesByCountyId.get(membership.countyId) ?? []
@@ -76,12 +89,35 @@ export function buildCountyInteractionIndex(
     if (primary) primaryLocationByCountyId.set(countyId, primary.id)
   }
 
+  const locationIdByCountyId = new Map<string, readonly ExpandedCountyLocation[]>()
+  for (const [countyId, candidates] of candidatesByCountyId) {
+    const primaryLocationId = primaryLocationByCountyId.get(countyId)
+    if (!primaryLocationId) continue
+    locationIdByCountyId.set(countyId, [...candidates]
+      .sort((left, right) => {
+        if (left.id === primaryLocationId) return -1
+        if (right.id === primaryLocationId) return 1
+        return right.importance - left.importance
+          || LOCATION_TYPE_PRIORITY[right.type] - LOCATION_TYPE_PRIORITY[left.type]
+          || left.name.localeCompare(right.name, 'zh-CN')
+          || left.id.localeCompare(right.id)
+      })
+      .map((entry) => ({ ...entry, isPrimary: entry.id === primaryLocationId })))
+  }
+
   return {
     primaryLocationByCountyId,
     countyIdByBaronyId,
     primaryLocationForBarony(baronyId: string): string | undefined {
       const countyId = countyIdByBaronyId.get(baronyId)
       return countyId ? primaryLocationByCountyId.get(countyId) : undefined
+    },
+    selectedCountyForLocation(locationId: string): SelectedCountyLocations | undefined {
+      const countyId = countyIdByLocationId.get(locationId)
+      if (!countyId) return undefined
+      const primaryLocationId = primaryLocationByCountyId.get(countyId)
+      const locations = locationIdByCountyId.get(countyId)
+      return primaryLocationId && locations ? { countyId, primaryLocationId, locations } : undefined
     },
   }
 }

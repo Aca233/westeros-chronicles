@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { readFileSync } from 'node:fs'
+import { readFileSync, statSync } from 'node:fs'
 import test from 'node:test'
 
 import { buildCountyInteractionIndex } from '../src/features/map/countyInteraction.ts'
@@ -67,6 +67,19 @@ test('点击伯爵领内任意省份都解析到同一中心地点', () => {
   assert.equal(index.primaryLocationForBarony('b_missing'), undefined)
 })
 
+test('选择伯爵领中心后只展开该伯爵领内部地点并标记首府', () => {
+  const index = buildCountyInteractionIndex(entries, semantic)
+  const selected = index.selectedCountyForLocation('b_winterfell')
+  assert.equal(selected?.countyId, 'c_winterfell')
+  assert.equal(selected?.primaryLocationId, 'b_winterfell')
+  assert.deepEqual(selected?.locations.map((location) => location.id), [
+    'b_winterfell', 'b_winter_town', 'b_brandford',
+  ])
+  assert.deepEqual(selected?.locations.map((location) => location.isPrimary), [true, false, false])
+  assert.equal(index.selectedCountyForLocation('b_lonely_port')?.locations.length, 1)
+  assert.equal(index.selectedCountyForLocation('b_missing'), undefined)
+})
+
 test('地图不再渲染男爵领点并提供全伯爵领透明点击层', () => {
   const style = createLocalMapStyle(manifest)
   const serialized = JSON.stringify(style)
@@ -81,5 +94,15 @@ test('地图不再渲染男爵领点并提供全伯爵领透明点击层', () =>
   const canvas = readFileSync('src/features/map/MapCanvas.tsx', 'utf8')
   assert.match(canvas, /COUNTY_HIT_LAYER/)
   assert.match(canvas, /primaryLocationForBarony/)
+  assert.match(canvas, /syncSelectedCountyLocations/)
   assert.doesNotMatch(canvas, /LOCATION_(?:POINT|CLUSTER)_LAYER|zoomToCluster/)
+
+  const layers = readFileSync('src/features/map/mapLayers.ts', 'utf8')
+  assert.match(layers, /agot-selected-county-outline/)
+  assert.match(layers, /agot-selected-county-locations/)
+  assert.match(layers, /minzoom:\s*3\.5/)
+  assert.match(layers, /location-winterfell\.webp/)
+  for (const type of ['castle', 'city', 'town', 'village', 'port', 'ruin', 'landmark', 'region']) {
+    assert.ok(statSync(`public/assets/map-icons/location-${type}.webp`).size > 0, `缺少 ${type} 地点图标`)
+  }
 })

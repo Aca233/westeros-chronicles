@@ -4,6 +4,7 @@ import maplibregl, {
   type ErrorEvent as MapLibreErrorEvent,
   type GeoJSONSource,
   type MapLayerMouseEvent,
+  type MapMouseEvent,
   type Map as MapLibreMap,
 } from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
@@ -12,6 +13,7 @@ import { lngLatToMapPixel, mapPixelToLngLat } from './coordinates'
 import {
   applyPoliticalFeatureStates,
   applyMapMode,
+  addSelectedCountyLocationLayers,
   ASSET_POINT_LAYER,
   CHARACTER_POINT_LAYER,
   COUNTY_HIT_LAYER,
@@ -19,6 +21,9 @@ import {
   JOURNEY_POSITION_SOURCE,
   JOURNEY_PROGRESS_SOURCE,
   JOURNEY_ROUTE_SOURCE,
+  loadCountyLocationIcons,
+  SELECTED_COUNTY_LOCATION_LAYER,
+  syncSelectedCountyLocations,
   syncPoliticalHouseLabels,
   syncDynamicMapSubjects,
   type MapMode,
@@ -46,7 +51,7 @@ interface MapCanvasProps {
   manifest: MapManifest
   selectedLocationId: string | null
   initialViewport: MapViewport | null
-  onSelectLocation: (locationId: string) => void
+  onSelectLocation: (locationId: string | null) => void
   onViewportChange: (viewport: MapViewport) => void
   onWarning: (message: string | null) => void
   mode: MapMode
@@ -212,6 +217,7 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
   const dynamicRef = useRef({ characterPoints, assetPoints })
   const semanticRef = useRef<SemanticRuntimeContext | null>(null)
   const countyInteractionRef = useRef<CountyInteractionIndex | null>(null)
+  const selectedLocationRef = useRef(selectedLocationId)
   const reducedMotionRef = useRef(false)
 
   const refreshSemanticSubjects = useCallback((pixelBounds?: MapBounds): void => {
@@ -257,6 +263,16 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
   useEffect(() => {
     modeRef.current = mode
   }, [mode])
+
+  useEffect(() => {
+    selectedLocationRef.current = selectedLocationId
+    const map = mapRef.current
+    const index = countyInteractionRef.current
+    if (map?.isStyleLoaded() && index) {
+      syncSelectedCountyLocations(map, manifest, index, selectedLocationId)
+      applyMapMode(map, modeRef.current)
+    }
+  }, [manifest, selectedLocationId])
 
   useEffect(() => {
     routeRef.current = { routePlan, journey }
@@ -358,13 +374,29 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
       refreshPoliticalHouseLabels()
     }
     const handleCountyClick = (event: MapLayerMouseEvent) => {
-      const foregroundLayers = [CHARACTER_POINT_LAYER, ASSET_POINT_LAYER]
+      const foregroundLayers = [CHARACTER_POINT_LAYER, ASSET_POINT_LAYER, SELECTED_COUNTY_LOCATION_LAYER]
         .filter((layerId) => Boolean(map.getLayer(layerId)))
       if (foregroundLayers.length && map.queryRenderedFeatures(event.point, { layers: foregroundLayers }).length) return
       const baronyId = event.features?.[0]?.properties?.baronyId
       if (typeof baronyId !== 'string') return
       const locationId = countyInteractionRef.current?.primaryLocationForBarony(baronyId)
       if (locationId) callbacksRef.current.onSelectLocation(locationId)
+    }
+    const handleExpandedLocationClick = (event: MapLayerMouseEvent) => {
+      const locationId = event.features?.[0]?.properties?.id
+      if (typeof locationId === 'string') callbacksRef.current.onSelectLocation(locationId)
+    }
+    const handleBlankMapClick = (event: MapMouseEvent) => {
+      const interactiveLayers = [
+        COUNTY_HIT_LAYER,
+        SELECTED_COUNTY_LOCATION_LAYER,
+        CHARACTER_POINT_LAYER,
+        ASSET_POINT_LAYER,
+      ].filter((layerId) => Boolean(map.getLayer(layerId)))
+      if (!interactiveLayers.length) return
+      if (map.queryRenderedFeatures(event.point, { layers: interactiveLayers }).length === 0) {
+        callbacksRef.current.onSelectLocation(null)
+      }
     }
     const handleCharacterClick = (event: MapLayerMouseEvent) => {
       const characterId = event.features?.[0]?.properties?.characterId
@@ -382,10 +414,17 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
     map.on('error', handleMapError)
     map.on('moveend', handleMoveEnd)
     map.on('zoomend', handleZoomEnd)
+    map.on('click', handleBlankMapClick)
     map.on('click', COUNTY_HIT_LAYER, handleCountyClick)
     map.on('mouseenter', COUNTY_HIT_LAYER, showPointer)
     map.on('mouseleave', COUNTY_HIT_LAYER, clearPointer)
     const initializeLocationLayers = () => {
+      addSelectedCountyLocationLayers(map)
+      map.on('click', SELECTED_COUNTY_LOCATION_LAYER, handleExpandedLocationClick)
+      map.on('mouseenter', SELECTED_COUNTY_LOCATION_LAYER, showPointer)
+      map.on('mouseleave', SELECTED_COUNTY_LOCATION_LAYER, clearPointer)
+      const locationIconsReady = loadCountyLocationIcons(map)
+        .catch(() => callbacksRef.current.onWarning('伯爵领内部地点图标未能载入，其他地图内容不受影响'))
       applyPoliticalFeatureStates(map, politicalRef.current)
       syncJourneyLayers(map, manifest, routeRef.current.routePlan, routeRef.current.journey)
       applyMapMode(map, modeRef.current)
@@ -395,12 +434,13 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
       map.on('mouseleave', CHARACTER_POINT_LAYER, clearPointer)
       map.on('mouseenter', ASSET_POINT_LAYER, showPointer)
       map.on('mouseleave', ASSET_POINT_LAYER, clearPointer)
-      Promise.all([mapRepository.loadSearchIndex(), mapRepository.loadSemanticIndex()])
+      Promise.all([mapRepository.loadSearchIndex(), mapRepository.loadSemanticIndex(), locationIconsReady])
         .then(([entries, semantic]) => {
           if (mapRef.current !== map) return
           const primaryRank = semanticZoomState(map.getZoom()).primaryRank
           semanticRef.current = { ...semantic, primaryRank }
           countyInteractionRef.current = buildCountyInteractionIndex(entries, semantic)
+          syncSelectedCountyLocations(map, manifest, countyInteractionRef.current, selectedLocationRef.current)
           setSemanticInitializationError(false)
           applyMapMode(map, modeRef.current)
           refreshSemanticSubjects()
@@ -428,9 +468,13 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
       map.off('error', handleMapError)
       map.off('moveend', handleMoveEnd)
       map.off('zoomend', handleZoomEnd)
+      map.off('click', handleBlankMapClick)
       map.off('click', COUNTY_HIT_LAYER, handleCountyClick)
       map.off('mouseenter', COUNTY_HIT_LAYER, showPointer)
       map.off('mouseleave', COUNTY_HIT_LAYER, clearPointer)
+      map.off('click', SELECTED_COUNTY_LOCATION_LAYER, handleExpandedLocationClick)
+      map.off('mouseenter', SELECTED_COUNTY_LOCATION_LAYER, showPointer)
+      map.off('mouseleave', SELECTED_COUNTY_LOCATION_LAYER, clearPointer)
       map.off('click', CHARACTER_POINT_LAYER, handleCharacterClick)
       map.off('click', ASSET_POINT_LAYER, handleAssetClick)
       map.off('mouseenter', CHARACTER_POINT_LAYER, showPointer)

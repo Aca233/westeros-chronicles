@@ -139,6 +139,21 @@ export function createLocalMapStyle(manifest: MapManifest): StyleSpecification {
         },
       },
       {
+        id: 'agot-selected-county-outline',
+        type: 'line',
+        source: 'agot-semantic',
+        'source-layer': 'county_boundaries',
+        minzoom: 3.5,
+        filter: ['==', ['get', 'titleId'], ''],
+        layout: { visibility: 'none' },
+        paint: {
+          'line-color': '#f0d58a',
+          'line-opacity': 0.96,
+          'line-width': ['interpolate', ['linear'], ['zoom'], 3.5, 2.2, 6, 4.2],
+          'line-blur': 0.2,
+        },
+      },
+      {
         id: 'agot-roads',
         type: 'line',
         source: 'agot-vector',
