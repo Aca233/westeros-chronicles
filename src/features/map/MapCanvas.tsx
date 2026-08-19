@@ -34,6 +34,12 @@ import { semanticTitlesAffectedByChanges } from './semanticPoliticalLabels.ts'
 import { cameraAnimation, configureCk3Camera, createCk3MapOptions } from './cameraProfile.ts'
 import { semanticZoomState } from './semanticZoom.ts'
 import { mapRepository } from './repository'
+import {
+  createTerrainController,
+  type TerrainController,
+  type TerrainSyncInput,
+} from './terrainController.ts'
+import { TERRAIN_ENTER_ZOOM, terrainCameraProfile } from './terrainProfile.ts'
 import type {
   MapBounds,
   MapManifest,
@@ -54,7 +60,10 @@ interface MapCanvasProps {
   onSelectLocation: (locationId: string | null) => void
   onViewportChange: (viewport: MapViewport) => void
   onWarning: (message: string | null) => void
+  onTerrainAvailabilityChange: (available: boolean) => void
   mode: MapMode
+  topDownLocked: boolean
+  northResetRequestId: number
   routePlan?: RoutePlan | null
   journey?: ActiveJourney
   politicalStates?: readonly PoliticalFeatureState[]
@@ -198,7 +207,10 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
   onSelectLocation,
   onViewportChange,
   onWarning,
+  onTerrainAvailabilityChange,
   mode,
+  topDownLocked,
+  northResetRequestId,
   routePlan,
   journey,
   politicalStates = [],
@@ -210,7 +222,13 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
   const mapRef = useRef<MapLibreMap | null>(null)
   const [initializationError, setInitializationError] = useState(false)
   const [semanticInitializationError, setSemanticInitializationError] = useState(false)
-  const callbacksRef = useRef({ onSelectLocation, onSelectCharacter, onViewportChange, onWarning })
+  const callbacksRef = useRef({
+    onSelectLocation,
+    onSelectCharacter,
+    onViewportChange,
+    onWarning,
+    onTerrainAvailabilityChange,
+  })
   const modeRef = useRef(mode)
   const routeRef = useRef({ routePlan, journey })
   const politicalRef = useRef<readonly PoliticalFeatureState[]>(politicalStates)
@@ -219,6 +237,23 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
   const countyInteractionRef = useRef<CountyInteractionIndex | null>(null)
   const selectedLocationRef = useRef(selectedLocationId)
   const reducedMotionRef = useRef(false)
+  const terrainControllerRef = useRef<TerrainController | null>(null)
+  const topDownLockedRef = useRef(topDownLocked)
+  const terrainAvailableRef = useRef(true)
+
+  const terrainInput = (): TerrainSyncInput => ({
+    mode: modeRef.current,
+    topDownLocked: topDownLockedRef.current,
+    reducedMotion: reducedMotionRef.current,
+  })
+
+  const targetTerrainPitch = (zoom: number): number => terrainCameraProfile({
+    zoom,
+    mode: modeRef.current,
+    topDownLocked: topDownLockedRef.current,
+    available: terrainAvailableRef.current,
+    terrainWasEnabled: zoom >= TERRAIN_ENTER_ZOOM,
+  }).pitch
 
   const refreshSemanticSubjects = useCallback((pixelBounds?: MapBounds): void => {
     const map = mapRef.current
@@ -257,12 +292,28 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
   }, [manifest])
 
   useEffect(() => {
-    callbacksRef.current = { onSelectLocation, onSelectCharacter, onViewportChange, onWarning }
-  }, [onSelectCharacter, onSelectLocation, onViewportChange, onWarning])
+    callbacksRef.current = {
+      onSelectLocation,
+      onSelectCharacter,
+      onViewportChange,
+      onWarning,
+      onTerrainAvailabilityChange,
+    }
+  }, [onSelectCharacter, onSelectLocation, onTerrainAvailabilityChange, onViewportChange, onWarning])
 
   useEffect(() => {
     modeRef.current = mode
+    terrainControllerRef.current?.requestSync(terrainInput(), true)
   }, [mode])
+
+  useEffect(() => {
+    topDownLockedRef.current = topDownLocked
+    terrainControllerRef.current?.requestSync(terrainInput(), true)
+  }, [topDownLocked])
+
+  useEffect(() => {
+    if (northResetRequestId > 0) terrainControllerRef.current?.resetNorth(terrainInput())
+  }, [northResetRequestId])
 
   useEffect(() => {
     selectedLocationRef.current = selectedLocationId
@@ -313,7 +364,8 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
       reducedMotionRef.current = event.matches
       if (mapRef.current) {
         cameraCleanup()
-        cameraCleanup = configureCk3Camera(mapRef.current, event.matches)
+        cameraCleanup = configureCk3Camera(mapRef.current, event.matches, targetTerrainPitch)
+        terrainControllerRef.current?.requestSync(terrainInput(), true)
       }
     }
     mediaQuery.addEventListener('change', handleReducedMotionChange)
@@ -344,12 +396,18 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
     }
     setInitializationError(false)
     mapRef.current = map
-    cameraCleanup = configureCk3Camera(map, reducedMotionRef.current)
+    cameraCleanup = configureCk3Camera(map, reducedMotionRef.current, targetTerrainPitch)
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'bottom-right')
     map.addControl(new maplibregl.AttributionControl({ compact: true }), 'bottom-left')
 
     const handleMapError = (event: MapLibreErrorEvent) => {
-      if (/404|not found/i.test(event.error.message)) return
+      const terrainEvent = event as MapLibreErrorEvent & { sourceId?: string }
+      const message = event.error?.message ?? ''
+      if (terrainEvent.sourceId === 'agot-dem' || /agot-dem|terrain(?:-rgb)?\s+(?:decode|tile)/i.test(message)) {
+        terrainControllerRef.current?.disable('DEM 地形不可用')
+        return
+      }
+      if (/404|not found/i.test(message)) return
       callbacksRef.current.onWarning('部分地图图块未能载入，可继续浏览其他区域')
     }
     const handleMoveEnd = () => {
@@ -410,6 +468,8 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
     }
     const showPointer = () => { map.getCanvas().style.cursor = 'pointer' }
     const clearPointer = () => { map.getCanvas().style.cursor = '' }
+    let terrainController: TerrainController | null = null
+    const handleTerrainZoom = () => terrainController?.requestSync(terrainInput(), true)
 
     map.on('error', handleMapError)
     map.on('moveend', handleMoveEnd)
@@ -419,6 +479,15 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
     map.on('mouseenter', COUNTY_HIT_LAYER, showPointer)
     map.on('mouseleave', COUNTY_HIT_LAYER, clearPointer)
     const initializeLocationLayers = () => {
+      const handleTerrainUnavailable = () => {
+        terrainAvailableRef.current = false
+        callbacksRef.current.onTerrainAvailabilityChange(false)
+        callbacksRef.current.onWarning('当前使用二维地图')
+      }
+      terrainController = createTerrainController(map, { onUnavailable: handleTerrainUnavailable })
+      terrainControllerRef.current = terrainController
+      map.on('zoom', handleTerrainZoom)
+      terrainController.syncNow(terrainInput(), true)
       addSelectedCountyLocationLayers(map)
       map.on('click', SELECTED_COUNTY_LOCATION_LAYER, handleExpandedLocationClick)
       map.on('mouseenter', SELECTED_COUNTY_LOCATION_LAYER, showPointer)
@@ -466,6 +535,7 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
       mediaQuery.removeEventListener('change', handleReducedMotionChange)
       cameraCleanup()
       map.off('error', handleMapError)
+      map.off('zoom', handleTerrainZoom)
       map.off('moveend', handleMoveEnd)
       map.off('zoomend', handleZoomEnd)
       map.off('click', handleBlankMapClick)
@@ -482,6 +552,8 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
       map.off('mouseenter', ASSET_POINT_LAYER, showPointer)
       map.off('mouseleave', ASSET_POINT_LAYER, clearPointer)
       map.off('load', initializeLocationLayers)
+      if (terrainController) terrainController.destroy()
+      terrainControllerRef.current = null
       map.stop()
       map.remove()
       mapRef.current = null
@@ -505,9 +577,18 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
       .then((location) => {
         if (cancelled || !mapRef.current) return
         callbacksRef.current.onWarning(null)
+        const targetZoom = 4.8
+        const profile = terrainCameraProfile({
+          zoom: targetZoom,
+          mode: modeRef.current,
+          topDownLocked: topDownLockedRef.current,
+          available: terrainAvailableRef.current,
+          terrainWasEnabled: targetZoom >= TERRAIN_ENTER_ZOOM,
+        })
         mapRef.current.flyTo({
           center: mapPixelToLngLat(location, manifest),
-          zoom: 4.8,
+          zoom: targetZoom,
+          pitch: profile.pitch,
           ...cameraAnimation(reducedMotionRef.current, 'search'),
         })
       })

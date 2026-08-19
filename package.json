@@ -81,6 +81,7 @@
     "test:map-terrain-profile": "node --experimental-strip-types scripts/test-map-terrain-profile.mjs",
     "test:map-terrain-controller": "node --experimental-strip-types scripts/test-map-terrain-controller.mjs",
     "test:map-terrain-ui": "node --experimental-strip-types scripts/test-map-terrain-ui.mjs",
+    "test:map-terrain-integration": "node --experimental-strip-types scripts/test-map-terrain-integration.mjs",
     "test:map-narrative-context": "node --experimental-strip-types scripts/test-map-narrative-context.mjs",
     "test:map-semantic-layers": "node --experimental-strip-types scripts/test-map-semantic-layers.mjs",
     "test:map-county-interaction": "node --experimental-strip-types scripts/test-map-county-interaction.mjs",

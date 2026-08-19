@@ -37,6 +37,7 @@ export const MapDrawer: React.FC<MapDrawerProps> = ({ onSelectCharacter }) => {
   const lastViewport = useMapUiStore((state) => state.lastViewport)
   const mapMode = useMapUiStore((state) => state.mapMode)
   const topDownLocked = useMapUiStore((state) => state.topDownLocked)
+  const northResetRequestId = useMapUiStore((state) => state.northResetRequestId)
   const routePreview = useMapUiStore((state) => state.routePreview)
   const closeDrawer = useMapUiStore((state) => state.closeDrawer)
   const selectLocation = useMapUiStore((state) => state.selectLocation)
@@ -48,7 +49,7 @@ export const MapDrawer: React.FC<MapDrawerProps> = ({ onSelectCharacter }) => {
   const [loadError, setLoadError] = useState(false)
   const [warning, setWarning] = useState<string | null>(null)
   const [reloadKey, setReloadKey] = useState(0)
-  const [terrainAvailable] = useState(true)
+  const [terrainAvailable, setTerrainAvailable] = useState(true)
   const [mapLocations, setMapLocations] = useState<MapLocationSearchEntry[]>([])
   const [dynamicCharacterNames, setDynamicCharacterNames] = useState<Map<string, string>>(new Map())
   const [politicalSource, setPoliticalSource] = useState<{
@@ -103,9 +104,15 @@ export const MapDrawer: React.FC<MapDrawerProps> = ({ onSelectCharacter }) => {
 
   useEffect(() => {
     if (activeDrawer !== 'map') return
+    setTerrainAvailable(true)
+  }, [activeDrawer, reloadKey])
+
+  useEffect(() => {
+    if (activeDrawer !== 'map') return
     let cancelled = false
     setLoadError(false)
     setWarning(null)
+    setTerrainAvailable(true)
     mapRepository.loadManifest()
       .then((loadedManifest) => {
         if (!cancelled) setManifest(loadedManifest)
@@ -214,7 +221,10 @@ export const MapDrawer: React.FC<MapDrawerProps> = ({ onSelectCharacter }) => {
                 onSelectCharacter={onSelectCharacter}
                 onViewportChange={rememberViewport}
                 onWarning={setWarning}
+                onTerrainAvailabilityChange={setTerrainAvailable}
                 mode={mapMode}
+                topDownLocked={topDownLocked}
+                northResetRequestId={northResetRequestId}
                 routePlan={displayedRoute}
                 journey={activeJourney?.routePlan.id === displayedRoute?.id ? activeJourney : undefined}
                 politicalStates={politicalStates}
