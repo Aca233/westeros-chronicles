@@ -3,6 +3,7 @@ from __future__ import annotations
 import shutil
 import tempfile
 import unittest
+from unittest import mock
 import os
 import json
 from dataclasses import replace
@@ -12,14 +13,16 @@ import numpy as np
 from pathlib import Path
 
 from PIL import Image
-from shapely.geometry import box, mapping
+from shapely.geometry import Point, box, mapping
 
 from scripts.agot_map_import.dem import build_dem_tiles, encode_terrain_rgb
-from scripts.agot_map_import.audit import audit_map_records
+from scripts.agot_map_import.audit import audit_map_records, audit_semantic_records
 from scripts.agot_map_import.geometry import extract_province_geometry
 from scripts.agot_map_import.locations import build_locations
 from scripts.agot_map_import.models import (
-    MapImportError, MapLocationRecord, ProvinceGeometry, RegionDefinition, TitleAncestors,
+    MapImportError, MapLocationRecord, ProvinceGeometry, RegionDefinition,
+    SemanticBoundaryRecord, SemanticDataset, SemanticMembershipRecord, SemanticTitleRecord,
+    TitleAncestors,
 )
 from scripts.agot_map_import.regions import expand_region, parse_regions
 from scripts.agot_map_import.province_history import holding_to_location_type, parse_province_holdings
@@ -27,8 +30,8 @@ from scripts.agot_map_import.routes import build_route_graph
 from scripts.agot_map_import.source import MapSource, parse_definition
 from scripts.agot_map_import.semantic import build_semantic_dataset
 from scripts.agot_map_import.titles import TitleIndex, parse_title_hierarchy
-from scripts.agot_map_import.tiles import build_terrain_tiles, build_vector_tiles
-from scripts.agot_map_import.writer import write_map_dataset
+from scripts.agot_map_import.tiles import build_semantic_tiles, build_terrain_tiles, build_vector_tiles
+from scripts.agot_map_import.writer import publish_map_pair, write_map_dataset
 from scripts.agot_map_import.cli import main as map_import_main
 
 
@@ -391,6 +394,73 @@ class RouteGraphTests(unittest.TestCase):
         self.assertEqual(list(first.edges), sorted(first.edges, key=lambda edge: edge.id))
 
 
+def semantic_fixture(location_ids: tuple[str, ...] = ("b_one", "b_two", "b_three")) -> SemanticDataset:
+    geometry = box(0, 0, 14, 4)
+    anchor = Point(7, 2)
+    ranks = (("realm", "the_fixture", 100), ("duchy", "d_fixture", 80), ("county", "c_fixture", 60))
+    boundaries = tuple(
+        SemanticBoundaryRecord(index, title_id, rank, f"{title_id}中文", "the_fixture", None, geometry)
+        for index, (rank, title_id, _importance) in enumerate(ranks, 1)
+    )
+    titles = tuple(
+        SemanticTitleRecord(
+            index, title_id, rank, f"{title_id}中文", 7.0, 2.0, importance,
+            "the_fixture", None, geometry, anchor,
+        )
+        for index, (rank, title_id, importance) in enumerate(ranks, 1)
+    )
+    memberships = tuple(
+        SemanticMembershipRecord(location_id, location_id, "c_fixture", "d_fixture", "the_fixture")
+        for location_id in sorted(location_ids)
+    )
+    return SemanticDataset(boundaries, titles, memberships, ())
+
+
+class SemanticAuditTests(unittest.TestCase):
+    @staticmethod
+    def _locations(location_ids: tuple[str, ...] = ("b_one", "b_two", "b_three")) -> list[MapLocationRecord]:
+        return [
+            MapLocationRecord(
+                id=location_id, name=location_id, english_name=None, type="castle",
+                map_x=index, map_y=2, province_id=index, barony_id=location_id,
+                county_id="c_fixture", duchy_id="d_fixture", kingdom_id=None,
+                region_id="the_fixture", terrain="plains", is_coastal=False,
+                is_port=False, importance=20, tags=(),
+            )
+            for index, location_id in enumerate(location_ids, 1)
+        ]
+
+    def test_rejects_duplicate_feature_id(self) -> None:
+        dataset = semantic_fixture()
+        duplicate = replace(dataset.boundaries[1], feature_id=dataset.boundaries[0].feature_id)
+        invalid = replace(dataset, boundaries=(dataset.boundaries[0], duplicate, *dataset.boundaries[2:]))
+        with self.assertRaisesRegex(MapImportError, "feature ID 重复"):
+            audit_semantic_records(invalid, self._locations(), (0, 0, 14, 4))
+
+    def test_rejects_dangling_membership_title(self) -> None:
+        dataset = semantic_fixture()
+        dangling = replace(dataset.memberships[0], county_id="c_missing")
+        invalid = replace(dataset, memberships=(dangling, *dataset.memberships[1:]))
+        with self.assertRaisesRegex(MapImportError, "membership 引用不存在：county:c_missing"):
+            audit_semantic_records(invalid, self._locations(), (0, 0, 14, 4))
+
+    def test_rejects_label_anchor_outside_boundary(self) -> None:
+        dataset = semantic_fixture()
+        outside = replace(dataset.titles[0], anchor=Point(20, 20))
+        invalid = replace(dataset, titles=(outside, *dataset.titles[1:]))
+        with self.assertRaisesRegex(MapImportError, "标题中心不在边界内"):
+            audit_semantic_records(invalid, self._locations(), (0, 0, 14, 4))
+
+    def test_rejects_missing_visible_rank(self) -> None:
+        dataset = semantic_fixture()
+        invalid = replace(
+            dataset,
+            boundaries=tuple(boundary for boundary in dataset.boundaries if boundary.rank != "county"),
+        )
+        with self.assertRaisesRegex(MapImportError, "缺少 county 层"):
+            audit_semantic_records(invalid, self._locations(), (0, 0, 14, 4))
+
+
 class TileBuilderTests(unittest.TestCase):
     def setUp(self) -> None:
         self.temp_dir = tempfile.TemporaryDirectory(prefix="agot-map-", dir=FAST_TMP_ROOT)
@@ -425,6 +495,18 @@ class TileBuilderTests(unittest.TestCase):
         self.assertEqual(report.tile_count, 1)
         self.assertEqual(set(decoded), set(layer_names))
         self.assertTrue(all(decoded[name]["extent"] == 4096 for name in layer_names))
+
+    def test_semantic_tile_contains_only_three_visible_ranks_and_title_labels(self) -> None:
+        report = build_semantic_tiles(
+            semantic_fixture(), (0, 0, 14, 4), self.root / "semantic", (0,), tile_size=512,
+        )
+        tile = self.root / "semantic/0/0/0.pbf"
+        decoded = mapbox_vector_tile.decode(tile.read_bytes(), default_options={"y_coord_down": True})
+        self.assertEqual(set(decoded), {
+            "realm_boundaries", "duchy_boundaries", "county_boundaries", "title_labels",
+        })
+        self.assertNotIn("barony_boundaries", decoded)
+        self.assertEqual(report.kind, "semantic")
 
     def test_terrain_rgb_formula_is_reversible_with_point_one_precision(self) -> None:
         heights = np.asarray([[0.0, 100.0, 1000.0]], dtype=np.float64)
@@ -475,6 +557,9 @@ class MapWriterTests(unittest.TestCase):
             route_tests.rivers,
             set(),
         )
+        self.semantic = semantic_fixture(tuple(location.id for location in self.locations))
+        self.semantic_tiles = self.root / "semantic-tiles"
+        build_semantic_tiles(self.semantic, (0, 0, 14, 4), self.semantic_tiles, (0,))
 
     def tearDown(self) -> None:
         self.temp_dir.cleanup()
@@ -489,7 +574,9 @@ class MapWriterTests(unittest.TestCase):
             source_hashes={"map_data/provinces.png": "a" * 64},
             map_size=(9216, 6144),
             westeros_bounds=(0, 0, 14, 4),
-            tile_counts={"terrain": 1, "vector": 1, "dem": 1},
+            tile_counts={"terrain": 1, "vector": 1, "dem": 1, "semantic": 1},
+            semantic=self.semantic,
+            semantic_tile_root=self.semantic_tiles,
             min_zoom=0,
             max_zoom=6,
         )
@@ -507,6 +594,16 @@ class MapWriterTests(unittest.TestCase):
         self.assertNotIn("/mnt/c/agot/2962333032", serialized)
         self.assertNotIn("http://", serialized)
 
+        self.assertEqual(first["schemaVersion"], 2)
+        self.assertEqual(first["paths"]["semantic"], "/assets/agot-map/semantic/{z}/{x}/{y}.pbf")
+        self.assertEqual(first["counts"]["semanticRealms"], 1)
+        self.assertEqual(first["counts"]["semanticDuchies"], 1)
+        self.assertEqual(first["counts"]["semanticCounties"], 1)
+        self.assertEqual(first["counts"]["semanticLabels"], 3)
+        self.assertRegex(first["semanticHash"], r"^[a-f0-9]{64}$")
+        self.assertTrue((self.root / "first/semantic/titles.json").is_file())
+        self.assertTrue((self.root / "first/semantic/membership.json").is_file())
+
     def test_audit_rejects_dangling_route_and_preserves_previous_output(self) -> None:
         output = self.root / "published"
         output.mkdir()
@@ -516,6 +613,29 @@ class MapWriterTests(unittest.TestCase):
         with self.assertRaisesRegex(MapImportError, "路线端点"):
             audit_map_records(self.locations, broken_graph, (9216, 6144), (0, 0, 14, 4))
         self.assertEqual((output / "marker.txt").read_text(encoding="utf-8"), "old")
+
+
+    def test_pair_publication_restores_both_previous_roots_when_asset_swap_fails(self) -> None:
+        data_output, asset_output = self.root / "published-data", self.root / "published-assets"
+        data_output.mkdir(); asset_output.mkdir()
+        (data_output / "marker.txt").write_text("old-data")
+        (asset_output / "marker.txt").write_text("old-assets")
+        data_stage, asset_stage = self.root / "new-data", self.root / "new-assets"
+        data_stage.mkdir(); asset_stage.mkdir()
+        (data_stage / "marker.txt").write_text("new-data")
+        (asset_stage / "marker.txt").write_text("new-assets")
+        real_replace = os.replace
+
+        def fail_asset_swap(source, target):
+            if Path(source) == asset_stage:
+                raise OSError("asset swap failed")
+            return real_replace(source, target)
+
+        with mock.patch("scripts.agot_map_import.writer.os.replace", side_effect=fail_asset_swap):
+            with self.assertRaisesRegex(OSError, "asset swap failed"):
+                publish_map_pair(data_stage, data_output, asset_stage, asset_output)
+        self.assertEqual((data_output / "marker.txt").read_text(), "old-data")
+        self.assertEqual((asset_output / "marker.txt").read_text(), "old-assets")
 
 
 class MapCliTests(unittest.TestCase):
@@ -546,7 +666,12 @@ class MapCliTests(unittest.TestCase):
             self.assertEqual(result, 0)
             manifest = json.loads((data_output / "manifest.json").read_text())
             self.assertEqual(manifest["counts"]["locations"], 2)
+            self.assertEqual(manifest["schemaVersion"], 2)
             self.assertEqual(manifest["counts"]["terrainTiles"], 0)
+            self.assertEqual(manifest["counts"]["semanticTiles"], 0)
+            self.assertGreater(manifest["counts"]["semanticCounties"], 0)
+            self.assertTrue((data_output / "semantic/titles.json").is_file())
+            self.assertTrue((data_output / "reports/semantic.json").is_file())
             self.assertTrue((data_output / "reports/audit.json").is_file())
 
 

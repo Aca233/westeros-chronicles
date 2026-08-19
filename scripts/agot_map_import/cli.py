@@ -20,10 +20,11 @@ from .models import MapImportError, MapLocationRecord, ProvinceGeometry
 from .province_history import holding_to_location_type, parse_province_holdings
 from .regions import expand_region, parse_regions
 from .routes import build_route_graph, parse_adjacencies
+from .semantic import build_semantic_dataset
 from .source import MapSource, parse_definition
-from .tiles import _atomic_publish, _staging_directory, build_terrain_tiles, build_vector_tiles
+from .tiles import _staging_directory, build_semantic_tiles, build_terrain_tiles, build_vector_tiles
 from .titles import TitleIndex, parse_title_hierarchy
-from .writer import write_map_dataset
+from .writer import publish_map_pair, stage_map_dataset
 
 
 RANGE_PATTERN = re.compile(r"^\s*{key}\s*=\s*RANGE\s*\{{\s*(\d+)\s+(\d+)\s*\}}", re.MULTILINE)
@@ -208,26 +209,10 @@ def build_map(args: argparse.Namespace) -> dict[str, object]:
         source.default_files["rivers"], impassable,
     )
 
-    asset_stage = _staging_directory(args.asset_output)
-    try:
-        if args.skip_tiles:
-            tile_counts = {"terrain": 0, "vector": 0, "dem": 0}
-        else:
-            raster_zooms = range(0, args.max_raster_zoom + 1)
-            vector_zooms = range(0, args.max_vector_zoom + 1)
-            terrain = build_terrain_tiles(
-                source.root / "gfx/map/terrain/flat_maps/flatmap.dds",
-                bounds, asset_stage / "terrain", raster_zooms, args.tile_size,
-            )
-            vector = build_vector_tiles(_vector_layers(geometries, locations, route_graph), bounds, asset_stage / "vector", vector_zooms)
-            dem = build_dem_tiles(source.heightmap, bounds, asset_stage / "dem", raster_zooms, args.tile_size)
-            tile_counts = {"terrain": terrain.tile_count, "vector": vector.tile_count, "dem": dem.tile_count}
-        _atomic_publish(asset_stage, args.asset_output)
-    except Exception:
-        if asset_stage.exists():
-            shutil.rmtree(asset_stage)
-        raise
-
+    anchors = json.loads(Path(__file__).with_name("semantic_anchors.json").read_text(encoding="utf-8"))
+    semantic = build_semantic_dataset(
+        geometries, locations, titles, region_definitions, localization, anchors,
+    )
     political = [{
         "baronyId": location.id,
         "provinceId": location.province_id,
@@ -235,19 +220,54 @@ def build_map(args: argparse.Namespace) -> dict[str, object]:
         "duchyId": location.duchy_id,
         "kingdomId": location.kingdom_id,
     } for location in locations]
-    return write_map_dataset(
-        output=args.data_output,
-        locations=locations,
-        route_graph=route_graph,
-        regions=region_records,
-        political=political,
-        source_hashes=_source_hashes(source),
-        map_size=source.map_size,
-        westeros_bounds=bounds,
-        tile_counts=tile_counts,
-        min_zoom=0,
-        max_zoom=args.max_vector_zoom,
-    )
+
+    asset_stage = _staging_directory(args.asset_output)
+    data_stage = _staging_directory(args.data_output)
+    try:
+        if args.skip_tiles:
+            tile_counts = {"terrain": 0, "vector": 0, "dem": 0, "semantic": 0}
+        else:
+            raster_zooms = range(0, args.max_raster_zoom + 1)
+            vector_zooms = range(0, args.max_vector_zoom + 1)
+            terrain = build_terrain_tiles(
+                source.root / "gfx/map/terrain/flat_maps/flatmap.dds",
+                bounds, asset_stage / "terrain", raster_zooms, args.tile_size,
+            )
+            vector = build_vector_tiles(
+                _vector_layers(geometries, locations, route_graph),
+                bounds, asset_stage / "vector", vector_zooms,
+            )
+            dem = build_dem_tiles(source.heightmap, bounds, asset_stage / "dem", raster_zooms, args.tile_size)
+            semantic_tiles = build_semantic_tiles(
+                semantic, bounds, asset_stage / "semantic", vector_zooms, args.tile_size,
+            )
+            tile_counts = {
+                "terrain": terrain.tile_count, "vector": vector.tile_count,
+                "dem": dem.tile_count, "semantic": semantic_tiles.tile_count,
+            }
+        manifest = stage_map_dataset(
+            output=data_stage,
+            locations=locations,
+            route_graph=route_graph,
+            regions=region_records,
+            political=political,
+            source_hashes=_source_hashes(source),
+            map_size=source.map_size,
+            westeros_bounds=bounds,
+            tile_counts=tile_counts,
+            semantic=semantic,
+            semantic_tile_root=asset_stage / "semantic",
+            min_zoom=0,
+            max_zoom=args.max_vector_zoom,
+        )
+        publish_map_pair(data_stage, args.data_output, asset_stage, args.asset_output)
+        return manifest
+    except Exception:
+        if data_stage.exists():
+            shutil.rmtree(data_stage)
+        if asset_stage.exists():
+            shutil.rmtree(asset_stage)
+        raise
 
 
 def parser() -> argparse.ArgumentParser:

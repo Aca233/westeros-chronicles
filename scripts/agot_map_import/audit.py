@@ -61,3 +61,68 @@ def audit_map_records(
         "ports": sum(location.is_port for location in locations),
         "regions": len({location.region_id for location in locations}),
     }
+
+
+def audit_semantic_records(
+    dataset,
+    locations: Sequence[MapLocationRecord],
+    westeros_bounds: tuple[float, float, float, float],
+) -> dict[str, object]:
+    ranks = ("realm", "duchy", "county")
+    rank_counts = Counter(boundary.rank for boundary in dataset.boundaries)
+    for rank in ranks:
+        if rank_counts[rank] <= 0:
+            raise MapImportError(f"语义地图缺少 {rank} 层")
+    if set(rank_counts) - set(ranks):
+        raise MapImportError(f"语义地图包含不可见层级：{sorted(set(rank_counts) - set(ranks))}")
+
+    feature_ids = [boundary.feature_id for boundary in dataset.boundaries]
+    duplicate_features = sorted(identifier for identifier, count in Counter(feature_ids).items() if count > 1)
+    if duplicate_features:
+        raise MapImportError(f"语义 feature ID 重复：{duplicate_features[:10]}")
+    keys = [(boundary.rank, boundary.title_id) for boundary in dataset.boundaries]
+    duplicate_keys = sorted(identifier for identifier, count in Counter(keys).items() if count > 1)
+    if duplicate_keys:
+        raise MapImportError(f"语义领地重复：{duplicate_keys[:10]}")
+
+    min_x, min_y, max_x, max_y = westeros_bounds
+    by_key = {(boundary.rank, boundary.title_id): boundary for boundary in dataset.boundaries}
+    boundary_by_feature = {boundary.feature_id: boundary for boundary in dataset.boundaries}
+    for boundary in dataset.boundaries:
+        geom_min_x, geom_min_y, geom_max_x, geom_max_y = boundary.geometry.bounds
+        if geom_min_x < min_x or geom_min_y < min_y or geom_max_x > max_x or geom_max_y > max_y:
+            raise MapImportError(f"语义领地越出维斯特洛范围：{boundary.title_id}")
+    for title in dataset.titles:
+        boundary = boundary_by_feature.get(title.feature_id)
+        if boundary is None or (boundary.rank, boundary.title_id) != (title.rank, title.title_id):
+            raise MapImportError(f"语义标题没有对应边界：{title.title_id}")
+        if not boundary.geometry.covers(title.anchor):
+            raise MapImportError(f"语义标题中心不在边界内：{title.title_id}")
+
+    location_by_id = {location.id: location for location in locations}
+    membership_ids = [item.location_id for item in dataset.memberships]
+    duplicate_memberships = sorted(identifier for identifier, count in Counter(membership_ids).items() if count > 1)
+    if duplicate_memberships:
+        raise MapImportError(f"语义 membership 重复：{duplicate_memberships[:10]}")
+    for membership in dataset.memberships:
+        location = location_by_id.get(membership.location_id)
+        if location is None:
+            raise MapImportError(f"语义 membership 地点不存在：{membership.location_id}")
+        if location.barony_id != membership.barony_id:
+            raise MapImportError(f"语义 membership 内部地点键不一致：{membership.location_id}")
+        for rank, title_id in (
+            ("county", membership.county_id),
+            ("duchy", membership.duchy_id),
+            ("realm", membership.realm_id),
+        ):
+            if (rank, title_id) not in by_key:
+                raise MapImportError(f"语义 membership 引用不存在：{rank}:{title_id}")
+
+    return {
+        "realms": rank_counts["realm"],
+        "duchies": rank_counts["duchy"],
+        "counties": rank_counts["county"],
+        "labels": len(dataset.titles),
+        "memberships": len(dataset.memberships),
+        "missingLocalizations": len(dataset.missing_localizations),
+    }

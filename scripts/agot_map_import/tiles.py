@@ -15,7 +15,7 @@ from shapely.geometry import box, mapping, shape
 from shapely.geometry.base import BaseGeometry
 from shapely.strtree import STRtree
 
-from .models import MapImportError, TileReport
+from .models import MapImportError, SemanticDataset, TileReport
 
 
 MapBoundsTuple = tuple[float, float, float, float]
@@ -217,3 +217,71 @@ def build_vector_tiles(
             shutil.rmtree(staging)
         raise
     return TileReport("vector", len(files), zoom_values[0], zoom_values[-1], tuple(files))
+
+
+SEMANTIC_LAYER_BY_RANK = {
+    "realm": "realm_boundaries",
+    "duchy": "duchy_boundaries",
+    "county": "county_boundaries",
+}
+
+
+def semantic_vector_layers(dataset: SemanticDataset) -> dict[str, list[dict[str, object]]]:
+    layers: dict[str, list[dict[str, object]]] = {
+        "realm_boundaries": [],
+        "duchy_boundaries": [],
+        "county_boundaries": [],
+        "title_labels": [],
+    }
+    for boundary in dataset.boundaries:
+        properties: dict[str, object] = {
+            "featureId": boundary.feature_id,
+            "titleId": boundary.title_id,
+            "rank": boundary.rank,
+            "name": boundary.name or "",
+            "regionId": boundary.region_id,
+        }
+        if boundary.political_anchor_title_id:
+            properties["politicalAnchorTitleId"] = boundary.political_anchor_title_id
+        layers[SEMANTIC_LAYER_BY_RANK[boundary.rank]].append({
+            "id": boundary.feature_id,
+            "geometry": mapping(boundary.geometry.boundary),
+            "properties": properties,
+        })
+    for title in dataset.titles:
+        properties = {
+            "featureId": title.feature_id,
+            "titleId": title.title_id,
+            "rank": title.rank,
+            "name": title.name,
+            "regionId": title.region_id,
+            "importance": title.importance,
+        }
+        if title.political_anchor_title_id:
+            properties["politicalAnchorTitleId"] = title.political_anchor_title_id
+        layers["title_labels"].append({
+            "id": title.feature_id,
+            "geometry": mapping(title.anchor),
+            "properties": properties,
+        })
+    return layers
+
+
+def build_semantic_tiles(
+    dataset: SemanticDataset,
+    bounds: MapBoundsTuple,
+    output: Path,
+    zooms: Iterable[int],
+    tile_size: int = 512,
+) -> TileReport:
+    if tile_size <= 0:
+        raise MapImportError("语义瓦片尺寸必须大于零")
+    report = build_vector_tiles(semantic_vector_layers(dataset), bounds, output, zooms)
+    for relative in report.files:
+        try:
+            decoded = mapbox_vector_tile.decode((output / relative).read_bytes())
+        except Exception as error:
+            raise MapImportError(f"语义瓦片无法解码：{relative}") from error
+        if "barony_boundaries" in decoded:
+            raise MapImportError(f"语义瓦片不得包含男爵领层：{relative}")
+    return TileReport("semantic", report.tile_count, report.min_zoom, report.max_zoom, report.files)
