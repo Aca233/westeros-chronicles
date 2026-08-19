@@ -11,6 +11,7 @@ export type MapLocationType =
 export type TravelMode = 'walk' | 'horse' | 'carriage' | 'ship'
 export type RoutePreference = 'fastest' | 'safest' | 'cheapest'
 export type KnowledgeLevel = 'confirmed' | 'rumored' | 'stale' | 'unknown'
+export type SemanticRank = 'realm' | 'duchy' | 'county'
 
 export interface WorldLocationRef {
   locationId: string
@@ -27,6 +28,31 @@ export interface MapBounds {
   minY: number
   maxX: number
   maxY: number
+}
+
+export interface SemanticTitle extends MapPixelPoint {
+  featureId: number
+  titleId: string
+  rank: SemanticRank
+  name: string
+  importance: number
+  regionId: string
+  politicalAnchorTitleId?: string
+}
+
+export interface SemanticMembership {
+  locationId: string
+  baronyId: string
+  countyId?: string
+  duchyId?: string
+  realmId: string
+}
+
+export interface SemanticMembershipIndex {
+  titles: readonly SemanticTitle[]
+  memberships: readonly SemanticMembership[]
+  byLocationId: ReadonlyMap<string, SemanticMembership>
+  titleById: ReadonlyMap<string, SemanticTitle>
 }
 
 export interface MapLocation extends MapPixelPoint {
@@ -88,7 +114,7 @@ export interface MapRouteShard {
 }
 
 export interface MapManifest {
-  schemaVersion: 1
+  schemaVersion: 2
   sourceId: string
   sourceHashes: Record<string, string>
   mapSize: {
@@ -103,9 +129,12 @@ export interface MapManifest {
     terrain: string
     vector: string
     dem: string
+    semantic: string
     locations: string
     routes: string
     searchIndex: string
+    semanticTitles: string
+    semanticMembership: string
   }
   counts: {
     regions: number
@@ -115,6 +144,13 @@ export interface MapManifest {
     terrainTiles: number
     vectorTiles: number
     demTiles: number
+    semanticTiles: number
+    semanticRealms: number
+    semanticDuchies: number
+    semanticCounties: number
+    semanticLabels: number
+    missingSemanticLocalizations: number
   }
   datasetHash: string
+  semanticHash: string
 }

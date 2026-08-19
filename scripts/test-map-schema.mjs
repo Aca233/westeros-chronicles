@@ -2,10 +2,16 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 
 import { lngLatToMapPixel, mapPixelToLngLat } from '../src/features/map/coordinates.ts'
-import { parseMapLocation, parseMapManifest } from '../src/features/map/schemas.ts'
+import {
+  buildSemanticMembershipIndex,
+  parseMapLocation,
+  parseMapManifest,
+  parseSemanticMembership,
+  parseSemanticTitles,
+} from '../src/features/map/schemas.ts'
 
-const manifest = {
-  schemaVersion: 1,
+const manifestV2 = {
+  schemaVersion: 2,
   sourceId: '2962333032',
   sourceHashes: { 'map_data/provinces.png': 'a'.repeat(64) },
   mapSize: { width: 9216, height: 6144 },
@@ -17,9 +23,12 @@ const manifest = {
     terrain: '/assets/agot-map/terrain/{z}/{x}/{y}.webp',
     vector: '/assets/agot-map/vector/{z}/{x}/{y}.pbf',
     dem: '/assets/agot-map/dem/{z}/{x}/{y}.png',
+    semantic: '/assets/agot-map/semantic/{z}/{x}/{y}.pbf',
     locations: '/data/agot-map/locations',
     routes: '/data/agot-map/routes',
     searchIndex: '/data/agot-map/location-search-index.json',
+    semanticTitles: '/data/agot-map/semantic/titles.json',
+    semanticMembership: '/data/agot-map/semantic/membership.json',
   },
   counts: {
     regions: 9,
@@ -29,9 +38,59 @@ const manifest = {
     terrainTiles: 85,
     vectorTiles: 85,
     demTiles: 85,
+    semanticTiles: 85,
+    semanticRealms: 9,
+    semanticDuchies: 30,
+    semanticCounties: 120,
+    semanticLabels: 159,
+    missingSemanticLocalizations: 0,
   },
   datasetHash: 'b'.repeat(64),
+  semanticHash: 'c'.repeat(64),
 }
+
+const manifest = manifestV2
+const semanticTitle = {
+  featureId: 1,
+  titleId: 'the_north',
+  rank: 'realm',
+  name: '北境',
+  mapX: 3130,
+  mapY: 1410,
+  importance: 100,
+  regionId: 'the_north',
+  politicalAnchorTitleId: 'k_the_north',
+}
+const semanticTitles = [
+  semanticTitle,
+  { ...semanticTitle, featureId: 2, titleId: 'd_winterfell', rank: 'duchy', name: '临冬城公国' },
+  { ...semanticTitle, featureId: 3, titleId: 'c_winterfell', rank: 'county', name: '临冬城伯爵领' },
+]
+const membership = {
+  locationId: 'b_winterfell',
+  baronyId: 'b_winterfell',
+  countyId: 'c_winterfell',
+  duchyId: 'd_winterfell',
+  realmId: 'the_north',
+}
+
+test('地图清单只接受版本二并要求全部语义路径与计数', () => {
+  assert.equal(parseMapManifest(manifestV2).schemaVersion, 2)
+  assert.throws(() => parseMapManifest({ ...manifestV2, schemaVersion: 1 }), /地图清单格式无效/)
+  assert.throws(() => parseMapManifest({
+    ...manifestV2,
+    paths: { ...manifestV2.paths, semantic: 'https://example.test/{z}.pbf' },
+  }), /项目内 AGOT 地图资源路径/)
+})
+
+test('语义标题与 membership 拒绝重复和悬空层级', () => {
+  assert.equal(parseSemanticTitles([semanticTitle]).length, 1)
+  assert.throws(() => parseSemanticTitles([semanticTitle, semanticTitle]), /featureId/)
+  assert.throws(() => parseSemanticMembership([{ ...membership, realmId: '' }]), /realmId/)
+  assert.throws(() => buildSemanticMembershipIndex(
+    semanticTitles, [{ ...membership, countyId: 'c_missing' }],
+  ), /c_missing/)
+})
 
 test('地图清单接受稳定来源标识并只允许项目内资源路径', () => {
   assert.equal(parseMapManifest(manifest).sourceId, '2962333032')

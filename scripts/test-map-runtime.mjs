@@ -4,8 +4,8 @@ import test from 'node:test'
 import { createLocalMapStyle } from '../src/features/map/mapStyle.ts'
 import { MapRepository } from '../src/features/map/repository.ts'
 
-const manifest = {
-  schemaVersion: 1, sourceId: '2962333032', sourceHashes: { source: 'a'.repeat(64) },
+const manifestV2 = {
+  schemaVersion: 2, sourceId: '2962333032', sourceHashes: { source: 'a'.repeat(64) },
   mapSize: { width: 9216, height: 6144 },
   westerosBounds: { minX: 168, minY: 6, maxX: 2335, maxY: 4305 },
   tileSize: 512, minZoom: 0, maxZoom: 6,
@@ -13,12 +13,47 @@ const manifest = {
     terrain: '/assets/agot-map/terrain/{z}/{x}/{y}.webp',
     vector: '/assets/agot-map/vector/{z}/{x}/{y}.pbf',
     dem: '/assets/agot-map/dem/{z}/{x}/{y}.png',
+    semantic: '/assets/agot-map/semantic/{z}/{x}/{y}.pbf',
     locations: '/data/agot-map/locations', routes: '/data/agot-map/routes',
     searchIndex: '/data/agot-map/location-search-index.json',
+    semanticTitles: '/data/agot-map/semantic/titles.json',
+    semanticMembership: '/data/agot-map/semantic/membership.json',
   },
-  counts: { regions: 12, provinces: 6094, locations: 6094, routeEdges: 31724, terrainTiles: 341, vectorTiles: 3474, demTiles: 341 },
+  counts: {
+    regions: 12, provinces: 6094, locations: 6094, routeEdges: 31724,
+    terrainTiles: 341, vectorTiles: 3474, demTiles: 341, semanticTiles: 3474,
+    semanticRealms: 9, semanticDuchies: 30, semanticCounties: 120,
+    semanticLabels: 159, missingSemanticLocalizations: 0,
+  },
   datasetHash: 'b'.repeat(64),
+  semanticHash: 'c'.repeat(64),
 }
+const manifest = manifestV2
+
+test('仓储按清单路径缓存语义标题和 membership', async () => {
+  const requested = []
+  const repository = new MapRepository(async (url) => {
+    requested.push(String(url))
+    if (String(url).endsWith('manifest.json')) return { ok: true, json: async () => manifestV2 }
+    if (String(url).endsWith('/semantic/titles.json')) return { ok: true, json: async () => [
+      { featureId: 1, titleId: 'the_north', rank: 'realm', name: '北境', mapX: 3130, mapY: 1410, importance: 100, regionId: 'the_north' },
+      { featureId: 2, titleId: 'd_winterfell', rank: 'duchy', name: '临冬城公国', mapX: 3130, mapY: 1410, importance: 80, regionId: 'the_north' },
+      { featureId: 3, titleId: 'c_winterfell', rank: 'county', name: '临冬城伯爵领', mapX: 3130, mapY: 1410, importance: 60, regionId: 'the_north' },
+    ] }
+    if (String(url).endsWith('/semantic/membership.json')) return { ok: true, json: async () => [
+      { locationId: 'b_winterfell', baronyId: 'b_winterfell', countyId: 'c_winterfell', duchyId: 'd_winterfell', realmId: 'the_north' },
+    ] }
+    throw new Error(`unexpected request: ${url}`)
+  })
+  const [titles, memberships, index] = await Promise.all([
+    repository.loadSemanticTitles(), repository.loadSemanticMembership(), repository.loadSemanticIndex(),
+  ])
+  assert.equal(titles[0].name, '北境')
+  assert.equal(memberships[0].locationId, 'b_winterfell')
+  assert.equal(index.byLocationId.get('b_winterfell')?.realmId, 'the_north')
+  assert.equal(requested.filter((value) => value.endsWith('/semantic/titles.json')).length, 1)
+  assert.equal(requested.filter((value) => value.endsWith('/semantic/membership.json')).length, 1)
+})
 
 test('仓储合并并发请求，失败后允许重试', async () => {
   let calls = 0

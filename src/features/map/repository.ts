@@ -5,6 +5,9 @@ import {
   parseMapManifest,
   parseMapPoliticalTitles,
   parseMapRouteShard,
+  parseSemanticMembership,
+  parseSemanticTitles,
+  buildSemanticMembershipIndex,
 } from './schemas.ts'
 import type { StaticPoliticalTitle } from './politicalProjection.ts'
 import type {
@@ -12,6 +15,9 @@ import type {
   MapLocationSearchEntry,
   MapManifest,
   MapRouteShard,
+  SemanticMembership,
+  SemanticMembershipIndex,
+  SemanticTitle,
 } from './types'
 
 const MANIFEST_PATH = '/data/agot-map/manifest.json'
@@ -109,6 +115,24 @@ export class MapRepository {
 
   loadPoliticalTitles(): Promise<StaticPoliticalTitle[]> {
     return this.loadJson(POLITICAL_TITLES_PATH, parseMapPoliticalTitles)
+  }
+
+  loadSemanticTitles(): Promise<SemanticTitle[]> {
+    return this.loadManifest().then((manifest) =>
+      this.loadJson(manifest.paths.semanticTitles, parseSemanticTitles))
+  }
+
+  loadSemanticMembership(): Promise<SemanticMembership[]> {
+    return this.loadManifest().then((manifest) =>
+      this.loadJson(manifest.paths.semanticMembership, parseSemanticMembership))
+  }
+
+  async loadSemanticIndex(): Promise<SemanticMembershipIndex> {
+    const [titles, memberships] = await Promise.all([
+      this.loadSemanticTitles(),
+      this.loadSemanticMembership(),
+    ])
+    return buildSemanticMembershipIndex(titles, memberships)
   }
 
   private loadJson<Value>(resource: string, parse: (value: unknown) => Value): Promise<Value> {

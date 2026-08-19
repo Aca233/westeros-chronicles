@@ -5,6 +5,9 @@ import type {
   MapLocationSearchEntry,
   MapManifest,
   MapRouteShard,
+  SemanticMembership,
+  SemanticMembershipIndex,
+  SemanticTitle,
 } from './types'
 import type { StaticPoliticalTitle } from './politicalProjection.ts'
 
@@ -34,7 +37,7 @@ const mapBoundsSchema = z.object({
 const nonNegativeInteger = z.number().int().nonnegative()
 
 export const mapManifestSchema = z.object({
-  schemaVersion: z.literal(1),
+  schemaVersion: z.literal(2),
   sourceId: mapSourceIdSchema,
   sourceHashes: z.record(z.string().min(1), sha256Schema),
   mapSize: z.object({
@@ -49,9 +52,12 @@ export const mapManifestSchema = z.object({
     terrain: localMapPathSchema,
     vector: localMapPathSchema,
     dem: localMapPathSchema,
+    semantic: localMapPathSchema,
     locations: localMapPathSchema,
     routes: localMapPathSchema,
     searchIndex: localMapPathSchema,
+    semanticTitles: localMapPathSchema,
+    semanticMembership: localMapPathSchema,
   }).strict(),
   counts: z.object({
     regions: nonNegativeInteger,
@@ -61,12 +67,79 @@ export const mapManifestSchema = z.object({
     terrainTiles: nonNegativeInteger,
     vectorTiles: nonNegativeInteger,
     demTiles: nonNegativeInteger,
+    semanticTiles: nonNegativeInteger,
+    semanticRealms: nonNegativeInteger,
+    semanticDuchies: nonNegativeInteger,
+    semanticCounties: nonNegativeInteger,
+    semanticLabels: nonNegativeInteger,
+    missingSemanticLocalizations: nonNegativeInteger,
   }).strict(),
   datasetHash: sha256Schema,
+  semanticHash: sha256Schema,
 }).strict().superRefine((manifest, context) => {
   if (manifest.minZoom > manifest.maxZoom) {
     context.addIssue({ code: z.ZodIssueCode.custom, path: ['maxZoom'], message: 'maxZoom 必须不小于 minZoom' })
   }
+})
+
+const semanticRankSchema = z.enum(['realm', 'duchy', 'county'])
+
+const semanticTitleSchema = z.object({
+  featureId: z.number().int().positive(),
+  titleId: stableIdSchema,
+  rank: semanticRankSchema,
+  name: z.string().trim().min(1).max(160),
+  mapX: z.number().finite().min(0).max(9216),
+  mapY: z.number().finite().min(0).max(6144),
+  importance: z.number().int().min(0).max(100),
+  regionId: stableIdSchema,
+  politicalAnchorTitleId: stableIdSchema.optional(),
+}).strict()
+
+const semanticTitlesSchema = z.array(semanticTitleSchema).superRefine((titles, context) => {
+  const featureIds = new Set<number>()
+  const titleKeys = new Set<string>()
+  titles.forEach((title, index) => {
+    if (featureIds.has(title.featureId)) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: [index, 'featureId'],
+        message: `featureId 重复：${title.featureId}`,
+      })
+    }
+    featureIds.add(title.featureId)
+    const titleKey = `${title.rank}:${title.titleId}`
+    if (titleKeys.has(titleKey)) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: [index, 'titleId'],
+        message: `领地层级与 titleId 重复：${titleKey}`,
+      })
+    }
+    titleKeys.add(titleKey)
+  })
+})
+
+const semanticMembershipSchema = z.object({
+  locationId: stableIdSchema,
+  baronyId: stableIdSchema,
+  countyId: stableIdSchema.optional(),
+  duchyId: stableIdSchema.optional(),
+  realmId: stableIdSchema,
+}).strict()
+
+const semanticMembershipsSchema = z.array(semanticMembershipSchema).superRefine((memberships, context) => {
+  const locationIds = new Set<string>()
+  memberships.forEach((membership, index) => {
+    if (locationIds.has(membership.locationId)) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: [index, 'locationId'],
+        message: `locationId 重复：${membership.locationId}`,
+      })
+    }
+    locationIds.add(membership.locationId)
+  })
 })
 
 export const mapLocationSchema = z.object({
@@ -196,4 +269,41 @@ export function parseMapPoliticalTitles(value: unknown): StaticPoliticalTitle[] 
   const result = z.array(staticPoliticalTitleSchema).safeParse(value)
   if (!result.success) throw formatSchemaError('地图政治头衔', result.error)
   return result.data
+}
+
+export function parseSemanticTitles(value: unknown): SemanticTitle[] {
+  const result = semanticTitlesSchema.safeParse(value)
+  if (!result.success) throw formatSchemaError('地图语义标题', result.error)
+  return result.data
+}
+
+export function parseSemanticMembership(value: unknown): SemanticMembership[] {
+  const result = semanticMembershipsSchema.safeParse(value)
+  if (!result.success) throw formatSchemaError('地图语义归属', result.error)
+  return result.data
+}
+
+export function buildSemanticMembershipIndex(
+  titles: readonly SemanticTitle[],
+  memberships: readonly SemanticMembership[],
+): SemanticMembershipIndex {
+  const titleByRankAndId = new Map(titles.map((title) => [`${title.rank}:${title.titleId}`, title]))
+  const titleById = new Map(titles.map((title) => [title.titleId, title]))
+  const byLocationId = new Map<string, SemanticMembership>()
+
+  for (const membership of memberships) {
+    const references: Array<readonly [SemanticTitle['rank'], string | undefined]> = [
+      ['county', membership.countyId],
+      ['duchy', membership.duchyId],
+      ['realm', membership.realmId],
+    ]
+    for (const [rank, titleId] of references) {
+      if (titleId && !titleByRankAndId.has(`${rank}:${titleId}`)) {
+        throw new Error(`地图语义归属引用不存在：${rank}:${titleId}`)
+      }
+    }
+    byLocationId.set(membership.locationId, membership)
+  }
+
+  return { titles, memberships, byLocationId, titleById }
 }
