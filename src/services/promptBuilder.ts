@@ -108,10 +108,8 @@ export const GOT_CONSTITUTION_PROMPT = `
   // { "type": "HEAL_ZONE", "zone": "arms", "clearWound": "右臂格挡划伤" },
   // { "type": "SET_BLEEDING", "value": false },
   // { "type": "MODIFY_GOLD", "goldDragons": 100, "reason": "国王劳勃的丰厚赏赐" },
-  // { "type": "CHANGE_LOCATION", "locationId": "b_winterfell", "sceneLocation": "主堡大门" }
-  // locationId 只能引用状态切片提供的地图地点 ID，不得编造自由文本目的地。
-  // 已开始的旅程由世界时间自动推进，不要重复输出 ADVANCE_TRAVEL。若一次已确认的障碍确实迫使队伍停下，可输出：
-  // { "type": "PAUSE_TRAVEL", "reason": "渡口因洪水封闭" }
+  // 地图位置、人物移动和旅程进度只由地图旅行系统与统一回合结算。
+  // 模型不得输出任何改变地点、移动人物或推进旅程的状态命令，也不得使用内部地点键。
 ]
 </state_cmd>
 `;
@@ -179,9 +177,13 @@ export function buildStateSlice(gameState: GameState): string {
   const roleplaySummary = traitEffects.roleplayDirectives.slice(0, 10)
     .map((directive) => formatTraitDescription(directive, lord.name)).join('；') || '无额外人物倾向';
   const journey = gameState.activeJourney;
+  const journeyLabel = (locationId: string, fallback: string): string => {
+    const label = journey?.locationLabels?.[locationId]?.trim();
+    return label && !/\bb_[a-z0-9_]+\b|baronyId|男爵领/i.test(label) ? label : fallback;
+  };
   const journeySummary = !journey
     ? '无'
-    : `${journey.status}；路线 ${journey.routePlan.from} -> ${journey.routePlan.to}；分段 ${journey.currentLeg + 1}/${Math.max(1, journey.routePlan.legs.length)}；本段已行 ${journey.progressDays} 天${journey.interruptedBy ? `；中断原因 ${journey.interruptedBy}` : ''}`;
+    : `${journey.status}；路线 ${journeyLabel(journey.routePlan.from, '已确认起点')} -> ${journeyLabel(journey.routePlan.to, '已确认终点')}；分段 ${journey.currentLeg + 1}/${Math.max(1, journey.routePlan.legs.length)}；本段已行 ${journey.progressDays} 天${journey.interruptedBy ? `；中断原因 ${journey.interruptedBy}` : ''}`;
 
   return stripEmoji(`
 ---
@@ -190,8 +192,6 @@ export function buildStateSlice(gameState: GameState): string {
 - 领主身份: ${lord.house} · ${lord.name} (${lord.title})
 - 宗族与箴言: ${lord.dynastyName || lord.house} · ${lord.houseWords}
 - 文化与信仰: ${lord.culture || '未指定'} · ${lord.faith || '未指定'}
-- 当前地图地点 ID: ${lord.location.locationId}
-- 当前地点: ${lord.locationLabel}
 - 当前旅程: ${journeySummary}
 - 整体体魄: 【${lord.overallStatus}】 (异常体态: ${statusList.length > 0 ? statusList.join(', ') : '无'})
 - 部位伤情: ${bodySummary}
@@ -209,6 +209,17 @@ export function buildStateSlice(gameState: GameState): string {
 - 特质约束: 上述倍率和抗性由程序结算；只用于当前相关行动，不得替玩家决定行为。
 ---
 `);
+}
+
+const MODEL_HIDDEN_LOCATION_COMMANDS = new Set(['CHANGE_LOCATION', 'MOVE_CHARACTER']);
+
+function modelVisibleStateCommands(commands: unknown): unknown[] {
+  if (!Array.isArray(commands)) return [];
+  return commands.filter((command) => {
+    if (!command || typeof command !== 'object') return true;
+    const type = 'type' in command ? command.type : undefined;
+    return typeof type !== 'string' || !MODEL_HIDDEN_LOCATION_COMMANDS.has(type);
+  });
 }
 
 // 组装完整的 Prompt 请求消息列表
@@ -248,7 +259,7 @@ export function buildChatMessages(
       turn.think ? `<think>\n${stripEmoji(turn.think)}\n</think>` : '',
       `<narrate>\n${stripEmoji(turn.narrate)}\n</narrate>`,
       `<branch>\n${turn.branches.map((b, i) => `${i + 1}. ${stripEmoji(b)}`).join('\n')}\n</branch>`,
-      `<state_cmd>\n${JSON.stringify(turn.stateCommands || [])}\n</state_cmd>`,
+      `<state_cmd>\n${JSON.stringify(modelVisibleStateCommands(turn.stateCommands))}\n</state_cmd>`,
     ]
       .filter(Boolean)
       .join('\n\n');

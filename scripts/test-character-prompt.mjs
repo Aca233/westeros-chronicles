@@ -367,3 +367,43 @@ test('领主状态切片只暴露当前装备与可访问物品的稳定 ID 和�
     assert.equal(text.includes(legacy), false, `提示词不应包含旧命令 ${legacy}`);
   }
 });
+
+
+test('模型消息只接收中文地点层级且隐藏内部移动命令', () => {
+  const state = gameState();
+  state.lord.location = { locationId: 'b_winterfell', sceneLocation: '神木林' };
+  state.lord.locationLabel = 'b_winterfell';
+  state.activeJourney = {
+    routePlan: { id: 'route:test', from: 'b_winterfell', to: 'b_red_keep', legs: [] },
+    currentLeg: 0,
+    progressDays: 0,
+    status: 'travelling',
+    companions: [],
+    vehicleIds: [],
+    startedAt: { year: 298, month: 10, day: 15 },
+    locationLabels: { b_winterfell: '临冬城', b_red_keep: '红堡' },
+  };
+  state.turns = [{
+    playerInput: '前往红堡',
+    think: '',
+    narrate: '队伍开始赶路。',
+    branches: ['继续前行'],
+    stateCommands: [
+      { type: 'CHANGE_LOCATION', locationId: 'b_red_keep' },
+      { type: 'MOVE_CHARACTER', characterId: 'agot:Stark_3', locationId: 'b_red_keep' },
+      { type: 'MODIFY_GOLD', goldDragons: -1, reason: '路费' },
+    ],
+  }];
+  const worldContext = `### 【当前权威地点】
+- 位置：临冬城 · 神木林 · 临冬城伯爵领 · 临冬城公国 · 北境
+- 地图位置与旅程由程序结算。`;
+
+  const messages = buildChatMessages(state, '继续赶路', undefined, undefined, [], worldContext);
+  const combined = messages.map((message) => message.content).join('\n');
+
+  assert.match(combined, /临冬城 · 神木林 · 临冬城伯爵领 · 临冬城公国 · 北境/);
+  assert.match(combined, /当前旅程: travelling；路线 临冬城 -> 红堡/);
+  assert.doesNotMatch(combined, /\bb_[a-z0-9_]+\b|baronyId|男爵领/);
+  assert.doesNotMatch(combined, /CHANGE_LOCATION|MOVE_CHARACTER/);
+  assert.match(combined, /MODIFY_GOLD/);
+});

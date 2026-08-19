@@ -18,6 +18,8 @@ import { advanceWorldDate, compareWorldDates, type WorldDate } from './worldHist
 import { projectNpcAssets, projectNpcEquipment, type NpcItemRelation } from './worldHistoryProjection';
 import { mapRepository } from '../map/repository';
 import { UNKNOWN_WESTEROS_LOCATION_ID } from '../map/locationResolver';
+import { formatNarrativeLocationContext, resolveNarrativeLocationContext, type NarrativeLocationContext } from '../map/narrativeLocationContext';
+import type { MapLocationSearchEntry, SemanticMembership, SemanticTitle } from '../map/types';
 
 export interface WorldTurnContextRepository {
   loadManifest(): Promise<{ datasetHash: string }>;
@@ -36,7 +38,11 @@ export interface BuildWorldTurnContextInput {
   actionText: string;
   repository?: WorldTurnContextRepository;
   eventStore?: WorldTurnContextEventStore;
-  mapLocationRepository?: { loadSearchIndex(): Promise<Array<{ id: string }>> };
+  mapLocationRepository?: {
+    loadSearchIndex(): Promise<MapLocationSearchEntry[]>;
+    loadSemanticTitles(): Promise<SemanticTitle[]>;
+    loadSemanticMembership(): Promise<SemanticMembership[]>;
+  };
   timeline?: readonly CanonicalTimelineEvent[];
 }
 
@@ -61,6 +67,7 @@ export interface WorldTurnContext {
   visibleWorldAssets: VisibleWorldItem[];
   characterCommandContext: CharacterCommandBatchBaseContext;
   currentDate: WorldDate;
+  narrativeLocation: NarrativeLocationContext;
 }
 
 const defaultRepository = new StaticCharacterRepository();
@@ -144,11 +151,13 @@ export async function buildWorldTurnContext(input: BuildWorldTurnContextInput): 
   const { gameState } = input;
   const currentDate = { year: gameState.currentYear, month: gameState.currentMonth, day: gameState.currentDay };
   const playerId = gameState.lord.canonicalCharacterId;
-  const [manifest, playerRecord, mentioned, mapLocations] = await Promise.all([
+  const [manifest, playerRecord, mentioned, mapLocations, semanticTitles, semanticMemberships] = await Promise.all([
     repository.loadManifest(),
     playerId ? repository.get(playerId) : Promise.resolve(undefined),
     repository.findMentioned(input.actionText, { alive: true, canonTiers: ['canon', 'semicanon'], limit: 24 }),
     locationRepository.loadSearchIndex(),
+    locationRepository.loadSemanticTitles().catch(() => [] as SemanticTitle[]),
+    locationRepository.loadSemanticMembership().catch(() => [] as SemanticMembership[]),
   ]);
   const directlyNamedIds = uniqueIds(mentioned.filter((hit) => hit.canonTier !== 'genealogy').map((hit) => hit.id));
   const strongRelationshipIds = relationIds(playerRecord);
@@ -178,6 +187,7 @@ export async function buildWorldTurnContext(input: BuildWorldTurnContextInput): 
   const strongSet = new Set(strongRelationshipIds);
   const recentSet = new Set(recentInteractionIds);
   const eventSet = new Set(eventParticipantIds);
+  const locationNameById = new Map(mapLocations.map((location) => [location.id, location.name]));
   const candidates: CharacterPromptCandidate[] = resolved.map((character) => {
     const age = characterAgeAtYear(character.birthDate, gameState.currentYear, character.deathDate, character.alive);
     const importedTraits = filterImportedCharacterTraits(character.traits, age);
@@ -191,7 +201,7 @@ export async function buildWorldTurnContext(input: BuildWorldTurnContextInput): 
       isEventParticipant: eventSet.has(character.id),
       publicIdentity: character.titles[0],
       role: character.titles[0],
-      locationName: character.locationId,
+      locationName: character.locationId ? locationNameById.get(character.locationId) : undefined,
       relationToViewer: relationToPlayer(character, playerId, playerRecord),
       visibleTraits: resolveCharacterTraits(importedTraits.visibleTraitIds, []).map((trait) => trait.name),
       memories: character.memories,
@@ -216,6 +226,12 @@ export async function buildWorldTurnContext(input: BuildWorldTurnContextInput): 
     UNKNOWN_WESTEROS_LOCATION_ID,
   ])];
   const visibleItems = visibleCharacterItems(resolved, selectedIds, gameState);
+  const narrativeLocation = resolveNarrativeLocationContext({
+    location: gameState.lord.location,
+    locations: mapLocations,
+    memberships: semanticMemberships,
+    titles: semanticTitles,
+  });
 
   return {
     selection,
@@ -233,6 +249,7 @@ export async function buildWorldTurnContext(input: BuildWorldTurnContextInput): 
       knownLocationIds,
     },
     currentDate,
+    narrativeLocation,
   };
 }
 
@@ -251,7 +268,12 @@ export function formatWorldTurnContext(context: WorldTurnContext): string {
   const assetLines = context.visibleWorldAssets.length
     ? context.visibleWorldAssets.map((item) => `- ${item.characterName} [${item.characterId}]：${item.name} (${item.definitionId}) · ${item.relation}；不代表当前随身携带。`)
     : ['- 当前场景人物没有可确认的未穿戴资产或保管物。'];
+  const narrativeLocation = formatNarrativeLocationContext(context.narrativeLocation) || '未确认地点';
   return [
+    '### 【当前权威地点】',
+    `- 位置：${narrativeLocation}`,
+    '- 地图位置、人物移动与旅程进度只由地图旅行系统和统一回合结算。',
+    '',
     characterSlice,
     '',
     '### 【原作预定压力】',

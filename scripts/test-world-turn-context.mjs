@@ -24,7 +24,7 @@ const base = {
 };
 const records = new Map([
   ['agot:player_1', { ...base, id: 'agot:player_1', name: '玩家原型', fatherId: 'agot:relative_1' }],
-  ['agot:named_1', { ...base, id: 'agot:named_1', name: '劳勃', traits: ['brave', 'family_first', 'education_martial_prowess_3', 'rowdy', 'knight'], titles: ['七国国王'] }],
+  ['agot:named_1', { ...base, id: 'agot:named_1', name: '劳勃', locationId: 'b_winterfell', traits: ['brave', 'family_first', 'education_martial_prowess_3', 'rowdy', 'knight'], titles: ['七国国王'] }],
   ['agot:relative_1', { ...base, id: 'agot:relative_1', name: '父亲' }],
   ['agot:recent_1', { ...base, id: 'agot:recent_1', name: '近来人物' }],
   ['agot:due_1', { ...base, id: 'agot:due_1', name: '时间线人物' }],
@@ -39,10 +39,23 @@ const repository = {
 };
 const characterEvents = new Map();
 const eventStore = { eventsForCharacter: async (_runId, id) => characterEvents.get(id) ?? [] };
-const mapLocationRepository = { loadSearchIndex: async () => [{ id: 'b_winterfell' }, { id: 'b_red_keep' }] };
+const mapLocationRepository = {
+  loadSearchIndex: async () => [
+    { id: 'b_winterfell', name: '临冬城', type: 'castle', importance: 100, mapX: 10, mapY: 20, regionId: 'the_north' },
+    { id: 'b_red_keep', name: '红堡', type: 'castle', importance: 100, mapX: 30, mapY: 40, regionId: 'crownlands' },
+  ],
+  loadSemanticTitles: async () => [
+    { featureId: 1, titleId: 'the_north', rank: 'realm', name: '北境', mapX: 10, mapY: 20, importance: 100, regionId: 'the_north' },
+    { featureId: 2, titleId: 'd_winterfell', rank: 'duchy', name: '临冬城公国', mapX: 10, mapY: 20, importance: 90, regionId: 'the_north' },
+    { featureId: 3, titleId: 'c_winterfell', rank: 'county', name: '临冬城伯爵领', mapX: 10, mapY: 20, importance: 80, regionId: 'the_north' },
+  ],
+  loadSemanticMembership: async () => [{
+    locationId: 'b_winterfell', baronyId: 'b_winterfell', countyId: 'c_winterfell', duchyId: 'd_winterfell', realmId: 'the_north',
+  }],
+};
 const gameState = {
   currentYear: 298, currentMonth: 5, currentDay: 10, currentSeason: '暮春', turnCount: 2,
-  lord: { canonicalCharacterId: 'agot:player_1', location: { locationId: 'b_winterfell' }, locationLabel: '临冬城', items: { instances: {}, placements: {}, sites: {}, vehicles: {} } },
+  lord: { canonicalCharacterId: 'agot:player_1', location: { locationId: 'b_winterfell', sceneLocation: '神木林' }, locationLabel: '临冬城', items: { instances: {}, placements: {}, sites: {}, vehicles: {} } },
   worldCharacters: { runId: 'run_fixture', datasetHash: 'fixture', revision: 1 },
   worldArtifacts: {
     artifacts: {
@@ -88,9 +101,15 @@ assert.ok(context.visibleWorldEquipment.some((item) => item.definitionId === 'cl
 assert.equal(context.visibleWorldEquipment.some((item) => item.definitionId === 'artifact.longclaw'), false);
 assert.ok(context.visibleWorldAssets.some((item) => item.definitionId === 'artifact.longclaw' && item.relation === '本人保管'));
 assert.ok(context.visibleWorldAssets.some((item) => item.definitionId === 'artifact.ice' && item.relation === '领地资产'));
+assert.equal(context.narrativeLocation.placeName, '临冬城');
+assert.equal(context.narrativeLocation.countyName, '临冬城伯爵领');
+assert.equal(context.selection.full.find((entry) => entry.id === 'agot:named_1')?.locationName, '临冬城');
 
 const formatted = formatWorldTurnContext(context);
 assert.match(formatted, /稳定人物 ID: agot:named_1/);
+assert.match(formatted, /当前权威地点/);
+assert.match(formatted, /临冬城 · 神木林 · 临冬城伯爵领 · 临冬城公国 · 北境/);
+assert.doesNotMatch(formatted, /b_winterfell|baronyId|男爵领/);
 assert.match(formatted, /特质: 勇敢；家族至上；骑士/);
 assert.doesNotMatch(formatted, /education_martial_prowess_3|family_first|rowdy/);
 assert.match(formatted, /原作预定压力/);
@@ -100,6 +119,17 @@ assert.match(formatted, /瓦雷利亚钢长剑“长爪”[\s\S]*本人保管/);
 assert.match(formatted, /领地资产/);
 assert.match(formatted, /不代表当前随身携带/);
 assert.doesNotMatch(formatted, /genealogy_1/);
+
+const semanticFailureRepository = {
+  ...mapLocationRepository,
+  loadSemanticTitles: async () => { throw new Error('fixture semantic titles failure'); },
+  loadSemanticMembership: async () => { throw new Error('fixture semantic membership failure'); },
+};
+const semanticFallbackContext = await buildWorldTurnContext({
+  gameState, actionText: '与劳勃交谈', repository, eventStore, mapLocationRepository: semanticFailureRepository, timeline,
+});
+assert.deepEqual(semanticFallbackContext.narrativeLocation, { placeName: '临冬城', sceneName: '神木林', countyName: undefined, duchyName: undefined, realmName: undefined });
+assert.doesNotMatch(formatWorldTurnContext(semanticFallbackContext), /b_winterfell|baronyId|男爵领/);
 
 characterEvents.set('agot:named_1', [
   { id: 'acquire-cloak', characterId: 'agot:named_1', turn: 3, sequence: 0, timestamp: 1, event: { type: 'ITEM_ACQUIRE', item: {
