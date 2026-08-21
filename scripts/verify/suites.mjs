@@ -210,6 +210,7 @@ export const STRUCTURE_GUARDS = Object.freeze([
   'test:domain-contracts',
   'test:module-cycles',
   'check:module-cycles',
+  'test:world-content-runtime',
 ]);
 
 export const VERIFICATION_SUITES = Object.freeze({

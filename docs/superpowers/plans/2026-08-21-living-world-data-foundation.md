@@ -255,7 +255,7 @@ git commit -m "feat: establish living world content compiler"
 - Produces: `assertWorldDatasetCompatibility(world, characterManifest, mapManifest, artifactState): void`。
 - Preserves: 大型人物基础记录继续由 `StaticCharacterRepository` 哈希分片加载；人物叙事内容最多按 16 个两位十六进制分片请求。
 
-- [ ] **Step 1: 写失败测试，锁定解析、缓存、分片和哈希不匹配错误**
+- [x] **Step 1: 写失败测试，锁定解析、缓存、分片和哈希不匹配错误**
 
 在 `scripts/test-world-content-runtime.mjs` 中通过 esbuild bundle TypeScript 模块并注入 fetcher：
 
@@ -284,7 +284,7 @@ test('依赖哈希不一致时拒绝组合世界', () => {
 });
 ```
 
-- [ ] **Step 2: 运行测试，确认运行时合同尚不存在**
+- [x] **Step 2: 运行测试，确认运行时合同尚不存在**
 
 Run:
 
@@ -294,7 +294,7 @@ node scripts/test-world-content-runtime.mjs
 
 Expected: FAIL，错误指出 `src/features/world-content/repository.ts` 不存在。
 
-- [ ] **Step 3: 定义精确运行时类型与 Zod 解析器**
+- [x] **Step 3: 定义精确运行时类型与 Zod 解析器**
 
 `src/features/world-content/types.ts` 至少导出：
 
@@ -337,7 +337,7 @@ export interface LivingWorldStartState {
 
 人物内容、术语、游戏地点和持有人摘要类型必须引用既有 `CharacterId`、`WorldLocationRef`、`EquipmentPosition`、`ItemDefinition`，不得复制规则枚举。
 
-- [ ] **Step 4: 实现仓储、清单依赖校验和缓存**
+- [x] **Step 4: 实现仓储、清单依赖校验和缓存**
 
 `src/features/world-content/repository.ts` 使用统一 `FetchJson = (path: string) => Promise<unknown>`，所有路径必须从 world manifest 解析；`clear()` 清空失败缓存，404 人物内容返回 `undefined`，其他 Schema 或哈希错误必须向调用方传播。
 
@@ -350,7 +350,7 @@ npm run build:code
 
 Expected: PASS，TypeScript 无错误。
 
-- [ ] **Step 5: 加入验证套件并提交**
+- [x] **Step 5: 加入验证套件并提交**
 
 把 `test:world-content-runtime` 加入 `STRUCTURE_GUARDS`，然后运行：
 
