@@ -102,11 +102,11 @@
 **Interfaces:**
 - Produces: `selectVisibleWorldEvents(events, viewer): WorldEvent[]`
 
-- [ ] Write tests for public, player-known and hidden secret events.
-- [ ] Implement fail-closed visibility selection.
-- [ ] Route all player-facing projections through the selector.
-- [ ] Verify secret events remain in the authoritative ledger but disappear from every UI projection.
-- [ ] Commit `fix: enforce world event visibility across projections`.
+- [x] Write tests for public, player-known and hidden secret events.
+- [x] Implement fail-closed visibility selection.
+- [x] Route all player-facing projections through the selector.
+- [x] Verify secret events remain in the authoritative ledger but disappear from every UI projection.
+- [x] Commit `fix: enforce world event visibility across projections`.
 
 ### Task 5: 玩家可见名称与事实呈现
 

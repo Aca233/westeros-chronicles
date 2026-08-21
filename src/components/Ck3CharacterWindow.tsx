@@ -40,6 +40,7 @@ import { HealthAndEquipmentPanel } from './items/HealthAndEquipmentPanel';
 import { WorldAssetSections } from './items/WorldAssetSections';
 import { factsForCharacter, worldEventDisplayTitle } from '../features/world/worldHistoryProjection';
 import type { WorldEvent } from '../features/world/worldRuntimeTypes';
+import { playerWorldEventViewer, selectVisibleWorldEvents } from '../features/world/worldEventVisibility';
 import { CANONICAL_TIMELINE } from '../data/generated/canonicalTimeline';
 import { extractNarrativeContent } from '../services/modelProtocol';
 
@@ -75,6 +76,12 @@ export const Ck3CharacterWindow: React.FC<Ck3CharacterWindowProps> = ({
 }) => {
   const turns = useGameStore((state) => state.gameState.turns);
   const worldEvents = useGameStore((state) => state.gameState.worldRuntime.events);
+  const lord = useGameStore((state) => state.gameState.lord);
+  const worldCharacters = useGameStore((state) => state.gameState.worldCharacters);
+  const visibleWorldEvents = useMemo(
+    () => selectVisibleWorldEvents(worldEvents, playerWorldEventViewer({ lord, worldCharacters })),
+    [lord.canonicalCharacterId, worldCharacters?.runId, worldEvents],
+  );
   const { dossier, relatedRecords, status, error, reload } = useCharacterDossier(selectedCharacterId);
   const [activeTab, setActiveTab] = useState<CharacterTab>('relations');
   const [activeTraitId, setActiveTraitId] = useState<string | null>(null);
@@ -156,7 +163,7 @@ export const Ck3CharacterWindow: React.FC<Ck3CharacterWindowProps> = ({
                 />
               )}
               {activeTab === 'health' && <HealthAndEquipmentPanel dossier={dossier} embedded />}
-              {activeTab === 'history' && (dossier.kind === 'player' ? <PlayerHistoryTab turns={turns} dossier={dossier} /> : <NpcHistoryTab dossier={dossier} worldEvents={worldEvents} />)}
+              {activeTab === 'history' && (dossier.kind === 'player' ? <PlayerHistoryTab turns={turns} dossier={dossier} /> : <NpcHistoryTab dossier={dossier} worldEvents={visibleWorldEvents} />)}
               {activeTab === 'inventory' && (
                 <CharacterAssetsTab
                   dossier={dossier}

@@ -22,6 +22,7 @@ import { formatNarrativeLocationContext, resolveNarrativeLocationContext, type N
 import type { MapLocationSearchEntry, SemanticMembership, SemanticTitle } from '../map/types';
 import type { PendingWorldTransaction, WorldEvent } from './worldRuntimeTypes';
 import { projectResolvedCharacterWorldFacts } from './characterWorldFacts';
+import { playerWorldEventViewer, selectVisibleWorldEvents } from './worldEventVisibility';
 
 export const WORLD_CONTEXT_LIMITS = {
   characters: 12,
@@ -111,8 +112,8 @@ function upcomingPressures(
     && compareWorldDates(event.date, horizon) <= 0).slice(0, 8);
 }
 
-function recentParticipantIds(gameState: GameState): CharacterId[] {
-  const eventsById = new Map(gameState.worldRuntime.events.map((event) => [event.id, event]));
+function recentParticipantIds(gameState: GameState, visibleWorldEvents: readonly WorldEvent[]): CharacterId[] {
+  const eventsById = new Map(visibleWorldEvents.map((event) => [event.id, event]));
   return uniqueIds(gameState.worldHistory.turns.slice(-4)
     .flatMap((turn) => turn.eventIds)
     .flatMap((eventId) => {
@@ -170,6 +171,10 @@ export async function buildWorldTurnContext(input: BuildWorldTurnContextInput): 
   const { gameState } = input;
   const currentDate = { year: gameState.currentYear, month: gameState.currentMonth, day: gameState.currentDay };
   const playerId = gameState.lord.canonicalCharacterId;
+  const visibleWorldEvents = selectVisibleWorldEvents(
+    gameState.worldRuntime.events,
+    playerWorldEventViewer(gameState),
+  );
   const [manifest, playerRecord, mentioned, mapResult] = await Promise.all([
     repository.loadManifest(),
     playerId ? repository.get(playerId) : Promise.resolve(undefined),
@@ -192,7 +197,7 @@ export async function buildWorldTurnContext(input: BuildWorldTurnContextInput): 
   const semanticMemberships = mapResult.memberships;
   const directlyNamedIds = uniqueIds(mentioned.filter((hit) => hit.canonTier !== 'genealogy').map((hit) => hit.id));
   const strongRelationshipIds = relationIds(playerRecord);
-  const recentInteractionIds = recentParticipantIds(gameState);
+  const recentInteractionIds = recentParticipantIds(gameState, visibleWorldEvents);
   const timelinePressures = upcomingPressures(gameState.worldHistory, timeline, currentDate);
   const eventParticipantIds = uniqueIds(timelinePressures.flatMap((event) => event.participants.map((person) => person.characterId)));
   const candidateIds = uniqueIds([
@@ -287,7 +292,7 @@ export async function buildWorldTurnContext(input: BuildWorldTurnContextInput): 
     })
     .sort((left, right) => right.importance - left.importance || left.name.localeCompare(right.name, 'zh-CN'))
     .slice(0, WORLD_CONTEXT_LIMITS.neighboringLocations);
-  const recentWorldEvents = gameState.worldRuntime.events
+  const recentWorldEvents = visibleWorldEvents
     .filter((event) => event.location?.locationId === gameState.lord.location.locationId
       || event.actorIds.some((id) => selectedIds.has(id)))
     .slice(-WORLD_CONTEXT_LIMITS.events);

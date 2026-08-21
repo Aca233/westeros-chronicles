@@ -16,6 +16,7 @@ import { useGameStore } from '../../store/useGameStore'
 import { StaticCharacterRepository } from '../characters/staticCharacterRepository'
 import type { CharacterTitleHolderSummary, CharacterId } from '../characters/types'
 import { pendingTravelTransactionFor } from '../world/worldTransactionQueue'
+import { playerWorldEventViewer } from '../world/worldEventVisibility'
 import {
   knownCharacterIds,
   projectKnownAssetMapPoints,
@@ -112,7 +113,8 @@ export const MapDrawer: React.FC<MapDrawerProps> = ({ onSelectCharacter }) => {
       { year: currentYear, month: currentMonth, day: currentDay },
       worldRuntime.events,
       worldRuntime.titles,
-    ) : [], [currentDay, currentMonth, currentYear, needsPolitics, politicalSource, worldHistory, worldRuntime.events, worldRuntime.titles])
+      playerWorldEventViewer({ lord, worldCharacters }),
+    ) : [], [currentDay, currentMonth, currentYear, lord.canonicalCharacterId, needsPolitics, politicalSource, worldCharacters?.runId, worldHistory, worldRuntime.events, worldRuntime.titles])
 
   const discoveredCharacterIds = useMemo(
     () => needsCharacters ? knownCharacterIds(characterTurnContext?.characters, worldHistory) : [],

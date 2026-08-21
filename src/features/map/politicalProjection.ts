@@ -8,6 +8,7 @@ import {
 } from '../world/worldHistory.ts'
 import type { SemanticMembership } from './types.ts'
 import type { TitleWorldPatch, WorldEvent } from '../world/worldRuntimeTypes.ts'
+import { selectVisibleWorldEvents, type WorldEventViewer } from '../world/worldEventVisibility.ts'
 
 export interface StaticPoliticalTitle {
   baronyId: string
@@ -215,7 +216,6 @@ function datedTransitions(history: WorldHistoryState, worldEvents: readonly Worl
     }
   }
   for (const event of worldEvents) {
-    if (event.visibility === 'secret') continue
     const titleId = event.subjectRefs.find((subject) => subject.type === 'title')?.titleId
     const holderId = event.actorIds[0]
       ?? event.subjectRefs.find((subject) => subject.type === 'character')?.characterId
@@ -319,13 +319,15 @@ export function projectPoliticalState(
   atDate: WorldDate,
   worldEvents: readonly WorldEvent[] = [],
   titlePatches: Readonly<Record<string, TitleWorldPatch>> = {},
+  viewer: WorldEventViewer = { kind: 'player' },
 ): PoliticalFeatureState[] {
   const characterValues = characterList(characters)
   const charactersById = characterIndex(characters)
   const holders = baselineHolders(characterValues)
   const controllers = new Map(holders)
   const contestedByTitle = new Map<string, CharacterId[]>()
-  for (const event of datedTransitions(history, worldEvents)) {
+  const visibleWorldEvents = selectVisibleWorldEvents(worldEvents, viewer)
+  for (const event of datedTransitions(history, visibleWorldEvents)) {
     if (compareWorldDates(event.date, atDate) > 0) break
     applyTransition(holders, controllers, contestedByTitle, event.transition)
   }

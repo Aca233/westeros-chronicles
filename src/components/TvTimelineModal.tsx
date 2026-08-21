@@ -23,6 +23,7 @@ import { clsx } from 'clsx';
 import { useGameStore } from '../store/useGameStore';
 import { CANONICAL_TIMELINE } from '../data/generated/canonicalTimeline';
 import { projectActualTimeline, projectCanonicalTimeline, type TimelineProjectionEvent } from '../features/world/worldHistoryProjection';
+import { playerWorldEventViewer, selectVisibleWorldEvents } from '../features/world/worldEventVisibility';
 import type { CharacterId } from '../features/characters/types';
 import type { WorldLocationRef } from '../features/map/types';
 
@@ -154,14 +155,20 @@ export const TvTimelineModal: React.FC<TvTimelineModalProps> = ({
 }) => {
   const worldHistory = useGameStore((state) => state.gameState.worldHistory);
   const worldEvents = useGameStore((state) => state.gameState.worldRuntime.events);
-  const worldEventById = useMemo(() => new Map(worldEvents.map((event) => [event.id, event])), [worldEvents]);
+  const lord = useGameStore((state) => state.gameState.lord);
+  const worldCharacters = useGameStore((state) => state.gameState.worldCharacters);
+  const visibleWorldEvents = useMemo(
+    () => selectVisibleWorldEvents(worldEvents, playerWorldEventViewer({ lord, worldCharacters })),
+    [lord.canonicalCharacterId, worldCharacters?.runId, worldEvents],
+  );
+  const worldEventById = useMemo(() => new Map(visibleWorldEvents.map((event) => [event.id, event])), [visibleWorldEvents]);
   const [timelineMode, setTimelineMode] = useState<TimelineMode>('actual');
   const timelineData = useMemo(() => projectionToTimelineData(
     timelineMode === 'actual'
-      ? projectActualTimeline(worldHistory, worldEvents, CANONICAL_TIMELINE)
+      ? projectActualTimeline(worldHistory, visibleWorldEvents, CANONICAL_TIMELINE)
       : projectCanonicalTimeline(worldHistory, CANONICAL_TIMELINE),
     timelineMode,
-  ), [timelineMode, worldEvents, worldHistory]);
+  ), [timelineMode, visibleWorldEvents, worldHistory]);
   const loading = false;
   const [selectedYear, setSelectedYear] = useState<number | 'all'>('all');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');

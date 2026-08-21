@@ -108,6 +108,10 @@ function assertEvent(value: unknown): asserts value is WorldEvent {
   if (!EVENT_SOURCES.has(String(value.source))) throw new Error('世界事件来源不合法');
   if (value.canonicalEventId !== undefined) assertStableId(value.canonicalEventId, '原作事件 ID');
   if (!EVENT_VISIBILITIES.has(String(value.visibility))) throw new Error('世界事件可见性不合法');
+  if (value.knownBy !== undefined) {
+    if (!Array.isArray(value.knownBy)) throw new Error('世界事件知情人物不合法');
+    value.knownBy.forEach((id) => assertCharacterId(id, '世界事件知情人物 ID'));
+  }
 }
 
 function assertAssetPatch(assetId: string, value: unknown): asserts value is AssetWorldPatch {

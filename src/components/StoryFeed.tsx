@@ -14,6 +14,7 @@ import { worldEventDisplayTitle, worldEventParticipantIds } from '../features/wo
 import { StaticCharacterRepository } from '../features/characters/staticCharacterRepository';
 import { mapRepository } from '../features/map/repository';
 import { buildStoryMentionEntities, findNextStoryEntity, supplementMentionedCharacterIds } from '../features/world/storyEntityLinks';
+import { playerWorldEventViewer, selectVisibleWorldEvents } from '../features/world/worldEventVisibility';
 
 const storyCharacterRepository = new StaticCharacterRepository();
 
@@ -189,7 +190,14 @@ export const StoryFeed: React.FC<StoryFeedProps> = ({
   };
 
   const isEmptyStage = gameState.turns.length === 0 && !isStreaming;
-  const worldEventsById = new Map(gameState.worldRuntime.events.map((event) => [event.id, event]));
+  const visibleWorldEvents = useMemo(
+    () => selectVisibleWorldEvents(gameState.worldRuntime.events, playerWorldEventViewer(gameState)),
+    [gameState.lord.canonicalCharacterId, gameState.worldCharacters?.runId, gameState.worldRuntime.events],
+  );
+  const worldEventsById = useMemo(
+    () => new Map(visibleWorldEvents.map((event) => [event.id, event])),
+    [visibleWorldEvents],
+  );
 
   return (
     <div className="relative min-h-0 flex-1">

@@ -72,6 +72,7 @@ export interface WorldEvent {
   source: WorldEventSource;
   canonicalEventId?: string;
   visibility: 'public' | 'secret';
+  knownBy?: CharacterId[];
 }
 
 export interface PendingWorldTransaction {

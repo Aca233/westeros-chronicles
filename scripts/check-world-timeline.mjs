@@ -3,7 +3,8 @@ import { readFile } from 'node:fs/promises';
 
 const source = await readFile('src/components/TvTimelineModal.tsx', 'utf8');
 assert.match(source, /useState<TimelineMode>\('actual'\)/, '时间线必须默认打开本世界视图');
-assert.match(source, /projectActualTimeline\(worldHistory, worldEvents, CANONICAL_TIMELINE\)/, '本世界视图必须读取统一世界事件账本投影');
+assert.match(source, /selectVisibleWorldEvents\(worldEvents, playerWorldEventViewer/, '本世界视图必须先应用玩家事件可见性边界');
+assert.match(source, /projectActualTimeline\(worldHistory, visibleWorldEvents, CANONICAL_TIMELINE\)/, '本世界视图必须读取玩家可见的统一世界事件账本投影');
 assert.match(source, /state\.gameState\.worldRuntime\.events/, '本世界视图必须订阅统一世界事件');
 assert.match(source, /projectCanonicalTimeline\(worldHistory, CANONICAL_TIMELINE\)/, '原作节点视图必须读取条件化时间表投影');
 assert.match(source, /historical:[^\n]*开局前历史/);
