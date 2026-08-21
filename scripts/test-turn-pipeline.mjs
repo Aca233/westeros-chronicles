@@ -5,6 +5,7 @@ const bundle = await build({
   stdin: {
     contents: [
       "export * from './src/services/turnResolution.ts';",
+      "export { parseTurnResolutionOutput as directParseTurnResolutionOutput, buildTurnResolutionMessages as directBuildTurnResolutionMessages, requestTurnResolution as directRequestTurnResolution } from './src/services/turn/resolutionProtocol.ts';",
       "export * from './src/services/turnNarration.ts';",
       "export { streamNarrativeCompletion } from './src/services/api.ts';",
       "export * from './src/data/presets.ts';",
@@ -23,10 +24,20 @@ const url = `data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].tex
 const {
   PRESET_SCENARIOS,
   buildSettledNarrativeMessages,
+  buildTurnResolutionMessages,
+  directBuildTurnResolutionMessages,
+  directParseTurnResolutionOutput,
+  directRequestTurnResolution,
+  parseTurnResolutionOutput,
+  requestTurnResolution,
   createInitialAgotArtifactWorldState,
   settleTurnDraft,
   streamNarrativeCompletion,
 } = await import(url);
+
+assert.equal(parseTurnResolutionOutput, directParseTurnResolutionOutput);
+assert.equal(buildTurnResolutionMessages, directBuildTurnResolutionMessages);
+assert.equal(requestTurnResolution, directRequestTurnResolution);
 
 const lord = structuredClone(PRESET_SCENARIOS[0].initialLord);
 const gameState = {
