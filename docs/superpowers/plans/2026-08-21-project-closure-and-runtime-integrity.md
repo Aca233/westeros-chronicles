@@ -160,12 +160,12 @@
 **Interfaces:**
 - Produces: `npm run test:ui`
 
-- [ ] Add Vitest, jsdom and Testing Library.
-- [ ] Test startup hydration and import replacement through rendered UI.
-- [ ] Test story entity → dossier, asset → detail → return, and map error → ordinary turn.
-- [ ] Keep source-string checks temporarily but stop treating them as interaction proof.
-- [ ] Add `test:ui` to `verify` before production build.
-- [ ] Commit `test: cover critical runtime flows in the DOM`.
+- [x] Add Vitest, jsdom and Testing Library.
+- [x] Test startup hydration and import replacement through rendered UI.
+- [x] Test story entity → dossier, asset → detail → return, and map error → ordinary turn.
+- [x] Keep source-string checks temporarily but stop treating them as interaction proof.
+- [x] Add `test:ui` to `verify` before production build.
+- [x] Commit `test: cover critical runtime flows in the DOM`.
 
 ### Task 8: DEM 海面与地图验证
 
@@ -176,11 +176,11 @@
 **Interfaces:**
 - Preserves: `build_dem_tiles(...) -> TileReport`
 
-- [ ] Preserve the existing failing ocean test as the regression test.
-- [ ] Trace whether resampling introduces edge values after source flattening.
-- [ ] Apply the water mask at output resolution before Terrain-RGB encoding.
-- [ ] Run `npm run test:agot-map-import` and `npm run verify:map`.
-- [ ] Commit `fix: keep masked ocean flat in generated dem tiles`.
+- [x] Preserve the existing failing ocean test as the regression test.
+- [x] Trace whether resampling introduces edge values after source flattening.
+- [x] Apply the water mask at output resolution before Terrain-RGB encoding.
+- [x] Run `npm run test:agot-map-import` and `npm run verify:map`.
+- [x] Commit `fix: keep masked ocean flat in generated dem tiles`.
 
 ### Task 9: 首屏与仓库负载整理
 
@@ -195,12 +195,12 @@
 **Interfaces:**
 - Preserves synchronous catalog access inside settlement after an explicit preload.
 
-- [ ] Add a bundle-budget check that fails on the current oversized entry chunk.
-- [ ] Move heavy optional panels and generated catalogs behind explicit lazy boundaries.
-- [ ] Remove tracked pilot duplicates and ignore the whole `tmp/` directory.
-- [ ] Confirm required production map/model assets remain present.
-- [ ] Run build and bundle-budget verification.
-- [ ] Commit `perf: reduce startup and repository asset overhead`.
+- [x] Add a bundle-budget check that fails on the current oversized entry chunk.
+- [x] Move heavy optional panels and generated catalogs behind explicit lazy boundaries.
+- [x] Remove tracked pilot duplicates and ignore the whole `tmp/` directory.
+- [x] Confirm required production map/model assets remain present.
+- [x] Run build and bundle-budget verification.
+- [x] Commit `perf: reduce startup and repository asset overhead`.
 
 ### Task 10: 文档与最终验证
 
@@ -213,8 +213,8 @@
 **Interfaces:**
 - Produces one authoritative current architecture document.
 
-- [ ] Update README to schema version 4 and five title ranks.
-- [ ] Document authoritative state, projections, degradation, persistence and provider boundaries.
-- [ ] Mark superseded specifications explicitly.
-- [ ] Run `npm run verify`, `npm run build`, `git diff --check` and repository status checks.
-- [ ] Commit `docs: align project documentation with runtime architecture`.
+- [x] Update README to schema version 4 and five title ranks.
+- [x] Document authoritative state, projections, degradation, persistence and provider boundaries.
+- [x] Mark superseded specifications explicitly.
+- [x] Run `npm run verify`, `npm run build`, `git diff --check` and repository status checks.
+- [x] Commit `docs: align project documentation with runtime architecture`.
