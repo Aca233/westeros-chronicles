@@ -72,6 +72,8 @@ class ArtifactWorldStateProjectionTests(unittest.TestCase):
         throne = result.artifacts["artifact.iron-throne"]
 
         self.assertEqual(throne["lawfulControllerId"], "agot:Baratheon_2")
+        self.assertEqual(throne["projectionKind"], "political-symbol")
+        self.assertEqual(result.artifacts["artifact.longclaw"]["projectionKind"], "portable-asset")
         self.assertEqual(throne["placement"], {
             "type": "title",
             "titleId": "b_the_red_keep",

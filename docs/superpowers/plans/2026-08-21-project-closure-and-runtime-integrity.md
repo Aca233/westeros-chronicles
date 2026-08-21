@@ -141,12 +141,12 @@
 **Interfaces:**
 - Produces: `projectionKind: 'portable-asset' | 'political-symbol'`
 
-- [ ] Write importer and runtime tests proving classification comes from generated data.
-- [ ] Add classification during import and schema validation.
-- [ ] Regenerate deterministic outputs twice and compare hashes.
-- [ ] Retain the ID guard only as backward-compatible defense.
-- [ ] Run artifact, asset baseline and world projection suites.
-- [ ] Commit `refactor: classify political symbols outside asset projection`.
+- [x] Write importer and runtime tests proving classification comes from generated data.
+- [x] Add classification during import and schema validation.
+- [x] Regenerate deterministic outputs twice and compare hashes.
+- [x] Retain the ID guard only as backward-compatible defense.
+- [x] Run artifact, asset baseline and world projection suites.
+- [x] Commit `refactor: classify political symbols outside asset projection`.
 
 ### Task 7: DOM interaction test foundation
 

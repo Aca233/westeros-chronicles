@@ -13,6 +13,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Dayne_7",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_vs_dawn_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -28,6 +29,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "dynastyId": "dynn_Hightower",
         "type": "dynasty"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_moons_rod_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -43,6 +45,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Strickland_1",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_bittersteel_skull_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -58,25 +61,11 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Baratheon_2",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_bobby_hammer_cooler_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
         "line": 513
-      }
-    },
-    "artifact.generated.brightflame-armor": {
-      "definitionId": "artifact.generated.brightflame-armor",
-      "equipped": false,
-      "instanceId": "world.artifact.generated.brightflame-armor",
-      "lawfulControllerId": "agot:Brightflame_9",
-      "placement": {
-        "characterId": "agot:Brightflame_9",
-        "type": "character"
-      },
-      "source": {
-        "effectId": "agot_create_artifact_brightflame_armor_effect",
-        "file": "00_agot_scenario_artifacts_effects.txt",
-        "line": 473
       }
     },
     "artifact.generated.bumblin-sword": {
@@ -88,6 +77,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Beesbury_2",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_bumblin_sword_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -103,6 +93,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Strickland_1",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_daemon_blackfyre_skull_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -118,6 +109,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "dynastyId": "dynn_Dennecent",
         "type": "dynasty"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_dennecent_axe_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -134,6 +126,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "titleId": "b_casterly_rock",
         "type": "title"
       },
+      "projectionKind": "political-symbol",
       "source": {
         "effectId": "agot_create_artifact_gilded_throne_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -149,6 +142,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "dynastyId": "dynn_Wyl",
         "type": "dynasty"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_hands_hand_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -165,6 +159,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "titleId": "b_winterfell",
         "type": "title"
       },
+      "projectionKind": "political-symbol",
       "source": {
         "effectId": "agot_create_artifact_high_seat_of_winter_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -181,6 +176,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "titleId": "b_the_red_keep",
         "type": "title"
       },
+      "projectionKind": "political-symbol",
       "source": {
         "effectId": "agot_create_artifact_iron_throne_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -196,6 +192,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "dynastyId": "dynn_Celtigar",
         "type": "dynasty"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_krakenhorn_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -211,6 +208,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Strickland_1",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_maelys_skull_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -227,6 +225,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "titleId": "b_dragonstone",
         "type": "title"
       },
+      "projectionKind": "political-symbol",
       "source": {
         "effectId": "agot_create_artifact_painted_table_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -242,6 +241,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "dynastyId": "dynn_Blackwood",
         "type": "dynasty"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_raven_feather_cloak_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -257,6 +257,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Baratheon_2",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_roberts_armor_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -272,6 +273,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "dynastyId": "dynn_Royce",
         "type": "dynasty"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_royce_runic_armor_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -288,6 +290,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "titleId": "b_highgarden",
         "type": "title"
       },
+      "projectionKind": "political-symbol",
       "source": {
         "effectId": "agot_create_artifact_ruined_oakenseat_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -304,6 +307,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "titleId": "b_pyke",
         "type": "title"
       },
+      "projectionKind": "political-symbol",
       "source": {
         "effectId": "agot_create_artifact_seastone_chair_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -319,6 +323,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Selmy_3",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_the_white_book_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -334,6 +339,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "dynastyId": "dynn_Uller",
         "type": "dynasty"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_uller_skull_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -349,6 +355,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Greyjoy_6",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_valyrian_steel_armor_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -364,6 +371,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Wyl_1",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_vs_adders_fang_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -379,6 +387,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Mallister_4",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_vs_ascendant_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -394,6 +403,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Wynch_2",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_vs_blood_moon_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -409,6 +419,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Crakehall_3",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_vs_boartusk_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -424,6 +435,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Vaith_3",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_vs_boneclaw_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -439,6 +451,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Gower_1",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_vs_clover_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -454,6 +467,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Massey_1",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_vs_dancer_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -469,6 +483,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Vyrwel_7",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_vs_darktalon_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -484,6 +499,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Ironsmith_19",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_vs_defiance_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -499,6 +515,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Florent_2",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_vs_deftpaw_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -514,6 +531,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Whent_3",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_vs_disputant_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -529,6 +547,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Caron_5",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_vs_dusk_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -544,6 +563,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Redwyne_4",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_vs_elegance_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -559,6 +579,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Rowan_1",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_vs_evergold_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -574,6 +595,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Morrigen_2",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_vs_feastmaker_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -589,6 +611,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Falwell_1",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_vs_fools_errand_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -604,6 +627,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Yronwood_2",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_vs_guardian_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -619,6 +643,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Staedmon_1",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_vs_heartbreaker_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -634,6 +659,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Tarly_1",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_vs_heartsbane_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -649,6 +675,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Vance_Wayfarers_Rest_1",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_vs_honest_broker_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -664,6 +691,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Forrester_2",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_vs_iron_will_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -679,6 +707,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Corbray_3",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_vs_lady_forlorn_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -694,6 +723,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Oldflowers_25",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_vs_longthorn_ruined_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -709,6 +739,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Penrose_1",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_vs_mourning_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -724,6 +755,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Harlaw_12",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_vs_nightfall_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -739,6 +771,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Oakheart_1",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_vs_oldroot_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -754,6 +787,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Roxton_72",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_vs_orphan_maker_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -769,6 +803,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Celtigar_2",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_vs_pincer_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -784,6 +819,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Jast_2",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_vs_pride_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -799,6 +835,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Drumm_1",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_vs_red_rain_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -814,6 +851,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Prester_1",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_vs_redhorn_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -829,6 +867,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Cargyll_27",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_vs_remige_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -844,6 +883,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Belmore_3",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_vs_resonance_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -859,6 +899,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Velaryon_2",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_vs_seafoam_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -874,6 +915,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Banefort_1",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_vs_skullcleaver_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -889,6 +931,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Darke_2",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_vs_stalwart_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -904,6 +947,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Templeton_1",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_vs_starcross_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -919,6 +963,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Serrett_1",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_vs_supremacy_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -934,6 +979,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Swann_1",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_vs_swansong_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -949,6 +995,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Bar_Emmon_3",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_vs_swordfish_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -964,6 +1011,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Brax_1",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_vs_tranquility_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -979,6 +1027,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Waynwood_5",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_vs_upright_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -994,6 +1043,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Vypren_1",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_vs_venom_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -1009,6 +1059,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Hightower_5",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_vs_vigilance_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -1024,25 +1075,11 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Lydden_3",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_vs_widestripe_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
         "line": 1422
-      }
-    },
-    "artifact.generated.vs-wyrmfang": {
-      "definitionId": "artifact.generated.vs-wyrmfang",
-      "equipped": false,
-      "instanceId": "world.artifact.generated.vs-wyrmfang",
-      "lawfulControllerId": "agot:Dustin_9",
-      "placement": {
-        "characterId": "agot:Dustin_9",
-        "type": "character"
-      },
-      "source": {
-        "effectId": "agot_create_artifact_vs_wyrmfang_effect",
-        "file": "00_agot_scenario_artifacts_effects.txt",
-        "line": 1324
       }
     },
     "artifact.generated.weirwood-throne": {
@@ -1055,6 +1092,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "titleId": "b_the_eyrie",
         "type": "title"
       },
+      "projectionKind": "political-symbol",
       "source": {
         "effectId": "agot_create_artifact_weirwood_throne_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -1070,6 +1108,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Stark_3",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_vs_ice_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -1085,6 +1124,7 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
         "characterId": "agot:Mormont_2",
         "type": "character"
       },
+      "projectionKind": "portable-asset",
       "source": {
         "effectId": "agot_create_artifact_vs_longclaw_effect",
         "file": "00_agot_scenario_artifacts_effects.txt",
@@ -1092,8 +1132,8 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
       }
     }
   },
-  "characterDatasetHash": "f055e3669eafe8599b80efa1b08060b7393b51a7f8d4f23167f61cf36e6005e8",
-  "datasetHash": "d85abea740bf52c3182f4bc7642a96a845536e9761ffa88852bd1f4feea1d8fa",
+  "characterDatasetHash": "da9f3e5f1e3105dd020a18131cbac7027e6058c3609227c403b11de369a1c38c",
+  "datasetHash": "09a5d6b7d4be63aa3e7adc89b5f8d424e8d16227066e5283710a3b5940fdb58e",
   "schemaVersion": 1,
   "startDate": "8298.1.1"
 } as const satisfies WorldArtifactState;

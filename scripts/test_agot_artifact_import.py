@@ -131,6 +131,7 @@ class ArtifactWriterTests(unittest.TestCase):
                     "instanceId": f"world.{item_id}",
                     "definitionId": item_id,
                     "lawfulControllerId": "agot:Tester_1",
+                    "projectionKind": "portable-asset",
                     "placement": {"type": "character", "characterId": "agot:Tester_1"},
                     "equipped": False,
                     "source": {"file": "scenario.txt", "line": 4, "effectId": "test_crown_effect"},

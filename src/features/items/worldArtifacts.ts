@@ -12,9 +12,12 @@ export interface WorldArtifactSource {
   effectId: string;
 }
 
+export type WorldArtifactProjectionKind = 'portable-asset' | 'political-symbol';
+
 export interface WorldArtifactRecord {
   instanceId: string;
   definitionId: string;
+  projectionKind: WorldArtifactProjectionKind;
   lawfulControllerId: string;
   placement: WorldArtifactPlacement;
   equipped: boolean;
@@ -70,6 +73,9 @@ export function validateWorldArtifactState(value: unknown): asserts value is Wor
     instanceIds.add(raw.instanceId);
     if (typeof raw.lawfulControllerId !== 'string' || !raw.lawfulControllerId) {
       throw new Error(`世界神器控制者缺失：${definitionId}`);
+    }
+    if (raw.projectionKind !== 'portable-asset' && raw.projectionKind !== 'political-symbol') {
+      throw new Error(`世界神器投影分类无效：${definitionId}`);
     }
     if (raw.equipped !== false) throw new Error(`世界神器不得在开局自动穿戴：${definitionId}`);
     validatePlacement(raw.placement, definitionId);

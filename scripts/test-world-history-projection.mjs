@@ -68,7 +68,7 @@ mergedArtifacts.artifacts['artifact.dynasty'] = {
   placement: { type: 'dynasty', dynastyId: 'dynn_stark' }, equipped: false, source: { file: '', line: 1, effectId: '' },
 };
 mergedArtifacts.artifacts['artifact.iron-throne'] = {
-  instanceId: 'world.artifact.generated.iron-throne', definitionId: 'artifact.generated.iron-throne', lawfulControllerId: 'agot:a',
+  instanceId: 'world.artifact.generated.iron-throne', definitionId: 'artifact.generated.iron-throne', projectionKind: 'political-symbol', lawfulControllerId: 'agot:a',
   placement: { type: 'title', titleId: 'b_the_red_keep', controllerId: 'agot:a' }, equipped: false, source: { file: '', line: 1, effectId: '' },
 };
 const mergedEquipment = projectNpcEquipment(ordinaryItems, mergedArtifacts, 'agot:a');

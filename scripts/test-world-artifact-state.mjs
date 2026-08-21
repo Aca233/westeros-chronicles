@@ -6,6 +6,7 @@ const bundle = await build({
     contents: [
       "export * from './src/data/itemDefinitions.ts';",
       "export * from './src/features/items/worldArtifacts.ts';",
+      "export * from './src/features/items/worldArtifactClassification.ts';",
       "export * from './src/store/useGameStore.ts';",
     ].join('\n'),
     resolveDir: process.cwd(),
@@ -21,6 +22,7 @@ const moduleUrl = `data:text/javascript;base64,${Buffer.from(bundle.outputFiles[
 const {
   ITEM_CATALOG,
   createInitialAgotArtifactWorldState,
+  isWorldArtifactAsset,
   listCharacterRecordedEquipment,
   validateWorldArtifactState,
   useGameStore,
@@ -33,27 +35,34 @@ validateWorldArtifactState(first);
 assert.equal(first.schemaVersion, 1);
 assert.equal(first.startDate, '8298.1.1');
 assert.match(first.datasetHash, /^[a-f0-9]{64}$/);
-assert.equal(Object.keys(first.artifacts).length, 72);
+assert.equal(Object.keys(first.artifacts).length, 70);
 
 const longclaw = first.artifacts['artifact.longclaw'];
 assert.ok(longclaw, '298 AC world state should contain Longclaw');
 assert.equal(longclaw.lawfulControllerId, 'agot:Mormont_2');
 assert.deepEqual(longclaw.placement, { type: 'character', characterId: 'agot:Mormont_2' });
 assert.equal(longclaw.equipped, false);
+assert.equal(longclaw.projectionKind, 'portable-asset');
 
 const throne = first.artifacts['artifact.generated.iron-throne'];
 assert.ok(throne, '298 AC world state should contain the Iron Throne');
 assert.equal(throne.lawfulControllerId, 'agot:Baratheon_2');
+assert.equal(throne.projectionKind, 'political-symbol');
 assert.deepEqual(throne.placement, {
   type: 'title',
   titleId: 'b_the_red_keep',
   controllerId: 'agot:Baratheon_2',
 });
+assert.equal(isWorldArtifactAsset(throne), false, 'generated political symbols must be excluded by explicit classification');
+assert.equal(isWorldArtifactAsset(longclaw), true, 'generated portable assets remain in asset projections');
+assert.equal(isWorldArtifactAsset({ definitionId: 'artifact.generated.iron-throne' }), false, 'legacy records retain the ID guard');
 
 const records = Object.values(first.artifacts);
 assert.equal(new Set(records.map((record) => record.instanceId)).size, records.length);
 assert.equal(new Set(records.map((record) => record.definitionId)).size, records.length);
 assert.ok(records.every((record) => record.equipped === false));
+assert.ok(records.every((record) => record.projectionKind === 'portable-asset' || record.projectionKind === 'political-symbol'));
+assert.equal(records.filter((record) => record.projectionKind === 'political-symbol').length, 7);
 assert.ok(records.every((record) => ITEM_CATALOG.has(record.definitionId)), 'world artifact must reference the item catalog');
 assert.ok(records.every((record) => !/crown.*winter|winter.*crown/i.test(record.source.effectId)), '298 AC should not create a winter crown');
 

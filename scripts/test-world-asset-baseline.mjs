@@ -57,6 +57,7 @@ const worldArtifacts = {
     iron_throne: {
       instanceId: 'world.artifact.generated.iron-throne',
       definitionId: 'artifact.generated.iron-throne',
+      projectionKind: 'political-symbol',
       lawfulControllerId: 'agot:Baratheon_2',
       placement: { type: 'title', titleId: 'b_the_red_keep', controllerId: 'agot:Baratheon_2' },
       equipped: false,

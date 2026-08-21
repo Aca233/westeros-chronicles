@@ -314,6 +314,7 @@ def project_artifact_world_state(
         artifacts[spec.definition_id] = {
             "instanceId": f"world.{spec.definition_id}",
             "definitionId": spec.definition_id,
+            "projectionKind": "political-symbol" if spec.subcategory == "throne_special" else "portable-asset",
             "lawfulControllerId": owner_scope.controller_id,
             "placement": placement,
             "equipped": False,
