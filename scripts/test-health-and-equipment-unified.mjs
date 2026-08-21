@@ -180,7 +180,10 @@ test('9. 长期健康特质（病残、疤痕、状态）解析与筛选机制',
 test('10. 健康与资产界面只读取统一世界资产分组', () => {
   const healthPanel = readFileSync('src/components/items/HealthAndEquipmentPanel.tsx', 'utf8');
   const assetSections = readFileSync('src/components/items/WorldAssetSections.tsx', 'utf8');
-  const characterWindow = readFileSync('src/components/Ck3CharacterWindow.tsx', 'utf8');
+  const characterWindow = [
+    readFileSync('src/components/Ck3CharacterWindow.tsx', 'utf8'),
+    readFileSync('src/components/character-window/CharacterAssetsTab.tsx', 'utf8'),
+  ].join('\n');
   assert.match(healthPanel, /dossier\.assetGroups\.equipment/);
   assert.match(healthPanel, /asset\.definitionId/);
   assert.doesNotMatch(healthPanel, /projectNpcEquipment/);

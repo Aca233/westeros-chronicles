@@ -1,4 +1,4 @@
-import { readFile } from 'node:fs/promises';
+import { readFile, readdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -14,14 +14,26 @@ async function read(relativePath) {
   }
 }
 
-const windowSource = await read('src/components/Ck3CharacterWindow.tsx');
+async function readTree(relativeDir) {
+  try {
+    const names = (await readdir(join(root, relativeDir))).filter((name) => /\.tsx?$/.test(name)).sort();
+    return (await Promise.all(names.map((name) => read(`${relativeDir}/${name}`)))).join('\n');
+  } catch {
+    failures.push(`缺少目录：${relativeDir}`);
+    return '';
+  }
+}
+
+const containerSource = await read('src/components/Ck3CharacterWindow.tsx');
+const childSource = await readTree('src/components/character-window');
+const windowSource = `${containerSource}\n${childSource}`;
 const appSource = await read('src/App.tsx');
 const healthPanelSource = await read('src/components/items/HealthAndEquipmentPanel.tsx');
 const itemManagementSource = await read('src/components/items/ItemManagementPanel.tsx');
 const assetSectionsSource = await read('src/components/items/WorldAssetSections.tsx');
 const dossierHookSource = await read('src/features/characters/useCharacterDossier.ts');
 
-if (!windowSource.includes('data-ck3-character-window')) failures.push('人物窗口缺少 CK3 根标记。');
+if (!containerSource.includes('data-ck3-character-window')) failures.push('人物窗口缺少 CK3 根标记。');
 const importsCk3CharacterWindow = appSource.includes("import { Ck3CharacterWindow } from './components/Ck3CharacterWindow'")
   || /import\(\s*['"]\.\/components\/Ck3CharacterWindow['"]\s*\)/.test(appSource);
 if (!importsCk3CharacterWindow) failures.push('App 尚未导入 CK3 人物窗口。');
@@ -44,7 +56,7 @@ for (const marker of ['dossier.name', 'dossier.title', 'dossier.house', 'dossier
   if (!windowSource.includes(marker)) failures.push(`通用人物身份区缺少 ${marker}。`);
 }
 for (const prop of ['selectedCharacterId', 'onSelectCharacter', 'onBack', 'onReturnToPlayer']) {
-  if (!windowSource.includes(prop)) failures.push(`人物窗口缺少通用人物导航参数 ${prop}。`);
+  if (!containerSource.includes(prop)) failures.push(`人物窗口缺少通用人物导航参数 ${prop}。`);
 }
 if (!windowSource.includes('useCharacterDossier')) failures.push('人物窗口没有接入通用玩家/NPC 档案加载器。');
 if (!windowSource.includes('data-character-card')) failures.push('关系人物卡尚不能打开对应人物档案。');
