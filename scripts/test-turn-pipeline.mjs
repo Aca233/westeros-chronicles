@@ -35,6 +35,7 @@ const {
   streamNarrativeCompletion,
 } = await import(url);
 
+assert.equal(typeof settleTurnDraft, 'function');
 assert.equal(parseTurnResolutionOutput, directParseTurnResolutionOutput);
 assert.equal(buildTurnResolutionMessages, directBuildTurnResolutionMessages);
 assert.equal(requestTurnResolution, directRequestTurnResolution);
@@ -84,6 +85,7 @@ assert.equal(settled.updatedLord.prestige, lord.prestige + 1);
 assert.equal(settled.worldHistory.turns.length, 1);
 assert.deepEqual(settled.worldHistory.turns[0].acceptedCommands.map((command) => command.type), ['MODIFY_PRESTIGE']);
 assert.equal(settled.worldRuntime.revision, settled.worldHistory.turns.length);
+assert.equal(settled.transactionId.startsWith('turn:'), true);
 
 
 const rejectedOnly = settleTurnDraft({

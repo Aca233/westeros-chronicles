@@ -30,7 +30,7 @@ function scan(rule, pattern, allowed) {
 scan(
   'UI 或业务代码不得直接读取世界神器原始表',
   /worldArtifacts(?:\?\.|\.)artifacts|\.worldArtifacts(?:\?\.|\.)artifacts/,
-  ['src/features/world/worldBaseline.ts', 'src/data/generated', 'src/features/items/worldArtifacts.ts'],
+  ['src/features/world/worldBaseline.ts', 'src/features/world/worldDisplayResolver.ts', 'src/data/generated', 'src/features/items/worldArtifacts.ts'],
 );
 scan(
   '物品位置写入只能发生在物品归约器或统一事务适配器',
@@ -53,13 +53,17 @@ for (const path of ['src/features/map/dynamicMapSubjects.ts']) {
 scan(
   '世界事实只能由统一世界事件投影生成',
   /(?:const|let)\s+\w+\s*:\s*WorldEventFact\s*=\s*\{/,
-  ['src/services/turnResolution.ts', 'src/features/world/worldHistory.ts'],
+  ['src/services/turn/legacySettlement.ts', 'src/services/turn/settlement.ts', 'src/features/world/worldHistory.ts'],
 );
 
 const lordLocationAllowlist = new Set([
-  'src/services/turnResolution.ts',
+  'src/services/turn/legacySettlement.ts',
+  'src/services/turn/settlement.ts',
+  'src/services/turn/worldPreparation.ts',
   'src/services/stateReducer.ts',
   'src/features/world/worldTurnContext.ts',
+  'src/features/world/worldDisplayResolver.ts',
+  'src/features/world/useWorldEventDisplays.ts',
   'src/features/characters/useCharacterDossier.ts',
   'src/features/map/TravelPlanner.tsx',
   'src/features/map/JourneyPanel.tsx',

@@ -144,7 +144,9 @@ test('附带抵达事实以单一事务推进地点、日期、事件和叙事�
     preparedWorld,
   });
 
+  assert.equal(preparedWorld.availability.map, 'available');
   assert.equal(settled.worldRuntime.revision, 1);
+  assert.equal(settled.worldRuntime.revision, settled.worldHistory.turns.length);
   assert.equal(settled.worldLocation.locationId, 'b_red_keep');
   assert.equal(settled.worldLocation.sceneLocation, '议事厅');
   assert.equal(settled.nextDate.day, 25);
