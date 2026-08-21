@@ -1,7 +1,11 @@
 import { readFile } from 'node:fs/promises';
 
 const source = await readFile('src/components/CharacterPortrait.tsx', 'utf8');
-const windowSource = await readFile('src/components/Ck3CharacterWindow.tsx', 'utf8');
+const windowSource = [
+  await readFile('src/components/Ck3CharacterWindow.tsx', 'utf8'),
+  await readFile('src/components/character-window/CharacterIdentityHeader.tsx', 'utf8'),
+  await readFile('src/components/character-window/CharacterRelationsTab.tsx', 'utf8'),
+].join('\n');
 const searchSource = await readFile('src/components/CharacterSearch.tsx', 'utf8');
 const creatorSource = await readFile('src/components/CharacterCreator.tsx', 'utf8');
 const failures = [];
