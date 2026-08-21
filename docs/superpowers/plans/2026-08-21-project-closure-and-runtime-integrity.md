@@ -121,12 +121,12 @@
 **Interfaces:**
 - Produces: `resolveWorldEventDisplay(event, repositories): Promise<WorldEventDisplay>`
 
-- [ ] Write failing tests asserting exact character/location/title/asset labels.
-- [ ] Implement cached display-name resolution with natural-language fallback.
-- [ ] Replace generic “查看人物/地点/资产” labels with entity names.
-- [ ] Hide internal command enum names from default presentation.
-- [ ] Keep raw audit data only in an opt-in disclosure.
-- [ ] Commit `fix: present world facts with canonical names`.
+- [x] Write failing tests asserting exact character/location/title/asset labels.
+- [x] Implement cached display-name resolution with natural-language fallback.
+- [x] Replace generic “查看人物/地点/资产” labels with entity names.
+- [x] Hide internal command enum names from default presentation.
+- [x] Keep raw audit data only in an opt-in disclosure.
+- [x] Commit `fix: present world facts with canonical names`.
 
 ### Task 6: 显式资产分类
 

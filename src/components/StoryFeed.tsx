@@ -10,11 +10,12 @@ import { OpeningCeremony } from './OpeningCeremony';
 import type { CharacterId } from '../features/characters/types';
 import type { WorldEvent } from '../features/world/worldRuntimeTypes';
 import type { WorldLocationRef } from '../features/map/types';
-import { worldEventDisplayTitle, worldEventParticipantIds } from '../features/world/worldHistoryProjection';
 import { StaticCharacterRepository } from '../features/characters/staticCharacterRepository';
 import { mapRepository } from '../features/map/repository';
 import { buildStoryMentionEntities, findNextStoryEntity, supplementMentionedCharacterIds } from '../features/world/storyEntityLinks';
 import { playerWorldEventViewer, selectVisibleWorldEvents } from '../features/world/worldEventVisibility';
+import { useWorldEventDisplays } from '../features/world/useWorldEventDisplays';
+import type { WorldEventDisplay } from '../features/world/worldDisplayResolver';
 
 const storyCharacterRepository = new StaticCharacterRepository();
 
@@ -198,6 +199,7 @@ export const StoryFeed: React.FC<StoryFeedProps> = ({
     () => new Map(visibleWorldEvents.map((event) => [event.id, event])),
     [visibleWorldEvents],
   );
+  const worldEventDisplays = useWorldEventDisplays(visibleWorldEvents, gameState);
 
   return (
     <div className="relative min-h-0 flex-1">
@@ -219,6 +221,7 @@ export const StoryFeed: React.FC<StoryFeedProps> = ({
               turn={turn}
               isFirst={index === 0}
               entities={storyEntities}
+              worldEventDisplays={worldEventDisplays}
               facts={(gameState.worldHistory.turns.find((entry) => entry.turn === turn.turnNumber)?.eventIds ?? [])
                 .flatMap((eventId) => worldEventsById.get(eventId) ?? [])}
               onSelectCharacter={onSelectCharacter}
@@ -274,6 +277,7 @@ function SceneBlock({
   turn,
   isFirst,
   facts,
+  worldEventDisplays,
   entities,
   onSelectCharacter,
   onOpenLocation,
@@ -282,6 +286,7 @@ function SceneBlock({
   turn: StoryTurn;
   isFirst: boolean;
   facts: readonly WorldEvent[];
+  worldEventDisplays: ReadonlyMap<string, WorldEventDisplay>;
   entities: readonly EntityInfo[];
   onSelectCharacter: (characterId: CharacterId) => void;
   onOpenLocation: (location: WorldLocationRef) => void;
@@ -406,25 +411,29 @@ function SceneBlock({
         <Reveal delay={160}>
           <aside className="mb-7 border-l border-gold-deep/60 pl-3" data-story-world-facts>
             <p className="eyebrow mb-1.5">本回合已确认事实</p>
-            {facts.map((fact) => (
-              <div key={fact.id} className="mb-1 text-[10.5px] leading-relaxed text-parchment-faint last:mb-0">
-                <span className="text-parchment-dim">{worldEventDisplayTitle(fact)}</span>
-                {worldEventParticipantIds(fact).map((characterId) => (
-                  <button key={characterId} type="button" onClick={() => onSelectCharacter(characterId)} className="ml-2 text-gold-dim underline decoration-gold-deep/50 underline-offset-2 hover:text-gold" data-story-fact-character={characterId}>
-                    查看人物
-                  </button>
-                ))}
-                {fact.subjectRefs.flatMap((subject, index) => subject.type === 'location' ? [(
-                  <button key={`location:${index}`} type="button" onClick={() => onOpenLocation(subject.location)} className="ml-2 text-gold-dim underline decoration-gold-deep/50 underline-offset-2 hover:text-gold" data-story-fact-location={subject.location.locationId}>
-                    查看地点
-                  </button>
-                )] : subject.type === 'asset' ? [(
-                  <button key={`asset:${subject.assetId}`} type="button" onClick={() => onOpenAsset(subject.assetId)} className="ml-2 text-gold-dim underline decoration-gold-deep/50 underline-offset-2 hover:text-gold" data-story-fact-asset={subject.assetId}>
-                    查看资产
-                  </button>
-                )] : [])}
-              </div>
-            ))}
+            {facts.map((fact) => {
+              const display = worldEventDisplays.get(fact.id);
+              return (
+                <div key={fact.id} className="mb-1 text-[10.5px] leading-relaxed text-parchment-faint last:mb-0">
+                  <span className="text-parchment-dim">{display?.title ?? fact.reason}</span>
+                  {display?.entities.map((entity, index) => entity.kind === 'character' ? (
+                    <button key={`${entity.kind}:${entity.id}:${index}`} type="button" onClick={() => onSelectCharacter(entity.id)} className="ml-2 text-gold-dim underline decoration-gold-deep/50 underline-offset-2 hover:text-gold" data-story-fact-character={entity.id}>{entity.label}</button>
+                  ) : entity.kind === 'location' ? (
+                    <button key={`${entity.kind}:${entity.id}:${index}`} type="button" onClick={() => onOpenLocation(entity.location)} className="ml-2 text-gold-dim underline decoration-gold-deep/50 underline-offset-2 hover:text-gold" data-story-fact-location={entity.id}>{entity.label}</button>
+                  ) : entity.kind === 'asset' ? (
+                    <button key={`${entity.kind}:${entity.id}:${index}`} type="button" onClick={() => onOpenAsset(entity.id)} className="ml-2 text-gold-dim underline decoration-gold-deep/50 underline-offset-2 hover:text-gold" data-story-fact-asset={entity.id}>{entity.label}</button>
+                  ) : (
+                    <span key={`${entity.kind}:${entity.id}:${index}`} className="ml-2 text-gold-dim">{entity.label}</span>
+                  ))}
+                  {display && (
+                    <details className="mt-1 text-[9px] text-parchment-faint/70">
+                      <summary className="cursor-pointer select-none">技术记录</summary>
+                      <p>{display.audit.eventType} · {display.audit.source} · {display.audit.transactionId}</p>
+                    </details>
+                  )}
+                </div>
+              );
+            })}
           </aside>
         </Reveal>
       )}

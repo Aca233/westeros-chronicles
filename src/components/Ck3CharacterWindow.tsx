@@ -38,9 +38,11 @@ import { GameIcon, getHouseIconId } from './GameIcon';
 import { ItemManagementPanel } from './items/ItemManagementPanel';
 import { HealthAndEquipmentPanel } from './items/HealthAndEquipmentPanel';
 import { WorldAssetSections } from './items/WorldAssetSections';
-import { factsForCharacter, worldEventDisplayTitle } from '../features/world/worldHistoryProjection';
+import { factsForCharacter } from '../features/world/worldHistoryProjection';
 import type { WorldEvent } from '../features/world/worldRuntimeTypes';
 import { playerWorldEventViewer, selectVisibleWorldEvents } from '../features/world/worldEventVisibility';
+import { useWorldEventDisplays } from '../features/world/useWorldEventDisplays';
+import type { WorldEventDisplay } from '../features/world/worldDisplayResolver';
 import { CANONICAL_TIMELINE } from '../data/generated/canonicalTimeline';
 import { extractNarrativeContent } from '../services/modelProtocol';
 
@@ -74,7 +76,8 @@ export const Ck3CharacterWindow: React.FC<Ck3CharacterWindowProps> = ({
   onOpenLocation = () => undefined,
   onOpenAsset = () => undefined,
 }) => {
-  const turns = useGameStore((state) => state.gameState.turns);
+  const gameState = useGameStore((state) => state.gameState);
+  const turns = gameState.turns;
   const worldEvents = useGameStore((state) => state.gameState.worldRuntime.events);
   const lord = useGameStore((state) => state.gameState.lord);
   const worldCharacters = useGameStore((state) => state.gameState.worldCharacters);
@@ -82,6 +85,7 @@ export const Ck3CharacterWindow: React.FC<Ck3CharacterWindowProps> = ({
     () => selectVisibleWorldEvents(worldEvents, playerWorldEventViewer({ lord, worldCharacters })),
     [lord.canonicalCharacterId, worldCharacters?.runId, worldEvents],
   );
+  const worldEventDisplays = useWorldEventDisplays(visibleWorldEvents, gameState);
   const { dossier, relatedRecords, status, error, reload } = useCharacterDossier(selectedCharacterId);
   const [activeTab, setActiveTab] = useState<CharacterTab>('relations');
   const [activeTraitId, setActiveTraitId] = useState<string | null>(null);
@@ -163,7 +167,7 @@ export const Ck3CharacterWindow: React.FC<Ck3CharacterWindowProps> = ({
                 />
               )}
               {activeTab === 'health' && <HealthAndEquipmentPanel dossier={dossier} embedded />}
-              {activeTab === 'history' && (dossier.kind === 'player' ? <PlayerHistoryTab turns={turns} dossier={dossier} /> : <NpcHistoryTab dossier={dossier} worldEvents={visibleWorldEvents} />)}
+              {activeTab === 'history' && (dossier.kind === 'player' ? <PlayerHistoryTab turns={turns} dossier={dossier} /> : <NpcHistoryTab dossier={dossier} worldEvents={visibleWorldEvents} worldEventDisplays={worldEventDisplays} />)}
               {activeTab === 'inventory' && (
                 <CharacterAssetsTab
                   dossier={dossier}
@@ -829,7 +833,7 @@ function PlayerHistoryTab({ turns, dossier }: { turns: StoryTurn[]; dossier: Pla
   );
 }
 
-function NpcHistoryTab({ dossier, worldEvents }: { dossier: NpcCharacterDossier; worldEvents: readonly WorldEvent[] }) {
+function NpcHistoryTab({ dossier, worldEvents, worldEventDisplays }: { dossier: NpcCharacterDossier; worldEvents: readonly WorldEvent[]; worldEventDisplays: ReadonlyMap<string, WorldEventDisplay> }) {
   const memories = [...dossier.memories].sort((a, b) => b.turn - a.turn || b.importance - a.importance);
   const worldFacts = factsForCharacter(worldEvents, dossier.id).slice().reverse();
   const hasNarrative = Boolean(
@@ -854,8 +858,16 @@ function NpcHistoryTab({ dossier, worldEvents }: { dossier: NpcCharacterDossier;
             {worldFacts.map((fact) => (
               <li key={fact.id} className="border-b border-hairline/60 py-3 last:border-b-0">
                 <strong className="font-mono text-[10px] tracking-wider text-gold">{fact.date.year} AC · {fact.date.month}月{fact.date.day}日</strong>
-                <p className="mt-1 font-serif text-[11px] font-semibold text-parchment">{worldEventDisplayTitle(fact)}</p>
-                <p className="mt-1 font-serif text-[10.5px] leading-relaxed text-parchment-dim">{fact.reason}</p>
+                <p className="mt-1 font-serif text-[11px] font-semibold text-parchment">{worldEventDisplays.get(fact.id)?.title ?? fact.reason}</p>
+                {worldEventDisplays.get(fact.id)?.entities.length ? (
+                  <p className="mt-1 font-serif text-[10.5px] leading-relaxed text-gold-dim">{worldEventDisplays.get(fact.id)!.entities.map((entity) => entity.label).join(' · ')}</p>
+                ) : null}
+                {worldEventDisplays.get(fact.id) && (
+                  <details className="mt-1 text-[9px] text-parchment-faint/70">
+                    <summary className="cursor-pointer select-none">技术记录</summary>
+                    <p>{worldEventDisplays.get(fact.id)!.audit.eventType} · {worldEventDisplays.get(fact.id)!.audit.source} · {worldEventDisplays.get(fact.id)!.audit.transactionId}</p>
+                  </details>
+                )}
               </li>
             ))}
           </ol>

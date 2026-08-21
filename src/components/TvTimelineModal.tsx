@@ -24,6 +24,7 @@ import { useGameStore } from '../store/useGameStore';
 import { CANONICAL_TIMELINE } from '../data/generated/canonicalTimeline';
 import { projectActualTimeline, projectCanonicalTimeline, type TimelineProjectionEvent } from '../features/world/worldHistoryProjection';
 import { playerWorldEventViewer, selectVisibleWorldEvents } from '../features/world/worldEventVisibility';
+import { useWorldEventDisplays } from '../features/world/useWorldEventDisplays';
 import type { CharacterId } from '../features/characters/types';
 import type { WorldLocationRef } from '../features/map/types';
 
@@ -134,9 +135,11 @@ function projectionToTimelineData(events: TimelineProjectionEvent[], mode: Timel
         region_tag: event.regionTag ?? 'world',
         characters: event.participantNames.length ? event.participantNames : event.participantIds,
         summary: event.summary,
-        full_narrative: event.reason ? `${event.summary}
+        full_narrative: event.reason && event.reason !== event.summary
+          ? `${event.summary}
 
-偏离原因：${event.reason}` : event.summary,
+${event.status === 'diverged' ? '偏离原因' : '补充说明'}：${event.reason}`
+          : event.summary,
         key_consequences: event.consequences,
         fatalities: event.fatalities,
         status: event.status,
@@ -153,7 +156,8 @@ export const TvTimelineModal: React.FC<TvTimelineModalProps> = ({
   onOpenLocation = () => undefined,
   onOpenAsset = () => undefined,
 }) => {
-  const worldHistory = useGameStore((state) => state.gameState.worldHistory);
+  const gameState = useGameStore((state) => state.gameState);
+  const worldHistory = gameState.worldHistory;
   const worldEvents = useGameStore((state) => state.gameState.worldRuntime.events);
   const lord = useGameStore((state) => state.gameState.lord);
   const worldCharacters = useGameStore((state) => state.gameState.worldCharacters);
@@ -162,13 +166,14 @@ export const TvTimelineModal: React.FC<TvTimelineModalProps> = ({
     [lord.canonicalCharacterId, worldCharacters?.runId, worldEvents],
   );
   const worldEventById = useMemo(() => new Map(visibleWorldEvents.map((event) => [event.id, event])), [visibleWorldEvents]);
+  const worldEventDisplays = useWorldEventDisplays(visibleWorldEvents, gameState);
   const [timelineMode, setTimelineMode] = useState<TimelineMode>('actual');
   const timelineData = useMemo(() => projectionToTimelineData(
     timelineMode === 'actual'
-      ? projectActualTimeline(worldHistory, visibleWorldEvents, CANONICAL_TIMELINE)
+      ? projectActualTimeline(worldHistory, visibleWorldEvents, CANONICAL_TIMELINE, worldEventDisplays)
       : projectCanonicalTimeline(worldHistory, CANONICAL_TIMELINE),
     timelineMode,
-  ), [timelineMode, visibleWorldEvents, worldHistory]);
+  ), [timelineMode, visibleWorldEvents, worldEventDisplays, worldHistory]);
   const loading = false;
   const [selectedYear, setSelectedYear] = useState<number | 'all'>('all');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -470,6 +475,7 @@ export const TvTimelineModal: React.FC<TvTimelineModalProps> = ({
                     const CatIcon = catInfo.icon;
                     const regionInfo = REGION_MAP[evt.region_tag] || { label: evt.region, color: 'border-hairline bg-ink text-parchment' };
                     const linkedWorldEvent = timelineMode === 'actual' ? worldEventById.get(evt.id) : undefined;
+                    const linkedDisplay = linkedWorldEvent ? worldEventDisplays.get(linkedWorldEvent.id) : undefined;
 
                     return (
                       <article
@@ -563,17 +569,23 @@ export const TvTimelineModal: React.FC<TvTimelineModalProps> = ({
                               ))}
                             </div>
 
-                            {linkedWorldEvent && linkedWorldEvent.subjectRefs.length > 0 && (
+                            {linkedDisplay && linkedDisplay.entities.length > 0 && (
                               <div className="flex flex-wrap items-center gap-1.5 rounded border border-hairline/50 bg-ink/70 p-2 text-[11px]" data-timeline-subject-links>
                                 <span className="font-semibold text-gold/90">关联对象:</span>
-                                {linkedWorldEvent.subjectRefs.map((subject, index) => subject.type === 'character' ? (
-                                  <button key={`character:${subject.characterId}:${index}`} type="button" onClick={() => onOpenCharacter(subject.characterId)} className="rounded border border-gold/30 px-1.5 py-0.5 text-gold hover:border-gold/70">查看人物</button>
-                                ) : subject.type === 'location' ? (
-                                  <button key={`location:${subject.location.locationId}:${index}`} type="button" onClick={() => onOpenLocation(subject.location)} className="rounded border border-gold/30 px-1.5 py-0.5 text-gold hover:border-gold/70">查看地点</button>
-                                ) : subject.type === 'asset' ? (
-                                  <button key={`asset:${subject.assetId}:${index}`} type="button" onClick={() => onOpenAsset(subject.assetId)} className="rounded border border-gold/30 px-1.5 py-0.5 text-gold hover:border-gold/70">查看资产</button>
-                                ) : null)}
+                                {linkedDisplay.entities.map((entity, index) => entity.kind === 'character' ? (
+                                  <button key={`${entity.kind}:${entity.id}:${index}`} type="button" onClick={() => onOpenCharacter(entity.id)} className="rounded border border-gold/30 px-1.5 py-0.5 text-gold hover:border-gold/70">{entity.label}</button>
+                                ) : entity.kind === 'location' ? (
+                                  <button key={`${entity.kind}:${entity.id}:${index}`} type="button" onClick={() => onOpenLocation(entity.location)} className="rounded border border-gold/30 px-1.5 py-0.5 text-gold hover:border-gold/70">{entity.label}</button>
+                                ) : entity.kind === 'asset' ? (
+                                  <button key={`${entity.kind}:${entity.id}:${index}`} type="button" onClick={() => onOpenAsset(entity.id)} className="rounded border border-gold/30 px-1.5 py-0.5 text-gold hover:border-gold/70">{entity.label}</button>
+                                ) : <span key={`${entity.kind}:${entity.id}:${index}`} className="rounded border border-hairline px-1.5 py-0.5 text-parchment-dim">{entity.label}</span>)}
                               </div>
+                            )}
+                            {linkedDisplay && (
+                              <details className="text-[10px] text-parchment-faint/70">
+                                <summary className="cursor-pointer select-none">技术记录</summary>
+                                <p>{linkedDisplay.audit.eventType} · {linkedDisplay.audit.source} · {linkedDisplay.audit.transactionId}</p>
+                              </details>
                             )}
 
                             {/* Full Narrative Text */}

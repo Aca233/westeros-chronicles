@@ -6,6 +6,7 @@ import type { CanonicalTimelineEvent } from './canonicalTimeline';
 import { compareWorldDates, type CanonicalEventStatus, type WorldDate, type WorldHistoryState } from './worldHistory';
 import { buildWorldEventIndex, eventsForCharacter, type WorldEventIndex } from './worldEventIndex';
 import type { WorldEvent } from './worldRuntimeTypes';
+import type { WorldEventDisplay } from './worldDisplayResolver';
 
 export interface TimelineProjectionEvent {
   id: string;
@@ -63,9 +64,7 @@ const EVENT_TITLES: Readonly<Record<string, string>> = {
 };
 
 export function worldEventDisplayTitle(event: WorldEvent): string {
-  if (EVENT_TITLES[event.type]) return EVENT_TITLES[event.type];
-  if (event.type.startsWith('command.')) return `已确认命令：${event.type.slice('command.'.length).toUpperCase()}`;
-  return event.type;
+  return EVENT_TITLES[event.type] ?? (event.reason.trim() || '已确认世界事件');
 }
 
 export function worldEventParticipantIds(event: WorldEvent): CharacterId[] {
@@ -75,19 +74,19 @@ export function worldEventParticipantIds(event: WorldEvent): CharacterId[] {
   ])];
 }
 
-function eventProjection(event: WorldEvent): TimelineProjectionEvent {
+function eventProjection(event: WorldEvent, display?: WorldEventDisplay): TimelineProjectionEvent {
   const participantIds = worldEventParticipantIds(event);
   return {
     id: event.id,
     date: { ...event.date },
-    title: worldEventDisplayTitle(event),
-    summary: event.reason,
+    title: display?.title ?? worldEventDisplayTitle(event),
+    summary: display?.summary ?? event.reason,
     source: event.source,
     status: 'actual',
     category: event.type.includes('death') ? 'death' : event.type.includes('war') ? 'war' : 'intrigue',
     region: '本世界',
     participantIds,
-    participantNames: [],
+    participantNames: display?.entities.flatMap((entity) => entity.kind === 'character' ? [entity.label] : []) ?? [],
     fatalities: event.type === 'character.death' ? [...participantIds] : [],
     consequences: [],
     canonicalEventId: event.canonicalEventId,
@@ -105,6 +104,7 @@ export function projectActualTimeline(
   history: WorldHistoryState,
   worldEvents: readonly WorldEvent[],
   schedule: readonly CanonicalTimelineEvent[] = [],
+  displays: ReadonlyMap<string, WorldEventDisplay> = new Map(),
 ): TimelineProjectionEvent[] {
   const canonical = schedule
     .map((event) => canonicalProjection(history, event))
@@ -112,7 +112,7 @@ export function projectActualTimeline(
   const canonicalEventIds = new Set(canonical.map((event) => event.canonicalEventId));
   const events = worldEvents
     .filter((event) => !event.canonicalEventId || !canonicalEventIds.has(event.canonicalEventId))
-    .map(eventProjection);
+    .map((event) => eventProjection(event, displays.get(event.id)));
   return [...canonical, ...events].sort(eventOrder);
 }
 
