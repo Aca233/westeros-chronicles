@@ -10,6 +10,11 @@ export interface WheelCameraController {
   destroy(): void
 }
 
+export interface WheelFrameScheduler {
+  request(callback: FrameRequestCallback): number
+  cancel(id: number): void
+}
+
 export type WheelCameraMapAdapter = Pick<
   MapLibreMap,
   | 'scrollZoom'
@@ -27,6 +32,10 @@ const WHEEL_ZOOM_DIVISOR = 360
 const WHEEL_EASE_ID = 'agot-wheel-camera'
 const linearEasing = (progress: number): number => progress
 const WHEEL_LISTENER_OPTIONS: AddEventListenerOptions = { passive: false }
+const browserFrameScheduler: WheelFrameScheduler = {
+  request: (callback) => requestAnimationFrame(callback),
+  cancel: (id) => cancelAnimationFrame(id),
+}
 
 export function normalizeWheelDelta(
   deltaY: number,
@@ -48,11 +57,28 @@ function clamp(value: number, minimum: number, maximum: number): number {
 export function createWheelCameraController(
   map: WheelCameraMapAdapter,
   initialInput: WheelCameraControllerInput,
+  scheduler: WheelFrameScheduler = browserFrameScheduler,
 ): WheelCameraController {
   const canvas = map.getCanvas()
   let input = initialInput
   let targetZoom = map.getZoom()
   let destroyed = false
+  let pendingFrame: number | null = null
+  let pointer: [number, number] = [0, 0]
+
+  const submitCamera = (): void => {
+    pendingFrame = null
+    if (destroyed) return
+    map.easeTo({
+      zoom: targetZoom,
+      pitch: input.targetPitch(targetZoom),
+      around: map.unproject(pointer),
+      duration: input.reducedMotion ? 0 : 90,
+      easing: linearEasing,
+      easeId: WHEEL_EASE_ID,
+      essential: !input.reducedMotion,
+    }, { agotWheelCamera: true })
+  }
 
   const resetTargetZoom = (event?: { agotWheelCamera?: boolean }): void => {
     if (!destroyed && !event?.agotWheelCamera) targetZoom = map.getZoom()
@@ -68,15 +94,8 @@ export function createWheelCameraController(
       map.getMinZoom(),
       map.getMaxZoom(),
     )
-    map.easeTo({
-      zoom: targetZoom,
-      pitch: input.targetPitch(targetZoom),
-      around: map.unproject([event.offsetX, event.offsetY]),
-      duration: input.reducedMotion ? 0 : 90,
-      easing: linearEasing,
-      easeId: WHEEL_EASE_ID,
-      essential: !input.reducedMotion,
-    }, { agotWheelCamera: true })
+    pointer = [event.offsetX, event.offsetY]
+    pendingFrame ??= scheduler.request(submitCamera)
   }
 
   map.scrollZoom.disable()
@@ -90,6 +109,8 @@ export function createWheelCameraController(
     destroy(): void {
       if (destroyed) return
       destroyed = true
+      if (pendingFrame !== null) scheduler.cancel(pendingFrame)
+      pendingFrame = null
       canvas.removeEventListener('wheel', handleWheel, WHEEL_LISTENER_OPTIONS)
       map.off('zoomend', resetTargetZoom)
     },

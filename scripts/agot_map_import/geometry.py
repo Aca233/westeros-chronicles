@@ -6,7 +6,10 @@ from typing import Iterable, Mapping
 
 import numpy as np
 from PIL import Image
-from rasterio.features import shapes
+try:
+    from rasterio.features import shapes
+except ImportError:
+    shapes = None
 from shapely import make_valid
 from shapely.geometry import shape
 from shapely.ops import unary_union
@@ -66,10 +69,18 @@ def extract_province_geometry(
         raise MapImportError(f"省份定义没有对应像素：{missing_pixels[:10]}")
 
     pieces: dict[int, list] = defaultdict(list)
-    for geojson, value in shapes(id_raster, mask=id_raster != 0, connectivity=4):
-        province_id = int(value)
-        if province_id in definitions:
-            pieces[province_id].append(shape(geojson))
+    if shapes is not None:
+        for geojson, value in shapes(id_raster, mask=id_raster != 0, connectivity=4):
+            province_id = int(value)
+            if province_id in definitions:
+                pieces[province_id].append(shape(geojson))
+    else:
+        from shapely.geometry import box
+        for y in range(id_raster.shape[0]):
+            for x in range(id_raster.shape[1]):
+                pid = int(id_raster[y, x])
+                if pid != 0 and pid in definitions:
+                    pieces[pid].append(box(x, y, x + 1, y + 1))
 
     output: dict[int, ProvinceGeometry] = {}
     for province_id in included:

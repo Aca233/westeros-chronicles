@@ -1,6 +1,13 @@
 import { HOUSES } from '../../data/houses';
 import { migrateLordIdentityData } from '../../data/characterTraits';
 import { filterImportedCharacterTraits } from '../../data/importedCharacterTraitPolicy';
+import { getCharacterDossierSupplement } from '../../data/characterDossierSupplements';
+import { filterVisibleExperiences } from './characterSupplementSchema';
+import type {
+  CharacterDossierSupplement,
+  CharacterExperience,
+  NotableNonKinRelation,
+} from './characterSupplementTypes';
 import type {
   BodyZoneKey,
   LordAttributes,
@@ -15,6 +22,13 @@ import type {
   ResolvedCharacter,
   StaticCharacterRecord,
 } from './types';
+import type { WorldLocationRef } from '../map/types';
+import type { WorldEvent, CharacterWorldPatch } from '../world/worldRuntimeTypes';
+import {
+  EMPTY_CHARACTER_ASSET_GROUPS,
+  type CharacterAssetGroups,
+  type CharacterWorldView,
+} from '../world/worldSelectors';
 
 export const PLAYER_DOSSIER_ID = 'player' as const;
 export type CharacterDossierId = typeof PLAYER_DOSSIER_ID | CharacterId;
@@ -26,7 +40,7 @@ export interface CharacterDossierRelations {
   fatherId?: CharacterId;
   motherId?: CharacterId;
   relationships: CharacterRelationship[];
-  notableRelations: Array<{ kind: string; targetId: CharacterId }>;
+  notableRelations: Array<{ kind: string; targetId: CharacterId; description?: string; sourceUrl?: string }>;
 }
 
 interface CharacterDossierBase {
@@ -56,6 +70,20 @@ interface CharacterDossierBase {
   wounds: string[];
   woundLevels: Partial<Record<BodyZoneKey, WoundLevel>>;
   memories: CharacterMemory[];
+  summary?: string;
+  publicRoles?: string[];
+  aliases?: string[];
+  appearance?: string;
+  personality?: string;
+  reputation?: string;
+  supplementExperiences?: CharacterExperience[];
+  sourceUrls?: string[];
+  worldCharacterId: CharacterId;
+  worldLocation: WorldLocationRef | null;
+  worldActivity: CharacterWorldPatch['currentActivity'];
+  worldTitleIds: readonly string[];
+  assetGroups: CharacterAssetGroups;
+  worldEvents: readonly WorldEvent[];
 }
 
 export interface PlayerCharacterDossier extends CharacterDossierBase {
@@ -130,11 +158,25 @@ function houseMetadata(dynastyId: string | null | undefined) {
   };
 }
 
-export function createPlayerDossier(lord: LordProfile): PlayerCharacterDossier {
+export function createPlayerDossier(
+  lord: LordProfile,
+  currentYear = 298,
+  worldCharacterId: CharacterId = lord.canonicalCharacterId ?? 'save:current:player',
+): PlayerCharacterDossier {
   const identifiedLord = migrateLordIdentityData(lord);
   const importedTraits = identifiedLord.importedTraitIds
     ? filterImportedCharacterTraits(identifiedLord.importedTraitIds, identifiedLord.age)
     : undefined;
+  const supplement = identifiedLord.canonicalCharacterId
+    ? getCharacterDossierSupplement(identifiedLord.canonicalCharacterId)
+    : undefined;
+  const supplementExperiences = filterVisibleExperiences(supplement?.experiences, currentYear);
+  const notableRelations = (supplement?.notableRelations ?? []).map((rel) => ({
+    kind: rel.kind,
+    targetId: rel.targetId,
+    description: rel.description,
+    sourceUrl: rel.sourceUrl,
+  }));
   return {
     id: PLAYER_DOSSIER_ID,
     kind: 'player',
@@ -157,7 +199,7 @@ export function createPlayerDossier(lord: LordProfile): PlayerCharacterDossier {
     hiddenModifierTraitIds: importedTraits?.hiddenModifierIds ?? [],
     statusTraitIds: importedTraits?.statusTraitIds ?? [],
     legacyTraits: [...(identifiedLord.traits ?? [])].filter((name) => !/^[a-z0-9]+(?:_[a-z0-9]+)+$/i.test(name.trim())),
-    relations: { spouseIds: [], childIds: [], siblingIds: [], relationships: [], notableRelations: [] },
+    relations: { spouseIds: [], childIds: [], siblingIds: [], relationships: [], notableRelations },
     wounds: Object.values(identifiedLord.body).flatMap((zone) => typeof zone === 'object' && 'wounds' in zone ? zone.wounds : []),
     woundLevels: {
       head: identifiedLord.body.head.level,
@@ -166,6 +208,20 @@ export function createPlayerDossier(lord: LordProfile): PlayerCharacterDossier {
       legs: identifiedLord.body.legs.level,
     },
     memories: [],
+    summary: supplement?.summary,
+    publicRoles: supplement?.publicRoles,
+    aliases: supplement?.aliases,
+    appearance: supplement?.appearance,
+    personality: supplement?.personality,
+    reputation: supplement?.reputation,
+    supplementExperiences: supplementExperiences.length ? supplementExperiences : undefined,
+    sourceUrls: supplement?.sourceUrls,
+    worldCharacterId,
+    worldLocation: { ...identifiedLord.location },
+    worldActivity: 'idle',
+    worldTitleIds: Object.freeze([]),
+    assetGroups: EMPTY_CHARACTER_ASSET_GROUPS,
+    worldEvents: Object.freeze([]),
     player: identifiedLord,
   };
 }
@@ -214,10 +270,35 @@ export function createNpcDossier(
   const title = character.titles[0] || '未持有封地';
   const age = characterAgeAtYear(character.birthDate, currentYear, character.deathDate, character.alive);
   const importedTraits = filterImportedCharacterTraits(character.traits, age);
-  const notableRelations = character.relations.flatMap((relation) => {
+  const supplement = getCharacterDossierSupplement(character.id);
+  const supplementExperiences = filterVisibleExperiences(supplement?.experiences, currentYear);
+
+  const baseRelations = character.relations.flatMap((relation) => {
     const targetId = normalizeRelatedCharacterId(relation.target_id);
     return targetId ? [{ kind: relation.kind, targetId }] : [];
   });
+  const suppRelations = (supplement?.notableRelations ?? []).map((rel) => ({
+    kind: rel.kind,
+    targetId: rel.targetId,
+    description: rel.description,
+    sourceUrl: rel.sourceUrl,
+  }));
+
+  const seenTargets = new Set<CharacterId>();
+  const notableRelations: Array<{ kind: string; targetId: CharacterId; description?: string; sourceUrl?: string }> = [];
+  for (const rel of suppRelations) {
+    if (!seenTargets.has(rel.targetId)) {
+      seenTargets.add(rel.targetId);
+      notableRelations.push(rel);
+    }
+  }
+  for (const rel of baseRelations) {
+    if (!seenTargets.has(rel.targetId)) {
+      seenTargets.add(rel.targetId);
+      notableRelations.push(rel);
+    }
+  }
+
   return {
     id: character.id,
     kind: 'npc',
@@ -230,7 +311,7 @@ export function createNpcDossier(
     title,
     titles: [...character.titles],
     age,
-    gender: '性别未记录',
+    gender: character.female === true ? '女性' : character.female === false ? '男性' : '性别未记录',
     culture: formatCharacterCulture(character.cultureId),
     faith: formatCharacterFaith(character.faithId),
     location: character.locationId || '所在地未记录',
@@ -253,12 +334,41 @@ export function createNpcDossier(
     wounds: [...character.wounds],
     woundLevels: { ...character.woundLevels },
     memories: [...character.memories],
+    summary: supplement?.summary,
+    publicRoles: supplement?.publicRoles,
+    aliases: supplement?.aliases,
+    appearance: supplement?.appearance,
+    personality: supplement?.personality,
+    reputation: supplement?.reputation,
+    supplementExperiences: supplementExperiences.length ? supplementExperiences : undefined,
+    sourceUrls: supplement?.sourceUrls,
+    worldCharacterId: character.id,
+    worldLocation: character.locationId
+      ? { locationId: character.locationId, ...(character.sceneLocation ? { sceneLocation: character.sceneLocation } : {}) }
+      : null,
+    worldActivity: 'idle',
+    worldTitleIds: Object.freeze([...character.titleIds]),
+    assetGroups: EMPTY_CHARACTER_ASSET_GROUPS,
+    worldEvents: Object.freeze([]),
     character,
   };
 }
 
+export function attachCharacterWorldView<T extends CharacterDossier>(
+  dossier: T,
+  view: CharacterWorldView,
+): T {
+  return {
+    ...dossier,
+    worldLocation: view.location,
+    worldActivity: view.activity,
+    worldTitleIds: view.titleIds,
+    assetGroups: view.assetGroups,
+    worldEvents: view.events,
+  };
+}
+
 export function relatedCharacterIds(dossier: CharacterDossier): CharacterId[] {
-  if (dossier.kind === 'player') return [];
   return [...new Set([
     ...dossier.relations.spouseIds,
     ...dossier.relations.childIds,

@@ -24,7 +24,7 @@ function fakeMap({ source = {} } = {}) {
   }
 }
 
-const input = { mode: 'terrain', topDownLocked: false, reducedMotion: false }
+const input = { topDownLocked: false, reducedMotion: false }
 
 test('近景连接唯一 DEM source 并启用旋转', () => {
   const map = fakeMap()
@@ -80,7 +80,7 @@ test('连续请求合并为一帧且 destroy 取消未执行帧', () => {
     cancel: (id) => cancelled.push(id),
   })
   controller.requestSync(input)
-  controller.requestSync({ ...input, mode: 'political' })
+  controller.requestSync({ ...input, reducedMotion: true })
   assert.equal(queued.length, 1)
   controller.destroy()
   assert.deepEqual(cancelled, [1])
@@ -94,6 +94,18 @@ test('连续缩放阶段不写相机，避免中断 MapLibre 正在进行的缩�
   map.zoom = 2.8
   controller.syncNow(input, false)
   assert.equal(map.calls.some(([name]) => name === 'pitch' || name === 'bearing' || name === 'ease'), false)
+})
+
+test('连续缩放时相同的旋转手势状态只写入一次', () => {
+  const map = fakeMap()
+  const controller = createTerrainController(map, { onUnavailable() {} })
+  controller.syncNow(input)
+  const firstGestureWrites = map.calls.filter(([name]) => ['drag', 'touchRotate', 'touchPitch'].includes(name)).length
+  controller.syncNow(input)
+  controller.syncNow(input)
+  const allGestureWrites = map.calls.filter(([name]) => ['drag', 'touchRotate', 'touchPitch'].includes(name)).length
+  assert.equal(firstGestureWrites, 3)
+  assert.equal(allGestureWrites, firstGestureWrites)
 })
 
 test('归北保留缩放中心并恢复推荐倾角', () => {

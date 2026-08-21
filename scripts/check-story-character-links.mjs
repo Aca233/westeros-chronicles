@@ -9,6 +9,7 @@ async function bundleModule(entryPoint) {
 }
 
 const { WESTEROS_ENTITIES } = await bundleModule('src/data/entities.ts');
+const { buildStoryMentionEntities, findNextStoryEntity, supplementMentionedCharacterIds } = await bundleModule('src/features/world/storyEntityLinks.ts');
 const storySource = await readFile('src/components/StoryFeed.tsx', 'utf8');
 const appSource = await readFile('src/App.tsx', 'utf8');
 const searchIndex = JSON.parse(await readFile('public/data/agot-characters/search-index.json', 'utf8'));
@@ -24,12 +25,47 @@ for (const entity of WESTEROS_ENTITIES.filter((entry) => entry.category !== 'cha
   assert.equal(entity.characterId, undefined, `${entity.name} 不是人物，不应触发人物栏跳转`);
 }
 
+for (const entity of WESTEROS_ENTITIES.filter((entry) => entry.category === 'location')) {
+  assert.ok(entity.location?.locationId, `${entity.name} 缺少地图地点 ID`);
+}
 assert.ok(storySource.includes('data-story-character-link'), '文章高亮人物缺少可测试的点击标记');
 assert.ok(storySource.includes('data-story-world-facts'), '正文没有展示统一回合事实。');
 assert.ok(storySource.includes('data-story-fact-character'), '回合事实中的人物不能打开人物卷宗。');
 assert.ok(storySource.includes('onSelectCharacter(entityToHover.characterId!)'), '文章高亮人物没有调用人物栏导航');
-assert.ok(appSource.includes('<StoryFeed onSelectCharacter={openStoryCharacter} />'), 'App 没有把人物导航传给文章');
+assert.match(appSource, /<StoryFeed[^>]*onSelectCharacter=\{openStoryCharacter\}/, 'App 没有把人物导航传给文章');
 assert.ok(appSource.includes('openCharacterDrawer();'), '点击人物后不会切换到人物抽屉');
 assert.ok(appSource.includes('<MapDrawer onSelectCharacter={openStoryCharacter} />'), '地图人物点没有复用人物卷宗导航');
+
+
+const mentionEntities = buildStoryMentionEntities(
+  '鲁温学士与罗德利克教头陪着艾莉亚前往君临。',
+  [
+    { id: 'agot:Stark_hh_1', name: '鲁温', canonTier: 'canon', born: true, alive: true, shard: 'df' },
+    { id: 'agot:Cassel_3', name: '罗德利克', canonTier: 'canon', born: true, alive: true, shard: '7d' },
+    { id: 'agot:Stark_9', name: '艾莉亚', dynastyId: 'dynn_Stark', canonTier: 'canon', born: true, alive: true, shard: 'e9' },
+  ],
+  [
+    { id: 'b_the_red_keep', name: '君临·红堡', importance: 100, mapX: 1, mapY: 1, regionId: 'crownlands', type: 'city' },
+  ],
+);
+for (const [keyword, id] of [['鲁温', 'agot:Stark_hh_1'], ['罗德利克教头', 'agot:Cassel_3'], ['艾莉亚', 'agot:Stark_9']]) {
+  assert.ok(mentionEntities.some((entity) => entity.characterId === id && entity.keywords.includes(keyword)), `正文人物 ${keyword} 未生成稳定人物链接`);
+}
+assert.ok(mentionEntities.some((entity) => entity.location?.locationId === 'b_the_red_keep' && entity.keywords.includes('君临')), '君临未生成地图地点链接');
+assert.ok(supplementMentionedCharacterIds('奈德走入大厅。').includes('agot:Stark_3'), '人物别名奈德未解析为稳定人物 ID');
+assert.equal(findNextStoryEntity('君临城门', mentionEntities)?.entity.location?.locationId, 'b_the_red_keep');
+
+const tyrionPhrase = '巴利斯坦爵士与侏儒提利昂·兰尼斯特亦在大厅等候。';
+const tyrionEntities = buildStoryMentionEntities(
+  tyrionPhrase,
+  [{ id: 'agot:Lannister_8', name: '提利昂', dynastyId: 'dynn_Lannister', canonTier: 'canon', born: true, alive: true, shard: '01' }],
+  [],
+);
+const tyrionMatch = findNextStoryEntity(tyrionPhrase, [...WESTEROS_ENTITIES, ...tyrionEntities]);
+assert.equal(tyrionMatch?.keyword, '侏儒提利昂·兰尼斯特', '同一人物的相邻别名与姓名不应被拆成两个连续链接');
+assert.equal(tyrionMatch?.entity.characterId, 'agot:Lannister_8');
+
+assert.ok(storySource.includes('data-story-location-link'), '正文地点缺少可测试的点击标记');
+assert.ok(storySource.includes('onOpenLocation(entityToHover.location!)'), '正文地点没有调用地图导航');
 
 console.log(`Validated ${characterEntities.length} clickable story character links against the AGOT dataset.`);

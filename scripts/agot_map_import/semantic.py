@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import math
 import re
 from collections import defaultdict
@@ -23,8 +24,8 @@ from .models import (
 from .regions import expand_region
 from .titles import TitleIndex
 
-RANK_ORDER: dict[SemanticRank, int] = {"realm": 0, "duchy": 1, "county": 2}
-RANK_IMPORTANCE: dict[SemanticRank, int] = {"realm": 100, "duchy": 80, "county": 60}
+RANK_ORDER: dict[SemanticRank, int] = {"hegemon": 0, "empire": 1, "kingdom": 2, "duchy": 3, "county": 4}
+RANK_IMPORTANCE: dict[SemanticRank, int] = {"hegemon": 100, "empire": 90, "kingdom": 80, "duchy": 70, "county": 60}
 _CJK_PATTERN = re.compile(r"[\u3400-\u9fff]")
 _MAP_BOUNDS = (0.0, 0.0, 9216.0, 6144.0)
 
@@ -105,13 +106,38 @@ def _localized_chinese(localization: Mapping[str, str], title_id: str) -> str | 
     return value if value and _CJK_PATTERN.search(value) else None
 
 
+def _fallback_title_color(title_id: str) -> str:
+    digest = hashlib.sha256(title_id.encode("utf-8")).digest()
+    channels = tuple(72 + value % 72 for value in digest[:3])
+    return "#" + "".join(f"{channel:02x}" for channel in channels)
+
+
+def _hegemon_by_empire(
+    titles: TitleIndex,
+    scopes: Mapping[str, Sequence[str]],
+) -> dict[str, str]:
+    known_empires = {item.empire_id for item in titles.by_barony.values() if item.empire_id}
+    result: dict[str, str] = {}
+    for hegemon_id, empire_ids in sorted(scopes.items()):
+        if not hegemon_id.startswith("h_"):
+            raise MapImportError(f"霸权配置不是 h_ 头衔：{hegemon_id}")
+        for empire_id in sorted(set(empire_ids)):
+            if empire_id not in known_empires:
+                raise MapImportError(f"霸权 {hegemon_id} 引用不存在的帝国头衔：{empire_id}")
+            existing = result.get(empire_id)
+            if existing and existing != hegemon_id:
+                raise MapImportError(f"帝国头衔 {empire_id} 同时属于两个霸权：{existing}、{hegemon_id}")
+            result[empire_id] = hegemon_id
+    return result
+
+
 def build_semantic_dataset(
     geometries: Mapping[int, ProvinceGeometry],
     locations: Sequence[MapLocationRecord],
     titles: TitleIndex,
     region_definitions: Mapping[str, RegionDefinition],
     localization: Mapping[str, str],
-    anchors: Mapping[str, str],
+    hegemon_scopes: Mapping[str, Sequence[str]],
 ) -> SemanticDataset:
     if not geometries:
         raise MapImportError("没有可生成语义层的省份几何")
@@ -125,9 +151,10 @@ def build_semantic_dataset(
         if not ancestors.duchy_id:
             raise MapImportError(f"伯爵领 {ancestors.county_id} 无法解析到公国")
     province_realms = _province_realms(geometries, titles, region_definitions)
+    hegemon_by_empire = _hegemon_by_empire(titles, hegemon_scopes)
     grouped: dict[tuple[SemanticRank, str], list[object]] = defaultdict(list)
     group_regions: dict[tuple[SemanticRank, str], str] = {}
-    hierarchy_by_province: dict[int, tuple[str, str, str, str]] = {}
+    hierarchy_by_province: dict[int, tuple[str, str, str, str | None, str | None, str | None, str]] = {}
 
     for province_id, geometry in sorted(geometries.items()):
         stable_barony = titles.barony_for_province(province_id)
@@ -138,18 +165,24 @@ def build_semantic_dataset(
             raise MapImportError(f"男爵领 {stable_barony} 无法解析到伯爵领")
         if not ancestors.duchy_id:
             raise MapImportError(f"伯爵领 {ancestors.county_id} 无法解析到公国")
-        realm_id = province_realms[province_id]
+        region_id = province_realms[province_id]
+        hegemon_id = hegemon_by_empire.get(ancestors.empire_id)
         hierarchy_by_province[province_id] = (
-            stable_barony, ancestors.county_id, ancestors.duchy_id, realm_id,
+            stable_barony, ancestors.county_id, ancestors.duchy_id, ancestors.kingdom_id,
+            ancestors.empire_id, hegemon_id, region_id,
         )
         for rank, title_id in (
-            ("realm", realm_id), ("duchy", ancestors.duchy_id), ("county", ancestors.county_id),
+            ("hegemon", hegemon_id), ("empire", ancestors.empire_id),
+            ("kingdom", ancestors.kingdom_id), ("duchy", ancestors.duchy_id),
+            ("county", ancestors.county_id),
         ):
+            if title_id is None:
+                continue
             key = (rank, title_id)
             existing_region = group_regions.get(key)
-            if existing_region and existing_region != realm_id:
-                raise MapImportError(f"领地 {title_id} 跨越战略区域 {existing_region} 与 {realm_id}")
-            group_regions[key] = realm_id
+            if existing_region and existing_region != region_id and rank in {"duchy", "county"}:
+                raise MapImportError(f"领地 {title_id} 跨越战略区域 {existing_region} 与 {region_id}")
+            group_regions.setdefault(key, region_id)
             grouped[key].append(geometry.geometry)
 
     keys = sorted(grouped, key=lambda item: (RANK_ORDER[item[0]], item[1]))
@@ -166,16 +199,16 @@ def build_semantic_dataset(
         name = _localized_chinese(localization, title_id)
         if name is None:
             missing_localizations.append(title_id)
-        political_anchor = anchors.get(title_id) if rank == "realm" else None
         feature_id = feature_ids[(rank, title_id)]
         region_id = group_regions[(rank, title_id)]
+        title_color = titles.title_colors.get(title_id, _fallback_title_color(title_id))
         boundaries.append(SemanticBoundaryRecord(
             feature_id=feature_id,
             title_id=title_id,
             rank=rank,
             name=name,
             region_id=region_id,
-            political_anchor_title_id=political_anchor,
+            title_color=title_color,
             geometry=geometry,
         ))
         if name is not None:
@@ -188,7 +221,7 @@ def build_semantic_dataset(
                 map_y=float(anchor.y),
                 importance=RANK_IMPORTANCE[rank],
                 region_id=region_id,
-                political_anchor_title_id=political_anchor,
+                title_color=title_color,
                 geometry=geometry,
                 anchor=anchor,
             ))
@@ -198,7 +231,7 @@ def build_semantic_dataset(
         hierarchy = hierarchy_by_province.get(location.province_id)
         if hierarchy is None:
             raise MapImportError(f"地点 {location.id} 的省份不在语义地图中")
-        barony_id, county_id, duchy_id, realm_id = hierarchy
+        barony_id, county_id, duchy_id, kingdom_id, empire_id, hegemon_id, region_id = hierarchy
         if location.barony_id != barony_id:
             raise MapImportError(f"地点 {location.id} 的内部男爵领键与省份不一致")
         memberships.append(SemanticMembershipRecord(
@@ -206,7 +239,10 @@ def build_semantic_dataset(
             barony_id=barony_id,
             county_id=county_id,
             duchy_id=duchy_id,
-            realm_id=realm_id,
+            kingdom_id=kingdom_id,
+            empire_id=empire_id,
+            hegemon_id=hegemon_id,
+            region_id=region_id,
         ))
 
     return SemanticDataset(

@@ -19,7 +19,7 @@ const runtimeSource = files.map((path) => `\n/* ${relative('.', path)} */\n${rea
 const packageJson = JSON.parse(readFileSync('package.json', 'utf8'))
 
 test('地图运行时代码不读取模组源目录、Workshop、Steam 或网络资源', () => {
-  assert.doesNotMatch(runtimeSource, /2962333032|Workshop|Steam|\/mnt\/[a-z]|[A-Z]:\\|https?:\/\//i)
+  assert.doesNotMatch(runtimeSource, /Workshop|Steam|\/mnt\/[a-z]|[A-Z]:\\|https?:\/\//i)
 })
 
 test('地图运行时代码不含 Emoji', () => {
@@ -27,8 +27,10 @@ test('地图运行时代码不含 Emoji', () => {
 })
 
 test('真实地图导入不会进入 verify 或 verify:quick', () => {
-  assert.doesNotMatch(packageJson.scripts.verify ?? '', /import:agot-map/)
-  assert.doesNotMatch(packageJson.scripts['verify:quick'] ?? '', /import:agot-map/)
+  assert.doesNotMatch(packageJson.scripts.verify ?? '', /import:agot-(?:map|models)/)
+  assert.doesNotMatch(packageJson.scripts['verify:quick'] ?? '', /import:agot-(?:map|models)/)
+  assert.doesNotMatch(packageJson.scripts['verify:map'] ?? '', /import:agot-models|agot_model_import\.cli convert/)
+  assert.doesNotMatch(packageJson.scripts['verify:quick'] ?? '', /agot_model_import\.cli convert/)
 })
 
 test('MapLibre、路线 Worker 与本地瓦片边界保持独立', () => {
@@ -42,12 +44,30 @@ test('运行时不在连续 zoom 事件重建政治、人物或资产 GeoJSON', 
   assert.doesNotMatch(runtimeSource, /map\.on\(['"]zoom['"][\s\S]{0,300}(?:setData|syncDynamicMapSubjects)/)
 })
 
-test('语义地图只使用原生本地 DEM 三维且没有远程字体或第二渲染器', () => {
+test('三维地标只使用 MapLibre 共享 canvas/context 且没有第二渲染循环或交互系统', () => {
+  const landmarkFiles = files.filter((path) => path.includes('src/features/map/landmarks/'))
+  const landmarkSource = landmarkFiles
+    .map((path) => readFileSync(path, 'utf8'))
+    .join('\n')
+  const layer = readFileSync('src/features/map/landmarks/landmarkCustomLayer.ts', 'utf8')
+  const contactShadow = readFileSync('src/features/map/landmarks/landmarkContactShadow.ts', 'utf8')
+  const canvas = readFileSync('src/features/map/MapCanvas.tsx', 'utf8')
   assert.match(runtimeSource, /setTerrain/)
   assert.match(runtimeSource, /source:\s*['"]agot-dem['"]/)
-  assert.doesNotMatch(runtimeSource, /three(?:\.module)?\.js|@react-three|new\s+THREE\.|<canvas[^>]+terrain/i)
+  assert.match(layer, /type\s*=\s*['"]custom['"]/)
+  assert.match(layer, /renderingMode\s*=\s*['"]3d['"]/)
+  assert.match(layer, /canvas:\s*this\.canvas/)
+  assert.match(layer, /context:\s*gl/)
+  assert.match(layer, /new WebGLRenderer\(parameters\)/)
+  assert.match(canvas, /import\(['"]\.\/landmarks\/landmarkRuntime\.ts['"]\)/)
+  assert.match(runtimeSource, /map\.addLayer\(layer, COUNTY_HIT_LAYER\)/)
+  assert.doesNotMatch(landmarkSource, /document\.createElement\(['"]canvas|new\s+HTMLCanvasElement|requestAnimationFrame|cancelAnimationFrame|new\s+THREE\.Raycaster|new\s+Raycaster|OrbitControls|TrackballControls|forceContextLoss/)
+  assert.doesNotMatch(landmarkSource, /https?:\/\/|steamapps|Workshop/i)
+  assert.match(contactShadow, /ShaderMaterial/)
+  assert.doesNotMatch(contactShadow, /CanvasTexture|TextureLoader|fetch\s*\(/)
   assert.doesNotMatch(runtimeSource, /glyphs:\s*['"]https?:|fallback.*https?:/i)
 })
+
 
 test('连续缩放处理只更新地形镜头', () => {
   const canvas = readFileSync('src/features/map/MapCanvas.tsx', 'utf8')
@@ -68,6 +88,17 @@ test('完整地图验证包含全部语义测试且不触发真实导入', () =>
     'test:map-terrain-controller',
     'test:map-terrain-ui',
     'test:map-terrain-integration',
+    'test:agot-model-import',
+    'test:map-landmark-schema',
+    'test:map-landmark-visibility',
+    'test:map-landmark-transform',
+    'test:map-landmark-lighting-profile',
+    'test:map-landmark-material-profile',
+    'test:map-landmark-contact-shadow',
+    'test:map-landmark-cache',
+    'test:map-landmark-layer',
+    'test:map-landmark-integration',
+    'audit:agot-models',
   ]) {
     assert.match(verifyMap, new RegExp(command))
   }

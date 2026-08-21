@@ -120,7 +120,6 @@ export interface ItemInstance {
   durability: number;
   quality: CraftQuality;
   customName?: string;
-  lawfulControllerId?: string;
   renown: number;
   isHeirloom: boolean;
   history: ItemHistoryEntry[];

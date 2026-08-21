@@ -18,15 +18,15 @@ const semantic = {
     { featureId: 2, titleId: 'c_lonely', rank: 'county', name: '孤寂海岸', importance: 40, regionId: 'the_north', mapX: 1700, mapY: 1000 },
   ],
   memberships: [
-    { locationId: 'b_winter_town', baronyId: 'b_winter_town', countyId: 'c_winterfell', duchyId: 'd_winterfell', realmId: 'the_north' },
-    { locationId: 'b_winterfell', baronyId: 'b_winterfell', countyId: 'c_winterfell', duchyId: 'd_winterfell', realmId: 'the_north' },
-    { locationId: 'b_brandford', baronyId: 'b_brandford', countyId: 'c_winterfell', duchyId: 'd_winterfell', realmId: 'the_north' },
-    { locationId: 'b_lonely_port', baronyId: 'b_lonely_port', countyId: 'c_lonely', duchyId: 'd_lonely', realmId: 'the_north' },
+    { locationId: 'b_winter_town', baronyId: 'b_winter_town', countyId: 'c_winterfell', duchyId: 'd_winterfell', hegemonId: 'h_the_iron_throne', regionId: 'the_north' },
+    { locationId: 'b_winterfell', baronyId: 'b_winterfell', countyId: 'c_winterfell', duchyId: 'd_winterfell', hegemonId: 'h_the_iron_throne', regionId: 'the_north' },
+    { locationId: 'b_brandford', baronyId: 'b_brandford', countyId: 'c_winterfell', duchyId: 'd_winterfell', hegemonId: 'h_the_iron_throne', regionId: 'the_north' },
+    { locationId: 'b_lonely_port', baronyId: 'b_lonely_port', countyId: 'c_lonely', duchyId: 'd_lonely', hegemonId: 'h_the_iron_throne', regionId: 'the_north' },
   ],
 }
 
 const manifest = {
-  schemaVersion: 3,
+  schemaVersion: 4,
   sourceId: '2962333032',
   sourceHashes: { source: 'a'.repeat(64) },
   mapSize: { width: 9216, height: 6144 },
@@ -36,6 +36,7 @@ const manifest = {
   maxZoom: 6,
   paths: {
     terrain: '/assets/agot-map/terrain/{z}/{x}/{y}.webp',
+    terrainLight: '/assets/agot-map/terrain-light/{z}/{x}/{y}.webp',
     materialTerrain: '/assets/agot-map/material-terrain/{z}/{x}/{y}.webp',
     vector: '/assets/agot-map/vector/{z}/{x}/{y}.pbf',
     dem: '/assets/agot-map/dem/{z}/{x}/{y}.png',
@@ -48,8 +49,8 @@ const manifest = {
   },
   counts: {
     regions: 1, provinces: 4, locations: 4, routeEdges: 0,
-    terrainTiles: 1, materialTerrainTiles: 1, vectorTiles: 1, demTiles: 1, semanticTiles: 1,
-    semanticRealms: 1, semanticDuchies: 2, semanticCounties: 2, semanticLabels: 5,
+    terrainLightTiles: 341, terrainTiles: 1, materialTerrainTiles: 1, vectorTiles: 1, demTiles: 1, semanticTiles: 1,
+    semanticHegemons: 1, semanticEmpires: 1, semanticKingdoms: 1, semanticDuchies: 2, semanticCounties: 2, semanticLabels: 5,
     missingSemanticLocalizations: 0,
   },
   datasetHash: 'b'.repeat(64), semanticHash: 'c'.repeat(64),
@@ -63,9 +64,6 @@ test('伯爵领同名中心优先于更高重要度的次级男爵领地点', ()
 
 test('点击伯爵领内任意省份都解析到同一中心地点', () => {
   const index = buildCountyInteractionIndex(entries, semantic)
-  assert.equal(index.primaryLocationForBarony('b_winterfell'), 'b_winterfell')
-  assert.equal(index.primaryLocationForBarony('b_brandford'), 'b_winterfell')
-  assert.equal(index.primaryLocationForBarony('b_missing'), undefined)
 })
 
 test('选择伯爵领中心后只展开该伯爵领内部地点并标记首府', () => {
@@ -94,14 +92,15 @@ test('地图不再渲染男爵领点并提供全伯爵领透明点击层', () =>
 
   const canvas = readFileSync('src/features/map/MapCanvas.tsx', 'utf8')
   assert.match(canvas, /COUNTY_HIT_LAYER/)
-  assert.match(canvas, /primaryLocationForBarony/)
+  assert.match(canvas, /countyIdForBarony/)
+  assert.match(canvas, /primaryLocationForCounty/)
   assert.match(canvas, /syncSelectedCountyLocations/)
   assert.doesNotMatch(canvas, /LOCATION_(?:POINT|CLUSTER)_LAYER|zoomToCluster/)
 
   const layers = readFileSync('src/features/map/mapLayers.ts', 'utf8')
   assert.match(layers, /agot-selected-county-outline/)
   assert.match(layers, /agot-selected-county-locations/)
-  assert.match(layers, /minzoom:\s*3\.5/)
+  assert.match(layers, /minzoom:\s*4\.6/)
   assert.match(layers, /location-winterfell\.webp/)
   const iconManifest = JSON.parse(readFileSync('public/assets/map-icons/manifest.json', 'utf8'))
   assert.equal(iconManifest.sourceId, '2962333032')

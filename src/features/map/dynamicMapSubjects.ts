@@ -1,5 +1,6 @@
 import type { CharacterId } from '../characters/types'
 import type { ItemSystemState } from '../items/types'
+import { worldAssetId } from '../world/worldAssetId.ts'
 import type { MapBounds, MapLocationSearchEntry, MapPixelPoint } from './types'
 
 export interface MapCharacterPoint extends MapPixelPoint {
@@ -42,26 +43,21 @@ export interface KnownCharacterMapInput {
   characters?: readonly KnownCharacterState[]
   history: CharacterHistoryLike
   names?: ReadonlyMap<string, string>
+  metrics?: MapSelectionMetrics
+}
+
+export interface MapSelectionMetrics {
+  staticCharacterShardReads: number
+  scannedDynamicCharacters: number
 }
 
 type LocationPoint = Pick<MapLocationSearchEntry, 'id' | 'name' | 'mapX' | 'mapY' | 'regionId'>
 
-function recordCommand(value: unknown): Record<string, unknown> | null {
-  return value && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, unknown> : null
-}
-
 export function knownCharacterIds(
   characters: readonly KnownCharacterState[] | undefined,
-  history: CharacterHistoryLike,
+  _history: CharacterHistoryLike,
 ): CharacterId[] {
   const ids = new Set<CharacterId>((characters ?? []).map((character) => character.id))
-  for (const turn of history.turns) {
-    for (const command of turn.acceptedCommands) {
-      const record = recordCommand(command)
-      const id = record?.characterId
-      if (typeof id === 'string' && (id.startsWith('agot:') || id.startsWith('save:'))) ids.add(id as CharacterId)
-    }
-  }
   return [...ids].sort()
 }
 
@@ -71,19 +67,9 @@ export function projectKnownCharacterMapPoints(
 ): MapCharacterPoint[] {
   const locationById = new Map(locations.map((location) => [location.id, location]))
   const states = new Map<CharacterId, { alive: boolean; locationId?: string }>()
-
-  for (const turn of [...input.history.turns].sort((left, right) => left.turn - right.turn)) {
-    for (const command of turn.acceptedCommands) {
-      const record = recordCommand(command)
-      if (!record || typeof record.characterId !== 'string') continue
-      if (!record.characterId.startsWith('agot:') && !record.characterId.startsWith('save:')) continue
-      const characterId = record.characterId as CharacterId
-      if (record.type === 'MOVE_CHARACTER' && typeof record.locationId === 'string') {
-        states.set(characterId, { alive: states.get(characterId)?.alive ?? true, locationId: record.locationId })
-      } else if (record.type === 'KILL_CHARACTER' || record.type === 'CHARACTER_DIE' || record.type === 'DIE') {
-        states.set(characterId, { ...states.get(characterId), alive: false })
-      }
-    }
+  if (input.metrics) {
+    input.metrics.staticCharacterShardReads = 0
+    input.metrics.scannedDynamicCharacters = input.characters?.length ?? 0
   }
 
   for (const character of input.characters ?? []) {
@@ -132,7 +118,7 @@ export function projectKnownAssetMapPoints(
     if (!location) continue
     points.push({
       id: `asset:site:${site.id}`,
-      assetId: site.id,
+      assetId: worldAssetId.site(site.id),
       name: site.name,
       assetType: 'site',
       locationId: location.id,
@@ -149,7 +135,7 @@ export function projectKnownAssetMapPoints(
     if (!location) continue
     points.push({
       id: `asset:vehicle:${vehicle.id}`,
-      assetId: vehicle.id,
+      assetId: worldAssetId.vehicle(vehicle.id),
       name: vehicle.name,
       assetType: 'vehicle',
       locationId: location.id,
@@ -172,4 +158,37 @@ export function filterMapPointsByPixelBounds<TPoint extends MapPixelPoint>(
     && point.mapX <= bounds.maxX
     && point.mapY >= bounds.minY
     && point.mapY <= bounds.maxY)
+}
+
+export interface ScopedMapSubjects {
+  characters: readonly MapCharacterPoint[]
+  assets: readonly MapAssetPoint[]
+  characterPoints: readonly MapCharacterPoint[]
+  assetPoints: readonly MapAssetPoint[]
+}
+
+export function scopeMapSubjects(input: {
+  countyId: string | null
+  countyIdByLocationId: ReadonlyMap<string, string>
+  characters: readonly MapCharacterPoint[]
+  assets: readonly MapAssetPoint[]
+  characterBudget?: number
+  assetBudget?: number
+}): ScopedMapSubjects {
+  if (!input.countyId) return { characters: [], assets: [], characterPoints: [], assetPoints: [] }
+  const inCounty = (locationId: string) => input.countyIdByLocationId.get(locationId) === input.countyId
+  const characters = input.characters
+    .filter((point) => inCounty(point.locationId))
+    .sort((left, right) => left.characterId.localeCompare(right.characterId))
+  const assets = input.assets
+    .filter((point) => inCounty(point.locationId))
+    .sort((left, right) => Number(left.assetType === 'vehicle') - Number(right.assetType === 'vehicle')
+      || right.itemCount - left.itemCount
+      || left.assetId.localeCompare(right.assetId))
+  return {
+    characters,
+    assets,
+    characterPoints: characters.slice(0, Math.max(0, input.characterBudget ?? 8)),
+    assetPoints: assets.slice(0, Math.max(0, input.assetBudget ?? 6)),
+  }
 }

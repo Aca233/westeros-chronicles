@@ -70,12 +70,19 @@ assert.equal(occurred.transitions[0].status, 'occurred');
 assert.equal(occurred.history.canonical.due.status, 'occurred');
 assert.equal(initial.due.status, 'scheduled', 'scheduler must not mutate previous state');
 
+const worldEvent = (overrides) => ({
+  id: 'event', transactionId: 'turn:2', turn: 2,
+  date: { year: 298, month: 5, day: 12 },
+  source: 'system_rule', type: 'fixture', actorIds: [], subjectRefs: [],
+  reason: '测试事件', visibility: 'public', ...overrides,
+});
+
 const diverged = resolveDueCanonicalEvents(
   { schemaVersion: 1, startDate: { year: 298, month: 5, day: 10 }, canonical: initial, turns: [] },
   fixture,
   { year: 298, month: 5, day: 10 },
   { year: 298, month: 5, day: 20 },
-  [{ id: 'death', turn: 2, date: { year: 298, month: 5, day: 12 }, source: 'character', kind: 'character.death', title: '甲死亡', summary: '', participantIds: ['agot:test_1'], commandTypes: ['KILL_CHARACTER'] }],
+  [worldEvent({ id: 'death', type: 'character.death', actorIds: ['agot:test_1'], subjectRefs: [{ type: 'character', characterId: 'agot:test_1' }], reason: '甲死亡' })],
 );
 assert.equal(diverged.history.canonical.due.status, 'diverged');
 assert.match(diverged.history.canonical.due.reason, /关键人物/);
@@ -85,7 +92,7 @@ const moved = resolveDueCanonicalEvents(
   fixture,
   { year: 298, month: 5, day: 10 },
   { year: 298, month: 5, day: 20 },
-  [{ id: 'move', turn: 2, date: { year: 298, month: 5, day: 12 }, source: 'character', kind: 'command.move_character', title: '甲离开原地', summary: '', participantIds: ['agot:test_1'], commandTypes: ['MOVE_CHARACTER'] }],
+  [worldEvent({ id: 'move', type: 'command.move_character', actorIds: ['agot:test_1'], subjectRefs: [{ type: 'character', characterId: 'agot:test_1' }], reason: '甲离开原地' })],
 );
 assert.equal(moved.history.canonical.due.status, 'diverged');
 assert.match(moved.history.canonical.due.reason, /地点|条件/);
@@ -95,7 +102,7 @@ const replaced = resolveDueCanonicalEvents(
   fixture,
   { year: 298, month: 5, day: 10 },
   { year: 298, month: 5, day: 20 },
-  [{ id: 'replacement', turn: 2, date: { year: 298, month: 5, day: 12 }, source: 'system', kind: 'timeline.replaced', title: '新的世界事件取代旧节点', summary: '旧节点不再发生。', participantIds: ['agot:test_1'], commandTypes: [], canonicalEventId: 'due' }],
+  [worldEvent({ id: 'replacement', type: 'timeline.replaced', actorIds: ['agot:test_1'], subjectRefs: [{ type: 'character', characterId: 'agot:test_1' }], reason: '新的世界事件取代旧节点', canonicalEventId: 'due' })],
 );
 assert.equal(replaced.history.canonical.due.status, 'suppressed');
 assert.match(replaced.history.canonical.due.reason, /取代/);

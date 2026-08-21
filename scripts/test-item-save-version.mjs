@@ -5,23 +5,72 @@ import { build } from 'esbuild';
 
 const bundle = await build({ entryPoints: ['src/features/items/saveVersion.ts'], bundle: true, write: false, format: 'esm', platform: 'node' });
 const moduleUrl = `data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString('base64')}`;
-const { ITEM_SAVE_FORMAT_VERSION, assertSupportedGameState, assertSupportedSaveEnvelope } = await import(moduleUrl);
-const [dbSource, settingsSource, presetsSource, creatorSource] = await Promise.all([
+const { ITEM_SAVE_FORMAT_VERSION, assertSupportedGameState, assertSupportedSaveEnvelope, isCompatibleTurnBaseline, repairKnownTurnRevisionDrift } = await import(moduleUrl);
+const [dbSource, storeSource, settingsSource, presetsSource, creatorSource] = await Promise.all([
   readFile('src/services/db.ts', 'utf8'),
+  readFile('src/store/useGameStore.ts', 'utf8'),
   readFile('src/components/SettingsModal.tsx', 'utf8'),
   readFile('src/data/presets.ts', 'utf8'),
   readFile('src/components/CharacterCreator.tsx', 'utf8'),
 ]);
 
-test('物品存档格式固定为版本 7 并明确拒绝版本 6', () => {
-  assert.equal(ITEM_SAVE_FORMAT_VERSION, 7);
+const emptyWorldRuntime = () => ({ schemaVersion: 1, revision: 0, characters: {}, titles: {}, assets: {}, events: [], pendingTransactions: [] });
+
+test('物品存档格式固定为版本 9 并明确拒绝版本 8', () => {
+  assert.equal(ITEM_SAVE_FORMAT_VERSION, 9);
   assert.throws(() => assertSupportedSaveEnvelope({ version: 5, snapshots: [] }), /测试版存档格式已更新.*重置/);
   assert.throws(() => assertSupportedSaveEnvelope({ version: 6, snapshots: [] }), /测试版存档格式已更新.*重置/);
-  assert.doesNotThrow(() => assertSupportedSaveEnvelope({ version: 7, snapshots: [] }));
+  assert.throws(() => assertSupportedSaveEnvelope({ version: 7, snapshots: [] }), /测试版存档格式已更新.*重置/);
+  assert.throws(() => assertSupportedSaveEnvelope({ version: 8, snapshots: [] }), /测试版存档格式已更新.*重置/);
+  assert.doesNotThrow(() => assertSupportedSaveEnvelope({ version: 9, snapshots: [] }));
   assert.throws(() => assertSupportedGameState({ saveFormatVersion: 5 }), /测试版存档格式已更新.*重置/);
   assert.throws(() => assertSupportedGameState({ saveFormatVersion: 6, lord: { items: { schemaVersion: 1 } } }), /重置/);
-  assert.doesNotThrow(() => assertSupportedGameState({ saveFormatVersion: 7, lord: { location: { locationId: 'b_winterfell' }, locationLabel: '临冬城', items: { schemaVersion: 1, sites: {}, vehicles: {} } }, worldHistory: { schemaVersion: 1, startDate: { year: 298, month: 5, day: 10 }, canonical: {}, turns: [] } }));
-  assert.throws(() => assertSupportedGameState({ saveFormatVersion: 7, lord: { location: { locationId: 'b_winterfell' }, locationLabel: '临冬城', items: { schemaVersion: 1, sites: {}, vehicles: {} } }, activeJourney: { status: 'travelling', currentLeg: -1 }, worldHistory: { schemaVersion: 1, startDate: { year: 298, month: 5, day: 10 }, canonical: {}, turns: [] } }), /重置/);
+  assert.doesNotThrow(() => assertSupportedGameState({ saveFormatVersion: 9, lord: { location: { locationId: 'b_winterfell' }, locationLabel: '临冬城', items: { schemaVersion: 1, sites: {}, vehicles: {} } }, worldHistory: { schemaVersion: 1, startDate: { year: 298, month: 5, day: 10 }, canonical: {}, turns: [] }, worldRuntime: emptyWorldRuntime() }));
+  assert.throws(() => assertSupportedGameState({ saveFormatVersion: 9, lord: { location: { locationId: 'b_winterfell' }, locationLabel: '临冬城', items: { schemaVersion: 1, sites: {}, vehicles: {} } }, activeJourney: { status: 'travelling', currentLeg: -1 }, worldHistory: { schemaVersion: 1, startDate: { year: 298, month: 5, day: 10 }, canonical: {}, turns: [] }, worldRuntime: emptyWorldRuntime() }), /重置/);
+});
+
+
+test('旧测试快照会在叙事开始前被识别并重建当前回合基线', () => {
+  const currentState = {
+    saveFormatVersion: 9,
+    turnCount: 1,
+    lord: { location: { locationId: 'b_winterfell' }, locationLabel: '临冬城', items: { schemaVersion: 1, sites: {}, vehicles: {} } },
+    worldCharacters: { runId: 'run-current', datasetHash: 'dataset', revision: 0 },
+    worldHistory: { schemaVersion: 1, startDate: { year: 298, month: 5, day: 10 }, canonical: {}, turns: [] },
+    worldRuntime: emptyWorldRuntime(),
+  };
+  const matching = { formatVersion: 9, turnNumber: 1, gameState: currentState };
+  assert.equal(isCompatibleTurnBaseline(matching, currentState), true);
+  assert.equal(isCompatibleTurnBaseline({ ...matching, formatVersion: 8 }, currentState), false);
+  assert.equal(isCompatibleTurnBaseline({ ...matching, gameState: { ...currentState, worldCharacters: { ...currentState.worldCharacters, runId: 'run-old' } } }, currentState), false);
+  assert.match(dbSource, /export async function ensureTurnSnapshotBaseline/);
+  assert.match(dbSource, /await Promise\.all\(\[db\.snapshots\.clear\(\), db\.worldRuns\.clear\(\), db\.characterEvents\.clear\(\), db\.characterStateCache\.clear\(\)\]\)/);
+  const preflightIndex = storeSource.indexOf('await ensureTurnSnapshotBaseline(gameState)');
+  const narrationIndex = storeSource.indexOf('requestTurnResolution(');
+  assert.ok(preflightIndex >= 0, '提交行动前应准备当前回合存档基线');
+  assert.ok(narrationIndex > preflightIndex, '存档基线必须在请求叙事前完成');
+});
+
+test('当前版本因旧回合计数缺陷产生的修订漂移会在叙事前就地修正', () => {
+  const broken = {
+    saveFormatVersion: 9,
+    turnCount: 2,
+    turns: [{}, {}],
+    worldCharacters: { runId: 'run-current', datasetHash: 'dataset', revision: 1 },
+    worldHistory: { turns: [{}] },
+    worldRuntime: { revision: 0 },
+  };
+  const repaired = repairKnownTurnRevisionDrift(broken);
+  assert.notEqual(repaired, broken);
+  assert.equal(repaired.worldRuntime.revision, 1);
+  assert.equal(repaired.worldCharacters.revision, 1);
+  assert.equal(repairKnownTurnRevisionDrift(repaired), repaired);
+
+  const futureRevision = {
+    ...broken,
+    worldRuntime: { revision: 2 },
+  };
+  assert.equal(repairKnownTurnRevisionDrift(futureRevision), futureRevision);
 });
 
 test('数据库不迁移旧物品并在事务前校验版本', () => {

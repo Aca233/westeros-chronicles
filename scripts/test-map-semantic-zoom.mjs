@@ -17,43 +17,41 @@ const manifest = {
   westerosBounds: { minX: 1024, minY: 512, maxX: 7168, maxY: 5632 },
 }
 
-test('三级权重在两个行政重叠区连续交叉且总和为一', () => {
-  assert.deepEqual(semanticZoomState(0).weights, { realm: 1, duchy: 0, county: 0 })
-  assert.deepEqual(semanticZoomState(1.25).weights, { realm: 0.5, duchy: 0.5, county: 0 })
-  assert.deepEqual(semanticZoomState(2.65).weights, { realm: 0, duchy: 0.5, county: 0.5 })
-  assert.deepEqual(semanticZoomState(4.25).weights, { realm: 0, duchy: 0, county: 1 })
-  assert.deepEqual(semanticZoomState(6).weights, { realm: 0, duchy: 0, county: 1 })
-  assert.equal(semanticZoomState(4.25).detailMix, 0.5)
-  for (const zoom of [0, 1.1, 1.25, 1.4, 2.5, 2.65, 2.8, 4.25, 6]) {
+test('五级头衔在阈值处硬切换且始终只有一个等级可见', () => {
+  const cases = [
+    [0.84, 'hegemon'], [0.85, 'empire'], [1.54, 'empire'], [1.55, 'kingdom'],
+    [2.24, 'kingdom'], [2.25, 'duchy'], [2.94, 'duchy'], [2.95, 'county'], [6, 'county'],
+  ]
+  for (const [zoom, rank] of cases) {
     const state = semanticZoomState(zoom)
-    assert.equal(state.weights.realm + state.weights.duchy + state.weights.county, 1)
+    assert.equal(state.primaryRank, rank)
+    assert.equal(Object.values(state.weights).filter((opacity) => opacity === 1).length, 1)
+    assert.equal(Object.values(state.weights).filter((opacity) => opacity === 0).length, 4)
   }
 })
 
-test('双击只推进到下一个语义观察层', () => {
-  assert.equal(nextSemanticZoom(0), 2)
-  assert.equal(nextSemanticZoom(2.2), 3.4)
-  assert.equal(nextSemanticZoom(3.8), 5)
+test('双击推进到下一个头衔观察层或本地细节层', () => {
+  assert.equal(nextSemanticZoom(0), 0.85)
+  assert.equal(nextSemanticZoom(0.85), 1.55)
+  assert.equal(nextSemanticZoom(1.55), 2.25)
+  assert.equal(nextSemanticZoom(2.25), 2.95)
+  assert.equal(nextSemanticZoom(3.8), 4.6)
   assert.equal(nextSemanticZoom(5.2), 6)
 })
 
-test('伯爵领细节观察点不会创建第四个行政层', () => {
+test('伯爵领是最后一个政治等级，本地细节不创建第六级头衔', () => {
   assert.equal(semanticZoomState(5).primaryRank, 'county')
   assert.equal(semanticZoomState(5).detailMix, 1)
 })
 
-test('地图表达式使用三级行政交叉且细节不构成第四层', () => {
-  assert.deepEqual(semanticRankOpacityExpression('realm'), [
-    'interpolate', ['linear'], ['zoom'], 0, 1, 1.1, 1, 1.4, 0,
-  ])
-  assert.deepEqual(semanticRankOpacityExpression('duchy'), [
-    'interpolate', ['linear'], ['zoom'], 1.1, 0, 1.4, 1, 2.5, 1, 2.8, 0,
-  ])
-  assert.deepEqual(semanticRankOpacityExpression('county'), [
-    'interpolate', ['linear'], ['zoom'], 2.5, 0, 2.8, 1, 6, 1,
-  ])
+test('地图表达式使用五级硬切换且不交叉融合', () => {
+  assert.deepEqual(semanticRankOpacityExpression('hegemon'), ['step', ['zoom'], 1, 0.85, 0])
+  assert.deepEqual(semanticRankOpacityExpression('empire'), ['step', ['zoom'], 0, 0.85, 1, 1.55, 0])
+  assert.deepEqual(semanticRankOpacityExpression('kingdom'), ['step', ['zoom'], 0, 1.55, 1, 2.25, 0])
+  assert.deepEqual(semanticRankOpacityExpression('duchy'), ['step', ['zoom'], 0, 2.25, 1, 2.95, 0])
+  assert.deepEqual(semanticRankOpacityExpression('county'), ['step', ['zoom'], 0, 2.95, 1])
   assert.deepEqual(semanticLabelSizeExpression('county'), [
-    'interpolate', ['linear'], ['zoom'], 2.5, 15, 6, 12,
+    'interpolate', ['linear'], ['zoom'], 2.95, 15, 6, 12,
   ])
 })
 
@@ -109,8 +107,8 @@ test('镜头配置使用 MapLibre 安全的维斯特洛边界并完整清理自�
   assert.ok(calls.includes('double-disable'))
   listeners.get('dblclick')({ lngLat: { lng: 12, lat: 34 }, preventDefault() {} })
   const ease = calls.find((value) => Array.isArray(value) && value[0] === 'ease')
-  assert.equal(ease[1].zoom, 3.4)
-  assert.equal(ease[1].pitch, 34)
+  assert.equal(ease[1].zoom, 2.25)
+  assert.equal(ease[1].pitch, 22.5)
   assert.deepEqual(ease[1].around, { lng: 12, lat: 34 })
   teardown()
   assert.equal(listeners.size, 0)

@@ -7,28 +7,16 @@ import {
   type WorldHistoryState,
 } from '../world/worldHistory.ts'
 import type { SemanticMembership } from './types.ts'
+import type { TitleWorldPatch, WorldEvent } from '../world/worldRuntimeTypes.ts'
 
 export interface StaticPoliticalTitle {
   baronyId: string
   countyId?: string
   duchyId?: string
   kingdomId?: string
-  realmId?: string
+  empireId?: string
+  hegemonId?: string
   provinceId: number
-}
-
-const POLITICAL_REALM_TITLE_BY_REGION: Readonly<Record<string, string>> = {
-  world_westeros_beyond_the_wall: 'e_beyond_the_wall',
-  world_westeros_dorne: 'e_dorne',
-  world_westeros_the_crownlands: 'e_the_crownlands',
-  world_westeros_the_iron_islands: 'e_the_iron_islands',
-  world_westeros_the_north: 'e_the_north',
-  world_westeros_the_reach: 'e_the_reach',
-  world_westeros_the_riverlands: 'e_the_riverlands',
-  world_westeros_the_stormlands: 'e_the_stormlands',
-  world_westeros_the_vale: 'e_the_vale',
-  world_westeros_the_wall: 'k_the_wall',
-  world_westeros_the_westerlands: 'e_the_westerlands',
 }
 
 export interface PoliticalCharacter {
@@ -45,19 +33,27 @@ export interface PoliticalCharacter {
 export interface PoliticalFeatureState {
   titleId: string
   provinceId: number
+  /** 男爵领所属王国头衔(k_*),用于王国级点击解析 */
+  kingdomId?: string
   effectiveTitleId?: string
   holderId?: CharacterId
+  /** 伯爵领主色槽对应的法理持有人，供伯爵领详情使用。 */
+  countyHolderId?: CharacterId
   holderName?: string
   dynastyId?: string
   houseId?: string
   houseLabel?: string
   color: string
   sigil?: string
+  /** 实际控制者；军事占领不得覆盖法理持有人。 */
+  controllerId?: CharacterId
+  controllerColor?: string
+  isContested: boolean
+  contestedByIds: CharacterId[]
   realmTitleId?: string
   realmHolderId?: CharacterId
   realmHouseId?: string
   realmHouseLabel?: string
-  realmColor?: string
   realmSigil?: string
 }
 
@@ -198,10 +194,13 @@ function commandTransition(command: unknown): DatedPoliticalTransition['transiti
   if ((type === 'WAR_TITLE_RESULT' || type === 'WAR_RESULT') && holderId && titleId) {
     return { type: 'war-result', titleId, holderId, formal: record.formal === true, visibility: 'public' }
   }
+  if ((type === 'OCCUPY_TITLE' || type === 'OCCUPY_CHARACTER_TITLE') && holderId && titleId) {
+    return { type: 'occupy-title', titleId, controllerId: holderId, visibility: 'public' }
+  }
   return null
 }
 
-function datedTransitions(history: WorldHistoryState): DatedPoliticalTransition[] {
+function datedTransitions(history: WorldHistoryState, worldEvents: readonly WorldEvent[]): DatedPoliticalTransition[] {
   const transitions: DatedPoliticalTransition[] = []
   for (const turn of history.turns) {
     for (const [index, command] of turn.acceptedCommands.entries()) {
@@ -214,38 +213,86 @@ function datedTransitions(history: WorldHistoryState): DatedPoliticalTransition[
         transition,
       })
     }
-    for (const fact of turn.facts) {
-      if (!fact.political) continue
-      transitions.push({ date: fact.date, eventId: fact.id, transition: fact.political })
-    }
+  }
+  for (const event of worldEvents) {
+    if (event.visibility === 'secret') continue
+    const titleId = event.subjectRefs.find((subject) => subject.type === 'title')?.titleId
+    const holderId = event.actorIds[0]
+      ?? event.subjectRefs.find((subject) => subject.type === 'character')?.characterId
+    if (!titleId) continue
+    const transition: DatedPoliticalTransition['transition'] | undefined =
+      event.type === 'title.inherited' && holderId
+        ? { type: 'inherit-title', titleId, holderId, visibility: event.visibility }
+        : event.type === 'title.granted' && holderId
+          ? { type: 'grant-title', titleId, holderId, visibility: event.visibility }
+          : event.type === 'title.revoked'
+            ? { type: 'revoke-title', titleId, ...(holderId ? { holderId } : {}), visibility: event.visibility }
+            : event.type === 'title.war-result.formal' && holderId
+              ? { type: 'war-result', titleId, holderId, formal: true, visibility: event.visibility }
+              : event.type === 'title.occupied' && holderId
+                ? { type: 'occupy-title', titleId, controllerId: holderId, visibility: event.visibility }
+              : undefined
+    if (transition) transitions.push({ date: event.date, eventId: event.id, transition })
   }
   return transitions.sort((left, right) => compareWorldDates(left.date, right.date) || left.eventId.localeCompare(right.eventId))
 }
 
-function applyTransition(holders: Map<string, CharacterId>, transition: DatedPoliticalTransition['transition']): void {
+function applyTransition(
+  holders: Map<string, CharacterId>,
+  controllers: Map<string, CharacterId>,
+  contestedByTitle: Map<string, CharacterId[]>,
+  transition: DatedPoliticalTransition['transition'],
+): void {
   if (transition.type === 'death') {
     for (const [titleId, holderId] of holders) {
-      if (holderId === transition.holderId) holders.delete(titleId)
+      if (holderId === transition.holderId) {
+        holders.delete(titleId)
+        controllers.delete(titleId)
+        contestedByTitle.delete(titleId)
+      }
+    }
+    for (const [titleId, controllerId] of controllers) {
+      if (controllerId === transition.holderId) controllers.delete(titleId)
+    }
+    for (const [titleId, ids] of contestedByTitle) {
+      const remaining = ids.filter((id) => id !== transition.holderId)
+      if (remaining.length) contestedByTitle.set(titleId, remaining)
+      else contestedByTitle.delete(titleId)
     }
     return
   }
   if (transition.visibility === 'secret') return
   if (transition.type === 'war-result' && !transition.formal) return
+  if (transition.type === 'occupy-title') {
+    controllers.set(transition.titleId, transition.controllerId)
+    const lawfulHolderId = holders.get(transition.titleId)
+    if (lawfulHolderId && lawfulHolderId !== transition.controllerId) {
+      contestedByTitle.set(transition.titleId, [lawfulHolderId])
+    } else {
+      contestedByTitle.delete(transition.titleId)
+    }
+    return
+  }
   if (transition.type === 'revoke-title') {
-    if (!transition.holderId || holders.get(transition.titleId) === transition.holderId) holders.delete(transition.titleId)
+    if (!transition.holderId || holders.get(transition.titleId) === transition.holderId) {
+      holders.delete(transition.titleId)
+      controllers.delete(transition.titleId)
+      contestedByTitle.delete(transition.titleId)
+    }
     return
   }
   holders.set(transition.titleId, transition.holderId)
+  controllers.set(transition.titleId, transition.holderId)
+  contestedByTitle.delete(transition.titleId)
 }
 
 function hierarchy(title: StaticPoliticalTitle): string[] {
-  return [title.baronyId, title.countyId, title.duchyId, title.kingdomId]
+  return [title.baronyId, title.countyId, title.duchyId, title.kingdomId, title.empireId, title.hegemonId]
     .filter((id): id is string => Boolean(id))
 }
 
 function politicalRealmHierarchy(title: StaticPoliticalTitle): string[] {
-  const realmTitleId = title.realmId ? POLITICAL_REALM_TITLE_BY_REGION[title.realmId] : undefined
-  return [realmTitleId, title.kingdomId, title.duchyId, title.countyId, title.baronyId]
+  return [title.hegemonId, title.empireId, title.kingdomId, title.duchyId, title.countyId, title.baronyId]
     .filter((id): id is string => Boolean(id))
 }
 
@@ -253,10 +300,15 @@ export function attachPoliticalRealms(
   titles: readonly StaticPoliticalTitle[],
   memberships: readonly SemanticMembership[],
 ): StaticPoliticalTitle[] {
-  const realmIdByBaronyId = new Map(memberships.map((membership) => [membership.baronyId, membership.realmId]))
+  const membershipByBaronyId = new Map(memberships.map((membership) => [membership.baronyId, membership]))
   return titles.map((title) => {
-    const realmId = realmIdByBaronyId.get(title.baronyId)
-    return realmId ? { ...title, realmId } : { ...title }
+    const membership = membershipByBaronyId.get(title.baronyId)
+    if (!membership) return { ...title }
+    return {
+      ...title,
+      ...(membership.empireId ? { empireId: membership.empireId } : {}),
+      ...(membership.hegemonId ? { hegemonId: membership.hegemonId } : {}),
+    }
   })
 }
 
@@ -265,21 +317,58 @@ export function projectPoliticalState(
   characters: PoliticalCharacterCollection,
   history: WorldHistoryState,
   atDate: WorldDate,
+  worldEvents: readonly WorldEvent[] = [],
+  titlePatches: Readonly<Record<string, TitleWorldPatch>> = {},
 ): PoliticalFeatureState[] {
   const characterValues = characterList(characters)
   const charactersById = characterIndex(characters)
   const holders = baselineHolders(characterValues)
-  for (const event of datedTransitions(history)) {
+  const controllers = new Map(holders)
+  const contestedByTitle = new Map<string, CharacterId[]>()
+  for (const event of datedTransitions(history, worldEvents)) {
     if (compareWorldDates(event.date, atDate) > 0) break
-    applyTransition(holders, event.transition)
+    applyTransition(holders, controllers, contestedByTitle, event.transition)
+  }
+  for (const [titleId, patch] of Object.entries(titlePatches)) {
+    if (Object.prototype.hasOwnProperty.call(patch, 'lawfulHolderId')) {
+      if (patch.lawfulHolderId) holders.set(titleId, patch.lawfulHolderId)
+      else holders.delete(titleId)
+    }
+    if (Object.prototype.hasOwnProperty.call(patch, 'controllerId')) {
+      if (patch.controllerId) controllers.set(titleId, patch.controllerId)
+      else controllers.delete(titleId)
+    }
+    if (Object.prototype.hasOwnProperty.call(patch, 'contestedByIds')) {
+      if (patch.contestedByIds?.length) contestedByTitle.set(titleId, [...patch.contestedByIds])
+      else contestedByTitle.delete(titleId)
+    }
   }
 
+  const styleCache = new Map<CharacterId, ReturnType<typeof holderStyle>>()
+  const styleForHolder = (holderId: CharacterId | undefined): ReturnType<typeof holderStyle> | undefined => {
+    if (!holderId) return undefined
+    let style = styleCache.get(holderId)
+    if (!style) {
+      style = holderStyle(charactersById.get(holderId), holderId)
+      styleCache.set(holderId, style)
+    }
+    return style
+  }
   return [...staticTitles]
     .sort((left, right) => left.baronyId.localeCompare(right.baronyId))
     .map((title) => {
       const effectiveTitleId = hierarchy(title).find((titleId) => holders.has(titleId))
       const holderId = effectiveTitleId ? holders.get(effectiveTitleId) : undefined
       const holder = holderId ? charactersById.get(holderId) : undefined
+      const countyHolderTitleId = [title.countyId, title.duchyId, title.kingdomId, title.empireId, title.hegemonId]
+        .find((titleId): titleId is string => Boolean(titleId && holders.has(titleId)))
+      const countyHolderId = countyHolderTitleId ? holders.get(countyHolderTitleId) : holderId
+      const controllerTitleId = [title.countyId, title.duchyId, title.kingdomId, title.empireId, title.hegemonId, title.baronyId]
+        .find((titleId): titleId is string => Boolean(titleId && controllers.has(titleId)))
+      const controllerId = controllerTitleId ? controllers.get(controllerTitleId) : undefined
+      const controllerStyle = styleForHolder(controllerId)
+      const contestedByIds = controllerTitleId ? [...(contestedByTitle.get(controllerTitleId) ?? [])] : []
+      const isContested = contestedByIds.length > 0 || Boolean(controllerId && holderId && controllerId !== holderId)
       const realmTitleId = politicalRealmHierarchy(title).find((titleId) => holders.has(titleId))
       const realmHolderId = realmTitleId ? holders.get(realmTitleId) : undefined
       const realmHolder = realmHolderId ? charactersById.get(realmHolderId) : undefined
@@ -287,14 +376,19 @@ export function projectPoliticalState(
       return {
         titleId: title.baronyId,
         provinceId: title.provinceId,
+        ...(title.kingdomId ? { kingdomId: title.kingdomId } : {}),
         ...(effectiveTitleId ? { effectiveTitleId } : {}),
         ...(holderId ? { holderId } : {}),
+        ...(countyHolderId ? { countyHolderId } : {}),
         ...holderStyle(holder, holderId),
+        ...(controllerId ? { controllerId } : {}),
+        ...(controllerStyle ? { controllerColor: controllerStyle.color } : {}),
+        isContested,
+        contestedByIds,
         ...(realmTitleId ? { realmTitleId } : {}),
         ...(realmHolderId ? { realmHolderId } : {}),
         ...(realmStyle.houseId ? { realmHouseId: realmStyle.houseId } : {}),
         ...(realmStyle.houseLabel ? { realmHouseLabel: realmStyle.houseLabel } : {}),
-        realmColor: realmStyle.color,
         ...(realmStyle.sigil ? { realmSigil: realmStyle.sigil } : {}),
       }
     })
@@ -306,16 +400,20 @@ function stateFingerprint(state: PoliticalFeatureState | undefined): string {
     state.provinceId,
     state.effectiveTitleId ?? '',
     state.holderId ?? '',
+    state.countyHolderId ?? '',
     state.dynastyId ?? '',
     state.houseId ?? '',
     state.houseLabel ?? '',
     state.color,
     state.sigil ?? '',
+    state.controllerId ?? '',
+    state.controllerColor ?? '',
+    state.isContested ? '1' : '0',
+    state.contestedByIds.join(','),
     state.realmTitleId ?? '',
     state.realmHolderId ?? '',
     state.realmHouseId ?? '',
     state.realmHouseLabel ?? '',
-    state.realmColor ?? '',
     state.realmSigil ?? '',
   ].join('|')
 }

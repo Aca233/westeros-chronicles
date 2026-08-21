@@ -4,30 +4,26 @@ import { PRESET_SCENARIOS } from '../data/presets';
 import type { CharacterCommandBatchBaseContext } from '../services/stateReducer';
 import { performD20Check } from '../services/diceEngine';
 import { DiceMode, evaluateDiceRequirement } from '../services/dicePolicy';
-import { buildTurnResolutionMessages, requestTurnResolution, settleTurnDraft } from '../services/turnResolution';
+import { buildTurnResolutionMessages, prepareWorldTurn, requestTurnResolution, settleTurnDraft } from '../services/turnResolution';
 import { buildSettledNarrativeMessages, streamSettledNarrative } from '../services/turnNarration';
-import { saveTurnSnapshot, commitTurnAtomically, rollbackLastTurn, clearSaveData } from '../services/db';
+import { saveTurnSnapshot, commitTurnAtomically, rollbackLastTurn, clearSaveData, ensureTurnSnapshotBaseline } from '../services/db';
 import { stripEmoji, stripEmojiDeep } from '../services/textSanitizer';
 import { normalizeCk3Attributes } from '../data/ck3Skills';
 import { migrateLordIdentityData, migrateLordTraitData } from '../data/characterTraits';
-import { ITEM_SAVE_FORMAT_VERSION } from '../features/items/saveVersion';
-import {
-  cancelItemAction as cancelQueuedItemAction,
-  createPendingItemAction,
-  enqueueItemAction,
-  removeSubmittedItemActions,
-  type PendingItemAction,
-} from '../features/items/itemActionQueue';
-import type { ItemAction } from '../features/items/types';
+import { ITEM_SAVE_FORMAT_VERSION, repairKnownTurnRevisionDrift } from '../features/items/saveVersion';
 import { ITEM_CATALOG } from '../data/itemDefinitions';
-import { getItemDefinition } from '../features/items/catalog';
 import { AGOT_CHARACTER_DATASET_HASH, createInitialAgotArtifactWorldState } from '../features/items/worldArtifacts';
 import { createWorldHistoryState, type WorldDate } from '../features/world/worldHistory';
+import { createWorldRuntimeState } from '../features/world/worldRuntimeState';
 import { CANONICAL_TIMELINE } from '../data/generated/canonicalTimeline';
 import { initializeCanonicalStates } from '../features/world/canonicalTimeline';
 import type { CharacterId } from '../features/characters/types';
 import { buildWorldTurnContext, formatWorldTurnContext } from '../features/world/worldTurnContext';
-import type { TravelStateCommand } from '../features/map/travel/types';
+import type { PendingWorldTransaction } from '../features/world/worldRuntimeTypes';
+import {
+  cancelWorldTransaction as cancelQueuedWorldTransaction,
+  enqueueWorldTransaction,
+} from '../features/world/worldTransactionQueue';
 
 export interface CharacterTurnContext extends CharacterCommandBatchBaseContext { promptContext?: string; }
 
@@ -45,8 +41,6 @@ interface GameStore {
   streamingText: string;
   activeDiceCheck: D20Check | null;
   changesLog: string[];
-  pendingItemActions: PendingItemAction[];
-  pendingTravelCommand: TravelStateCommand | null;
   characterTurnContext: CharacterTurnContext | null;
   
   // 模态弹窗状态
@@ -65,10 +59,8 @@ interface GameStore {
   openTvTimeline: () => void;
   closeTvTimeline: () => void;
   closeDiceModal: () => void;
-  queueItemAction: (action: ItemAction) => void;
-  cancelItemAction: (actionId: string) => void;
-  queueTravelCommand: (command: TravelStateCommand) => void;
-  cancelTravelCommand: () => void;
+  queueWorldTransaction: (transaction: PendingWorldTransaction) => void;
+  cancelWorldTransaction: (transactionId: string) => void;
   setCharacterTurnContext: (context: CharacterTurnContext | null) => void;
 
   // 游戏核心流程
@@ -140,6 +132,7 @@ const INITIAL_GAME_STATE: GameState = {
   worldCharacters: { runId: createWorldRunId(), datasetHash: AGOT_DATASET_HASH, revision: 0 },
   worldArtifacts: createInitialAgotArtifactWorldState(),
   worldHistory: createInitialWorldHistory(INITIAL_WORLD_DATE),
+  worldRuntime: createWorldRuntimeState(),
   worldFlags: {},
   isGameOver: false,
 };
@@ -151,8 +144,6 @@ export const useGameStore = create<GameStore>((set, get) => ({
   streamingText: '',
   activeDiceCheck: null,
   changesLog: [],
-  pendingItemActions: [],
-  pendingTravelCommand: null,
   characterTurnContext: null,
   isDiceModalOpen: false,
   isSettingsOpen: false,
@@ -178,40 +169,37 @@ export const useGameStore = create<GameStore>((set, get) => ({
   closeTvTimeline: () => set({ isTvTimelineOpen: false }),
   closeDiceModal: () => set({ isDiceModalOpen: false, activeDiceCheck: null }),
 
-  queueItemAction: (action) => {
+  queueWorldTransaction: (transaction) => {
     if (get().isStreaming) return;
-    const instanceId = action.kind === 'acquire'
-      ? action.instance.instanceId
-      : action.kind === 'merge'
-        ? action.sourceInstanceId
-        : action.instanceId;
-    const instance = action.kind === 'acquire' ? action.instance : get().gameState.lord.items.instances[instanceId];
-    if (!instance) return;
-    const definition = getItemDefinition(ITEM_CATALOG, instance.definitionId);
-    const verb: Record<ItemAction['kind'], string> = {
-      acquire: '收下', equip: '穿上', unequip: '卸下', use: '使用', transfer: '转移', gift: '赠送',
-      discard: '丢弃', repair: '修理', damage: '受损', split: '拆分', merge: '合并', mark_heirloom: '立为传家宝',
-    };
-    const pending = createPendingItemAction(action, {
-      itemName: instance.customName ?? definition.name,
-      image: definition.image,
-      label: verb[action.kind],
-    });
-    set((state) => ({ pendingItemActions: enqueueItemAction(state.pendingItemActions, pending) }));
+    set((state) => ({
+      gameState: {
+        ...state.gameState,
+        worldRuntime: {
+          ...state.gameState.worldRuntime,
+          pendingTransactions: enqueueWorldTransaction(
+            state.gameState.worldRuntime.pendingTransactions,
+            transaction,
+          ),
+        },
+      },
+    }));
+  },
+  cancelWorldTransaction: (transactionId) => {
+    if (get().isStreaming) return;
+    set((state) => ({
+      gameState: {
+        ...state.gameState,
+        worldRuntime: {
+          ...state.gameState.worldRuntime,
+          pendingTransactions: cancelQueuedWorldTransaction(
+            state.gameState.worldRuntime.pendingTransactions,
+            transactionId,
+          ),
+        },
+      },
+    }));
   },
   setCharacterTurnContext: (context) => set({ characterTurnContext: context ? { ...context, characters: context.characters.map((character) => ({ ...character })), promptContext: context.promptContext ? stripEmoji(context.promptContext) : undefined } : null }),
-  cancelItemAction: (actionId) => {
-    if (get().isStreaming) return;
-    set((state) => ({ pendingItemActions: cancelQueuedItemAction(state.pendingItemActions, actionId) }));
-  },
-  queueTravelCommand: (command) => {
-    if (get().isStreaming) return;
-    set({ pendingTravelCommand: structuredClone(command) });
-  },
-  cancelTravelCommand: () => {
-    if (get().isStreaming) return;
-    set({ pendingTravelCommand: null });
-  },
 
   // 开启新剧本
   startNewGame: async (lord, opening, worldSetup) => {
@@ -245,6 +233,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       worldCharacters: { runId: createWorldRunId(), datasetHash: AGOT_DATASET_HASH, revision: 0 },
       worldArtifacts: createInitialAgotArtifactWorldState(),
       worldHistory: createInitialWorldHistory(startDate),
+      worldRuntime: createWorldRuntimeState(),
       worldFlags: {},
       isGameOver: false,
     };
@@ -257,45 +246,47 @@ export const useGameStore = create<GameStore>((set, get) => ({
       changesLog: [`维斯特洛新传奇开启: ${safeLord.house} · ${safeLord.name}`],
       streamingText: '',
       isStreaming: false,
-      pendingItemActions: [],
-      pendingTravelCommand: null,
       characterTurnContext: null,
     });
   },
 
   // 提交领主行动
   submitAction: async (actionText: string, diceMode: DiceMode = 'auto') => {
-    const { gameState, apiConfig, isStreaming, pendingItemActions, pendingTravelCommand, characterTurnContext } = get();
+    const { gameState: visibleGameState, apiConfig, isStreaming, characterTurnContext } = get();
+    let gameState = repairKnownTurnRevisionDrift(visibleGameState);
+    if (gameState !== visibleGameState) set({ gameState });
     const safeActionText = stripEmoji(actionText);
     if (isStreaming || gameState.isGameOver || !safeActionText) return;
 
-    const submittedItemActions = [...pendingItemActions];
-    const submittedTravelCommand = pendingTravelCommand ? structuredClone(pendingTravelCommand) : null;
+    const submittedWorldTransactions = structuredClone(
+      gameState.worldRuntime.pendingTransactions.filter((transaction) => transaction.status === 'pending'),
+    );
     let diceCheck: D20Check | undefined = undefined;
-
-    // 1. 只有存在真实风险的行动才进行 D20 检定；叙事模式永不隐藏掷骰。
-    const diceDecision = evaluateDiceRequirement(safeActionText, { overallStatus: gameState.lord.overallStatus });
-    const shouldRoll = !diceDecision.isImpossible && (diceMode === 'force' || (diceMode === 'auto' && diceDecision.shouldRoll));
-    if (shouldRoll) {
-      diceCheck = performD20Check(
-        safeActionText,
-        gameState.lord.attributes,
-        gameState.lord.items,
-        ITEM_CATALOG,
-        gameState.lord.traitIds ?? [],
-        diceDecision.attribute,
-        diceDecision.dc,
-        diceDecision.domain,
-      );
-      set({
-        activeDiceCheck: diceCheck,
-        isDiceModalOpen: true,
-      });
-    }
-
     set({ isStreaming: true, streamingText: '' });
 
     try {
+      // 先丢弃不兼容的测试快照并建立当前回合基线，避免生成完叙事才发现无法提交。
+      await ensureTurnSnapshotBaseline(gameState);
+
+      // 1. 只有存在真实风险的行动才进行 D20 检定；叙事模式永不隐藏掷骰。
+      const diceDecision = evaluateDiceRequirement(safeActionText, { overallStatus: gameState.lord.overallStatus });
+      const shouldRoll = !diceDecision.isImpossible && (diceMode === 'force' || (diceMode === 'auto' && diceDecision.shouldRoll));
+      if (shouldRoll) {
+        diceCheck = performD20Check(
+          safeActionText,
+          gameState.lord.attributes,
+          gameState.lord.items,
+          ITEM_CATALOG,
+          gameState.lord.traitIds ?? [],
+          diceDecision.attribute,
+          diceDecision.dc,
+          diceDecision.domain,
+        );
+        set({
+          activeDiceCheck: diceCheck,
+          isDiceModalOpen: true,
+        });
+      }
       const automaticWorldContext = characterTurnContext
         ? null
         : await buildWorldTurnContext({ gameState, actionText: safeActionText }).catch((error: unknown) => {
@@ -314,31 +305,55 @@ export const useGameStore = create<GameStore>((set, get) => ({
         safeActionText,
         diceCheck,
         { mode: diceMode, decision: diceDecision },
-        submittedItemActions,
+        submittedWorldTransactions,
         combinedPromptContext,
       );
       const draft = await requestTurnResolution(
         resolutionMessages,
         apiConfig,
         gameState,
-        submittedItemActions,
+        submittedWorldTransactions,
       );
+      const preparedWorld = await prepareWorldTurn({
+        gameState,
+        draft,
+        actionText: safeActionText,
+        nextTurnNumber,
+        pendingTransactions: submittedWorldTransactions,
+        characterContext: effectiveCharacterContext,
+      });
       const settled = settleTurnDraft({
         gameState,
         actionText: safeActionText,
         nextTurnNumber,
         draft,
-        pendingItemActions: submittedItemActions,
-        pendingTravelCommands: submittedTravelCommand ? [submittedTravelCommand] : [],
+        pendingTransactions: submittedWorldTransactions,
         characterContext: effectiveCharacterContext,
         diceCheck,
+        preparedWorld,
       });
 
       // 第二阶段只能根据程序已接受的事实生成正文。
+      const committedContextState: GameState = {
+        ...gameState,
+        currentYear: settled.nextDate.year,
+        currentMonth: settled.nextDate.month,
+        currentDay: settled.nextDate.day,
+        currentSeason: settled.nextSeason,
+        lord: settled.updatedLord,
+        worldHistory: settled.worldHistory,
+        worldRuntime: settled.worldRuntime,
+        activeJourney: settled.activeJourney,
+      };
+      const committedWorldContext = await buildWorldTurnContext({
+        gameState: committedContextState,
+        actionText: safeActionText,
+      }).then(formatWorldTurnContext).catch(() => '');
       const narrativeMessages = buildSettledNarrativeMessages({
-        gameState,
+        gameState: committedContextState,
         actionText: safeActionText,
         facts: settled.resolvedFacts,
+        worldContext: [settled.narrationContext, committedWorldContext].filter(Boolean).join('\n\n'),
       });
       const parsedTurn = await streamSettledNarrative(
         narrativeMessages,
@@ -372,6 +387,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
         turns: [...gameState.turns, finalTurn],
         worldCharacters: { ...currentWorldRef, revision: currentWorldRef.revision + 1 },
         worldHistory: settled.worldHistory,
+        worldRuntime: settled.worldRuntime,
         activeJourney: settled.activeJourney,
         isGameOver: settled.isFatalDeath,
         deathReason: settled.isFatalDeath ? '要害遭受致命创伤，领主陨落于维斯特洛的残酷权谋之中' : undefined,
@@ -387,8 +403,6 @@ export const useGameStore = create<GameStore>((set, get) => ({
         gameState: updatedGameState,
         isStreaming: false,
         streamingText: '',
-        pendingItemActions: removeSubmittedItemActions(get().pendingItemActions, submittedItemActions),
-        pendingTravelCommand: null,
         characterTurnContext: characterTurnContext
           ? { ...settled.characterContext, promptContext: characterTurnContext.promptContext }
           : null,
@@ -418,8 +432,6 @@ export const useGameStore = create<GameStore>((set, get) => ({
       set({
         gameState: restoredState,
         changesLog: ['时光倒流: 已回退到上一回合决策点'],
-        pendingItemActions: [],
-        pendingTravelCommand: null,
         characterTurnContext: null,
       });
     } else {

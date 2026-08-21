@@ -191,7 +191,6 @@ function applyGiftOrDiscard(
   const next = cloneState(moved);
   const definition = getItemDefinition(catalog, next.instances[targetInstanceId].definitionId);
   if (action.kind === 'gift') {
-    next.instances[targetInstanceId].lawfulControllerId = action.recipientId;
     appendHistory(next, targetInstanceId, 'gifted', context, `赠予${action.recipientId}`, action.recipientId);
     validateItemSystem(next, catalog);
     return { state: next, log: `将【${definition.name}】赠予${action.recipientId}` };
@@ -258,7 +257,6 @@ function applyMerge(
     && source.quality === target.quality
     && source.charges === target.charges
     && source.customName === target.customName
-    && source.lawfulControllerId === target.lawfulControllerId
     && source.renown === target.renown
     && source.isHeirloom === target.isHeirloom;
   if (!sameState || source.history.length > 0 || target.history.length > 0) {

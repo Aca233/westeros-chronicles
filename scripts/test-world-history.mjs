@@ -62,11 +62,13 @@ const turn = {
   resolvedOn: { year: 298, month: 5, day: 10 },
   acceptedCommands: [],
   rejectedCommands: [],
-  facts: [],
+  eventIds: [],
   canonicalTransitions: [],
 };
 const appended = appendWorldTurn(second, turn);
 assert.equal(appended.turns.length, 1);
+assert.equal('facts' in appended.turns[0], false, '世界账本不得持久化重复事实');
+assert.deepEqual(appended.turns[0].eventIds, []);
 assert.equal(second.turns.length, 0, 'appendWorldTurn must not mutate the previous snapshot');
 assert.throws(() => appendWorldTurn(appended, turn), /回合.*已存在/);
 

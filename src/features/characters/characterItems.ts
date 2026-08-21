@@ -1,4 +1,6 @@
 import { NPC_LOADOUT_TEMPLATES } from '../../data/npcLoadoutTemplates';
+import { NPC_LOADOUT_OVERRIDES } from '../../data/npcLoadoutOverrides';
+import type { EquipmentPosition } from '../items/types';
 import type { CharacterEventEnvelope } from './characterEventStore';
 import type {
   CharacterItemRecord,
@@ -6,15 +8,51 @@ import type {
   StaticCharacterRecord,
 } from './types';
 
+function isSamePosition(a: EquipmentPosition, b: EquipmentPosition): boolean {
+  if (a.group !== b.group) return false;
+  if (a.group === 'torso' && b.group === 'torso') return a.layer === b.layer;
+  if (a.group === 'legs' && b.group === 'legs') return a.layer === b.layer;
+  if (a.group === 'accessories' && b.group === 'accessories') return a.index === b.index;
+  return true;
+}
+
 export function expandBaselineLoadout(
   character: StaticCharacterRecord,
   profile: StaticCharacterLoadoutProfile | undefined,
 ): CharacterItemRecord[] {
   if (!profile) return [];
-  const template = NPC_LOADOUT_TEMPLATES[profile.templateId];
-  if (!template) throw new Error(`人物装束模板不存在：${profile.templateId}`);
-  const source = profile.overrideId ? 'curated_override' as const : 'baseline_template' as const;
-  return template.slots.map((slot) => ({
+  const registeredOverride = NPC_LOADOUT_OVERRIDES[character.id];
+  const override = profile.overrideId
+    ? registeredOverride?.id === profile.overrideId ? registeredOverride : undefined
+    : undefined;
+  if (profile.overrideId && !override) {
+    throw new Error(`人物装束覆盖不存在或不匹配：${character.id}/${profile.overrideId}`);
+  }
+  const templateId = override?.templateId ?? profile.templateId;
+  const template = NPC_LOADOUT_TEMPLATES[templateId];
+  if (!template) throw new Error(`人物装束模板不存在：${templateId}`);
+
+  let resolvedSlots = [...template.slots];
+
+  if (override?.clearedPositions && override.clearedPositions.length > 0) {
+    resolvedSlots = resolvedSlots.filter(
+      (slot) => !override.clearedPositions!.some((pos) => isSamePosition(slot.position, pos)),
+    );
+  }
+
+  if (override?.slots && override.slots.length > 0) {
+    for (const overrideSlot of override.slots) {
+      const existingIndex = resolvedSlots.findIndex((s) => isSamePosition(s.position, overrideSlot.position));
+      if (existingIndex >= 0) {
+        resolvedSlots[existingIndex] = overrideSlot;
+      } else {
+        resolvedSlots.push(overrideSlot);
+      }
+    }
+  }
+
+  const source = override ? ('curated_override' as const) : ('baseline_template' as const);
+  return resolvedSlots.map((slot) => ({
     instanceId: `npc:${character.rawId}:baseline:${slot.id}`,
     definitionId: slot.definitionId,
     ownerId: character.id,
@@ -23,6 +61,7 @@ export function expandBaselineLoadout(
     source,
   })).sort((left, right) => left.instanceId.localeCompare(right.instanceId));
 }
+
 
 export function projectCharacterItems(
   baseline: readonly CharacterItemRecord[],

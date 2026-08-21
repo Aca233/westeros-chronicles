@@ -1,10 +1,12 @@
 import { ApiConfig, StoryTurn, StateCommand, GameState } from '../types/game';
-import type { PendingItemAction } from '../features/items/itemActionQueue';
+import { pendingItemActionsFromWorldTransactions } from '../features/items/itemActionQueue';
+import type { PendingWorldTransaction } from '../features/world/worldRuntimeTypes';
 import { stripEmoji } from './textSanitizer';
 import { ITEM_CATALOG } from '../data/itemDefinitions';
 import { getItemDefinition } from '../features/items/catalog';
 import type { EquipmentPosition, ItemPlacement } from '../features/items/types';
 import { sameWorldLocation } from '../features/map/locationResolver';
+import { parseBranchOptions } from './branchOptions';
 
 // 解析模型输出的 XML 结构化标签 (小说流全融合 + 深度思考全捕获)
 export function parseModelOutput(
@@ -35,6 +37,7 @@ export function parseModelOutput(
       .replace(/<reasoning>[\s\S]*?<\/reasoning>/gi, '')
       .replace(/<branch>[\s\S]*?<\/branch>/gi, '')
       .replace(/<state_cmd>[\s\S]*?<\/state_cmd>/gi, '')
+      .replace(/<world_intent>[\s\S]*?<\/world_intent>/gi, '')
       .trim();
   }
 
@@ -56,11 +59,7 @@ export function parseModelOutput(
   const branches: string[] = [];
   const branchMatch = safeRawText.match(/<branch>([\s\S]*?)<\/branch>/i);
   if (branchMatch) {
-    const lines = branchMatch[1]
-      .split('\n')
-      .map((l) => l.replace(/^\d+[\.、\s\-]+/, '').trim())
-      .filter(Boolean);
-    branches.push(...lines.slice(0, 4));
+    branches.push(...parseBranchOptions(branchMatch[1]));
   }
 
   if (branches.length === 0) {
@@ -123,8 +122,11 @@ export function generateOfflineDemoResponse(
   playerInput: string,
   turnNumber: number,
   gameState?: GameState,
-  pendingItemActions: PendingItemAction[] = [],
+  pendingTransactions: PendingWorldTransaction[] = [],
 ): Omit<StoryTurn, 'id' | 'timestamp'> {
+  const pendingItemActions = gameState
+    ? pendingItemActionsFromWorldTransactions(pendingTransactions, gameState.lord.items, ITEM_CATALOG)
+    : [];
   playerInput = stripEmoji(playerInput);
   const stateCommands: StateCommand[] = [];
   let dynamicNarrate = '';
@@ -242,7 +244,7 @@ export async function streamChatCompletion(
   onChunk: (partialText: string) => void,
   signal?: AbortSignal,
   gameState?: GameState,
-  pendingItemActions: PendingItemAction[] = [],
+  pendingTransactions: PendingWorldTransaction[] = [],
 ): Promise<string> {
   // 如果未配置 API Key，走离线 Demo
   if (!config.apiKey || config.apiKey.trim() === '') {
@@ -252,7 +254,7 @@ export async function streamChatCompletion(
         messages[messages.length - 1].content.slice(0, 30),
         Math.floor(messages.length / 2) + 1,
         gameState,
-        pendingItemActions,
+        pendingTransactions,
       );
       const rawText = [
         `<think>\n${demo.think}\n</think>`,
@@ -373,7 +375,7 @@ export async function requestTurnResolutionCompletion(
   messages: Array<{ role: string; content: string }>,
   config: ApiConfig,
   gameState?: GameState,
-  pendingItemActions: PendingItemAction[] = [],
+  pendingTransactions: PendingWorldTransaction[] = [],
   signal?: AbortSignal,
 ): Promise<string> {
   if (!config.apiKey || config.apiKey.trim() === '') {
@@ -381,12 +383,13 @@ export async function requestTurnResolutionCompletion(
       messages[messages.length - 1]?.content.slice(0, 120) ?? '',
       (gameState?.turnCount ?? 0) + 1,
       gameState,
-      pendingItemActions,
+      pendingTransactions,
     );
     return `<resolution>程序离线解析了当前行动，最终事实仍以命令验证结果为准。</resolution>
 <state_cmd>
 ${JSON.stringify(demo.stateCommands ?? [])}
-</state_cmd>`;
+</state_cmd>
+<world_intent>[]</world_intent>`;
   }
   const baseUrl = (config.baseUrl || 'https://api.openai.com/v1').replace(/\/+$/, '');
   const response = await fetch(`${baseUrl}/chat/completions`, {

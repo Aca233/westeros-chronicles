@@ -10,6 +10,7 @@ import {
   buildSemanticMembershipIndex,
 } from './schemas.ts'
 import type { StaticPoliticalTitle } from './politicalProjection.ts'
+import type { MapSearchTarget } from './mapInteraction.ts'
 import type {
   MapLocation,
   MapLocationSearchEntry,
@@ -92,6 +93,60 @@ export class MapRepository {
       .map(({ entry }) => entry)
   }
 
+
+  async searchMapTargets(query: string, limit = 20): Promise<MapSearchTarget[]> {
+    const needle = normalized(query)
+    if (!needle || limit <= 0) return []
+    const [locations, semantic] = await Promise.all([this.loadSearchIndex(), this.loadSemanticIndex()])
+    const countyNames = new Map(semantic.titles
+      .filter((title) => title.rank === 'county')
+      .map((title) => [title.titleId, title.name]))
+    const membershipByLocation = semantic.byLocationId
+    const candidates: Array<{ result: MapSearchTarget; score: number; importance: number }> = []
+    for (const title of semantic.titles) {
+      if (title.rank !== 'county') continue
+      const values = [title.name].map(normalized)
+      const score = values.some((value) => value === needle) ? 4
+        : values.some((value) => value.startsWith(needle)) ? 3
+          : values.some((value) => value.includes(needle)) ? 2 : 0
+      if (score) candidates.push({
+        result: {
+          key: `county:${title.titleId}`,
+          target: { kind: 'county', countyId: title.titleId },
+          name: /伯爵领$/u.test(title.name) ? title.name : `${title.name}伯爵领`,
+          secondaryLabel: '伯爵领',
+        },
+        score,
+        importance: title.importance,
+      })
+    }
+    for (const entry of locations) {
+      const values = [entry.name, entry.englishName ?? ''].map(normalized)
+      const score = values.some((value) => value === needle) ? 4
+        : values.some((value) => value.startsWith(needle)) ? 3
+          : values.some((value) => value.includes(needle)) ? 1 : 0
+      if (!score) continue
+      const countyId = membershipByLocation.get(entry.id)?.countyId
+      candidates.push({
+        result: {
+          key: `location:${entry.id}`,
+          target: { kind: 'location', locationId: entry.id },
+          name: entry.name,
+          secondaryLabel: countyId ? countyNames.get(countyId) ?? '辖内地点' : '具体地点',
+          locationType: entry.type,
+        },
+        score,
+        importance: entry.importance,
+      })
+    }
+    return candidates
+      .sort((left, right) => right.score - left.score
+        || right.importance - left.importance
+        || left.result.name.localeCompare(right.result.name, 'zh-CN'))
+      .slice(0, Math.max(0, Math.floor(limit)))
+      .map(({ result }) => result)
+  }
+
   async getLocation(id: string): Promise<MapLocation> {
     const entry = (await this.loadSearchIndex()).find((candidate) => candidate.id === id)
     if (!entry) throw new MapDataError(`未找到地图地点：${id}`, id, false)
@@ -99,6 +154,23 @@ export class MapRepository {
     const location = locations.find((candidate) => candidate.id === id)
     if (!location) throw new MapDataError(`地点分片缺少记录：${id}`, entry.regionId, false)
     return location
+  }
+
+  async getLocations(ids: readonly string[]): Promise<MapLocation[]> {
+    const uniqueIds = [...new Set(ids)]
+    return Promise.all(uniqueIds.map((id) => this.getLocation(id)))
+  }
+
+  async hasPoliticalTitles(ids: readonly string[]): Promise<Set<string>> {
+    const wanted = new Set(ids)
+    if (wanted.size === 0) return new Set()
+    const matches = new Set<string>()
+    for (const title of await this.loadPoliticalTitles()) {
+      for (const id of [title.baronyId, title.countyId, title.duchyId, title.kingdomId, title.empireId, title.hegemonId]) {
+        if (id && wanted.has(id)) matches.add(id)
+      }
+    }
+    return matches
   }
 
   async loadLocationRegion(regionId: string): Promise<MapLocation[]> {

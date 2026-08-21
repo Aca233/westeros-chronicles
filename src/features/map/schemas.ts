@@ -37,7 +37,7 @@ const mapBoundsSchema = z.object({
 const nonNegativeInteger = z.number().int().nonnegative()
 
 export const mapManifestSchema = z.object({
-  schemaVersion: z.literal(3),
+  schemaVersion: z.literal(4),
   sourceId: mapSourceIdSchema,
   sourceHashes: z.record(z.string().min(1), sha256Schema),
   mapSize: z.object({
@@ -50,6 +50,7 @@ export const mapManifestSchema = z.object({
   maxZoom: nonNegativeInteger,
   paths: z.object({
     terrain: localMapPathSchema,
+    terrainLight: localMapPathSchema,
     materialTerrain: localMapPathSchema,
     vector: localMapPathSchema,
     dem: localMapPathSchema,
@@ -66,11 +67,14 @@ export const mapManifestSchema = z.object({
     locations: nonNegativeInteger,
     routeEdges: nonNegativeInteger,
     terrainTiles: nonNegativeInteger,
+    terrainLightTiles: nonNegativeInteger,
     materialTerrainTiles: nonNegativeInteger,
     vectorTiles: nonNegativeInteger,
     demTiles: nonNegativeInteger,
     semanticTiles: nonNegativeInteger,
-    semanticRealms: nonNegativeInteger,
+    semanticHegemons: nonNegativeInteger,
+    semanticEmpires: nonNegativeInteger,
+    semanticKingdoms: nonNegativeInteger,
     semanticDuchies: nonNegativeInteger,
     semanticCounties: nonNegativeInteger,
     semanticLabels: nonNegativeInteger,
@@ -84,7 +88,7 @@ export const mapManifestSchema = z.object({
   }
 })
 
-const semanticRankSchema = z.enum(['realm', 'duchy', 'county'])
+const semanticRankSchema = z.enum(['hegemon', 'empire', 'kingdom', 'duchy', 'county'])
 
 const semanticTitleSchema = z.object({
   featureId: z.number().int().positive(),
@@ -95,7 +99,7 @@ const semanticTitleSchema = z.object({
   mapY: z.number().finite().min(0).max(6144),
   importance: z.number().int().min(0).max(100),
   regionId: stableIdSchema,
-  politicalAnchorTitleId: stableIdSchema.optional(),
+  titleColor: z.string().regex(/^#[0-9a-f]{6}$/),
 }).strict()
 
 const semanticTitlesSchema = z.array(semanticTitleSchema).superRefine((titles, context) => {
@@ -125,9 +129,12 @@ const semanticTitlesSchema = z.array(semanticTitleSchema).superRefine((titles, c
 const semanticMembershipSchema = z.object({
   locationId: stableIdSchema,
   baronyId: stableIdSchema,
-  countyId: stableIdSchema.optional(),
-  duchyId: stableIdSchema.optional(),
-  realmId: stableIdSchema,
+  countyId: stableIdSchema,
+  duchyId: stableIdSchema,
+  kingdomId: stableIdSchema.optional(),
+  empireId: stableIdSchema.optional(),
+  hegemonId: stableIdSchema.optional(),
+  regionId: stableIdSchema,
 }).strict()
 
 const semanticMembershipsSchema = z.array(semanticMembershipSchema).superRefine((memberships, context) => {
@@ -215,7 +222,8 @@ const staticPoliticalTitleSchema = z.object({
   countyId: stableIdSchema.optional(),
   duchyId: stableIdSchema.optional(),
   kingdomId: stableIdSchema.optional(),
-  realmId: stableIdSchema.optional(),
+  empireId: stableIdSchema.optional(),
+  hegemonId: stableIdSchema.optional(),
   provinceId: z.number().int().positive(),
 }).strict()
 
@@ -298,7 +306,9 @@ export function buildSemanticMembershipIndex(
     const references: Array<readonly [SemanticTitle['rank'], string | undefined]> = [
       ['county', membership.countyId],
       ['duchy', membership.duchyId],
-      ['realm', membership.realmId],
+      ['kingdom', membership.kingdomId],
+      ['empire', membership.empireId],
+      ['hegemon', membership.hegemonId],
     ]
     for (const [rank, titleId] of references) {
       if (titleId && !titleByRankAndId.has(`${rank}:${titleId}`)) {

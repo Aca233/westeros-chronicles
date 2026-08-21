@@ -13,6 +13,7 @@ export interface ItemCardProps {
   pendingNote?: string;
   onCancelPending?: () => void;
   pendingCancellationDisabled?: boolean;
+  assetContext?: React.ReactNode;
   onAction?: (item: ItemCardModel, action: ItemCardModel['actions'][number]) => void;
 }
 
@@ -38,6 +39,7 @@ export const ItemCard: React.FC<ItemCardProps> = ({
   pendingNote,
   onCancelPending,
   pendingCancellationDisabled = false,
+  assetContext,
   onAction,
 }) => {
   const [expanded, setExpanded] = useState(defaultExpanded);
@@ -67,6 +69,12 @@ export const ItemCard: React.FC<ItemCardProps> = ({
         </span>
         <ChevronDown className={`h-4 w-4 shrink-0 text-gold-dim transition-transform ${expanded ? 'rotate-180' : ''}`} />
       </button>
+
+      {assetContext && (
+        <div className="border-t border-hairline/70 bg-ink-3/25 px-3 py-2" data-item-asset-context>
+          {assetContext}
+        </div>
+      )}
 
       {(pendingNote || item.actions.length > 0) && (
         <div className="flex flex-wrap gap-1.5 border-t border-hairline px-3 py-2">

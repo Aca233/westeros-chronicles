@@ -45,12 +45,12 @@ const mapLocationRepository = {
     { id: 'b_red_keep', name: '红堡', type: 'castle', importance: 100, mapX: 30, mapY: 40, regionId: 'crownlands' },
   ],
   loadSemanticTitles: async () => [
-    { featureId: 1, titleId: 'the_north', rank: 'realm', name: '北境', mapX: 10, mapY: 20, importance: 100, regionId: 'the_north' },
+    { featureId: 1, titleId: 'the_north', rank: 'kingdom', name: '北境', mapX: 10, mapY: 20, importance: 100, regionId: 'the_north' },
     { featureId: 2, titleId: 'd_winterfell', rank: 'duchy', name: '临冬城公国', mapX: 10, mapY: 20, importance: 90, regionId: 'the_north' },
     { featureId: 3, titleId: 'c_winterfell', rank: 'county', name: '临冬城伯爵领', mapX: 10, mapY: 20, importance: 80, regionId: 'the_north' },
   ],
   loadSemanticMembership: async () => [{
-    locationId: 'b_winterfell', baronyId: 'b_winterfell', countyId: 'c_winterfell', duchyId: 'd_winterfell', realmId: 'the_north',
+    locationId: 'b_winterfell', baronyId: 'b_winterfell', countyId: 'c_winterfell', duchyId: 'd_winterfell', kingdomId: 'the_north', regionId: 'the_north',
   }],
 };
 const gameState = {
@@ -77,9 +77,12 @@ const gameState = {
     canonical: { due: { eventId: 'due', status: 'scheduled' } },
     turns: [{
       turn: 2, action: '此前行动', startedOn: { year: 298, month: 5, day: 9 }, resolvedOn: { year: 298, month: 5, day: 10 },
-      acceptedCommands: [], rejectedCommands: [], canonicalTransitions: [],
-      facts: [{ id: 'recent', turn: 2, date: { year: 298, month: 5, day: 10 }, source: 'character', kind: 'relationship', title: '会面', summary: '', participantIds: ['agot:recent_1'], commandTypes: [] }],
+      acceptedCommands: [], rejectedCommands: [], canonicalTransitions: [], eventIds: ['recent'],
     }],
+  },
+  worldRuntime: {
+    schemaVersion: 1, revision: 1, characters: {}, titles: {}, assets: {}, pendingTransactions: [],
+    events: [{ id: 'recent', transactionId: 'turn:2', turn: 2, date: { year: 298, month: 5, day: 10 }, source: 'ai_resolution', type: 'relationship', actorIds: ['agot:recent_1'], subjectRefs: [{ type: 'character', characterId: 'agot:recent_1' }], reason: '会面', visibility: 'public' }],
   },
 };
 const timeline = [{
@@ -128,7 +131,7 @@ const semanticFailureRepository = {
 const semanticFallbackContext = await buildWorldTurnContext({
   gameState, actionText: '与劳勃交谈', repository, eventStore, mapLocationRepository: semanticFailureRepository, timeline,
 });
-assert.deepEqual(semanticFallbackContext.narrativeLocation, { placeName: '临冬城', sceneName: '神木林', countyName: undefined, duchyName: undefined, realmName: undefined });
+assert.deepEqual(semanticFallbackContext.narrativeLocation, { placeName: '临冬城', sceneName: '神木林', countyName: undefined, duchyName: undefined, kingdomName: undefined, empireName: undefined, hegemonName: undefined });
 assert.doesNotMatch(formatWorldTurnContext(semanticFallbackContext), /b_winterfell|baronyId|男爵领/);
 
 characterEvents.set('agot:named_1', [

@@ -66,3 +66,15 @@ test('卡片只暴露最多三条主要效果并标记待执行动作', () => {
   assert.ok(chainmail.actions.every((action) => action.disabledReason?.includes('待执行')));
   assert.match(chainmail.durabilityLabel, /100/);
 });
+
+
+test('普通物品卡不从实例旧字段显示法理归属', () => {
+  const state = createNedItemState();
+  const legacyOwnershipKey = ['lawful', 'ControllerId'].join('');
+  state.instances['ned.ice'][legacyOwnershipKey] = 'house_stark';
+  const cards = buildEquipmentGroupModels({ state, catalog: ITEM_CATALOG, pendingActions: [] })
+    .flatMap((group) => group.items);
+  const ice = cards.find((card) => card.instanceId === 'ned.ice');
+  assert.ok(ice);
+  assert.equal(ice.provenanceLines.some((line) => line.includes('合法归属')), false);
+});

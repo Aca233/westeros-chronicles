@@ -35,6 +35,7 @@ class CharacterHistory:
     culture: str | None
     faith: str | None
     sexuality: str | None
+    female: bool
     base_attributes: dict[str, int] = field(default_factory=dict)
     undated_traits: tuple[str, ...] = ()
     dated_events: tuple[DatedEvent, ...] = ()

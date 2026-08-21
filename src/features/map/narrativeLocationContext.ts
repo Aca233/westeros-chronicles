@@ -12,7 +12,9 @@ export interface NarrativeLocationContext {
   sceneName?: string
   countyName?: string
   duchyName?: string
-  realmName?: string
+  kingdomName?: string
+  empireName?: string
+  hegemonName?: string
 }
 
 export interface ResolveNarrativeLocationContextInput {
@@ -57,7 +59,9 @@ export function resolveNarrativeLocationContext(
     sceneName: visibleName(input.location.sceneLocation),
     countyName: titleName(titles, 'county', membership?.countyId),
     duchyName: titleName(titles, 'duchy', membership?.duchyId),
-    realmName: titleName(titles, 'realm', membership?.realmId),
+    kingdomName: titleName(titles, 'kingdom', membership?.kingdomId),
+    empireName: titleName(titles, 'empire', membership?.empireId),
+    hegemonName: titleName(titles, 'hegemon', membership?.hegemonId),
   }
 }
 
@@ -67,6 +71,8 @@ export function formatNarrativeLocationContext(context: NarrativeLocationContext
     context.sceneName,
     context.countyName,
     context.duchyName,
-    context.realmName,
+    context.kingdomName,
+    context.empireName,
+    context.hegemonName,
   ].map(visibleName).filter((name): name is string => Boolean(name)).join(' · '))
 }

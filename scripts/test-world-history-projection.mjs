@@ -11,8 +11,8 @@ const bundle = await build({
 const url = `data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString('base64')}`;
 const { factsForCharacter, projectActualTimeline, projectCanonicalTimeline, projectNpcAssets, projectNpcEquipment, visibleAssetsForCharacter, visibleEquipmentForCharacter } = await import(url);
 
-const marriage = { id: 'marriage', turn: 2, date: { year: 298, month: 5, day: 10 }, source: 'character', kind: 'command.marry_characters', title: '婚姻成立', summary: '两人结婚', participantIds: ['agot:a', 'agot:b'], commandTypes: ['MARRY_CHARACTERS'] };
-const death = { id: 'death', turn: 3, date: { year: 298, month: 5, day: 12 }, source: 'character', kind: 'character.death', title: '人物死亡', summary: '甲死亡', participantIds: ['agot:a'], commandTypes: ['KILL_CHARACTER'] };
+const marriage = { id: 'marriage', transactionId: 'turn:2', turn: 2, date: { year: 298, month: 5, day: 10 }, source: 'ai_resolution', type: 'command.marry_characters', actorIds: ['agot:a', 'agot:b'], subjectRefs: [{ type: 'character', characterId: 'agot:a' }, { type: 'character', characterId: 'agot:b' }], reason: '两人结婚', visibility: 'public' };
+const death = { id: 'death', transactionId: 'turn:3', turn: 3, date: { year: 298, month: 5, day: 12 }, source: 'ai_resolution', type: 'character.death', actorIds: ['agot:a'], subjectRefs: [{ type: 'character', characterId: 'agot:a' }], reason: '甲死亡', visibility: 'public' };
 const history = {
   schemaVersion: 1,
   startDate: { year: 298, month: 5, day: 1 },
@@ -20,17 +20,17 @@ const history = {
     canon_past: { eventId: 'canon_past', status: 'historical' },
     canon_diverged: { eventId: 'canon_diverged', status: 'diverged', resolvedOn: { year: 298, month: 5, day: 15 }, reason: '关键人物提前死亡' },
   },
-  turns: [{ turn: 2, action: '', startedOn: { year: 298, month: 5, day: 10 }, resolvedOn: { year: 298, month: 5, day: 12 }, acceptedCommands: [], rejectedCommands: [], facts: [marriage, death], canonicalTransitions: [] }],
+  turns: [{ turn: 2, action: '', startedOn: { year: 298, month: 5, day: 10 }, resolvedOn: { year: 298, month: 5, day: 12 }, acceptedCommands: [], rejectedCommands: [], eventIds: ['marriage', 'death'], canonicalTransitions: [] }],
 };
 const schedule = [
   { id: 'canon_past', date: { year: 298, month: 4, day: 5 }, title: '过去节点', summary: '过去', region: '北境', category: 'intrigue', participants: [], fatalities: [], consequences: [] },
   { id: 'canon_diverged', date: { year: 298, month: 5, day: 15 }, title: '偏离节点', summary: '原定事件', region: '君临', category: 'death', participants: [], fatalities: [], consequences: [] },
 ];
-assert.deepEqual(factsForCharacter(history, 'agot:a').map((fact) => fact.id), ['marriage', 'death']);
-assert.deepEqual(factsForCharacter(history, 'agot:b').map((fact) => fact.id), ['marriage']);
-const actual = projectActualTimeline(history, schedule);
+assert.deepEqual(factsForCharacter([marriage, death], 'agot:a').map((fact) => fact.id), ['marriage', 'death']);
+assert.deepEqual(factsForCharacter([marriage, death], 'agot:b').map((fact) => fact.id), ['marriage']);
+const actual = projectActualTimeline(history, [marriage, death], schedule);
 assert.ok(actual.some((event) => event.id === 'canon_past' && event.status === 'historical'));
-assert.ok(actual.some((event) => event.id === 'marriage' && event.source === 'character'));
+assert.ok(actual.some((event) => event.id === 'marriage' && event.source === 'ai_resolution'));
 assert.ok(actual.some((event) => event.id === 'death'));
 const canon = projectCanonicalTimeline(history, schedule);
 assert.equal(canon.find((event) => event.id === 'canon_diverged').status, 'diverged');
@@ -40,14 +40,15 @@ const artifacts = {
   schemaVersion: 1, startDate: '8298.1.1', datasetHash: 'a'.repeat(64), artifactDatasetHash: 'b'.repeat(64), characterDatasetHash: 'c'.repeat(64),
   artifacts: {
     owned: { instanceId: 'owned', definitionId: 'artifact.longclaw', lawfulControllerId: 'agot:a', placement: { type: 'character', characterId: 'agot:a' }, equipped: false, source: { file: '', line: 1, effectId: '' } },
-    worn: { instanceId: 'worn', definitionId: 'artifact.ice', lawfulControllerId: 'agot:a', placement: { type: 'character', characterId: 'agot:a' }, equipped: true, source: { file: '', line: 1, effectId: '' } },
+    worn: { instanceId: 'worn', definitionId: 'artifact.ice', lawfulControllerId: 'agot:a', placement: { type: 'character', characterId: 'agot:a' }, equipped: true, equippedPosition: { group: 'mainhand' }, source: { file: '', line: 1, effectId: '' } },
+    positionless: { instanceId: 'positionless', definitionId: 'artifact.longclaw', lawfulControllerId: 'agot:a', placement: { type: 'character', characterId: 'agot:a' }, equipped: true, source: { file: '', line: 1, effectId: '' } },
     custodied: { instanceId: 'custodied', definitionId: 'artifact.custodied', lawfulControllerId: 'agot:b', placement: { type: 'character', characterId: 'agot:a' }, equipped: false, source: { file: '', line: 1, effectId: '' } },
     titleAsset: { instanceId: 'titleAsset', definitionId: 'artifact.title', lawfulControllerId: 'agot:a', placement: { type: 'title', titleId: 'k_north', controllerId: 'agot:a' }, equipped: false, source: { file: '', line: 1, effectId: '' } },
     unrelated: { instanceId: 'unrelated', definitionId: 'artifact.unrelated', lawfulControllerId: 'agot:b', placement: { type: 'character', characterId: 'agot:b' }, equipped: false, source: { file: '', line: 1, effectId: '' } },
   },
 };
 assert.deepEqual(visibleEquipmentForCharacter(artifacts, 'agot:a').map((record) => record.instanceId), ['worn']);
-assert.deepEqual(visibleAssetsForCharacter(artifacts, 'agot:a').map((record) => record.instanceId).sort(), ['custodied', 'owned', 'titleAsset', 'worn']);
+assert.deepEqual(visibleAssetsForCharacter(artifacts, 'agot:a').map((record) => record.instanceId).sort(), ['custodied', 'owned', 'positionless', 'titleAsset', 'worn']);
 
 
 
@@ -69,6 +70,8 @@ mergedArtifacts.artifacts['artifact.dynasty'] = {
 const mergedEquipment = projectNpcEquipment(ordinaryItems, mergedArtifacts, 'agot:a');
 assert.deepEqual(mergedEquipment.map((record) => record.instanceId).sort(), ['ordinary-worn', 'worn']);
 assert.equal(mergedEquipment.find((record) => record.instanceId === 'ordinary-worn').equippedPosition.layer, 'garment');
+assert.deepEqual(mergedEquipment.find((record) => record.instanceId === 'worn').equippedPosition, { group: 'mainhand' });
+assert.equal(mergedEquipment.some((record) => record.instanceId === 'positionless'), false, '没有实际槽位的世界物品不得猜测穿戴位置');
 assert.ok(mergedEquipment.every((record) => record.relation === '当前穿戴'));
 assert.equal(mergedEquipment.some((record) => record.instanceId === 'titleAsset'), false, '领地资产不能显示为穿戴');
 

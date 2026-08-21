@@ -23,6 +23,8 @@ import { clsx } from 'clsx';
 import { useGameStore } from '../store/useGameStore';
 import { CANONICAL_TIMELINE } from '../data/generated/canonicalTimeline';
 import { projectActualTimeline, projectCanonicalTimeline, type TimelineProjectionEvent } from '../features/world/worldHistoryProjection';
+import type { CharacterId } from '../features/characters/types';
+import type { WorldLocationRef } from '../features/map/types';
 
 export interface TimelineEventNode {
   id: string;
@@ -61,6 +63,9 @@ export interface PureTimelineData {
 interface TvTimelineModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onOpenCharacter?: (characterId: CharacterId) => void;
+  onOpenLocation?: (location: WorldLocationRef) => void;
+  onOpenAsset?: (assetId: string) => void;
 }
 
 const CATEGORY_MAP: Record<string, { label: string; color: string; icon: React.FC<{ className?: string }> }> = {
@@ -140,15 +145,23 @@ function projectionToTimelineData(events: TimelineProjectionEvent[], mode: Timel
   };
 }
 
-export const TvTimelineModal: React.FC<TvTimelineModalProps> = ({ isOpen, onClose }) => {
+export const TvTimelineModal: React.FC<TvTimelineModalProps> = ({
+  isOpen,
+  onClose,
+  onOpenCharacter = () => undefined,
+  onOpenLocation = () => undefined,
+  onOpenAsset = () => undefined,
+}) => {
   const worldHistory = useGameStore((state) => state.gameState.worldHistory);
+  const worldEvents = useGameStore((state) => state.gameState.worldRuntime.events);
+  const worldEventById = useMemo(() => new Map(worldEvents.map((event) => [event.id, event])), [worldEvents]);
   const [timelineMode, setTimelineMode] = useState<TimelineMode>('actual');
   const timelineData = useMemo(() => projectionToTimelineData(
     timelineMode === 'actual'
-      ? projectActualTimeline(worldHistory, CANONICAL_TIMELINE)
+      ? projectActualTimeline(worldHistory, worldEvents, CANONICAL_TIMELINE)
       : projectCanonicalTimeline(worldHistory, CANONICAL_TIMELINE),
     timelineMode,
-  ), [timelineMode, worldHistory]);
+  ), [timelineMode, worldEvents, worldHistory]);
   const loading = false;
   const [selectedYear, setSelectedYear] = useState<number | 'all'>('all');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -449,6 +462,7 @@ export const TvTimelineModal: React.FC<TvTimelineModalProps> = ({ isOpen, onClos
                     const catInfo = CATEGORY_MAP[evt.category] || CATEGORY_MAP.intrigue;
                     const CatIcon = catInfo.icon;
                     const regionInfo = REGION_MAP[evt.region_tag] || { label: evt.region, color: 'border-hairline bg-ink text-parchment' };
+                    const linkedWorldEvent = timelineMode === 'actual' ? worldEventById.get(evt.id) : undefined;
 
                     return (
                       <article
@@ -541,6 +555,19 @@ export const TvTimelineModal: React.FC<TvTimelineModalProps> = ({ isOpen, onClos
                                 </span>
                               ))}
                             </div>
+
+                            {linkedWorldEvent && linkedWorldEvent.subjectRefs.length > 0 && (
+                              <div className="flex flex-wrap items-center gap-1.5 rounded border border-hairline/50 bg-ink/70 p-2 text-[11px]" data-timeline-subject-links>
+                                <span className="font-semibold text-gold/90">关联对象:</span>
+                                {linkedWorldEvent.subjectRefs.map((subject, index) => subject.type === 'character' ? (
+                                  <button key={`character:${subject.characterId}:${index}`} type="button" onClick={() => onOpenCharacter(subject.characterId)} className="rounded border border-gold/30 px-1.5 py-0.5 text-gold hover:border-gold/70">查看人物</button>
+                                ) : subject.type === 'location' ? (
+                                  <button key={`location:${subject.location.locationId}:${index}`} type="button" onClick={() => onOpenLocation(subject.location)} className="rounded border border-gold/30 px-1.5 py-0.5 text-gold hover:border-gold/70">查看地点</button>
+                                ) : subject.type === 'asset' ? (
+                                  <button key={`asset:${subject.assetId}:${index}`} type="button" onClick={() => onOpenAsset(subject.assetId)} className="rounded border border-gold/30 px-1.5 py-0.5 text-gold hover:border-gold/70">查看资产</button>
+                                ) : null)}
+                              </div>
+                            )}
 
                             {/* Full Narrative Text */}
                             <div className="space-y-1.5">

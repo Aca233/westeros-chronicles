@@ -12,6 +12,7 @@ import {
 
 function fixture(sourceLoaded = false) {
   const writes = []
+  const layoutWrites = []
   const warnings = []
   const frames = new Map()
   let nextFrame = 1
@@ -19,6 +20,7 @@ function fixture(sourceLoaded = false) {
   const map = {
     isSourceLoaded: (sourceId) => sourceId === MATERIAL_TERRAIN_SOURCE && loaded,
     setPaintProperty: (layerId, property, value) => writes.push([layerId, property, value]),
+    setLayoutProperty: (layerId, property, value) => layoutWrites.push([layerId, property, value]),
   }
   const scheduler = {
     request(callback) {
@@ -34,7 +36,7 @@ function fixture(sourceLoaded = false) {
     scheduler,
   )
   return {
-    controller, writes, warnings, frames,
+    controller, writes, layoutWrites, warnings, frames,
     setLoaded(value) { loaded = value },
     flush() {
       const queued = [...frames.values()]
@@ -44,10 +46,14 @@ function fixture(sourceLoaded = false) {
   }
 }
 
-test('近景地表在来源就绪后硬切换并使用迟滞返回远景', () => {
+test('近景地表在来源就绪后淡入覆盖,远景保留兜底并使用迟滞返回', () => {
   const state = fixture(false)
-  state.controller.syncNow(3.24)
+  state.controller.syncNow(2.8)
   assert.equal(state.controller.isNear(), false)
+  assert.deepEqual(state.layoutWrites, [])
+  state.controller.syncNow(3.05)
+  assert.deepEqual(state.layoutWrites.at(-1), [MATERIAL_TERRAIN_LAYER, 'visibility', 'visible'])
+  state.controller.syncNow(3.24)
   state.controller.syncNow(3.25)
   assert.equal(state.controller.isNear(), false)
   assert.deepEqual(state.writes, [])
@@ -55,9 +61,10 @@ test('近景地表在来源就绪后硬切换并使用迟滞返回远景', () =>
   state.setLoaded(true)
   state.controller.handleSourceData(MATERIAL_TERRAIN_SOURCE)
   assert.equal(state.controller.isNear(), true)
+  // 材质淡入时远景保持可见:快速平移缺块的区域透出远景而非黑块
   assert.deepEqual(state.writes.slice(-2), [
     [MATERIAL_TERRAIN_LAYER, 'raster-opacity', 1],
-    [FAR_MAP_LAYER, 'raster-opacity', 0],
+    [FAR_MAP_LAYER, 'raster-opacity', 1],
   ])
 
   state.controller.syncNow(3.15)
@@ -68,6 +75,7 @@ test('近景地表在来源就绪后硬切换并使用迟滞返回远景', () =>
     [FAR_MAP_LAYER, 'raster-opacity', 1],
     [MATERIAL_TERRAIN_LAYER, 'raster-opacity', 0],
   ])
+  assert.deepEqual(state.layoutWrites.at(-1), [MATERIAL_TERRAIN_LAYER, 'visibility', 'none'])
   assert.ok(state.writes.every(([, property, value]) => property === 'raster-opacity' && (value === 0 || value === 1)))
 })
 
@@ -84,6 +92,7 @@ test('来源失败只警告一次并立即恢复远景', () => {
     [FAR_MAP_LAYER, 'raster-opacity', 1],
     [MATERIAL_TERRAIN_LAYER, 'raster-opacity', 0],
   ])
+  assert.deepEqual(state.layoutWrites.at(-1), [MATERIAL_TERRAIN_LAYER, 'visibility', 'none'])
 })
 
 test('帧同步会合并连续缩放，销毁会取消待处理帧', () => {

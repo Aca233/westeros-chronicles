@@ -13,6 +13,8 @@ import {
 } from 'lucide-react'
 
 import { useGameStore } from '../../store/useGameStore'
+import type { CharacterId } from '../characters/types'
+import { createPendingWorldTransaction, pendingTravelTransactionFor, travelCommandToWorldIntent } from '../world/worldTransactionQueue'
 import { sameWorldLocation } from './locationResolver'
 import { useMapUiStore } from './mapUiStore'
 import { mapRepository } from './repository'
@@ -73,15 +75,25 @@ export const TravelPlanner: React.FC<TravelPlannerProps> = ({ destinationId, ori
   const routeRequest = useRef(0)
   const waypointRequest = useRef(0)
 
-  const activeJourney = useGameStore((state) => state.gameState.activeJourney)
-  const pendingTravelCommand = useGameStore((state) => state.pendingTravelCommand)
-  const playerLocation = useGameStore((state) => state.gameState.lord.location)
-  const vehicles = useGameStore((state) => state.gameState.lord.items.vehicles)
+  const gameState = useGameStore((state) => state.gameState)
+  const activeJourney = gameState.activeJourney
+  const playerLocation = gameState.lord.location
+  const vehicles = gameState.lord.items.vehicles
   const isStreaming = useGameStore((state) => state.isStreaming)
-  const queueTravelCommand = useGameStore((state) => state.queueTravelCommand)
-  const cancelTravelCommand = useGameStore((state) => state.cancelTravelCommand)
+  const queueWorldTransaction = useGameStore((state) => state.queueWorldTransaction)
+  const cancelWorldTransaction = useGameStore((state) => state.cancelWorldTransaction)
+  const playerCharacterId = (gameState.lord.canonicalCharacterId
+    ?? `save:${gameState.worldCharacters?.runId ?? 'current'}:player`) as CharacterId
+  const pendingTravelTransaction = pendingTravelTransactionFor(gameState.worldRuntime.pendingTransactions, playerCharacterId)
+  const pendingTravelCommand = pendingTravelTransaction?.travelCommands?.[0] ?? null
+  const queueTravelCommand = (command: TravelStateCommand) => queueWorldTransaction(createPendingWorldTransaction(
+    travelCommandToWorldIntent(command, playerCharacterId, `地图旅行操作：${command.type}`),
+  ))
+  const cancelTravelCommand = () => {
+    if (pendingTravelTransaction) cancelWorldTransaction(pendingTravelTransaction.id)
+  }
   const previewRoute = useMapUiStore((state) => state.previewRoute)
-  const clearTravelIntent = useMapUiStore((state) => state.clearTravelIntent)
+  const closeTravelPlanning = useMapUiStore((state) => state.closeTravelPlanning)
 
   const viaKey = waypoints.map((entry) => entry.id).join('|')
 
@@ -203,7 +215,7 @@ export const TravelPlanner: React.FC<TravelPlannerProps> = ({ destinationId, ori
           locationLabels,
         })
       }
-      clearTravelIntent()
+      closeTravelPlanning()
     } catch {
       setRouteError('路线地点名称未能读取，请重新规划。')
     } finally {
@@ -299,7 +311,6 @@ export const TravelPlanner: React.FC<TravelPlannerProps> = ({ destinationId, ori
                       }}>
                         <Plus />
                         <span>{entry.name}</span>
-                        <small>{entry.id}</small>
                       </button>
                     ))}
                   </div>

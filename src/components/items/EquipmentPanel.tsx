@@ -1,6 +1,9 @@
 import React, { useMemo, useState } from 'react';
 import { ChevronDown, Hammer, Shield, ThermometerSun, Weight } from 'lucide-react';
 import { ITEM_CATALOG } from '../../data/itemDefinitions';
+import type { CharacterId } from '../../features/characters/types';
+import { pendingItemActionsFromWorldTransactions } from '../../features/items/itemActionQueue';
+import { createPendingWorldTransaction, itemActionToWorldIntent } from '../../features/world/worldTransactionQueue';
 import {
   aggregateEquippedItemEffects,
   getEquipmentBurden,
@@ -8,6 +11,7 @@ import {
 import type {
   EquipmentGroup,
   EquipmentPosition,
+  ItemAction,
   ItemPlacement,
   ItemSystemState,
 } from '../../features/items/types';
@@ -107,9 +111,20 @@ export interface EquipmentPanelProps {
 }
 
 export const EquipmentPanel: React.FC<EquipmentPanelProps> = ({ body, focusedGroup, onGroupFocus }) => {
-  const { gameState, pendingItemActions, queueItemAction, cancelItemAction, isStreaming } = useGameStore();
+  const { gameState, queueWorldTransaction, cancelWorldTransaction, isStreaming } = useGameStore();
   const state = gameState.lord.items;
   const currentLocation = gameState.lord.location;
+  const playerCharacterId = (gameState.lord.canonicalCharacterId
+    ?? `save:${gameState.worldCharacters?.runId ?? 'current'}:player`) as CharacterId;
+  const pendingItemActions = useMemo(() => pendingItemActionsFromWorldTransactions(
+    gameState.worldRuntime.pendingTransactions,
+    state,
+    ITEM_CATALOG,
+  ), [gameState.worldRuntime.pendingTransactions, state]);
+  const queueItemAction = (action: ItemAction) => queueWorldTransaction(createPendingWorldTransaction(
+    itemActionToWorldIntent(action, playerCharacterId, `人物卷宗物品操作：${action.kind}`),
+  ));
+  const cancelItemAction = cancelWorldTransaction;
   const groups = useMemo(() => buildEquipmentGroupModels({ state, catalog: ITEM_CATALOG, pendingActions: pendingItemActions }), [state, pendingItemActions]);
   const groupById = useMemo(() => new Map(groups.map((group) => [group.group, group])), [groups]);
   const status = useMemo(() => aggregateStatus(state), [state]);

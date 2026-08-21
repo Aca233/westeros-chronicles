@@ -9,6 +9,7 @@ from PIL import Image
 
 from .models import MapImportError, TileReport
 from .tiles import MapBoundsTuple, _atomic_publish, _open_copy, _staging_directory, _tile_bounds, _validate_bounds, _validated_zooms
+from .terrain_lighting import _shared_edge_sample_bounds
 
 
 def encode_terrain_rgb(height: np.ndarray) -> np.ndarray:
@@ -24,6 +25,19 @@ def encode_terrain_rgb(height: np.ndarray) -> np.ndarray:
     ), axis=-1).astype(np.uint8)
 
 
+
+def height_value_to_elevation(
+    value: np.ndarray | float | int,
+    min_elevation: float = -500,
+    max_elevation: float = 8000,
+) -> np.ndarray:
+    if min_elevation >= max_elevation:
+        raise MapImportError("DEM 最大高程必须大于最小高程")
+    values = np.asarray(value, dtype=np.float64)
+    if not np.all(np.isfinite(values)):
+        raise MapImportError("DEM 高度图包含非有限值")
+    return min_elevation + values / 65535.0 * (max_elevation - min_elevation)
+
 def build_dem_tiles(
     heightmap: Image.Image | Path,
     bounds: MapBoundsTuple,
@@ -32,6 +46,7 @@ def build_dem_tiles(
     tile_size: int = 512,
     min_elevation: float = -500,
     max_elevation: float = 8000,
+    land_mask: Image.Image | Path | None = None,
 ) -> TileReport:
     bounds = _validate_bounds(bounds)
     zoom_values = _validated_zooms(zooms)
@@ -44,6 +59,36 @@ def build_dem_tiles(
     if source.ndim != 2:
         source_image.close()
         raise MapImportError("DEM 高度图必须是单通道 16 位图像")
+
+    min_x, min_y, max_x, max_y = bounds
+    left, top = max(0, int(np.floor(min_x))), max(0, int(np.floor(min_y)))
+    right = min(source.shape[1], int(np.ceil(max_x)))
+    bottom = min(source.shape[0], int(np.ceil(max_y)))
+    cropped_source = source[top:bottom, left:right].copy()
+    if cropped_source.size == 0:
+        source_image.close()
+        raise MapImportError("DEM 范围超出高度图")
+
+    mask_image: Image.Image | None = None
+    if land_mask is not None:
+        mask_image = _open_copy(land_mask).convert("L")
+        if mask_image.size == source_image.size:
+            cropped_mask = np.asarray(mask_image.crop((left, top, right, bottom)), dtype=np.uint8)
+        elif mask_image.size == (cropped_source.shape[1], cropped_source.shape[0]):
+            cropped_mask = np.asarray(mask_image, dtype=np.uint8)
+        else:
+            mask_image.close()
+            source_image.close()
+            raise MapImportError("DEM 陆地蒙版尺寸必须匹配高度图或裁剪范围")
+        water = cropped_mask == 0
+        if np.any(water):
+            water_height = float(np.median(cropped_source[water]))
+            cropped_source[water] = water_height
+
+    local_bounds = (0.0, 0.0, float(cropped_source.shape[1]), float(cropped_source.shape[0]))
+    elevation_image = Image.fromarray(
+        height_value_to_elevation(cropped_source, min_elevation, max_elevation).astype(np.float32),
+    )
     staging = _staging_directory(output)
     files: list[str] = []
     try:
@@ -51,17 +96,13 @@ def build_dem_tiles(
             count = 1 << zoom
             for tile_x in range(count):
                 for tile_y in range(count):
-                    left, top, right, bottom = _tile_bounds(bounds, zoom, tile_x, tile_y)
-                    crop = source[
-                        max(0, int(np.floor(top))):min(source.shape[0], int(np.ceil(bottom))),
-                        max(0, int(np.floor(left))):min(source.shape[1], int(np.ceil(right))),
-                    ]
-                    if crop.size == 0:
-                        raise MapImportError(f"DEM 瓦片超出高度图范围：z{zoom}/{tile_x}/{tile_y}")
-                    normalized = crop / 65535
-                    elevation = min_elevation + normalized * (max_elevation - min_elevation)
-                    resized = Image.fromarray(elevation.astype(np.float32)).resize(
-                        (tile_size, tile_size), Image.Resampling.BILINEAR,
+                    tile_bounds = _tile_bounds(local_bounds, zoom, tile_x, tile_y)
+                    sample_bounds = _shared_edge_sample_bounds(tile_bounds, tile_size)
+                    resized = elevation_image.transform(
+                        (tile_size, tile_size),
+                        Image.Transform.EXTENT,
+                        sample_bounds,
+                        Image.Resampling.BILINEAR,
                     )
                     encoded = encode_terrain_rgb(np.asarray(resized, dtype=np.float32))
                     relative = Path(str(zoom)) / str(tile_x) / f"{tile_y}.png"
@@ -69,11 +110,23 @@ def build_dem_tiles(
                     target.parent.mkdir(parents=True, exist_ok=True)
                     Image.fromarray(encoded).save(target, format="PNG", optimize=True)
                     files.append(relative.as_posix())
-        _atomic_publish(staging, output)
+        try:
+            _atomic_publish(staging, output)
+        except PermissionError:
+            # DrvFS can reject directory replacement even when all staged files
+            # are complete. DEM is an independent generated cache, so publish
+            # the finished tree with a copy fallback rather than partial writes.
+            if output.exists():
+                shutil.rmtree(output)
+            shutil.copytree(staging, output)
+            shutil.rmtree(staging)
     except Exception:
         if staging.exists():
             shutil.rmtree(staging)
         raise
     finally:
+        elevation_image.close()
+        if mask_image is not None:
+            mask_image.close()
         source_image.close()
     return TileReport("dem", len(files), zoom_values[0], zoom_values[-1], tuple(files))

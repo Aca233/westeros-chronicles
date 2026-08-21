@@ -95,6 +95,7 @@ export interface StaticCharacterRecord {
   cultureId?: string | null;
   faithId?: string | null;
   sexuality?: string | null;
+  female?: boolean;
   born: boolean;
   alive: boolean;
   birthDate?: string | null;

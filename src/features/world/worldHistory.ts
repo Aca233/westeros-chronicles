@@ -27,6 +27,7 @@ export type PoliticalWorldTransition =
   | { type: 'grant-title'; titleId: string; holderId: CharacterId; visibility?: 'public' | 'secret' }
   | { type: 'revoke-title'; titleId: string; holderId?: CharacterId; visibility?: 'public' | 'secret' }
   | { type: 'inherit-title'; titleId: string; holderId: CharacterId; visibility?: 'public' | 'secret' }
+  | { type: 'occupy-title'; titleId: string; controllerId: CharacterId; visibility?: 'public' | 'secret' }
   | { type: 'war-result'; titleId: string; holderId: CharacterId; formal: boolean; visibility?: 'public' | 'secret' };
 
 export interface WorldEventFact {
@@ -56,7 +57,7 @@ export interface WorldTurnRecord {
   resolvedOn: WorldDate;
   acceptedCommands: StateCommand[];
   rejectedCommands: RejectedWorldCommand[];
-  facts: WorldEventFact[];
+  eventIds: string[];
   canonicalTransitions: CanonicalEventState[];
 }
 

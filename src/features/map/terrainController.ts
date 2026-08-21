@@ -1,4 +1,3 @@
-import type { MapMode } from './mapLayers.ts'
 import { terrainCameraAnimation, terrainCameraProfile } from './terrainProfile.ts'
 
 export interface TerrainMapAdapter {
@@ -15,7 +14,6 @@ export interface TerrainMapAdapter {
 }
 
 export interface TerrainSyncInput {
-  mode: MapMode
   topDownLocked: boolean
   reducedMotion: boolean
 }
@@ -55,8 +53,11 @@ export function createTerrainController(
   let pendingFrame: number | null = null
   let pendingInput: TerrainSyncInput | null = null
   let pendingForcePitch = false
+  let gesturesEnabled: boolean | null = null
 
   const setGestures = (enabled: boolean): void => {
+    if (gesturesEnabled === enabled) return
+    gesturesEnabled = enabled
     const actions = enabled
       ? [
           () => map.dragRotate.enable(),
@@ -109,7 +110,6 @@ export function createTerrainController(
     if (destroyed) return
     const profile = terrainCameraProfile({
       zoom: map.getZoom(),
-      mode: input.mode,
       topDownLocked: input.topDownLocked,
       available,
       terrainWasEnabled: terrainAttached,
@@ -177,7 +177,6 @@ export function createTerrainController(
     if (destroyed) return
     const profile = terrainCameraProfile({
       zoom: map.getZoom(),
-      mode: input.mode,
       topDownLocked: input.topDownLocked,
       available,
       terrainWasEnabled: terrainAttached,

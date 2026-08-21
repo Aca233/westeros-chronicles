@@ -27,6 +27,10 @@ export type Ck3MapOptions = Pick<
   | 'maxBounds'
   | 'reduceMotion'
   | 'fadeDuration'
+  | 'maxTileCacheSize'
+  | 'maxTileCacheZoomLevels'
+  | 'canvasContextAttributes'
+  | 'refreshExpiredTiles'
 >
 
 export function cameraAnimation(
@@ -68,7 +72,17 @@ export function createCk3MapOptions(
     renderWorldCopies: false,
     maxBounds,
     reduceMotion: reducedMotion,
-    fadeDuration: reducedMotion ? 0 : 300,
+    // 快速滚轮/平移时瓦片尽快显现,长淡入会放大"加载慢"的观感
+    fadeDuration: reducedMotion ? 0 : 120,
+    // 每个来源多留已解码瓦片,快速移动后回看不再重新请求与解码
+    maxTileCacheSize: 160,
+    // 多栅格/矢量来源同时存在时，默认保留 5 个缩放层会放大显存占用。
+    // 三层仍覆盖连续滚轮回看，同时避免每个来源积压过多已解码瓦片。
+    maxTileCacheZoomLevels: 3,
+    // 烘焙瓦片内容永不变化,回看时不再做过期再校验请求
+    refreshExpiredTiles: false,
+    // 双显卡设备上请求高性能 GPU,避免浏览器回退到核显或软件渲染
+    canvasContextAttributes: { powerPreference: 'high-performance' },
   }
 }
 

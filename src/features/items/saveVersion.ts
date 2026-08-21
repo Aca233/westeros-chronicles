@@ -1,11 +1,98 @@
 import { validateWorldLocationRef } from '../map/locationResolver.ts';
+import { validateWorldRuntimeState } from '../world/worldRuntimeState.ts';
 
-export const ITEM_SAVE_FORMAT_VERSION = 7 as const;
+export const ITEM_SAVE_FORMAT_VERSION = 9 as const;
 
 const RESET_REQUIRED_MESSAGE = '测试版存档格式已更新，请重置测试存档后重新开始。';
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null;
+}
+
+
+/**
+ * A persisted baseline may be reused only when it describes the exact in-memory
+ * run and committed revision that is about to advance. Old test saves are not
+ * migrated; callers can discard them and seed the visible current state.
+ */
+export function isCompatibleTurnBaseline(snapshot: unknown, currentState: unknown): boolean {
+  if (!isRecord(snapshot)
+    || snapshot.formatVersion !== ITEM_SAVE_FORMAT_VERSION
+    || !Number.isInteger(snapshot.turnNumber)
+    || !isRecord(snapshot.gameState)) return false;
+
+  try {
+    assertSupportedGameState(snapshot.gameState);
+    assertSupportedGameState(currentState);
+  } catch {
+    return false;
+  }
+
+  const persisted = snapshot.gameState as Record<string, unknown>;
+  const current = currentState as Record<string, unknown>;
+  const persistedCharacters = persisted.worldCharacters;
+  const currentCharacters = current.worldCharacters;
+  const persistedRuntime = persisted.worldRuntime;
+  const currentRuntime = current.worldRuntime;
+  if (snapshot.turnNumber !== current.turnCount
+    || persisted.turnCount !== current.turnCount
+    || !isRecord(persistedCharacters)
+    || !isRecord(currentCharacters)
+    || persistedCharacters.runId !== currentCharacters.runId
+    || persistedCharacters.datasetHash !== currentCharacters.datasetHash
+    || persistedCharacters.revision !== currentCharacters.revision
+    || !isRecord(persistedRuntime)
+    || !isRecord(currentRuntime)
+    || persistedRuntime.revision !== currentRuntime.revision) return false;
+
+  return true;
+}
+
+
+/**
+ * Repair the revision-only drift produced by the former turn resolver, which
+ * could append a valid ledger turn without advancing the runtime counter.
+ * This is deliberately narrow: future counters or structurally inconsistent
+ * story/ledger lengths are left untouched and rejected by the commit guard.
+ */
+export function repairKnownTurnRevisionDrift<T extends {
+  saveFormatVersion: number;
+  turnCount: number;
+  turns: readonly unknown[];
+  worldHistory: { turns: readonly unknown[] };
+  worldRuntime: { revision: number };
+  worldCharacters?: { revision: number };
+}>(gameState: T): T {
+  const expectedRevision = gameState.worldHistory?.turns?.length;
+  if (gameState.saveFormatVersion !== ITEM_SAVE_FORMAT_VERSION
+    || !Number.isInteger(gameState.turnCount)
+    || !Array.isArray(gameState.turns)
+    || !Number.isInteger(expectedRevision)
+    || expectedRevision !== gameState.turnCount - 1
+    || gameState.turns.length !== gameState.turnCount
+    || !Number.isInteger(gameState.worldRuntime?.revision)
+    || gameState.worldRuntime.revision < 0
+    || gameState.worldRuntime.revision > expectedRevision
+    || (gameState.worldCharacters !== undefined
+      && (!Number.isInteger(gameState.worldCharacters.revision)
+        || gameState.worldCharacters.revision < 0
+        || gameState.worldCharacters.revision > expectedRevision))) {
+    return gameState;
+  }
+
+  const characterRevision = gameState.worldCharacters?.revision;
+  if (gameState.worldRuntime.revision === expectedRevision
+    && (characterRevision === undefined || characterRevision === expectedRevision)) {
+    return gameState;
+  }
+
+  return {
+    ...gameState,
+    worldRuntime: { ...gameState.worldRuntime, revision: expectedRevision },
+    ...(gameState.worldCharacters
+      ? { worldCharacters: { ...gameState.worldCharacters, revision: expectedRevision } }
+      : {}),
+  };
 }
 
 function hasValidContainerLocations(items: Record<string, unknown>): boolean {
@@ -53,9 +140,10 @@ function hasValidActiveJourney(value: unknown): boolean {
 }
 
 export function assertSupportedGameState(value: unknown): asserts value is {
-  saveFormatVersion: 7;
+  saveFormatVersion: 9;
   lord: { items: { schemaVersion: 1 } };
   worldHistory: { schemaVersion: 1 };
+  worldRuntime: { schemaVersion: 1 };
 } {
   if (!isRecord(value)
     || value.saveFormatVersion !== ITEM_SAVE_FORMAT_VERSION
@@ -71,10 +159,15 @@ export function assertSupportedGameState(value: unknown): asserts value is {
     || value.worldHistory.schemaVersion !== 1) {
     throw new Error(RESET_REQUIRED_MESSAGE);
   }
+  try {
+    validateWorldRuntimeState(value.worldRuntime);
+  } catch {
+    throw new Error(RESET_REQUIRED_MESSAGE);
+  }
 }
 
 export function assertSupportedSaveEnvelope(value: unknown): asserts value is {
-  version: 7;
+  version: 9;
   snapshots: unknown[];
   worldRuns?: unknown[];
   characterEvents?: unknown[];

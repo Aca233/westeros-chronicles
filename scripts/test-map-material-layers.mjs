@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 
 import {
-  applyMapMode,
+  applyMapPresentation,
   FAR_MAP_LAYER,
   FAR_MAP_SOURCE,
   MATERIAL_TERRAIN_LAYER,
@@ -11,7 +11,7 @@ import {
 import { createLocalMapStyle } from '../src/features/map/mapStyle.ts'
 
 const manifest = {
-  schemaVersion: 3,
+  schemaVersion: 4,
   sourceId: 'local-fixture',
   sourceHashes: { source: 'a'.repeat(64) },
   mapSize: { width: 9216, height: 6144 },
@@ -21,6 +21,7 @@ const manifest = {
   maxZoom: 6,
   paths: {
     terrain: '/assets/agot-map/terrain/{z}/{x}/{y}.webp',
+    terrainLight: '/assets/agot-map/terrain-light/{z}/{x}/{y}.webp',
     materialTerrain: '/assets/agot-map/material-terrain/{z}/{x}/{y}.webp',
     vector: '/assets/agot-map/vector/{z}/{x}/{y}.pbf',
     dem: '/assets/agot-map/dem/{z}/{x}/{y}.png',
@@ -32,9 +33,10 @@ const manifest = {
   },
   counts: {
     regions: 9, provinces: 1200, locations: 800, routeEdges: 2400,
-    terrainTiles: 341, materialTerrainTiles: 1365, vectorTiles: 5461,
-    demTiles: 341, semanticTiles: 5461, semanticRealms: 9,
-    semanticDuchies: 30, semanticCounties: 120, semanticLabels: 159,
+    terrainLightTiles: 341, terrainTiles: 341, materialTerrainTiles: 1365, vectorTiles: 5461,
+    demTiles: 341, semanticTiles: 5461, semanticHegemons: 1,
+    semanticEmpires: 9, semanticKingdoms: 18, semanticDuchies: 30,
+    semanticCounties: 120, semanticLabels: 178,
     missingSemanticLocalizations: 0,
   },
   datasetHash: 'b'.repeat(64), semanticHash: 'c'.repeat(64),
@@ -48,30 +50,35 @@ test('远景与近景地表使用独立本地栅格源并按正确顺序叠放',
 
   const farIndex = style.layers.findIndex((layer) => layer.id === FAR_MAP_LAYER)
   const nearIndex = style.layers.findIndex((layer) => layer.id === MATERIAL_TERRAIN_LAYER)
-  const hillshadeIndex = style.layers.findIndex((layer) => layer.id === 'agot-hillshade')
-  const politicalIndex = style.layers.findIndex((layer) => layer.id === 'agot-provinces')
+  const lightingIndex = style.layers.findIndex((layer) => layer.id === 'agot-terrain-light')
+  const politicalIndices = ['hegemon', 'empire', 'kingdom', 'duchy', 'county']
+    .map((rank) => style.layers.findIndex((layer) => layer.id === `agot-${rank}-surface`))
   assert.ok(farIndex >= 0 && farIndex < nearIndex)
-  assert.ok(nearIndex < hillshadeIndex && hillshadeIndex < politicalIndex)
+  assert.ok(nearIndex < lightingIndex)
+  assert.ok(politicalIndices.every((index) => index > lightingIndex))
 
   const far = style.layers[farIndex]
   const near = style.layers[nearIndex]
   assert.equal(far.paint['raster-opacity'], 1)
   assert.equal(near.paint['raster-opacity'], 0)
+  assert.equal(near.layout.visibility, 'none')
   assert.equal(Array.isArray(far.paint['raster-opacity']), false)
   assert.equal(Array.isArray(near.paint['raster-opacity']), false)
 })
 
-test('地图模式只调整两张地表的色彩，不接管远近景透明度', () => {
+test('自动地图表达只调整两张地表的色彩，不接管远近景透明度', () => {
   const paintCalls = []
+  const layoutCalls = []
   const map = {
     getLayer: (id) => id === FAR_MAP_LAYER || id === MATERIAL_TERRAIN_LAYER,
-    setLayoutProperty: () => {},
+    setLayoutProperty: (...args) => layoutCalls.push(args),
     setPaintProperty: (layerId, property, value) => paintCalls.push([layerId, property, value]),
   }
-  applyMapMode(map, 'characters')
+  applyMapPresentation(map, { band: 'county', politicalSurface: false, countyLabels: true, internalLocations: false, roads: true, characters: false, assets: false }, false, 'county')
   assert.ok(paintCalls.some(([, property]) => property === 'raster-saturation'))
   assert.ok(paintCalls.some(([, property]) => property === 'raster-brightness-max'))
   assert.equal(paintCalls.some(([, property]) => property === 'raster-opacity'), false)
+  assert.equal(layoutCalls.some(([layerId]) => layerId === MATERIAL_TERRAIN_LAYER), false)
   for (const layerId of [FAR_MAP_LAYER, MATERIAL_TERRAIN_LAYER]) {
     assert.ok(paintCalls.some(([id]) => id === layerId))
   }

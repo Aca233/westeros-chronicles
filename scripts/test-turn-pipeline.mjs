@@ -30,12 +30,13 @@ const {
 
 const lord = structuredClone(PRESET_SCENARIOS[0].initialLord);
 const gameState = {
-  saveFormatVersion: 7,
+  saveFormatVersion: 9,
   currentYear: 298, currentMonth: 5, currentDay: 10, currentSeason: '暮春', turnCount: 1,
   lord, turns: [],
   worldCharacters: { runId: 'run_test', datasetHash: 'f'.repeat(64), revision: 0 },
   worldArtifacts: createInitialAgotArtifactWorldState(),
   worldHistory: { schemaVersion: 1, startDate: { year: 298, month: 5, day: 10 }, canonical: {}, turns: [] },
+  worldRuntime: { schemaVersion: 1, revision: 0, characters: {}, titles: {}, assets: {}, events: [], pendingTransactions: [] },
   worldFlags: {}, isGameOver: false,
 };
 const ARYA = 'agot:Arya_1';
@@ -61,7 +62,7 @@ const settled = settleTurnDraft({
       { type: 'INJURE_CHARACTER', characterId: SANSA, zone: 'arms', level: 'minor', woundText: '手臂擦伤' },
     ],
   },
-  pendingItemActions: [],
+  pendingTransactions: [],
   characterContext: context,
   timeline: [],
 });
@@ -71,6 +72,26 @@ assert.equal(settled.characterEvents.length, 0);
 assert.equal(settled.updatedLord.prestige, lord.prestige + 1);
 assert.equal(settled.worldHistory.turns.length, 1);
 assert.deepEqual(settled.worldHistory.turns[0].acceptedCommands.map((command) => command.type), ['MODIFY_PRESTIGE']);
+assert.equal(settled.worldRuntime.revision, settled.worldHistory.turns.length);
+
+
+const rejectedOnly = settleTurnDraft({
+  gameState,
+  actionText: '要求远在君临的珊莎立刻受伤',
+  nextTurnNumber: 2,
+  draft: {
+    outcomeSummary: '珊莎受了伤。',
+    stateCommands: [
+      { type: 'INJURE_CHARACTER', characterId: SANSA, zone: 'arms', level: 'minor', woundText: '手臂擦伤' },
+    ],
+  },
+  pendingTransactions: [],
+  characterContext: context,
+  timeline: [],
+});
+assert.equal(rejectedOnly.worldHistory.turns.length, 1);
+assert.equal(rejectedOnly.worldRuntime.revision, 1);
+assert.equal(rejectedOnly.worldRuntime.revision, rejectedOnly.worldHistory.turns.length);
 
 const messages = buildSettledNarrativeMessages({
   gameState,

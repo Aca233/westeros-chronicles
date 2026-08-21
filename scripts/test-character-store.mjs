@@ -7,6 +7,20 @@ const stubs = {
   setup(api) {
     api.onResolve({ filter: /(?:services[\\/])?api$/ }, () => ({ path: 'api-stub', namespace: 'character-store' }));
     api.onResolve({ filter: /services[\\/]db$/ }, () => ({ path: 'db-stub', namespace: 'character-store' }));
+    api.onResolve({ filter: /features[\\/]map[\\/]repository$/ }, () => ({ path: 'map-repository-stub', namespace: 'character-store' }));
+    api.onLoad({ filter: /map-repository-stub/, namespace: 'character-store' }, () => ({
+      loader: 'js',
+      contents: `
+        const locations = [
+          { id: 'b_winterfell', name: '临冬城', mapX: 0, mapY: 0, importance: 100, type: 'castle' },
+          { id: 'b_riverrun', name: '奔流城', mapX: 1, mapY: 0, importance: 80, type: 'castle' },
+        ];
+        export const mapRepository = {
+          async loadSearchIndex() { return structuredClone(locations); },
+          async loadSemanticMembership() { return []; },
+        };
+      `,
+    }));
     api.onLoad({ filter: /api-stub/, namespace: 'character-store' }, () => ({
       loader: 'js',
       contents: `
@@ -33,6 +47,7 @@ const stubs = {
       loader: 'js',
       contents: `
         export const db = {};
+        export async function ensureTurnSnapshotBaseline() { return 'ready'; }
         export async function saveTurnSnapshot() {}
         export async function clearSaveData() {}
         export async function commitTurnAtomically(state, events) {
@@ -68,7 +83,7 @@ function reset() {
   globalThis.__characterStoreRollbackState = null;
   useGameStore.setState({
     gameState: structuredClone(initial), isStreaming: false, streamingText: '', changesLog: [],
-    pendingItemActions: [], characterTurnContext: null,
+    pendingTransactions: [], characterTurnContext: null,
   });
 }
 

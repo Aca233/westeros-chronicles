@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections import Counter
+import re
 from typing import Sequence
 
 from .models import MapImportError, MapLocationRecord, RouteGraphRecord
@@ -68,7 +69,7 @@ def audit_semantic_records(
     locations: Sequence[MapLocationRecord],
     westeros_bounds: tuple[float, float, float, float],
 ) -> dict[str, object]:
-    ranks = ("realm", "duchy", "county")
+    ranks = ("hegemon", "empire", "kingdom", "duchy", "county")
     rank_counts = Counter(boundary.rank for boundary in dataset.boundaries)
     for rank in ranks:
         if rank_counts[rank] <= 0:
@@ -89,6 +90,8 @@ def audit_semantic_records(
     by_key = {(boundary.rank, boundary.title_id): boundary for boundary in dataset.boundaries}
     boundary_by_feature = {boundary.feature_id: boundary for boundary in dataset.boundaries}
     for boundary in dataset.boundaries:
+        if not re.fullmatch(r"#[0-9a-f]{6}", boundary.title_color):
+            raise MapImportError(f"语义领地颜色非法：{boundary.title_id}")
         geom_min_x, geom_min_y, geom_max_x, geom_max_y = boundary.geometry.bounds
         if geom_min_x < min_x or geom_min_y < min_y or geom_max_x > max_x or geom_max_y > max_y:
             raise MapImportError(f"语义领地越出维斯特洛范围：{boundary.title_id}")
@@ -113,13 +116,17 @@ def audit_semantic_records(
         for rank, title_id in (
             ("county", membership.county_id),
             ("duchy", membership.duchy_id),
-            ("realm", membership.realm_id),
+            ("kingdom", membership.kingdom_id),
+            ("empire", membership.empire_id),
+            ("hegemon", membership.hegemon_id),
         ):
-            if (rank, title_id) not in by_key:
+            if title_id is not None and (rank, title_id) not in by_key:
                 raise MapImportError(f"语义 membership 引用不存在：{rank}:{title_id}")
 
     return {
-        "realms": rank_counts["realm"],
+        "hegemons": rank_counts["hegemon"],
+        "empires": rank_counts["empire"],
+        "kingdoms": rank_counts["kingdom"],
         "duchies": rank_counts["duchy"],
         "counties": rank_counts["county"],
         "labels": len(dataset.titles),

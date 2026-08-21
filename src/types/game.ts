@@ -5,6 +5,7 @@ import type { CharacterStateCommand } from '../features/characters/characterComm
 import type { ItemStateCommand, ItemSystemState } from '../features/items/types';
 import type { WorldArtifactState } from '../features/items/worldArtifacts';
 import type { WorldHistoryState } from '../features/world/worldHistory';
+import type { WorldRuntimeState } from '../features/world/worldRuntimeTypes';
 import type { CharacterId } from '../features/characters/types';
 import type { WorldLocationRef } from '../features/map/types';
 import type { ActiveJourney, TravelStateCommand } from '../features/map/travel/types';
@@ -155,7 +156,7 @@ export interface WorldCharacterStateRef {
 
 // 游戏全局状态
 export interface GameState {
-  saveFormatVersion: 7;
+  saveFormatVersion: 9;
   currentYear: number;
   currentMonth: number;
   currentDay: number;
@@ -166,6 +167,7 @@ export interface GameState {
   worldCharacters?: WorldCharacterStateRef;
   worldArtifacts: WorldArtifactState;
   worldHistory: WorldHistoryState;
+  worldRuntime: WorldRuntimeState;
   activeJourney?: ActiveJourney;
   worldFlags: Record<string, boolean | string | number>;
   isGameOver: boolean;

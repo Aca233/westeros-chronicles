@@ -143,3 +143,13 @@ test('离线生成的 AGOT 神器目录具有来源、图片与唯一性约束',
   }
   assert.equal(new Set(generated.map((definition) => definition.id)).size, generated.length);
 });
+
+test('日常服装和腿部衣物不冒用护甲图标', () => {
+  for (const item of ITEM_DEFINITIONS.filter((entry) => entry.category === 'clothing')) {
+    const isGarmentOrLegwear = item.allowedPositions.some((position) =>
+      (position.group === 'torso' && position.layer === 'garment')
+      || (position.group === 'legs' && position.layer === 'legwear'));
+    if (!isGarmentOrLegwear) continue;
+    assert.notDeepEqual(item.image, { type: 'game', icon: 'gear-armor' }, `${item.id} 不得显示为护甲`);
+  }
+});

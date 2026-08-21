@@ -4,7 +4,7 @@ import test from 'node:test'
 
 import { filterMapIntelligence } from '../src/features/map/intelligence.ts'
 import { buildLocationView } from '../src/features/map/locationViewModel.ts'
-import { visibleMapSubjectsForMode } from '../src/features/map/mapLayers.ts'
+import { visibleMapSubjectsForOverlay } from '../src/features/map/mapLayers.ts'
 
 const NOW = '298.3.12'
 
@@ -120,20 +120,19 @@ test('确认情报只通过注册类型白名单；未知类型即使调试开�
   assert.doesNotMatch(source, /URLSearchParams|location\.search|window\.location/)
 })
 
-test('地图图层只接收已经过滤且与模式匹配的可见主题', () => {
+test('地图图层只接收已经过滤且与信息图层匹配的可见主题', () => {
   const character = filterMapIntelligence(dynamicSubjects[0], { level: 'confirmed' }, NOW, false)
   const asset = filterMapIntelligence(dynamicSubjects[2], { level: 'confirmed' }, NOW, false)
   const closure = filterMapIntelligence(dynamicSubjects[3], { level: 'confirmed' }, NOW, false)
   const unfiltered = dynamicSubjects[1]
   const subjects = [character, asset, closure, unfiltered].filter(Boolean)
 
-  assert.deepEqual(visibleMapSubjectsForMode('characters', subjects).map((entry) => entry.id), ['where-arya'])
-  assert.deepEqual(visibleMapSubjectsForMode('assets', subjects).map((entry) => entry.id), ['asset-dragon-egg'])
-  assert.deepEqual(visibleMapSubjectsForMode('travel', subjects).map((entry) => entry.id), ['road-neck'])
-  assert.deepEqual(visibleMapSubjectsForMode('terrain', subjects), [])
+  assert.deepEqual(visibleMapSubjectsForOverlay('characters', subjects).map((entry) => entry.id), ['where-arya'])
+  assert.deepEqual(visibleMapSubjectsForOverlay('assets', subjects).map((entry) => entry.id), ['asset-dragon-egg'])
+  assert.deepEqual(visibleMapSubjectsForOverlay('roads', subjects).map((entry) => entry.id), ['road-neck'])
 })
 
-test('未知动态情报不影响公开海岸、道路、三级行政区域和著名城堡', () => {
+test('未知动态情报不影响公开海岸、道路、五级头衔区域和著名城堡', () => {
   const winterfell = {
     id: 'b_winterfell', name: '临冬城', englishName: 'Winterfell', type: 'castle',
     mapX: 1360, mapY: 1447, provinceId: 42, baronyId: 'b_winterfell', countyId: 'c_winterfell',
@@ -152,9 +151,8 @@ test('未知动态情报不影响公开海岸、道路、三级行政区域和�
   assert.match(styleSource, /FAR_MAP_SOURCE/)
   assert.match(styleSource, /MATERIAL_TERRAIN_SOURCE/)
   assert.match(styleSource, /agot-roads/)
-  assert.match(styleSource, /agot-realm-boundaries/)
-  assert.match(styleSource, /agot-duchy-boundaries/)
-  assert.match(styleSource, /agot-county-boundaries/)
+  assert.match(styleSource, /SEMANTIC_RANKS = \['hegemon', 'empire', 'kingdom', 'duchy', 'county'\]/)
+  assert.match(styleSource, /agot-\$\{rank\}-boundaries/)
   assert.doesNotMatch(styleSource, /agot-borders|barony-boundaries/)
   assert.match(styleSource, /agot-county-hit-areas/)
   assert.doesNotMatch(styleSource, /id: 'agot-locations'/)

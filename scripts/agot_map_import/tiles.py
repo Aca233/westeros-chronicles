@@ -6,7 +6,7 @@ import tempfile
 import uuid
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterable, Mapping, Sequence
+from typing import Callable, Iterable, Mapping, Sequence
 
 import mapbox_vector_tile
 from PIL import Image
@@ -142,10 +142,15 @@ def _prepare_layers(layers: Mapping[str, Sequence[Mapping[str, object]]]) -> tup
     return tuple(prepared)
 
 
+FeatureFilter = Callable[[int, str, Mapping[str, object]], bool]
+
+
 def _tile_layers(
     layers: Sequence[_PreparedLayer],
     tile_bounds: MapBoundsTuple,
     tolerance: float,
+    zoom: int,
+    feature_filter: FeatureFilter | None = None,
 ) -> list[dict[str, object]]:
     clipping_box = box(*tile_bounds)
     encoded_layers: list[dict[str, object]] = []
@@ -153,6 +158,8 @@ def _tile_layers(
         features: list[dict[str, object]] = []
         for feature_index in layer.tree.query(clipping_box, predicate="intersects"):
             feature = layer.features[int(feature_index)]
+            if feature_filter is not None and not feature_filter(zoom, layer.name, feature):
+                continue
             geometry = layer.geometries[int(feature_index)]
             if geometry.is_empty or not geometry.intersects(clipping_box):
                 continue
@@ -179,6 +186,7 @@ def build_vector_tiles(
     bounds: MapBoundsTuple,
     output: Path,
     zooms: Iterable[int],
+    feature_filter: FeatureFilter | None = None,
 ) -> TileReport:
     bounds = _validate_bounds(bounds)
     zoom_values = _validated_zooms(zooms)
@@ -191,11 +199,13 @@ def build_vector_tiles(
             for tile_x in range(count):
                 for tile_y in range(count):
                     tile_bounds = _tile_bounds(bounds, zoom, tile_x, tile_y)
+                    # 量化网格为 4096,瓦片渲染约 512 像素宽:容差取 4 个量化单位
+                    # (原生缩放恒不超过 1 倍,即半像素以内),视觉无损但顶点数大降
                     tolerance = max(
-                        (tile_bounds[2] - tile_bounds[0]) / 8192,
-                        (tile_bounds[3] - tile_bounds[1]) / 8192,
+                        (tile_bounds[2] - tile_bounds[0]) / 1024,
+                        (tile_bounds[3] - tile_bounds[1]) / 1024,
                     )
-                    encoded_layers = _tile_layers(prepared_layers, tile_bounds, tolerance)
+                    encoded_layers = _tile_layers(prepared_layers, tile_bounds, tolerance, zoom, feature_filter)
                     if not encoded_layers:
                         continue
                     data = mapbox_vector_tile.encode(
@@ -219,18 +229,38 @@ def build_vector_tiles(
     return TileReport("vector", len(files), zoom_values[0], zoom_values[-1], tuple(files))
 
 
-SEMANTIC_LAYER_BY_RANK = {
-    "realm": "realm_boundaries",
-    "duchy": "duchy_boundaries",
-    "county": "county_boundaries",
+SEMANTIC_SURFACE_LAYER_BY_RANK = {
+    rank: f"{rank}_surfaces"
+    for rank in ("hegemon", "empire", "kingdom", "duchy", "county")
 }
+
+SEMANTIC_BOUNDARY_LAYER_BY_RANK = {
+    rank: f"{rank}_boundaries"
+    for rank in ("hegemon", "empire", "kingdom", "duchy", "county")
+}
+
+
+SEMANTIC_RANKS_BY_TILE_ZOOM = {
+    0: frozenset({"hegemon", "empire"}),
+    1: frozenset({"empire", "kingdom"}),
+    2: frozenset({"kingdom", "duchy", "county"}),
+}
+
+
+def _semantic_feature_filter(zoom: int, layer_name: str, feature: Mapping[str, object]) -> bool:
+    if layer_name.endswith("_surfaces") or layer_name.endswith("_boundaries"):
+        rank = layer_name.rsplit("_", 1)[0]
+    else:
+        properties = feature.get("properties")
+        rank = properties.get("rank") if isinstance(properties, Mapping) else None
+    visible_ranks = SEMANTIC_RANKS_BY_TILE_ZOOM.get(zoom, frozenset({"county"}))
+    return rank in visible_ranks
 
 
 def semantic_vector_layers(dataset: SemanticDataset) -> dict[str, list[dict[str, object]]]:
     layers: dict[str, list[dict[str, object]]] = {
-        "realm_boundaries": [],
-        "duchy_boundaries": [],
-        "county_boundaries": [],
+        **{layer_name: [] for layer_name in SEMANTIC_SURFACE_LAYER_BY_RANK.values()},
+        **{layer_name: [] for layer_name in SEMANTIC_BOUNDARY_LAYER_BY_RANK.values()},
         "title_labels": [],
     }
     for boundary in dataset.boundaries:
@@ -240,13 +270,18 @@ def semantic_vector_layers(dataset: SemanticDataset) -> dict[str, list[dict[str,
             "rank": boundary.rank,
             "name": boundary.name or "",
             "regionId": boundary.region_id,
+            "titleColor": boundary.title_color,
         }
-        if boundary.political_anchor_title_id:
-            properties["politicalAnchorTitleId"] = boundary.political_anchor_title_id
-        layers[SEMANTIC_LAYER_BY_RANK[boundary.rank]].append({
+        feature = {
+            "id": boundary.feature_id,
+            "geometry": mapping(boundary.geometry),
+            "properties": properties,
+        }
+        layers[SEMANTIC_SURFACE_LAYER_BY_RANK[boundary.rank]].append(feature)
+        layers[SEMANTIC_BOUNDARY_LAYER_BY_RANK[boundary.rank]].append({
             "id": boundary.feature_id,
             "geometry": mapping(boundary.geometry.boundary),
-            "properties": properties,
+            "properties": ({"titleId": boundary.title_id} if boundary.rank == "county" else {}),
         })
     for title in dataset.titles:
         properties = {
@@ -256,9 +291,8 @@ def semantic_vector_layers(dataset: SemanticDataset) -> dict[str, list[dict[str,
             "name": title.name,
             "regionId": title.region_id,
             "importance": title.importance,
+            "titleColor": title.title_color,
         }
-        if title.political_anchor_title_id:
-            properties["politicalAnchorTitleId"] = title.political_anchor_title_id
         layers["title_labels"].append({
             "id": title.feature_id,
             "geometry": mapping(title.anchor),
@@ -276,7 +310,9 @@ def build_semantic_tiles(
 ) -> TileReport:
     if tile_size <= 0:
         raise MapImportError("语义瓦片尺寸必须大于零")
-    report = build_vector_tiles(semantic_vector_layers(dataset), bounds, output, zooms)
+    report = build_vector_tiles(
+        semantic_vector_layers(dataset), bounds, output, zooms, _semantic_feature_filter,
+    )
     for relative in report.files:
         try:
             decoded = mapbox_vector_tile.decode((output / relative).read_bytes())

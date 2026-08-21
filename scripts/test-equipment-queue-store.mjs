@@ -7,6 +7,19 @@ const dependencyStubs = {
   setup(buildApi) {
     buildApi.onResolve({ filter: /(?:services[\\/])?api$/ }, () => ({ path: 'api-stub', namespace: 'queue-test' }));
     buildApi.onResolve({ filter: /services[\\/]db$/ }, () => ({ path: 'db-stub', namespace: 'queue-test' }));
+    buildApi.onResolve({ filter: /features[\\/]map[\\/]repository$/ }, () => ({ path: 'map-repository-stub', namespace: 'queue-test' }));
+    buildApi.onLoad({ filter: /map-repository-stub/, namespace: 'queue-test' }, () => ({
+      loader: 'js',
+      contents: `
+        const locations = [
+          { id: 'b_winterfell', name: '临冬城', mapX: 0, mapY: 0, importance: 100, type: 'castle' },
+        ];
+        export const mapRepository = {
+          async loadSearchIndex() { return structuredClone(locations); },
+          async loadSemanticMembership() { return []; },
+        };
+      `,
+    }));
     buildApi.onLoad({ filter: /api-stub/, namespace: 'queue-test' }, () => ({
       loader: 'js',
       contents: `
@@ -32,6 +45,7 @@ const dependencyStubs = {
       loader: 'js',
       contents: `
         export const db = {};
+        export async function ensureTurnSnapshotBaseline() { return 'ready'; }
         export async function saveTurnSnapshot() {}
         export async function commitTurnAtomically() {}
         export async function rollbackLastTurn() { return null; }
@@ -47,18 +61,43 @@ globalThis.__itemQueueRequestShouldFail = false;
 const moduleUrl = `data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString('base64')}`;
 const { useGameStore } = await import(moduleUrl);
 
+let transactionSequence = 0;
 function resetQueue() {
-  useGameStore.setState({ pendingItemActions: [], isStreaming: false, streamingText: '' });
+  const current = useGameStore.getState();
+  useGameStore.setState({
+    gameState: {
+      ...current.gameState,
+      worldRuntime: { ...current.gameState.worldRuntime, pendingTransactions: [] },
+    },
+    isStreaming: false,
+    streamingText: '',
+  });
+}
+
+function queueItem(command, ...conflictKeys) {
+  transactionSequence += 1;
+  useGameStore.getState().queueWorldTransaction({
+    id: `test:item:${transactionSequence}`,
+    status: 'pending',
+    source: 'ui_action',
+    conflictKeys,
+    intents: [],
+    itemCommands: [command],
+  });
+}
+
+function pendingTransactions() {
+  return useGameStore.getState().gameState.worldRuntime.pendingTransactions.filter((entry) => entry.status === 'pending');
 }
 
 test('装备、转移和使用可同时排队，成功回复后统一结算', async () => {
   resetQueue();
   const before = useGameStore.getState();
   const originalHerbCharges = before.gameState.lord.items.instances['ned.staunching_herbs'].charges;
-  before.queueItemAction({ kind: 'equip', instanceId: 'ned.chainmail', position: { group: 'torso', layer: 'armor' }, displacedTo: { type: 'site', siteId: 'winterfell_armory' } });
-  before.queueItemAction({ kind: 'transfer', instanceId: 'ned.castle_sword', to: { type: 'carried' } });
-  before.queueItemAction({ kind: 'use', instanceId: 'ned.staunching_herbs' });
-  assert.equal(useGameStore.getState().pendingItemActions.length, 3);
+  queueItem({ type: 'ITEM_EQUIP', instanceId: 'ned.chainmail', position: { group: 'torso', layer: 'armor' }, displacedTo: { type: 'site', siteId: 'winterfell_armory' } }, 'asset:item:ned.chainmail', 'equipment:agot:1001:torso:armor');
+  queueItem({ type: 'ITEM_TRANSFER', instanceId: 'ned.castle_sword', to: { type: 'carried' } }, 'asset:item:ned.castle_sword');
+  queueItem({ type: 'ITEM_USE', instanceId: 'ned.staunching_herbs' }, 'asset:item:ned.staunching_herbs');
+  assert.equal(pendingTransactions().length, 3);
   assert.deepEqual(useGameStore.getState().gameState.lord.items.placements['ned.chainmail'], { type: 'site', siteId: 'winterfell_armory' });
 
   await useGameStore.getState().submitAction('继续听取鲁温学士的禀报', 'narrative');
@@ -66,15 +105,16 @@ test('装备、转移和使用可同时排队，成功回复后统一结算', as
   assert.deepEqual(after.gameState.lord.items.placements['ned.chainmail'], { type: 'equipped', position: { group: 'torso', layer: 'armor' } });
   assert.deepEqual(after.gameState.lord.items.placements['ned.castle_sword'], { type: 'carried' });
   assert.equal(after.gameState.lord.items.instances['ned.staunching_herbs'].charges, originalHerbCharges - 1);
-  assert.equal(after.pendingItemActions.length, 0);
+  assert.equal(after.gameState.worldRuntime.pendingTransactions.filter((entry) => entry.status === 'pending').length, 0);
+  assert.equal(after.gameState.worldRuntime.pendingTransactions.filter((entry) => entry.status === 'committed').length, 3);
 });
 
 test('生成失败会保留物品队列和完整物品状态', async () => {
   resetQueue();
   const before = useGameStore.getState();
   const originalItems = structuredClone(before.gameState.lord.items);
-  before.queueItemAction({ kind: 'repair', instanceId: 'ned.castle_sword', amount: 10 });
-  const queuedSnapshot = structuredClone(useGameStore.getState().pendingItemActions);
+  queueItem({ type: 'ITEM_REPAIR', instanceId: 'ned.castle_sword', amount: 10 }, 'asset:item:ned.castle_sword');
+  const queuedSnapshot = structuredClone(useGameStore.getState().gameState.worldRuntime.pendingTransactions);
   globalThis.__itemQueueRequestShouldFail = true;
   const originalConsoleError = console.error;
   console.error = () => {};
@@ -85,5 +125,5 @@ test('生成失败会保留物品队列和完整物品状态', async () => {
     globalThis.__itemQueueRequestShouldFail = false;
   }
   assert.deepEqual(useGameStore.getState().gameState.lord.items, originalItems);
-  assert.deepEqual(useGameStore.getState().pendingItemActions, queuedSnapshot);
+  assert.deepEqual(useGameStore.getState().gameState.worldRuntime.pendingTransactions, queuedSnapshot);
 });

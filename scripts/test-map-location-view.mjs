@@ -25,13 +25,34 @@ test('地点重要度控制远景显示，近景显示全部地点', () => {
 })
 
 test('地点详情保留身份、领地层级、地形和通行事实', () => {
-  const view = buildLocationView(winterfell)
+  const title = (featureId, titleId, rank, name) => ({
+    featureId, titleId, rank, name, mapX: 1, mapY: 2, importance: 80,
+    regionId: 'world_westeros_the_north', titleColor: '#777777',
+  })
+  const membership = {
+    locationId: 'b_winterfell', baronyId: 'b_winterfell',
+    countyId: 'c_winterfell', duchyId: 'd_winterfell', kingdomId: 'k_the_north',
+    empireId: 'e_the_north', hegemonId: 'h_the_iron_throne', regionId: 'world_westeros_the_north',
+  }
+  const view = buildLocationView(winterfell, {}, { now: '未记录', semantic: {
+    membership,
+    titles: [
+      title(1, 'h_the_iron_throne', 'hegemon', '铁王座'),
+      title(2, 'e_the_north', 'empire', '北境'),
+      title(3, 'k_the_north', 'kingdom', '北境王国'),
+      title(4, 'd_winterfell', 'duchy', '临冬城公国'),
+      title(5, 'c_winterfell', 'county', '临冬城伯爵领'),
+    ],
+  } })
   assert.equal(view.name, '临冬城')
   assert.equal(view.englishName, 'Winterfell')
   assert.equal(view.typeLabel, '城堡')
   assert.equal(view.regionLabel, '北境')
   assert.deepEqual(view.hierarchy.map((entry) => entry.id), [
-    'k_the_north', 'd_winterfell', 'c_winterfell', 'b_winterfell',
+    'h_the_iron_throne', 'e_the_north', 'k_the_north', 'd_winterfell', 'c_winterfell',
+  ])
+  assert.deepEqual(view.hierarchy.map((entry) => entry.label), [
+    '铁王座', '北境', '北境王国', '临冬城公国', '临冬城伯爵领',
   ])
   assert.equal(view.terrainLabel, '陆地')
   assert.equal(view.access.port, false)

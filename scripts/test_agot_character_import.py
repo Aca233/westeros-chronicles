@@ -63,6 +63,14 @@ class CharacterExtractionTests(unittest.TestCase):
         self.assertEqual(eddard.undated_traits, ("honest", "just"))
         self.assertEqual([event.raw_date for event in eddard.dated_events], ["8263.1.1", "8298.1.1", "8298.2.1", "8298.3.1", "8299.1.10"])
 
+    def test_extracts_explicit_female_flag(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            path = Path(temp_dir) / "female.txt"
+            path.write_text("Test_1 = { name = Test female = yes }\nTest_2 = { name = Test2 }\n", encoding="utf-8")
+            records = {record.raw_id: record for record in extract_character_histories(path)}
+            self.assertTrue(records["Test_1"].female)
+            self.assertFalse(records["Test_2"].female)
+
 
 class TimelineTests(unittest.TestCase):
     def setUp(self) -> None:

@@ -25,6 +25,7 @@ from .routes import build_route_graph, parse_adjacencies
 from .semantic import build_semantic_dataset
 from .source import MapSource, parse_definition
 from .tiles import _staging_directory, build_semantic_tiles, build_terrain_tiles, build_vector_tiles
+from .terrain_lighting import build_terrain_light_tiles, terrain_land_mask
 from .titles import TitleIndex, parse_title_hierarchy
 from .writer import publish_map_pair, stage_map_dataset
 from .water_coloring import (
@@ -38,6 +39,24 @@ def _sha256(path: Path) -> str:
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def _load_hegemon_scopes() -> dict[str, list[str]]:
+    path = Path(__file__).with_name("semantic_hegemons.json")
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        raise MapImportError("霸权覆盖配置无法读取") from error
+    if not isinstance(payload, dict):
+        raise MapImportError("霸权覆盖配置必须是对象")
+    scopes: dict[str, list[str]] = {}
+    for hegemon_id, empire_ids in payload.items():
+        if not isinstance(hegemon_id, str) or not isinstance(empire_ids, list) or not all(
+            isinstance(empire_id, str) for empire_id in empire_ids
+        ):
+            raise MapImportError("霸权覆盖配置必须由头衔 ID 数组组成")
+        scopes[hegemon_id] = empire_ids
+    return scopes
 
 
 
@@ -215,15 +234,16 @@ def build_map(args: argparse.Namespace) -> dict[str, object]:
         for location in locations
     ]
     default_text = (source.root / "map_data/default.map").read_text(encoding="utf-8-sig", errors="replace")
+    water_provinces = parse_water_province_sets(default_text)
     impassable = parse_province_set(default_text, "impassable_mountains") | parse_province_set(default_text, "impassable_seas")
     route_graph = build_route_graph(
         locations, geometries, adjacency_rows, source.road_mask,
         source.default_files["rivers"], impassable,
     )
 
-    anchors = json.loads(Path(__file__).with_name("semantic_anchors.json").read_text(encoding="utf-8"))
+    hegemon_scopes = _load_hegemon_scopes()
     semantic = build_semantic_dataset(
-        geometries, locations, titles, region_definitions, localization, anchors,
+        geometries, locations, titles, region_definitions, localization, hegemon_scopes,
     )
     political = [{
         "baronyId": location.id,
@@ -237,7 +257,7 @@ def build_map(args: argparse.Namespace) -> dict[str, object]:
     data_stage = _staging_directory(args.data_output)
     try:
         if args.skip_tiles:
-            tile_counts = {"terrain": 0, "materialTerrain": 0, "vector": 0, "dem": 0, "semantic": 0}
+            tile_counts = {"terrain": 0, "terrainLight": 0, "materialTerrain": 0, "vector": 0, "dem": 0, "semantic": 0}
         else:
             if args.ck3_source is None or not (args.ck3_source / "gfx/map/terrain").is_dir():
                 raise MapImportError("生成地形材质瓦片需要有效的 --ck3-source")
@@ -248,11 +268,33 @@ def build_map(args: argparse.Namespace) -> dict[str, object]:
                 source.root / "gfx/map/terrain/flat_maps/flatmap.dds",
                 bounds, asset_stage / "terrain", raster_zooms, args.tile_size,
             )
+            land_mask = terrain_land_mask(
+                source.default_files["provinces"],
+                bounds,
+                definitions,
+                water_provinces.seas | water_provinces.lakes | water_provinces.rivers,
+            )
+            try:
+                terrain_light = build_terrain_light_tiles(
+                    source.heightmap, bounds, asset_stage / "terrain-light", material_zooms, args.tile_size,
+                    land_mask=land_mask,
+                )
+            finally:
+                land_mask.close()
             vector = build_vector_tiles(
                 _vector_layers(geometries, locations, route_graph),
                 bounds, asset_stage / "vector", vector_zooms,
             )
-            dem = build_dem_tiles(source.heightmap, bounds, asset_stage / "dem", raster_zooms, args.tile_size)
+            sea_land_mask = terrain_land_mask(
+                source.default_files["provinces"], bounds, definitions, water_provinces.seas,
+            )
+            try:
+                dem = build_dem_tiles(
+                    source.heightmap, bounds, asset_stage / "dem", raster_zooms, args.tile_size,
+                    land_mask=sea_land_mask,
+                )
+            finally:
+                sea_land_mask.close()
             material_terrain = build_material_terrain_tiles(
                 source.terrain_materials,
                 parse_material_catalog(source.terrain_materials.settings, default_tile_factor=64),
@@ -265,7 +307,7 @@ def build_map(args: argparse.Namespace) -> dict[str, object]:
                 source.default_files["provinces"],
                 source.default_files["rivers"],
                 definitions,
-                parse_water_province_sets(default_text),
+                water_provinces,
                 bounds, material_zooms, args.tile_size,
             )
             if colored_tile_count != material_terrain.tile_count:
@@ -274,8 +316,8 @@ def build_map(args: argparse.Namespace) -> dict[str, object]:
                 semantic, bounds, asset_stage / "semantic", vector_zooms, args.tile_size,
             )
             tile_counts = {
-                "terrain": terrain.tile_count, "vector": vector.tile_count,
-                "materialTerrain": material_terrain.tile_count,
+                "terrain": terrain.tile_count, "terrainLight": terrain_light.tile_count,
+                "vector": vector.tile_count, "materialTerrain": material_terrain.tile_count,
                 "dem": dem.tile_count, "semantic": semantic_tiles.tile_count,
             }
         manifest = stage_map_dataset(

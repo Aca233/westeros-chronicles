@@ -1,0 +1,2086 @@
+{
+  "assetHash": "cf21d91affb23bc5b8f46fbe0b442ad1900598f3cac921c87249ba6ec463912d",
+  "landmarks": [
+    {
+      "correctionReason": null,
+      "excludedReason": null,
+      "excludedShapes": [],
+      "id": "winterfell",
+      "lods": [
+        {
+          "bytes": 5348084,
+          "minZoom": 5.35,
+          "path": "/assets/agot-map/models/winterfell/lod0.glb",
+          "sha256": "15b98ad303f67511ad6b4cee6c352f1e0df26e722b277afd9783d454b7f3815a",
+          "textureMaxEdge": 512,
+          "textureSizes": [
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ]
+          ],
+          "triangleCount": 38497
+        },
+        {
+          "bytes": 958900,
+          "minZoom": 4.6,
+          "path": "/assets/agot-map/models/winterfell/lod1.glb",
+          "sha256": "f1ad9b21c8af816675a752ec99f76850dbbfd42849ecf379e70a7ab105f3beae",
+          "textureMaxEdge": 256,
+          "textureSizes": [
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ]
+          ],
+          "triangleCount": 13150
+        }
+      ],
+      "placement": {
+        "anchorMatchesProvince": true,
+        "anchorProvinceId": 77,
+        "expectedProvinceCoverage": 0.9090467263764493,
+        "inBoundsCoverage": 1.0,
+        "landCoverage": 1.0,
+        "sampleCount": 57612
+      },
+      "sourceHashes": {
+        "gfx/models/buildings/special/Winterfell/winterfell_new.asset": "1ac86f07f68a1f6cdd52122ba972a7870e84114afc6af7e422bad0dee2d9da86",
+        "gfx/models/buildings/special/Winterfell/winterfell_new.mesh": "e2adf0cc482fd03071c3b26ffc83807d406332160466b9fe49324ee13125e4e5",
+        "gfx/models/buildings/special/Winterfell/winterfell_new_inner_diffuse.dds": "568c6e2f957e102ac9380543db423b5b18da6b3ddb092cf842dd75d5363f8c06",
+        "gfx/models/buildings/special/Winterfell/winterfell_new_inner_normal.dds": "28d4b23a4c6ec4381778670d536b4ee11e3fc3e24b9525e9ba1bcccf53ec497f",
+        "gfx/models/buildings/special/Winterfell/winterfell_new_inner_properties.dds": "8cbc3d8a05de8075bae35012f96a429d86e199b8f71b7b8dea156f5cd5ea57f0",
+        "gfx/models/buildings/special/Winterfell/winterfell_new_outer_diffuse.dds": "817eb27c0d8d256c53c53069ff44c18e93b71e77e8476568c72f500b887b11ef",
+        "gfx/models/buildings/special/Winterfell/winterfell_new_outer_normal.dds": "81efdeded531637d7079998679b4de0d0dc3487bacb47fa99ec94e60fac6a98e",
+        "gfx/models/buildings/special/Winterfell/winterfell_new_outer_properties.dds": "86d77392ff7184ad39e3d7af897b1910f85cdf68161d54e161ea154fe50f4e37"
+      },
+      "variant": null
+    },
+    {
+      "correctionReason": null,
+      "excludedReason": "基础游戏 tree shader 贴图不在 AGOT Workshop 源中",
+      "excludedShapes": [
+        "building_special_KL_Trees1Shape",
+        "building_special_KL_Trees2Shape"
+      ],
+      "id": "red-keep",
+      "lods": [
+        {
+          "bytes": 12172308,
+          "minZoom": 5.35,
+          "path": "/assets/agot-map/models/red-keep/lod0.glb",
+          "sha256": "67ce70277b153bdeeb7d2cd3fe13befef87da468bd8d882f2d9dd3669900d721",
+          "textureMaxEdge": 512,
+          "textureSizes": [
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ]
+          ],
+          "triangleCount": 22805
+        },
+        {
+          "bytes": 2629952,
+          "minZoom": 4.6,
+          "path": "/assets/agot-map/models/red-keep/lod1.glb",
+          "sha256": "2a5168d5505b9cb7a498ba098a099ad1108bc8ca54ec82855f4a1efd191cc080",
+          "textureMaxEdge": 256,
+          "textureSizes": [
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ]
+          ],
+          "triangleCount": 7888
+        }
+      ],
+      "placement": {
+        "anchorMatchesProvince": true,
+        "anchorProvinceId": 4151,
+        "expectedProvinceCoverage": 0.8574289264050281,
+        "inBoundsCoverage": 1.0,
+        "landCoverage": 0.9970328144412774,
+        "sampleCount": 68415
+      },
+      "sourceHashes": {
+        "gfx/models/buildings/special/Kings Landing/Red Keep/building_special_KL_Gardens_diffuse.dds": "6e959e2474780c029c81e424cedca9c03922237b485c9bf072a5da2b9b9c75d4",
+        "gfx/models/buildings/special/Kings Landing/Red Keep/building_special_KL_Gardens_normal.dds": "7378df721e984f4f712873f8392b80619e0b84aa5e95b279829412dcddba1d7c",
+        "gfx/models/buildings/special/Kings Landing/Red Keep/building_special_KL_Gardens_properties.dds": "916e49d4c972aa0a62129963276fe56459a9a8319b4b6806344b710bb3857744",
+        "gfx/models/buildings/special/Kings Landing/Red Keep/building_special_KL_Maegors_diffuse.dds": "d4b4c47da5169654cfe5913ea12b4baca98a324705c7f97b9e1069c26c042609",
+        "gfx/models/buildings/special/Kings Landing/Red Keep/building_special_KL_Maegors_normal.dds": "f648c92946bae4792784e9f2f01b4ad5f88cfecceaf30ba7b31d2ac6d0912697",
+        "gfx/models/buildings/special/Kings Landing/Red Keep/building_special_KL_Maegors_properties.dds": "86ce396c1c6d1dce94cd10d5c2eff12ce8939388ec9161ef50196aca1feca5d1",
+        "gfx/models/buildings/special/Kings Landing/Red Keep/building_special_KL_RedKeep.asset": "4e613ae42c420b21ab9e1dab50586949c00190191e72d01edfc09bd1e48d6072",
+        "gfx/models/buildings/special/Kings Landing/Red Keep/building_special_KL_RedKeep.mesh": "094fee702c7e58fcb673d576e2fac32a0fe46782dd6d3791d1cfc0baa03e6fae",
+        "gfx/models/buildings/special/Kings Landing/Red Keep/building_special_KL_RedKeep_diffuse.dds": "81e2d0948085e39b8a38b5a9ae2bc45f53da89f096e10cb9ff047aae03a7542d",
+        "gfx/models/buildings/special/Kings Landing/Red Keep/building_special_KL_RedKeep_normal.dds": "a3e1bd17cdf86ceba47216b692edb5a2644d0d111e461fa8332edc7229974d41",
+        "gfx/models/buildings/special/Kings Landing/Red Keep/building_special_KL_RedKeep_properties.dds": "7b8f00f12bb8fa69c3a043ef654ae3e7b81586186284575208748a69ea3012ac",
+        "gfx/models/buildings/special/Kings Landing/Red Keep/building_special_KL_RoyalHall_diffuse.dds": "feae8a6ab9a8de4f95fdd684c68f6bb60aa58461d731b673d7ee9725dfde8152",
+        "gfx/models/buildings/special/Kings Landing/Red Keep/building_special_KL_RoyalHall_normal.dds": "c9e11d0da15508c39de83104b37abb034121d8675c5b73cecc0b6d561ea8feaa",
+        "gfx/models/buildings/special/Kings Landing/Red Keep/building_special_KL_RoyalHall_properties.dds": "4384c481bd7f20c53a149deb8f9c815289897375306d7af1da8b6d672b9a11e5",
+        "gfx/models/buildings/special/Kings Landing/Red Keep/building_special_KL_RoyalSept_diffuse.dds": "ecec84b988f4a56432d3a61c5d8809417ef5c034e77a0f995b55b6508728a97a",
+        "gfx/models/buildings/special/Kings Landing/Red Keep/building_special_KL_RoyalSept_normal.dds": "4d3d3b402dd53b340046aaf7b8635e4a1f71bbf57b09e4664a55649bebead558",
+        "gfx/models/buildings/special/Kings Landing/Red Keep/building_special_KL_RoyalSept_properties.dds": "3c310c81c0d43b4ecc6ec57ad74cc3902a48403e29a7c0cc4dc4ee7d6fdc267a",
+        "gfx/models/buildings/special/Kings Landing/Red Keep/building_special_KL_TowerTops_diffuse.dds": "5b0d420d25bf121d121db4c9e25b1bae8b56b1b1b1e8dc001fe91650f9c9f5a0",
+        "gfx/models/buildings/special/Kings Landing/Red Keep/building_special_KL_TowerTops_normal.dds": "fb46e709e8149901d1c1b99005ee90cd43f6d277df039b32fabf1e5f2821ee07",
+        "gfx/models/buildings/special/Kings Landing/Red Keep/building_special_KL_TowerTops_properties.dds": "744cdac61769d52856906c29609f0a4e29d3898028e392c524399531b8d9c3ff",
+        "gfx/models/buildings/special/Kings Landing/Red Keep/building_special_KL_WhiteSwordTower_diffuse.dds": "e804dc139715d294a9d31f2731b709b667a62e78d98fc95518551d3d72602ffd",
+        "gfx/models/buildings/special/Kings Landing/Red Keep/building_special_KL_WhiteSwordTower_normal.dds": "a7193bb6c16e5dfc1c57faa27aea4361c8963daeea35fc615fae8ab50544dc03",
+        "gfx/models/buildings/special/Kings Landing/Red Keep/building_special_KL_WhiteSwordTower_properties.dds": "c027db758cb1f4535fb8bf829fdf5b0ab67f18d7f07ec55ae1771a9df60b0332",
+        "gfx/models/buildings/special/Kings Landing/Seven Gates/building_special_KL_Walls_diffuse.dds": "6b03096a93acf50932052ddf21a206d14b2b0c8a2c6fb7125b3d8fba57954079",
+        "gfx/models/buildings/special/Kings Landing/Seven Gates/building_special_KL_Walls_normal.dds": "ec0ed1d6c8d913fd59f891a41cf9ddcff6f17dbb232c5cae04cca7b47e890365",
+        "gfx/models/buildings/special/Kings Landing/Seven Gates/building_special_KL_Walls_properties.dds": "7126dc2442e2ab76868606fec083e96a2e55b537120bb8250db9f8e83400968c",
+        "gfx/models/mapitems/trees/tree_leaf_01_diffuse.dds": "7e312369fcee5072d947f5f74e055e7622e68dd9e7dd294fcba454b4eda37f8b"
+      },
+      "variant": null
+    },
+    {
+      "correctionReason": null,
+      "excludedReason": null,
+      "excludedShapes": [],
+      "id": "dragonstone",
+      "lods": [
+        {
+          "bytes": 3635368,
+          "minZoom": 5.35,
+          "path": "/assets/agot-map/models/dragonstone/lod0.glb",
+          "sha256": "858c4f5fe608688dc18ad573dede4dc9658090629a62ff77331d894fb239132f",
+          "textureMaxEdge": 512,
+          "textureSizes": [
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ]
+          ],
+          "triangleCount": 31403
+        },
+        {
+          "bytes": 573360,
+          "minZoom": 4.6,
+          "path": "/assets/agot-map/models/dragonstone/lod1.glb",
+          "sha256": "a5e0097662b89369d14d9dfec383f97f90685445427ea995b32c7a1a480d6411",
+          "textureMaxEdge": 256,
+          "textureSizes": [
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ]
+          ],
+          "triangleCount": 10438
+        }
+      ],
+      "placement": {
+        "anchorMatchesProvince": true,
+        "anchorProvinceId": 4415,
+        "expectedProvinceCoverage": 0.7183051382152293,
+        "inBoundsCoverage": 1.0,
+        "landCoverage": 0.7629441224023029,
+        "sampleCount": 50718
+      },
+      "sourceHashes": {
+        "gfx/models/buildings/special/Dragonstone/Dragonstone.asset": "b7aec5db85cc684f99fa20a0184b3382cb0c8c9a0a7e4006d6bd935da7421e42",
+        "gfx/models/buildings/special/Dragonstone/Dragonstone.mesh": "9cb746fd38b99c3c75f9ffe1556e3004f53ddcd4872aaf8668ae15a5e86db936",
+        "gfx/models/buildings/special/Dragonstone/Dragonstone_diffuse.dds": "5cef0c5f4eacaec6956d87e45d23c4d1186121a9ef96f80fef495d32cc411979",
+        "gfx/models/buildings/special/Dragonstone/Dragonstone_normal.dds": "7bd8268bfc47e5ee13cbe4252815a2316e80b341c16717a6f84ab94b3831d63b",
+        "gfx/models/buildings/special/Dragonstone/Dragonstone_properties.dds": "efab45fdb569c35a60ea9c4547efad1c941e9ddbf81fe028c451f9cf181278d4"
+      },
+      "variant": null
+    },
+    {
+      "correctionReason": null,
+      "excludedReason": null,
+      "excludedShapes": [],
+      "id": "casterly-rock",
+      "lods": [
+        {
+          "bytes": 3812980,
+          "minZoom": 5.35,
+          "path": "/assets/agot-map/models/casterly-rock/lod0.glb",
+          "sha256": "b52adb2d77a61a9acfb078772218bc62dace7fd465b5999d66064154c14fa8d0",
+          "textureMaxEdge": 512,
+          "textureSizes": [
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ]
+          ],
+          "triangleCount": 28145
+        },
+        {
+          "bytes": 775996,
+          "minZoom": 4.6,
+          "path": "/assets/agot-map/models/casterly-rock/lod1.glb",
+          "sha256": "89ccd9e8c3d3b65eb183f2eee11d94a1c3b36b153dcba08900572ed34053d334",
+          "textureMaxEdge": 256,
+          "textureSizes": [
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ]
+          ],
+          "triangleCount": 9749
+        }
+      ],
+      "placement": {
+        "anchorMatchesProvince": true,
+        "anchorProvinceId": 2855,
+        "expectedProvinceCoverage": 0.7086179791339146,
+        "inBoundsCoverage": 1.0,
+        "landCoverage": 0.9786479919965699,
+        "sampleCount": 34985
+      },
+      "sourceHashes": {
+        "gfx/models/buildings/special/Casterly Rock/casterlyrock.asset": "01eb42c45c1341e13b870eac5b02b03ff716384d256e117477aac51162555065",
+        "gfx/models/buildings/special/Casterly Rock/casterlyrock.mesh": "1494444e07d0e12121168143f97d9158c0f5bdba2620b02066a4b343f7c5601f",
+        "gfx/models/buildings/special/Casterly Rock/casterlyrock_castle_diffuse.dds": "a84a377708c0b087e36fbe9c3269e3886ae511c281decd0b54261ccb6506eee7",
+        "gfx/models/buildings/special/Casterly Rock/casterlyrock_castle_normal.dds": "a390976342474ebc8b84c59e0c95f5c55eb7110a12f9cc3c52614ff22da0e228",
+        "gfx/models/buildings/special/Casterly Rock/casterlyrock_castle_properties.dds": "c0635c9c6263416fb91877ee94ab9150a3fbc7134669a582d76fcfd95fff5599",
+        "gfx/models/buildings/special/Casterly Rock/casterlyrock_rock_diffuse.dds": "7196e12cccc7e13d8992a6ed2fc21531e0e72fad070b3c2434333aef1ac3979f",
+        "gfx/models/buildings/special/Casterly Rock/casterlyrock_rock_normal.dds": "dbeed01738e592d0cd3178c7cfde3dd247836a2b263407ddf7983135aae49aef",
+        "gfx/models/buildings/special/Casterly Rock/casterlyrock_rock_properties.dds": "d4cd5b3462192f928e74673d95eb140e70168f56594e4aec1db9d8a364519423"
+      },
+      "variant": null
+    },
+    {
+      "correctionReason": null,
+      "excludedReason": null,
+      "excludedShapes": [],
+      "id": "highgarden",
+      "lods": [
+        {
+          "bytes": 5836756,
+          "minZoom": 5.35,
+          "path": "/assets/agot-map/models/highgarden/lod0.glb",
+          "sha256": "5f3ac142341921c51e69225cfc858a1a5863b866e9c28cf84d74790d6e44b398",
+          "textureMaxEdge": 512,
+          "textureSizes": [
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ]
+          ],
+          "triangleCount": 21750
+        },
+        {
+          "bytes": 1261876,
+          "minZoom": 4.6,
+          "path": "/assets/agot-map/models/highgarden/lod1.glb",
+          "sha256": "eeff69aff1c67baf7993675fddae67a5c77049c5f3c511765073970cf776debf",
+          "textureMaxEdge": 256,
+          "textureSizes": [
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ]
+          ],
+          "triangleCount": 7268
+        }
+      ],
+      "placement": {
+        "anchorMatchesProvince": true,
+        "anchorProvinceId": 3237,
+        "expectedProvinceCoverage": 0.9045277804556702,
+        "inBoundsCoverage": 1.0,
+        "landCoverage": 1.0,
+        "sampleCount": 31119
+      },
+      "sourceHashes": {
+        "gfx/models/buildings/special/Highgarden/building_special_highgarden.asset": "70a36335792ced935aac9c78c2d432aa225138dd256046c99b72f3898f76d758",
+        "gfx/models/buildings/special/Highgarden/building_special_highgarden.mesh": "a2d9aae973590e3604251591f5d5a7c5eb368a6926392b33bedc192c50f467bb",
+        "gfx/models/buildings/special/Highgarden/building_special_highgarden_city_diffuse.dds": "312e37e765a01b3821fc9c620bca2eb9b694a670a68aa48e09184b6eaf1aced9",
+        "gfx/models/buildings/special/Highgarden/building_special_highgarden_city_normal.dds": "a82f5f80cf048890f02cf88228edec7c20b589f636da1628a8dee60163bfbbce",
+        "gfx/models/buildings/special/Highgarden/building_special_highgarden_city_properties.dds": "fc813bd953de68fb58fdf6c614e7110cd316a6e8be2fe4c5413c307024b0d688",
+        "gfx/models/buildings/special/Highgarden/building_special_highgarden_hedge_diffuse.dds": "8e3e88adbcdd1c4d1336b3a1f84dc0e75e6bbe61b466e2111269637423f40bb3",
+        "gfx/models/buildings/special/Highgarden/building_special_highgarden_hedge_normal.dds": "13f6c8dd53f069db260f8145fc6f76c896fd093db3b20dab339bac93589f02bb",
+        "gfx/models/buildings/special/Highgarden/building_special_highgarden_hedge_properties.dds": "41dd523cfba47efa69a43a0e90b2072169ac1853314890ca4b131a4c56739bc0",
+        "gfx/models/buildings/special/Highgarden/building_special_highgarden_walls_diffuse.dds": "b393d8e4de5040426570740ec083b88f603facace6d482786c4637a833ceca53",
+        "gfx/models/buildings/special/Highgarden/building_special_highgarden_walls_normal.dds": "670e63d9ce376b43cf01431863a1bed714b2d361b8f07dbfae3cb259cfa49354",
+        "gfx/models/buildings/special/Highgarden/building_special_highgarden_walls_properties.dds": "ac6d8496e7aac8e728c3f00b7a64f6eb21a5e16e88a04e04db8dfccca24dcbf6"
+      },
+      "variant": null
+    },
+    {
+      "correctionReason": "AGOT 阳戟城 locator 落在影子城省份且原始占地跨越海域",
+      "excludedReason": null,
+      "excludedShapes": [],
+      "id": "sunspear",
+      "lods": [
+        {
+          "bytes": 8018216,
+          "minZoom": 5.35,
+          "path": "/assets/agot-map/models/sunspear/lod0.glb",
+          "sha256": "387cbe58bf8838a2f390cffc4b1e06d5ed57eb4117ad64cbc069a6943412f84a",
+          "textureMaxEdge": 512,
+          "textureSizes": [
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ]
+          ],
+          "triangleCount": 35057
+        },
+        {
+          "bytes": 1432284,
+          "minZoom": 4.6,
+          "path": "/assets/agot-map/models/sunspear/lod1.glb",
+          "sha256": "dfeca0b6280f4e4a575f8c000b1a11324a628a3119e41352bee31d160e0c06ca",
+          "textureMaxEdge": 256,
+          "textureSizes": [
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ]
+          ],
+          "triangleCount": 11966
+        }
+      ],
+      "placement": {
+        "anchorMatchesProvince": true,
+        "anchorProvinceId": 4937,
+        "expectedProvinceCoverage": 0.6624297922742846,
+        "inBoundsCoverage": 1.0,
+        "landCoverage": 0.8435498045009361,
+        "sampleCount": 78517
+      },
+      "sourceHashes": {
+        "gfx/models/buildings/special/Sunspear/building_special_shadow_city_lvl1_diffuse.dds": "31dca9df75dbc042888dcfd941da6e6ac4967db91c66cb82821d2987532f5165",
+        "gfx/models/buildings/special/Sunspear/building_special_shadow_city_lvl1_normal.dds": "b8f6b549eb3bd5aca0aafe3eedb9858f8ef7edf1c41325499905f5cab6e8bcf7",
+        "gfx/models/buildings/special/Sunspear/building_special_shadow_city_lvl1_properties.dds": "bef05d58eeeabddbaa5087b461d76d7c96986e83dd90ed137ba622173ce778c6",
+        "gfx/models/buildings/special/Sunspear/building_special_shadow_city_lvl2_diffuse.dds": "c5316c96ba4ecf9496aed89338cb8a76b2efba7318ca3fd1f44890701929bc9c",
+        "gfx/models/buildings/special/Sunspear/building_special_shadow_city_lvl2_normal.dds": "06e4153c708e527c5e12c72ae364755db70f77cb43ea8b87a1666f72e106c6de",
+        "gfx/models/buildings/special/Sunspear/building_special_shadow_city_lvl2_properties.dds": "cc632c73270af26efdcfa30e2a6d46e96c5450e64e3e7125e5a47d92037ed66c",
+        "gfx/models/buildings/special/Sunspear/building_special_sun_diffuse.dds": "aaa74ee459f6433a2b4a610007ab232acebff118851a04fd4ece62866c43c775",
+        "gfx/models/buildings/special/Sunspear/building_special_sun_normal.dds": "3cd1eea7612263ddfb50c5bcc0bc6bc6b94b47cb257dcf48f48110d69d2ae049",
+        "gfx/models/buildings/special/Sunspear/building_special_sun_properties.dds": "953280ea8768633195d6ab49c531851cccf90160f93fda2f82f43fb5b3921a68",
+        "gfx/models/buildings/special/Sunspear/building_special_sunspear.asset": "b57ebf2c56d0433c7d8363fb2a39a08a5f9acec2e75032e65cb5f3847eabcfc2",
+        "gfx/models/buildings/special/Sunspear/building_special_sunspear.mesh": "29e82692a8bea6f22808fe87304394499aa0911f7121e9bf1660c784da321a6c",
+        "gfx/models/buildings/special/Sunspear/building_special_sunspear1_diffuse.dds": "0ac21f5138e08577c10628dee4473312959e9258d90c5b26d755547e095610c9",
+        "gfx/models/buildings/special/Sunspear/building_special_sunspear1_normal.dds": "e0d02ec2b0e9df97872c9b5d239cad973e130b401650f027030dfc2fa120e0fe",
+        "gfx/models/buildings/special/Sunspear/building_special_sunspear1_properties.dds": "53f651e409fdee58d7cfaf13608609f10244e1f3e28b68c731af280eab633f8e",
+        "gfx/models/buildings/special/Sunspear/building_special_sunspear2_diffuse.dds": "2f5f96edfd2de25f591bbfec774b7d885003964692a900bf493b13338fcb39da",
+        "gfx/models/buildings/special/Sunspear/building_special_sunspear2_normal.dds": "669c0afb39f184be7ad274e5b9f22e12064f77ceb845f4d7280373fa814c25df",
+        "gfx/models/buildings/special/Sunspear/building_special_sunspear2_properties.dds": "4a9983c1d5f85542216c016b690c78f9818aa58e3729807a2f72a98e4108e5a0",
+        "gfx/models/buildings/special/Sunspear/building_special_winding_walls_diffuse.dds": "35de0ea075ef21c4325b9f2085164ff48f781f9f29f079dd0a7b7857265bbc57",
+        "gfx/models/buildings/special/Sunspear/building_special_winding_walls_normal.dds": "11fc6dc12288f7aaa3997800a4d3414497b83ed4e9774842b3d108dcce77a87a",
+        "gfx/models/buildings/special/Sunspear/building_special_winding_walls_properties.dds": "0e11daf0bd8a291b034189f945c5c99a0a91a0cfdc885d90f0195e0132efee52"
+      },
+      "variant": null
+    },
+    {
+      "correctionReason": null,
+      "excludedReason": null,
+      "excludedShapes": [],
+      "id": "storms-end",
+      "lods": [
+        {
+          "bytes": 3413652,
+          "minZoom": 5.35,
+          "path": "/assets/agot-map/models/storms-end/lod0.glb",
+          "sha256": "c5e640a387b58b05f2aec287045a45dbe83da9599dd18eef8cd3065fc5cd10f4",
+          "textureMaxEdge": 512,
+          "textureSizes": [
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ]
+          ],
+          "triangleCount": 14981
+        },
+        {
+          "bytes": 883616,
+          "minZoom": 4.6,
+          "path": "/assets/agot-map/models/storms-end/lod1.glb",
+          "sha256": "2b93b4e2d00d0663f5fc6bd373b6def841f497a5bf2ab32445ffce1ba0e4e194",
+          "textureMaxEdge": 256,
+          "textureSizes": [
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ]
+          ],
+          "triangleCount": 4950
+        }
+      ],
+      "placement": {
+        "anchorMatchesProvince": true,
+        "anchorProvinceId": 4439,
+        "expectedProvinceCoverage": 0.9687357519702989,
+        "inBoundsCoverage": 1.0,
+        "landCoverage": 0.9745977984758679,
+        "sampleCount": 15353
+      },
+      "sourceHashes": {
+        "gfx/models/buildings/special/Storms End/building_special_stormsend_castle.asset": "58d800ab12a4bf22672a180f332ac22cab51fed892198e0e4672b865cf379da0",
+        "gfx/models/buildings/special/Storms End/building_special_stormsend_castle.mesh": "ad05e36246169f94a5060643e847acb93ded1879a2a4a82bbfe8531354e6c293",
+        "gfx/models/buildings/special/Storms End/building_special_stormsend_castle_cliffs_diffuse.dds": "b505e2098a0f67ac7eeec647b5c72577ec5cb5004b6f07f91c297668e2d34b29",
+        "gfx/models/buildings/special/Storms End/building_special_stormsend_castle_cliffs_normal.dds": "2c4de53aa1ece24d3757a4683ca90f5eb12f475c1bd67f865a8307ba7e6425eb",
+        "gfx/models/buildings/special/Storms End/building_special_stormsend_castle_cliffs_properties.dds": "19727785ef738a63e757aecc404411564a6cb2185bbd512d1b71d993282f1de9",
+        "gfx/models/buildings/special/Storms End/building_special_stormsend_castle_diffuse.dds": "64bc8012742cfce0d549467025f85d5d044bf4542c7095d8facddfd99fd4341a",
+        "gfx/models/buildings/special/Storms End/building_special_stormsend_castle_normal.dds": "594adc64022606ba10028c4d312c6e23fa7e96bc623d4e8bb6be72a3853df3cf",
+        "gfx/models/buildings/special/Storms End/building_special_stormsend_castle_properties.dds": "777343872d201f6721d5faa12ae6615a5d22eef977c2efc09a93979881875c43",
+        "gfx/models/buildings/special/Storms End/building_special_stormsend_castle_stables_diffuse.dds": "878f235ab29eaaa9f0aabfd8a1b9648adc13526d2d12467d26733cf87545a7e5",
+        "gfx/models/buildings/special/Storms End/building_special_stormsend_castle_stables_normal.dds": "593a6f10acd23b768333a93a5c20ec3863b1e19c4484b4508bd7ef2730c3706b",
+        "gfx/models/buildings/special/Storms End/building_special_stormsend_castle_stables_properties.dds": "65a3276d45b54e5a7f5275f81eddaa2a59fa044d5a8c869bc32e2ac0af19f90b"
+      },
+      "variant": null
+    },
+    {
+      "correctionReason": null,
+      "excludedReason": null,
+      "excludedShapes": [],
+      "id": "the-eyrie",
+      "lods": [
+        {
+          "bytes": 6252964,
+          "minZoom": 5.35,
+          "path": "/assets/agot-map/models/the-eyrie/lod0.glb",
+          "sha256": "2c95ad87c9d634de60ab02b6222dbe594918debcf1a290810fc02ce9da33a7c4",
+          "textureMaxEdge": 512,
+          "textureSizes": [
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ]
+          ],
+          "triangleCount": 25445
+        },
+        {
+          "bytes": 1445040,
+          "minZoom": 4.6,
+          "path": "/assets/agot-map/models/the-eyrie/lod1.glb",
+          "sha256": "750ca53763be040562077b93ec4abf351adab2e8bf044574b844dc83ca03ac96",
+          "textureMaxEdge": 256,
+          "textureSizes": [
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ]
+          ],
+          "triangleCount": 8570
+        }
+      ],
+      "placement": {
+        "anchorMatchesProvince": true,
+        "anchorProvinceId": 2251,
+        "expectedProvinceCoverage": 0.9998959769068734,
+        "inBoundsCoverage": 1.0,
+        "landCoverage": 1.0,
+        "sampleCount": 38453
+      },
+      "sourceHashes": {
+        "gfx/models/buildings/special/The Eyrie/building_special_the_eyrie.asset": "b997d436835894906c510c6686328a703fd999c895daf101ee069c37231ea2c8",
+        "gfx/models/buildings/special/The Eyrie/building_special_the_eyrie.mesh": "592b281664f181871bc2d1cbe42b1bcbccc2de2570015a8b7538d9b064e5c53f",
+        "gfx/models/buildings/special/The Eyrie/building_special_the_eyrie_1_diffuse.dds": "e330a0a3bfc323fdb534007e1654a0237f9eb2672a61db2f8c3f1d2fe4667681",
+        "gfx/models/buildings/special/The Eyrie/building_special_the_eyrie_1_normal.dds": "c9611ca438949f4e8950d62d0976410add0a6530e57eed33ec56d50957750aad",
+        "gfx/models/buildings/special/The Eyrie/building_special_the_eyrie_1_properties.dds": "dca1e96cd0c12cd37cadc06fceab237008e4ed492b06a244522197aaa8555ccf",
+        "gfx/models/buildings/special/The Eyrie/building_special_the_eyrie_2_diffuse.dds": "12fd40928c95d1b74b1f2593649e1af4730616e0fbeb87cb83cff661c4bd7153",
+        "gfx/models/buildings/special/The Eyrie/building_special_the_eyrie_2_normal.dds": "e904601784689bb0cfeea00b08bbc756916e51866a8e5f05393a39f95550674c",
+        "gfx/models/buildings/special/The Eyrie/building_special_the_eyrie_2_properties.dds": "6a0dac6017bfb32389654b5b760c30bb4a24586e5244216a4e9eb363e5627a50",
+        "gfx/models/buildings/special/The Eyrie/building_special_the_eyrie_3_diffuse.dds": "e750ff0e7b548963e55039c06a1eaf036f02327959c3e39b7076438c4e47dc52",
+        "gfx/models/buildings/special/The Eyrie/building_special_the_eyrie_3_normal.dds": "f15a4f5161d4658fbb53099f89f42a5d6ef71e4f8206c0aa66f390318d3e5a91",
+        "gfx/models/buildings/special/The Eyrie/building_special_the_eyrie_3_properties.dds": "6e9a309ab2a995e73d07e2175d17efe4e41e7a21bcbcf7acb5522267b3ec710b",
+        "gfx/models/buildings/special/The Eyrie/building_special_the_eyrie_4_diffuse.dds": "eb102ac554207f4db90f874c540eacd9a8246ee86d5ce2a4621b58415204e507",
+        "gfx/models/buildings/special/The Eyrie/building_special_the_eyrie_4_normal.dds": "0cafc431939d43d731f43850cda34f330825b29424aeb59fc38e12c69f9075ac",
+        "gfx/models/buildings/special/The Eyrie/building_special_the_eyrie_4_properties.dds": "fbb531fe0fbf7db8fa75ea73d7522a87d99ae1495003d861fee56b2271db6116",
+        "gfx/models/buildings/special/The Eyrie/building_special_the_eyrie_sky_cells_diffuse.dds": "b1333a9e97d92f4a3987ba6671b6f549e98b7661df87d9972b93652a5d1cfd70",
+        "gfx/models/buildings/special/The Eyrie/building_special_the_eyrie_sky_cells_normal.dds": "5f707334e4c00dc1965ade895f1ae46a673b901b7844b52e8db8f407b9bd2f89",
+        "gfx/models/buildings/special/The Eyrie/building_special_the_eyrie_sky_cells_properties.dds": "868f51ab9ee12e74149d3dc5589e50e40eb05a11dd4ea573a9e7832d467376f9"
+      },
+      "variant": null
+    },
+    {
+      "correctionReason": null,
+      "excludedReason": null,
+      "excludedShapes": [],
+      "id": "pyke",
+      "lods": [
+        {
+          "bytes": 3951876,
+          "minZoom": 5.35,
+          "path": "/assets/agot-map/models/pyke/lod0.glb",
+          "sha256": "e2aee6deca6a259256616035c9dfd6d0da6836bdac736642956c85aa5bf3fab1",
+          "textureMaxEdge": 512,
+          "textureSizes": [
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ]
+          ],
+          "triangleCount": 12169
+        },
+        {
+          "bytes": 943004,
+          "minZoom": 4.6,
+          "path": "/assets/agot-map/models/pyke/lod1.glb",
+          "sha256": "31f21b4680c37958b51626f40146c2ce77c4b570376c0735b00571059d26545a",
+          "textureMaxEdge": 256,
+          "textureSizes": [
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ]
+          ],
+          "triangleCount": 4103
+        }
+      ],
+      "placement": {
+        "anchorMatchesProvince": true,
+        "anchorProvinceId": 2723,
+        "expectedProvinceCoverage": 0.8476916611634748,
+        "inBoundsCoverage": 1.0,
+        "landCoverage": 0.8476916611634748,
+        "sampleCount": 16657
+      },
+      "sourceHashes": {
+        "gfx/models/buildings/special/Pyke/building_special_PykeUpdated.asset": "1da2d529793d5617c5ce7e9776109c893a312431bd129d3d141b6d2b40a82fb7",
+        "gfx/models/buildings/special/Pyke/building_special_PykeUpdated.mesh": "7a3a4686d6dc4665aae0f97f0eb54ca99a2bac35892aeb0a4dae1b026f7a8fad",
+        "gfx/models/buildings/special/Pyke/building_special_pyke01_diffuse.dds": "eddaf22006da5d9ac5bbebeedad6001fdddd55765c41b599834fa73342acf5be",
+        "gfx/models/buildings/special/Pyke/building_special_pyke01_normal.dds": "8d12f5f4e6982b6f2e48b87699833e5df10daa547288f6ae63fbfc6b356dcfc4",
+        "gfx/models/buildings/special/Pyke/building_special_pyke01_properties.dds": "a3d391819bba73e08b7eb5055bac00a22167988cecb3411395a44d7c871d5697",
+        "gfx/models/buildings/special/Pyke/building_special_pyke02_diffuse.dds": "82d92b5ec6982e55777deeb1fb81b0881c96d1367305f04c7e8d2b0ec91df62c",
+        "gfx/models/buildings/special/Pyke/building_special_pyke02_normal.dds": "282f3f1d52f6d7b1b8be885555aff5018a22294f44ff755c152a534778e6884f",
+        "gfx/models/buildings/special/Pyke/building_special_pyke02_properties.dds": "879230a36db0aaef54b281af4d09ecc632624ecf57c02d79a3121de1e9d98572",
+        "gfx/models/buildings/special/Pyke/building_special_pyke03_diffuse.dds": "4c3c9ee43a205303e4726b89658fc6ea823af9460032c0b9dd0c951ceb48b8c3",
+        "gfx/models/buildings/special/Pyke/building_special_pyke03_normal.dds": "e941190219f53da0ea4588f1c53a2afcfdfa7ba89900937de4f90555738d0967",
+        "gfx/models/buildings/special/Pyke/building_special_pyke03_properties.dds": "ee14de60d65ac1379322307140a70420520fd59971048dd4cde1cac44cb955e5"
+      },
+      "variant": null
+    },
+    {
+      "correctionReason": null,
+      "excludedReason": null,
+      "excludedShapes": [],
+      "id": "oldtown",
+      "lods": [
+        {
+          "bytes": 13005712,
+          "minZoom": 5.35,
+          "path": "/assets/agot-map/models/oldtown/lod0.glb",
+          "sha256": "8522418e3b69a62f4fe1ff12285e521578eb6223224e26dfb4f3835d14ee7f83",
+          "textureMaxEdge": 256,
+          "textureSizes": [
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ]
+          ],
+          "triangleCount": 86508
+        },
+        {
+          "bytes": 4290124,
+          "minZoom": 4.6,
+          "path": "/assets/agot-map/models/oldtown/lod1.glb",
+          "sha256": "0e09c98f864e93287d5dc4feb0a512a623669922f3ec28c215bd835e0cad84b0",
+          "textureMaxEdge": 256,
+          "textureSizes": [
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ]
+          ],
+          "triangleCount": 29603
+        }
+      ],
+      "placement": {
+        "anchorMatchesProvince": true,
+        "anchorProvinceId": 3494,
+        "expectedProvinceCoverage": 1.0,
+        "inBoundsCoverage": 1.0,
+        "landCoverage": 1.0,
+        "sampleCount": 191403
+      },
+      "sourceHashes": {
+        "gfx/models/buildings/special/Oldtown/building_special_OT/building_special_OT_citadel_diffuse.dds": "89ead20bed530c3de28ecafd1ee0bfd66bdab547e641597602c9e81ae0ac918b",
+        "gfx/models/buildings/special/Oldtown/building_special_OT/building_special_OT_citadel_normal.dds": "6d21c12173e2bfe1059d1ea83be2ec5e5bc9f52a62cb9418247cbcda3f721ba2",
+        "gfx/models/buildings/special/Oldtown/building_special_OT/building_special_OT_citadel_properties.dds": "23cafb4adfd987c3ddd3933aadd62f3662966175bb6850a6c8561cd4a3ccbbd8",
+        "gfx/models/buildings/special/Oldtown/building_special_OT/building_special_OT_city_walls_diffuse.dds": "1423702682ea774c32795b6f68afb92f0b4bad679d150c759706c6b9ea5bc43d",
+        "gfx/models/buildings/special/Oldtown/building_special_OT/building_special_OT_city_walls_normal.dds": "ed2a3df101d1014b1cad4712e5fee93f15c997fa2d98d48008cc6284d361dcab",
+        "gfx/models/buildings/special/Oldtown/building_special_OT/building_special_OT_city_walls_properties.dds": "2d0f9d7c5b5beb5652d06339a7bd0053fabd9849decd82b98187d3bef542d193",
+        "gfx/models/buildings/special/Oldtown/building_special_OT/building_special_OT_guildhalls_diffuse.dds": "09bde4c8e40b6f2ddafaedeb0acf21a827d0be3abc0d689b790ced9a562c504a",
+        "gfx/models/buildings/special/Oldtown/building_special_OT/building_special_OT_guildhalls_normal.dds": "ce28d433805206cfa7e9900a1b64ce19d0431c1d71642c47be19ac05df9eefca",
+        "gfx/models/buildings/special/Oldtown/building_special_OT/building_special_OT_guildhalls_properties.dds": "cb58eb5ad5162360bec450804d0fc3a199e0b8e9b96e213e5c4e9677b13a1c18",
+        "gfx/models/buildings/special/Oldtown/building_special_OT/building_special_OT_houses_diffuse.dds": "91cb883ee7b4280c84656c384c3aa84d342e0246e32f35b0e6a2573a7b77cd31",
+        "gfx/models/buildings/special/Oldtown/building_special_OT/building_special_OT_houses_normal.dds": "76321353ead93024b3b6dfa8830004f1f8752c67d776a8b2e84dc63d3ae7f467",
+        "gfx/models/buildings/special/Oldtown/building_special_OT/building_special_OT_houses_properties.dds": "82b3b1af0661125f4013248a3bc18013629f0317e72921b10f6ffda30922721c",
+        "gfx/models/buildings/special/Oldtown/building_special_OT/building_special_OT_septs_diffuse.dds": "b0a40f6a435a458a44abe2c967a1eb01166b38709095b8902e3c9b006d4de8c7",
+        "gfx/models/buildings/special/Oldtown/building_special_OT/building_special_OT_septs_normal.dds": "be54296b27febe3465d50218a3a5a9ebe98ff241367a19f6eb487ed6dde339b2",
+        "gfx/models/buildings/special/Oldtown/building_special_OT/building_special_OT_septs_properties.dds": "8ff49d598db86d6006f3206dd0ea9ed39f7bd6dbc740e78f25721a5731e11352",
+        "gfx/models/buildings/special/Oldtown/building_special_OT/building_special_OT_starry_sept_diffuse.dds": "ed187088dda42ca86e1d4a6fc93c3e2b9da27085c9a7fba8cd5bfdcfcb0f74b0",
+        "gfx/models/buildings/special/Oldtown/building_special_OT/building_special_OT_starry_sept_normal.dds": "7280de22f64d85a47aa49d8e3ccf56b91ed76aea1498160daa7fc26e2f6208fd",
+        "gfx/models/buildings/special/Oldtown/building_special_OT/building_special_OT_starry_sept_properties.dds": "bc291b83de75c7759dc1ea7fad45f1a81266836fd0ee4da2f9196265a276510f",
+        "gfx/models/buildings/special/Oldtown/building_special_OT/building_special_oldtown.asset": "76f708ce3dd47f14e1a4259b43586d5775158250da5435f82d79fcccdc99f219",
+        "gfx/models/buildings/special/Oldtown/building_special_OT/building_special_oldtown_citadel.mesh": "4deebe33ba5781fdf9932d78d8cb5a354dd7de12cb80d4beea41e56cfac3202e",
+        "gfx/models/buildings/special/Oldtown/building_special_OT/building_special_oldtown_east.mesh": "7139354e6880eeb2148dbff6ac99f910008aa87e8a59e5897eff8b0f6b897f6a",
+        "gfx/models/buildings/special/Oldtown/building_special_OT/building_special_oldtown_east_wall.mesh": "8821fd8ca1a3365cf2ee87556614def6abab7c4850070a3dcfc7bab650f6184a",
+        "gfx/models/buildings/special/Oldtown/building_special_OT/building_special_oldtown_island_1.mesh": "7d5346455313a03be16aa9b5066c40f5c8f6348e570f4f5b6b132ed5522efb57",
+        "gfx/models/buildings/special/Oldtown/building_special_OT/building_special_oldtown_island_2.mesh": "0f71bd48d69f889be3789ba0ea1a742ac39d3735a131483481eacd74185a2685",
+        "gfx/models/buildings/special/Oldtown/building_special_OT/building_special_oldtown_west.mesh": "329b84cadee7fc9c39036c256667668601ad0c9951c78c33549a0152f3f724ed",
+        "gfx/models/buildings/special/Oldtown/building_special_OT/building_special_oldtown_west_wall.mesh": "23dd48b9d9a1bfbd246d54aca6fb24ad515fcdba4cb6cc4b08167cd25aa6adf0"
+      },
+      "variant": null
+    },
+    {
+      "correctionReason": null,
+      "excludedReason": null,
+      "excludedShapes": [],
+      "id": "riverrun",
+      "lods": [
+        {
+          "bytes": 1413520,
+          "minZoom": 5.35,
+          "path": "/assets/agot-map/models/riverrun/lod0.glb",
+          "sha256": "22cac128eea3b9474cd880fdadc3ccbfa817a39051c7b5ad715b56e48bc1dc05",
+          "textureMaxEdge": 512,
+          "textureSizes": [
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ]
+          ],
+          "triangleCount": 6750
+        },
+        {
+          "bytes": 326844,
+          "minZoom": 4.6,
+          "path": "/assets/agot-map/models/riverrun/lod1.glb",
+          "sha256": "59a8698dcc598d1c5ffe3d0b2aeab96b9cb55891fc2064fc1c78caabeb6e1240",
+          "textureMaxEdge": 256,
+          "textureSizes": [
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ]
+          ],
+          "triangleCount": 2313
+        }
+      ],
+      "placement": {
+        "anchorMatchesProvince": true,
+        "anchorProvinceId": 1658,
+        "expectedProvinceCoverage": 0.9284594556078096,
+        "inBoundsCoverage": 1.0,
+        "landCoverage": 0.9284594556078096,
+        "sampleCount": 7017
+      },
+      "sourceHashes": {
+        "gfx/models/buildings/special/Riverrun/building_special_riverrun.asset": "89d47d4a96170e52eab7b4a161d91fb2534eb866cc83532f9585a2ea794722ce",
+        "gfx/models/buildings/special/Riverrun/building_special_riverrun.mesh": "696e601c5ef544fd6f4fe896cbdae61ebf47888adb1cc48ef9a5ea73075f1d44",
+        "gfx/models/buildings/special/Riverrun/building_special_riverrun_diffuse.dds": "0210dfdb824b2537346413b076a5b96915ba4309bbf9bae7be7b67c5bce90f59",
+        "gfx/models/buildings/special/Riverrun/building_special_riverrun_normal.dds": "3140468a57cea03bada9454f272b01279eb26a88ce9ff6c38c714000def56925",
+        "gfx/models/buildings/special/Riverrun/building_special_riverrun_properties.dds": "4a9d2d433e21acb2ae31aa8ead59fb30d4588d5ee26bee3b269a8e61e624134e"
+      },
+      "variant": null
+    },
+    {
+      "correctionReason": null,
+      "excludedReason": null,
+      "excludedShapes": [],
+      "id": "harrenhal",
+      "lods": [
+        {
+          "bytes": 18390084,
+          "minZoom": 5.35,
+          "path": "/assets/agot-map/models/harrenhal/lod0.glb",
+          "sha256": "e6e4f7b6baa4bd6e1133b39c756bfa37f469588bfce0a446bd1e744b9a73499d",
+          "textureMaxEdge": 512,
+          "textureSizes": [
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              512,
+              512
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ]
+          ],
+          "triangleCount": 50851
+        },
+        {
+          "bytes": 3452484,
+          "minZoom": 4.6,
+          "path": "/assets/agot-map/models/harrenhal/lod1.glb",
+          "sha256": "906d45ef192e076ad55a24143b68d5c37cb8dacef39abf6b386b88c0105d0836",
+          "textureMaxEdge": 256,
+          "textureSizes": [
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ]
+          ],
+          "triangleCount": 15916
+        }
+      ],
+      "placement": {
+        "anchorMatchesProvince": true,
+        "anchorProvinceId": 1934,
+        "expectedProvinceCoverage": 0.8506536788823114,
+        "inBoundsCoverage": 1.0,
+        "landCoverage": 0.8715938413616056,
+        "sampleCount": 151527
+      },
+      "sourceHashes": {
+        "gfx/models/buildings/special/Harrenhal/Harrenhal Redo/building_special_HH_Repaired_diffuse.dds": "6d7cdcdfcc3d27f3412127dea75f541521b473e7adb2264d0d8bd34880047fc2",
+        "gfx/models/buildings/special/Harrenhal/Harrenhal Redo/building_special_HH_Repaired_normal.dds": "e3ec99c4aaaed9bc20b89c1abf2ae3649a23a2df23c8fa6c28fc8234ee203990",
+        "gfx/models/buildings/special/Harrenhal/Harrenhal Redo/building_special_HH_Repaired_properties.dds": "8878961226c8d272057cf9776e068a8624db484c9333e55fc5c0d8c10ede96ef",
+        "gfx/models/buildings/special/Harrenhal/Harrenhal Redo/building_special_HH_Ruined_diffuse.dds": "16dedd0e0bba411bb75e78c528a80d64e3ba0af97054c3e01ae8bd6651f45e23",
+        "gfx/models/buildings/special/Harrenhal/Harrenhal Redo/building_special_HH_Ruined_normal.dds": "981bd2ee36edb9c35a2e936cf062fa8c0500cbb4fb9f8eea7a11783a0db808fd",
+        "gfx/models/buildings/special/Harrenhal/Harrenhal Redo/building_special_HH_Ruined_properties.dds": "a8b84d7864a30a580cc0742888af2ca9bb6df50c28a288071bf7ccc293e90ede",
+        "gfx/models/buildings/special/Harrenhal/Harrenhal Redo/building_special_Harrenhal_walls_diffuse.dds": "dedbe184c71d82a8490e0d4ef9492c6d7db8a97cd03d83054348ded4659e0e8d",
+        "gfx/models/buildings/special/Harrenhal/Harrenhal Redo/building_special_Harrenhal_walls_normal.dds": "de785367ae314ceee5edf356c420ec1c6f17ef6155de9e876d962868063b84fe",
+        "gfx/models/buildings/special/Harrenhal/Harrenhal Redo/building_special_Harrenhal_walls_properties.dds": "0afeb8c5547b1cdc87ae8a13320ecb33bb211d4bccfc4dc08178db520c4f1619",
+        "gfx/models/buildings/special/Harrenhal/Harrenhal Redo/building_special_harrenhal_interior_buildings_diffuse.dds": "705f864a76df33c5ba98c6178ed8abe8a0526eb6640466e03d55ad01976e9b53",
+        "gfx/models/buildings/special/Harrenhal/Harrenhal Redo/building_special_harrenhal_interior_buildings_normal.dds": "09b219e6544d5366e66fc0ec78c8765db2facb487ee4450d07c11740bf78bac9",
+        "gfx/models/buildings/special/Harrenhal/Harrenhal Redo/building_special_harrenhal_interior_buildings_properties.dds": "bdee637d24613141ba8aeb1daae4afeaf8112f37e746b8bca153bb8af253de98",
+        "gfx/models/buildings/special/Harrenhal/Harrenhal Redo/building_special_harrenhal_ruined.asset": "5e922513799d81d2229e1255d02012f0ac43707cf8319625155f39033851880d",
+        "gfx/models/buildings/special/Harrenhal/Harrenhal Redo/building_special_harrenhal_ruined.mesh": "9931a23cb069b53a6f9092fae07dbf0fc678b0d0dbcb3a9866b7d863921bbbb0",
+        "gfx/models/buildings/special/Harrenhal/Harrenhal Redo/harrenhal_decal_diffuse.dds": "2436adb1b34bc1860bb5055c651524cf1be5538150b19ab83dbe776aefa33d63",
+        "gfx/models/buildings/special/Harrenhal/Harrenhal Redo/harrenhal_decal_normal.dds": "5c2e409e4c7da39e371e539f8ea1965f96d6c055397bec9b57fc5fd6e7809acf",
+        "gfx/models/buildings/special/Harrenhal/Harrenhal Redo/harrenhal_decal_properties.dds": "b0ece64282a7185ce05b4264860ba7af5a56848dcd06f045b726d0882d20b867",
+        "gfx/models/buildings/special/Lannisport/lannisport_lp_diffuse.dds": "660ccfdfd712e9ed6e22c9317bc4932a35c528812f3a87eaa0feba114e815e50",
+        "gfx/models/buildings/special/Lannisport/lannisport_lp_normal.dds": "9d59d3200c7752d5916e188f0e2c1cc231d120e744e3c44b2d2fb8a459221aaf",
+        "gfx/models/buildings/special/Lannisport/lannisport_lp_properties.dds": "c1b2827d5835835b79313fcea81da20d617c639ad93a68ad0e4ea5d0131d968f"
+      },
+      "variant": "ruined"
+    }
+  ],
+  "schemaVersion": 1
+}

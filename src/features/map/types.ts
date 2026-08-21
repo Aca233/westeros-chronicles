@@ -11,7 +11,7 @@ export type MapLocationType =
 export type TravelMode = 'walk' | 'horse' | 'carriage' | 'ship'
 export type RoutePreference = 'fastest' | 'safest' | 'cheapest'
 export type KnowledgeLevel = 'confirmed' | 'rumored' | 'stale' | 'unknown'
-export type SemanticRank = 'realm' | 'duchy' | 'county'
+export type SemanticRank = 'hegemon' | 'empire' | 'kingdom' | 'duchy' | 'county'
 
 export interface WorldLocationRef {
   locationId: string
@@ -37,15 +37,18 @@ export interface SemanticTitle extends MapPixelPoint {
   name: string
   importance: number
   regionId: string
-  politicalAnchorTitleId?: string
+  titleColor: string
 }
 
 export interface SemanticMembership {
   locationId: string
   baronyId: string
-  countyId?: string
-  duchyId?: string
-  realmId: string
+  countyId: string
+  duchyId: string
+  kingdomId?: string
+  empireId?: string
+  hegemonId?: string
+  regionId: string
 }
 
 export interface SemanticMembershipIndex {
@@ -114,7 +117,7 @@ export interface MapRouteShard {
 }
 
 export interface MapManifest {
-  schemaVersion: 3
+  schemaVersion: 4
   sourceId: string
   sourceHashes: Record<string, string>
   mapSize: {
@@ -127,6 +130,7 @@ export interface MapManifest {
   maxZoom: number
   paths: {
     terrain: string
+    terrainLight: string
     materialTerrain: string
     vector: string
     dem: string
@@ -143,11 +147,14 @@ export interface MapManifest {
     locations: number
     routeEdges: number
     terrainTiles: number
+    terrainLightTiles: number
     materialTerrainTiles: number
     vectorTiles: number
     demTiles: number
     semanticTiles: number
-    semanticRealms: number
+    semanticHegemons: number
+    semanticEmpires: number
+    semanticKingdoms: number
     semanticDuchies: number
     semanticCounties: number
     semanticLabels: number

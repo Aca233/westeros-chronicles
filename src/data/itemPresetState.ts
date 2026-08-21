@@ -41,12 +41,12 @@ function createPreset(
 
 export function createNedItemState(): ItemSystemState {
   return createPreset([
-    { instanceId: 'ned.ice', definitionId: 'artifact.ice', placement: { type: 'equipped', position: { group: 'mainhand' } }, overrides: { isHeirloom: true, lawfulControllerId: 'house_stark', renown: 100 } },
+    { instanceId: 'ned.ice', definitionId: 'artifact.ice', placement: { type: 'equipped', position: { group: 'mainhand' } }, overrides: { isHeirloom: true, renown: 100 } },
     { instanceId: 'ned.wool_tunic', definitionId: 'clothing.northern_wool_tunic', placement: { type: 'equipped', position: { group: 'torso', layer: 'garment' } } },
     { instanceId: 'ned.grey_cloak', definitionId: 'clothing.grey_wolf_cloak', placement: { type: 'equipped', position: { group: 'torso', layer: 'outerwear' } } },
     { instanceId: 'ned.wool_breeches', definitionId: 'legwear.northern_wool_breeches', placement: { type: 'equipped', position: { group: 'legs', layer: 'legwear' } } },
     { instanceId: 'ned.riding_boots', definitionId: 'footwear.northern_riding_boots', placement: { type: 'equipped', position: { group: 'legs', layer: 'footwear' } } },
-    { instanceId: 'ned.house_seal', definitionId: 'keepsake.house_seal', placement: { type: 'equipped', position: { group: 'accessories', index: 0 } }, overrides: { customName: '临冬城公爵印章', lawfulControllerId: 'house_stark' } },
+    { instanceId: 'ned.house_seal', definitionId: 'keepsake.house_seal', placement: { type: 'equipped', position: { group: 'accessories', index: 0 } }, overrides: { customName: '临冬城公爵印章' } },
     { instanceId: 'ned.wolf_helm', definitionId: 'armor.stark_wolf_helm', placement: { type: 'site', siteId: 'winterfell_armory' } },
     { instanceId: 'ned.chainmail', definitionId: 'armor.castle_chainmail', placement: { type: 'site', siteId: 'winterfell_armory' } },
     { instanceId: 'ned.castle_sword', definitionId: 'weapon.castle_bastard_sword', placement: { type: 'site', siteId: 'winterfell_armory' } },
@@ -80,10 +80,10 @@ export function createDaenerysItemState(): ItemSystemState {
     { instanceId: 'daenerys.silk_skirt', definitionId: 'legwear.pentos_silk_skirt', placement: { type: 'equipped', position: { group: 'legs', layer: 'legwear' } } },
     { instanceId: 'daenerys.soft_shoes', definitionId: 'footwear.pentos_soft_shoes', placement: { type: 'equipped', position: { group: 'legs', layer: 'footwear' } } },
     { instanceId: 'daenerys.silver_ring', definitionId: 'jewelry.simple_silver_ring', placement: { type: 'equipped', position: { group: 'accessories', index: 0 } }, overrides: { customName: '坦格利安旧银戒' } },
-    { instanceId: 'daenerys.black_red_egg', definitionId: 'artifact.petrified_dragon_egg_black_red', placement: { type: 'carried' }, overrides: { lawfulControllerId: 'char_daenerys', renown: 40 } },
-    { instanceId: 'daenerys.green_bronze_egg', definitionId: 'artifact.petrified_dragon_egg_green_bronze', placement: { type: 'site', siteId: 'pentos_guest_room' }, overrides: { lawfulControllerId: 'char_daenerys', renown: 40 } },
-    { instanceId: 'daenerys.cream_gold_egg', definitionId: 'artifact.petrified_dragon_egg_cream_gold', placement: { type: 'site', siteId: 'pentos_guest_room' }, overrides: { lawfulControllerId: 'char_daenerys', renown: 40 } },
-    { instanceId: 'daenerys.house_seal', definitionId: 'keepsake.house_seal', placement: { type: 'site', siteId: 'pentos_guest_room' }, overrides: { customName: '三首龙旧印', lawfulControllerId: 'house_targaryen' } },
+    { instanceId: 'daenerys.black_red_egg', definitionId: 'artifact.petrified_dragon_egg_black_red', placement: { type: 'carried' }, overrides: { renown: 40 } },
+    { instanceId: 'daenerys.green_bronze_egg', definitionId: 'artifact.petrified_dragon_egg_green_bronze', placement: { type: 'site', siteId: 'pentos_guest_room' }, overrides: { renown: 40 } },
+    { instanceId: 'daenerys.cream_gold_egg', definitionId: 'artifact.petrified_dragon_egg_cream_gold', placement: { type: 'site', siteId: 'pentos_guest_room' }, overrides: { renown: 40 } },
+    { instanceId: 'daenerys.house_seal', definitionId: 'keepsake.house_seal', placement: { type: 'site', siteId: 'pentos_guest_room' }, overrides: { customName: '三首龙旧印' } },
   ], [
     { id: 'pentos_guest_room', name: '潘托斯总督宅邸客房', type: 'room', location: { locationId: UNKNOWN_WESTEROS_LOCATION_ID, sceneLocation: '潘托斯 · 伊利里欧宅邸' }, locationLabel: '所在地未查明 · 潘托斯 · 伊利里欧宅邸', description: '客房内的衣箱、梳妆柜和有锁木匣。', capacity: 24 },
   ]);

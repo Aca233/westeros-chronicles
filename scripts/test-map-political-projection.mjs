@@ -13,11 +13,11 @@ import { MapRepository } from '../src/features/map/repository.ts'
 const staticTitles = [
   {
     baronyId: 'b_winterfell', countyId: 'c_winterfell', duchyId: 'd_winterfell',
-    kingdomId: 'k_winterfell', realmId: 'world_westeros_the_north', provinceId: 77,
+    kingdomId: 'k_winterfell', empireId: 'e_the_north', provinceId: 77,
   },
   {
     baronyId: 'b_pyke', countyId: 'c_pyke', duchyId: 'd_pyke',
-    kingdomId: 'k_under_islands', realmId: 'world_westeros_the_iron_islands', provinceId: 2723,
+    kingdomId: 'k_under_islands', empireId: 'e_the_iron_islands', provinceId: 2723,
   },
 ]
 
@@ -38,59 +38,56 @@ const history = {
     {
       turn: 1, action: '将临冬城伯爵领授予波顿', startedOn: { year: 298, month: 1, day: 10 }, resolvedOn: { year: 298, month: 1, day: 10 },
       acceptedCommands: [{ type: 'GRANT_CHARACTER_TITLE', characterId: 'agot:Bolton_4', titleId: 'c_winterfell', commandId: 'grant-bolton' }],
-      rejectedCommands: [], facts: [], canonicalTransitions: [],
+      rejectedCommands: [], eventIds: [], canonicalTransitions: [],
     },
     {
       turn: 2, action: '撤销波顿封地', startedOn: { year: 298, month: 1, day: 20 }, resolvedOn: { year: 298, month: 1, day: 20 },
       acceptedCommands: [{ type: 'REVOKE_TITLE', characterId: 'agot:Bolton_4', titleId: 'c_winterfell', commandId: 'revoke-bolton' }],
-      rejectedCommands: [], facts: [], canonicalTransitions: [],
+      rejectedCommands: [], eventIds: [], canonicalTransitions: [],
     },
     {
       turn: 3, action: '艾德身亡', startedOn: { year: 298, month: 2, day: 1 }, resolvedOn: { year: 298, month: 2, day: 1 },
       acceptedCommands: [{ type: 'CHARACTER_DIE', characterId: 'agot:Stark_3', cause: '处决', commandId: 'death-eddard' }],
-      rejectedCommands: [], facts: [], canonicalTransitions: [],
+      rejectedCommands: [], eventIds: [], canonicalTransitions: [],
     },
     {
       turn: 4, action: '罗柏继承', startedOn: { year: 298, month: 2, day: 10 }, resolvedOn: { year: 298, month: 2, day: 10 },
-      acceptedCommands: [], rejectedCommands: [], canonicalTransitions: [],
-      facts: [{
-        id: 'inherit-winterfell', turn: 4, date: { year: 298, month: 2, day: 10 }, source: 'system', kind: 'inheritance', title: '临冬城继承', summary: '罗柏继承临冬城',
-        participantIds: ['agot:Stark_14'], commandTypes: [],
-        political: { type: 'inherit-title', titleId: 'k_winterfell', holderId: 'agot:Stark_14', visibility: 'public' },
-      }],
+      acceptedCommands: [], rejectedCommands: [], canonicalTransitions: [], eventIds: ['inherit-winterfell'],
     },
     {
       turn: 5, action: '正式战争结果', startedOn: { year: 298, month: 3, day: 10 }, resolvedOn: { year: 298, month: 3, day: 10 },
       acceptedCommands: [], rejectedCommands: [], canonicalTransitions: [],
-      facts: [
-        {
-          id: 'war-winterfell', turn: 5, date: { year: 298, month: 3, day: 10 }, source: 'system', kind: 'war_result', title: '战争结果', summary: '兰尼斯特取得临冬城',
-          participantIds: ['agot:Lannister_1'], commandTypes: [],
-          political: { type: 'war-result', titleId: 'k_winterfell', holderId: 'agot:Lannister_1', formal: true, visibility: 'public' },
-        },
-        {
-          id: 'secret-claim', turn: 5, date: { year: 298, month: 3, day: 11 }, source: 'character', kind: 'claim', title: '秘密宣称', summary: '未公开',
-          participantIds: ['agot:Secret_1'], commandTypes: [],
-          political: { type: 'grant-title', titleId: 'k_winterfell', holderId: 'agot:Secret_1', visibility: 'secret' },
-        },
-        {
-          id: 'informal-war', turn: 5, date: { year: 298, month: 3, day: 12 }, source: 'character', kind: 'war_result', title: '未经确认的战报', summary: '尚无正式结果',
-          participantIds: ['agot:Bolton_4'], commandTypes: [],
-          political: { type: 'war-result', titleId: 'k_winterfell', holderId: 'agot:Bolton_4', formal: false, visibility: 'public' },
-        },
-      ],
+      eventIds: ['war-winterfell', 'secret-claim', 'informal-war'],
     },
   ],
 }
 
+const worldEvent = (overrides) => ({
+  id: 'event', transactionId: 'fixture', turn: 4,
+  date: { year: 298, month: 2, day: 10 }, source: 'system_rule', type: 'fixture',
+  actorIds: [], subjectRefs: [], reason: '测试事件', visibility: 'public', ...overrides,
+})
+const worldEvents = [
+  worldEvent({ id: 'inherit-winterfell', type: 'title.inherited', actorIds: ['agot:Stark_14'], subjectRefs: [{ type: 'title', titleId: 'k_winterfell' }] }),
+  worldEvent({ id: 'war-winterfell', turn: 5, date: { year: 298, month: 3, day: 10 }, type: 'title.war-result.formal', actorIds: ['agot:Lannister_1'], subjectRefs: [{ type: 'title', titleId: 'k_winterfell' }] }),
+  worldEvent({ id: 'secret-claim', turn: 5, date: { year: 298, month: 3, day: 11 }, type: 'title.granted', actorIds: ['agot:Secret_1'], subjectRefs: [{ type: 'title', titleId: 'k_winterfell' }], visibility: 'secret' }),
+  worldEvent({ id: 'informal-war', turn: 5, date: { year: 298, month: 3, day: 12 }, type: 'title.war-result.informal', actorIds: ['agot:Bolton_4'], subjectRefs: [{ type: 'title', titleId: 'k_winterfell' }] }),
+]
+
 function stateAt(year, month, day) {
-  return projectPoliticalState(staticTitles, characters, history, { year, month, day })
+  return projectPoliticalState(staticTitles, characters, history, { year, month, day }, worldEvents)
 }
 
 function titleAt(states, titleId) {
   const state = states.find((entry) => entry.titleId === titleId)
   assert.ok(state, `缺少政治图块 ${titleId}`)
   return state
+}
+
+function assertNoLegacyTitleColors(state) {
+  for (const key of ['realmColor', 'countyColor', 'duchyColor', 'kingdomColor', 'empireColor']) {
+    assert.equal(key in state, false, `政治投影不应再生成旧地图色槽 ${key}`)
+  }
 }
 
 test('298 年基础持有人来自人物头衔，不保存第二份当前领主状态', () => {
@@ -115,22 +112,21 @@ test('授予与撤销按日期折叠，并能重建旧日期', () => {
   assert.equal(titleAt(stateAt(298, 1, 5), 'b_winterfell').holderId, 'agot:Stark_3')
 })
 
-test('政治填色使用最高公开政治领主并保留当地伯爵资料', () => {
+test('头衔颜色职责与持有人资料分离，不生成旧法理色槽', () => {
   const beforeGrant = titleAt(stateAt(298, 1, 5), 'b_winterfell')
   const afterGrant = titleAt(stateAt(298, 1, 15), 'b_winterfell')
   assert.equal(afterGrant.holderId, 'agot:Bolton_4')
   assert.equal(afterGrant.effectiveTitleId, 'c_winterfell')
-  assert.equal(afterGrant.realmTitleId, 'k_winterfell')
   assert.equal(afterGrant.realmHolderId, 'agot:Stark_3')
-  assert.equal(afterGrant.realmHouseId, 'stark')
-  assert.equal(afterGrant.realmColor, beforeGrant.realmColor)
-  assert.notEqual(afterGrant.color, afterGrant.realmColor)
+  assert.equal(beforeGrant.realmHolderId, 'agot:Stark_3')
+  assertNoLegacyTitleColors(beforeGrant)
+  assertNoLegacyTitleColors(afterGrant)
 })
 
-test('同一最高领地内由不同伯爵持有的省份共享政治填色', () => {
+test('同一帝国下的省份保留各自伯爵资料，但不生成家族政治填色', () => {
   const states = projectPoliticalState([
-    { baronyId: 'b_first', countyId: 'c_first', duchyId: 'd_first', kingdomId: 'k_north', realmId: 'world_westeros_the_north', provinceId: 1 },
-    { baronyId: 'b_second', countyId: 'c_second', duchyId: 'd_second', kingdomId: 'k_north', realmId: 'world_westeros_the_north', provinceId: 2 },
+    { baronyId: 'b_first', countyId: 'c_first', duchyId: 'd_first', kingdomId: 'k_north', empireId: 'e_the_north', provinceId: 1 },
+    { baronyId: 'b_second', countyId: 'c_second', duchyId: 'd_second', kingdomId: 'k_north', empireId: 'e_the_north', provinceId: 2 },
   ], [
     { id: 'agot:King_1', dynastyId: 'dynn_Stark', titleIds: ['k_north'] },
     { id: 'agot:Count_1', dynastyId: 'dynn_Bolton', titleIds: ['c_first'] },
@@ -139,7 +135,61 @@ test('同一最高领地内由不同伯爵持有的省份共享政治填色', ()
   assert.notEqual(states[0].holderId, states[1].holderId)
   assert.equal(states[0].realmHolderId, 'agot:King_1')
   assert.equal(states[1].realmHolderId, 'agot:King_1')
-  assert.equal(states[0].realmColor, states[1].realmColor)
+  states.forEach(assertNoLegacyTitleColors)
+})
+
+test('政治层级直接使用语义 membership 的帝国头衔而非地理区域映射', () => {
+  const [attached] = attachPoliticalRealms([
+    { baronyId: 'b_first', countyId: 'c_first', duchyId: 'd_first', kingdomId: 'k_north', provinceId: 1 },
+  ], [{
+    locationId: 'b_first', baronyId: 'b_first', countyId: 'c_first', duchyId: 'd_first',
+    kingdomId: 'k_north', empireId: 'e_the_north', hegemonId: 'h_the_iron_throne',
+    regionId: 'world_westeros_the_north',
+  }])
+  assert.equal(attached.empireId, 'e_the_north')
+  assert.equal('realmId' in attached, false)
+})
+
+test('军事占领暴露实际控制和争议描边资料，但不覆盖法理填色', () => {
+  const lawful = projectPoliticalState(
+    [staticTitles[0]], characters, { ...history, turns: [] },
+    { year: 298, month: 1, day: 5 },
+  )[0]
+  const occupied = projectPoliticalState(
+    [staticTitles[0]], characters, { ...history, turns: [] },
+    { year: 298, month: 1, day: 6 },
+    [worldEvent({
+      id: 'occupy-winterfell',
+      date: { year: 298, month: 1, day: 6 },
+      type: 'title.occupied',
+      actorIds: ['agot:Bolton_4'],
+      subjectRefs: [{ type: 'title', titleId: 'k_winterfell' }],
+    })],
+  )[0]
+  assert.equal(occupied.holderId, 'agot:Stark_3')
+  assert.equal(occupied.color, lawful.color)
+  assert.equal(occupied.controllerId, 'agot:Bolton_4')
+  assert.equal(occupied.isContested, true)
+  assert.deepEqual(occupied.contestedByIds, ['agot:Stark_3'])
+  assert.notEqual(occupied.controllerColor, occupied.color)
+  const calls = []
+  applyPoliticalFeatureStates({
+    getSource: () => ({}),
+    setFeatureState: (target, state) => calls.push({ target, state }),
+    removeFeatureState: () => undefined,
+  }, [occupied])
+  assert.equal(calls[0].state.politicalControllerId, 'agot:Bolton_4')
+  assert.equal(calls[0].state.politicalIsContested, true)
+  assert.equal(calls[0].state.politicalControllerColor, occupied.controllerColor)
+
+  const fromRuntimePatch = projectPoliticalState(
+    [staticTitles[0]], characters, { ...history, turns: [] },
+    { year: 298, month: 1, day: 6 }, [],
+    { k_winterfell: { controllerId: 'agot:Bolton_4', contestedByIds: ['agot:Stark_3'] } },
+  )[0]
+  assert.equal(fromRuntimePatch.holderId, 'agot:Stark_3')
+  assert.equal(fromRuntimePatch.controllerId, 'agot:Bolton_4')
+  assert.equal(fromRuntimePatch.isContested, true)
 })
 
 test('死亡清空持有头衔，继承和正式战争结果重新指派持有人', () => {
@@ -184,7 +234,10 @@ test('政治图层只对变化的省份写入 MapLibre feature-state', () => {
   assert.deepEqual(calls[0].target, { source: 'agot-vector', sourceLayer: 'provinces', id: 77 })
   assert.equal(calls[0].state.politicalHolderId, 'agot:Bolton_4')
   assert.equal(calls[0].state.politicalRealmHolderId, 'agot:Stark_3')
-  assert.equal(calls[0].state.politicalColor, titleAt(after, 'b_winterfell').realmColor)
+  assert.equal('politicalColor' in calls[0].state, false)
+  assert.equal('politicalDuchyColor' in calls[0].state, false)
+  assert.equal('politicalKingdomColor' in calls[0].state, false)
+  assert.equal('politicalEmpireColor' in calls[0].state, false)
 })
 
 test('运行时从本地资料加载基础持有人并把投影接入地图画布', async () => {
@@ -207,7 +260,8 @@ test('运行时从本地资料加载基础持有人并把投影接入地图画�
   assert.match(drawer, /projectPoliticalState/)
   assert.match(canvas, /applyPoliticalFeatureStates/)
   assert.match(canvas, /changedTitleIds/)
-  assert.match(style, /feature-state.*politicalColor/)
+  assert.match(style, /'fill-color': \['get', 'titleColor'\]/)
+  assert.doesNotMatch(style, /politicalTierFill|politicalEmpireColor|politicalDuchyColor|politicalColor/)
   assert.match(characters, /loadTitleHolderSummaries/)
 })
 
@@ -234,7 +288,8 @@ test('生成的 6094 个本地政治图块能从 298 年人物资料解析真实
   assert.equal(new Set(baseline.map((entry) => entry.titleId)).size, generatedTitles.length)
   assert.ok(baseline.filter((entry) => entry.holderId).length > 3000)
   assert.equal(titleAt(baseline, 'b_winterfell').holderId, 'agot:Stark_3')
-  assert.equal(titleAt(baseline, 'b_winterfell').realmHolderId, 'agot:Stark_3')
+  assert.equal(titleAt(baseline, 'b_winterfell').realmTitleId, 'h_the_iron_throne')
+  assert.equal(titleAt(baseline, 'b_winterfell').realmHolderId, 'agot:Baratheon_2')
   assert.equal(titleAt(baseline, 'b_winterfell').sigil, 'house-stark')
-  assert.ok(new Set(baseline.map((entry) => entry.realmColor)).size <= 11)
+  baseline.forEach(assertNoLegacyTitleColors)
 })

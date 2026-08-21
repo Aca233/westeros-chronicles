@@ -3,7 +3,11 @@ import type {
   ItemAction,
   ItemImageRef,
   ItemStateCommand,
+  ItemSystemState,
+  ItemCatalog,
 } from './types';
+import type { PendingWorldTransaction } from '../world/worldRuntimeTypes';
+import { getItemDefinition } from './catalog';
 
 export interface PendingItemAction {
   id: string;
@@ -14,8 +18,6 @@ export interface PendingItemAction {
   label: string;
   conflictKey: string;
 }
-
-let pendingSequence = 0;
 
 function positionKey(position: EquipmentPosition): string {
   if (position.group === 'torso') return `torso:${position.layer}`;
@@ -30,54 +32,7 @@ function instanceIdOf(action: ItemAction): string | undefined {
   return action.instanceId;
 }
 
-function conflictKeyOf(action: ItemAction): string {
-  switch (action.kind) {
-    case 'equip': return `equip:${positionKey(action.position)}`;
-    case 'use': return `item:${action.instanceId}:use`;
-    case 'repair': return `item:${action.instanceId}:repair`;
-    case 'transfer':
-    case 'gift':
-    case 'discard':
-    case 'split':
-    case 'unequip': return `item:${action.instanceId}:move`;
-    case 'merge': return `item:${action.sourceInstanceId}:move`;
-    case 'mark_heirloom': return `item:${action.instanceId}:heirloom`;
-    case 'damage': return `item:${action.instanceId}:damage`;
-    case 'acquire': return `item:${action.instance.instanceId}:create`;
-  }
-}
-
-export function createPendingItemAction(
-  action: ItemAction,
-  model: { itemName: string; image: ItemImageRef; label: string },
-): PendingItemAction {
-  pendingSequence += 1;
-  return {
-    id: `pending_item_${Date.now()}_${pendingSequence}`,
-    action,
-    instanceId: instanceIdOf(action),
-    itemName: model.itemName,
-    image: model.image,
-    label: model.label,
-    conflictKey: conflictKeyOf(action),
-  };
-}
-
-export function enqueueItemAction(
-  queue: readonly PendingItemAction[],
-  action: PendingItemAction,
-): PendingItemAction[] {
-  return [...queue.filter((entry) => entry.conflictKey !== action.conflictKey), action];
-}
-
-export function cancelItemAction(
-  queue: readonly PendingItemAction[],
-  actionId: string,
-): PendingItemAction[] {
-  return queue.filter((action) => action.id !== actionId);
-}
-
-function actionToCommand(action: ItemAction): ItemStateCommand {
+export function actionToCommand(action: ItemAction): ItemStateCommand {
   switch (action.kind) {
     case 'acquire': return { type: 'ITEM_CREATE', instance: action.instance, placement: action.placement, historyType: action.historyType };
     case 'equip': return { type: 'ITEM_EQUIP', instanceId: action.instanceId, position: action.position, displacedTo: action.displacedTo };
@@ -92,6 +47,56 @@ function actionToCommand(action: ItemAction): ItemStateCommand {
     case 'merge': return { type: 'ITEM_MERGE', sourceInstanceId: action.sourceInstanceId, targetInstanceId: action.targetInstanceId };
     case 'mark_heirloom': return { type: 'ITEM_MARK_HEIRLOOM', instanceId: action.instanceId, houseId: action.houseId };
   }
+}
+
+export function itemCommandToAction(command: ItemStateCommand): ItemAction {
+  switch (command.type) {
+    case 'ITEM_CREATE': return { kind: 'acquire', instance: command.instance, placement: command.placement, historyType: command.historyType };
+    case 'ITEM_EQUIP': return { kind: 'equip', instanceId: command.instanceId, position: command.position, displacedTo: command.displacedTo };
+    case 'ITEM_UNEQUIP': return { kind: 'unequip', instanceId: command.instanceId, to: command.to };
+    case 'ITEM_USE': return { kind: 'use', instanceId: command.instanceId, quantity: command.quantity };
+    case 'ITEM_TRANSFER': return { kind: 'transfer', instanceId: command.instanceId, to: command.to, quantity: command.quantity, newInstanceId: command.newInstanceId };
+    case 'ITEM_GIFT': return { kind: 'gift', instanceId: command.instanceId, recipientId: command.recipientId, quantity: command.quantity, newInstanceId: command.newInstanceId };
+    case 'ITEM_DISCARD': return { kind: 'discard', instanceId: command.instanceId, quantity: command.quantity, newInstanceId: command.newInstanceId };
+    case 'ITEM_REPAIR': return { kind: 'repair', instanceId: command.instanceId, amount: command.amount };
+    case 'ITEM_DAMAGE': return { kind: 'damage', instanceId: command.instanceId, amount: command.amount, reason: command.reason };
+    case 'ITEM_SPLIT': return { kind: 'split', instanceId: command.instanceId, quantity: command.quantity, newInstanceId: command.newInstanceId, to: command.to };
+    case 'ITEM_MERGE': return { kind: 'merge', sourceInstanceId: command.sourceInstanceId, targetInstanceId: command.targetInstanceId };
+    case 'ITEM_MARK_HEIRLOOM': return { kind: 'mark_heirloom', instanceId: command.instanceId, houseId: command.houseId };
+  }
+}
+
+const ACTION_LABELS: Record<ItemAction['kind'], string> = {
+  acquire: '收下', equip: '穿上', unequip: '卸下', use: '使用', transfer: '转移', gift: '赠送',
+  discard: '丢弃', repair: '修理', damage: '受损', split: '拆分', merge: '合并', mark_heirloom: '立为传家宝',
+};
+
+export function pendingItemActionsFromWorldTransactions(
+  queue: readonly PendingWorldTransaction[],
+  state: ItemSystemState,
+  catalog: ItemCatalog,
+): PendingItemAction[] {
+  const result: PendingItemAction[] = [];
+  for (const transaction of queue) {
+    if (transaction.status !== 'pending') continue;
+    for (const [index, command] of (transaction.itemCommands ?? []).entries()) {
+      const action = itemCommandToAction(command);
+      const instanceId = instanceIdOf(action);
+      const instance = action.kind === 'acquire' ? action.instance : instanceId ? state.instances[instanceId] : undefined;
+      if (!instance) continue;
+      const definition = getItemDefinition(catalog, instance.definitionId);
+      result.push({
+        id: index === 0 ? transaction.id : `${transaction.id}:${index}`,
+        action,
+        instanceId,
+        itemName: instance.customName ?? definition.name,
+        image: definition.image,
+        label: ACTION_LABELS[action.kind],
+        conflictKey: transaction.conflictKeys[0] ?? `asset:item:${instanceId}`,
+      });
+    }
+  }
+  return result;
 }
 
 function commandConflictKey(command: ItemStateCommand): string {
@@ -111,22 +116,18 @@ function commandConflictKey(command: ItemStateCommand): string {
   }
 }
 
-export function mergePendingItemCommands(
-  queue: readonly PendingItemAction[],
+export function mergePendingWorldItemCommands(
+  queue: readonly PendingWorldTransaction[],
   modelCommands: readonly ItemStateCommand[],
 ): ItemStateCommand[] {
-  const queuedConflictKeys = new Set(queue.map((entry) => entry.conflictKey));
-  const queuedCommands = queue.map((entry) => actionToCommand(entry.action));
-  const filteredModelCommands = modelCommands.filter((command) => !queuedConflictKeys.has(commandConflictKey(command)));
-  return [...queuedCommands, ...filteredModelCommands];
-}
-
-export function removeSubmittedItemActions(
-  current: readonly PendingItemAction[],
-  submitted: readonly PendingItemAction[],
-): PendingItemAction[] {
-  const submittedIds = new Set(submitted.map((action) => action.id));
-  return current.filter((action) => !submittedIds.has(action.id));
+  const queuedCommands = queue
+    .filter((entry) => entry.status === 'pending')
+    .flatMap((entry) => entry.itemCommands ?? []);
+  const queuedConflictKeys = new Set(queuedCommands.map(commandConflictKey));
+  return [
+    ...structuredClone(queuedCommands),
+    ...modelCommands.filter((command) => !queuedConflictKeys.has(commandConflictKey(command))),
+  ];
 }
 
 export function formatPendingItemPrompt(queue: readonly PendingItemAction[]): string {

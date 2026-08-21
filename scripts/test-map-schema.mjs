@@ -10,8 +10,8 @@ import {
   parseSemanticTitles,
 } from '../src/features/map/schemas.ts'
 
-const manifestV3 = {
-  schemaVersion: 3,
+const manifestV4 = {
+  schemaVersion: 4,
   sourceId: '2962333032',
   sourceHashes: { 'map_data/provinces.png': 'a'.repeat(64) },
   mapSize: { width: 9216, height: 6144 },
@@ -21,6 +21,7 @@ const manifestV3 = {
   maxZoom: 7,
   paths: {
     terrain: '/assets/agot-map/terrain/{z}/{x}/{y}.webp',
+    terrainLight: '/assets/agot-map/terrain-light/{z}/{x}/{y}.webp',
     materialTerrain: '/assets/agot-map/material-terrain/{z}/{x}/{y}.webp',
     vector: '/assets/agot-map/vector/{z}/{x}/{y}.pbf',
     dem: '/assets/agot-map/dem/{z}/{x}/{y}.png',
@@ -37,11 +38,14 @@ const manifestV3 = {
     locations: 800,
     routeEdges: 2400,
     terrainTiles: 85,
+    terrainLightTiles: 341,
     materialTerrainTiles: 1365,
     vectorTiles: 85,
     demTiles: 85,
     semanticTiles: 85,
-    semanticRealms: 9,
+    semanticHegemons: 1,
+    semanticEmpires: 9,
+    semanticKingdoms: 9,
     semanticDuchies: 30,
     semanticCounties: 120,
     semanticLabels: 159,
@@ -51,20 +55,22 @@ const manifestV3 = {
   semanticHash: 'c'.repeat(64),
 }
 
-const manifest = manifestV3
+const manifest = manifestV4
 const semanticTitle = {
   featureId: 1,
-  titleId: 'the_north',
-  rank: 'realm',
-  name: '北境',
+  titleId: 'h_the_iron_throne',
+  rank: 'hegemon',
+  name: '铁王座',
   mapX: 3130,
   mapY: 1410,
   importance: 100,
   regionId: 'the_north',
-  politicalAnchorTitleId: 'k_the_north',
+  titleColor: '#777777',
 }
 const semanticTitles = [
   semanticTitle,
+  { ...semanticTitle, featureId: 4, titleId: 'e_the_north', rank: 'empire', name: '北境' },
+  { ...semanticTitle, featureId: 5, titleId: 'k_the_north', rank: 'kingdom', name: '北境王国' },
   { ...semanticTitle, featureId: 2, titleId: 'd_winterfell', rank: 'duchy', name: '临冬城公国' },
   { ...semanticTitle, featureId: 3, titleId: 'c_winterfell', rank: 'county', name: '临冬城伯爵领' },
 ]
@@ -73,26 +79,35 @@ const membership = {
   baronyId: 'b_winterfell',
   countyId: 'c_winterfell',
   duchyId: 'd_winterfell',
-  realmId: 'the_north',
+  kingdomId: 'k_the_north',
+  empireId: 'e_the_north',
+  hegemonId: 'h_the_iron_throne',
+  regionId: 'the_north',
 }
 
-test('地图清单只接受版本三并要求近景材质路径与计数', () => {
-  assert.equal(parseMapManifest(manifestV3).schemaVersion, 3)
-  assert.throws(() => parseMapManifest({ ...manifestV3, schemaVersion: 2 }), /地图清单格式无效/)
+test('地图清单只接受版本四并要求近景材质与地形光照路径及计数', () => {
+  assert.equal(parseMapManifest(manifestV4).schemaVersion, 4)
+  assert.throws(() => parseMapManifest({ ...manifestV4, schemaVersion: 2 }), /地图清单格式无效/)
   assert.throws(() => parseMapManifest({
-    ...manifestV3,
-    paths: { ...manifestV3.paths, materialTerrain: 'https://example.test/{z}.webp' },
+    ...manifestV4,
+    paths: { ...manifestV4.paths, materialTerrain: 'https://example.test/{z}.webp' },
   }), /项目内 AGOT 地图资源路径/)
-  const { materialTerrain: _path, ...pathsWithoutMaterial } = manifestV3.paths
-  assert.throws(() => parseMapManifest({ ...manifestV3, paths: pathsWithoutMaterial }), /地图清单格式无效/)
-  const { materialTerrainTiles: _count, ...countsWithoutMaterial } = manifestV3.counts
-  assert.throws(() => parseMapManifest({ ...manifestV3, counts: countsWithoutMaterial }), /地图清单格式无效/)
+  const { materialTerrain: _path, ...pathsWithoutMaterial } = manifestV4.paths
+  assert.throws(() => parseMapManifest({ ...manifestV4, paths: pathsWithoutMaterial }), /地图清单格式无效/)
+  const { materialTerrainTiles: _count, ...countsWithoutMaterial } = manifestV4.counts
+  assert.throws(() => parseMapManifest({ ...manifestV4, counts: countsWithoutMaterial }), /地图清单格式无效/)
+  const { terrainLight: _terrainLight, ...pathsWithoutTerrainLight } = manifestV4.paths
+  assert.throws(() => parseMapManifest({ ...manifestV4, paths: pathsWithoutTerrainLight }), /地图清单格式无效/)
+  const { terrainLightTiles: _terrainLightCount, ...countsWithoutTerrainLight } = manifestV4.counts
+  assert.throws(() => parseMapManifest({ ...manifestV4, counts: countsWithoutTerrainLight }), /地图清单格式无效/)
 })
 
 test('语义标题与 membership 拒绝重复和悬空层级', () => {
   assert.equal(parseSemanticTitles([semanticTitle]).length, 1)
   assert.throws(() => parseSemanticTitles([semanticTitle, semanticTitle]), /featureId/)
-  assert.throws(() => parseSemanticMembership([{ ...membership, realmId: '' }]), /realmId/)
+  assert.throws(() => parseSemanticMembership([{ ...membership, regionId: '' }]), /regionId/)
+  assert.throws(() => parseSemanticTitles([{ ...semanticTitle, rank: 'realm' }]), /地图语义标题格式无效/)
+  assert.throws(() => parseSemanticMembership([{ ...membership, realmId: 'the_north' }]), /地图语义归属格式无效/)
   assert.throws(() => buildSemanticMembershipIndex(
     semanticTitles, [{ ...membership, countyId: 'c_missing' }],
   ), /c_missing/)

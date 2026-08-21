@@ -53,11 +53,11 @@ test('地点标签由地图仓储解析并组合具体场景', async () => {
   assert.equal(await resolveLocationLabel({ locationId: UNKNOWN_WESTEROS_LOCATION_ID }, repository), '所在地未查明')
 })
 
-test('测试版存档提升到版本 7 并明确拒绝版本 6', () => {
-  assert.equal(ITEM_SAVE_FORMAT_VERSION, 7)
-  assert.throws(() => assertSupportedGameState({ saveFormatVersion: 6 }), /测试版存档格式已更新.*重置/)
+test('测试版存档提升到版本 9 并明确拒绝版本 8', () => {
+  assert.equal(ITEM_SAVE_FORMAT_VERSION, 9)
+  assert.throws(() => assertSupportedGameState({ saveFormatVersion: 9 }), /测试版存档格式已更新.*重置/)
   assert.doesNotThrow(() => assertSupportedGameState({
-    saveFormatVersion: 7,
+    saveFormatVersion: 9,
     lord: {
       location: { locationId: 'b_winterfell', sceneLocation: '神木林' },
       locationLabel: '临冬城 · 神木林',
@@ -66,6 +66,7 @@ test('测试版存档提升到版本 7 并明确拒绝版本 6', () => {
       traits: ['教育特质'],
     },
     worldHistory: { schemaVersion: 1 },
+    worldRuntime: { schemaVersion: 1, revision: 0, characters: {}, titles: {}, assets: {}, events: [], pendingTransactions: [] },
   }))
 })
 
@@ -89,7 +90,7 @@ test('所有内置人物、据点和运输工具都保存稳定地点引用', ()
 
 function gameStateAtWinterfell() {
   return {
-    saveFormatVersion: 7,
+    saveFormatVersion: 9,
     currentYear: 298,
     currentMonth: 5,
     currentDay: 10,
@@ -103,6 +104,7 @@ function gameStateAtWinterfell() {
       canonical: {},
       turns: [],
     },
+    worldRuntime: { schemaVersion: 1, revision: 0, characters: {}, titles: {}, assets: {}, events: [], pendingTransactions: [] },
     worldFlags: {},
     isGameOver: false,
   }
@@ -115,7 +117,7 @@ test('玩家地点命令提交前校验 ID，并把稳定地点引用写入人�
     actionText: '前往黑城堡内院',
     nextTurnNumber: 1,
     draft: { outcomeSummary: '抵达。', stateCommands: [{ type: 'CHANGE_LOCATION', locationId: 'b_castle_black', sceneLocation: '内院' }] },
-    pendingItemActions: [],
+    pendingTransactions: [],
     characterContext: context,
     timeline: [],
   })
@@ -131,7 +133,7 @@ test('玩家地点命令提交前校验 ID，并把稳定地点引用写入人�
       actionText: '尝试移动',
       nextTurnNumber: 1,
       draft: { outcomeSummary: '', stateCommands: [command] },
-      pendingItemActions: [],
+      pendingTransactions: [],
       characterContext: context,
       timeline: [],
     })

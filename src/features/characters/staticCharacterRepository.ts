@@ -119,6 +119,52 @@ export class StaticCharacterRepository {
     return pending;
   }
 
+  private async directShardForCharacterId(id: CharacterId): Promise<string> {
+    const bytes = new TextEncoder().encode(id);
+    const digest = new Uint8Array(await globalThis.crypto.subtle.digest('SHA-256', bytes));
+    return [...digest.subarray(0, 1)].map((value) => value.toString(16).padStart(2, '0')).join('');
+  }
+
+  /**
+   * Reads only the deterministic character shards needed by the world projection.
+   * It intentionally bypasses the full search index and title-holder expansion.
+   */
+  async getWorldBaselineRecords(
+    ids: readonly CharacterId[],
+  ): Promise<Array<Pick<StaticCharacterRecord, 'id' | 'alive'>>> {
+    const grouped = new Map<string, CharacterId[]>();
+    await Promise.all(ids.map(async (id) => {
+      if (!id.startsWith('agot:')) return;
+      const shard = await this.directShardForCharacterId(id);
+      const entries = grouped.get(shard) ?? [];
+      entries.push(id);
+      grouped.set(shard, entries);
+    }));
+    const records = await Promise.all([...grouped.entries()].map(async ([shard, characterIds]) => {
+      const shardRecords = await this.loadShard(shard);
+      return characterIds.flatMap((id) => {
+        const record = shardRecords.get(id);
+        return record ? [{ id: record.id, alive: record.alive }] : [];
+      });
+    }));
+    return records.flat();
+  }
+
+  async findTitleHoldersByTitleIds(
+    titleIds: readonly string[],
+  ): Promise<Map<string, CharacterId>> {
+    const wanted = new Set(titleIds);
+    const result = new Map<string, CharacterId>();
+    if (wanted.size === 0) return result;
+    const holders = await this.loadTitleHolders();
+    for (const [characterId, titles] of Object.entries(holders) as Array<[CharacterId, NonNullable<CharacterTitleHolders[CharacterId]>]>) {
+      for (const title of titles) {
+        if (wanted.has(title.id) && !result.has(title.id)) result.set(title.id, characterId);
+      }
+    }
+    return result;
+  }
+
   async get(id: CharacterId): Promise<StaticCharacterRecord | undefined> {
     if (!id.startsWith('agot:')) return undefined;
     const hit = (await this.loadIndex()).find((entry) => entry.id === id);

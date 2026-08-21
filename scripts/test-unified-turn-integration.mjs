@@ -7,6 +7,21 @@ const storeStubs = {
   setup(api) {
     api.onResolve({ filter: /(?:services[\\/])?api$/ }, () => ({ path: 'api-stub', namespace: 'unified-turn' }));
     api.onResolve({ filter: /services[\\/]db$/ }, () => ({ path: 'db-stub', namespace: 'unified-turn' }));
+    api.onResolve({ filter: /features[\\/]map[\\/]repository$/ }, () => ({ path: 'map-repository-stub', namespace: 'unified-turn' }));
+    api.onLoad({ filter: /map-repository-stub/, namespace: 'unified-turn' }, () => ({
+      loader: 'js',
+      contents: `
+        const locations = [
+          { id: 'b_winterfell', name: '临冬城', mapX: 0, mapY: 0, importance: 100, type: 'castle' },
+          { id: 'winterfell', name: '临冬城', mapX: 0, mapY: 0, importance: 100, type: 'castle' },
+          { id: 'b_test_destination', name: '测试目的地', mapX: 1, mapY: 0, importance: 10, type: 'castle' },
+        ];
+        export const mapRepository = {
+          async loadSearchIndex() { return structuredClone(locations); },
+          async loadSemanticMembership() { return []; },
+        };
+      `,
+    }));
     api.onLoad({ filter: /api-stub/, namespace: 'unified-turn' }, () => ({
       loader: 'js',
       contents: `
@@ -35,6 +50,7 @@ const storeStubs = {
       loader: 'js',
       contents: `
         export const db = {};
+        export async function ensureTurnSnapshotBaseline() { return 'ready'; }
         export async function saveTurnSnapshot(state, summaryNote) {
           globalThis.__unifiedSnapshots.push({ state: structuredClone(state), summaryNote });
         }
@@ -115,6 +131,7 @@ function resetAtCanonBoundary() {
   state.turnCount = 1;
   state.turns = [{ ...state.turns[0], turnNumber: 1 }];
   state.worldHistory.turns = [];
+  state.worldRuntime = { schemaVersion: 1, revision: 0, characters: {}, titles: {}, assets: {}, events: [], pendingTransactions: [] };
   state.worldCharacters.revision = 0;
   globalThis.__unifiedSnapshots = [{ state: structuredClone(state), summaryNote: '测试开局' }];
   globalThis.__unifiedCharacterEvents = [];
@@ -129,8 +146,6 @@ function resetAtCanonBoundary() {
     isStreaming: false,
     streamingText: '',
     changesLog: [],
-    pendingItemActions: [],
-    pendingTravelCommand: null,
     characterTurnContext: null,
     activeDiceCheck: null,
     isDiceModalOpen: false,
@@ -162,6 +177,41 @@ function travelRoute(from, to = 'b_test_destination') {
   };
 }
 
+
+let transactionSequence = 0;
+function queueItemEquip() {
+  transactionSequence += 1;
+  useGameStore.getState().queueWorldTransaction({
+    id: `test:item:${transactionSequence}`,
+    status: 'pending',
+    source: 'ui_action',
+    conflictKeys: ['asset:item:ned.chainmail', 'equipment:agot:1001:torso:armor'],
+    intents: [],
+    itemCommands: [{
+      type: 'ITEM_EQUIP',
+      instanceId: 'ned.chainmail',
+      position: { group: 'torso', layer: 'armor' },
+      displacedTo: { type: 'site', siteId: 'winterfell_armory' },
+    }],
+  });
+}
+
+function queueTravel(command) {
+  transactionSequence += 1;
+  useGameStore.getState().queueWorldTransaction({
+    id: `test:travel:${transactionSequence}`,
+    status: 'pending',
+    source: 'ui_action',
+    conflictKeys: ['journey:agot:1001'],
+    intents: [],
+    travelCommands: [structuredClone(command)],
+  });
+}
+
+function pendingWorldTransactions() {
+  return useGameStore.getState().gameState.worldRuntime.pendingTransactions.filter((entry) => entry.status === 'pending');
+}
+
 function relationshipCommand() {
   return {
     type: 'SET_CHARACTER_RELATIONSHIP',
@@ -186,12 +236,7 @@ test('一个行动把 D20、装备、人物关系、拒绝命令、日期和原�
     { type: 'KILL_CHARACTER', characterId: DEAD_BRANDON, cause: '不可能的重复死亡' },
     { type: 'ADVANCE_TIME', days: 1, reason: '交谈与整装耗时' },
   ];
-  useGameStore.getState().queueItemAction({
-    kind: 'equip',
-    instanceId: 'ned.chainmail',
-    position: { group: 'torso', layer: 'armor' },
-    displacedTo: { type: 'site', siteId: 'winterfell_armory' },
-  });
+  queueItemEquip();
 
   const originalRandom = Math.random;
   Math.random = () => 0.9;
@@ -209,7 +254,8 @@ test('一个行动把 D20、装备、人物关系、拒绝命令、日期和原�
   assert.deepEqual(current.gameState.lord.items.placements['ned.chainmail'], {
     type: 'equipped', position: { group: 'torso', layer: 'armor' },
   });
-  assert.equal(current.pendingItemActions.length, 0, '原子提交成功后才消费装备队列');
+  assert.equal(pendingWorldTransactions().length, 0, '原子提交成功后才结算装备事务');
+  assert.equal(current.gameState.worldRuntime.pendingTransactions.at(-1).status, 'committed');
 
   const historyTurn = current.gameState.worldHistory.turns.at(-1);
   assert.equal(historyTurn.turn, 2);
@@ -223,12 +269,12 @@ test('一个行动把 D20、装备、人物关系、拒绝命令、日期和原�
   assert.ok(historyTurn.acceptedCommands.some((command) => command.type === 'SET_CHARACTER_RELATIONSHIP'));
   assert.ok(historyTurn.rejectedCommands.some((command) => command.type === 'KILL_CHARACTER' && /死亡/.test(command.reason)));
   assert.equal(current.gameState.worldHistory.canonical.evt_298_05_10.status, 'occurred');
-  assert.ok(historyTurn.facts.some((fact) => fact.canonicalEventId === 'evt_298_05_10'));
+  assert.ok(historyTurn.eventIds.some((eventId) => current.gameState.worldRuntime.events.find((event) => event.id === eventId)?.canonicalEventId === 'evt_298_05_10'));
 
   assert.equal(globalThis.__unifiedCharacterEvents.length, 1);
   assert.equal(globalThis.__unifiedCharacterEvents[0].event.type, 'SET_RELATIONSHIP');
-  const relationshipFact = historyTurn.facts.find((fact) => fact.commandTypes.includes('SET_CHARACTER_RELATIONSHIP'));
-  assert.deepEqual(new Set(relationshipFact.participantIds), new Set([ARYA, SANSA]), '关系事实必须链接关系双方');
+  const relationshipEvent = current.gameState.worldRuntime.events.find((event) => event.type === 'command.set_character_relationship');
+  assert.deepEqual(new Set(relationshipEvent.actorIds), new Set([ARYA, SANSA]), '关系事件必须链接关系双方');
 
   const narrativePrompt = globalThis.__unifiedNarrativeMessages.map((message) => message.content).join('\n');
   assert.match(narrativePrompt, /SET_CHARACTER_RELATIONSHIP/);
@@ -263,7 +309,7 @@ test('排队出发只在下一次成功对话后建立旅程', async () => {
     currentLocationId: origin,
     knownLocationIds: new Set([origin, 'b_test_destination']),
   });
-  useGameStore.getState().queueTravelCommand({
+  queueTravel({
     type: 'START_TRAVEL',
     routePlan: travelRoute(origin),
     companions: [],
@@ -274,7 +320,8 @@ test('排队出发只在下一次成功对话后建立旅程', async () => {
   await useGameStore.getState().submitAction('召集队伍，准备沿大道启程', 'off');
 
   const current = useGameStore.getState();
-  assert.equal(current.pendingTravelCommand, null);
+  assert.equal(pendingWorldTransactions().length, 0);
+  assert.equal(current.gameState.worldRuntime.pendingTransactions.at(-1).status, 'committed');
   assert.equal(current.gameState.activeJourney.status, 'travelling');
   assert.equal(current.gameState.activeJourney.routePlan.to, 'b_test_destination');
   assert.equal(current.gameState.lord.location.locationId, origin, '没有时间流逝时仍停留在起点');
@@ -290,7 +337,8 @@ test('正文失败时保留排队出发且不建立旅程', async () => {
     knownLocationIds: new Set([origin, 'b_test_destination']),
   });
   const command = { type: 'START_TRAVEL', routePlan: travelRoute(origin), companions: [], vehicleIds: [] };
-  useGameStore.getState().queueTravelCommand(command);
+  queueTravel(command);
+  const queuedState = structuredClone(useGameStore.getState().gameState);
   globalThis.__unifiedNarrativeFails = true;
   const originalError = console.error;
   console.error = () => {};
@@ -300,21 +348,16 @@ test('正文失败时保留排队出发且不建立旅程', async () => {
     console.error = originalError;
   }
 
-  assert.deepEqual(useGameStore.getState().gameState, before);
-  assert.deepEqual(useGameStore.getState().pendingTravelCommand, command);
+  assert.deepEqual(useGameStore.getState().gameState, queuedState);
+  assert.deepEqual(pendingWorldTransactions()[0].travelCommands[0], command);
   assert.equal(globalThis.__unifiedSnapshots.length, 1);
 });
 
 test('正文失败不产生快照、人物事件或队列消费', async () => {
   const before = resetAtCanonBoundary();
   globalThis.__unifiedCommands = [relationshipCommand(), { type: 'CHARACTER_ITEM_ACQUIRE', characterId: ARYA, definitionId: 'clothing.common_linen_tunic', instanceId: 'story:arya:rollback-tunic' }, { type: 'ADVANCE_TIME', days: 1 }];
-  useGameStore.getState().queueItemAction({
-    kind: 'equip',
-    instanceId: 'ned.chainmail',
-    position: { group: 'torso', layer: 'armor' },
-    displacedTo: { type: 'site', siteId: 'winterfell_armory' },
-  });
-  const queued = structuredClone(useGameStore.getState().pendingItemActions);
+  queueItemEquip();
+  const queuedState = structuredClone(useGameStore.getState().gameState);
   globalThis.__unifiedNarrativeFails = true;
   const originalError = console.error;
   console.error = () => {};
@@ -324,8 +367,7 @@ test('正文失败不产生快照、人物事件或队列消费', async () => {
     console.error = originalError;
   }
 
-  assert.deepEqual(useGameStore.getState().gameState, before);
-  assert.deepEqual(useGameStore.getState().pendingItemActions, queued);
+  assert.deepEqual(useGameStore.getState().gameState, queuedState);
   assert.equal(globalThis.__unifiedSnapshots.length, 1);
   assert.equal(globalThis.__unifiedCharacterEvents.length, 0);
 });
@@ -333,13 +375,8 @@ test('正文失败不产生快照、人物事件或队列消费', async () => {
 test('数据库原子提交失败时 Store、人物事件与装备队列保持原样', async () => {
   const before = resetAtCanonBoundary();
   globalThis.__unifiedCommands = [relationshipCommand(), { type: 'ADVANCE_TIME', days: 1 }];
-  useGameStore.getState().queueItemAction({
-    kind: 'equip',
-    instanceId: 'ned.chainmail',
-    position: { group: 'torso', layer: 'armor' },
-    displacedTo: { type: 'site', siteId: 'winterfell_armory' },
-  });
-  const queued = structuredClone(useGameStore.getState().pendingItemActions);
+  queueItemEquip();
+  const queuedState = structuredClone(useGameStore.getState().gameState);
   globalThis.__unifiedCommitFails = true;
   const originalError = console.error;
   console.error = () => {};
@@ -349,8 +386,7 @@ test('数据库原子提交失败时 Store、人物事件与装备队列保持�
     console.error = originalError;
   }
 
-  assert.deepEqual(useGameStore.getState().gameState, before);
-  assert.deepEqual(useGameStore.getState().pendingItemActions, queued);
+  assert.deepEqual(useGameStore.getState().gameState, queuedState);
   assert.equal(globalThis.__unifiedSnapshots.length, 1);
   assert.equal(globalThis.__unifiedCharacterEvents.length, 0);
 });
@@ -358,12 +394,7 @@ test('数据库原子提交失败时 Store、人物事件与装备队列保持�
 test('回滚同步恢复世界账本、人物事件、装备状态与回合号', async () => {
   const before = resetAtCanonBoundary();
   globalThis.__unifiedCommands = [relationshipCommand(), { type: 'ADVANCE_TIME', days: 1 }];
-  useGameStore.getState().queueItemAction({
-    kind: 'equip',
-    instanceId: 'ned.chainmail',
-    position: { group: 'torso', layer: 'armor' },
-    displacedTo: { type: 'site', siteId: 'winterfell_armory' },
-  });
+  queueItemEquip();
   await useGameStore.getState().submitAction('攀上城墙后与艾莉亚交谈', 'force');
   assert.equal(globalThis.__unifiedCharacterEvents.length, 1);
   await useGameStore.getState().undoTurn();
@@ -399,11 +430,12 @@ test('数据库只接受同一世界中连续的下一回合快照', () => {
     resolvedOn: { year: 298, month: 5, day: 15 },
     acceptedCommands: [],
     rejectedCommands: [],
-    facts: [],
+    eventIds: [],
     canonicalTransitions: [],
   });
   next.currentDay = 15;
   next.worldCharacters.revision = 1;
+  next.worldRuntime.revision = 1;
   dbModule.assertTurnSuccessor(previous, next);
 
   const skipped = structuredClone(next);
@@ -423,11 +455,12 @@ test('数据库提交前拒绝故事回合、世界账本与快照回合号分�
     resolvedOn: { year: 298, month: 5, day: 15 },
     acceptedCommands: [],
     rejectedCommands: [],
-    facts: [],
+    eventIds: [],
     canonicalTransitions: [],
   });
   valid.currentDay = 15;
   valid.worldCharacters.revision = 1;
+  valid.worldRuntime.revision = 1;
   dbModule.assertTurnCommitConsistency(valid, []);
 
   const broken = structuredClone(valid);

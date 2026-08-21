@@ -8,6 +8,7 @@ import { TERRAIN_ENTER_ZOOM, TERRAIN_EXIT_ZOOM } from './terrainProfile.ts'
 export interface TerrainSurfaceMapAdapter {
   isSourceLoaded(sourceId: string): boolean
   setPaintProperty(layerId: string, property: string, value: number): void
+  setLayoutProperty(layerId: string, property: 'visibility', value: 'visible' | 'none'): void
 }
 
 export interface FrameScheduler {
@@ -37,6 +38,7 @@ export function createTerrainSurfaceController(
 ): TerrainSurfaceController {
   let nearRequested = false
   let nearVisible = false
+  let materialLayerVisible = false
   let available = true
   let destroyed = false
   let scheduledFrame: number | null = null
@@ -50,10 +52,18 @@ export function createTerrainSurfaceController(
     }
   }
 
+  function setMaterialLayerVisible(visible: boolean): void {
+    if (materialLayerVisible === visible) return
+    map.setLayoutProperty(MATERIAL_TERRAIN_LAYER, 'visibility', visible ? 'visible' : 'none')
+    materialLayerVisible = visible
+  }
+
   function showNear(): void {
     if (nearVisible || !available || !sourceReady()) return
+    setMaterialLayerVisible(true)
+    // 远景保留在下方兜底:材质瓦片未就位的区域透出远景,而不是黑块
     map.setPaintProperty(MATERIAL_TERRAIN_LAYER, 'raster-opacity', 1)
-    map.setPaintProperty(FAR_MAP_LAYER, 'raster-opacity', 0)
+    map.setPaintProperty(FAR_MAP_LAYER, 'raster-opacity', 1)
     nearVisible = true
   }
 
@@ -67,8 +77,10 @@ export function createTerrainSurfaceController(
   function syncNow(zoom: number): void {
     if (destroyed || !available) return
     nearRequested = nearRequested ? zoom >= TERRAIN_EXIT_ZOOM : zoom >= TERRAIN_ENTER_ZOOM
+    setMaterialLayerVisible(zoom >= TERRAIN_EXIT_ZOOM)
     if (!nearRequested) {
       showFar()
+      if (zoom < TERRAIN_EXIT_ZOOM) setMaterialLayerVisible(false)
       return
     }
     showNear()
@@ -99,6 +111,7 @@ export function createTerrainSurfaceController(
     }
     map.setPaintProperty(FAR_MAP_LAYER, 'raster-opacity', 1)
     map.setPaintProperty(MATERIAL_TERRAIN_LAYER, 'raster-opacity', 0)
+    setMaterialLayerVisible(false)
     nearVisible = false
     callbacks.onUnavailable(reason)
   }

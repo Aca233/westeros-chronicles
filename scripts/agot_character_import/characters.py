@@ -95,6 +95,7 @@ def extract_character_histories(path: Path) -> list[CharacterHistory]:
                 culture=_scalar(entry, "culture"),
                 faith=_scalar(entry, "religion"),
                 sexuality=_scalar(entry, "sexuality"),
+                female=_scalar(entry, "female") == "yes",
                 base_attributes=attributes,
                 undated_traits=undated_traits,
                 dated_events=tuple(dated_events),

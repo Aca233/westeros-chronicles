@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { useGameStore } from '../store/useGameStore';
 import { StoryTurn } from '../types/game';
 import { WESTEROS_ENTITIES, EntityInfo } from '../data/entities';
@@ -7,10 +7,19 @@ import { GameIcon, isGameIconId } from './GameIcon';
 import { stripEmoji } from '../services/textSanitizer';
 import { OpeningCeremony } from './OpeningCeremony';
 import type { CharacterId } from '../features/characters/types';
-import type { WorldEventFact } from '../features/world/worldHistory';
+import type { WorldEvent } from '../features/world/worldRuntimeTypes';
+import type { WorldLocationRef } from '../features/map/types';
+import { worldEventDisplayTitle, worldEventParticipantIds } from '../features/world/worldHistoryProjection';
+import { StaticCharacterRepository } from '../features/characters/staticCharacterRepository';
+import { mapRepository } from '../features/map/repository';
+import { buildStoryMentionEntities, findNextStoryEntity, supplementMentionedCharacterIds } from '../features/world/storyEntityLinks';
+
+const storyCharacterRepository = new StaticCharacterRepository();
 
 export interface StoryFeedProps {
   onSelectCharacter?: (characterId: CharacterId) => void;
+  onOpenLocation?: (location: WorldLocationRef) => void;
+  onOpenAsset?: (assetId: string) => void;
 }
 
 /** 视口内揭示:元素进入视野一次后定格 */
@@ -84,11 +93,42 @@ function toRoman(num: number): string {
   return out;
 }
 
-export const StoryFeed: React.FC<StoryFeedProps> = ({ onSelectCharacter = () => undefined }) => {
+export const StoryFeed: React.FC<StoryFeedProps> = ({
+  onSelectCharacter = () => undefined,
+  onOpenLocation = () => undefined,
+  onOpenAsset = () => undefined,
+}) => {
   const { gameState, isStreaming, streamingText } = useGameStore();
   const bottomRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showJump, setShowJump] = useState(false);
+  const [dynamicEntities, setDynamicEntities] = useState<EntityInfo[]>([]);
+  const narrativeCorpus = useMemo(
+    () => gameState.turns.map((turn) => `${turn.playerInput ?? ''}\n${turn.narrate ?? ''}`).join('\n'),
+    [gameState.turns],
+  );
+  const storyEntities = useMemo(() => [...WESTEROS_ENTITIES, ...dynamicEntities], [dynamicEntities]);
+
+  useEffect(() => {
+    let cancelled = false;
+    if (!narrativeCorpus.trim()) {
+      setDynamicEntities([]);
+      return () => { cancelled = true; };
+    }
+    Promise.all([
+      storyCharacterRepository.findMentioned(narrativeCorpus, { includeGenealogy: false, limit: 100 }).then(async (mentioned) => {
+        const aliasIds = supplementMentionedCharacterIds(narrativeCorpus) as CharacterId[];
+        const aliases = await storyCharacterRepository.getSearchHits(aliasIds);
+        return [...new Map([...mentioned, ...aliases].map((hit) => [hit.id, hit])).values()];
+      }),
+      mapRepository.loadSearchIndex().catch(() => []),
+    ]).then(([characters, locations]) => {
+      if (!cancelled) setDynamicEntities(buildStoryMentionEntities(narrativeCorpus, characters, locations));
+    }).catch(() => {
+      if (!cancelled) setDynamicEntities([]);
+    });
+    return () => { cancelled = true; };
+  }, [narrativeCorpus]);
 
   const isNearBottom = () => {
     const el = scrollRef.current;
@@ -148,6 +188,7 @@ export const StoryFeed: React.FC<StoryFeedProps> = ({ onSelectCharacter = () => 
   };
 
   const isEmptyStage = gameState.turns.length === 0 && !isStreaming;
+  const worldEventsById = new Map(gameState.worldRuntime.events.map((event) => [event.id, event]));
 
   return (
     <div className="relative min-h-0 flex-1">
@@ -168,8 +209,12 @@ export const StoryFeed: React.FC<StoryFeedProps> = ({ onSelectCharacter = () => 
               key={turn.id}
               turn={turn}
               isFirst={index === 0}
-              facts={gameState.worldHistory.turns.find((entry) => entry.turn === turn.turnNumber)?.facts ?? []}
+              entities={storyEntities}
+              facts={(gameState.worldHistory.turns.find((entry) => entry.turn === turn.turnNumber)?.eventIds ?? [])
+                .flatMap((eventId) => worldEventsById.get(eventId) ?? [])}
               onSelectCharacter={onSelectCharacter}
+              onOpenLocation={onOpenLocation}
+              onOpenAsset={onOpenAsset}
             />
           ))}
 
@@ -220,12 +265,18 @@ function SceneBlock({
   turn,
   isFirst,
   facts,
+  entities,
   onSelectCharacter,
+  onOpenLocation,
+  onOpenAsset,
 }: {
   turn: StoryTurn;
   isFirst: boolean;
-  facts: readonly WorldEventFact[];
+  facts: readonly WorldEvent[];
+  entities: readonly EntityInfo[];
   onSelectCharacter: (characterId: CharacterId) => void;
+  onOpenLocation: (location: WorldLocationRef) => void;
+  onOpenAsset: (assetId: string) => void;
 }) {
   const [isThinkOpen, setIsThinkOpen] = useState(false);
   const [hoveredEntity, setHoveredEntity] = useState<{ entity: EntityInfo; x: number; y: number; above: boolean } | null>(null);
@@ -237,20 +288,10 @@ function SceneBlock({
     let keyCounter = 0;
 
     while (remaining.length > 0) {
-      let earliestIndex = -1;
-      let matchedEntity: EntityInfo | null = null;
-      let matchedKeyword = '';
-
-      for (const entity of WESTEROS_ENTITIES) {
-        for (const kw of entity.keywords) {
-          const idx = remaining.indexOf(kw);
-          if (idx !== -1 && (earliestIndex === -1 || idx < earliestIndex)) {
-            earliestIndex = idx;
-            matchedEntity = entity;
-            matchedKeyword = kw;
-          }
-        }
-      }
+      const match = findNextStoryEntity(remaining, entities);
+      const earliestIndex = match?.index ?? -1;
+      const matchedEntity = match?.entity ?? null;
+      const matchedKeyword = match?.keyword ?? '';
 
       if (earliestIndex === -1 || !matchedEntity) {
         parts.push(remaining);
@@ -291,6 +332,24 @@ function SceneBlock({
             onClick={() => {
               setHoveredEntity(null);
               onSelectCharacter(entityToHover.characterId!);
+            }}
+          >
+            {matchedKeyword}
+          </button>,
+        );
+      } else if (entityToHover.category === 'location' && entityToHover.location) {
+        parts.push(
+          <button
+            key={key}
+            {...sharedProps}
+            type="button"
+            data-story-location-link={entityToHover.location.locationId}
+            className="lore-term lore-term--location"
+            aria-label={`在地图中查看${matchedKeyword}`}
+            title={`打开${entityToHover.name}的地图位置`}
+            onClick={() => {
+              setHoveredEntity(null);
+              onOpenLocation(entityToHover.location!);
             }}
           >
             {matchedKeyword}
@@ -340,12 +399,21 @@ function SceneBlock({
             <p className="eyebrow mb-1.5">本回合已确认事实</p>
             {facts.map((fact) => (
               <div key={fact.id} className="mb-1 text-[10.5px] leading-relaxed text-parchment-faint last:mb-0">
-                <span className="text-parchment-dim">{fact.title}</span>
-                {fact.participantIds.map((characterId) => (
+                <span className="text-parchment-dim">{worldEventDisplayTitle(fact)}</span>
+                {worldEventParticipantIds(fact).map((characterId) => (
                   <button key={characterId} type="button" onClick={() => onSelectCharacter(characterId)} className="ml-2 text-gold-dim underline decoration-gold-deep/50 underline-offset-2 hover:text-gold" data-story-fact-character={characterId}>
                     查看人物
                   </button>
                 ))}
+                {fact.subjectRefs.flatMap((subject, index) => subject.type === 'location' ? [(
+                  <button key={`location:${index}`} type="button" onClick={() => onOpenLocation(subject.location)} className="ml-2 text-gold-dim underline decoration-gold-deep/50 underline-offset-2 hover:text-gold" data-story-fact-location={subject.location.locationId}>
+                    查看地点
+                  </button>
+                )] : subject.type === 'asset' ? [(
+                  <button key={`asset:${subject.assetId}`} type="button" onClick={() => onOpenAsset(subject.assetId)} className="ml-2 text-gold-dim underline decoration-gold-deep/50 underline-offset-2 hover:text-gold" data-story-fact-asset={subject.assetId}>
+                    查看资产
+                  </button>
+                )] : [])}
               </div>
             ))}
           </aside>

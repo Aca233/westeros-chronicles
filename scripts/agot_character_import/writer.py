@@ -59,6 +59,7 @@ def _record(history: CharacterHistory, start_date: AgotDate, localization: Mappi
         "cultureId": history.culture,
         "faithId": history.faith,
         "sexuality": history.sexuality,
+        "female": history.female,
         "born": projected.born,
         "alive": projected.alive,
         "birthDate": str(projected.birth_date) if projected.birth_date else None,

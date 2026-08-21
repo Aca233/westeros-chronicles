@@ -1,4 +1,5 @@
 import { AGOT_ARTIFACT_WORLD_STATE } from '../../data/generated/agotArtifactWorldState';
+import type { EquipmentPosition } from './types';
 
 export type WorldArtifactPlacement =
   | { type: 'character'; characterId: string }
@@ -17,6 +18,7 @@ export interface WorldArtifactRecord {
   lawfulControllerId: string;
   placement: WorldArtifactPlacement;
   equipped: boolean;
+  equippedPosition?: EquipmentPosition;
   source: WorldArtifactSource;
 }
 

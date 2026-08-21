@@ -101,6 +101,8 @@ test('赠送、丢弃、修理和传家宝动作写入关键历史', () => {
   ], context, catalog);
   assert.equal(result.ok, true);
   assert.deepEqual(result.state.placements.herbs_gift, { type: 'character', characterId: 'char_arya' });
+  const legacyOwnershipKey = ['lawful', 'ControllerId'].join('');
+  assert.equal(Object.hasOwn(result.state.instances.herbs_gift, legacyOwnershipKey), false);
   assert.equal(result.state.instances.herbs_gift.history.at(-1).type, 'gifted');
   assert.equal(result.state.instances.rope.history.at(-1).type, 'lost');
   assert.equal(result.state.instances.broken_rope.durability, 100);

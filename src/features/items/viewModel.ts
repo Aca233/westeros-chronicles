@@ -135,7 +135,6 @@ function provenanceLines(instance: ItemInstance, definition: ItemDefinition): st
   if (definition.provenance?.origin) result.push(`来历：${definition.provenance.origin}`);
   if (definition.provenance?.createdAt) result.push(`年代：${definition.provenance.createdAt}`);
   if (definition.provenance?.boundHouse) result.push(`绑定家族：${definition.provenance.boundHouse}`);
-  if (instance.lawfulControllerId) result.push(`合法归属：${instance.lawfulControllerId}`);
   if (instance.isHeirloom) result.push('家族传家宝');
   if (instance.renown > 0) result.push(`名望：${instance.renown}`);
   return result;

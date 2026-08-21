@@ -1,6 +1,10 @@
 import React, { useMemo, useState } from 'react';
-import { Search } from 'lucide-react';
+import { MapPin, PackageOpen, Search } from 'lucide-react';
 import { ITEM_CATALOG } from '../../data/itemDefinitions';
+import type { PlayerCharacterDossier } from '../../features/characters/characterDossier';
+import type { CharacterId } from '../../features/characters/types';
+import { pendingItemActionsFromWorldTransactions } from '../../features/items/itemActionQueue';
+import { createPendingWorldTransaction, itemActionToWorldIntent } from '../../features/world/worldTransactionQueue';
 import { getItemDefinition } from '../../features/items/catalog';
 import { DEFAULT_CARRIED_CAPACITY, getUsedCarryUnits } from '../../features/items/custody';
 import type {
@@ -17,16 +21,18 @@ import {
 import { getTransferDestinationChoices } from '../../features/items/actionChoices';
 import { sameWorldLocation } from '../../features/map/locationResolver';
 import type { WorldLocationRef } from '../../features/map/types';
+import type { WorldAssetBaseline } from '../../features/world/worldBaseline';
 import { useGameStore } from '../../store/useGameStore';
 import { ItemCard } from './ItemCard';
 import { ItemChoiceDialog } from './ItemChoiceDialog';
 import { ItemGiftDialog } from './ItemGiftDialog';
+import { assetCustodianLabel, assetPrincipalLabel } from './worldAssetPresentation';
 
 const CUSTODY_TABS: Array<{ id: CustodyTab; label: string }> = [
-  { id: 'carried', label: '随身物品' },
-  { id: 'current-site', label: '当前据点' },
-  { id: 'vehicle', label: '随行运输' },
-  { id: 'remote-site', label: '远方储藏' },
+  { id: 'carried', label: '随行物品' },
+  { id: 'current-site', label: '当前地点' },
+  { id: 'vehicle', label: '随行载具' },
+  { id: 'remote-site', label: '远方资产' },
 ];
 
 const CATEGORY_LABELS: Record<ItemCategory, string> = {
@@ -82,10 +88,109 @@ function durableValue(label: string): number {
   return Number(label.match(/(\d+)\/100/)?.[1] ?? 0);
 }
 
-export const ItemManagementPanel: React.FC = () => {
-  const { gameState, pendingItemActions, queueItemAction, cancelItemAction, isStreaming } = useGameStore();
+
+export interface ItemManagementPanelProps {
+  dossier?: PlayerCharacterDossier;
+  onOpenCharacter?: (characterId: CharacterId) => void;
+  onOpenLocation?: (locationId: string) => void;
+  onOpenAsset?: (assetId: string) => void;
+}
+
+function itemInstanceId(assetId: string): string | null {
+  if (assetId.startsWith('world-item:')) return assetId.slice('world-item:'.length);
+  if (assetId.startsWith('item:')) return assetId.slice('item:'.length);
+  return null;
+}
+
+function assetMapForDossier(dossier: PlayerCharacterDossier | undefined): Map<string, WorldAssetBaseline> {
+  const result = new Map<string, WorldAssetBaseline>();
+  if (!dossier) return result;
+  const groups = dossier.assetGroups;
+  for (const asset of [
+    ...groups.equipment,
+    ...groups.carried,
+    ...groups.custody,
+    ...groups.ownedElsewhere,
+    ...groups.controlled,
+  ]) {
+    if (asset.kind !== 'item') continue;
+    const instanceId = itemInstanceId(asset.id);
+    if (instanceId && !result.has(instanceId)) result.set(instanceId, asset);
+  }
+  return result;
+}
+
+
+
+function ItemAssetContext({
+  asset,
+  characterNames,
+  assetNames,
+  locationId,
+  locationName,
+  assetName,
+  onOpenCharacter,
+  onOpenLocation,
+  onOpenAsset,
+}: {
+  asset?: WorldAssetBaseline;
+  characterNames: ReadonlyMap<CharacterId, string>;
+  assetNames: ReadonlyMap<string, string>;
+  locationId?: string;
+  locationName?: string;
+  assetName: string;
+  onOpenCharacter?: (characterId: CharacterId) => void;
+  onOpenLocation?: (locationId: string) => void;
+  onOpenAsset?: (assetId: string) => void;
+}) {
+  if (!asset) return null;
+  const ownerCharacterId = asset.lawfulOwner?.type === 'character' ? asset.lawfulOwner.characterId : undefined;
+  const controllerCharacterId = asset.controller?.type === 'character' ? asset.controller.characterId : undefined;
+  const custodianCharacterId = asset.custodian?.type === 'character' ? asset.custodian.characterId : undefined;
+  const custodianAssetId = asset.custodian?.type === 'asset' ? asset.custodian.assetId : undefined;
+  const ownerLabel = assetPrincipalLabel(asset.lawfulOwner, characterNames);
+  const controllerLabel = assetPrincipalLabel(asset.controller, characterNames);
+  const custodianLabel = assetCustodianLabel(asset, characterNames, assetNames);
+  return (
+    <div className="flex flex-wrap items-center gap-x-2 gap-y-1 font-serif text-[9.5px] text-parchment-faint" data-asset-context>
+      <button type="button" disabled={!ownerCharacterId || !onOpenCharacter} onClick={() => ownerCharacterId && onOpenCharacter?.(ownerCharacterId)} className="transition-colors enabled:hover:text-gold disabled:cursor-default">{ownerLabel}所有</button>
+      <span aria-hidden="true">·</span>
+      <button type="button" disabled={!controllerCharacterId || !onOpenCharacter} onClick={() => controllerCharacterId && onOpenCharacter?.(controllerCharacterId)} className="transition-colors enabled:hover:text-gold disabled:cursor-default">{controllerLabel}控制</button>
+      <span aria-hidden="true">·</span>
+      {custodianCharacterId && onOpenCharacter ? (
+        <button type="button" onClick={() => onOpenCharacter(custodianCharacterId)} className="hover:text-gold-bright">{custodianLabel}保管</button>
+      ) : custodianAssetId && onOpenAsset ? (
+        <button type="button" onClick={() => onOpenAsset(custodianAssetId)} className="hover:text-gold-bright">{custodianLabel}保管</button>
+      ) : <span>{custodianLabel}保管</span>}
+      {asset.status !== 'normal' && <span className="border border-gold-deep/60 px-1 text-gold-dim">{asset.status === 'stolen' ? '失窃争议' : asset.status === 'contested' ? '归属争议' : '继承待定'}</span>}
+      <span className="ml-auto flex items-center gap-1.5">
+        {locationId && locationName && onOpenLocation && <button type="button" onClick={() => onOpenLocation(locationId)} className="text-gold-dim hover:text-gold-bright">{locationName}</button>}
+        {onOpenAsset && <button type="button" onClick={() => onOpenAsset(asset.id)} className="text-gold-dim hover:text-gold-bright">{assetName}</button>}
+      </span>
+    </div>
+  );
+}
+
+export const ItemManagementPanel: React.FC<ItemManagementPanelProps> = ({
+  dossier,
+  onOpenCharacter,
+  onOpenLocation,
+  onOpenAsset,
+}) => {
+  const { gameState, queueWorldTransaction, cancelWorldTransaction, isStreaming } = useGameStore();
   const { lord } = gameState;
   const state = lord.items;
+  const playerCharacterId = (lord.canonicalCharacterId
+    ?? `save:${gameState.worldCharacters?.runId ?? 'current'}:player`) as CharacterId;
+  const pendingItemActions = useMemo(() => pendingItemActionsFromWorldTransactions(
+    gameState.worldRuntime.pendingTransactions,
+    state,
+    ITEM_CATALOG,
+  ), [gameState.worldRuntime.pendingTransactions, state]);
+  const queueItemAction = (action: ItemAction) => queueWorldTransaction(createPendingWorldTransaction(
+    itemActionToWorldIntent(action, playerCharacterId, `人物卷宗物品操作：${action.kind}`),
+  ));
+  const cancelItemAction = cancelWorldTransaction;
   const [activeTab, setActiveTab] = useState<CustodyTab>('carried');
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState<ItemCategory | 'all'>('all');
@@ -93,6 +198,36 @@ export const ItemManagementPanel: React.FC = () => {
   const [transferRequest, setTransferRequest] = useState<{ instanceId: string; name: string } | null>(null);
   const [giftRequest, setGiftRequest] = useState<{ instanceId: string; name: string } | null>(null);
   const pendingByInstance = useMemo(() => new Map(pendingItemActions.map((action) => [action.instanceId, action])), [pendingItemActions]);
+  const assetsByInstance = useMemo(() => assetMapForDossier(dossier), [dossier]);
+  const storageAssets = useMemo(() => [
+    ...Object.values(state.sites).map((site) => ({ id: `site:${site.id}`, name: site.name, locationId: site.location.locationId, locationLabel: site.locationLabel, kind: '据点' })),
+    ...Object.values(state.vehicles).map((vehicle) => ({ id: `vehicle:${vehicle.id}`, name: vehicle.name, locationId: vehicle.location.locationId, locationLabel: vehicle.locationLabel, kind: '载具' })),
+  ], [state.sites, state.vehicles]);
+  const characterNames = useMemo(() => new Map<CharacterId, string>([[playerCharacterId, lord.name]]), [lord.name, playerCharacterId]);
+  const assetNames = useMemo(() => new Map<string, string>([
+    ...Object.values(state.sites).map((site) => [`site:${site.id}`, site.name] as const),
+    ...Object.values(state.vehicles).map((vehicle) => [`vehicle:${vehicle.id}`, vehicle.name] as const),
+    ...Object.values(state.instances).map((instance) => [
+      `item:${instance.instanceId}`,
+      instance.customName ?? getItemDefinition(ITEM_CATALOG, instance.definitionId).name,
+    ] as const),
+  ]), [state.instances, state.sites, state.vehicles]);
+  const itemContext = (instanceId: string) => {
+    const placement = state.placements[instanceId];
+    if (!placement) return {};
+    if (placement.type === 'site') {
+      const site = state.sites[placement.siteId];
+      return site ? { locationId: site.location.locationId, locationName: site.locationLabel } : {};
+    }
+    if (placement.type === 'vehicle') {
+      const vehicle = state.vehicles[placement.vehicleId];
+      return vehicle ? { locationId: vehicle.location.locationId, locationName: vehicle.locationLabel } : {};
+    }
+    if (placement.type === 'carried' || placement.type === 'equipped') {
+      return { locationId: lord.location.locationId, locationName: lord.locationLabel };
+    }
+    return {};
+  };
 
   const transferChoices = useMemo(() => {
     if (!transferRequest) return [];
@@ -173,7 +308,33 @@ export const ItemManagementPanel: React.FC = () => {
   return (
     <>
     <section className="space-y-3" data-item-management>
-      <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-4" role="tablist" aria-label="物品保管位置">
+      <div className="grid gap-2 border border-hairline bg-ink-3/45 p-2 sm:grid-cols-3" data-asset-overview>
+        <button type="button" onClick={() => onOpenLocation?.(lord.location.locationId)} className="flex min-w-0 items-center gap-2 border border-hairline bg-ink-2/65 px-2.5 py-2 text-left hover:border-gold-deep">
+          <MapPin className="h-4 w-4 shrink-0 text-gold-deep" />
+          <span className="min-w-0"><span className="block text-[9px] text-parchment-faint">当前位置</span><strong className="line-clamp-1 font-serif text-[11px] text-parchment">{lord.locationLabel}</strong></span>
+        </button>
+        <div className="flex items-center gap-2 border border-hairline bg-ink-2/65 px-2.5 py-2">
+          <PackageOpen className="h-4 w-4 shrink-0 text-gold-deep" />
+          <span><span className="block text-[9px] text-parchment-faint">随行容量</span><strong className="font-mono text-[11px] text-parchment">{usedCarry}/{DEFAULT_CARRIED_CAPACITY}</strong></span>
+        </div>
+        <div className="border border-hairline bg-ink-2/65 px-2.5 py-2">
+          <span className="block text-[9px] text-parchment-faint">待生效调整</span>
+          <strong className="font-mono text-[11px] text-parchment">{pendingItemActions.length} 项</strong>
+        </div>
+      </div>
+
+      {storageAssets.length > 0 && (
+        <div className="flex flex-wrap gap-1.5" data-storage-assets>
+          {storageAssets.map((storage) => (
+            <div key={storage.id} className="flex items-center border border-hairline bg-ink-3/35 text-[9.5px]">
+              <button type="button" onClick={() => onOpenAsset?.(storage.id)} className="px-2 py-1 text-gold-dim hover:text-gold-bright">{storage.kind} · {storage.name}</button>
+              <button type="button" onClick={() => onOpenLocation?.(storage.locationId)} className="border-l border-hairline px-2 py-1 text-parchment-faint hover:text-parchment">{storage.locationLabel}</button>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-4" role="tablist" aria-label="物品保管位置" data-asset-location-tabs>
         {CUSTODY_TABS.map((tab) => (
           <button key={tab.id} type="button" role="tab" data-custody-tab={tab.id} aria-selected={activeTab === tab.id} onClick={() => setActiveTab(tab.id)} className={`border px-2 py-2 text-left transition-colors ${activeTab === tab.id ? 'border-gold bg-gold-deep/15 text-gold-bright' : 'border-hairline bg-ink-3/40 text-parchment-dim hover:border-gold-deep'}`}>
             <span className="block font-serif text-[11px] font-bold">{tab.label}</span>
@@ -205,6 +366,7 @@ export const ItemManagementPanel: React.FC = () => {
         <div className="grid gap-2 xl:grid-cols-2">
           {cards.map((card) => {
             const pending = pendingByInstance.get(card.instanceId);
+            const asset = assetsByInstance.get(card.instanceId);
             return (
               <ItemCard
                 key={card.key}
@@ -212,6 +374,18 @@ export const ItemManagementPanel: React.FC = () => {
                 pendingNote={pending?.label}
                 onCancelPending={pending ? () => cancelItemAction(pending.id) : undefined}
                 pendingCancellationDisabled={isStreaming}
+                assetContext={asset ? (
+                  <ItemAssetContext
+                    asset={asset}
+                    characterNames={characterNames}
+                    assetNames={assetNames}
+                    {...itemContext(card.instanceId)}
+                    assetName={card.name}
+                    onOpenCharacter={onOpenCharacter}
+                    onOpenLocation={onOpenLocation}
+                    onOpenAsset={onOpenAsset}
+                  />
+                ) : undefined}
                 onAction={queueCardAction}
               />
             );

@@ -1,4 +1,5 @@
 import type { CharacterId } from '../features/characters/types';
+import type { WorldLocationRef } from '../features/map/types';
 
 export interface EntityInfo {
   keywords: string[];
@@ -9,6 +10,7 @@ export interface EntityInfo {
   description: string;
   extraStats?: string;
   characterId?: CharacterId;
+  location?: WorldLocationRef;
 }
 
 export const WESTEROS_ENTITIES: EntityInfo[] = [
@@ -117,6 +119,7 @@ export const WESTEROS_ENTITIES: EntityInfo[] = [
     keywords: ['临冬城', 'Winterfell', '神木林'],
     name: '临冬城 (Winterfell)',
     category: 'location',
+    location: { locationId: 'b_winterfell' },
     icon: 'location-winterfell',
     tag: '北境首府 · 史塔克家族祖墟',
     description: '依古老温泉而建的坚固城堡，城墙由两道巨大的花岗岩构成，神木林中古老心树守护了八千年。',
@@ -126,6 +129,7 @@ export const WESTEROS_ENTITIES: EntityInfo[] = [
     keywords: ['绝境长城', '黑城堡', '长城'],
     name: '绝境长城 (The Wall)',
     category: 'location',
+    location: { locationId: 'b_castle_black' },
     icon: 'location-hightower',
     tag: '北境极北冰墙 · 守夜人军团驻地',
     description: '由筑城者巴布用巨冰、碎石与古老魔咒筑成，高七百尺，绵延三百哩，阻隔塞外永冬之地。',
@@ -135,6 +139,7 @@ export const WESTEROS_ENTITIES: EntityInfo[] = [
     keywords: ['君临', '红堡', 'King\'s Landing'],
     name: '君临 · 红堡 (King\'s Landing)',
     category: 'location',
+    location: { locationId: 'b_the_red_keep' },
     icon: 'artifact-crown',
     tag: '七国国都 · 铁王座所在地',
     description: '黑水河畔的庞大王都。红堡矗立于高崖之上，铁王座下埋葬着数不尽的宫廷血腥暗战。',

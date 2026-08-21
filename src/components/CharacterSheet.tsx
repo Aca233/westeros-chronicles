@@ -204,6 +204,45 @@ export const CharacterSheet: React.FC<{ embedded?: boolean }> = ({ embedded = fa
           </div>
         </div>
 
+        {/* 长期身体状态与健康特质 */}
+        <div className="space-y-1.5 border-t border-hairline/70 pt-2" data-health-traits-section>
+          <div className="flex items-center justify-between">
+            <span className="eyebrow !text-[9px]">长期身体状态与特质</span>
+            <span className="font-mono text-[9px] text-parchment-faint">
+              {displayedTraits.filter((t) => t.category === 'health' || t.id.startsWith('wound') || t.id.startsWith('scar') || t.id.startsWith('maim') || t.id.startsWith('ill') || t.id.startsWith('blind')).length ? `${displayedTraits.filter((t) => t.category === 'health' || t.id.startsWith('wound') || t.id.startsWith('scar') || t.id.startsWith('maim') || t.id.startsWith('ill') || t.id.startsWith('blind')).length} 项` : '无特殊病残'}
+            </span>
+          </div>
+          {displayedTraits.filter((t) => t.category === 'health' || t.id.startsWith('wound') || t.id.startsWith('scar') || t.id.startsWith('maim') || t.id.startsWith('ill') || t.id.startsWith('blind')).length > 0 ? (
+            <div className="flex flex-wrap gap-1.5">
+              {displayedTraits
+                .filter((t) => t.category === 'health' || t.id.startsWith('wound') || t.id.startsWith('scar') || t.id.startsWith('maim') || t.id.startsWith('ill') || t.id.startsWith('blind'))
+                .map((trait) => {
+                  const isSelected = activeTraitId === trait.id;
+                  return (
+                    <button
+                      key={trait.id}
+                      type="button"
+                      onClick={() => setActiveTraitId(isSelected ? null : trait.id)}
+                      title={`${trait.name}：${formatTraitDescription(trait.description, lord.name)}`}
+                      className={`flex items-center gap-1 border px-2 py-0.5 text-left transition-colors ${
+                        isSelected
+                          ? 'border-gold bg-gold-deep/20 text-gold-bright'
+                          : 'border-hairline bg-ink-3/40 text-parchment hover:border-gold-deep'
+                      }`}
+                    >
+                      <GameIcon icon={trait.icon} className="h-5 w-5 shrink-0" />
+                      <span className="text-[10px] font-bold">{trait.name}</span>
+                    </button>
+                  );
+                })}
+            </div>
+          ) : (
+            <div className="border border-hairline/60 bg-ink-3/25 py-1 text-center text-[10px] text-parchment-faint">
+              未记录长期疾病或肢体伤残
+            </div>
+          )}
+        </div>
+
         <EquipmentPanel body={body} focusedGroup={currentTarget} onGroupFocus={focusEquipmentGroup} />
       </div>
     </aside>

@@ -25,21 +25,22 @@ import {
 } from '../data/characterTraits';
 import { resolveLordFamilyRecords, type LordFamilyRecords } from '../features/characters/lordRelationshipResolver';
 import { StaticCharacterRepository } from '../features/characters/staticCharacterRepository';
-import { useCharacterDossier } from '../features/characters/useCharacterDossier';
-import type { CharacterDossier, NpcCharacterDossier } from '../features/characters/characterDossier';
+import { dossierEventStore, useCharacterDossier } from '../features/characters/useCharacterDossier';
+import { projectLordFamilyRecords } from '../features/characters/characterRelationshipProjection';
+import type { CharacterDossier, NpcCharacterDossier, PlayerCharacterDossier } from '../features/characters/characterDossier';
+import type { CharacterExperience } from '../features/characters/characterSupplementTypes';
 import type { CharacterId, StaticCharacterRecord } from '../features/characters/types';
 import type { StoryTurn, WoundLevel } from '../types/game';
-import { CharacterSheet } from './CharacterSheet';
 import { CharacterSearch } from './CharacterSearch';
 import { CoatOfArms } from './CoatOfArms';
 import { CharacterPortrait } from './CharacterPortrait';
 import { GameIcon, getHouseIconId } from './GameIcon';
 import { ItemManagementPanel } from './items/ItemManagementPanel';
-import { ItemImage } from './items/ItemImage';
-import { ITEM_CATALOG } from '../data/itemDefinitions';
-import { factsForCharacter, projectNpcAssets, projectNpcEquipment } from '../features/world/worldHistoryProjection';
-import type { WorldArtifactState } from '../features/items/worldArtifacts';
-import type { WorldHistoryState } from '../features/world/worldHistory';
+import { HealthAndEquipmentPanel } from './items/HealthAndEquipmentPanel';
+import { WorldAssetSections } from './items/WorldAssetSections';
+import { factsForCharacter, worldEventDisplayTitle } from '../features/world/worldHistoryProjection';
+import type { WorldEvent } from '../features/world/worldRuntimeTypes';
+import { CANONICAL_TIMELINE } from '../data/generated/canonicalTimeline';
 
 const TABS = [
   { id: 'relations', label: '关系与家族', icon: UsersRound },
@@ -58,6 +59,8 @@ export interface Ck3CharacterWindowProps {
   canGoBack?: boolean;
   onBack?: () => void;
   onReturnToPlayer?: () => void;
+  onOpenLocation?: (locationId: string) => void;
+  onOpenAsset?: (assetId: string) => void;
 }
 
 export const Ck3CharacterWindow: React.FC<Ck3CharacterWindowProps> = ({
@@ -66,10 +69,11 @@ export const Ck3CharacterWindow: React.FC<Ck3CharacterWindowProps> = ({
   canGoBack = false,
   onBack = () => undefined,
   onReturnToPlayer = () => undefined,
+  onOpenLocation = () => undefined,
+  onOpenAsset = () => undefined,
 }) => {
   const turns = useGameStore((state) => state.gameState.turns);
-  const worldArtifacts = useGameStore((state) => state.gameState.worldArtifacts);
-  const worldHistory = useGameStore((state) => state.gameState.worldHistory);
+  const worldEvents = useGameStore((state) => state.gameState.worldRuntime.events);
   const { dossier, relatedRecords, status, error, reload } = useCharacterDossier(selectedCharacterId);
   const [activeTab, setActiveTab] = useState<CharacterTab>('relations');
   const [activeTraitId, setActiveTraitId] = useState<string | null>(null);
@@ -108,6 +112,7 @@ export const Ck3CharacterWindow: React.FC<Ck3CharacterWindowProps> = ({
             canGoBack={canGoBack}
             onBack={onBack}
             onReturnToPlayer={onReturnToPlayer}
+            onOpenLocation={onOpenLocation}
           />
 
           <div className="min-h-0 flex-1 overflow-y-auto">
@@ -149,9 +154,17 @@ export const Ck3CharacterWindow: React.FC<Ck3CharacterWindowProps> = ({
                   onSelectCharacter={onSelectCharacter}
                 />
               )}
-              {activeTab === 'health' && (dossier.kind === 'player' ? <CharacterSheet embedded /> : <NpcHealthTab dossier={dossier} worldArtifacts={worldArtifacts} />)}
-              {activeTab === 'history' && (dossier.kind === 'player' ? <PlayerHistoryTab turns={turns} /> : <NpcHistoryTab dossier={dossier} worldHistory={worldHistory} />)}
-              {activeTab === 'inventory' && (dossier.kind === 'player' ? <PlayerInventoryTab /> : <NpcInventoryTab dossier={dossier} worldArtifacts={worldArtifacts} />)}
+              {activeTab === 'health' && <HealthAndEquipmentPanel dossier={dossier} embedded />}
+              {activeTab === 'history' && (dossier.kind === 'player' ? <PlayerHistoryTab turns={turns} dossier={dossier} /> : <NpcHistoryTab dossier={dossier} worldEvents={worldEvents} />)}
+              {activeTab === 'inventory' && (
+                <CharacterAssetsTab
+                  dossier={dossier}
+                  relatedRecords={relatedRecords}
+                  onOpenCharacter={onSelectCharacter}
+                  onOpenLocation={onOpenLocation}
+                  onOpenAsset={onOpenAsset}
+                />
+              )}
             </div>
           </div>
 
@@ -203,12 +216,14 @@ function IdentityHeader({
   canGoBack,
   onBack,
   onReturnToPlayer,
+  onOpenLocation,
 }: {
   dossier: CharacterDossier;
   houseIcon: ReturnType<typeof getHouseIconId>;
   canGoBack: boolean;
   onBack: () => void;
   onReturnToPlayer: () => void;
+  onOpenLocation: (locationId: string) => void;
 }) {
   return (
     <header className="relative shrink-0 px-4 pb-5 pt-5">
@@ -240,7 +255,14 @@ function IdentityHeader({
             </div>
             <div className="min-w-0 pt-0.5">
               <p className="eyebrow">{dossier.dynastyName}</p>
-              <h2 className="mt-1 break-words font-serif text-[25px] font-black leading-[1.12] tracking-[0.04em] text-parchment">{dossier.name}</h2>
+              <div className="mt-1 flex flex-wrap items-baseline gap-x-2">
+                <h2 className="break-words font-serif text-[25px] font-black leading-[1.12] tracking-[0.04em] text-parchment">{dossier.name}</h2>
+                {dossier.aliases && dossier.aliases.length > 0 && (
+                  <span data-character-aliases className="font-serif text-[11px] italic text-gold-deep/90">
+                    （{dossier.aliases.join('、')}）
+                  </span>
+                )}
+              </div>
             </div>
           </div>
 
@@ -259,10 +281,20 @@ function IdentityHeader({
           <div className="mt-2.5 flex flex-col items-start gap-1 text-[10px] text-parchment-faint">
             <span>{dossier.house}</span>
             <span>{dossier.culture} · {dossier.faith}</span>
-            <span className="inline-flex min-w-0 items-center gap-1">
+            <button
+              type="button"
+              disabled={!dossier.worldLocation}
+              onClick={() => dossier.worldLocation && onOpenLocation(dossier.worldLocation.locationId)}
+              className="inline-flex min-w-0 items-center gap-1 text-left transition-colors enabled:hover:text-gold disabled:cursor-default"
+            >
               <MapPin className="h-3 w-3 shrink-0 text-gold-deep" /><span className="truncate">{dossier.location}</span>
-            </span>
+            </button>
           </div>
+          {dossier.summary && (
+            <p data-character-summary className="mt-3 border-l-2 border-gold-deep/50 pl-2.5 font-serif text-[11px] leading-relaxed text-parchment-dim">
+              {dossier.summary}
+            </p>
+          )}
           <div className="identity-rule !mx-0 !mt-4 !w-full" aria-hidden="true"><span className="divider-gem" /></div>
         </div>
 
@@ -395,7 +427,7 @@ function RelationsTab({
   const [showAllChildren, setShowAllChildren] = useState(false);
   useEffect(() => setShowAllChildren(false), [dossier.id]);
   const relationshipCards = dossier.kind === 'player'
-    ? playerRelationshipCards(family)
+    ? playerRelationshipCards(family, dossier, relatedRecords)
     : npcRelationshipCards(dossier, relatedRecords);
   const byGroup = (group: RelationshipCard['group']) => relationshipCards.filter((card) => card.group === group);
 
@@ -503,7 +535,11 @@ function isJonSnow(characterId: CharacterId | undefined): boolean {
   return characterId === 'agot:Stark_7';
 }
 
-function playerRelationshipCards(family: LordFamilyRecords): RelationshipCard[] {
+function playerRelationshipCards(
+  family: LordFamilyRecords,
+  dossier?: PlayerCharacterDossier,
+  records?: ReadonlyMap<CharacterId, StaticCharacterRecord>,
+): RelationshipCard[] {
   const cards: RelationshipCard[] = [];
   const spouses = family.spouses ?? (family.spouse ? [family.spouse] : []);
   if (spouses.length === 0) cards.push({ label: '配偶', group: 'spouse' });
@@ -517,9 +553,15 @@ function playerRelationshipCards(family: LordFamilyRecords): RelationshipCard[] 
     emptyText: isJonSnow(family.subject?.id) ? '当前时间线未公开' : undefined,
     group: 'parent',
   });
-  cards.push({ label: '继承人', group: 'notable' });
-  cards.push({ label: '领主', group: 'notable' });
-  cards.push({ label: '重要关系', group: 'notable' });
+  if (dossier?.relations?.notableRelations && dossier.relations.notableRelations.length > 0 && records) {
+    dossier.relations.notableRelations.forEach((relation) =>
+      cards.push({ label: relationLabel(relation.kind), person: records.get(relation.targetId), emptyText: relation.description, group: 'notable' })
+    );
+  } else {
+    cards.push({ label: '继承人', group: 'notable' });
+    cards.push({ label: '领主', group: 'notable' });
+    cards.push({ label: '重要关系', group: 'notable' });
+  }
   return cards;
 }
 
@@ -536,7 +578,9 @@ function npcRelationshipCards(dossier: NpcCharacterDossier, records: ReadonlyMap
     emptyText: isJonSnow(dossier.id) ? '当前时间线未公开' : undefined,
     group: 'parent',
   });
-  dossier.relations.notableRelations.forEach((relation) => cards.push({ label: relationLabel(relation.kind), person: records.get(relation.targetId), group: 'notable' }));
+  dossier.relations.notableRelations.forEach((relation) =>
+    cards.push({ label: relationLabel(relation.kind), person: records.get(relation.targetId), emptyText: relation.description, group: 'notable' })
+  );
   const existingIds = new Set(dossier.relations.notableRelations.map((relation) => relation.targetId));
   dossier.relations.relationships
     .filter((relation) => !existingIds.has(relation.targetId))
@@ -554,6 +598,9 @@ function useVerifiedLordFamily(
   lord: ReturnType<typeof useGameStore.getState>['gameState']['lord'] | null,
   currentYear: number,
 ): { family: LordFamilyRecords; isLoading: boolean } {
+  const worldCharacters = useGameStore((state) => state.gameState.worldCharacters);
+  const worldHistory = useGameStore((state) => state.gameState.worldHistory);
+  const worldRuntime = useGameStore((state) => state.gameState.worldRuntime);
   const [family, setFamily] = useState<LordFamilyRecords>({});
   const [isLoading, setIsLoading] = useState(Boolean(lord));
 
@@ -573,11 +620,29 @@ function useVerifiedLordFamily(
       age: lord.age,
       currentYear,
     }, relationshipRepository)
+      .then((result) => projectLordFamilyRecords(
+        result,
+        (characterId) => worldCharacters
+          ? dossierEventStore.eventsForCharacter(worldCharacters.runId, characterId)
+          : Promise.resolve([]),
+        { history: worldHistory, runtime: worldRuntime, timeline: CANONICAL_TIMELINE },
+      ))
       .then((result) => { if (!cancelled) setFamily(result); })
       .catch(() => { if (!cancelled) setFamily({}); })
       .finally(() => { if (!cancelled) setIsLoading(false); });
     return () => { cancelled = true; };
-  }, [lord?.canonicalCharacterId, lord?.name, lord?.house, lord?.houseSigil, lord?.age, currentYear]);
+  }, [
+    lord?.canonicalCharacterId,
+    lord?.name,
+    lord?.house,
+    lord?.houseSigil,
+    lord?.age,
+    currentYear,
+    worldCharacters?.runId,
+    worldCharacters?.revision,
+    worldHistory,
+    worldRuntime.revision,
+  ]);
 
   return { family, isLoading };
 }
@@ -634,152 +699,229 @@ function getDynastyHouseIcon(dynastyId: string | null | undefined): ReturnType<t
   return null;
 }
 
-function PlayerHistoryTab({ turns }: { turns: StoryTurn[] }) {
-  const recentTurns = turns.slice(-8).reverse();
+function CharacterNarrativeProfile({ dossier }: { dossier: CharacterDossier }) {
+  const hasNarrative = Boolean(
+    (dossier.publicRoles && dossier.publicRoles.length > 0) ||
+    dossier.appearance ||
+    dossier.personality ||
+    dossier.reputation
+  );
+  if (!hasNarrative) return null;
+
   return (
-    <div className="space-y-5 px-5 py-5">
-      <SectionTitle title="记忆与经历" subtitle="从已发生的场景中整理" />
-      {recentTurns.length > 0 ? (
-        <ol className="flex flex-col">
-          {recentTurns.map((turn) => (
-            <li key={turn.id} className="border-b border-hairline/60 py-3 last:border-b-0">
-              <div className="flex items-baseline justify-between gap-2">
-                <strong className="font-mono text-[10px] tracking-wider text-gold">TURN {turn.turnNumber}</strong>
-                <span className="text-[9px] text-parchment-faint">{turn.gameDate || '日期未记录'}</span>
-              </div>
-              <p className="mt-1 line-clamp-2 font-serif text-[11px] leading-relaxed text-parchment-dim">{turn.narrate || turn.playerInput}</p>
-            </li>
+    <section className="space-y-3 rounded border border-hairline/80 bg-ink-2/60 p-3.5" aria-label="个人生平概述" data-character-narrative-profile>
+      {dossier.publicRoles && dossier.publicRoles.length > 0 && (
+        <div className="flex flex-wrap items-center gap-1.5" data-character-public-roles>
+          <span className="eyebrow !text-[9.5px]">公开身份:</span>
+          {dossier.publicRoles.map((role) => (
+            <span key={role} className="rounded border border-gold-deep/30 bg-gold-deep/15 px-1.5 py-0.5 font-serif text-[10.5px] font-semibold text-gold">
+              {role}
+            </span>
           ))}
-        </ol>
-      ) : (
-        <EmptyState label="尚无可记录的经历" />
+        </div>
       )}
+      {dossier.appearance && (
+        <div data-character-appearance>
+          <span className="eyebrow !text-[9.5px]">外貌特征:</span>
+          <p className="mt-0.5 font-serif text-[11px] leading-relaxed text-parchment-dim">{dossier.appearance}</p>
+        </div>
+      )}
+      {dossier.personality && (
+        <div data-character-personality>
+          <span className="eyebrow !text-[9.5px]">性格作风:</span>
+          <p className="mt-0.5 font-serif text-[11px] leading-relaxed text-parchment-dim">{dossier.personality}</p>
+        </div>
+      )}
+      {dossier.reputation && (
+        <div data-character-reputation>
+          <span className="eyebrow !text-[9.5px]">声誉风评:</span>
+          <p className="mt-0.5 font-serif text-[11px] leading-relaxed text-parchment-dim">{dossier.reputation}</p>
+        </div>
+      )}
+    </section>
+  );
+}
+
+function CharacterExperiencesList({ experiences }: { experiences?: CharacterExperience[] }) {
+  if (!experiences || experiences.length === 0) return null;
+  return (
+    <div className="space-y-3" data-character-historical-experiences>
+      <div className="border-b border-hairline/70 pb-1">
+        <p className="eyebrow">重要历史经历</p>
+      </div>
+      <ol className="flex flex-col">
+        {experiences.map((exp, idx) => (
+          <li key={`${exp.date}-${exp.title}-${idx}`} className="border-b border-hairline/60 py-3 last:border-b-0">
+            <strong className="font-mono text-[10px] tracking-wider text-gold">{exp.date} AC</strong>
+            <p className="mt-1 font-serif text-[11.5px] font-semibold text-parchment">{exp.title}</p>
+            <p className="mt-1 font-serif text-[10.5px] leading-relaxed text-parchment-dim">{exp.description}</p>
+          </li>
+        ))}
+      </ol>
     </div>
   );
 }
 
-function NpcHistoryTab({ dossier, worldHistory }: { dossier: NpcCharacterDossier; worldHistory: WorldHistoryState }) {
-  const memories = [...dossier.memories].sort((a, b) => b.turn - a.turn || b.importance - a.importance);
-  const worldFacts = factsForCharacter(worldHistory, dossier.id).slice().reverse();
+function CharacterSourceLinks({ sources }: { sources?: string[] }) {
+  if (!sources || sources.length === 0) return null;
+  return (
+    <div className="border-t border-hairline/50 pt-2 text-[9.5px] text-parchment-faint" data-character-source-links>
+      <span className="eyebrow !text-[9px]">参考资料: </span>
+      {sources.map((url, i) => (
+        <span key={url}>
+          {i > 0 && ' · '}
+          <a href={url} target="_blank" rel="noreferrer" className="text-gold-dim hover:text-gold hover:underline">
+            来源 {i + 1}
+          </a>
+        </span>
+      ))}
+    </div>
+  );
+}
+
+function PlayerHistoryTab({ turns, dossier }: { turns: StoryTurn[]; dossier: PlayerCharacterDossier }) {
+  const recentTurns = turns.slice(-8).reverse();
+  const hasNarrative = Boolean(
+    (dossier.publicRoles && dossier.publicRoles.length > 0) ||
+    dossier.appearance ||
+    dossier.personality ||
+    dossier.reputation
+  );
+  const hasExperiences = Boolean(dossier.supplementExperiences && dossier.supplementExperiences.length > 0);
+
   return (
     <div className="space-y-5 px-5 py-5">
-      <SectionTitle title="记忆与经历" subtitle="只展示统一世界历史中已经提交的人物事实与记忆" />
+      <SectionTitle title="记忆与经历" subtitle="从已发生的场景与人物卷宗中整理" />
+      <CharacterNarrativeProfile dossier={dossier} />
+      <CharacterExperiencesList experiences={dossier.supplementExperiences} />
+      {recentTurns.length > 0 ? (
+        <div className="space-y-3">
+          {hasExperiences && (
+            <div className="border-b border-hairline/70 pb-1">
+              <p className="eyebrow">近期剧情经历</p>
+            </div>
+          )}
+          <ol className="flex flex-col">
+            {recentTurns.map((turn) => (
+              <li key={turn.id} className="border-b border-hairline/60 py-3 last:border-b-0">
+                <div className="flex items-baseline justify-between gap-2">
+                  <strong className="font-mono text-[10px] tracking-wider text-gold">TURN {turn.turnNumber}</strong>
+                  <span className="text-[9px] text-parchment-faint">{turn.gameDate || '日期未记录'}</span>
+                </div>
+                <p className="mt-1 line-clamp-2 font-serif text-[11px] leading-relaxed text-parchment-dim">{turn.narrate || turn.playerInput}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      ) : (
+        !hasNarrative && !hasExperiences && <EmptyState label="尚无可记录的经历" />
+      )}
+      <CharacterSourceLinks sources={dossier.sourceUrls} />
+    </div>
+  );
+}
+
+function NpcHistoryTab({ dossier, worldEvents }: { dossier: NpcCharacterDossier; worldEvents: readonly WorldEvent[] }) {
+  const memories = [...dossier.memories].sort((a, b) => b.turn - a.turn || b.importance - a.importance);
+  const worldFacts = factsForCharacter(worldEvents, dossier.id).slice().reverse();
+  const hasNarrative = Boolean(
+    (dossier.publicRoles && dossier.publicRoles.length > 0) ||
+    dossier.appearance ||
+    dossier.personality ||
+    dossier.reputation
+  );
+  const hasExperiences = Boolean(dossier.supplementExperiences && dossier.supplementExperiences.length > 0);
+
+  return (
+    <div className="space-y-5 px-5 py-5">
+      <SectionTitle title="记忆与经历" subtitle="展示人物公开履历、生平记忆与世界历史记录" />
+      <CharacterNarrativeProfile dossier={dossier} />
+      <CharacterExperiencesList experiences={dossier.supplementExperiences} />
       {worldFacts.length > 0 && (
-        <ol className="flex flex-col" data-character-world-facts>
-          {worldFacts.map((fact) => (
-            <li key={fact.id} className="border-b border-hairline/60 py-3 last:border-b-0">
-              <strong className="font-mono text-[10px] tracking-wider text-gold">{fact.date.year} AC · {fact.date.month}月{fact.date.day}日</strong>
-              <p className="mt-1 font-serif text-[11px] font-semibold text-parchment">{fact.title}</p>
-              <p className="mt-1 font-serif text-[10.5px] leading-relaxed text-parchment-dim">{fact.summary}</p>
-            </li>
-          ))}
-        </ol>
+        <div className="space-y-3">
+          <div className="border-b border-hairline/70 pb-1">
+            <p className="eyebrow">世界事实记录</p>
+          </div>
+          <ol className="flex flex-col" data-character-world-facts>
+            {worldFacts.map((fact) => (
+              <li key={fact.id} className="border-b border-hairline/60 py-3 last:border-b-0">
+                <strong className="font-mono text-[10px] tracking-wider text-gold">{fact.date.year} AC · {fact.date.month}月{fact.date.day}日</strong>
+                <p className="mt-1 font-serif text-[11px] font-semibold text-parchment">{worldEventDisplayTitle(fact)}</p>
+                <p className="mt-1 font-serif text-[10.5px] leading-relaxed text-parchment-dim">{fact.reason}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
       )}
       {memories.length > 0 ? (
-        <ol className="flex flex-col">
-          {memories.map((memory) => (
-            <li key={memory.id} className="border-b border-hairline/60 py-3 last:border-b-0">
-              <strong className="font-mono text-[10px] tracking-wider text-gold">TURN {memory.turn}</strong>
-              <p className="mt-1 font-serif text-[11px] leading-relaxed text-parchment-dim">{memory.event}</p>
-              {memory.attitude && <p className="mt-1 text-[9px] text-parchment-faint">态度:{memory.attitude}</p>}
-            </li>
-          ))}
-        </ol>
+        <div className="space-y-3">
+          <div className="border-b border-hairline/70 pb-1">
+            <p className="eyebrow">个人记忆</p>
+          </div>
+          <ol className="flex flex-col">
+            {memories.map((memory) => (
+              <li key={memory.id} className="border-b border-hairline/60 py-3 last:border-b-0">
+                <strong className="font-mono text-[10px] tracking-wider text-gold">TURN {memory.turn}</strong>
+                <p className="mt-1 font-serif text-[11px] leading-relaxed text-parchment-dim">{memory.event}</p>
+                {memory.attitude && <p className="mt-1 text-[9px] text-parchment-faint">态度:{memory.attitude}</p>}
+              </li>
+            ))}
+          </ol>
+        </div>
       ) : (
-        <EmptyState label="当前存档尚未记录此人的个人记忆" />
+        !hasNarrative && !hasExperiences && worldFacts.length === 0 && (
+          <EmptyState label="当前存档尚未记录此人的个人记忆" />
+        )
       )}
+      <CharacterSourceLinks sources={dossier.sourceUrls} />
     </div>
   );
 }
 
-function NpcHealthTab({ dossier, worldArtifacts }: { dossier: NpcCharacterDossier; worldArtifacts: WorldArtifactState }) {
-  const zones = [
-    { id: 'head', label: '头部', muscles: ['head', 'neck'] },
-    { id: 'torso', label: '躯干', muscles: ['chest', 'abs', 'obliques'] },
-    { id: 'arms', label: '双臂与双手', muscles: ['biceps', 'triceps', 'forearm', 'front-deltoids'] },
-    { id: 'legs', label: '双腿', muscles: ['quadriceps', 'abductors', 'calves', 'knees'] },
-  ] as const;
-  const bodyData: IExerciseData[] = zones.flatMap((zone) => {
-    const level = dossier.woundLevels[zone.id] ?? 'intact';
-    const frequency = level === 'critical' ? 3 : level === 'heavy' ? 2 : level === 'minor' ? 1 : 0;
-    return frequency ? [{ name: zone.label, muscles: [...zone.muscles], frequency }] : [];
-  });
-  const equippedItems = projectNpcEquipment(dossier.character.items, worldArtifacts, dossier.id)
-    .map((item) => ({ item, definition: ITEM_CATALOG.get(item.definitionId) }))
-    .filter((entry) => Boolean(entry.definition));
-  const groups = [
-    { id: 'head', label: '头部' }, { id: 'torso', label: '躯干' }, { id: 'mainhand', label: '主手' },
-    { id: 'offhand', label: '副手' }, { id: 'legs', label: '双腿' }, { id: 'accessories', label: '佩饰' },
-  ] as const;
-  const inGroup = (position: typeof equippedItems[number]['item']['equippedPosition'], group: string) => position?.group === group;
-  return (
-    <div className="space-y-4 px-5 py-5" data-npc-health>
-      <SectionTitle title="健康与装备" subtitle="与玩家人物使用相同布局；其他人物档案为只读状态" />
-      {!dossier.alive && <p className="border-l-2 border-rubric pl-3 font-serif text-[11px] text-rubric">此人物已经死亡{dossier.deathReason ? `:${dossier.deathReason}` : ''}</p>}
-      <div className="grid gap-2 border border-hairline bg-gradient-to-b from-ink-2 via-ink-3 to-ink p-2.5 shadow-inner sm:grid-cols-[minmax(150px,0.75fr)_minmax(180px,1fr)]" data-npc-body-layout>
-        <div className="relative min-h-[280px] overflow-hidden border border-hairline bg-ink/35">
-          <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#c9a45c_1px,transparent_1px)] [background-size:12px_12px]" />
-          <div className="body-model absolute inset-0 flex items-center justify-center">
-            <Model type="anterior" bodyColor="#2e2519" highlightedColors={['#d97706', '#b4432f', '#d4593f']} data={bodyData} style={{ width: '100%', height: '100%', maxHeight: '270px', maxWidth: '165px' }} svgStyle={{ filter: 'drop-shadow(0 0 3px rgba(234,201,126,0.55))' }} />
-          </div>
-        </div>
-        <div className="grid content-start grid-cols-2 gap-1.5">
-          {zones.map((zone) => { const level = dossier.woundLevels[zone.id] ?? 'intact'; return <div key={zone.id} data-body-zone={zone.id} className="border border-hairline bg-ink-2/55 px-2 py-2"><span className="flex items-center justify-between gap-2"><strong className="font-serif text-[11.5px] text-parchment">{zone.label}</strong><span className={`font-mono text-[10px] ${level === 'intact' ? 'text-gold-dim' : 'font-bold text-rubric'}`}>{woundLabel(level)}</span></span><span className="mt-1 block font-serif text-[10px] text-parchment-dim">{level === 'intact' ? '未记录创伤' : dossier.wounds.join(' · ') || '已记录伤势'}</span></div>; })}
-          <div className="col-span-2 mt-1 border border-hairline bg-ink-3/35 px-2.5 py-2"><span className="eyebrow !text-[8px]">总体状态</span><p className="mt-1 font-serif text-[12px] font-semibold text-gold-bright">{dossier.alive ? (dossier.wounds.length ? '负伤' : '强健') : '阵亡'}</p></div>
-        </div>
-      </div>
-      <section className="border-t border-hairline/60 pt-4" data-npc-equipment-state>
-        <div className="mb-3 flex items-center justify-between"><p className="eyebrow">实际穿戴</p><Shield className="h-3.5 w-3.5 text-gold-deep" /></div>
-        {equippedItems.length === 0 && <EmptyState label="当前没有记录此人实际穿戴的装备。名下物品、据点储藏与家族保管物不会显示在这里。" />}
-        <div className="grid grid-cols-2 gap-2 md:grid-cols-3" data-npc-equipped-items>
-          {groups.map((group) => { const entries = equippedItems.filter(({ item }) => inGroup(item.equippedPosition, group.id)); return <div key={group.id} data-equipment-group={group.id} className="min-h-24 border border-hairline bg-ink-2/60 p-2"><p className="mb-2 text-[9px] font-bold tracking-wider text-gold-dim">{group.label}</p>{entries.length ? entries.map(({ item, definition }) => definition && <article key={item.instanceId} className="flex items-center gap-2"><span className="h-11 w-11 shrink-0 border border-hairline p-1"><ItemImage image={definition.image} alt={definition.name} className="h-full w-full" /></span><strong className="line-clamp-2 font-serif text-[10.5px] text-parchment">{definition.name}</strong></article>) : <span className="text-[9px] text-parchment-faint">未装备</span>}</div>; })}
-        </div>
-      </section>
-    </div>
-  );
-}
 
 function woundLabel(level: WoundLevel): string {
   return level === 'minor' ? '轻创' : level === 'heavy' ? '重伤' : level === 'critical' ? '垂危' : '未记录创伤';
 }
 
-function PlayerInventoryTab() {
-  return <div className="p-4 pb-8"><ItemManagementPanel /></div>;
-}
-
-function NpcInventoryTab({ dossier, worldArtifacts }: { dossier: NpcCharacterDossier; worldArtifacts: WorldArtifactState }) {
-  const assets = projectNpcAssets(dossier.character.items, worldArtifacts, {
-    characterId: dossier.id,
-    titleIds: dossier.character.titleIds,
-    dynastyId: dossier.character.dynastyId,
-  }).flatMap((item) => {
-    const definition = ITEM_CATALOG.get(item.definitionId);
-    return definition ? [{ item, definition }] : [];
-  });
-
+function CharacterAssetsTab({
+  dossier,
+  relatedRecords,
+  onOpenCharacter,
+  onOpenLocation,
+  onOpenAsset,
+}: {
+  dossier: CharacterDossier;
+  relatedRecords: ReadonlyMap<CharacterId, StaticCharacterRecord>;
+  onOpenCharacter: (characterId: CharacterId) => void;
+  onOpenLocation: (locationId: string) => void;
+  onOpenAsset: (assetId: string) => void;
+}) {
   return (
-    <div className="space-y-5 px-5 py-5" data-npc-inventory>
-      <SectionTitle title="物品与资产" subtitle="展示能够确认的归属与保管记录，不等同于随身携带或实际穿戴" />
-      {assets.length > 0 ? (
-        <div className="grid gap-2" data-npc-assets>
-          {assets.map(({ item, definition }) => definition && (
-            <article key={item.instanceId} className="flex min-w-0 items-center gap-3 border border-hairline bg-ink-2/75 px-3 py-2.5" data-npc-asset={item.definitionId}>
-              <span className="h-14 w-14 shrink-0 border border-hairline bg-ink-3/80 p-1">
-                <ItemImage image={definition.image} alt={definition.name} className="h-full w-full" />
-              </span>
-              <span className="min-w-0 flex-1">
-                <strong className="line-clamp-2 block font-serif text-[12.5px] text-parchment">{definition.name}</strong>
-                <span className="mt-1 inline-block border border-gold-deep/60 px-1.5 py-0.5 text-[9px] text-gold-dim">{item.relation}</span>
-                <span className="mt-1.5 line-clamp-2 block font-serif text-[10px] text-parchment-faint">{definition.description}</span>
-              </span>
-            </article>
-          ))}
-        </div>
+    <div className="space-y-5 px-5 py-5" data-character-world-assets>
+      <SectionTitle
+        title="物品与资产"
+        subtitle={dossier.kind === 'player'
+          ? '按随行、当前地点、载具与远方资产整理；法理所有、实际控制、直接保管、物理位置与装备状态分别记录'
+          : '法理所有、实际控制、直接保管、物理位置与装备状态分别记录'}
+      />
+      {dossier.kind === 'player' ? (
+        <ItemManagementPanel
+          dossier={dossier}
+          onOpenCharacter={onOpenCharacter}
+          onOpenLocation={onOpenLocation}
+          onOpenAsset={onOpenAsset}
+        />
       ) : (
-        <EmptyState label="当前没有能够确认归属或保管关系的物品与资产。" />
+        <WorldAssetSections
+          dossier={dossier}
+          relatedRecords={relatedRecords}
+          onOpenCharacter={onOpenCharacter}
+          onOpenLocation={onOpenLocation}
+          onOpenAsset={onOpenAsset}
+        />
       )}
       <p className="border-l border-gold-deep/60 pl-3 font-serif text-[10px] leading-relaxed text-parchment-faint">
-        这里不会根据身份猜测武器、盔甲或财产；具体记录仍严格区分名下所有、本人保管与当前穿戴。
+        实际穿戴只在“健康与装备”中显示；本页不会把远处名下资产误作随身携带。
       </p>
     </div>
   );

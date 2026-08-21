@@ -5,6 +5,7 @@ import { readFile } from 'node:fs/promises'
 const planner = await readFile('src/features/map/TravelPlanner.tsx', 'utf8')
 const journeyPanel = await readFile('src/features/map/JourneyPanel.tsx', 'utf8')
 const details = await readFile('src/features/map/LocationDetails.tsx', 'utf8')
+const countyDetails = await readFile('src/features/map/CountyDetails.tsx', 'utf8')
 const canvas = await readFile('src/features/map/MapCanvas.tsx', 'utf8')
 const drawer = await readFile('src/features/map/MapDrawer.tsx', 'utf8')
 const store = await readFile('src/store/useGameStore.ts', 'utf8')
@@ -60,12 +61,26 @@ test('地图画布绘制规划虚线、已走实线和当前位置', () => {
   assert.match(canvas, /line-dasharray/)
 })
 
-test('地点详情和旅程面板在移动端堆叠为内部底部抽屉', () => {
-  assert.match(css, /map-journey-panel/)
-  assert.match(css, /map-journey-panel\.with-details/)
+test('伯爵领和地点从原位发起旅行，规划器只由地图抽屉按需打开', () => {
+  assert.match(countyDetails, /前往这里/)
+  assert.match(details, /前往这里/)
+  assert.doesNotMatch(details, /TravelPlanner/)
+  assert.match(drawer, /travelTargetLocationId &&/)
+  assert.match(drawer, /<TravelPlanner/)
+  assert.match(drawer, /pick-travel-destination/)
+  assert.match(drawer, /正在选择目的地/)
+  assert.match(drawer, /取消选择/)
+  assert.match(css, /map-travel-planner-shell/)
   assert.match(css, /@media \(max-width: 640px\)/)
-  assert.match(drawer, /JourneyPanel/)
-  assert.match(details, /TravelPlanner/)
+})
+
+
+test('旅行待处理状态只保存在统一世界事务队列', () => {
+  assert.match(planner, /queueWorldTransaction/)
+  assert.match(journeyPanel, /queueWorldTransaction/)
+  assert.match(planner, /pendingTravelTransactionFor/)
+  assert.doesNotMatch(store, /^\s*pendingTravelCommand:\s*/m)
+  assert.doesNotMatch(store, /^\s*queueTravelCommand:\s*/m)
 })
 
 test('正文状态切片只描述权威旅程且不向模型开放旅行命令', () => {

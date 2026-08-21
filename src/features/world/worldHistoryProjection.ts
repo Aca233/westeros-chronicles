@@ -2,14 +2,16 @@ import type { CharacterId, CharacterItemRecord } from '../characters/types';
 import type { EquipmentPosition } from '../items/types';
 import type { WorldArtifactRecord, WorldArtifactState } from '../items/worldArtifacts';
 import type { CanonicalTimelineEvent } from './canonicalTimeline';
-import { compareWorldDates, type CanonicalEventStatus, type WorldDate, type WorldEventFact, type WorldHistoryState } from './worldHistory';
+import { compareWorldDates, type CanonicalEventStatus, type WorldDate, type WorldHistoryState } from './worldHistory';
+import { buildWorldEventIndex, eventsForCharacter, type WorldEventIndex } from './worldEventIndex';
+import type { WorldEvent } from './worldRuntimeTypes';
 
 export interface TimelineProjectionEvent {
   id: string;
   date: WorldDate;
   title: string;
   summary: string;
-  source: WorldEventFact['source'] | 'canon';
+  source: WorldEvent['source'] | 'canon';
   status: CanonicalEventStatus | 'actual';
   category: CanonicalTimelineEvent['category'];
   region: string;
@@ -51,21 +53,43 @@ function canonicalProjection(
   };
 }
 
-function factProjection(fact: WorldEventFact): TimelineProjectionEvent {
+const EVENT_TITLES: Readonly<Record<string, string>> = {
+  'character.death': '人物死亡',
+  'travel.progress': '旅程继续推进',
+  'timeline.occurred': '原作节点发生',
+  'timeline.diverged': '原作节点偏离',
+  'timeline.replaced': '世界事件取代原作节点',
+};
+
+export function worldEventDisplayTitle(event: WorldEvent): string {
+  if (EVENT_TITLES[event.type]) return EVENT_TITLES[event.type];
+  if (event.type.startsWith('command.')) return `已确认命令：${event.type.slice('command.'.length).toUpperCase()}`;
+  return event.type;
+}
+
+export function worldEventParticipantIds(event: WorldEvent): CharacterId[] {
+  return [...new Set([
+    ...event.actorIds,
+    ...event.subjectRefs.flatMap((subject) => subject.type === 'character' ? [subject.characterId] : []),
+  ])];
+}
+
+function eventProjection(event: WorldEvent): TimelineProjectionEvent {
+  const participantIds = worldEventParticipantIds(event);
   return {
-    id: fact.id,
-    date: { ...fact.date },
-    title: fact.title,
-    summary: fact.summary,
-    source: fact.source,
+    id: event.id,
+    date: { ...event.date },
+    title: worldEventDisplayTitle(event),
+    summary: event.reason,
+    source: event.source,
     status: 'actual',
-    category: fact.kind.includes('death') ? 'death' : fact.kind.includes('war') ? 'war' : 'intrigue',
+    category: event.type.includes('death') ? 'death' : event.type.includes('war') ? 'war' : 'intrigue',
     region: '本世界',
-    participantIds: [...fact.participantIds],
+    participantIds,
     participantNames: [],
-    fatalities: fact.kind === 'character.death' ? [...fact.participantIds] : [],
+    fatalities: event.type === 'character.death' ? [...participantIds] : [],
     consequences: [],
-    canonicalEventId: fact.canonicalEventId,
+    canonicalEventId: event.canonicalEventId,
   };
 }
 
@@ -78,23 +102,25 @@ export function projectCanonicalTimeline(
 
 export function projectActualTimeline(
   history: WorldHistoryState,
+  worldEvents: readonly WorldEvent[],
   schedule: readonly CanonicalTimelineEvent[] = [],
 ): TimelineProjectionEvent[] {
   const canonical = schedule
     .map((event) => canonicalProjection(history, event))
     .filter((event) => event.status === 'historical' || event.status === 'occurred');
-  const canonicalFactIds = new Set(canonical.map((event) => event.canonicalEventId));
-  const facts = history.turns
-    .flatMap((turn) => turn.facts)
-    .filter((fact) => !fact.canonicalEventId || !canonicalFactIds.has(fact.canonicalEventId))
-    .map(factProjection);
-  return [...canonical, ...facts].sort(eventOrder);
+  const canonicalEventIds = new Set(canonical.map((event) => event.canonicalEventId));
+  const events = worldEvents
+    .filter((event) => !event.canonicalEventId || !canonicalEventIds.has(event.canonicalEventId))
+    .map(eventProjection);
+  return [...canonical, ...events].sort(eventOrder);
 }
 
-export function factsForCharacter(history: WorldHistoryState, characterId: CharacterId): WorldEventFact[] {
-  return history.turns
-    .flatMap((turn) => turn.facts)
-    .filter((fact) => fact.participantIds.includes(characterId))
+export function factsForCharacter(
+  worldEvents: readonly WorldEvent[],
+  characterId: CharacterId,
+  index: WorldEventIndex = buildWorldEventIndex(worldEvents),
+): WorldEvent[] {
+  return eventsForCharacter(worldEvents, index, characterId)
     .sort((left, right) => compareWorldDates(left.date, right.date) || left.id.localeCompare(right.id));
 }
 
@@ -104,6 +130,7 @@ export function visibleEquipmentForCharacter(
 ): WorldArtifactRecord[] {
   return Object.values(state.artifacts)
     .filter((record) => record.equipped
+      && Boolean(record.equippedPosition)
       && record.placement.type === 'character'
       && record.placement.characterId === characterId)
     .sort((left, right) => left.definitionId.localeCompare(right.definitionId));
@@ -191,6 +218,7 @@ export function projectNpcEquipment(
       instanceId: record.instanceId,
       definitionId: record.definitionId,
       relation: '当前穿戴',
+      equippedPosition: record.equippedPosition ? { ...record.equippedPosition } : undefined,
       source: 'world_artifact',
     });
   }

@@ -1,0 +1,21 @@
+pdxmesh = {
+  name = "fixture_mesh"
+  file = "fixture.mesh"
+  scale = 0.5
+  meshsettings = {
+    name = "wallsShape"
+    index = 0
+    texture_diffuse = "walls_diffuse.dds"
+    texture_normal = "walls_normal.dds"
+    texture_specular = "walls_properties.dds"
+    shader = "standard"
+  }
+  meshsettings = {
+    name = "roofShape"
+    index = 1
+    texture_diffuse = "roof_diffuse.dds"
+    texture_normal = "roof_normal.dds"
+    texture_specular = "roof_properties.dds"
+    shader = "standard_winter"
+  }
+}

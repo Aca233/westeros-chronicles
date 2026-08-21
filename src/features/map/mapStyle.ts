@@ -1,4 +1,4 @@
-import type { StyleSpecification } from 'maplibre-gl'
+import type { ExpressionSpecification, StyleSpecification } from 'maplibre-gl'
 
 import { semanticLabelSizeExpression, semanticRankOpacityExpression } from './semanticZoom.ts'
 import {
@@ -6,8 +6,89 @@ import {
   FAR_MAP_SOURCE,
   MATERIAL_TERRAIN_LAYER,
   MATERIAL_TERRAIN_SOURCE,
+  TERRAIN_LIGHT_LAYER,
+  TERRAIN_LIGHT_SOURCE,
+  POLITICAL_CONTESTED_BORDER_LAYER,
 } from './mapLayers.ts'
 import type { MapManifest } from './types'
+
+const SEMANTIC_RANKS = ['hegemon', 'empire', 'kingdom', 'duchy', 'county'] as const
+
+const SEMANTIC_LINE_WIDTH = {
+  hegemon: [2.2, 3.4],
+  empire: [1.9, 3.1],
+  kingdom: [1.6, 2.8],
+  duchy: [1.2, 2.5],
+  county: [0.8, 2],
+} as const
+
+function semanticAdministrativeLayers(): NonNullable<StyleSpecification['layers']> {
+  return SEMANTIC_RANKS.flatMap((rank) => {
+    const [minimumWidth, maximumWidth] = SEMANTIC_LINE_WIDTH[rank]
+    const opacity = semanticRankOpacityExpression(rank)
+    return [
+      {
+        id: `agot-${rank}-surface`,
+        type: 'fill' as const,
+        source: 'agot-semantic',
+        'source-layer': `${rank}_surfaces`,
+        paint: {
+          'fill-color': ['get', 'titleColor'] as ExpressionSpecification,
+          'fill-opacity': semanticRankOpacityExpression(rank, 0.2, true),
+        },
+      },
+      {
+        id: `agot-${rank}-boundaries-casing`,
+        type: 'line' as const,
+        source: 'agot-semantic',
+        'source-layer': `${rank}_boundaries`,
+        paint: {
+          'line-color': '#17130d',
+          'line-opacity': semanticRankOpacityExpression(rank, 0.62),
+          'line-width': ['interpolate', ['linear'], ['zoom'], 0, minimumWidth + 2.2, 6, maximumWidth + 2.8] as ExpressionSpecification,
+          'line-blur': 0.8,
+        },
+      },
+      {
+        id: `agot-${rank}-boundaries`,
+        type: 'line' as const,
+        source: 'agot-semantic',
+        'source-layer': `${rank}_boundaries`,
+        paint: {
+          'line-color': '#d2bd87',
+          'line-opacity': opacity,
+          'line-width': ['interpolate', ['linear'], ['zoom'], 0, minimumWidth, 6, maximumWidth] as ExpressionSpecification,
+          'line-blur': 0.3,
+        },
+      },
+    ]
+  })
+}
+
+function semanticTitleLayers(): NonNullable<StyleSpecification['layers']> {
+  return SEMANTIC_RANKS.map((rank) => ({
+    id: `agot-${rank}-labels`,
+    type: 'symbol' as const,
+    source: 'agot-semantic',
+    'source-layer': 'title_labels',
+    filter: ['==', ['get', 'rank'], rank],
+    layout: {
+      'text-field': ['get', 'name'],
+      'text-font': ['Noto Sans CJK SC Regular'],
+      'text-size': semanticLabelSizeExpression(rank),
+      'text-letter-spacing': rank === 'hegemon' || rank === 'empire' ? 0.14 : 0.08,
+      'text-allow-overlap': rank !== 'county',
+      'text-ignore-placement': rank !== 'county',
+      'symbol-sort-key': ['-', 100, ['get', 'importance']],
+    },
+    paint: {
+      'text-color': '#eadcb6',
+      'text-halo-color': '#17130d',
+      'text-halo-width': rank === 'hegemon' || rank === 'empire' ? 2.2 : 1.5,
+      'text-opacity': semanticRankOpacityExpression(rank),
+    },
+  }))
+}
 
 export function createLocalMapStyle(manifest: MapManifest): StyleSpecification {
   return {
@@ -30,6 +111,14 @@ export function createLocalMapStyle(manifest: MapManifest): StyleSpecification {
         maxzoom: 5,
         attribution: 'AGOT 离线地形材质',
       },
+      [TERRAIN_LIGHT_SOURCE]: {
+        type: 'raster',
+        tiles: [manifest.paths.terrainLight],
+        tileSize: manifest.tileSize,
+        minzoom: manifest.minZoom,
+        maxzoom: 5,
+        attribution: 'AGOT 离线地形光照',
+      },
       'agot-vector': {
         type: 'vector',
         tiles: [manifest.paths.vector],
@@ -50,10 +139,6 @@ export function createLocalMapStyle(manifest: MapManifest): StyleSpecification {
         minzoom: manifest.minZoom,
         maxzoom: manifest.maxZoom,
       },
-      'agot-political-house-label-source': {
-        type: 'geojson',
-        data: { type: 'FeatureCollection', features: [] },
-      },
     },
     layers: [
       {
@@ -70,56 +155,45 @@ export function createLocalMapStyle(manifest: MapManifest): StyleSpecification {
           'raster-saturation': 0,
           'raster-brightness-max': 1,
           'raster-contrast': 0.1,
+          'raster-saturation-transition': { duration: 360, delay: 0 },
+          'raster-brightness-max-transition': { duration: 360, delay: 0 },
         },
       },
       {
         id: MATERIAL_TERRAIN_LAYER,
         type: 'raster',
         source: MATERIAL_TERRAIN_SOURCE,
+        layout: { visibility: 'none' },
         paint: {
           'raster-opacity': 0,
           'raster-saturation': 0,
           'raster-brightness-max': 1,
           'raster-contrast': 0.06,
+          'raster-saturation-transition': { duration: 360, delay: 0 },
+          'raster-brightness-max-transition': { duration: 360, delay: 0 },
         },
       },
       {
-        id: 'agot-hillshade',
-        type: 'hillshade',
-        source: 'agot-dem',
+        id: TERRAIN_LIGHT_LAYER,
+        type: 'raster',
+        source: TERRAIN_LIGHT_SOURCE,
         paint: {
-          'hillshade-shadow-color': '#17150f',
-          'hillshade-highlight-color': '#d4c39b',
-          'hillshade-accent-color': '#6d5837',
-          'hillshade-exaggeration': 0.32,
+          'raster-opacity': 0.78,
+          'raster-fade-duration': 0,
+          'raster-resampling': 'linear',
         },
       },
       {
-        id: 'agot-provinces',
-        type: 'fill',
+        id: POLITICAL_CONTESTED_BORDER_LAYER,
+        type: 'line',
         source: 'agot-vector',
         'source-layer': 'provinces',
         layout: { visibility: 'none' },
         paint: {
-          'fill-color': [
-            'coalesce', ['feature-state', 'politicalColor'],
-            [
-              'match', ['get', 'regionId'],
-              'world_westeros_the_north', '#6f7f75',
-              'world_westeros_the_wall', '#aab6b2',
-              'world_westeros_beyond_the_wall', '#7d8c87',
-              'world_westeros_the_riverlands', '#587c85',
-              'world_westeros_the_vale', '#84929f',
-              'world_westeros_the_westerlands', '#a27054',
-              'world_westeros_the_crownlands', '#8c6363',
-              'world_westeros_the_stormlands', '#9a8760',
-              'world_westeros_the_reach', '#708d62',
-              'world_westeros_dorne', '#b48359',
-              'world_westeros_the_iron_islands', '#586d72',
-              '#766a55',
-            ],
-          ],
-          'fill-opacity': 0.3,
+          'line-color': ['coalesce', ['feature-state', 'politicalControllerColor'], '#b4432f'],
+          'line-opacity': ['case', ['boolean', ['feature-state', 'politicalIsContested'], false], 0.92, 0],
+          'line-width': ['interpolate', ['linear'], ['zoom'], 2.5, 1.4, 6, 3.2],
+          'line-dasharray': [2, 1.25],
         },
       },
       {
@@ -132,40 +206,20 @@ export function createLocalMapStyle(manifest: MapManifest): StyleSpecification {
           'fill-opacity': 0.001,
         },
       },
+      ...semanticAdministrativeLayers(),
       {
-        id: 'agot-realm-boundaries',
-        type: 'line',
-        source: 'agot-semantic',
-        'source-layer': 'realm_boundaries',
-        paint: {
-          'line-color': '#d9c99d',
-          'line-opacity': semanticRankOpacityExpression('realm'),
-          'line-width': ['interpolate', ['linear'], ['zoom'], 0, 1.8, 1.4, 3.2],
-          'line-blur': 0.45,
-        },
-      },
-      {
-        id: 'agot-duchy-boundaries',
-        type: 'line',
-        source: 'agot-semantic',
-        'source-layer': 'duchy_boundaries',
-        paint: {
-          'line-color': '#c2ad78',
-          'line-opacity': semanticRankOpacityExpression('duchy'),
-          'line-width': ['interpolate', ['linear'], ['zoom'], 1.1, 1.2, 2.8, 2.6],
-          'line-blur': 0.4,
-        },
-      },
-      {
-        id: 'agot-county-boundaries',
+        id: 'agot-selected-county-outline-glow',
         type: 'line',
         source: 'agot-semantic',
         'source-layer': 'county_boundaries',
+        minzoom: 3.5,
+        filter: ['==', ['get', 'titleId'], ''],
+        layout: { visibility: 'none' },
         paint: {
-          'line-color': '#aa9160',
-          'line-opacity': semanticRankOpacityExpression('county'),
-          'line-width': ['interpolate', ['linear'], ['zoom'], 2.5, 0.8, 6, 2],
-          'line-blur': 0.3,
+          'line-color': '#f0d58a',
+          'line-opacity': 0.38,
+          'line-width': ['interpolate', ['linear'], ['zoom'], 3.5, 5.6, 6, 10.5],
+          'line-blur': 2.6,
         },
       },
       {
@@ -181,6 +235,17 @@ export function createLocalMapStyle(manifest: MapManifest): StyleSpecification {
           'line-opacity': 0.96,
           'line-width': ['interpolate', ['linear'], ['zoom'], 3.5, 2.2, 6, 4.2],
           'line-blur': 0.2,
+        },
+      },
+      {
+        id: 'agot-roads-casing',
+        type: 'line',
+        source: 'agot-vector',
+        'source-layer': 'roads',
+        paint: {
+          'line-color': '#241b10',
+          'line-opacity': ['interpolate', ['linear'], ['zoom'], 0, 0, 1.09, 0, 1.1, 0.1, 4.1, 0.19, 4.4, 0.4, 6, 0.47],
+          'line-width': ['interpolate', ['linear'], ['zoom'], 0, 1.5, 1.1, 1.55, 4.1, 1.85, 4.4, 2.4, 6, 3.1],
         },
       },
       {
@@ -207,90 +272,7 @@ export function createLocalMapStyle(manifest: MapManifest): StyleSpecification {
           'line-dasharray': [2, 1.5],
         },
       },
-      {
-        id: 'agot-realm-labels',
-        type: 'symbol',
-        source: 'agot-semantic',
-        'source-layer': 'title_labels',
-        filter: ['==', ['get', 'rank'], 'realm'],
-        layout: {
-          'text-field': ['get', 'name'],
-          'text-font': ['Noto Sans CJK SC Regular'],
-          'text-size': semanticLabelSizeExpression('realm'),
-          'text-letter-spacing': 0.14,
-          'text-allow-overlap': false,
-          'text-ignore-placement': false,
-          'symbol-sort-key': ['-', 100, ['get', 'importance']],
-        },
-        paint: {
-          'text-color': '#eadcb6',
-          'text-halo-color': '#17130d',
-          'text-halo-width': 2.2,
-          'text-opacity': semanticRankOpacityExpression('realm'),
-        },
-      },
-      {
-        id: 'agot-duchy-labels',
-        type: 'symbol',
-        source: 'agot-semantic',
-        'source-layer': 'title_labels',
-        filter: ['==', ['get', 'rank'], 'duchy'],
-        layout: {
-          'text-field': ['get', 'name'],
-          'text-font': ['Noto Sans CJK SC Regular'],
-          'text-size': semanticLabelSizeExpression('duchy'),
-          'text-letter-spacing': 0.08,
-          'text-allow-overlap': false,
-          'text-ignore-placement': false,
-          'symbol-sort-key': ['-', 100, ['get', 'importance']],
-        },
-        paint: {
-          'text-color': '#eadcb6',
-          'text-halo-color': '#17130d',
-          'text-halo-width': 1.5,
-          'text-opacity': semanticRankOpacityExpression('duchy'),
-        },
-      },
-      {
-        id: 'agot-county-labels',
-        type: 'symbol',
-        source: 'agot-semantic',
-        'source-layer': 'title_labels',
-        filter: ['==', ['get', 'rank'], 'county'],
-        layout: {
-          'text-field': ['get', 'name'],
-          'text-font': ['Noto Sans CJK SC Regular'],
-          'text-size': semanticLabelSizeExpression('county'),
-          'text-letter-spacing': 0.08,
-          'text-allow-overlap': false,
-          'text-ignore-placement': false,
-          'symbol-sort-key': ['-', 100, ['get', 'importance']],
-        },
-        paint: {
-          'text-color': '#eadcb6',
-          'text-halo-color': '#17130d',
-          'text-halo-width': 1.5,
-          'text-opacity': semanticRankOpacityExpression('county'),
-        },
-      },
-      {
-        id: 'agot-political-house-labels',
-        type: 'symbol',
-        source: 'agot-political-house-label-source',
-        layout: {
-          visibility: 'none',
-          'text-field': ['get', 'politicalHouseLabel'],
-          'text-font': ['Noto Sans CJK SC Regular'],
-          'text-size': ['interpolate', ['linear'], ['zoom'], 0, 11, 6, 13],
-          'text-allow-overlap': false,
-          'text-ignore-placement': false,
-        },
-        paint: {
-          'text-color': '#c9b784',
-          'text-halo-color': '#17130d',
-          'text-halo-width': 1.25,
-        },
-      },
+      ...semanticTitleLayers(),
     ],
   }
 }

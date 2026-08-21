@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "2962333032",
+  "landmarks": [
+    {
+      "id": "winterfell",
+      "name": "临冬城",
+      "locationId": "b_winterfell",
+      "provinceId": 77,
+      "asset": "gfx/models/buildings/special/Winterfell/winterfell_new.asset"
+    },
+    {
+      "id": "red-keep",
+      "name": "红堡",
+      "locationId": "b_winterfell",
+      "provinceId": 4151,
+      "asset": "gfx/models/buildings/special/Kings Landing/Red Keep/building_special_KL_RedKeep.asset"
+    },
+    {
+      "id": "dragonstone",
+      "name": "龙石岛",
+      "locationId": "b_dragonstone",
+      "provinceId": 4415,
+      "asset": "gfx/models/buildings/special/Dragonstone/Dragonstone.asset"
+    },
+    {
+      "id": "casterly-rock",
+      "name": "凯岩城",
+      "locationId": "b_casterly_rock",
+      "provinceId": 2855,
+      "asset": "gfx/models/buildings/special/Casterly Rock/casterlyrock.asset"
+    },
+    {
+      "id": "highgarden",
+      "name": "高庭",
+      "locationId": "b_highgarden",
+      "provinceId": 3237,
+      "asset": "gfx/models/buildings/special/Highgarden/building_special_highgarden.asset"
+    },
+    {
+      "id": "sunspear",
+      "name": "阳戟城",
+      "locationId": "b_sunspear",
+      "provinceId": 4937,
+      "asset": "gfx/models/buildings/special/Sunspear/building_special_sunspear.asset"
+    },
+    {
+      "id": "storms-end",
+      "name": "风息堡",
+      "locationId": "b_storms_end",
+      "provinceId": 4439,
+      "asset": "gfx/models/buildings/special/Storms End/building_special_stormsend_castle.asset"
+    },
+    {
+      "id": "the-eyrie",
+      "name": "鹰巢城",
+      "locationId": "b_the_eyrie",
+      "provinceId": 2251,
+      "asset": "gfx/models/buildings/special/The Eyrie/building_special_the_eyrie.asset"
+    },
+    {
+      "id": "pyke",
+      "name": "派克城",
+      "locationId": "b_pyke",
+      "provinceId": 2723,
+      "asset": "gfx/models/buildings/special/Pyke/building_special_PykeUpdated.asset"
+    },
+    {
+      "id": "oldtown",
+      "name": "旧镇",
+      "locationId": "b_oldtown",
+      "provinceId": 3494,
+      "asset": "gfx/models/buildings/special/Oldtown/building_special_OT/building_special_oldtown.asset"
+    },
+    {
+      "id": "riverrun",
+      "name": "奔流城",
+      "locationId": "b_riverrun",
+      "provinceId": 1658,
+      "asset": "gfx/models/buildings/special/Riverrun/building_special_riverrun.asset"
+    },
+    {
+      "id": "harrenhal",
+      "name": "赫伦堡",
+      "locationId": "b_harrenhal",
+      "provinceId": 1934,
+      "asset": "gfx/models/buildings/special/Harrenhal/Harrenhal Redo/building_special_harrenhal_ruined.asset",
+      "variant": "ruined"
+    }
+  ]
+}

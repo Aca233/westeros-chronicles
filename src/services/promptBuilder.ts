@@ -1,5 +1,5 @@
 import { GameState, D20Check } from '../types/game';
-import type { PendingItemAction } from '../features/items/itemActionQueue';
+import type { PendingWorldTransaction } from '../features/world/worldRuntimeTypes';
 import { stripEmoji } from './textSanitizer';
 import { aggregateSelectedTraitEffects, formatTraitDescription, formatTraitRuleEffects, getTraitCheckContributions } from '../data/characterTraits';
 import { inferCheckFromAction, inferItemSceneTags } from './diceEngine';
@@ -9,8 +9,38 @@ import { ITEM_CATALOG } from '../data/itemDefinitions';
 import { getItemDefinition } from '../features/items/catalog';
 import { aggregateEquippedItemEffects, formatItemNarrativeDirectives, getEquipmentBurden, getUnlockedItemActions } from '../features/items/effects';
 import { getUsedCarryUnits } from '../features/items/custody';
-import { formatPendingItemPrompt } from '../features/items/itemActionQueue';
+import { formatPendingItemPrompt, pendingItemActionsFromWorldTransactions } from '../features/items/itemActionQueue';
 import { sameWorldLocation } from '../features/map/locationResolver';
+
+export const WORLD_INTENT_RESOLUTION_PROMPT = `
+### 【地点事实与旅行意图】
+除 state_cmd 外，必须把本回合出现的地点事实逐条写入 <world_intent> JSON 数组。不得依靠单个地点词猜测移动，必须按玩家表达的完整语义分类：
+
+| 玩家表达 | kind | 是否改变人物地点 |
+| --- | --- | --- |
+| 仅提及、回忆、询问某地，或只是“想去”但没有安排 | mention | 否 |
+| 已决定并安排将来前往，但尚未出发 | plan_travel | 否 |
+| 明确离开当前地点并启程 | start_travel | 否；仅建立旅程，不能直接抵达 |
+| 已在路上且叙事明确推进了一段时间或路程 | advance_travel | 由程序按旅程验证 |
+| 已有旅程抵达终点，或文本明确给出足够时间流逝后抵达 | arrive | 由程序验证后改变 |
+| 只在同一城堡、城市或据点内换房间、庭院、神木林等场景 | move_inside_location | 只改内部场景，不跨地图地点 |
+
+要求：
+1. 即使主要行动是交谈、战斗、赠礼或调查，也要输出其中可确认的次要地点事实。
+2. evidenceText 必须引用支持该分类的原文短句，不能为空；不得把模型自行续写的内容当证据。
+3. targetId 只能使用当前世界切片明确提供的稳定地点 ID；否则填写 targetText，不得编造内部地点键。
+4. sceneLocation 只填写地点内部的自然场景名。elapsedTime 只填写原文明确表达的时间，不得估算。
+5. 愿望、计划和提及绝不等于出发；出发绝不等于抵达；没有可验证旅程或明确时间流逝不得输出 arrive。
+6. 没有地点事实时也必须输出空数组。
+
+<world_intent>
+[
+  { "kind": "mention", "targetText": "君临", "evidenceText": "我想起了君临" },
+  { "kind": "plan_travel", "targetText": "君临", "evidenceText": "我准备明日去君临" },
+  { "kind": "start_travel", "targetText": "君临", "evidenceText": "我骑马赶往君临" },
+  { "kind": "arrive", "targetText": "红堡", "sceneLocation": "议事厅", "elapsedTime": { "days": 15 }, "evidenceText": "半个月后，我推开红堡议事厅的门" }
+]
+</world_intent>`;
 
 // 权游核心大宪章系统提示词 (长篇严肃小说体裁 + 对白全融合 + 沉浸深度文学)
 export const GOT_CONSTITUTION_PROMPT = `
@@ -112,6 +142,8 @@ export const GOT_CONSTITUTION_PROMPT = `
   // 模型不得输出任何改变地点、移动人物或推进旅程的状态命令，也不得使用内部地点键。
 ]
 </state_cmd>
+
+${WORLD_INTENT_RESOLUTION_PROMPT}
 `;
 
 // 构建当前世界状态切片 (Dynamic State Slice)
@@ -233,7 +265,7 @@ export function buildChatMessages(
   currentUserInput: string,
   diceCheck?: D20Check,
   diceContext?: DicePromptContext,
-  pendingItemActions: PendingItemAction[] = [],
+  pendingTransactions: PendingWorldTransaction[] = [],
   characterContext?: string,
 ): Array<{ role: 'system' | 'user' | 'assistant'; content: string }> {
   const messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }> = [];
@@ -271,7 +303,9 @@ export function buildChatMessages(
   }
 
   // 4. 当前回合用户输入 + 掷骰检定结果 (如果有)
-  const pendingEquipmentPrompt = formatPendingItemPrompt(pendingItemActions);
+  const pendingEquipmentPrompt = formatPendingItemPrompt(
+    pendingItemActionsFromWorldTransactions(pendingTransactions, gameState.lord.items, ITEM_CATALOG),
+  );
   const safeCharacterContext = typeof characterContext === 'string'
     ? stripEmoji(characterContext).replace(/</g, '＜').replace(/>/g, '＞')
     : '';

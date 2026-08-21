@@ -53,6 +53,8 @@ class TitleAncestors:
     county_id: str | None = None
     duchy_id: str | None = None
     kingdom_id: str | None = None
+    empire_id: str | None = None
+    hegemon_id: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -78,7 +80,7 @@ class MapLocationRecord:
     icon: str | None = None
 
 
-SemanticRank = Literal["realm", "duchy", "county"]
+SemanticRank = Literal["hegemon", "empire", "kingdom", "duchy", "county"]
 
 
 @dataclass(frozen=True, slots=True)
@@ -88,7 +90,7 @@ class SemanticBoundaryRecord:
     rank: SemanticRank
     name: str | None
     region_id: str
-    political_anchor_title_id: str | None
+    title_color: str
     geometry: "BaseGeometry"
 
 
@@ -102,7 +104,7 @@ class SemanticTitleRecord:
     map_y: float
     importance: int
     region_id: str
-    political_anchor_title_id: str | None
+    title_color: str
     geometry: "BaseGeometry"
     anchor: "BaseGeometry"
 
@@ -113,7 +115,10 @@ class SemanticMembershipRecord:
     barony_id: str
     county_id: str
     duchy_id: str
-    realm_id: str
+    kingdom_id: str | None
+    empire_id: str | None
+    hegemon_id: str | None
+    region_id: str
 
 
 @dataclass(frozen=True, slots=True)

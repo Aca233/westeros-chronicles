@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Dices, Hourglass, Send, X } from 'lucide-react';
+import { Dices, Hourglass, Send } from 'lucide-react';
 import { useGameStore } from '../store/useGameStore';
 import { stripEmoji } from '../services/textSanitizer';
 import type { DiceMode } from '../services/dicePolicy';
-import { ItemImage } from './items/ItemImage';
+import { normalizeBranchOptions } from '../services/branchOptions';
 
 const DICE_MODES: ReadonlyArray<{ id: DiceMode; label: string; title: string }> = [
   { id: 'auto', label: '自动判断', title: '程序先判断行动是否可行、是否存在真实阻力与失败后果,再根据伤势、环境、准备和协助调整 DC' },
@@ -18,14 +18,12 @@ export const ActionDock: React.FC = () => {
     gameState,
     isStreaming,
     submitAction,
-    pendingItemActions,
-    cancelItemAction,
   } = useGameStore();
   const [customInput, setCustomInput] = useState('');
   const [diceMode, setDiceMode] = useState<DiceMode>('auto');
   const inputRef = useRef<HTMLInputElement>(null);
   const latestTurn = gameState.turns[gameState.turns.length - 1];
-  const branches = latestTurn ? latestTurn.branches : [];
+  const branches = normalizeBranchOptions(latestTurn?.branches ?? []);
 
   // 回合落定后自动聚焦命令行
   const prevStreaming = useRef(isStreaming);
@@ -84,35 +82,6 @@ export const ActionDock: React.FC = () => {
   return (
     <footer className="dock-enter relative z-20 shrink-0 px-5 pb-5 pt-2 md:px-6">
       <div className="mx-auto flex w-full max-w-[42rem] flex-col gap-4">
-        {/* 待执行物品动作:下一次成功对话后原子生效 */}
-        {pendingItemActions.length > 0 && (
-          <section data-item-action-queue aria-label="待执行物品动作" className="select-none">
-            <p className="mb-1.5 text-[10px] tracking-[0.18em] text-gold">
-              待执行 ×{pendingItemActions.length}
-              <span className="ml-2 font-normal normal-case tracking-normal text-parchment-faint">下一次对话生成成功后生效</span>
-            </p>
-            <ul className="flex flex-col gap-1">
-              {pendingItemActions.map((action) => (
-                <li key={action.id} className="flex items-center gap-2 font-serif text-[11px] text-parchment-dim">
-                  <ItemImage image={action.image} alt="" className="h-5 w-5 shrink-0" />
-                  <span className="truncate">{action.itemName}</span>
-                  <span className="truncate text-[9.5px] text-parchment-faint">{action.label}</span>
-                  <button
-                    type="button"
-                    onClick={() => cancelItemAction(action.id)}
-                    disabled={isStreaming}
-                    title={isStreaming ? '本次对话完成后才能继续调整队列' : `取消${action.label}${action.itemName}`}
-                    aria-label={`取消${action.label}${action.itemName}`}
-                    className="ml-auto text-parchment-faint transition-colors hover:text-rubric disabled:cursor-not-allowed disabled:opacity-40"
-                  >
-                    <X className="h-3 w-3" />
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
-
         {/* 决断:无框列表,朱红序数,墨痕扫过 */}
         {branches.length > 0 && !isStreaming && (
           <nav aria-label="决断分支" className="select-none">

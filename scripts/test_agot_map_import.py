@@ -16,6 +16,7 @@ from PIL import Image
 from shapely.geometry import Point, box, mapping
 
 from scripts.agot_map_import.dem import build_dem_tiles, encode_terrain_rgb
+from scripts.agot_map_import.terrain_lighting import build_terrain_light_tiles, terrain_light_overlay
 from scripts.agot_map_import.audit import audit_map_records, audit_semantic_records
 from scripts.agot_map_import.geometry import extract_province_geometry
 from scripts.agot_map_import.locations import build_locations
@@ -531,8 +532,8 @@ class SemanticDatasetTests(unittest.TestCase):
         }
         titles = TitleIndex(
             by_barony={
-                "b_winterfell": TitleAncestors(None if countyless else "c_winterfell", "d_winterfell", "k_westeros"),
-                "b_kings_landing": TitleAncestors("c_kings_landing", "d_kings_landing", "k_westeros"),
+                "b_winterfell": TitleAncestors(None if countyless else "c_winterfell", "d_winterfell", "k_westeros", "e_test"),
+                "b_kings_landing": TitleAncestors("c_kings_landing", "d_kings_landing", "k_westeros", "e_test"),
             },
             province_baronies={
                 **({} if missing_stable_barony else {1: "b_winterfell"}),
@@ -548,6 +549,7 @@ class SemanticDatasetTests(unittest.TestCase):
             "the_crownlands": RegionDefinition("the_crownlands", ("b_kings_landing",), (), "fixture", 3),
         }
         localization = {
+            "h_test": "铁王座", "e_test": "测试帝国", "k_westeros": "测试王国",
             "the_north": "北境", "b_winterfell": "临冬城", "c_winterfell": "临冬城伯爵领",
             "d_winterfell": "临冬城公国", "the_crownlands": "王领",
             "b_kings_landing": "君临", "c_kings_landing": "君临伯爵领", "d_kings_landing": "君临公国",
@@ -569,22 +571,25 @@ class SemanticDatasetTests(unittest.TestCase):
         ]
         return build_semantic_dataset(
             geometries, locations, titles, regions, localization,
-            {"the_north": "k_the_north", "the_crownlands": "k_the_crownlands"},
+            {"h_test": ["e_test"]},
         )
 
-    def test_builds_three_visible_ranks_internal_barony_key_and_membership(self) -> None:
+    def test_builds_five_visible_ranks_internal_barony_key_and_membership(self) -> None:
         dataset = self._dataset()
-        self.assertEqual([boundary.rank for boundary in dataset.boundaries].count("realm"), 2)
-        self.assertEqual([boundary.rank for boundary in dataset.boundaries].count("duchy"), 2)
-        self.assertEqual([boundary.rank for boundary in dataset.boundaries].count("county"), 2)
+        self.assertEqual({boundary.rank for boundary in dataset.boundaries}, {
+            "hegemon", "empire", "kingdom", "duchy", "county",
+        })
         self.assertNotIn("barony", {boundary.rank for boundary in dataset.boundaries})
-        self.assertEqual([title.feature_id for title in dataset.titles], list(range(1, 7)))
+        self.assertEqual([title.feature_id for title in dataset.titles], list(range(1, 8)))
         self.assertTrue(all(title.geometry.covers(title.anchor) for title in dataset.titles))
         winterfell = next(item for item in dataset.memberships if item.location_id == "b_winterfell")
         self.assertEqual(
-            (winterfell.realm_id, winterfell.duchy_id, winterfell.county_id, winterfell.barony_id),
-            ("the_north", "d_winterfell", "c_winterfell", "b_winterfell"),
+            (winterfell.hegemon_id, winterfell.empire_id, winterfell.kingdom_id,
+             winterfell.duchy_id, winterfell.county_id, winterfell.barony_id, winterfell.region_id),
+            ("h_test", "e_test", "k_westeros", "d_winterfell", "c_winterfell",
+             "b_winterfell", "the_north"),
         )
+        self.assertTrue(all(title.title_color.startswith("#") for title in dataset.titles))
 
     def test_output_is_identical_when_input_order_is_reversed(self) -> None:
         self.assertEqual(self._dataset(), self._dataset(reverse=True))
@@ -671,6 +676,10 @@ class MapLocationTests(unittest.TestCase):
         self.assertEqual(ancestors.county_id, "c_winterfell")
         self.assertEqual(ancestors.duchy_id, "d_winterfell")
         self.assertEqual(ancestors.kingdom_id, "k_westeros")
+        self.assertEqual(ancestors.empire_id, "e_test")
+        self.assertEqual(ancestors.hegemon_id, "h_test")
+        self.assertEqual(self.titles.title_colors["e_test"], "#b9bfbc")
+        self.assertEqual(self.titles.title_colors["h_test"], "#826464")
         locations = build_locations(
             self.geometries,
             self.titles,
@@ -682,6 +691,34 @@ class MapLocationTests(unittest.TestCase):
         self.assertEqual(winterfell.type, "landmark")
         self.assertEqual((winterfell.map_x, winterfell.map_y), (0, 0))
         self.assertEqual(winterfell.county_id, "c_winterfell")
+
+    def test_rejects_out_of_range_title_color(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="agot-title-color-", dir=FAST_TMP_ROOT) as directory:
+            path = Path(directory) / "titles.txt"
+            path.write_text(
+                "e_test = { color = { 256 10 20 } k_test = { d_test = { c_test = { b_test = { province = 1 } } } } }",
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(MapImportError, "color 通道必须位于 0 到 255"):
+                parse_title_hierarchy(path)
+
+    def test_accepts_optional_alpha_title_color_channel(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="agot-title-color-", dir=FAST_TMP_ROOT) as directory:
+            path = Path(directory) / "titles.txt"
+            path.write_text(
+                "e_test = { color = { 120 130 140 0 } k_test = { d_test = { c_test = { b_test = { province = 1 } } } } }",
+                encoding="utf-8",
+            )
+            self.assertEqual(parse_title_hierarchy(path).title_colors["e_test"], "#78828c")
+
+    def test_missing_title_color_does_not_create_entry(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="agot-title-color-", dir=FAST_TMP_ROOT) as directory:
+            path = Path(directory) / "titles.txt"
+            path.write_text(
+                "e_test = { k_test = { d_test = { c_test = { b_test = { province = 1 } } } } }",
+                encoding="utf-8",
+            )
+            self.assertEqual(parse_title_hierarchy(path).title_colors, {})
 
     def test_override_cannot_change_stable_location_id(self) -> None:
         with self.assertRaisesRegex(MapImportError, "稳定 ID"):
@@ -791,20 +828,35 @@ class RouteGraphTests(unittest.TestCase):
 def semantic_fixture(location_ids: tuple[str, ...] = ("b_one", "b_two", "b_three")) -> SemanticDataset:
     geometry = box(0, 0, 14, 4)
     anchor = Point(7, 2)
-    ranks = (("realm", "the_fixture", 100), ("duchy", "d_fixture", 80), ("county", "c_fixture", 60))
+    ranks = (
+        ("hegemon", "h_fixture", 100),
+        ("empire", "e_fixture", 90),
+        ("kingdom", "k_fixture", 80),
+        ("duchy", "d_fixture", 70),
+        ("county", "c_fixture", 60),
+    )
     boundaries = tuple(
-        SemanticBoundaryRecord(index, title_id, rank, f"{title_id}中文", "the_fixture", None, geometry)
+        SemanticBoundaryRecord(index, title_id, rank, f"{title_id}中文", "the_fixture", "#777777", geometry)
         for index, (rank, title_id, _importance) in enumerate(ranks, 1)
     )
     titles = tuple(
         SemanticTitleRecord(
             index, title_id, rank, f"{title_id}中文", 7.0, 2.0, importance,
-            "the_fixture", None, geometry, anchor,
+            "the_fixture", "#777777", geometry, anchor,
         )
         for index, (rank, title_id, importance) in enumerate(ranks, 1)
     )
     memberships = tuple(
-        SemanticMembershipRecord(location_id, location_id, "c_fixture", "d_fixture", "the_fixture")
+        SemanticMembershipRecord(
+            location_id,
+            location_id,
+            "c_fixture",
+            "d_fixture",
+            "k_fixture",
+            "e_fixture",
+            "h_fixture",
+            "the_fixture",
+        )
         for location_id in sorted(location_ids)
     )
     return SemanticDataset(boundaries, titles, memberships, ())
@@ -890,16 +942,48 @@ class TileBuilderTests(unittest.TestCase):
         self.assertEqual(set(decoded), set(layer_names))
         self.assertTrue(all(decoded[name]["extent"] == 4096 for name in layer_names))
 
-    def test_semantic_tile_contains_only_three_visible_ranks_and_title_labels(self) -> None:
+    def test_semantic_tiles_only_encode_ranks_visible_within_each_integer_zoom(self) -> None:
         report = build_semantic_tiles(
-            semantic_fixture(), (0, 0, 14, 4), self.root / "semantic", (0,), tile_size=512,
+            semantic_fixture(), (0, 0, 14, 4), self.root / "semantic", (0, 1, 2, 3), tile_size=512,
         )
-        tile = self.root / "semantic/0/0/0.pbf"
-        decoded = mapbox_vector_tile.decode(tile.read_bytes(), default_options={"y_coord_down": True})
-        self.assertEqual(set(decoded), {
-            "realm_boundaries", "duchy_boundaries", "county_boundaries", "title_labels",
-        })
-        self.assertNotIn("barony_boundaries", decoded)
+        expected_ranks = {
+            0: {"hegemon", "empire"},
+            1: {"empire", "kingdom"},
+            2: {"kingdom", "duchy", "county"},
+            3: {"county"},
+        }
+        for zoom, ranks in expected_ranks.items():
+            seen_layers: set[str] = set()
+            seen_label_ranks: set[str] = set()
+            for tile in (self.root / "semantic" / str(zoom)).rglob("*.pbf"):
+                decoded = mapbox_vector_tile.decode(tile.read_bytes(), default_options={"y_coord_down": True})
+                seen_layers.update(decoded)
+                seen_label_ranks.update(
+                    feature["properties"]["rank"]
+                    for feature in decoded.get("title_labels", {}).get("features", [])
+                )
+                for layer_name, layer in decoded.items():
+                    for feature in layer["features"]:
+                        properties = feature["properties"]
+                        if layer_name.endswith("_surfaces") or layer_name == "title_labels":
+                            for key in ("titleId", "rank", "name", "regionId", "titleColor"):
+                                self.assertIn(key, properties, f"{layer_name} 缺少 {key}")
+                            self.assertRegex(properties["titleColor"], r"^#[0-9a-f]{6}$")
+                        if layer_name.endswith("_surfaces"):
+                            self.assertIn(feature["geometry"]["type"], {"Polygon", "MultiPolygon"})
+                        elif layer_name.endswith("_boundaries"):
+                            self.assertIn(feature["geometry"]["type"], {"LineString", "MultiLineString"})
+                            if layer_name == "county_boundaries":
+                                self.assertIn("titleId", properties)
+                self.assertNotIn("barony_boundaries", decoded)
+                self.assertNotIn("barony_surfaces", decoded)
+            expected_layers = {
+                f"{rank}_{geometry_kind}"
+                for rank in ranks
+                for geometry_kind in ("surfaces", "boundaries")
+            } | {"title_labels"}
+            self.assertEqual(seen_layers, expected_layers)
+            self.assertEqual(seen_label_ranks, ranks)
         self.assertEqual(report.kind, "semantic")
 
     def test_terrain_rgb_formula_is_reversible_with_point_one_precision(self) -> None:
@@ -912,6 +996,56 @@ class TileBuilderTests(unittest.TestCase):
         )
         decoded = -10000 + packed * 0.1
         np.testing.assert_allclose(decoded, heights, atol=0.1)
+
+    def test_adjacent_dem_tiles_share_the_same_world_edge(self) -> None:
+        output = self.root / "seamless-dem"
+        y, x = np.mgrid[0:128, 0:128]
+        height = np.clip(
+            x * 180 + y * 80 + np.sin(x / 13) * 3500 + np.cos(y / 17) * 2600 + 8000,
+            0,
+            65535,
+        ).astype(np.uint16)
+        build_dem_tiles(
+            Image.fromarray(height), (0, 0, 128, 128), output, (1,), tile_size=128,
+        )
+
+        def decode(path: Path) -> np.ndarray:
+            with Image.open(path) as rendered:
+                rgb = np.asarray(rendered, dtype=np.uint32)
+            packed = rgb[..., 0] * 65536 + rgb[..., 1] * 256 + rgb[..., 2]
+            return -10000 + packed * 0.1
+
+        left = decode(output / "1/0/0.png")
+        right = decode(output / "1/1/0.png")
+        seam = np.abs(left[:, -1] - right[:, 0])
+        nearby = np.concatenate((
+            np.abs(left[:, -1] - left[:, -2]),
+            np.abs(right[:, 1] - right[:, 0]),
+        ))
+        self.assertLessEqual(float(np.percentile(seam, 99)), float(np.percentile(nearby, 99)) + 0.2)
+
+    def test_dem_flattens_masked_ocean_height_before_encoding(self) -> None:
+        output = self.root / "flat-water-dem"
+        heightmap = Image.fromarray(np.tile(
+            np.asarray([0, 1000, 2000, 3000], dtype=np.uint16),
+            (4, 1),
+        ))
+        ocean_mask = Image.new("L", (4, 4), 0)
+        build_dem_tiles(
+            heightmap,
+            (0, 0, 4, 4),
+            output,
+            (0,),
+            tile_size=16,
+            min_elevation=0,
+            max_elevation=1000,
+            land_mask=ocean_mask,
+        )
+        with Image.open(output / "0/0/0.png") as rendered:
+            encoded = np.asarray(rendered, dtype=np.uint32)
+        packed = encoded[..., 0] * 65536 + encoded[..., 1] * 256 + encoded[..., 2]
+        decoded = -10000 + packed * 0.1
+        self.assertLessEqual(float(decoded.max() - decoded.min()), 0.1)
 
     def test_builds_dem_png_and_atomically_removes_stale_tiles(self) -> None:
         output = self.root / "dem"
@@ -968,7 +1102,7 @@ class MapWriterTests(unittest.TestCase):
             source_hashes={"map_data/provinces.png": "a" * 64},
             map_size=(9216, 6144),
             westeros_bounds=(0, 0, 14, 4),
-            tile_counts={"terrain": 1, "vector": 1, "dem": 1, "semantic": 1},
+            tile_counts={"terrain": 1, "terrainLight": 1, "vector": 1, "dem": 1, "semantic": 1},
             semantic=self.semantic,
             semantic_tile_root=self.semantic_tiles,
             min_zoom=0,
@@ -988,15 +1122,35 @@ class MapWriterTests(unittest.TestCase):
         self.assertNotIn("/mnt/c/agot/2962333032", serialized)
         self.assertNotIn("http://", serialized)
 
-        self.assertEqual(first["schemaVersion"], 3)
+        self.assertEqual(first["schemaVersion"], 4)
         self.assertEqual(first["paths"]["semantic"], "/assets/agot-map/semantic/{z}/{x}/{y}.pbf")
-        self.assertEqual(first["counts"]["semanticRealms"], 1)
+        self.assertEqual(first["paths"]["terrainLight"], "/assets/agot-map/terrain-light/{z}/{x}/{y}.webp")
+        self.assertEqual(first["counts"]["terrainLightTiles"], 1)
+        self.assertEqual(first["counts"]["semanticHegemons"], 1)
+        self.assertEqual(first["counts"]["semanticEmpires"], 1)
+        self.assertEqual(first["counts"]["semanticKingdoms"], 1)
         self.assertEqual(first["counts"]["semanticDuchies"], 1)
         self.assertEqual(first["counts"]["semanticCounties"], 1)
-        self.assertEqual(first["counts"]["semanticLabels"], 3)
+        self.assertEqual(first["counts"]["semanticLabels"], 5)
         self.assertRegex(first["semanticHash"], r"^[a-f0-9]{64}$")
         self.assertTrue((self.root / "first/semantic/titles.json").is_file())
         self.assertTrue((self.root / "first/semantic/membership.json").is_file())
+
+    def test_omits_missing_optional_semantic_ancestors(self) -> None:
+        first_membership = replace(
+            self.semantic.memberships[0], kingdom_id=None, empire_id=None, hegemon_id=None,
+        )
+        self.semantic = replace(
+            self.semantic, memberships=(first_membership, *self.semantic.memberships[1:]),
+        )
+        self._write(self.root / "optional-ancestors")
+        memberships = json.loads(
+            (self.root / "optional-ancestors/semantic/membership.json").read_text(encoding="utf-8"),
+        )
+        first = next(item for item in memberships if item["locationId"] == first_membership.location_id)
+        self.assertNotIn("kingdomId", first)
+        self.assertNotIn("empireId", first)
+        self.assertNotIn("hegemonId", first)
 
     def test_audit_rejects_dangling_route_and_preserves_previous_output(self) -> None:
         output = self.root / "published"
@@ -1056,25 +1210,105 @@ class MapCliTests(unittest.TestCase):
             )
             data_output = root / "data"
             asset_output = root / "assets"
-            result = map_import_main([
-                "--source", str(source),
-                "--data-output", str(data_output),
-                "--asset-output", str(asset_output),
-                "--expected-size", "8", "6",
-                "--max-vector-zoom", "0",
-                "--skip-tiles",
-            ])
+            with mock.patch(
+                "scripts.agot_map_import.cli._load_hegemon_scopes",
+                return_value={"h_test": ["e_test"]},
+            ):
+                result = map_import_main([
+                    "--source", str(source),
+                    "--data-output", str(data_output),
+                    "--asset-output", str(asset_output),
+                    "--expected-size", "8", "6",
+                    "--max-vector-zoom", "0",
+                    "--skip-tiles",
+                ])
             self.assertEqual(result, 0)
             manifest = json.loads((data_output / "manifest.json").read_text())
             self.assertEqual(manifest["counts"]["locations"], 2)
-            self.assertEqual(manifest["schemaVersion"], 3)
+            self.assertEqual(manifest["schemaVersion"], 4)
             self.assertEqual(manifest["counts"]["terrainTiles"], 0)
+            self.assertEqual(manifest["counts"]["terrainLightTiles"], 0)
             self.assertEqual(manifest["counts"]["materialTerrainTiles"], 0)
             self.assertEqual(manifest["counts"]["semanticTiles"], 0)
             self.assertGreater(manifest["counts"]["semanticCounties"], 0)
             self.assertTrue((data_output / "semantic/titles.json").is_file())
             self.assertTrue((data_output / "reports/semantic.json").is_file())
             self.assertTrue((data_output / "reports/audit.json").is_file())
+
+
+class TerrainLightingTests(unittest.TestCase):
+    def test_overlay_is_transparent_on_flat_ground_and_directional_on_relief(self) -> None:
+        flat = np.zeros((64, 64), dtype=np.uint16)
+        flat_overlay = terrain_light_overlay(Image.fromarray(flat), (0, 0, 64, 64))
+        self.assertEqual(int(np.asarray(flat_overlay)[..., 3].max()), 0)
+
+        height = np.zeros((96, 96), dtype=np.uint16)
+        height[:, 36:60] = np.linspace(0, 65535, 24, dtype=np.uint16)[None, :]
+        overlay = terrain_light_overlay(Image.fromarray(height), (0, 0, 96, 96))
+        rgba = np.asarray(overlay)
+        self.assertGreater(int(rgba[..., 3].max()), 80)
+        self.assertGreater(len(np.unique(rgba[..., :3].reshape(-1, 3), axis=0)), 1)
+
+    def test_overlay_suppresses_high_frequency_height_noise_and_uses_neutral_highlight(self) -> None:
+        y, x = np.mgrid[0:128, 0:128]
+        noisy = (30000 + ((x + y) % 2) * 300).astype(np.uint16)
+        overlay = np.asarray(terrain_light_overlay(
+            Image.fromarray(noisy), (0, 0, 128, 128),
+        ))
+        interior_alpha = overlay[16:-16, 16:-16, 3]
+        self.assertLessEqual(int(interior_alpha.max()), 12)
+        visible = overlay[..., 3] > 0
+        if np.any(visible):
+            visible_rgb = overlay[..., :3][visible].astype(np.int16)
+            self.assertLessEqual(int(np.max(visible_rgb[:, 0] - visible_rgb[:, 2])), 48)
+
+    def test_overlay_masks_water_relief_without_hiding_land_relief(self) -> None:
+        height = np.zeros((64, 64), dtype=np.uint16)
+        height[:, 16:48] = np.linspace(0, 65535, 32, dtype=np.uint16)[None, :]
+        land_mask = np.full((64, 64), 255, dtype=np.uint8)
+        land_mask[:, :32] = 0
+
+        overlay = terrain_light_overlay(
+            Image.fromarray(height),
+            (0, 0, 64, 64),
+            land_mask=Image.fromarray(land_mask),
+        )
+        alpha = np.asarray(overlay)[..., 3]
+        self.assertEqual(int(alpha[:, :32].max()), 0)
+        self.assertGreater(int(alpha[:, 32:].max()), 80)
+
+    def test_adjacent_tiles_sample_one_global_overlay_without_visible_seam(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="agot-light-seam-", dir=FAST_TMP_ROOT) as folder:
+            y, x = np.mgrid[0:128, 0:128]
+            height = np.clip(
+                x * 180 + y * 80 + np.sin(x / 13) * 3500 + np.cos(y / 17) * 2600 + 8000,
+                0,
+                65535,
+            ).astype(np.uint16)
+            output = Path(folder) / "tiles"
+            build_terrain_light_tiles(
+                Image.fromarray(height), (0, 0, 128, 128), output, (1,), 128,
+            )
+            left = np.asarray(Image.open(output / "1/0/0.webp").convert("RGBA"), dtype=np.int16)
+            right = np.asarray(Image.open(output / "1/1/0.webp").convert("RGBA"), dtype=np.int16)
+            seam = np.abs(left[:, -1] - right[:, 0])
+            nearby = np.concatenate((
+                np.abs(left[:, -1] - left[:, -2]),
+                np.abs(right[:, 1] - right[:, 0]),
+            ))
+            self.assertLessEqual(float(np.percentile(seam, 99)), float(np.percentile(nearby, 99)) + 8)
+
+    def test_builder_writes_transparent_webp_tiles(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="agot-light-", dir=FAST_TMP_ROOT) as folder:
+            source = Path(folder) / "height.png"
+            output = Path(folder) / "tiles"
+            values = np.tile(np.linspace(0, 65535, 64, dtype=np.uint16), (64, 1))
+            Image.fromarray(values).save(source)
+            report = build_terrain_light_tiles(source, (0, 0, 64, 64), output, (0, 1), 32)
+            self.assertEqual(report.tile_count, 5)
+            with Image.open(output / "0/0/0.webp") as tile:
+                self.assertEqual(tile.mode, "RGBA")
+                self.assertGreater(tile.getchannel("A").getextrema()[1], 0)
 
 
 if __name__ == "__main__":

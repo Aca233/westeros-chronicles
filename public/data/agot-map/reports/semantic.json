@@ -1,1 +1,1 @@
-{"counts":{"counties":1077,"duchies":205,"labels":1293,"memberships":6094,"missingLocalizations":0,"realms":11},"missingLocalizations":[],"semanticHash":"979123c0c21824e37558c3cf9bc857b10c2576ef59c77fd9b08d5715d04b1e94","status":"passed"}
+{"counts":{"counties":1077,"duchies":205,"empires":11,"hegemons":1,"kingdoms":51,"labels":1345,"memberships":6094,"missingLocalizations":0},"missingLocalizations":[],"semanticHash":"380a1e7ca5bd8a69e37f5bce7e094b0c9ac9f3df6fd2c4f6248dcafbba16799b","status":"passed"}

@@ -2,27 +2,25 @@ import type { ExpressionSpecification } from 'maplibre-gl'
 
 import type { SemanticRank } from './types'
 
-const CROSS_FADES = {
-  realmToDuchy: [1.1, 1.4],
-  duchyToCounty: [2.5, 2.8],
-} as const
+export const HEGEMON_MAX_ZOOM = 0.85
+export const EMPIRE_MAX_ZOOM = 1.55
+export const KINGDOM_MAX_ZOOM = 2.25
+export const DUCHY_MAX_ZOOM = 2.95
+export const LOCAL_MIN_ZOOM = 4.6
+
 const DETAIL_CROSS_FADE = [4.1, 4.4] as const
 const MAX_SEMANTIC_ZOOM = 6
 
-const RANK_OPACITY_STOPS: Record<SemanticRank, ExpressionSpecification> = {
-  realm: ['interpolate', ['linear'], ['zoom'], 0, 1, 1.1, 1, 1.4, 0],
-  duchy: ['interpolate', ['linear'], ['zoom'], 1.1, 0, 1.4, 1, 2.5, 1, 2.8, 0],
-  county: ['interpolate', ['linear'], ['zoom'], 2.5, 0, 2.8, 1, 6, 1],
-}
-
 const LABEL_SIZE_STOPS: Record<SemanticRank, ExpressionSpecification> = {
-  realm: ['interpolate', ['linear'], ['zoom'], 0, 22, 1.4, 18],
-  duchy: ['interpolate', ['linear'], ['zoom'], 1.1, 18, 2.8, 15],
-  county: ['interpolate', ['linear'], ['zoom'], 2.5, 15, 6, 12],
+  hegemon: ['interpolate', ['linear'], ['zoom'], 0, 24, HEGEMON_MAX_ZOOM, 21],
+  empire: ['interpolate', ['linear'], ['zoom'], HEGEMON_MAX_ZOOM, 22, EMPIRE_MAX_ZOOM, 19],
+  kingdom: ['interpolate', ['linear'], ['zoom'], EMPIRE_MAX_ZOOM, 20, KINGDOM_MAX_ZOOM, 17],
+  duchy: ['interpolate', ['linear'], ['zoom'], KINGDOM_MAX_ZOOM, 18, DUCHY_MAX_ZOOM, 15],
+  county: ['interpolate', ['linear'], ['zoom'], DUCHY_MAX_ZOOM, 15, MAX_SEMANTIC_ZOOM, 12],
 }
 
 export const semanticDetailOpacityExpression: ExpressionSpecification = [
-  'interpolate', ['linear'], ['zoom'], 4.1, 0, 4.4, 1, 6, 1,
+  'interpolate', ['linear'], ['zoom'], DETAIL_CROSS_FADE[0], 0, DETAIL_CROSS_FADE[1], 1, MAX_SEMANTIC_ZOOM, 1,
 ]
 
 export interface SemanticZoomState {
@@ -51,20 +49,24 @@ function fade(start: number, end: number, zoom: number): number {
   return rounded(Math.min(1, Math.max(0, (zoom - start) / (end - start))))
 }
 
+function rankForZoom(zoom: number): SemanticRank {
+  if (zoom < HEGEMON_MAX_ZOOM) return 'hegemon'
+  if (zoom < EMPIRE_MAX_ZOOM) return 'empire'
+  if (zoom < KINGDOM_MAX_ZOOM) return 'kingdom'
+  if (zoom < DUCHY_MAX_ZOOM) return 'duchy'
+  return 'county'
+}
+
 export function semanticZoomState(value: number): SemanticZoomState {
   const zoom = normalizedZoom(value)
-  const realmToDuchy = fade(...CROSS_FADES.realmToDuchy, zoom)
-  const duchyToCounty = fade(...CROSS_FADES.duchyToCounty, zoom)
-  const weights = {
-    realm: rounded(1 - realmToDuchy),
-    duchy: rounded(realmToDuchy * (1 - duchyToCounty)),
-    county: duchyToCounty,
+  const primaryRank = rankForZoom(zoom)
+  const weights: Record<SemanticRank, number> = {
+    hegemon: Number(primaryRank === 'hegemon'),
+    empire: Number(primaryRank === 'empire'),
+    kingdom: Number(primaryRank === 'kingdom'),
+    duchy: Number(primaryRank === 'duchy'),
+    county: Number(primaryRank === 'county'),
   }
-  const primaryRank: SemanticRank = weights.county >= weights.duchy && weights.county >= weights.realm
-    ? 'county'
-    : weights.duchy >= weights.realm
-      ? 'duchy'
-      : 'realm'
   const detailMix = fade(...DETAIL_CROSS_FADE, zoom)
 
   return {
@@ -81,8 +83,18 @@ export function semanticZoomState(value: number): SemanticZoomState {
   }
 }
 
-export function semanticRankOpacityExpression(rank: SemanticRank): ExpressionSpecification {
-  return RANK_OPACITY_STOPS[rank]
+export function semanticRankOpacityExpression(
+  rank: SemanticRank,
+  visibleOpacity = 1,
+  hideAtLocalDetail = false,
+): ExpressionSpecification {
+  if (rank === 'hegemon') return ['step', ['zoom'], visibleOpacity, HEGEMON_MAX_ZOOM, 0]
+  if (rank === 'empire') return ['step', ['zoom'], 0, HEGEMON_MAX_ZOOM, visibleOpacity, EMPIRE_MAX_ZOOM, 0]
+  if (rank === 'kingdom') return ['step', ['zoom'], 0, EMPIRE_MAX_ZOOM, visibleOpacity, KINGDOM_MAX_ZOOM, 0]
+  if (rank === 'duchy') return ['step', ['zoom'], 0, KINGDOM_MAX_ZOOM, visibleOpacity, DUCHY_MAX_ZOOM, 0]
+  return hideAtLocalDetail
+    ? ['step', ['zoom'], 0, DUCHY_MAX_ZOOM, visibleOpacity, LOCAL_MIN_ZOOM, 0]
+    : ['step', ['zoom'], 0, DUCHY_MAX_ZOOM, visibleOpacity]
 }
 
 export function semanticLabelSizeExpression(rank: SemanticRank): ExpressionSpecification {
@@ -91,8 +103,8 @@ export function semanticLabelSizeExpression(rank: SemanticRank): ExpressionSpeci
 
 export function nextSemanticZoom(value: number): number {
   const zoom = normalizedZoom(value)
-  if (zoom < 2) return 2
-  if (zoom < 3.4) return 3.4
-  if (zoom < 5) return 5
+  for (const target of [HEGEMON_MAX_ZOOM, EMPIRE_MAX_ZOOM, KINGDOM_MAX_ZOOM, DUCHY_MAX_ZOOM, LOCAL_MIN_ZOOM, 6]) {
+    if (zoom < target) return target
+  }
   return 6
 }

@@ -6,6 +6,7 @@ import {
   ITEM_SAVE_FORMAT_VERSION,
   assertSupportedGameState,
   assertSupportedSaveEnvelope,
+  isCompatibleTurnBaseline,
 } from '../features/items/saveVersion';
 
 export interface GameSnapshot {
@@ -63,11 +64,17 @@ export function assertTurnCommitConsistency(
   if (history.turns.length !== expectedHistoryLength) {
     throw new Error(`世界账本回合数量与当前回合号不一致：${history.turns.length}/${expectedHistoryLength}`);
   }
+  const worldEventsById = new Map(gameState.worldRuntime.events.map((event) => [event.id, event]));
   history.turns.forEach((turn, index) => {
     const expected = index + 2;
     if (turn.turn !== expected) throw new Error(`世界账本回合号不连续：期望 ${expected}，实际 ${turn.turn}`);
-    if (turn.facts.some((fact) => fact.turn !== turn.turn)) {
-      throw new Error(`世界账本回合 ${turn.turn} 含有其他回合的事实`);
+    if (new Set(turn.eventIds).size !== turn.eventIds.length) {
+      throw new Error(`世界账本回合 ${turn.turn} 含有重复事件引用`);
+    }
+    for (const eventId of turn.eventIds) {
+      const event = worldEventsById.get(eventId);
+      if (!event) throw new Error(`世界账本引用的世界事件不存在：${eventId}`);
+      if (event.turn !== turn.turn) throw new Error(`世界账本回合 ${turn.turn} 含有其他回合的事件`);
     }
   });
 
@@ -86,6 +93,9 @@ export function assertTurnCommitConsistency(
 
   if (gameState.worldCharacters && gameState.worldCharacters.revision !== history.turns.length) {
     throw new Error(`人物世界修订号与世界账本不一致：${gameState.worldCharacters.revision}/${history.turns.length}`);
+  }
+  if (gameState.worldRuntime.revision !== history.turns.length) {
+    throw new Error(`世界运行时修订号与世界账本不一致：${gameState.worldRuntime.revision}/${history.turns.length}`);
   }
 
   if (characterEvents !== undefined) {
@@ -125,6 +135,9 @@ export function assertTurnSuccessor(previous: GameState, next: GameState): void 
   const nextRevision = next.worldCharacters?.revision;
   if (previousRevision === undefined || nextRevision !== previousRevision + 1) {
     throw new Error(`人物世界修订号必须连续：${previousRevision ?? '无'} -> ${nextRevision ?? '无'}`);
+  }
+  if (next.worldRuntime.revision !== previous.worldRuntime.revision + 1) {
+    throw new Error(`世界运行时修订号必须连续：${previous.worldRuntime.revision} -> ${next.worldRuntime.revision}`);
   }
 }
 
@@ -167,6 +180,40 @@ async function upsertWorldRun(gameState: GameState): Promise<void> {
   if (!ref) return;
   const existing = await db.worldRuns.get(ref.runId);
   await db.worldRuns.put({ runId: ref.runId, datasetHash: ref.datasetHash, revision: ref.revision, createdAt: existing?.createdAt ?? Date.now() });
+}
+
+
+/**
+ * Keep the persisted predecessor aligned with the state the player can see.
+ * Test builds deliberately do not migrate old save formats: an incompatible,
+ * missing, or foreign baseline is discarded before any model request starts.
+ */
+export async function ensureTurnSnapshotBaseline(gameState: GameState): Promise<'ready' | 'reset'> {
+  assertSupportedGameState(gameState);
+  assertTurnCommitConsistency(gameState);
+
+  return db.transaction('rw', db.snapshots, db.worldRuns, db.characterEvents, db.characterStateCache, async () => {
+    const latest = await db.snapshots.orderBy('turnNumber').reverse().first();
+    if (latest && isCompatibleTurnBaseline(latest, gameState)) {
+      try {
+        assertSupportedSnapshot(latest);
+        return 'ready' as const;
+      } catch {
+        // A current-version but internally inconsistent test snapshot is stale.
+      }
+    }
+
+    await Promise.all([db.snapshots.clear(), db.worldRuns.clear(), db.characterEvents.clear(), db.characterStateCache.clear()]);
+    await upsertWorldRun(gameState);
+    await db.snapshots.add({
+      formatVersion: ITEM_SAVE_FORMAT_VERSION,
+      turnNumber: gameState.turnCount,
+      timestamp: Date.now(),
+      gameState: clone(gameState),
+      summaryNote: '自动重建测试存档基线',
+    });
+    return 'reset' as const;
+  });
 }
 
 export async function saveTurnSnapshot(gameState: GameState, summaryNote?: string): Promise<number> {

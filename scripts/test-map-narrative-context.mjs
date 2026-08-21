@@ -7,7 +7,7 @@ import {
 } from '../src/features/map/narrativeLocationContext.ts'
 
 const title = (titleId, rank, name) => ({
-  featureId: { realm: 1, duchy: 2, county: 3 }[rank],
+  featureId: { hegemon: 1, empire: 2, kingdom: 3, duchy: 4, county: 5 }[rank],
   titleId,
   rank,
   name,
@@ -15,6 +15,7 @@ const title = (titleId, rank, name) => ({
   mapY: 20,
   importance: 80,
   regionId: 'the_north',
+  titleColor: '#777777',
 })
 
 const winterfell = {
@@ -33,16 +34,21 @@ const hierarchy = {
     baronyId: 'b_winterfell',
     countyId: 'c_winterfell',
     duchyId: 'd_winterfell',
-    realmId: 'the_north',
+    kingdomId: 'k_the_north',
+    empireId: 'e_the_north',
+    hegemonId: 'h_the_iron_throne',
+    regionId: 'the_north',
   }],
   titles: [
     title('c_winterfell', 'county', '临冬城伯爵领'),
     title('d_winterfell', 'duchy', '临冬城公国'),
-    title('the_north', 'realm', '北境'),
+    title('k_the_north', 'kingdom', '北境王国'),
+    title('e_the_north', 'empire', '北境'),
+    title('h_the_iron_throne', 'hegemon', '铁王座'),
   ],
 }
 
-test('叙事地点只输出具体地点、伯爵领、公国和战略区域中文名', () => {
+test('叙事地点只输出具体地点和经过验证的五级头衔中文名', () => {
   const context = resolveNarrativeLocationContext({
     location: { locationId: 'b_winterfell', sceneLocation: '神木林' },
     locations: [winterfell],
@@ -51,7 +57,7 @@ test('叙事地点只输出具体地点、伯爵领、公国和战略区域中�
 
   assert.equal(
     formatNarrativeLocationContext(context),
-    '临冬城 · 神木林 · 临冬城伯爵领 · 临冬城公国 · 北境',
+    '临冬城 · 神木林 · 临冬城伯爵领 · 临冬城公国 · 北境王国 · 北境 · 铁王座',
   )
   assert.doesNotMatch(JSON.stringify(context), /b_winterfell|baronyId|男爵/)
 })

@@ -1,4 +1,11 @@
-import type { KnowledgeLevel, MapLocation, MapLocationType } from './types'
+import type {
+  KnowledgeLevel,
+  MapLocation,
+  MapLocationType,
+  SemanticMembership,
+  SemanticRank,
+  SemanticTitle,
+} from './types'
 import {
   filterMapIntelligence,
   type MapIntelRecord,
@@ -38,10 +45,14 @@ export interface LocationKnowledgeProjection {
 export interface LocationViewContext {
   now: string
   debugIntelligence?: boolean
+  semantic?: {
+    membership: SemanticMembership
+    titles: readonly SemanticTitle[]
+  }
 }
 
 export interface LocationHierarchyEntry {
-  rank: 'kingdom' | 'duchy' | 'county' | 'barony'
+  rank: SemanticRank
   rankLabel: string
   id: string
   label: string
@@ -114,10 +125,11 @@ const TERRAIN_LABELS: Record<string, string> = {
 }
 
 const HIERARCHY_META = [
-  ['kingdomId', 'kingdom', '王国'],
+  ['hegemonId', 'hegemon', '霸权'],
+  ['empireId', 'empire', '帝国级头衔'],
+  ['kingdomId', 'kingdom', '王国级头衔'],
   ['duchyId', 'duchy', '公国'],
   ['countyId', 'county', '伯爵领'],
-  ['baronyId', 'barony', '男爵领'],
 ] as const
 
 function displayStableId(id: string): string {
@@ -155,9 +167,11 @@ export function buildLocationView(
   projection: LocationKnowledgeProjection = {},
   context: LocationViewContext = { now: '未记录' },
 ): LocationViewModel {
+  const titleById = new Map(context.semantic?.titles.map((title) => [title.titleId, title]) ?? [])
   const hierarchy = HIERARCHY_META.flatMap(([field, rank, rankLabel]) => {
-    const id = location[field]
-    return id ? [{ rank, rankLabel, id, label: displayStableId(id) }] : []
+    const id = context.semantic?.membership[field]
+    const title = id ? titleById.get(id) : undefined
+    return id && title?.rank === rank ? [{ rank, rankLabel, id, label: title.name }] : []
   })
   const ruler = visible(projection.ruler ? [projection.ruler] : [])[0]
   const intelligence = (projection.intelligence ?? []).flatMap(({ subject, knowledge }) => {

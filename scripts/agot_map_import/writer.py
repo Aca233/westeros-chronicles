@@ -53,21 +53,27 @@ def _edge_json(edge) -> dict[str, object]:
 
 
 def _title_json(title) -> dict[str, object]:
-    value: dict[str, object] = {
+    return {
         "featureId": title.feature_id, "titleId": title.title_id, "rank": title.rank,
         "name": title.name, "mapX": title.map_x, "mapY": title.map_y,
         "importance": title.importance, "regionId": title.region_id,
+        "titleColor": title.title_color,
     }
-    if title.political_anchor_title_id:
-        value["politicalAnchorTitleId"] = title.political_anchor_title_id
-    return value
 
 
 def _membership_json(item) -> dict[str, object]:
-    return {
+    value: dict[str, object] = {
         "locationId": item.location_id, "baronyId": item.barony_id,
-        "countyId": item.county_id, "duchyId": item.duchy_id, "realmId": item.realm_id,
+        "countyId": item.county_id, "duchyId": item.duchy_id,
+        "regionId": item.region_id,
     }
+    optional = {
+        "kingdomId": item.kingdom_id,
+        "empireId": item.empire_id,
+        "hegemonId": item.hegemon_id,
+    }
+    value.update({key: title_id for key, title_id in optional.items() if title_id is not None})
+    return value
 
 
 def _hash_runtime_files(root: Path) -> tuple[str, dict[str, str]]:
@@ -180,13 +186,14 @@ def stage_map_dataset(
     dataset_hash, data_file_hashes = _hash_runtime_files(output)
     min_x, min_y, max_x, max_y = westeros_bounds
     manifest: dict[str, object] = {
-        "schemaVersion": 3, "sourceId": "2962333032",
+        "schemaVersion": 4, "sourceId": "2962333032",
         "sourceHashes": dict(sorted(source_hashes.items())),
         "mapSize": {"width": map_size[0], "height": map_size[1]},
         "westerosBounds": {"minX": min_x, "minY": min_y, "maxX": max_x, "maxY": max_y},
         "tileSize": 512, "minZoom": min_zoom, "maxZoom": max_zoom,
         "paths": {
             "terrain": "/assets/agot-map/terrain/{z}/{x}/{y}.webp",
+            "terrainLight": "/assets/agot-map/terrain-light/{z}/{x}/{y}.webp",
             "materialTerrain": "/assets/agot-map/material-terrain/{z}/{x}/{y}.webp",
             "vector": "/assets/agot-map/vector/{z}/{x}/{y}.pbf",
             "dem": "/assets/agot-map/dem/{z}/{x}/{y}.png",
@@ -200,10 +207,14 @@ def stage_map_dataset(
             "regions": len(regions), "provinces": len({item.province_id for item in locations}),
             "locations": len(locations), "routeEdges": len(route_graph.edges),
             "terrainTiles": int(tile_counts.get("terrain", 0)),
+            "terrainLightTiles": int(tile_counts.get("terrainLight", 0)),
             "materialTerrainTiles": int(tile_counts.get("materialTerrain", 0)),
             "vectorTiles": int(tile_counts.get("vector", 0)), "demTiles": int(tile_counts.get("dem", 0)),
             "semanticTiles": int(tile_counts.get("semantic", 0)),
-            "semanticRealms": semantic_counts["realms"], "semanticDuchies": semantic_counts["duchies"],
+            "semanticHegemons": semantic_counts["hegemons"],
+            "semanticEmpires": semantic_counts["empires"],
+            "semanticKingdoms": semantic_counts["kingdoms"],
+            "semanticDuchies": semantic_counts["duchies"],
             "semanticCounties": semantic_counts["counties"], "semanticLabels": semantic_counts["labels"],
             "missingSemanticLocalizations": semantic_counts["missingLocalizations"],
         },

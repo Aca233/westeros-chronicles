@@ -1,4 +1,4 @@
-import type { ExpressionSpecification, GeoJSONSource, Map as MapLibreMap } from 'maplibre-gl'
+import type { ExpressionSpecification, FilterSpecification, GeoJSONSource, Map as MapLibreMap } from 'maplibre-gl'
 
 import { mapPixelToLngLat } from './coordinates.ts'
 import {
@@ -11,32 +11,29 @@ import type { PoliticalFeatureState } from './politicalProjection.ts'
 import type { CountyInteractionIndex } from './countyInteraction.ts'
 import { semanticDetailOpacityExpression, type SemanticZoomState } from './semanticZoom.ts'
 import { aggregateAssetPoints, aggregateCharacterPoints, type SemanticSubjectAggregate } from './semanticAggregation.ts'
-import {
-  buildPoliticalHouseLabelCollection,
-  type PoliticalHouseLabelInput,
-} from './semanticPoliticalLabels.ts'
 import type {
   MapBounds,
   MapManifest,
   SemanticMembership,
+  SemanticRank,
   SemanticTitle,
 } from './types'
+import type { MapPresentation } from './mapPresentation.ts'
 
-export type MapMode = 'terrain' | 'political' | 'characters' | 'travel' | 'assets'
+export type MapInformationCategory = 'political' | 'characters' | 'roads' | 'assets'
 
-const INTELLIGENCE_TYPES_BY_MODE: Record<MapMode, ReadonlySet<RegisteredMapIntelType>> = {
-  terrain: new Set(),
+const INTELLIGENCE_TYPES_BY_CATEGORY: Record<MapInformationCategory, ReadonlySet<RegisteredMapIntelType>> = {
   political: new Set(['garrison', 'event']),
   characters: new Set(['character-location', 'identity', 'death']),
-  travel: new Set(['road-closure']),
+  roads: new Set(['road-closure']),
   assets: new Set(['asset']),
 }
 
-export function visibleMapSubjectsForMode(
-  mode: MapMode,
+export function visibleMapSubjectsForOverlay(
+  category: MapInformationCategory,
   subjects: readonly unknown[],
 ): VisibleMapSubject[] {
-  const allowedTypes = INTELLIGENCE_TYPES_BY_MODE[mode]
+  const allowedTypes = INTELLIGENCE_TYPES_BY_CATEGORY[category]
   return subjects.filter((subject): subject is VisibleMapSubject => {
     if (!subject || typeof subject !== 'object') return false
     const candidate = subject as Partial<VisibleMapSubject>
@@ -72,11 +69,15 @@ export function applyPoliticalFeatureStates(
       politicalTitleId: state.titleId,
       politicalEffectiveTitleId: state.effectiveTitleId ?? null,
       politicalHolderId: state.holderId ?? null,
+      politicalCountyHolderId: state.countyHolderId ?? null,
+      politicalControllerId: state.controllerId ?? null,
+      politicalControllerColor: state.controllerColor ?? null,
+      politicalIsContested: state.isContested,
+      politicalContestedByIds: state.contestedByIds,
       politicalHouseId: state.houseId ?? null,
       politicalRealmTitleId: state.realmTitleId ?? null,
       politicalRealmHolderId: state.realmHolderId ?? null,
       politicalRealmHouseId: state.realmHouseId ?? null,
-      politicalColor: state.realmColor ?? state.color,
       politicalSigil: state.sigil ?? null,
     })
   }
@@ -95,14 +96,16 @@ export const ASSET_POINT_LAYER = 'agot-asset-points'
 export const ASSET_AGGREGATE_SOURCE = 'agot-asset-aggregate-source'
 export const ASSET_AGGREGATE_LAYER = 'agot-asset-aggregates'
 export const ASSET_AGGREGATE_COUNT_LAYER = 'agot-asset-aggregate-counts'
-export const POLITICAL_HOUSE_LABEL_SOURCE = 'agot-political-house-label-source'
-export const POLITICAL_HOUSE_LABEL_LAYER = 'agot-political-house-labels'
+export const POLITICAL_CONTESTED_BORDER_LAYER = 'agot-political-contested-borders'
 export const COUNTY_HIT_LAYER = 'agot-county-hit-areas'
 export const SELECTED_COUNTY_OUTLINE_LAYER = 'agot-selected-county-outline'
+export const SELECTED_COUNTY_OUTLINE_GLOW_LAYER = 'agot-selected-county-outline-glow'
 export const SELECTED_COUNTY_LOCATION_SOURCE = 'agot-selected-county-location-source'
 export const SELECTED_COUNTY_LOCATION_LAYER = 'agot-selected-county-locations'
 export const FAR_MAP_SOURCE = 'agot-flatmap'
 export const FAR_MAP_LAYER = 'agot-flatmap'
+export const TERRAIN_LIGHT_SOURCE = 'agot-terrain-light'
+export const TERRAIN_LIGHT_LAYER = 'agot-terrain-light'
 export const MATERIAL_TERRAIN_SOURCE = 'agot-material-terrain'
 export const MATERIAL_TERRAIN_LAYER = 'agot-material-terrain'
 
@@ -122,107 +125,6 @@ const SPECIAL_COUNTY_LOCATION_ICONS: Readonly<Record<string, string>> = {
   b_sunspear: '/assets/game-icons/location-sunspear.webp',
   b_the_hightower: '/assets/game-icons/location-hightower.webp',
   b_oldtown: '/assets/game-icons/location-hightower.webp',
-}
-
-const SEMANTIC_VISIBILITY = {
-  'agot-realm-boundaries': true,
-  'agot-duchy-boundaries': true,
-  'agot-county-boundaries': true,
-  'agot-realm-labels': true,
-  'agot-duchy-labels': true,
-  'agot-county-labels': true,
-  [SELECTED_COUNTY_OUTLINE_LAYER]: true,
-} as const
-
-const COMMON_VISIBILITY = {
-  [FAR_MAP_LAYER]: true,
-  [MATERIAL_TERRAIN_LAYER]: true,
-  'agot-hillshade': true,
-  [COUNTY_HIT_LAYER]: true,
-  ...SEMANTIC_VISIBILITY,
-} as const
-
-export const MODE_VISIBILITY: Record<MapMode, Record<string, boolean>> = {
-  terrain: {
-    ...COMMON_VISIBILITY,
-    'agot-provinces': false,
-    [POLITICAL_HOUSE_LABEL_LAYER]: false,
-    'agot-roads': true,
-    'agot-routes': false,
-    [JOURNEY_ROUTE_SOURCE]: false,
-    [JOURNEY_PROGRESS_SOURCE]: false,
-    [JOURNEY_POSITION_SOURCE]: false,
-    [CHARACTER_POINT_LAYER]: false,
-    [CHARACTER_AGGREGATE_LAYER]: false,
-    [CHARACTER_AGGREGATE_COUNT_LAYER]: false,
-    [ASSET_POINT_LAYER]: false,
-    [ASSET_AGGREGATE_LAYER]: false,
-    [ASSET_AGGREGATE_COUNT_LAYER]: false,
-  },
-  political: {
-    ...COMMON_VISIBILITY,
-    'agot-provinces': true,
-    [POLITICAL_HOUSE_LABEL_LAYER]: true,
-    'agot-roads': false,
-    'agot-routes': false,
-    [JOURNEY_ROUTE_SOURCE]: false,
-    [JOURNEY_PROGRESS_SOURCE]: false,
-    [JOURNEY_POSITION_SOURCE]: false,
-    [CHARACTER_POINT_LAYER]: false,
-    [CHARACTER_AGGREGATE_LAYER]: false,
-    [CHARACTER_AGGREGATE_COUNT_LAYER]: false,
-    [ASSET_POINT_LAYER]: false,
-    [ASSET_AGGREGATE_LAYER]: false,
-    [ASSET_AGGREGATE_COUNT_LAYER]: false,
-  },
-  characters: {
-    ...COMMON_VISIBILITY,
-    'agot-provinces': false,
-    [POLITICAL_HOUSE_LABEL_LAYER]: false,
-    'agot-roads': false,
-    'agot-routes': false,
-    [JOURNEY_ROUTE_SOURCE]: false,
-    [JOURNEY_PROGRESS_SOURCE]: false,
-    [JOURNEY_POSITION_SOURCE]: false,
-    [CHARACTER_POINT_LAYER]: true,
-    [CHARACTER_AGGREGATE_LAYER]: true,
-    [CHARACTER_AGGREGATE_COUNT_LAYER]: true,
-    [ASSET_POINT_LAYER]: false,
-    [ASSET_AGGREGATE_LAYER]: false,
-    [ASSET_AGGREGATE_COUNT_LAYER]: false,
-  },
-  travel: {
-    ...COMMON_VISIBILITY,
-    'agot-provinces': false,
-    [POLITICAL_HOUSE_LABEL_LAYER]: false,
-    'agot-roads': true,
-    'agot-routes': true,
-    [JOURNEY_ROUTE_SOURCE]: true,
-    [JOURNEY_PROGRESS_SOURCE]: true,
-    [JOURNEY_POSITION_SOURCE]: true,
-    [CHARACTER_POINT_LAYER]: false,
-    [CHARACTER_AGGREGATE_LAYER]: false,
-    [CHARACTER_AGGREGATE_COUNT_LAYER]: false,
-    [ASSET_POINT_LAYER]: false,
-    [ASSET_AGGREGATE_LAYER]: false,
-    [ASSET_AGGREGATE_COUNT_LAYER]: false,
-  },
-  assets: {
-    ...COMMON_VISIBILITY,
-    'agot-provinces': false,
-    [POLITICAL_HOUSE_LABEL_LAYER]: false,
-    'agot-roads': false,
-    'agot-routes': false,
-    [JOURNEY_ROUTE_SOURCE]: false,
-    [JOURNEY_PROGRESS_SOURCE]: false,
-    [JOURNEY_POSITION_SOURCE]: false,
-    [CHARACTER_POINT_LAYER]: false,
-    [CHARACTER_AGGREGATE_LAYER]: false,
-    [CHARACTER_AGGREGATE_COUNT_LAYER]: false,
-    [ASSET_POINT_LAYER]: true,
-    [ASSET_AGGREGATE_LAYER]: true,
-    [ASSET_AGGREGATE_COUNT_LAYER]: true,
-  },
 }
 
 function dynamicPointCollection(
@@ -377,6 +279,24 @@ export interface SemanticSubjectContext {
   zoomState: SemanticZoomState
 }
 
+const dynamicSourceSignatures = new WeakMap<object, Map<string, string>>()
+
+function setDynamicSourceData(
+  map: MapLibreMap,
+  sourceId: string,
+  data: GeoJSON.FeatureCollection,
+): void {
+  let signatures = dynamicSourceSignatures.get(map)
+  if (!signatures) {
+    signatures = new Map()
+    dynamicSourceSignatures.set(map, signatures)
+  }
+  const signature = JSON.stringify(data)
+  if (signatures.get(sourceId) === signature) return
+  ;(map.getSource(sourceId) as GeoJSONSource).setData(data)
+  signatures.set(sourceId, signature)
+}
+
 export function syncDynamicMapSubjects(
   map: MapLibreMap,
   manifest: MapManifest,
@@ -384,76 +304,65 @@ export function syncDynamicMapSubjects(
   assets: readonly MapAssetPoint[],
   pixelBounds: MapBounds,
   semanticContext?: SemanticSubjectContext,
+  markerPoints?: { characters: readonly MapCharacterPoint[]; assets: readonly MapAssetPoint[] },
 ): void {
   if (!map.isStyleLoaded()) return
   addDynamicMapSubjectLayers(map)
   const zoom = semanticContext?.zoomState.zoom
   const sendsAggregates = zoom !== undefined && zoom >= 2.5 && zoom <= 4.4
   const sendsPoints = zoom === undefined || zoom >= 4.1
-  const visibleCharacters = sendsPoints ? filterMapPointsByPixelBounds(characters, pixelBounds) : []
-  const visibleAssets = sendsPoints ? filterMapPointsByPixelBounds(assets, pixelBounds) : []
-  const characterAggregates = sendsAggregates && semanticContext
-    ? aggregateCharacterPoints({ points: characters, pixelBounds, ...semanticContext })
-    : []
-  const assetAggregates = sendsAggregates && semanticContext
-    ? aggregateAssetPoints({ points: assets, pixelBounds, ...semanticContext })
-    : []
-  const collections = dynamicPointCollection(visibleCharacters, visibleAssets, manifest)
-  ;(map.getSource(CHARACTER_POINT_SOURCE) as GeoJSONSource).setData(collections.characters)
-  ;(map.getSource(ASSET_POINT_SOURCE) as GeoJSONSource).setData(collections.assets)
-  ;(map.getSource(CHARACTER_AGGREGATE_SOURCE) as GeoJSONSource).setData(dynamicAggregateCollection(characterAggregates, manifest))
-  ;(map.getSource(ASSET_AGGREGATE_SOURCE) as GeoJSONSource).setData(dynamicAggregateCollection(assetAggregates, manifest))
+  {
+    const visibleCharacters = sendsPoints ? filterMapPointsByPixelBounds(markerPoints?.characters ?? characters, pixelBounds) : []
+    const characterAggregates = sendsAggregates && semanticContext
+      ? aggregateCharacterPoints({ points: characters, pixelBounds, ...semanticContext })
+      : []
+    const charactersCollection = dynamicPointCollection(visibleCharacters, [], manifest).characters
+    setDynamicSourceData(map, CHARACTER_POINT_SOURCE, charactersCollection)
+    setDynamicSourceData(map, CHARACTER_AGGREGATE_SOURCE, dynamicAggregateCollection(characterAggregates, manifest))
+  }
+  {
+    const visibleAssets = sendsPoints ? filterMapPointsByPixelBounds(markerPoints?.assets ?? assets, pixelBounds) : []
+    const assetAggregates = sendsAggregates && semanticContext
+      ? aggregateAssetPoints({ points: assets, pixelBounds, ...semanticContext })
+      : []
+    const assetsCollection = dynamicPointCollection([], visibleAssets, manifest).assets
+    setDynamicSourceData(map, ASSET_POINT_SOURCE, assetsCollection)
+    setDynamicSourceData(map, ASSET_AGGREGATE_SOURCE, dynamicAggregateCollection(assetAggregates, manifest))
+  }
 }
 
-export function applyMapMode(map: MapLibreMap, mode: MapMode): void {
-  for (const [layerId, visible] of Object.entries(MODE_VISIBILITY[mode])) {
-    if (map.getLayer(layerId)) {
-      map.setLayoutProperty(layerId, 'visibility', visible ? 'visible' : 'none')
+export function applyMapPresentation(
+  map: MapLibreMap,
+  presentation: MapPresentation,
+  hasRoute: boolean,
+  primaryRank: SemanticRank,
+): void {
+  const visibility = (visible: boolean) => visible ? 'visible' : 'none'
+  const setVisible = (layerIds: readonly string[], visible: boolean) => {
+    for (const layerId of layerIds) {
+      if (map.getLayer(layerId)) map.setLayoutProperty(layerId, 'visibility', visibility(visible))
     }
   }
-  const surfacePaint = mode === 'terrain'
-    ? { saturation: 0, brightness: 1 }
-    : mode === 'political'
-      ? { saturation: -0.12, brightness: 0.9 }
-      : { saturation: -0.28, brightness: 0.78 }
+  setVisible([FAR_MAP_LAYER, TERRAIN_LIGHT_LAYER, COUNTY_HIT_LAYER], true)
+  setVisible([POLITICAL_CONTESTED_BORDER_LAYER], presentation.politicalSurface)
+  setVisible(['hegemon', 'empire', 'kingdom', 'duchy', 'county'].map((rank) => `agot-${rank}-surface`), presentation.politicalSurface)
+  setVisible(['agot-roads-casing', 'agot-roads'], presentation.roads)
+  setVisible(['agot-routes'], hasRoute)
+  setVisible([CHARACTER_POINT_LAYER, CHARACTER_AGGREGATE_LAYER, CHARACTER_AGGREGATE_COUNT_LAYER], presentation.characters)
+  setVisible([ASSET_POINT_LAYER, ASSET_AGGREGATE_LAYER, ASSET_AGGREGATE_COUNT_LAYER], presentation.assets)
+  setVisible([SELECTED_COUNTY_LOCATION_LAYER], presentation.internalLocations)
+  setVisible([JOURNEY_ROUTE_SOURCE, JOURNEY_PROGRESS_SOURCE, JOURNEY_POSITION_SOURCE], hasRoute)
+  for (const rank of ['hegemon', 'empire', 'kingdom', 'duchy', 'county'] as const) {
+    setVisible([`agot-${rank}-boundaries-casing`, `agot-${rank}-boundaries`], true)
+    setVisible([`agot-${rank}-labels`], rank === primaryRank)
+  }
+  const surfacePaint = presentation.politicalSurface
+    ? { saturation: -0.12, brightness: 0.9 }
+    : { saturation: 0, brightness: 1 }
   for (const layerId of [FAR_MAP_LAYER, MATERIAL_TERRAIN_LAYER]) {
     if (!map.getLayer(layerId)) continue
     map.setPaintProperty(layerId, 'raster-saturation', surfacePaint.saturation)
     map.setPaintProperty(layerId, 'raster-brightness-max', surfacePaint.brightness)
-  }
-}
-
-type PoliticalHouseLabelMap = Pick<MapLibreMap, 'getSource' | 'getLayer' | 'setLayoutProperty'>
-
-export function syncPoliticalHouseLabels(
-  map: PoliticalHouseLabelMap,
-  input: PoliticalHouseLabelInput,
-  affectedTitleIds?: ReadonlySet<string>,
-): 'updated' | 'skipped' | 'failed' {
-  if (affectedTitleIds && !input.titles.some((title) =>
-    title.rank === input.rank
-    && affectedTitleIds.has(title.titleId)
-    && title.mapX >= input.pixelBounds.minX
-    && title.mapX <= input.pixelBounds.maxX
-    && title.mapY >= input.pixelBounds.minY
-    && title.mapY <= input.pixelBounds.maxY)) {
-    return 'skipped'
-  }
-  const source = map.getSource(POLITICAL_HOUSE_LABEL_SOURCE) as GeoJSONSource | undefined
-  if (!source) return 'skipped'
-  try {
-    source.setData(buildPoliticalHouseLabelCollection(input))
-    return 'updated'
-  } catch {
-    try {
-      source.setData({ type: 'FeatureCollection', features: [] })
-    } catch {
-      // The source itself is broken; layer isolation below still prevents stale labels.
-    }
-    if (map.getLayer(POLITICAL_HOUSE_LABEL_LAYER)) {
-      map.setLayoutProperty(POLITICAL_HOUSE_LABEL_LAYER, 'visibility', 'none')
-    }
-    return 'failed'
   }
 }
 
@@ -489,7 +398,7 @@ export function addSelectedCountyLocationLayers(map: MapLibreMap): void {
       id: SELECTED_COUNTY_LOCATION_LAYER,
       type: 'symbol',
       source: SELECTED_COUNTY_LOCATION_SOURCE,
-      minzoom: 3.5,
+      minzoom: 4.6,
       layout: {
         'icon-image': ['get', 'iconId'],
         'icon-size': ['case', ['get', 'isPrimary'], 0.92, 0.68],
@@ -515,16 +424,17 @@ export function addSelectedCountyLocationLayers(map: MapLibreMap): void {
   }
 }
 
+
 export function syncSelectedCountyLocations(
   map: MapLibreMap,
   manifest: MapManifest,
   index: CountyInteractionIndex,
-  selectedLocationId: string | null,
+  selectedCountyId: string | null,
 ): void {
   addSelectedCountyLocationLayers(map)
   const source = map.getSource(SELECTED_COUNTY_LOCATION_SOURCE) as GeoJSONSource | undefined
   if (!source) return
-  const selected = selectedLocationId ? index.selectedCountyForLocation(selectedLocationId) : undefined
+  const selected = selectedCountyId ? index.locationsForCounty(selectedCountyId) : undefined
   source.setData({
     type: 'FeatureCollection',
     features: selected?.locations.map((location) => ({
@@ -540,6 +450,10 @@ export function syncSelectedCountyLocations(
       },
     })) ?? [],
   })
+  if (map.getLayer(SELECTED_COUNTY_OUTLINE_GLOW_LAYER)) {
+    map.setFilter(SELECTED_COUNTY_OUTLINE_GLOW_LAYER, ['==', ['get', 'titleId'], selected?.countyId ?? ''])
+    map.setLayoutProperty(SELECTED_COUNTY_OUTLINE_GLOW_LAYER, 'visibility', selected ? 'visible' : 'none')
+  }
   if (map.getLayer(SELECTED_COUNTY_OUTLINE_LAYER)) {
     map.setFilter(SELECTED_COUNTY_OUTLINE_LAYER, ['==', ['get', 'titleId'], selected?.countyId ?? ''])
     map.setLayoutProperty(SELECTED_COUNTY_OUTLINE_LAYER, 'visibility', selected ? 'visible' : 'none')

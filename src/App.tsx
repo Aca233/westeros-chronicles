@@ -1,6 +1,7 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { Suspense, lazy, useCallback, useEffect, useState } from 'react';
 import { Header } from './components/Header';
 import { Ck3CharacterWindow } from './components/Ck3CharacterWindow';
+import { WorldAssetDrawer } from './components/items/WorldAssetDrawer';
 import { StoryFeed } from './components/StoryFeed';
 import { ActionDock } from './components/ActionDock';
 import { DiceModal } from './components/DiceModal';
@@ -14,8 +15,10 @@ import { X } from 'lucide-react';
 import { stripEmoji } from './services/textSanitizer';
 import { useCharacterNavigation } from './features/characters/useCharacterNavigation';
 import type { CharacterId } from './features/characters/types';
-import { MapDrawer } from './features/map/MapDrawer';
 import { useMapUiStore } from './features/map/mapUiStore';
+
+// 地图抽屉按需分包:MapLibre 不进首屏,首次打开时才加载
+const MapDrawer = lazy(() => import('./features/map/MapDrawer').then((module) => ({ default: module.MapDrawer })));
 
 export const App: React.FC = () => {
   const { changesLog, isTvTimelineOpen, closeTvTimeline } = useGameStore();
@@ -26,12 +29,21 @@ export const App: React.FC = () => {
   const closeDrawer = useMapUiStore((state) => state.closeDrawer);
   const toggleCharacter = useMapUiStore((state) => state.toggleCharacter);
   const toggleMap = useMapUiStore((state) => state.toggleMap);
+  const openMap = useMapUiStore((state) => state.openMap);
+  const dismissMapContext = useMapUiStore((state) => state.dismissMapContext);
+  const openAsset = useMapUiStore((state) => state.openAsset);
+  const returnFromAsset = useMapUiStore((state) => state.returnFromAsset);
+  const selectedAssetId = useMapUiStore((state) => state.selectedAssetId);
+  const assetSourceCharacterId = useMapUiStore((state) => state.assetSourceCharacterId);
 
   // 点击正文中的人名:打开对应卷宗;卷宗收于抽屉,两端都自动拉出
   const openStoryCharacter = useCallback((characterId: CharacterId) => {
     characterNavigation.openCharacter(characterId);
     openCharacterDrawer();
   }, [characterNavigation.openCharacter, openCharacterDrawer]);
+  const openDossierAsset = useCallback((assetId: string) => {
+    openAsset(assetId, characterNavigation.selectedCharacterId);
+  }, [characterNavigation.selectedCharacterId, openAsset]);
 
   // 全局快捷键:/ 聚焦命令行;C 开合卷宗;Esc 收起卷宗
   useEffect(() => {
@@ -51,12 +63,28 @@ export const App: React.FC = () => {
       if (e.key === 'Escape') {
         // 物品选择/赠予对话框浮在卷宗之上:Esc 先关最上层,卷宗保持
         const itemDialogOpen = document.querySelector('[data-item-choice-dialog], [data-item-gift-dialog]');
-        if (!itemDialogOpen) closeDrawer();
+        if (!itemDialogOpen) {
+          if (activeDrawer === 'map' && dismissMapContext()) return;
+          closeDrawer();
+        }
       }
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [closeDrawer, toggleCharacter, toggleMap]);
+  }, [activeDrawer, closeDrawer, dismissMapContext, toggleCharacter, toggleMap]);
+
+  // 浏览器空闲时预热地图分包,首次开图无需等待下载
+  useEffect(() => {
+    const warm = () => {
+      void import('./features/map/MapDrawer').then((module) => module.prewarmMapRuntime());
+    };
+    if (typeof window.requestIdleCallback === 'function') {
+      const idleId = window.requestIdleCallback(warm);
+      return () => window.cancelIdleCallback(idleId);
+    }
+    const timeoutId = window.setTimeout(warm, 2000);
+    return () => window.clearTimeout(timeoutId);
+  }, []);
 
   const dossierWindow = (
     <Ck3CharacterWindow
@@ -65,6 +93,8 @@ export const App: React.FC = () => {
       canGoBack={characterNavigation.canGoBack}
       onBack={characterNavigation.goBack}
       onReturnToPlayer={characterNavigation.returnToPlayer}
+      onOpenLocation={(locationId) => openMap({ kind: 'location', locationId })}
+      onOpenAsset={openDossierAsset}
     />
   );
 
@@ -103,7 +133,7 @@ export const App: React.FC = () => {
 
       {/* 舞台:一整列文字 */}
       <main className="relative z-10 flex min-h-0 flex-1 flex-col">
-        <StoryFeed onSelectCharacter={openStoryCharacter} />
+        <StoryFeed onSelectCharacter={openStoryCharacter} onOpenLocation={(location) => openMap({ kind: 'location', locationId: location.locationId })} onOpenAsset={openAsset} />
         <ActionDock />
       </main>
 
@@ -154,13 +184,35 @@ export const App: React.FC = () => {
         </div>
       )}
 
-      <MapDrawer onSelectCharacter={openStoryCharacter} />
+      {activeDrawer === 'map' && (
+        <Suspense fallback={null}>
+          <MapDrawer onSelectCharacter={openStoryCharacter} />
+        </Suspense>
+      )}
+
+      {activeDrawer === 'asset' && selectedAssetId && (
+        <WorldAssetDrawer
+          assetId={selectedAssetId}
+          sourceCharacterId={assetSourceCharacterId}
+          onBack={returnFromAsset}
+          onClose={closeDrawer}
+          onOpenCharacter={openStoryCharacter}
+          onOpenLocation={(locationId) => openMap({ kind: 'location', locationId })}
+          onOpenAsset={openAsset}
+        />
+      )}
 
       {/* 模态弹窗系统 */}
       <DiceModal />
       <SettingsModal />
       <CharacterCreator />
-      <TvTimelineModal isOpen={isTvTimelineOpen} onClose={closeTvTimeline} />
+      <TvTimelineModal
+        isOpen={isTvTimelineOpen}
+        onClose={closeTvTimeline}
+        onOpenCharacter={(characterId) => { closeTvTimeline(); openStoryCharacter(characterId); }}
+        onOpenLocation={(location) => { closeTvTimeline(); openMap({ kind: 'location', locationId: location.locationId }); }}
+        onOpenAsset={(assetId) => { closeTvTimeline(); openAsset(assetId); }}
+      />
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import test from 'node:test'
+import { build } from 'esbuild'
 
 import {
   filterMapPointsByPixelBounds,
@@ -9,6 +10,11 @@ import {
 } from '../src/features/map/dynamicMapSubjects.ts'
 import { assertSupportedGameState } from '../src/features/items/saveVersion.ts'
 import { aggregateCharacterPoints } from '../src/features/map/semanticAggregation.ts'
+const selectorBundle = await build({
+  entryPoints: ['src/features/world/worldSelectors.ts'], bundle: true, write: false,
+  format: 'esm', platform: 'node', logLevel: 'silent',
+})
+const { selectCountyWorldView, selectWorldAssetView } = await import(`data:text/javascript;base64,${Buffer.from(selectorBundle.outputFiles[0].text).toString('base64')}`)
 
 const locations = [
   { id: 'b_winterfell', name: '临冬城', mapX: 100, mapY: 100, regionId: 'world_westeros_the_north' },
@@ -26,7 +32,51 @@ const history = {
   }],
 }
 
+test('伯爵领世界视图统一投影法理、控制、人物、资产和事件', () => {
+  const starkId = 'agot:Stark_3'
+  const boltonId = 'agot:Bolton_4'
+  const baselineInput = {
+    characters: [
+      { id: starkId, alive: true, location: { locationId: 'b_winterfell' } },
+      { id: boltonId, alive: true, location: { locationId: 'b_winterfell' } },
+    ],
+    titles: [{ id: 'c_winterfell', lawfulHolderId: starkId, controllerId: boltonId, contestedByIds: [starkId] }],
+    assets: [
+      { id: 'site:winterfell', kind: 'site', lawfulOwner: { type: 'title', titleId: 'c_winterfell' }, controller: { type: 'character', characterId: boltonId }, custodian: null, placement: { type: 'location', location: { locationId: 'b_winterfell' } }, equippedPosition: null, status: 'contested' },
+      { id: 'vehicle:wagon', kind: 'vehicle', lawfulOwner: { type: 'character', characterId: starkId }, controller: { type: 'character', characterId: starkId }, custodian: null, placement: { type: 'location', location: { locationId: 'b_winterfell' } }, equippedPosition: null, status: 'normal' },
+    ],
+    knownLocationIds: ['b_winterfell'],
+  }
+  const baseline = {
+    characters: new Map(baselineInput.characters.map((entry) => [entry.id, entry])),
+    titles: new Map(baselineInput.titles.map((entry) => [entry.id, entry])),
+    assets: new Map(baselineInput.assets.map((entry) => [entry.id, entry])),
+    knownLocationIds: new Set(baselineInput.knownLocationIds),
+  }
+  const runtime = { schemaVersion: 1, revision: 0, characters: {}, titles: {}, assets: {}, events: [], pendingTransactions: [] }
+  runtime.events.push({
+    id: 'event:occupation', transactionId: 'tx:occupation', turn: 1,
+    date: { year: 298, month: 1, day: 2 }, type: 'title.occupied', actorIds: [boltonId],
+    subjectRefs: [{ type: 'title', titleId: 'c_winterfell' }, { type: 'location', location: { locationId: 'b_winterfell' } }],
+    location: { locationId: 'b_winterfell' }, reason: '波顿军控制临冬城', source: 'system_rule', visibility: 'public',
+  })
+  const view = selectCountyWorldView('c_winterfell', {
+    baseline,
+    runtime,
+    countyIdByLocationId: new Map([['b_winterfell', 'c_winterfell']]),
+    candidateCharacterIds: new Set([starkId, boltonId]),
+  })
+  assert.equal(view.lawfulHolderId, starkId)
+  assert.equal(view.controllerId, boltonId)
+  assert.equal(view.isContested, true)
+  assert.deepEqual(view.characterIds, [starkId, boltonId])
+  assert.deepEqual(view.siteAssetIds, ['site:winterfell'])
+  assert.deepEqual(view.vehicleAssetIds, ['vehicle:wagon'])
+  assert.deepEqual(view.eventIds, ['event:occupation'])
+})
+
 test('人物位置只投影玩家和统一世界状态中已知的有效地点，并按人物去重', () => {
+  const metrics = { staticCharacterShardReads: -1, scannedDynamicCharacters: -1 }
   const points = projectKnownCharacterMapPoints({
     player: { id: 'agot:Stark_3', name: '艾德·史塔克', locationId: 'b_winterfell' },
     characters: [
@@ -35,7 +85,10 @@ test('人物位置只投影玩家和统一世界状态中已知的有效地点�
     ],
     history,
     names: new Map([['agot:Arya_1', '艾莉亚·史塔克']]),
+    metrics,
   }, locations)
+  assert.equal(metrics.staticCharacterShardReads <= 1, true)
+  assert.equal(metrics.scannedDynamicCharacters <= 2, true)
   assert.deepEqual(points.map((point) => point.characterId), ['agot:Arya_1', 'agot:Stark_3'])
   assert.equal(points.find((point) => point.characterId === 'agot:Arya_1').locationId, 'b_winterfell')
   assert.equal(points.some((point) => point.characterId === 'agot:Hidden_1'), false)
@@ -43,12 +96,12 @@ test('人物位置只投影玩家和统一世界状态中已知的有效地点�
   const aggregates = aggregateCharacterPoints({
     points,
     memberships: [
-      { locationId: 'b_winterfell', baronyId: 'b_winterfell', countyId: 'c_winterfell', duchyId: 'd_winterfell', realmId: 'the_north' },
-      { locationId: 'b_riverrun', baronyId: 'b_riverrun', countyId: 'c_riverrun', duchyId: 'd_riverrun', realmId: 'the_riverlands' },
+      { locationId: 'b_winterfell', baronyId: 'b_winterfell', countyId: 'c_winterfell', duchyId: 'd_winterfell', regionId: 'the_north' },
+      { locationId: 'b_riverrun', baronyId: 'b_riverrun', countyId: 'c_riverrun', duchyId: 'd_riverrun', regionId: 'the_riverlands' },
     ],
     titles: [
-      { featureId: 1, titleId: 'c_winterfell', rank: 'county', name: '临冬城伯爵领', mapX: 100, mapY: 100, importance: 60, regionId: 'the_north' },
-      { featureId: 2, titleId: 'c_riverrun', rank: 'county', name: '奔流城伯爵领', mapX: 300, mapY: 220, importance: 60, regionId: 'the_riverlands' },
+      { featureId: 1, titleId: 'c_winterfell', rank: 'county', name: '临冬城伯爵领', mapX: 100, mapY: 100, importance: 60, regionId: 'the_north', titleColor: '#777777' },
+      { featureId: 2, titleId: 'c_riverrun', rank: 'county', name: '奔流城伯爵领', mapX: 300, mapY: 220, importance: 60, regionId: 'the_riverlands', titleColor: '#777777' },
     ],
     pixelBounds: { minX: 0, minY: 0, maxX: 500, maxY: 500 },
   })
@@ -74,9 +127,21 @@ test('资产模式显示有权威地点的据点和运输工具，并统计其�
     },
   }, locations)
   assert.deepEqual(points.map((point) => [point.assetId, point.itemCount]), [
-    ['site-armory', 1],
-    ['wagon-1', 2],
+    ['site:site-armory', 1],
+    ['vehicle:wagon-1', 2],
   ])
+  const baseline = {
+    characters: new Map(),
+    titles: new Map(),
+    assets: new Map([
+      ['site:site-armory', { id: 'site:site-armory', kind: 'site', lawfulOwner: null, controller: null, custodian: null, placement: { type: 'location', location: { locationId: 'b_winterfell' } }, equippedPosition: null, status: 'normal' }],
+      ['vehicle:wagon-1', { id: 'vehicle:wagon-1', kind: 'vehicle', lawfulOwner: null, controller: null, custodian: null, placement: { type: 'location', location: { locationId: 'b_riverrun' } }, equippedPosition: null, status: 'normal' }],
+    ]),
+    knownLocationIds: new Set(['b_winterfell', 'b_riverrun']),
+  }
+  const runtime = { schemaVersion: 1, revision: 0, characters: {}, titles: {}, assets: {}, events: [], pendingTransactions: [] }
+  assert.equal(selectWorldAssetView(points[0].assetId, { baseline, runtime })?.asset.id, 'site:site-armory')
+  assert.equal(selectWorldAssetView(points[1].assetId, { baseline, runtime })?.asset.id, 'vehicle:wagon-1')
 })
 
 test('人物与资产查询按当前像素视野裁剪，不把全世界点位塞给 MapLibre', () => {
@@ -105,6 +170,9 @@ test('人物和资产图层已接入地图，人物可打开卷宗，地点详�
   const layers = readFileSync('src/features/map/mapLayers.ts', 'utf8')
   const drawer = readFileSync('src/features/map/MapDrawer.tsx', 'utf8')
   const details = readFileSync('src/features/map/LocationDetails.tsx', 'utf8')
+  const countyDetails = readFileSync('src/features/map/CountyDetails.tsx', 'utf8')
+  const countyWorldDetails = readFileSync('src/features/map/CountyWorldDetails.tsx', 'utf8')
+  const style = readFileSync('src/features/map/mapStyle.ts', 'utf8')
   assert.match(canvas, /syncDynamicMapSubjects/)
   assert.match(canvas, /onSelectCharacter/)
   assert.match(layers, /agot-character-points/)
@@ -115,11 +183,17 @@ test('人物和资产图层已接入地图，人物可打开卷宗，地点详�
   assert.match(drawer, /projectKnownCharacterMapPoints/)
   assert.match(drawer, /projectKnownAssetMapPoints/)
   assert.match(details, /onSelectCharacter/)
-  assert.match(details, /当地人物/)
-  assert.match(details, /当地资产/)
+  assert.match(details, /此地点的已知人物/)
+  assert.match(details, /此地点的资产/)
+  assert.match(countyDetails, /CountyWorldDetails/)
+  assert.match(countyWorldDetails, /法理领主/)
+  assert.match(countyWorldDetails, /实际控制者/)
+  assert.match(countyWorldDetails, /近期事件/)
+  assert.match(style, /POLITICAL_CONTESTED_BORDER_LAYER/)
+  assert.match(style, /politicalIsContested/)
 })
 
-test('地点搜索只读取轻量索引，路线计算继续运行在 Worker', () => {
+test('地点搜索只读取轻量地点与语义索引，路线计算继续运行在 Worker', () => {
   const repository = readFileSync('src/features/map/repository.ts', 'utf8')
   const routeClient = readFileSync('src/features/map/routing/routeClient.ts', 'utf8')
   const drawer = readFileSync('src/features/map/MapDrawer.tsx', 'utf8')
@@ -128,19 +202,21 @@ test('地点搜索只读取轻量索引，路线计算继续运行在 Worker', (
   assert.doesNotMatch(searchBody, /loadLocationRegion|getLocation/)
   assert.match(routeClient, /new Worker/)
   assert.match(routeClient, /routeWorker/)
-  assert.match(drawer, /mapRepository\.loadSearchIndex\(\)\s*\.then\(\(locations\)/)
+  assert.match(drawer, /mapRepository\.loadSearchIndex\(\)/)
+  assert.match(drawer, /mapRepository\.loadSemanticIndex\(\)/)
   assert.doesNotMatch(drawer, /Promise\.all\(\[[\s\S]*?mapRepository\.loadPoliticalTitles\(\)[\s\S]*?mapRepository\.loadSearchIndex\(\)/)
 })
 
-test('无效地点和畸形路线不能作为版本 7 存档提交', () => {
+test('无效地点和畸形路线不能作为版本 9 存档提交', () => {
   const base = {
-    saveFormatVersion: 7,
+    saveFormatVersion: 9,
     lord: {
       location: { locationId: 'b_winterfell' },
       locationLabel: '临冬城',
       items: { schemaVersion: 1, sites: {}, vehicles: {} },
     },
     worldHistory: { schemaVersion: 1 },
+    worldRuntime: { schemaVersion: 1, revision: 0, characters: {}, titles: {}, assets: {}, events: [], pendingTransactions: [] },
   }
   assert.doesNotThrow(() => assertSupportedGameState(base))
   assert.throws(() => assertSupportedGameState({ ...base, lord: { ...base.lord, location: { locationId: '临冬城' } } }))
@@ -154,10 +230,11 @@ test('无效地点和畸形路线不能作为版本 7 存档提交', () => {
   }))
 })
 
-test('移动端地点详情和旅程面板是地图内部底部抽屉', () => {
+test('移动端伯爵领、地点和旅程面板是地图内部底部抽屉', () => {
   const css = readFileSync('src/index.css', 'utf8')
   assert.match(css, /@media \(max-width: 640px\)/)
-  assert.match(css, /\.map-location-details\s*\{[^}]*bottom:\s*0/s)
+  assert.match(css, /\.map-location-details,[\s\S]*?\.map-county-details\s*\{[^}]*bottom:\s*0/s)
+  assert.match(css, /\.map-travel-planner-shell\s*\{[^}]*bottom:\s*0/s)
   assert.match(css, /\.map-journey-panel\.with-details/)
   assert.match(css, /\.map-drawer-panel\s*\{\s*width:\s*100vw/s)
 })
@@ -166,11 +243,11 @@ test('MapCanvas 只在稳定边界或权威状态变化时刷新动态语义源'
   const source = readFileSync('src/features/map/MapCanvas.tsx', 'utf8')
   assert.match(source, /semanticZoomState\(map\.getZoom\(\)\)/)
   assert.match(source, /map\.on\('zoomend'/)
-  assert.match(source, /refreshPoliticalHouseLabels/)
+  assert.doesNotMatch(source, /refreshPoliticalHouseLabels|syncPoliticalHouseLabels/)
   assert.doesNotMatch(source, /map\.on\('zoom',\s*refresh(?:Political|Semantic)/)
 })
 
-test('缩放不修改地图模式，旅程路线仍只来自原 routePlan', () => {
+test('缩放不修改地图选择，旅程路线仍只来自原 routePlan', () => {
   const source = readFileSync('src/features/map/MapCanvas.tsx', 'utf8')
   assert.doesNotMatch(source, /setMapMode|useMapUiStore/)
   assert.match(source, /syncJourneyLayers\(map, manifest, routeRef\.current\.routePlan/)
@@ -198,4 +275,11 @@ test('连续地形 zoom 不触发政治人物资产重投影', () => {
   const handler = source.match(/const handleTerrainZoom = \(\) => \{[\s\S]*?\n\s*\}/)?.[0] ?? ''
   assert.match(handler, /requestSync/)
   assert.doesNotMatch(handler, /syncDynamicMapSubjects|syncPoliticalHouseLabels|applyPoliticalFeatureStates/)
+})
+
+test('平移结束不会重复写入未变化的地图表达样式', () => {
+  const source = readFileSync('src/features/map/MapCanvas.tsx', 'utf8')
+  const handler = source.match(/const handleMoveEnd = \(\) => \{[\s\S]*?\n\s*\}/)?.[0] ?? ''
+  assert.match(handler, /onViewportChange/)
+  assert.doesNotMatch(handler, /applyMapMode/)
 })

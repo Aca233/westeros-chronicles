@@ -1,96 +1,46 @@
 import assert from 'node:assert/strict'
+import { readFileSync } from 'node:fs'
 import test from 'node:test'
 
-import {
-  buildPoliticalHouseLabelCollection,
-  resolveSemanticPoliticalHouse,
-  semanticTitlesAffectedByChanges,
-} from '../src/features/map/semanticPoliticalLabels.ts'
 import {
   aggregateAssetPoints,
   aggregateCharacterPoints,
 } from '../src/features/map/semanticAggregation.ts'
+import { createLocalMapStyle } from '../src/features/map/mapStyle.ts'
 
 const countyTitle = {
-  featureId: 3, titleId: 'c_winterfell', rank: 'county', name: '临冬城伯爵领',
-  mapX: 1200, mapY: 900, importance: 80, regionId: 'the_north',
-  politicalAnchorTitleId: 'c_winterfell',
+  featureId: 5, titleId: 'c_winterfell', rank: 'county', name: '临冬城伯爵领',
+  mapX: 1200, mapY: 900, importance: 60, regionId: 'the_north', titleColor: '#6f7f75',
 }
-const otherCountyTitle = {
-  ...countyTitle, featureId: 4, titleId: 'c_dreadfort', name: '恐怖堡伯爵领', mapX: 4200,
-  politicalAnchorTitleId: 'c_dreadfort',
-}
-const realmTitle = {
-  ...countyTitle, featureId: 1, titleId: 'the_north', rank: 'realm', name: '北境',
-  politicalAnchorTitleId: undefined,
-}
-const memberships = [
-  { locationId: 'b_one', baronyId: 'b_one', countyId: 'c_winterfell', duchyId: 'd_winterfell', realmId: 'the_north' },
-  { locationId: 'b_two', baronyId: 'b_two', countyId: 'c_dreadfort', duchyId: 'd_dreadfort', realmId: 'the_north' },
-]
 
-function state(titleId, effectiveTitleId, houseId, houseLabel, holderId = 'agot:Ned_1') {
-  return {
-    titleId, provinceId: titleId === 'b_one' ? 1 : 2, effectiveTitleId,
-    houseId, houseLabel, holderId, color: '#6f7f75',
+test('头衔名称与颜色来自语义资料，不随持有人家族改变', () => {
+  const manifest = {
+    tileSize: 512, minZoom: 0, maxZoom: 6,
+    paths: {
+      terrain: '/assets/agot-map/terrain/{z}/{x}/{y}.webp',
+    terrainLight: '/assets/agot-map/terrain-light/{z}/{x}/{y}.webp',
+      materialTerrain: '/assets/agot-map/material-terrain/{z}/{x}/{y}.webp',
+      vector: '/assets/agot-map/vector/{z}/{x}/{y}.pbf',
+      dem: '/assets/agot-map/dem/{z}/{x}/{y}.png',
+      semantic: '/assets/agot-map/semantic/{z}/{x}/{y}.pbf',
+    },
   }
-}
-
-test('政治副标题优先直接公开持有人之家族', () => {
-  const result = resolveSemanticPoliticalHouse(countyTitle, [
-    state('b_one', 'c_winterfell', 'stark', '史塔克家族'),
-    state('b_two', 'd_winterfell', 'bolton', '波顿家族'),
-  ], memberships)
-  assert.deepEqual(result, { houseId: 'stark', houseLabel: '史塔克家族', holderId: 'agot:Ned_1' })
+  const style = createLocalMapStyle(manifest)
+  for (const rank of ['hegemon', 'empire', 'kingdom', 'duchy', 'county']) {
+    const surface = style.layers.find((layer) => layer.id === `agot-${rank}-surface`)
+    assert.deepEqual(surface.paint['fill-color'], ['get', 'titleColor'])
+  }
+  const source = readFileSync('src/features/map/mapStyle.ts', 'utf8')
+  assert.doesNotMatch(source, /houseColor|politicalColor|politicalDuchyColor|politicalKingdomColor|politicalEmpireColor/)
 })
 
-test('战略区域无直接锚点时按公开省份多数并以稳定家族 ID 破同票', () => {
-  const tiedStates = [
-    state('b_one', 'c_winterfell', 'bolton', '波顿家族', 'agot:Roose_1'),
-    state('b_two', 'c_dreadfort', 'arryn', '艾林家族', 'agot:Jon_1'),
-  ]
-  assert.equal(resolveSemanticPoliticalHouse(realmTitle, tiedStates, memberships).houseId, 'arryn')
-})
-
-test('战略区域优先显示最高政治领主家族而不是当地伯爵多数', () => {
-  const result = resolveSemanticPoliticalHouse(realmTitle, [
-    {
-      ...state('b_one', 'c_winterfell', 'bolton', '波顿家族', 'agot:Roose_1'),
-      realmHolderId: 'agot:Ned_1', realmHouseId: 'stark', realmHouseLabel: '史塔克家族',
-    },
-    {
-      ...state('b_two', 'c_dreadfort', 'manderly', '曼德勒家族', 'agot:Wyman_1'),
-      realmHolderId: 'agot:Ned_1', realmHouseId: 'stark', realmHouseLabel: '史塔克家族',
-    },
-  ], memberships)
-  assert.deepEqual(result, { houseId: 'stark', houseLabel: '史塔克家族', holderId: 'agot:Ned_1' })
-})
-
-test('没有公开且经过核验的家族名时不生成替代标签', () => {
-  const secretOnlyStates = [state('b_one', 'c_winterfell', 'stark', undefined)]
-  assert.equal(resolveSemanticPoliticalHouse(countyTitle, secretOnlyStates, memberships), undefined)
-})
-
-test('副标题集合只包含当前视野和当前主要语义层', () => {
-  const collection = buildPoliticalHouseLabelCollection({
-    rank: 'county',
-    titles: [realmTitle, countyTitle, otherCountyTitle],
-    states: [state('b_one', 'c_winterfell', 'stark', '史塔克家族')],
-    memberships,
-    pixelBounds: { minX: 1000, minY: 700, maxX: 2000, maxY: 1200 },
-    manifest: { westerosBounds: { minX: 0, minY: 0, maxX: 5000, maxY: 5000 } },
-  })
-  assert.deepEqual(collection.features.map((feature) => feature.properties.titleId), ['c_winterfell'])
-  assert.equal(collection.features[0].properties.politicalHouseLabel, '史塔克家族')
-})
-
-test('内部地点变化只影响其伯爵领、公国和战略区域', () => {
-  assert.deepEqual(
-    [...semanticTitlesAffectedByChanges(['b_one'], memberships)].sort(),
-    ['c_winterfell', 'd_winterfell', 'the_north'],
-  )
-  assert.equal(semanticTitlesAffectedByChanges(['c_winterfell'], memberships).has('c_winterfell'), true)
-  assert.equal(semanticTitlesAffectedByChanges(['b_one'], memberships).has('c_dreadfort'), false)
+test('地图不存在家族副标题数据管线', () => {
+  const source = [
+    readFileSync('src/features/map/mapStyle.ts', 'utf8'),
+    readFileSync('src/features/map/mapLayers.ts', 'utf8'),
+    readFileSync('src/features/map/MapCanvas.tsx', 'utf8'),
+  ].join('\n')
+  assert.doesNotMatch(source, /POLITICAL_HOUSE_LABEL|KINGDOM_HOUSE_LABEL|politicalHouseLabel|createPoliticalHouseResolver|syncPoliticalHouseLabels/)
 })
 
 const aggregationTitles = [
@@ -98,9 +48,9 @@ const aggregationTitles = [
   { ...countyTitle, featureId: 5, titleId: 'd_the_neck', rank: 'duchy', name: '颈泽公国', mapX: 180, mapY: 140 },
 ]
 const aggregationMemberships = [
-  { locationId: 'b_winterfell', baronyId: 'b_winterfell', countyId: 'c_winterfell', duchyId: 'd_winterfell', realmId: 'the_north' },
-  { locationId: 'b_godswood', baronyId: 'b_godswood', countyId: 'c_winterfell', duchyId: 'd_winterfell', realmId: 'the_north' },
-  { locationId: 'b_greywater', baronyId: 'b_greywater', duchyId: 'd_the_neck', realmId: 'the_north' },
+  { locationId: 'b_winterfell', baronyId: 'b_winterfell', countyId: 'c_winterfell', duchyId: 'd_winterfell', regionId: 'the_north' },
+  { locationId: 'b_godswood', baronyId: 'b_godswood', countyId: 'c_winterfell', duchyId: 'd_winterfell', regionId: 'the_north' },
+  { locationId: 'b_greywater', baronyId: 'b_greywater', duchyId: 'd_the_neck', regionId: 'the_north' },
 ]
 const characterPoints = [
   { id: 'character:agot:Ned_1', characterId: 'agot:Ned_1', locationId: 'b_winterfell', mapX: 110, mapY: 85 },
@@ -133,7 +83,7 @@ test('人物中景按伯爵领聚合，缺少伯爵领时回退公国', () => {
 test('资产先按地点聚合，县内超过八个地点时提升为伯爵领聚合', () => {
   const denseMemberships = Array.from({ length: 9 }, (_, index) => ({
     locationId: `b_dense_${index}`, baronyId: `b_dense_${index}`,
-    countyId: 'c_winterfell', duchyId: 'd_winterfell', realmId: 'the_north',
+    countyId: 'c_winterfell', duchyId: 'd_winterfell', regionId: 'the_north',
   }))
   const denseAssets = denseMemberships.map((membership, index) => ({
     id: `asset:site:${index}`, assetId: `site-${index}`, locationId: membership.locationId,
@@ -165,4 +115,36 @@ test('反向输入、重复输入和视野外输入不会改变聚合结果', ()
     ],
   }
   assert.deepEqual(aggregateCharacterPoints(base), aggregateCharacterPoints(reversedDuplicatedAndOffscreen))
+})
+
+test('人物与资产先按伯爵领限域，完整列表与独立标记预算分离', async () => {
+  const { scopeMapSubjects } = await import('../src/features/map/dynamicMapSubjects.ts')
+  const countyIdByLocationId = new Map([
+    ['b_winterfell', 'c_winterfell'],
+    ['b_kings_landing', 'c_kings_landing'],
+  ])
+  const characters = Array.from({ length: 9 }, (_, index) => ({
+    id: `character:agot:Stark_${index}`,
+    characterId: `agot:Stark_${index}`,
+    name: `史塔克 ${index}`,
+    locationId: 'b_winterfell', locationName: '临冬城', regionId: 'the_north',
+    mapX: 1200 + index, mapY: 900, knowledge: 'confirmed',
+  }))
+  characters.push({
+    id: 'character:agot:Lannister_6', characterId: 'agot:Lannister_6', name: '瑟曦',
+    locationId: 'b_kings_landing', locationName: '君临', regionId: 'crownlands',
+    mapX: 5000, mapY: 3000, knowledge: 'confirmed',
+  })
+  const assets = [
+    { id: 'asset:site:winterfell', assetId: 'winterfell', name: '临冬城', assetType: 'site', locationId: 'b_winterfell', locationName: '临冬城', regionId: 'the_north', mapX: 1200, mapY: 900, itemCount: 3, knowledge: 'confirmed' },
+    { id: 'asset:site:red_keep', assetId: 'red_keep', name: '红堡', assetType: 'site', locationId: 'b_kings_landing', locationName: '君临', regionId: 'crownlands', mapX: 5000, mapY: 3000, itemCount: 4, knowledge: 'confirmed' },
+  ]
+  assert.deepEqual(scopeMapSubjects({ countyId: null, countyIdByLocationId, characters, assets }), {
+    characters: [], assets: [], characterPoints: [], assetPoints: [],
+  })
+  const scoped = scopeMapSubjects({ countyId: 'c_winterfell', countyIdByLocationId, characters, assets })
+  assert.equal(scoped.characters.length, 9)
+  assert.equal(scoped.characterPoints.length, 8)
+  assert.deepEqual(scoped.assets.map((entry) => entry.assetId), ['winterfell'])
+  assert.equal(scoped.characters.some((entry) => entry.locationId === 'b_kings_landing'), false)
 })

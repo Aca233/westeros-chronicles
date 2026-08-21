@@ -16,8 +16,10 @@ async function read(relativePath) {
 
 const windowSource = await read('src/components/Ck3CharacterWindow.tsx');
 const appSource = await read('src/App.tsx');
-const sheetSource = await read('src/components/CharacterSheet.tsx');
+const healthPanelSource = await read('src/components/items/HealthAndEquipmentPanel.tsx');
 const itemManagementSource = await read('src/components/items/ItemManagementPanel.tsx');
+const assetSectionsSource = await read('src/components/items/WorldAssetSections.tsx');
+const dossierHookSource = await read('src/features/characters/useCharacterDossier.ts');
 
 if (!windowSource.includes('data-ck3-character-window')) failures.push('人物窗口缺少 CK3 根标记。');
 if (!appSource.includes("import { Ck3CharacterWindow } from './components/Ck3CharacterWindow'")) failures.push('App 尚未导入 CK3 人物窗口。');
@@ -52,22 +54,24 @@ if (!windowSource.includes('当前时间线未公开')) failures.push('琼恩的
 if (!windowSource.includes('显示全部子女')) failures.push('大量子女没有展开入口。');
 if (windowSource.includes('return cards.slice(0, 8)')) failures.push('NPC 关系仍被八张卡片上限截断。');
 if (!windowSource.includes('<CharacterSearch')) failures.push('关系页缺少全人物档案检索入口。');
-if (!windowSource.includes('data-npc-health')) failures.push('NPC 人物栏缺少独立健康视图。');
-if (!windowSource.includes('data-npc-equipment-state')) failures.push('NPC 健康页缺少实际穿戴状态区域。');
-if (!windowSource.includes('projectNpcEquipment')) failures.push('NPC 健康页没有合并普通物品与特殊物品的实际穿戴。');
+if (!healthPanelSource.includes('data-npc-health')) failures.push('NPC 人物栏缺少独立健康视图。');
+if (!healthPanelSource.includes('data-npc-equipment-state')) failures.push('NPC 健康页缺少实际穿戴状态区域。');
+if (!healthPanelSource.includes('dossier.assetGroups.equipment')) failures.push('健康页没有读取统一世界选择器判定的实际穿戴。');
 if (!windowSource.includes('data-character-world-facts')) failures.push('NPC 经历页没有读取统一世界历史事实。');
-if (!windowSource.includes('当前没有记录此人实际穿戴的装备')) failures.push('NPC 健康页没有明确区分实际穿戴与物品归属。');
+if (!healthPanelSource.includes('当前没有记录此人实际穿戴的装备')) failures.push('NPC 健康页没有明确区分实际穿戴与物品归属。');
 if (windowSource.includes('listCharacterRecordedEquipment')) failures.push('NPC 健康页不应把归属人物的世界装备当作实际穿戴。');
 if (windowSource.includes('data-npc-recorded-items') || windowSource.includes('data-recorded-equipment') || windowSource.includes('>未穿戴<')) failures.push('NPC 健康页仍在显示未穿戴的归属物品。');
-if (!windowSource.includes('data-npc-inventory')) failures.push('NPC 人物栏缺少独立物品空状态。');
-if (!windowSource.includes('projectNpcAssets')) failures.push('NPC 物品与资产页没有合并普通物品与特殊物品的归属和保管记录。');
-if (!windowSource.includes('data-npc-assets')) failures.push('NPC 物品与资产页缺少资产记录区域。');
-if (!windowSource.includes('dossier.character.items')) failures.push('NPC 人物卷宗没有读取人物投影后的普通物品。');
-if (!windowSource.includes('不等同于随身携带或实际穿戴')) failures.push('NPC 物品与资产页没有区分归属、保管和穿戴。');
+if (!windowSource.includes('data-character-world-assets')) failures.push('人物栏缺少玩家与 NPC 共用的物品资产区域。');
+if (!windowSource.includes('<WorldAssetSections')) failures.push('物品与资产页没有使用统一世界资产分组。');
+if (!assetSectionsSource.includes('data-world-asset-sections')) failures.push('物品与资产页缺少统一资产记录区域。');
+if (!dossierHookSource.includes('dossier.character.items')) failures.push('NPC 人物卷宗没有把人物投影后的普通物品接入世界基线。');
+if (!windowSource.includes('法理所有、实际控制、直接保管、物理位置与装备状态分别记录')) failures.push('人物物品与资产页没有区分各类世界关系。');
 if (windowSource.includes("id: 'inventory', label: '随身物品'")) failures.push('人物卷宗页签不应再命名为“随身物品”。');
 if (!windowSource.includes('data-npc-status')) failures.push('NPC 人物栏缺少三项状态栏标记。');
 if (windowSource.includes('value={dossier.titles.length} label="头衔"')) failures.push('NPC 状态栏不应重复显示头衔数量。');
-if (!windowSource.includes("dossier.kind === 'player' ? <CharacterSheet embedded")) failures.push('玩家专属健康装备功能没有与 NPC 只读资料隔离。');
+if (!windowSource.includes('<HealthAndEquipmentPanel dossier={dossier} embedded')) failures.push('玩家与 NPC 没有统一使用健康与装备面板。');
+if (windowSource.includes('state.gameState.worldArtifacts')) failures.push('人物窗口不应直接订阅原始世界神器状态。');
+if (windowSource.includes("dossier.kind === 'player' ? <CharacterSheet embedded")) failures.push('健康与装备页仍保留玩家旧面板分支。');
 for (const tab of ['关系与家族', '健康与装备', '记忆与经历', '物品与资产']) {
   if (!windowSource.includes(tab)) failures.push(`缺少页签：${tab}`);
 }
@@ -77,8 +81,8 @@ if (windowSource.includes('const ACTIONS') || windowSource.includes('人物互�
 for (const relation of ['配偶', '继承人', '领主', '父亲', '母亲', '重要关系']) {
   if (!windowSource.includes(relation)) failures.push(`缺少关系人物卡：${relation}`);
 }
-if (!sheetSource.includes('embedded?: boolean')) failures.push('旧健康装备面板尚未提供嵌入模式。');
-if (!windowSource.includes('<CharacterSheet embedded')) failures.push('健康与装备页签尚未接入装备功能。');
+if (!healthPanelSource.includes('data-hand-pair')) failures.push('NPC 主手与副手没有使用对称手部布局。');
+if (!healthPanelSource.includes('body-model--mainhand') || !healthPanelSource.includes('body-model--offhand')) failures.push('统一面板没有区分主手与副手的人体高亮。');
 if (!windowSource.includes('<ItemManagementPanel')) failures.push('玩家物品页签没有接入集中物品管理。');
 for (const marker of ["id: 'carried'", "id: 'current-site'", "id: 'vehicle'", "id: 'remote-site'", 'data-item-search', 'data-item-category-filter', 'data-item-sort']) {
   if (!itemManagementSource.includes(marker)) failures.push(`集中物品管理缺少 ${marker}。`);

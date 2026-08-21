@@ -15,11 +15,20 @@ import type { CharacterId, CharacterSearchHit, ResolvedCharacter, StaticCharacte
 import type { CharacterCommandBatchBaseContext } from '../../services/stateReducer';
 import type { CanonicalTimelineEvent } from './canonicalTimeline';
 import { advanceWorldDate, compareWorldDates, type WorldDate } from './worldHistory';
-import { projectNpcAssets, projectNpcEquipment, type NpcItemRelation } from './worldHistoryProjection';
+import { projectNpcAssets, projectNpcEquipment, worldEventParticipantIds, type NpcItemRelation } from './worldHistoryProjection';
 import { mapRepository } from '../map/repository';
 import { UNKNOWN_WESTEROS_LOCATION_ID } from '../map/locationResolver';
 import { formatNarrativeLocationContext, resolveNarrativeLocationContext, type NarrativeLocationContext } from '../map/narrativeLocationContext';
 import type { MapLocationSearchEntry, SemanticMembership, SemanticTitle } from '../map/types';
+import type { PendingWorldTransaction, WorldEvent } from './worldRuntimeTypes';
+import { projectResolvedCharacterWorldFacts } from './characterWorldFacts';
+
+export const WORLD_CONTEXT_LIMITS = {
+  characters: 12,
+  assets: 20,
+  events: 12,
+  neighboringLocations: 8,
+} as const;
 
 export interface WorldTurnContextRepository {
   loadManifest(): Promise<{ datasetHash: string }>;
@@ -68,6 +77,9 @@ export interface WorldTurnContext {
   characterCommandContext: CharacterCommandBatchBaseContext;
   currentDate: WorldDate;
   narrativeLocation: NarrativeLocationContext;
+  neighboringLocations: MapLocationSearchEntry[];
+  recentWorldEvents: WorldEvent[];
+  pendingTransactions: PendingWorldTransaction[];
 }
 
 const defaultRepository = new StaticCharacterRepository();
@@ -99,7 +111,13 @@ function upcomingPressures(
 }
 
 function recentParticipantIds(gameState: GameState): CharacterId[] {
-  return uniqueIds(gameState.worldHistory.turns.slice(-4).flatMap((turn) => turn.facts.flatMap((fact) => fact.participantIds)));
+  const eventsById = new Map(gameState.worldRuntime.events.map((event) => [event.id, event]));
+  return uniqueIds(gameState.worldHistory.turns.slice(-4)
+    .flatMap((turn) => turn.eventIds)
+    .flatMap((eventId) => {
+      const event = eventsById.get(eventId);
+      return event ? worldEventParticipantIds(event) : [];
+    }));
 }
 
 function relationToPlayer(character: ResolvedCharacter, playerId: CharacterId | undefined, playerRecord: StaticCharacterRecord | undefined): string | undefined {
@@ -172,7 +190,7 @@ export async function buildWorldTurnContext(input: BuildWorldTurnContextInput): 
   ]);
   const records = (await repository.getMany(candidateIds)).filter((record) => record.canonTier !== 'genealogy');
   const runId = gameState.worldCharacters?.runId;
-  const resolved = await Promise.all(records.map(async (record) => {
+  const resolved = (await Promise.all(records.map(async (record) => {
     const [events, loadoutProfile] = await Promise.all([
       runId ? eventStore.eventsForCharacter(runId, record.id) : Promise.resolve([]),
       repository.getLoadoutProfile(record.id),
@@ -182,6 +200,11 @@ export async function buildWorldTurnContext(input: BuildWorldTurnContextInput): 
       currentYear: characterDatasetYear(gameState.currentYear, record.birthDate),
       loadoutProfile,
     });
+  }))).map((character) => projectResolvedCharacterWorldFacts(character, {
+    history: gameState.worldHistory,
+    runtime: gameState.worldRuntime,
+    timeline,
+    mapLocations,
   }));
   const directSet = new Set(directlyNamedIds);
   const strongSet = new Set(strongRelationshipIds);
@@ -208,13 +231,21 @@ export async function buildWorldTurnContext(input: BuildWorldTurnContextInput): 
       knowledge: character.knowledge,
     };
   });
-  const selection = selectSceneCharacters({
+  const rawSelection = selectSceneCharacters({
     candidates,
     directlyNamedIds,
     eventParticipantIds,
     strongRelationshipIds,
     recentInteractionIds,
-  }) as CharacterPromptSelection;
+  });
+  const full = rawSelection.full.slice(0, WORLD_CONTEXT_LIMITS.characters);
+  const compactBudget = Math.max(0, WORLD_CONTEXT_LIMITS.characters - full.length);
+  const compact = rawSelection.compact.slice(0, compactBudget);
+  const selection: CharacterPromptSelection = {
+    full,
+    compact,
+    omittedCount: Math.max(0, rawSelection.full.length + rawSelection.compact.length - full.length - compact.length),
+  };
   const selectedIds = new Set<CharacterId>([...selection.full, ...selection.compact].map((entry) => entry.id));
   const presentCharacterIds = uniqueIds([
     ...directlyNamedIds,
@@ -232,6 +263,21 @@ export async function buildWorldTurnContext(input: BuildWorldTurnContextInput): 
     memberships: semanticMemberships,
     titles: semanticTitles,
   });
+  const currentMembership = semanticMemberships.find((entry) => entry.locationId === gameState.lord.location.locationId);
+  const membershipByLocationId = new Map(semanticMemberships.map((entry) => [entry.locationId, entry]));
+  const neighboringLocations = mapLocations
+    .filter((location) => location.id !== gameState.lord.location.locationId)
+    .filter((location) => {
+      const membership = membershipByLocationId.get(location.id);
+      return Boolean(currentMembership?.countyId && membership?.countyId === currentMembership.countyId)
+        || Boolean(currentMembership?.duchyId && membership?.duchyId === currentMembership.duchyId);
+    })
+    .sort((left, right) => right.importance - left.importance || left.name.localeCompare(right.name, 'zh-CN'))
+    .slice(0, WORLD_CONTEXT_LIMITS.neighboringLocations);
+  const recentWorldEvents = gameState.worldRuntime.events
+    .filter((event) => event.location?.locationId === gameState.lord.location.locationId
+      || event.actorIds.some((id) => selectedIds.has(id)))
+    .slice(-WORLD_CONTEXT_LIMITS.events);
 
   return {
     selection,
@@ -240,8 +286,8 @@ export async function buildWorldTurnContext(input: BuildWorldTurnContextInput): 
     recentInteractionIds,
     eventParticipantIds,
     timelinePressures,
-    visibleWorldEquipment: visibleItems.equipment,
-    visibleWorldAssets: visibleItems.assets,
+    visibleWorldEquipment: visibleItems.equipment.slice(0, WORLD_CONTEXT_LIMITS.assets),
+    visibleWorldAssets: visibleItems.assets.slice(0, WORLD_CONTEXT_LIMITS.assets),
     characterCommandContext: {
       characters: resolved,
       currentLocationId: gameState.lord.location.locationId,
@@ -250,6 +296,9 @@ export async function buildWorldTurnContext(input: BuildWorldTurnContextInput): 
     },
     currentDate,
     narrativeLocation,
+    neighboringLocations,
+    recentWorldEvents,
+    pendingTransactions: gameState.worldRuntime.pendingTransactions.filter((entry) => entry.status === 'pending').slice(0, 12),
   };
 }
 
@@ -269,10 +318,21 @@ export function formatWorldTurnContext(context: WorldTurnContext): string {
     ? context.visibleWorldAssets.map((item) => `- ${item.characterName} [${item.characterId}]：${item.name} (${item.definitionId}) · ${item.relation}；不代表当前随身携带。`)
     : ['- 当前场景人物没有可确认的未穿戴资产或保管物。'];
   const narrativeLocation = formatNarrativeLocationContext(context.narrativeLocation) || '未确认地点';
+  const neighborLines = context.neighboringLocations.length
+    ? context.neighboringLocations.map((location) => `- ${location.name}`)
+    : ['- 当前没有需要提供给模型的邻近地点。'];
+  const eventLines = context.recentWorldEvents.length
+    ? context.recentWorldEvents.map((event) => `- ${event.reason}`)
+    : ['- 当前地点和在场人物没有近期已提交事件。'];
+  const pendingLines = context.pendingTransactions.length
+    ? context.pendingTransactions.map((entry) => `- ${entry.id}：等待下一次成功回合结算。`)
+    : ['- 当前没有待处理世界事务。'];
   return [
     '### 【当前权威地点】',
     `- 位置：${narrativeLocation}`,
     '- 地图位置、人物移动与旅程进度只由地图旅行系统和统一回合结算。',
+    '### 【邻近地点】',
+    ...neighborLines,
     '',
     characterSlice,
     '',
@@ -286,5 +346,11 @@ export function formatWorldTurnContext(context: WorldTurnContext): string {
     '### 【人物名下或保管资产】',
     '- 本段只说明所有权、领地/家族关联或保管关系，不代表当前随身携带。',
     ...assetLines,
+    '',
+    '### 【近期已提交世界事件】',
+    ...eventLines,
+    '',
+    '### 【待处理世界事务】',
+    ...pendingLines,
   ].join('\n');
 }

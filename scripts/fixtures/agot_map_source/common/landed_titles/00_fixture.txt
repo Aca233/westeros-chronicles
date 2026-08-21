@@ -1,12 +1,19 @@
-k_westeros = {
-    d_winterfell = {
-        c_winterfell = {
-            b_winterfell = { province = 1 }
-        }
-    }
-    d_kings_landing = {
-        c_kings_landing = {
-            b_kings_landing = { province = 2 }
+h_test = {
+    color = { 130 100 100 }
+    e_test = {
+        color = { 185 191 188 }
+        k_westeros = {
+            color = { 120 130 140 }
+            d_winterfell = {
+                c_winterfell = {
+                    b_winterfell = { province = 1 }
+                }
+            }
+            d_kings_landing = {
+                c_kings_landing = {
+                    b_kings_landing = { province = 2 }
+                }
+            }
         }
     }
 }

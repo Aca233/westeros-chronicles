@@ -11,6 +11,8 @@ import {
 } from 'lucide-react'
 
 import { useGameStore } from '../../store/useGameStore'
+import type { CharacterId } from '../characters/types'
+import { createPendingWorldTransaction, pendingTravelTransactionFor, travelCommandToWorldIntent } from '../world/worldTransactionQueue'
 import { advanceWorldDate } from '../world/worldHistory'
 import { useMapUiStore } from './mapUiStore'
 import { mapRepository } from './repository'
@@ -41,19 +43,28 @@ function formatDate(date: { year: number; month: number; day: number }): string 
 export const JourneyPanel: React.FC<JourneyPanelProps> = ({ journey, season, hasLocationDetails }) => {
   const [returnLoading, setReturnLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const pendingTravelCommand = useGameStore((state) => state.pendingTravelCommand)
+  const gameState = useGameStore((state) => state.gameState)
   const isStreaming = useGameStore((state) => state.isStreaming)
-  const currentLocation = useGameStore((state) => state.gameState.lord.location)
-  const currentYear = useGameStore((state) => state.gameState.currentYear)
-  const currentMonth = useGameStore((state) => state.gameState.currentMonth)
-  const currentDay = useGameStore((state) => state.gameState.currentDay)
-  const currentDate = { year: currentYear, month: currentMonth, day: currentDay }
-  const queueTravelCommand = useGameStore((state) => state.queueTravelCommand)
-  const cancelTravelCommand = useGameStore((state) => state.cancelTravelCommand)
-  const travelIntent = useMapUiStore((state) => state.travelIntent)
-  const beginReroute = useMapUiStore((state) => state.beginReroute)
-  const clearTravelIntent = useMapUiStore((state) => state.clearTravelIntent)
-  const selectLocation = useMapUiStore((state) => state.selectLocation)
+  const currentLocation = gameState.lord.location
+  const currentDate = { year: gameState.currentYear, month: gameState.currentMonth, day: gameState.currentDay }
+  const queueWorldTransaction = useGameStore((state) => state.queueWorldTransaction)
+  const cancelWorldTransaction = useGameStore((state) => state.cancelWorldTransaction)
+  const playerCharacterId = (gameState.lord.canonicalCharacterId
+    ?? `save:${gameState.worldCharacters?.runId ?? 'current'}:player`) as CharacterId
+  const pendingTravelTransaction = pendingTravelTransactionFor(gameState.worldRuntime.pendingTransactions, playerCharacterId)
+  const pendingTravelCommand = pendingTravelTransaction?.travelCommands?.[0] ?? null
+  const queueTravelCommand = (command: TravelStateCommand) => queueWorldTransaction(createPendingWorldTransaction(
+    travelCommandToWorldIntent(command, playerCharacterId, `地图旅行操作：${command.type}`),
+  ))
+  const cancelTravelCommand = () => {
+    if (pendingTravelTransaction) cancelWorldTransaction(pendingTravelTransaction.id)
+  }
+  const interactionState = useMapUiStore((state) => state.interactionState)
+  const beginTravelPlanning = useMapUiStore((state) => state.beginTravelPlanning)
+  const beginDestinationPick = useMapUiStore((state) => state.beginDestinationPick)
+  const cancelDestinationPick = useMapUiStore((state) => state.cancelDestinationPick)
+  const closeTravelPlanning = useMapUiStore((state) => state.closeTravelPlanning)
+  const openMap = useMapUiStore((state) => state.openMap)
 
   const completedDays = useMemo(() => journey.routePlan.legs
     .slice(0, journey.currentLeg)
@@ -96,7 +107,7 @@ export const JourneyPanel: React.FC<JourneyPanelProps> = ({ journey, season, has
         .filter((entry) => routeIds.has(entry.id))
         .map((entry) => [entry.id, entry.name]))
       queueTravelCommand({ type: 'RETURN_TRAVEL', routePlan, locationLabels })
-      clearTravelIntent()
+      closeTravelPlanning()
     } catch (reason) {
       setError(reason instanceof RoutePlanningError ? reason.failure.reason : '返回路线暂时无法规划。')
     } finally {
@@ -119,8 +130,11 @@ export const JourneyPanel: React.FC<JourneyPanelProps> = ({ journey, season, has
       cancelTravelCommand()
       return
     }
-    if (travelIntent === 'reroute') clearTravelIntent()
-    else beginReroute()
+    if (interactionState === 'pick-travel-destination') cancelDestinationPick()
+    else {
+      beginTravelPlanning(journey.routePlan.to)
+      beginDestinationPick()
+    }
   }
 
   const statusLabel = journey.status === 'travelling'
@@ -140,7 +154,7 @@ export const JourneyPanel: React.FC<JourneyPanelProps> = ({ journey, season, has
           <small>{statusLabel}</small>
           <strong>{destination}</strong>
         </div>
-        <button type="button" onClick={() => selectLocation(journey.routePlan.to)} aria-label="在地图上查看旅程目的地">
+        <button type="button" onClick={() => openMap({ kind: 'location', locationId: journey.routePlan.to })} aria-label="在地图上查看旅程目的地">
           <MapPin />
         </button>
       </header>
@@ -157,7 +171,7 @@ export const JourneyPanel: React.FC<JourneyPanelProps> = ({ journey, season, has
         <span>剩余约 {remainingDays.toFixed(1)} 天</span>
       </div>
       {journey.interruptedBy && <p className="map-journey-interruption">{journey.interruptedBy}</p>}
-      {travelIntent === 'reroute' && <p className="map-journey-guidance">请选择新的目的地，再在地点详情中规划并确认改道。</p>}
+      {interactionState === 'pick-travel-destination' && <p className="map-journey-guidance">请选择新的伯爵领作为目的地。</p>}
       {error && <p className="map-journey-error" role="alert">{error}</p>}
 
       <div className="map-journey-actions">
@@ -166,8 +180,8 @@ export const JourneyPanel: React.FC<JourneyPanelProps> = ({ journey, season, has
           {pendingPause || pendingResume ? '取消调整' : journey.status === 'travelling' ? '暂停旅程' : '继续旅程'}
         </button>
         <button type="button" onClick={toggleReroute} disabled={isStreaming || rerouteBlocked}>
-          {pendingReroute || travelIntent === 'reroute' ? <Undo2 /> : <Route />}
-          {pendingReroute || travelIntent === 'reroute' ? '取消改道' : '改道'}
+          {pendingReroute || interactionState === 'pick-travel-destination' ? <Undo2 /> : <Route />}
+          {pendingReroute || interactionState === 'pick-travel-destination' ? '取消改道' : '改道'}
         </button>
         <button
           type="button"

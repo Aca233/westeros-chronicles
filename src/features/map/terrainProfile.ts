@@ -1,5 +1,3 @@
-import type { MapMode } from './mapLayers.ts'
-
 export const TERRAIN_ENTER_ZOOM = 3.25
 export const TERRAIN_EXIT_ZOOM = 3.05
 export const TERRAIN_TRANSITION_START = 3.2
@@ -12,17 +10,10 @@ export const TERRAIN_MAX_PITCH = 55
 // deliberately stylised vertical scale to remain legible.
 export const TERRAIN_VISUAL_SCALE = 32
 
-const MODE_PROFILE: Record<MapMode, { pitch: number; exaggeration: number }> = {
-  terrain: { pitch: 52, exaggeration: TERRAIN_VISUAL_SCALE },
-  political: { pitch: 42, exaggeration: 26 },
-  characters: { pitch: 34, exaggeration: 20 },
-  travel: { pitch: 34, exaggeration: 20 },
-  assets: { pitch: 34, exaggeration: 20 },
-}
+const TERRAIN_PROFILE = { pitch: 52, exaggeration: TERRAIN_VISUAL_SCALE } as const
 
 export interface TerrainProfileInput {
   zoom: number
-  mode: MapMode
   topDownLocked: boolean
   available: boolean
   terrainWasEnabled: boolean
@@ -42,7 +33,6 @@ function smoothstep(value: number): number {
 }
 
 export function terrainCameraProfile(input: TerrainProfileInput): TerrainCameraProfile {
-  const mode = MODE_PROFILE[input.mode]
   const allowed = input.available && !input.topDownLocked
   const threshold = input.terrainWasEnabled ? TERRAIN_EXIT_ZOOM : TERRAIN_ENTER_ZOOM
   const terrainEnabled = allowed && input.zoom >= threshold
@@ -51,9 +41,9 @@ export function terrainCameraProfile(input: TerrainProfileInput): TerrainCameraP
     : 0
   return {
     terrainEnabled,
-    pitch: Math.round(mode.pitch * progress * 100) / 100,
-    maxPitch: mode.pitch,
-    terrainExaggeration: mode.exaggeration,
+    pitch: Math.round(TERRAIN_PROFILE.pitch * progress * 100) / 100,
+    maxPitch: TERRAIN_PROFILE.pitch,
+    terrainExaggeration: TERRAIN_PROFILE.exaggeration,
     rotationEnabled: terrainEnabled,
   }
 }

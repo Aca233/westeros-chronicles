@@ -126,7 +126,7 @@ function body() {
 function gameState(journey = activeJourney()) {
   const startDate = { year: 298, month: 1, day: 1 }
   return {
-    saveFormatVersion: 7,
+    saveFormatVersion: 9,
     currentYear: startDate.year, currentMonth: startDate.month, currentDay: startDate.day,
     currentSeason: 'summer', turnCount: 1,
     lord: {
@@ -138,8 +138,9 @@ function gameState(journey = activeJourney()) {
     },
     turns: [{ id: 'turn_1', turnNumber: 1, playerInput: '开始', narrate: '开始', branches: [], timestamp: 1 }],
     worldCharacters: { runId: 'run_test', datasetHash: 'hash', revision: 0 },
-    worldArtifacts: { schemaVersion: 1, instances: {}, custody: {}, equipped: {} },
+    worldArtifacts: { schemaVersion: 1, startDate: '298.1.1', datasetHash: 'test', artifactDatasetHash: 'test', characterDatasetHash: 'test', artifacts: {} },
     worldHistory: travel.createWorldHistoryState(startDate),
+    worldRuntime: { schemaVersion: 1, revision: 0, characters: {}, titles: {}, assets: {}, events: [], pendingTransactions: [] },
     worldFlags: {}, isGameOver: false,
     ...(journey ? { activeJourney: journey } : {}),
   }
@@ -151,7 +152,7 @@ test('同地点内部移动只更新具体场景，并在成功结算中留下�
     actionText: '走到临冬城内的校场',
     nextTurnNumber: 2,
     draft: { outcomeSummary: '', stateCommands: [{ type: 'CHANGE_LOCATION', locationId: 'b_start', sceneLocation: '校场' }] },
-    pendingItemActions: [],
+    pendingTransactions: [],
     characterContext: { characters: [], knownLocationIds: ['b_start', 'b_mid', 'b_finish'] },
     timeline: [],
   })
@@ -173,7 +174,7 @@ test('短途抵达会原子移动玩家、同行者、车辆和车内物品，�
     actionText: '随车队前往终点',
     nextTurnNumber: 2,
     draft: { outcomeSummary: '', stateCommands: [{ type: 'ADVANCE_TIME', days: 1 }] },
-    pendingItemActions: [],
+    pendingTransactions: [],
     characterContext: {
       characters: [{ id: COMPANION, alive: true, locationId: 'b_start' }],
       knownLocationIds: ['b_start', 'b_mid', 'b_finish'],
@@ -185,9 +186,11 @@ test('短途抵达会原子移动玩家、同行者、车辆和车内物品，�
   assert.equal(settled.updatedLord.items.vehicles.wagon.location.locationId, 'b_finish')
   assert.equal(settled.updatedLord.items.sites.castle.location.locationId, 'b_start')
   assert.deepEqual(settled.updatedLord.items.placements['wagon.chest'], { type: 'vehicle', vehicleId: 'wagon' })
-  assert.equal(settled.characterEvents.filter((event) => event.event.type === 'MOVE').length, 1)
+  assert.equal(settled.characterEvents.filter((event) => event.event.type === 'MOVE').length, 0)
+  assert.deepEqual(settled.worldRuntime.characters[COMPANION].location, { locationId: 'b_finish' })
+  assert.deepEqual(settled.worldRuntime.assets['vehicle:wagon'].placement, { type: 'location', location: { locationId: 'b_finish' } })
   assert.equal(settled.worldHistory.turns.length, 1)
-  assert.equal(settled.worldHistory.turns[0].facts.filter((fact) => fact.kind === 'travel.progress').length, 1)
+  assert.equal(settled.worldRuntime.events.filter((event) => event.type === 'travel.arrived').length, 1)
 })
 
 test('长途跨回合推进，途中权威位置停在上一节点', () => {
@@ -271,7 +274,7 @@ test('没有有效旅程时拒绝显式推进且日期不会被偷走', () => {
     actionText: '继续赶路',
     nextTurnNumber: 2,
     draft: { outcomeSummary: '', stateCommands: [{ type: 'ADVANCE_TRAVEL', days: 2 }] },
-    pendingItemActions: [],
+    pendingTransactions: [],
     characterContext: { characters: [], knownLocationIds: ['b_start', 'b_mid', 'b_finish'] },
     timeline: [],
   })
