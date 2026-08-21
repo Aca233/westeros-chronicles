@@ -109,12 +109,14 @@ test('中质量只选择最近地标，低质量保留 LOD1 但关闭实时阴�
 })
 
 test('MapCanvas 动态加载模型运行时，保留二维点击权威并先销毁模型再移除地图', () => {
-  const source = readFileSync('src/features/map/MapCanvas.tsx', 'utf8')
-  assert.match(source, /import\(['"]\.\/landmarks\/landmarkRuntime\.ts['"]\)/)
-  assert.match(source, /landmarkRuntime\?\.sync\(['"]moveend['"]\)/)
-  assert.match(source, /landmarkRuntime\?\.sync\(['"]zoomend['"]\)/)
-  assert.match(source, /landmarkRuntime\?\.destroy\(\)[\s\S]*map\.remove\(\)/)
-  const terrainHandler = source.match(/const handleTerrainZoom = \(\) => \{[\s\S]*?\n\s*\}/)?.[0] ?? ''
+  const lifecycle = readFileSync('src/features/map/canvas/useMapLifecycle.ts', 'utf8')
+  const controller = readFileSync('src/features/map/canvas/landmarkRuntimeController.ts', 'utf8')
+  const source = `${lifecycle}\n${controller}`
+  assert.match(controller, /import\(['"]\.\.\/landmarks\/landmarkRuntime\.ts['"]\)/)
+  assert.match(lifecycle, /landmarkController\.sync\(['"]moveend['"]\)/)
+  assert.match(lifecycle, /landmarkController\.sync\(['"]zoomend['"]\)/)
+  assert.match(lifecycle, /landmarkController\.destroy\(\)[\s\S]*map\.remove\(\)/)
+  const terrainHandler = lifecycle.match(/const handleTerrainZoom = \(\) => \{[\s\S]*?\n\s*\}/)?.[0] ?? ''
   assert.doesNotMatch(terrainHandler, /landmark|GLTF|fetch\(/i)
   for (const layer of ['COUNTY_HIT_LAYER', 'SELECTED_COUNTY_LOCATION_LAYER', 'CHARACTER_POINT_LAYER', 'ASSET_POINT_LAYER']) {
     assert.match(source, new RegExp(`map\\.on\\('click', ${layer}`))

@@ -4,7 +4,10 @@ import { readFileSync } from 'node:fs'
 const app = readFileSync('src/App.tsx', 'utf8')
 const drawer = readFileSync('src/features/map/MapDrawer.tsx', 'utf8')
 const boundary = readFileSync('src/features/map/MapErrorBoundary.tsx', 'utf8')
-const canvas = readFileSync('src/features/map/MapCanvas.tsx', 'utf8')
+const canvas = [
+  readFileSync('src/features/map/MapCanvas.tsx', 'utf8'),
+  readFileSync('src/features/map/canvas/useMapLifecycle.ts', 'utf8'),
+].join('\n')
 const store = readFileSync('src/features/map/mapUiStore.ts', 'utf8')
 const css = readFileSync('src/index.css', 'utf8')
 const { useMapUiStore } = await import('../src/features/map/mapUiStore.ts')

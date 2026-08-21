@@ -53,7 +53,10 @@ test('三维地标只使用 MapLibre 共享 canvas/context 且没有第二渲染
     .join('\n')
   const layer = readFileSync('src/features/map/landmarks/landmarkCustomLayer.ts', 'utf8')
   const contactShadow = readFileSync('src/features/map/landmarks/landmarkContactShadow.ts', 'utf8')
-  const canvas = readFileSync('src/features/map/MapCanvas.tsx', 'utf8')
+  const canvasRuntimeSource = files
+    .filter((path) => path.includes('src/features/map/canvas/') || path.endsWith('src/features/map/MapCanvas.tsx'))
+    .map((path) => readFileSync(path, 'utf8'))
+    .join('\n')
   assert.match(runtimeSource, /setTerrain/)
   assert.match(runtimeSource, /source:\s*['"]agot-dem['"]/)
   assert.match(layer, /type\s*=\s*['"]custom['"]/)
@@ -61,7 +64,7 @@ test('三维地标只使用 MapLibre 共享 canvas/context 且没有第二渲染
   assert.match(layer, /canvas:\s*this\.canvas/)
   assert.match(layer, /context:\s*gl/)
   assert.match(layer, /new WebGLRenderer\(parameters\)/)
-  assert.match(canvas, /import\(['"]\.\/landmarks\/landmarkRuntime\.ts['"]\)/)
+  assert.match(canvasRuntimeSource, /import\(['"]\.\.\/landmarks\/landmarkRuntime\.ts['"]\)/)
   assert.match(runtimeSource, /map\.addLayer\(layer, COUNTY_HIT_LAYER\)/)
   assert.doesNotMatch(landmarkSource, /document\.createElement\(['"]canvas|new\s+HTMLCanvasElement|requestAnimationFrame|cancelAnimationFrame|new\s+THREE\.Raycaster|new\s+Raycaster|OrbitControls|TrackballControls|forceContextLoss/)
   assert.doesNotMatch(landmarkSource, /https?:\/\/|steamapps|Workshop/i)
@@ -72,8 +75,8 @@ test('三维地标只使用 MapLibre 共享 canvas/context 且没有第二渲染
 
 
 test('连续缩放处理只更新地形镜头', () => {
-  const canvas = readFileSync('src/features/map/MapCanvas.tsx', 'utf8')
-  const handler = canvas.match(/const handleTerrainZoom = \(\) => \{[\s\S]*?\n\s*\}/)?.[0] ?? ''
+  const lifecycleSource = readFileSync('src/features/map/canvas/useMapLifecycle.ts', 'utf8')
+  const handler = lifecycleSource.match(/const handleTerrainZoom = \(\) => \{[\s\S]*?\n\s*\}/)?.[0] ?? ''
   assert.match(handler, /requestSync/)
   assert.doesNotMatch(handler, /fetch\(|loadSemanticIndex|syncDynamicMapSubjects|syncPoliticalHouseLabels/)
 })

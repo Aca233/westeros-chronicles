@@ -101,10 +101,10 @@ test('只保留伯爵领选中描边并彻底移除家族副标题', () => {
 })
 
 test('点击区域直接选择伯爵领，不再逐级下钻', () => {
-  const canvas = readFileSync('src/features/map/MapCanvas.tsx', 'utf8')
-  assert.match(canvas, /countyIdForBarony\(baronyId\)/)
-  assert.match(canvas, /onSelectCounty\(countyId\)/)
-  assert.doesNotMatch(canvas, /onExpandTitle|titleExpansion|expansionDisplayColor/)
+  const lifecycle = readFileSync('src/features/map/canvas/useMapLifecycle.ts', 'utf8')
+  assert.match(lifecycle, /countyIdForBarony\(baronyId\)/)
+  assert.match(lifecycle, /onSelectCounty\(countyId\)/)
+  assert.doesNotMatch(lifecycle, /onExpandTitle|titleExpansion|expansionDisplayColor/)
   const store = readFileSync('src/features/map/mapUiStore.ts', 'utf8')
   assert.match(store, /selection:\s*MapSelection/)
   assert.doesNotMatch(store, /titleExpansion|expandTitle/)
@@ -113,13 +113,14 @@ test('点击区域直接选择伯爵领，不再逐级下钻', () => {
 })
 
 test('地图内点选不飞镜头,搜索等外部选中仍飞行定位', () => {
-  const canvas = readFileSync('src/features/map/MapCanvas.tsx', 'utf8')
-  assert.match(canvas, /if \(!focusRequest \|\| !mapRef\.current\) return/)
-  assert.match(canvas, /focusRequest\.target\.kind === 'location'/)
-  assert.match(canvas, /mapRef\.current\.flyTo\(\{[\s\S]*?zoom: targetZoom/)
-  const countyHandler = canvas.slice(
-    canvas.indexOf('const handleCountyClick'),
-    canvas.indexOf('const handleExpandedLocationClick'),
+  const cameraSync = readFileSync('src/features/map/canvas/useMapCameraSync.ts', 'utf8')
+  const lifecycle = readFileSync('src/features/map/canvas/useMapLifecycle.ts', 'utf8')
+  assert.match(cameraSync, /if \(!input\.focusRequest \|\| !input\.mapRef\.current\) return/)
+  assert.match(cameraSync, /focusRequest!\.target\.kind === 'location'/)
+  assert.match(cameraSync, /mapRef\.current\.flyTo\(\{[\s\S]*?zoom: targetZoom/)
+  const countyHandler = lifecycle.slice(
+    lifecycle.indexOf('const handleCountyClick'),
+    lifecycle.indexOf('const handleExpandedLocationClick'),
   )
   assert.doesNotMatch(countyHandler, /flyTo/)
 })

@@ -250,7 +250,11 @@ test('运行时从本地资料加载基础持有人并把投影接入地图画�
   assert.deepEqual(requested, ['/data/agot-map/political/titles.json'])
 
   const drawer = readFileSync('src/features/map/MapDrawer.tsx', 'utf8')
-  const canvas = readFileSync('src/features/map/MapCanvas.tsx', 'utf8')
+  const canvas = [
+    readFileSync('src/features/map/MapCanvas.tsx', 'utf8'),
+    readFileSync('src/features/map/canvas/useMapLifecycle.ts', 'utf8'),
+    readFileSync('src/features/map/canvas/semanticProjectionController.ts', 'utf8'),
+  ].join('\n')
   const style = readFileSync('src/features/map/mapStyle.ts', 'utf8')
   const characters = readFileSync('src/features/characters/staticCharacterRepository.ts', 'utf8')
   assert.match(drawer, /loadPoliticalTitles/)

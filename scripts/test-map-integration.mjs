@@ -9,6 +9,17 @@ import {
   projectKnownCharacterMapPoints,
 } from '../src/features/map/dynamicMapSubjects.ts'
 import { assertSupportedGameState } from '../src/features/items/saveVersion.ts'
+
+const mapCanvasSource = () => readFileSync('src/features/map/MapCanvas.tsx', 'utf8')
+const mapLifecycleSource = () => readFileSync('src/features/map/canvas/useMapLifecycle.ts', 'utf8')
+const mapCanvasRuntimeSource = () => [
+  mapCanvasSource(),
+  mapLifecycleSource(),
+  readFileSync('src/features/map/canvas/useMapCameraSync.ts', 'utf8'),
+  readFileSync('src/features/map/canvas/semanticProjectionController.ts', 'utf8'),
+  readFileSync('src/features/map/canvas/journeyLayers.ts', 'utf8'),
+  readFileSync('src/features/map/canvas/landmarkRuntimeController.ts', 'utf8'),
+].join('\n')
 import { aggregateCharacterPoints } from '../src/features/map/semanticAggregation.ts'
 const selectorBundle = await build({
   entryPoints: ['src/features/world/worldSelectors.ts'], bundle: true, write: false,
@@ -166,7 +177,7 @@ test('地图抽屉关闭后不渲染 MapLibre，故障只隔离地图子树并�
 })
 
 test('人物和资产图层已接入地图，人物可打开卷宗，地点详情显示已知对象', () => {
-  const canvas = readFileSync('src/features/map/MapCanvas.tsx', 'utf8')
+  const canvas = mapCanvasRuntimeSource()
   const layers = readFileSync('src/features/map/mapLayers.ts', 'utf8')
   const drawer = readFileSync('src/features/map/MapDrawer.tsx', 'utf8')
   const details = readFileSync('src/features/map/LocationDetails.tsx', 'utf8')
@@ -240,25 +251,25 @@ test('移动端伯爵领、地点和旅程面板是地图内部底部抽屉', ()
 })
 
 test('MapCanvas 只在稳定边界或权威状态变化时刷新动态语义源', () => {
-  const source = readFileSync('src/features/map/MapCanvas.tsx', 'utf8')
-  assert.match(source, /semanticZoomState\(map\.getZoom\(\)\)/)
+  const source = mapCanvasRuntimeSource()
+  assert.match(source, /semanticZoomState\((?:input\.)?map\.getZoom\(\)\)/)
   assert.match(source, /map\.on\('zoomend'/)
   assert.doesNotMatch(source, /refreshPoliticalHouseLabels|syncPoliticalHouseLabels/)
   assert.doesNotMatch(source, /map\.on\('zoom',\s*refresh(?:Political|Semantic)/)
 })
 
 test('缩放不修改地图选择，旅程路线仍只来自原 routePlan', () => {
-  const source = readFileSync('src/features/map/MapCanvas.tsx', 'utf8')
+  const source = mapCanvasRuntimeSource()
   assert.doesNotMatch(source, /setMapMode|useMapUiStore/)
   assert.match(source, /syncJourneyLayers\(map, manifest, routeRef\.current\.routePlan/)
 })
 
 test('镜头、zoomend 和 moveend 监听在地图销毁时完整解绑', () => {
-  const source = readFileSync('src/features/map/MapCanvas.tsx', 'utf8')
+  const source = mapCanvasRuntimeSource()
   for (const event of ['zoomend', 'moveend']) assert.match(source, new RegExp(`map\\.off\\('${event}'`))
   assert.match(source, /cameraCleanup\(\)/)
   assert.match(source, /map\.off\('sourcedata'/)
-  assert.match(source, /terrainSurfaceController\.destroy\(\)/)
+  assert.match(source, /terrainSurfaceController\?\.destroy\(\)/)
   assert.match(source, /wheelCameraController\.destroy\(\)/)
   assert.match(source, /mediaQuery\.removeEventListener/)
 })
@@ -271,15 +282,23 @@ test('镜头持久化只保存中心与缩放，不保存 bearing 或 pitch', ()
 })
 
 test('连续地形 zoom 不触发政治人物资产重投影', () => {
-  const source = readFileSync('src/features/map/MapCanvas.tsx', 'utf8')
+  const source = mapLifecycleSource()
   const handler = source.match(/const handleTerrainZoom = \(\) => \{[\s\S]*?\n\s*\}/)?.[0] ?? ''
   assert.match(handler, /requestSync/)
   assert.doesNotMatch(handler, /syncDynamicMapSubjects|syncPoliticalHouseLabels|applyPoliticalFeatureStates/)
 })
 
 test('平移结束不会重复写入未变化的地图表达样式', () => {
-  const source = readFileSync('src/features/map/MapCanvas.tsx', 'utf8')
+  const source = mapLifecycleSource()
   const handler = source.match(/const handleMoveEnd = \(\) => \{[\s\S]*?\n\s*\}/)?.[0] ?? ''
   assert.match(handler, /onViewportChange/)
   assert.doesNotMatch(handler, /applyMapMode/)
+})
+
+
+test('MapCanvas delegates one lifecycle and lifecycle owns one MapLibre instance', () => {
+  const canvas = readFileSync('src/features/map/MapCanvas.tsx', 'utf8')
+  const lifecycle = readFileSync('src/features/map/canvas/useMapLifecycle.ts', 'utf8')
+  assert.equal((canvas.match(/useMapLifecycle\(/g) ?? []).length, 1)
+  assert.equal((lifecycle.match(/new maplibregl\.Map\(/g) ?? []).length, 1)
 })

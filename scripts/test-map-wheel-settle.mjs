@@ -28,8 +28,8 @@ function fakeMap({ zoom = 4.8 } = {}) {
 const input = { topDownLocked: false, reducedMotion: false }
 
 test('滚轮结束的同步不强制写相机,避免顶掉滚轮缩放动画', () => {
-  const canvas = readFileSync('src/features/map/MapCanvas.tsx', 'utf8')
-  const handler = canvas.match(/const handleZoomEnd =[\s\S]*?\n    \}/)?.[0] ?? ''
+  const lifecycle = readFileSync('src/features/map/canvas/useMapLifecycle.ts', 'utf8')
+  const handler = lifecycle.match(/const handleZoomEnd =[\s\S]*?\n    \}/)?.[0] ?? ''
   assert.match(handler, /event\?\.agotWheelCamera/)
   assert.match(handler, /agotWheelCamera\) \{[\s\S]*?requestSync\(terrainInput\(\)\)/)
   assert.match(handler, /requestSync\(terrainInput\(\), true\)/)
@@ -45,6 +45,6 @@ test('非强制同步在启用缩放即挂载地形,不积攒到停稳后爆发'
 test('相机运动途中不拆装地形:没有运动卸载入口', () => {
   const controller = readFileSync('src/features/map/terrainController.ts', 'utf8')
   assert.doesNotMatch(controller, /setCameraInMotion|MOTION_DETACH/)
-  const canvas = readFileSync('src/features/map/MapCanvas.tsx', 'utf8')
-  assert.doesNotMatch(canvas, /handleCameraMotion/)
+  const lifecycle = readFileSync('src/features/map/canvas/useMapLifecycle.ts', 'utf8')
+  assert.doesNotMatch(lifecycle, /handleCameraMotion/)
 })

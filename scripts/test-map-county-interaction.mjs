@@ -90,7 +90,10 @@ test('地图不再渲染男爵领点并提供全伯爵领透明点击层', () =>
   assert.ok(Number(hitLayer?.paint?.['fill-opacity']) > 0)
   assert.ok(Number(hitLayer?.paint?.['fill-opacity']) <= 0.01)
 
-  const canvas = readFileSync('src/features/map/MapCanvas.tsx', 'utf8')
+  const canvas = [
+    readFileSync('src/features/map/canvas/useMapLifecycle.ts', 'utf8'),
+    readFileSync('src/features/map/canvas/semanticProjectionController.ts', 'utf8'),
+  ].join('\n')
   assert.match(canvas, /COUNTY_HIT_LAYER/)
   assert.match(canvas, /countyIdForBarony/)
   assert.match(canvas, /primaryLocationForCounty/)

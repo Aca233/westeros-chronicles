@@ -6,7 +6,10 @@ const planner = await readFile('src/features/map/TravelPlanner.tsx', 'utf8')
 const journeyPanel = await readFile('src/features/map/JourneyPanel.tsx', 'utf8')
 const details = await readFile('src/features/map/LocationDetails.tsx', 'utf8')
 const countyDetails = await readFile('src/features/map/CountyDetails.tsx', 'utf8')
-const canvas = await readFile('src/features/map/MapCanvas.tsx', 'utf8')
+const canvas = [
+  await readFile('src/features/map/MapCanvas.tsx', 'utf8'),
+  await readFile('src/features/map/canvas/journeyLayers.ts', 'utf8'),
+].join('\n')
 const drawer = await readFile('src/features/map/MapDrawer.tsx', 'utf8')
 const store = await readFile('src/store/useGameStore.ts', 'utf8')
 const prompt = await readFile('src/services/promptBuilder.ts', 'utf8')
