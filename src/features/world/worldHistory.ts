@@ -2,7 +2,7 @@ import type { CharacterId } from '../../domain/characterId';
 import type { WorldDate, WorldDateAdvance } from '../../domain/worldDate';
 import type { WorldLocationRef } from '../../domain/worldLocation';
 export type { WorldDate, WorldDateAdvance } from '../../domain/worldDate';
-import type { StateCommand } from '../../types/game';
+import type { StateCommand } from '../../types/stateCommand';
 
 export type CanonicalEventStatus = 'historical' | 'scheduled' | 'occurred' | 'diverged' | 'suppressed';
 

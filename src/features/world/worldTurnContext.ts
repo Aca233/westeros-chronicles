@@ -6,7 +6,7 @@ import type { GameState } from '../../types/game';
 import { getItemDefinition } from '../items/catalog';
 import { buildCharacterPromptSlice, type CharacterPromptCandidate, type CharacterPromptSelection } from '../characters/characterPromptSlice';
 import { characterAgeAtYear, characterDatasetYear } from '../characters/characterDossier';
-import type { CharacterEventEnvelope, CharacterEventStore } from '../characters/characterEventStore';
+import type { CharacterEventEnvelope, CharacterEventStore } from '../characters/characterEventTypes';
 import { DexieCharacterEventStore } from '../characters/characterEventStore';
 import { resolveCharacter } from '../characters/characterProjector';
 import { selectSceneCharacters } from '../characters/sceneCharacterSelector';

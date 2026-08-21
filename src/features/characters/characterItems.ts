@@ -1,7 +1,7 @@
 import { NPC_LOADOUT_TEMPLATES } from '../../data/npcLoadoutTemplates';
 import { NPC_LOADOUT_OVERRIDES } from '../../data/npcLoadoutOverrides';
 import type { EquipmentPosition } from '../items/types';
-import type { CharacterEventEnvelope } from './characterEventStore';
+import type { CharacterEventEnvelope } from './characterEventTypes';
 import type {
   CharacterItemRecord,
   StaticCharacterLoadoutProfile,

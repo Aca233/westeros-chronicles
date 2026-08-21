@@ -1,7 +1,7 @@
 import Dexie, { Table } from 'dexie';
 import type { GameState } from '../types/game';
-import type { CharacterEventEnvelope, CharacterEventInput } from '../features/characters/characterEventStore';
-import type { CharacterId } from '../features/characters/types';
+import type { CharacterEventEnvelope, CharacterEventInput } from '../features/characters/characterEventTypes';
+import type { CharacterId } from '../domain/characterId';
 import {
   ITEM_SAVE_FORMAT_VERSION,
   assertSupportedGameState,

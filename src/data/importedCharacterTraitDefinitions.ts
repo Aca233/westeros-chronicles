@@ -1,4 +1,4 @@
-import type { BaseCharacterTraitDefinition } from './characterTraits';
+import type { BaseCharacterTraitDefinition } from './characterTraitTypes';
 
 /**
  * AGOT 离线人物数据中会在 298 AC 开局人物身上出现、但不属于自建统治者基础目录的可见特质。

@@ -1,18 +1,19 @@
 import type { CoatOfArmsDesign } from '../data/heraldry';
 import type { TraitCheckDomain } from '../services/traitEffectEngine';
 import type { CheckOutcomeContract } from '../services/dicePolicy';
-import type { CharacterStateCommand } from '../features/characters/characterCommands';
-import type { ItemStateCommand, ItemSystemState } from '../features/items/types';
-import type { WorldArtifactState } from '../features/items/worldArtifacts';
+import type { ItemSystemState } from '../features/items/types';
+import type { WorldArtifactState } from '../features/items/worldArtifactTypes';
 import type { WorldHistoryState } from '../features/world/worldHistory';
 import type { WorldRuntimeState } from '../features/world/worldRuntimeTypes';
 import type { BodyZoneKey, WoundLevel } from '../domain/body';
 import type { LordAttributes } from '../domain/character';
 import type { CharacterId } from '../domain/characterId';
 import type { WorldLocationRef } from '../domain/worldLocation';
+import type { StateCommand } from './stateCommand';
+export type { StateCommand } from './stateCommand';
+import type { ActiveJourney } from '../features/map/travel/types';
 export type { BodyZoneKey, WoundLevel } from '../domain/body';
 export type { LordAttributes } from '../domain/character';
-import type { ActiveJourney, TravelStateCommand } from '../features/map/travel/types';
 
 export interface BodyZoneStatus {
   key: BodyZoneKey;
@@ -71,26 +72,6 @@ export interface LordProfile {
   traitIds?: string[];
   importedTraitIds?: string[]; // 现成人物保留的完整离线原始特质，显示时按年龄与呈现策略投影
 }
-
-// 状态指令
-export type StateCommand =
-  | { type: 'INJURE_ZONE'; zone: BodyZoneKey; level: WoundLevel; woundText: string; reason?: string; damageTags?: string[] }
-  | { type: 'HEAL_ZONE'; zone: BodyZoneKey | 'all'; level?: WoundLevel; clearWound?: string }
-  | { type: 'SET_BLEEDING'; value: boolean }
-  | { type: 'SET_POISONED'; value: boolean }
-  | { type: 'SET_INFECTED'; value: boolean }
-  | { type: 'MODIFY_GOLD'; goldDragons?: number; silverStags?: number; reason?: string }
-  | { type: 'MODIFY_STAT'; stat: keyof LordAttributes; delta: number; reason?: string }
-  | { type: 'MODIFY_PRESTIGE'; delta: number }
-  | { type: 'MODIFY_DREAD'; delta: number }
-  | { type: 'ADD_TRAIT'; trait: string }
-  | { type: 'CHANGE_LOCATION'; locationId: string; sceneLocation?: string }
-  | { type: 'CHANGE_TITLE'; title: string }
-  | { type: 'ADVANCE_TIME'; days?: number; months?: number; years?: number; season?: string; reason?: string }
-  | { type: 'SET_DATE'; year?: number; month?: number; day?: number; season?: string; reason?: string }
-  | ItemStateCommand
-  | CharacterStateCommand
-  | TravelStateCommand;
 
 // D20 跑团检定定义
 export interface D20Check {

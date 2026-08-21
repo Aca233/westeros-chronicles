@@ -16,6 +16,8 @@
     "verify:quick": "node scripts/verify/run-suite.mjs quick",
     "test:verification-suites": "node scripts/test-verification-suites.mjs",
     "test:domain-contracts": "node scripts/test-domain-contracts.mjs",
+    "test:module-cycles": "node scripts/test-module-cycles.mjs",
+    "check:module-cycles": "node scripts/check-module-cycles.mjs",
     "verify": "node scripts/verify/run-suite.mjs full",
     "test:trait-effects": "node --experimental-strip-types scripts/test-trait-effects.mjs",
     "test:character-trait-display": "node scripts/test-character-trait-display.mjs",

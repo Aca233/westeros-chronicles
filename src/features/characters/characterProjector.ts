@@ -1,6 +1,6 @@
 import { calculateFinalAttributes } from '../../data/characterTraits';
-import type { CharacterEventEnvelope } from './characterEventStore';
-import { projectCharacterEvents } from './characterEventStore';
+import type { CharacterEventEnvelope } from './characterEventTypes';
+import { projectCharacterEvents } from './characterEventProjection';
 import { generateMissingBaseAttributes } from './attributeGenerator';
 import { expandBaselineLoadout, projectCharacterItems } from './characterItems';
 import type { ResolvedCharacter, StaticCharacterLoadoutProfile, StaticCharacterRecord } from './types';

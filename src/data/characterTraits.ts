@@ -1,5 +1,6 @@
-import type { GameIconId } from '../components/GameIcon';
-import type { LordAttributes } from '../types/game';
+import type { LordAttributes } from '../domain/character';
+import type { BaseCharacterTraitDefinition, TraitCategory, TraitSource } from './characterTraitTypes';
+export type { BaseCharacterTraitDefinition, TraitCategory, TraitSource } from './characterTraitTypes';
 import { CK3_TRAIT_DESCRIPTIONS } from './ck3TraitDescriptions';
 import { AGOT_TRAIT_DESCRIPTIONS } from './agotTraitDescriptions';
 import { CHARACTER_TRAIT_RULES } from './characterTraitEffects';
@@ -16,24 +17,9 @@ export const DESIGN_POINT_LIMIT = 400;
 export const MAX_PERSONALITY_TRAITS = 3;
 export const MIN_CHARACTER_TRAIT_COUNT = 100;
 
-export type TraitCategory = 'personality' | 'education' | 'lifestyle' | 'congenital' | 'health' | 'fame';
-export type TraitSource = 'ck3' | 'agot';
-
-export interface CharacterTraitDefinition {
-  id: string;
-  name: string;
-  category: TraitCategory;
-  description: string;
-  cost: number;
-  icon: GameIconId;
-  modifiers: Partial<LordAttributes>;
-  exclusiveGroup?: string;
-  incompatibleTraitIds?: readonly string[];
-  source?: TraitSource;
+export interface CharacterTraitDefinition extends BaseCharacterTraitDefinition {
   rules: TraitRuleSet;
 }
-
-export type BaseCharacterTraitDefinition = Omit<CharacterTraitDefinition, 'rules'>;
 
 export interface HouseIdentity {
   culture: string;

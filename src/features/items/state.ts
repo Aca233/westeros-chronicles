@@ -1,5 +1,5 @@
 import { getItemDefinition } from './catalog';
-import { canContainerAccept } from './custody';
+import { canContainerAccept } from './itemValidation';
 import type {
   CraftQuality,
   ItemCatalog,

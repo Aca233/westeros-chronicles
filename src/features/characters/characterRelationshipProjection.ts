@@ -1,5 +1,5 @@
-import type { CharacterEventEnvelope } from './characterEventStore';
-import { projectCharacterEvents } from './characterEventStore';
+import type { CharacterEventEnvelope } from './characterEventTypes';
+import { projectCharacterEvents } from './characterEventProjection';
 import type { CharacterId, StaticCharacterRecord } from './types';
 import type { LordFamilyRecords } from './lordRelationshipResolver';
 import {
