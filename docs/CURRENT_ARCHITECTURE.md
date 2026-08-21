@@ -137,3 +137,14 @@ Dexie 保存回合快照、世界 run、人物事件和人物状态缓存。启�
 - `npm run verify`：完整 Node、Python、DOM、地图、包体与生产构建验证
 
 正式地图清单、瓦片与模型位于 `public/data/agot-map` 和 `public/assets/agot-map`。`tmp/`、构建目录和本地分析文件不属于运行时合同。
+
+## 11. 工程边界
+
+- 验证编排由 `scripts/verify/suites.mjs` 和 `scripts/verify/run-suite.mjs` 统一维护；现有单项 `test:*`、`check:*` 继续作为稳定叶子入口。
+- `src/domain` 保存 `CharacterId`、人物属性、身体状态键、世界日期和世界地点引用等无 feature 反向依赖的基础合同；旧聚合模块保留兼容 re-export。
+- `src/services/turnResolution.ts` 是回合解析与结算的公共 facade，协议、世界准备、新结算和旧结算分别位于 `src/services/turn`。
+- `src/components/Ck3CharacterWindow.tsx` 是人物窗口公共组合入口；具体页签、身份头部、关系卡与数据 hook 位于 `src/components/character-window`。
+- `src/features/map/MapCanvas.tsx` 是地图画布公共组合入口；旅行图层、语义投影、地标控制、镜头同步和 MapLibre 生命周期位于 `src/features/map/canvas`。
+- `scripts/check-module-cycles.mjs` 要求 `src` 的静态相对 import/export 图不存在循环依赖。
+
+开发入口与数据生成边界见 [`INDEX.md`](INDEX.md)、[`TESTING.md`](TESTING.md) 和 [`DATA_PIPELINES.md`](DATA_PIPELINES.md)。

@@ -18,6 +18,10 @@
 
 当前实现边界和数据流见 [`docs/CURRENT_ARCHITECTURE.md`](docs/CURRENT_ARCHITECTURE.md)。
 
+## 开发文档
+
+从 [`docs/INDEX.md`](docs/INDEX.md) 进入当前架构、测试套件、数据流水线以及设计与实施记录。历史规格用于追踪决策，当前行为以代码和 `docs/CURRENT_ARCHITECTURE.md` 为准。
+
 ## 本地运行
 
 需要 Node.js 20 或更高版本。
