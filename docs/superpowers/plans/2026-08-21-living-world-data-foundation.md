@@ -110,7 +110,7 @@ src/features/world/
 - Produces: `npm run build:world-content` 和 `npm run test:world-content-compiler`。
 - Preserves: 编译失败不得删除或部分覆盖既有 `public/data/world/`。
 
-- [ ] **Step 1: 写失败测试，锁定唯一清单、固定日期、确定性哈希和原子发布**
+- [x] **Step 1: 写失败测试，锁定唯一清单、固定日期、确定性哈希和原子发布**
 
 在 `scripts/test-world-content-compiler.mjs` 使用临时 fixture，测试以下真实合同：
 
@@ -155,7 +155,7 @@ test('校验失败保留上一份完整产物', async () => {
 
 `createWorldFixture()` 必须在测试文件中写出最小人物、地图、神器 manifest 以及空内容数组；不得读取真实模组目录。
 
-- [ ] **Step 2: 运行测试，确认编译器尚不存在**
+- [x] **Step 2: 运行测试，确认编译器尚不存在**
 
 Run:
 
@@ -165,7 +165,7 @@ node scripts/test-world-content-compiler.mjs
 
 Expected: FAIL，错误指出 `scripts/world-content/compiler.mjs` 不存在。
 
-- [ ] **Step 3: 实现稳定 JSON、源 Schema 和编译器骨架**
+- [x] **Step 3: 实现稳定 JSON、源 Schema 和编译器骨架**
 
 `scripts/world-content/hash.mjs` 固定导出：
 
@@ -207,7 +207,7 @@ export async function compileWorldContent({ rootDir, contentDir, outputDir }) {
 
 编译器必须拒绝第二个世界清单、其他产品日期、重复 ID、未知顶层字段和绝对路径；输出 manifest 记录 `characterDatasetHash`、`mapDatasetHash`、`artifactDatasetHash`、`contentHash` 和所有产物相对路径。
 
-- [ ] **Step 4: 接入 package scripts 并验证正式空骨架产物**
+- [x] **Step 4: 接入 package scripts 并验证正式空骨架产物**
 
 `package.json` 增加：
 
@@ -230,7 +230,7 @@ node -e "const m=require('./public/data/world/manifest.json'); if(m.worldId!=='a
 
 Expected: 全部 PASS，且 `public/data/world/` 中只出现完整、可解析的产物。
 
-- [ ] **Step 5: 提交编译基础**
+- [x] **Step 5: 提交编译基础**
 
 ```bash
 git add content/world scripts/world-content scripts/test-world-content-compiler.mjs package.json public/data/world

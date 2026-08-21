@@ -154,7 +154,9 @@
     "check:item-ownership-authority": "node scripts/check-ordinary-item-ownership-authority.mjs",
     "test:map-independent-turn": "node scripts/test-map-independent-turn.mjs",
     "test:ui": "vitest run",
-    "check:bundle-budget": "node scripts/check-bundle-budget.mjs"
+    "check:bundle-budget": "node scripts/check-bundle-budget.mjs",
+    "build:world-content": "node scripts/world-content/compiler.mjs",
+    "test:world-content-compiler": "node scripts/test-world-content-compiler.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",

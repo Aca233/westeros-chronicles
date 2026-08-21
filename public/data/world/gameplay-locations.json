@@ -1,0 +1,24 @@
+{
+  "config": {
+    "exclude": [],
+    "include": [],
+    "rules": {
+      "includeEventReferences": true,
+      "includeMajorRoutePorts": true,
+      "includePoliticalCenters": true,
+      "includeStartReferences": true,
+      "minimumImportance": 45,
+      "types": [
+        "castle",
+        "city",
+        "town",
+        "port",
+        "ruin",
+        "landmark"
+      ]
+    },
+    "schemaVersion": 1
+  },
+  "entries": [],
+  "schemaVersion": 1
+}
