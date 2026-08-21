@@ -300,7 +300,7 @@ test('旧存档只补齐已知家族身份且不会覆盖自建内容', () => {
   );
 });
 
-const { CHARACTER_DOSSIER_SUPPLEMENTS, getCharacterDossierSupplement } = await bundleModule('src/data/characterDossierSupplements.ts');
+const { CHARACTER_DOSSIER_SUPPLEMENTS, getCharacterDossierSupplement } = await bundleModule('src/data/generated/characterDossierSupplements.ts');
 const {
   filterVisibleExperiences,
   deduplicateExperiences,
@@ -310,11 +310,11 @@ const {
 const { default: searchIndex } = await import('../public/data/agot-characters/search-index.json', { with: { type: 'json' } });
 const searchIndexMap = new Map(searchIndex.map((c) => [c.id, c]));
 const rawSupplementModules = await Promise.all([
-  import('./raw_supplements_part1.mjs'),
-  import('./raw_supplements_part2.mjs'),
-  import('./raw_supplements_part3.mjs'),
-  import('./raw_supplements_part4.mjs'),
-  import('./raw_supplements_part5.mjs'),
+  import('./data/character-dossier/raw_supplements_part1.mjs'),
+  import('./data/character-dossier/raw_supplements_part2.mjs'),
+  import('./data/character-dossier/raw_supplements_part3.mjs'),
+  import('./data/character-dossier/raw_supplements_part4.mjs'),
+  import('./data/character-dossier/raw_supplements_part5.mjs'),
 ]);
 const rawSupplements = rawSupplementModules.flatMap((module, index) => (
   module.RAW_SUPPLEMENTS ?? module[`RAW_SUPPLEMENTS_PART${index + 1}`]

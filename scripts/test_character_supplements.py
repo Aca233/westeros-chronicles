@@ -7,6 +7,16 @@ from scripts.build_character_supplements import build_kinship_index, build_suppl
 
 
 class CharacterSupplementTests(unittest.TestCase):
+    def test_curated_supplement_pipeline_uses_generated_directories(self) -> None:
+        root = Path(__file__).resolve().parents[1]
+        generated = root / "src" / "data" / "generated" / "characterDossierSupplements.ts"
+        legacy = root / "src" / "data" / "characterDossierSupplements.ts"
+        compiler = (root / "scripts" / "compile_dossier_supplements.mjs").read_text(encoding="utf-8")
+        self.assertTrue(generated.is_file())
+        self.assertFalse(legacy.exists())
+        self.assertIn("./data/character-dossier/raw_supplements_part1.mjs", compiler)
+        self.assertIn("src/data/generated/characterDossierSupplements.ts", compiler)
+
     def test_reverse_children_are_complete_unique_and_sorted(self) -> None:
         records = [
             {"id": "agot:parent", "spouseIds": ["agot:spouse"]},

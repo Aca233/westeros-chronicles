@@ -1,5 +1,5 @@
 import { HOUSES } from '../../data/houses';
-import { CHARACTER_DOSSIER_SUPPLEMENTS } from '../../data/characterDossierSupplements';
+import { CHARACTER_DOSSIER_SUPPLEMENTS } from '../../data/generated/characterDossierSupplements';
 import type { EntityInfo } from '../../data/entities';
 import type { CharacterSearchHit } from '../characters/types';
 import type { MapLocationSearchEntry } from '../map/types';

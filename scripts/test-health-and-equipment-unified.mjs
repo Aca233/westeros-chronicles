@@ -20,7 +20,7 @@ const { NPC_LOADOUT_TEMPLATES } = await bundleModule('src/data/npcLoadoutTemplat
 const { NPC_LOADOUT_OVERRIDES } = await bundleModule('src/data/npcLoadoutOverrides.ts');
 const { expandBaselineLoadout } = await bundleModule('src/features/characters/characterItems.ts');
 const { resolveCharacterTraits } = await bundleModule('src/data/characterTraits.ts');
-const { CHARACTER_DOSSIER_SUPPLEMENTS } = await bundleModule('src/data/characterDossierSupplements.ts');
+const { CHARACTER_DOSSIER_SUPPLEMENTS } = await bundleModule('src/data/generated/characterDossierSupplements.ts');
 
 test('1. 物品目录完备性与中文命名（无 Emoji）', () => {
   assert.ok(ITEM_DEFINITIONS.length >= 600, `物品总数应丰富，当前为 ${ITEM_DEFINITIONS.length}`);

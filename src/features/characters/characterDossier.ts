@@ -1,7 +1,7 @@
 import { HOUSES } from '../../data/houses';
 import { migrateLordIdentityData } from '../../data/characterTraits';
 import { filterImportedCharacterTraits } from '../../data/importedCharacterTraitPolicy';
-import { getCharacterDossierSupplement } from '../../data/characterDossierSupplements';
+import { getCharacterDossierSupplement } from '../../data/generated/characterDossierSupplements';
 import { filterVisibleExperiences } from './characterSupplementSchema';
 import type {
   CharacterDossierSupplement,

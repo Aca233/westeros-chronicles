@@ -3,11 +3,11 @@ import { fileURLToPath } from 'node:url';
 import { join } from 'node:path';
 import { build } from 'esbuild';
 
-import { RAW_SUPPLEMENTS as part1 } from './raw_supplements_part1.mjs';
-import { RAW_SUPPLEMENTS_PART2 as part2 } from './raw_supplements_part2.mjs';
-import { RAW_SUPPLEMENTS_PART3 as part3 } from './raw_supplements_part3.mjs';
-import { RAW_SUPPLEMENTS_PART4 as part4 } from './raw_supplements_part4.mjs';
-import { RAW_SUPPLEMENTS_PART5 as part5 } from './raw_supplements_part5.mjs';
+import { RAW_SUPPLEMENTS as part1 } from './data/character-dossier/raw_supplements_part1.mjs';
+import { RAW_SUPPLEMENTS_PART2 as part2 } from './data/character-dossier/raw_supplements_part2.mjs';
+import { RAW_SUPPLEMENTS_PART3 as part3 } from './data/character-dossier/raw_supplements_part3.mjs';
+import { RAW_SUPPLEMENTS_PART4 as part4 } from './data/character-dossier/raw_supplements_part4.mjs';
+import { RAW_SUPPLEMENTS_PART5 as part5 } from './data/character-dossier/raw_supplements_part5.mjs';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 
@@ -132,8 +132,8 @@ console.log(`Successfully validated ${Object.keys(validatedMap).length} characte
 // Generate TypeScript source code
 const tsHeader = `// Generated character dossier narrative supplement dataset
 // Curated public-at-start profiles for 100+ canon and important characters
-import type { CharacterId } from '../features/characters/types';
-import type { CharacterDossierSupplement } from '../features/characters/characterSupplementTypes';
+import type { CharacterId } from '../../features/characters/types';
+import type { CharacterDossierSupplement } from '../../features/characters/characterSupplementTypes';
 
 export const CHARACTER_DOSSIER_SUPPLEMENTS: Record<CharacterId, CharacterDossierSupplement> = ${JSON.stringify(validatedMap, null, 2)} as const;
 
@@ -143,5 +143,5 @@ export function getCharacterDossierSupplement(characterId: CharacterId | string 
 }
 `;
 
-await writeFile(join(root, 'src/data/characterDossierSupplements.ts'), tsHeader, 'utf8');
-console.log('Written to src/data/characterDossierSupplements.ts successfully!');
+await writeFile(join(root, 'src/data/generated/characterDossierSupplements.ts'), tsHeader, 'utf8');
+console.log('Written to src/data/generated/characterDossierSupplements.ts successfully!');

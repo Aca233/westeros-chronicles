@@ -1,7 +1,7 @@
 // Generated character dossier narrative supplement dataset
 // Curated public-at-start profiles for 100+ canon and important characters
-import type { CharacterId } from '../features/characters/types';
-import type { CharacterDossierSupplement } from '../features/characters/characterSupplementTypes';
+import type { CharacterId } from '../../features/characters/types';
+import type { CharacterDossierSupplement } from '../../features/characters/characterSupplementTypes';
 
 export const CHARACTER_DOSSIER_SUPPLEMENTS: Record<CharacterId, CharacterDossierSupplement> = {
   "agot:Stark_3": {
