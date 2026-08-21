@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Dices, Hourglass, Send } from 'lucide-react';
+import { Dices, Hourglass, Send, Square } from 'lucide-react';
 import { useGameStore } from '../store/useGameStore';
 import { stripEmoji } from '../services/textSanitizer';
 import type { DiceMode } from '../services/dicePolicy';
@@ -17,7 +17,9 @@ export const ActionDock: React.FC = () => {
   const {
     gameState,
     isStreaming,
+    turnStage,
     submitAction,
+    cancelCurrentTurn,
   } = useGameStore();
   const [customInput, setCustomInput] = useState('');
   const [diceMode, setDiceMode] = useState<DiceMode>('auto');
@@ -79,6 +81,13 @@ export const ActionDock: React.FC = () => {
 
   const SubmitIcon = diceMode === 'narrative' ? Send : diceMode === 'force' ? Dices : Hourglass;
 
+  const stageLabel = {
+    idle: '',
+    resolving: '正在解析行动',
+    settling: '正在结算世界',
+    narrating: '正在书写正文',
+  }[turnStage];
+
   return (
     <footer className="dock-enter relative z-20 shrink-0 px-5 pb-5 pt-2 md:px-6">
       <div className="mx-auto flex w-full max-w-[42rem] flex-col gap-4">
@@ -111,7 +120,7 @@ export const ActionDock: React.FC = () => {
               value={customInput}
               onChange={(event) => setCustomInput(stripEmoji(event.target.value))}
               disabled={isStreaming}
-              placeholder={isStreaming ? '局势推演中,静候回音……' : '口述你的行动(按 / 聚焦,按 1-6 选分支)……'}
+              placeholder={isStreaming ? `${stageLabel}，可随时取消……` : '口述你的行动(按 / 聚焦,按 1-6 选分支)……'}
               className="command-input"
             />
           </div>
@@ -138,15 +147,32 @@ export const ActionDock: React.FC = () => {
               );
             })}
           </div>
-          <button
-            type="submit"
-            disabled={!customInput.trim() || isStreaming}
-            className="btn-decree shrink-0"
-            title={diceMode === 'narrative' ? '口述此行' : diceMode === 'force' ? '掷骰而行' : '下令'}
-            aria-label="提交御令"
-          >
-            <SubmitIcon className="h-4 w-4" />
-          </button>
+          {isStreaming && turnStage !== 'settling' ? (
+            <button
+              type="button"
+              onClick={cancelCurrentTurn}
+              className="btn-decree shrink-0"
+              title="取消当前回合，不提交任何变化"
+              aria-label="取消当前回合"
+            >
+              <Square className="h-3.5 w-3.5" />
+              <span className="sr-only">{stageLabel}</span>
+            </button>
+          ) : isStreaming ? (
+            <span className="flex h-9 shrink-0 items-center px-3 font-serif text-[11px] text-parchment-dim" role="status">
+              {stageLabel}
+            </span>
+          ) : (
+            <button
+              type="submit"
+              disabled={!customInput.trim()}
+              className="btn-decree shrink-0"
+              title={diceMode === 'narrative' ? '口述此行' : diceMode === 'force' ? '掷骰而行' : '下令'}
+              aria-label="提交御令"
+            >
+              <SubmitIcon className="h-4 w-4" />
+            </button>
+          )}
         </form>
       </div>
     </footer>

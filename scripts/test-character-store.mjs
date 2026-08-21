@@ -83,7 +83,7 @@ function reset() {
   globalThis.__characterStoreCommitFails = false;
   globalThis.__characterStoreRollbackState = null;
   useGameStore.setState({
-    gameState: structuredClone(initial), isStreaming: false, streamingText: '', changesLog: [],
+    gameState: structuredClone(initial), isStreaming: false, turnStage: 'idle', streamingText: '', changesLog: [],
     pendingTransactions: [], characterTurnContext: null,
   });
 }

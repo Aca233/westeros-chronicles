@@ -8,6 +8,7 @@ import type { EquipmentPosition, ItemPlacement } from '../features/items/types';
 import { sameWorldLocation } from '../features/map/locationResolver';
 import { parseBranchOptions } from './branchOptions';
 import { extractNarrativeContent, normalizeModelProtocolMarkup } from './modelProtocol';
+import { listProviderModels, requestModelCompletion } from './modelProviders';
 
 // 解析模型输出的 XML 结构化标签 (小说流全融合 + 深度思考全捕获)
 export function parseModelOutput(
@@ -233,130 +234,31 @@ export async function streamChatCompletion(
   gameState?: GameState,
   pendingTransactions: PendingWorldTransaction[] = [],
 ): Promise<string> {
-  // 如果未配置 API Key，走离线 Demo
   if (!config.apiKey || config.apiKey.trim() === '') {
-    // 模拟打字机流式输出
-    return new Promise((resolve) => {
-      const demo = generateOfflineDemoResponse(
-        messages[messages.length - 1].content.slice(0, 30),
-        Math.floor(messages.length / 2) + 1,
-        gameState,
-        pendingTransactions,
-      );
-      const rawText = [
-        `<think>\n${demo.think}\n</think>`,
-        `<narrate>\n${demo.narrate}\n</narrate>`,
-        `<branch>\n${demo.branches.map((b, i) => `${i + 1}. ${b}`).join('\n')}\n</branch>`,
-        `<state_cmd>\n${JSON.stringify(demo.stateCommands || [])}\n</state_cmd>`,
-      ].join('\n\n');
-
-      let current = '';
-      let index = 0;
-      const timer = setInterval(() => {
-        if (index < rawText.length) {
-          current += rawText[index];
-          onChunk(current);
-          index += 6; // 每次输出几个字，模拟自然打字机
-        } else {
-          clearInterval(timer);
-          resolve(rawText);
-        }
-      }, 25);
-    });
+    const demo = generateOfflineDemoResponse(
+      messages[messages.length - 1].content.slice(0, 30),
+      Math.floor(messages.length / 2) + 1,
+      gameState,
+      pendingTransactions,
+    );
+    const rawText = [
+      `<think>\n${demo.think}\n</think>`,
+      `<narrate>\n${demo.narrate}\n</narrate>`,
+      `<branch>\n${demo.branches.map((branch, index) => `${index + 1}. ${branch}`).join('\n')}\n</branch>`,
+      `<state_cmd>\n${JSON.stringify(demo.stateCommands || [])}\n</state_cmd>`,
+    ].join('\n\n');
+    return streamOfflineText(rawText, onChunk, signal, 6, 25);
   }
 
-  // 线上 API 请求
-  const baseUrl = (config.baseUrl || 'https://api.openai.com/v1').replace(/\/+$/, '');
-  const model = config.model || 'gpt-4o';
-  const temperature = config.temperature ?? 0.7;
-
-  const response = await fetch(`${baseUrl}/chat/completions`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${config.apiKey}`,
-    },
-    body: JSON.stringify({
-      model,
-      messages,
-      temperature,
-      max_tokens: 3000,
-      stream: true,
-    }),
+  return requestModelCompletion({
+    config,
+    messages,
+    stream: true,
+    maxTokens: 3000,
+    onChunk,
     signal,
   });
-
-  if (!response.ok) {
-    const errorText = await response.text().catch(() => '网络请求失败');
-    throw new Error(`API 接口错误 (${response.status}): ${errorText}`);
-  }
-
-  const reader = response.body?.getReader();
-  if (!reader) {
-    throw new Error('无法创建流式读取器');
-  }
-
-  const decoder = new TextDecoder('utf-8');
-  let accumulatedReasoning = '';
-  let accumulatedContent = '';
-  let buffer = '';
-
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
-
-    buffer += decoder.decode(value, { stream: true });
-    const lines = buffer.split('\n');
-    buffer = lines.pop() || '';
-
-    for (const line of lines) {
-      const trimmed = line.trim();
-      if (!trimmed || !trimmed.startsWith('data:')) continue;
-
-      const dataStr = trimmed.replace(/^data:\s*/, '');
-      if (dataStr === '[DONE]') break;
-
-      try {
-        const json = JSON.parse(dataStr);
-        const delta = json.choices?.[0]?.delta;
-        if (delta) {
-          // 兼容 DeepSeek Reasoner、SiliconFlow R1、OpenAI o1/o3 的推理字段
-          const reasoning =
-            delta.reasoning_content ||
-            delta.reasoning ||
-            delta.thought ||
-            delta.thinking ||
-            '';
-          const content = delta.content || '';
-
-          if (reasoning) {
-            accumulatedReasoning += reasoning;
-          }
-          if (content) {
-            accumulatedContent += content;
-          }
-
-          let fullStream = '';
-          if (accumulatedReasoning) {
-            fullStream = `<think>\n${accumulatedReasoning}\n</think>\n\n${accumulatedContent}`;
-          } else {
-            fullStream = accumulatedContent;
-          }
-
-          onChunk(fullStream);
-        }
-      } catch {
-        // 忽略畸形 JSON 分片
-      }
-    }
-  }
-
-  if (accumulatedReasoning && !accumulatedContent.includes('<think>')) {
-    return `<think>\n${accumulatedReasoning}\n</think>\n\n${accumulatedContent}`;
-  }
-  return accumulatedContent;
 }
-
 
 export async function requestTurnResolutionCompletion(
   messages: Array<{ role: string; content: string }>,
@@ -366,6 +268,7 @@ export async function requestTurnResolutionCompletion(
   signal?: AbortSignal,
 ): Promise<string> {
   if (!config.apiKey || config.apiKey.trim() === '') {
+    if (signal?.aborted) throw signal.reason ?? new DOMException('规则解析已取消', 'AbortError');
     const demo = generateOfflineDemoResponse(
       messages[messages.length - 1]?.content.slice(0, 120) ?? '',
       (gameState?.turnCount ?? 0) + 1,
@@ -378,31 +281,16 @@ ${JSON.stringify(demo.stateCommands ?? [])}
 </state_cmd>
 <world_intent>[]</world_intent>`;
   }
-  const baseUrl = (config.baseUrl || 'https://api.openai.com/v1').replace(/\/+$/, '');
-  const response = await fetch(`${baseUrl}/chat/completions`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${config.apiKey}` },
-    body: JSON.stringify({
-      model: config.model || 'gpt-4o',
-      messages,
-      temperature: Math.min(config.temperature ?? 0.7, 0.4),
-      max_tokens: 1600,
-      stream: false,
-    }),
+  const output = await requestModelCompletion({
+    config: { ...config, temperature: Math.min(config.temperature ?? 0.7, 0.4) },
+    messages,
+    stream: false,
+    maxTokens: 1600,
     signal,
   });
-  if (!response.ok) {
-    const errorText = await response.text().catch(() => '网络请求失败');
-    throw new Error(`API 规则解析错误 (${response.status}): ${errorText}`);
-  }
-  const payload = await response.json();
-  const message = payload.choices?.[0]?.message;
-  const reasoning = message?.reasoning_content || message?.reasoning || '';
-  const content = message?.content || '';
-  return reasoning && !content.includes('<resolution>')
-    ? `<resolution>${reasoning}</resolution>
-${content}`
-    : content;
+  if (output.includes('<resolution>')) return output;
+  const thinkMatch = output.match(/<think>([\s\S]*?)<\/think>/i);
+  return thinkMatch ? `<resolution>${thinkMatch[1].trim()}</resolution>\n${output.replace(thinkMatch[0], '').trim()}` : output;
 }
 
 function offlineSettledNarrative(messages: Array<{ role: string; content: string }>): string {
@@ -435,19 +323,21 @@ function offlineSettledNarrative(messages: Array<{ role: string; content: string
   ].join('\n\n');
 }
 
-async function streamOfflineSettledNarrative(
+async function streamOfflineText(
   rawText: string,
   onChunk: (partialText: string) => void,
   signal?: AbortSignal,
+  chunkSize = 12,
+  delayMs = 4,
 ): Promise<string> {
   let index = 0;
   let current = '';
   while (index < rawText.length) {
-    if (signal?.aborted) throw new Error('叙事生成已取消');
-    current += rawText.slice(index, index + 12);
-    index += 12;
+    if (signal?.aborted) throw signal.reason ?? new DOMException('叙事生成已取消', 'AbortError');
+    current += rawText.slice(index, index + chunkSize);
+    index += chunkSize;
     onChunk(current);
-    await new Promise((resolve) => setTimeout(resolve, 4));
+    await new Promise((resolve) => setTimeout(resolve, delayMs));
   }
   return rawText;
 }
@@ -459,31 +349,20 @@ export async function streamNarrativeCompletion(
   signal?: AbortSignal,
 ): Promise<string> {
   if (!config.apiKey || config.apiKey.trim() === '') {
-    return streamOfflineSettledNarrative(offlineSettledNarrative(messages), onChunk, signal);
+    return streamOfflineText(offlineSettledNarrative(messages), onChunk, signal);
   }
-  return streamChatCompletion(messages, config, onChunk, signal);
+  return requestModelCompletion({
+    config,
+    messages,
+    stream: true,
+    maxTokens: 3000,
+    onChunk,
+    signal,
+  });
 }
 
-// 动态拉取服务商可用模型列表
-export async function fetchAvailableModels(baseUrl: string, apiKey: string): Promise<string[]> {
-  const url = `${baseUrl.replace(/\/+$/, '')}/models`;
-  const response = await fetch(url, {
-    method: 'GET',
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-    },
-  });
-
-  if (!response.ok) {
-    const errorText = await response.text().catch(() => '');
-    throw new Error(`拉取模型失败 (${response.status}): ${errorText || '未知错误'}`);
-  }
-
-  const data = await response.json();
-  if (Array.isArray(data.data)) {
-    return data.data
-      .map((m: { id: string }) => m.id)
-      .filter((id: string) => !id.includes('whisper') && !id.includes('embedding') && !id.includes('tts') && !id.includes('dall-e'));
-  }
-  return [];
+// 动态拉取所选服务商可用模型列表
+export async function fetchAvailableModels(config: ApiConfig, signal?: AbortSignal): Promise<string[]> {
+  const models = await listProviderModels(config, signal);
+  return models.filter((id) => !id.includes('whisper') && !id.includes('embedding') && !id.includes('tts') && !id.includes('dall-e'));
 }

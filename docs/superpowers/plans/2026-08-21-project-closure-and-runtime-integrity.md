@@ -61,13 +61,13 @@
 - Produces: `cancelCurrentTurn(): void`
 - Produces: `turnStage: 'idle' | 'resolving' | 'settling' | 'narrating'`
 
-- [ ] Write request-shape and response-parsing tests for OpenAI-compatible and Anthropic.
-- [ ] Confirm Anthropic tests fail against the current universal `/chat/completions` transport.
-- [ ] Implement adapters and shared timeout/abort composition.
-- [ ] Route both resolution and narration through the selected adapter.
-- [ ] Add cancel action and truthful stage copy to the action dock.
-- [ ] Verify failure/cancellation leaves state and pending transactions unchanged.
-- [ ] Commit `fix: implement provider-specific model transports`.
+- [x] Write request-shape and response-parsing tests for OpenAI-compatible and Anthropic.
+- [x] Confirm Anthropic tests fail against the current universal `/chat/completions` transport.
+- [x] Implement adapters and shared timeout/abort composition.
+- [x] Route both resolution and narration through the selected adapter.
+- [x] Add cancel action and truthful stage copy to the action dock.
+- [x] Verify failure/cancellation leaves state and pending transactions unchanged.
+- [x] Commit `fix: implement provider-specific model transports`.
 
 ### Task 3: 地图故障的真正降级路径
 

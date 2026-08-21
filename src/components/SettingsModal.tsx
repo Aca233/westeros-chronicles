@@ -46,7 +46,7 @@ export const SettingsModal: React.FC = () => {
       setModel('deepseek-ai/DeepSeek-V3');
     } else if (p === 'claude') {
       setBaseUrl('https://api.anthropic.com/v1');
-      setModel('claude-3-5-sonnet-20241022');
+      setModel('claude-sonnet-4-0');
     }
   };
 
@@ -61,7 +61,7 @@ export const SettingsModal: React.FC = () => {
     setFetchStatus(null);
 
     try {
-      const models = await fetchAvailableModels(baseUrl, apiKey);
+      const models = await fetchAvailableModels({ provider, baseUrl, apiKey, model, temperature });
       setFetchedModels(models);
       setFetchStatus({ type: 'success', message: `成功拉取 ${models.length} 个可用模型!` });
       if (models.length > 0 && !models.includes(model)) {
@@ -137,7 +137,7 @@ export const SettingsModal: React.FC = () => {
     deepseek: ['deepseek-chat', 'deepseek-reasoner'],
     siliconflow: ['deepseek-ai/DeepSeek-V3', 'deepseek-ai/DeepSeek-R1', 'Qwen/Qwen2.5-72B-Instruct', 'THUDM/glm-4-9b-chat'],
     openai: ['gpt-4o', 'gpt-4o-mini', 'o3-mini'],
-    claude: ['claude-3-5-sonnet-20241022', 'claude-3-5-haiku-20241022'],
+    claude: ['claude-sonnet-4-0', 'claude-opus-4-0', 'claude-3-7-sonnet-latest'],
     custom: ['deepseek-chat', 'gpt-4o', 'claude-3-5-sonnet'],
   };
 
@@ -172,8 +172,8 @@ export const SettingsModal: React.FC = () => {
         {/* 厂商快捷选择 */}
         <div className="flex flex-col gap-1.5">
           <label className="text-[11px] tracking-wide text-parchment-dim">模型服务厂商预设</label>
-          <div className="grid grid-cols-4 gap-1.5 font-serif text-xs">
-            {(['deepseek', 'siliconflow', 'openai', 'custom'] as const).map((p) => (
+          <div className="grid grid-cols-5 gap-1.5 font-serif text-xs">
+            {(['deepseek', 'siliconflow', 'openai', 'claude', 'custom'] as const).map((p) => (
               <button
                 key={p}
                 type="button"
@@ -190,6 +190,8 @@ export const SettingsModal: React.FC = () => {
                   ? '硅基流动'
                   : p === 'openai'
                   ? 'OpenAI'
+                  : p === 'claude'
+                  ? 'Claude'
                   : '自定义中转'}
               </button>
             ))}

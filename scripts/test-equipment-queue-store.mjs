@@ -71,6 +71,7 @@ function resetQueue() {
       worldRuntime: { ...current.gameState.worldRuntime, pendingTransactions: [] },
     },
     isStreaming: false,
+    turnStage: 'idle',
     streamingText: '',
   });
 }

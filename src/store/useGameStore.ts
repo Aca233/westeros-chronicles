@@ -38,6 +38,7 @@ interface GameStore {
   gameState: GameState;
   apiConfig: ApiConfig;
   isStreaming: boolean;
+  turnStage: 'idle' | 'resolving' | 'settling' | 'narrating';
   streamingText: string;
   activeDiceCheck: D20Check | null;
   changesLog: string[];
@@ -53,7 +54,7 @@ interface GameStore {
 
   // 动作
   setApiConfig: (config: Partial<ApiConfig>) => void;
-  setStreaming: (isStreaming: boolean) => void;
+  cancelCurrentTurn: () => void;
   openSettings: () => void;
   closeSettings: () => void;
   openCreator: () => void;
@@ -146,11 +147,13 @@ function createInitialGameState(): GameState {
 }
 
 const INITIAL_GAME_STATE = createInitialGameState();
+let currentTurnController: AbortController | null = null;
 
 export const useGameStore = create<GameStore>((set, get) => ({
   gameState: INITIAL_GAME_STATE,
   apiConfig: loadStoredApiConfig(),
   isStreaming: false,
+  turnStage: 'idle',
   streamingText: '',
   activeDiceCheck: null,
   changesLog: [],
@@ -172,7 +175,9 @@ export const useGameStore = create<GameStore>((set, get) => ({
     }
   },
 
-  setStreaming: (isStreaming) => set({ isStreaming }),
+  cancelCurrentTurn: () => {
+    currentTurnController?.abort(new DOMException('玩家取消了当前回合', 'AbortError'));
+  },
   openSettings: () => set({ isSettingsOpen: true }),
   closeSettings: () => set({ isSettingsOpen: false }),
   openCreator: () => set({ isCreatorOpen: true }),
@@ -240,6 +245,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       bootStatus: 'ready',
       bootError: null,
       isStreaming: false,
+      turnStage: 'idle',
       streamingText: '',
       characterTurnContext: null,
       changesLog: ['已载入维斯特洛存档'],
@@ -254,6 +260,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       bootStatus: 'ready',
       bootError: null,
       isStreaming: false,
+      turnStage: 'idle',
       streamingText: '',
       characterTurnContext: null,
       changesLog: ['已重置本地测试存档'],
@@ -305,6 +312,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       changesLog: [`维斯特洛新传奇开启: ${safeLord.house} · ${safeLord.name}`],
       streamingText: '',
       isStreaming: false,
+      turnStage: 'idle',
       characterTurnContext: null,
     });
   },
@@ -321,7 +329,9 @@ export const useGameStore = create<GameStore>((set, get) => ({
       gameState.worldRuntime.pendingTransactions.filter((transaction) => transaction.status === 'pending'),
     );
     let diceCheck: D20Check | undefined = undefined;
-    set({ isStreaming: true, streamingText: '' });
+    const turnController = new AbortController();
+    currentTurnController = turnController;
+    set({ isStreaming: true, turnStage: 'resolving', streamingText: '' });
 
     try {
       // 先丢弃不兼容的测试快照并建立当前回合基线，避免生成完叙事才发现无法提交。
@@ -372,7 +382,10 @@ export const useGameStore = create<GameStore>((set, get) => ({
         apiConfig,
         gameState,
         submittedWorldTransactions,
+        turnController.signal,
       );
+      if (turnController.signal.aborted) throw turnController.signal.reason;
+      set({ turnStage: 'settling' });
       const preparedWorld = await prepareWorldTurn({
         gameState,
         draft,
@@ -414,12 +427,15 @@ export const useGameStore = create<GameStore>((set, get) => ({
         facts: settled.resolvedFacts,
         worldContext: [settled.narrationContext, committedWorldContext].filter(Boolean).join('\n\n'),
       });
+      if (turnController.signal.aborted) throw turnController.signal.reason;
+      set({ turnStage: 'narrating' });
       const parsedTurn = await streamSettledNarrative(
         narrativeMessages,
         apiConfig,
         nextTurnNumber,
         safeActionText,
         (partial) => set({ streamingText: stripEmoji(partial) }),
+        turnController.signal,
       );
       const turnDate = formatWorldDate(settled.nextDate);
       const finalTurn: StoryTurn = {
@@ -452,6 +468,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
         deathReason: settled.isFatalDeath ? '要害遭受致命创伤，领主陨落于维斯特洛的残酷权谋之中' : undefined,
       });
 
+      if (turnController.signal.aborted) throw turnController.signal.reason;
+      set({ turnStage: 'settling' });
       await commitTurnAtomically(
         updatedGameState,
         settled.characterEvents,
@@ -461,6 +479,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       set({
         gameState: updatedGameState,
         isStreaming: false,
+        turnStage: 'idle',
         streamingText: '',
         characterTurnContext: characterTurnContext
           ? { ...settled.characterContext, promptContext: characterTurnContext.promptContext }
@@ -471,9 +490,19 @@ export const useGameStore = create<GameStore>((set, get) => ({
         ].filter(Boolean),
       });
     } catch (err) {
-      console.error('提交行动出错:', err);
-      set({ isStreaming: false, streamingText: '' });
-      alert(`叙事生成遇到错误: ${err instanceof Error ? err.message : String(err)}`);
+      const cancelled = turnController.signal.aborted || (err instanceof DOMException && err.name === 'AbortError');
+      if (!cancelled) {
+        console.error('提交行动出错:', err);
+        alert(`叙事生成遇到错误: ${err instanceof Error ? err.message : String(err)}`);
+      }
+      set({
+        isStreaming: false,
+        turnStage: 'idle',
+        streamingText: '',
+        ...(cancelled ? { changesLog: ['当前回合已取消，世界状态未改变'] } : {}),
+      });
+    } finally {
+      if (currentTurnController === turnController) currentTurnController = null;
     }
   },
 

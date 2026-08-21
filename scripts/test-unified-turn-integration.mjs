@@ -25,14 +25,26 @@ const storeStubs = {
     api.onLoad({ filter: /api-stub/, namespace: 'unified-turn' }, () => ({
       loader: 'js',
       contents: `
-        export async function requestTurnResolutionCompletion(messages) {
+        export async function requestTurnResolutionCompletion(messages, _config, _state, _transactions, signal) {
           globalThis.__unifiedResolutionMessages = structuredClone(messages);
           if (globalThis.__unifiedResolutionFails) throw new Error('模拟规则解析失败');
+          if (globalThis.__unifiedResolutionWaitForAbort) {
+            return new Promise((_resolve, reject) => {
+              if (signal?.aborted) reject(signal.reason);
+              else signal?.addEventListener('abort', () => reject(signal.reason), { once: true });
+            });
+          }
           return '<resolution>规则结算完成。</resolution><state_cmd>' + JSON.stringify(globalThis.__unifiedCommands || []) + '</state_cmd>';
         }
-        export async function streamNarrativeCompletion(messages, _config, onChunk) {
+        export async function streamNarrativeCompletion(messages, _config, onChunk, signal) {
           globalThis.__unifiedNarrativeMessages = structuredClone(messages);
           if (globalThis.__unifiedNarrativeFails) throw new Error('模拟正文生成失败');
+          if (globalThis.__unifiedNarrativeWaitForAbort) {
+            return new Promise((_resolve, reject) => {
+              if (signal?.aborted) reject(signal.reason);
+              else signal?.addEventListener('abort', () => reject(signal.reason), { once: true });
+            });
+          }
           onChunk?.('本回合正文');
           return '<narrate>本回合正文只叙述已确认事实。</narrate><branch>继续</branch>';
         }
@@ -97,7 +109,9 @@ globalThis.__unifiedCommands = [];
 globalThis.__unifiedResolutionMessages = [];
 globalThis.__unifiedNarrativeMessages = [];
 globalThis.__unifiedResolutionFails = false;
+globalThis.__unifiedResolutionWaitForAbort = false;
 globalThis.__unifiedNarrativeFails = false;
+globalThis.__unifiedNarrativeWaitForAbort = false;
 globalThis.__unifiedCommitFails = false;
 
 const storeUrl = `data:text/javascript;base64,${Buffer.from(storeBundle.outputFiles[0].text).toString('base64')}`;
@@ -140,11 +154,14 @@ function resetAtCanonBoundary() {
   globalThis.__unifiedResolutionMessages = [];
   globalThis.__unifiedNarrativeMessages = [];
   globalThis.__unifiedResolutionFails = false;
+  globalThis.__unifiedResolutionWaitForAbort = false;
   globalThis.__unifiedNarrativeFails = false;
+  globalThis.__unifiedNarrativeWaitForAbort = false;
   globalThis.__unifiedCommitFails = false;
   useGameStore.setState({
     gameState: state,
     isStreaming: false,
+    turnStage: 'idle',
     streamingText: '',
     changesLog: [],
     characterTurnContext: null,
@@ -352,6 +369,45 @@ test('正文失败时保留排队出发且不建立旅程', async () => {
   assert.deepEqual(useGameStore.getState().gameState, queuedState);
   assert.deepEqual(pendingWorldTransactions()[0].travelCommands[0], command);
   assert.equal(globalThis.__unifiedSnapshots.length, 1);
+});
+
+test('取消规则解析会保留世界状态、待处理事务和数据库快照', async () => {
+  resetAtCanonBoundary();
+  queueItemEquip();
+  const queuedState = structuredClone(useGameStore.getState().gameState);
+  globalThis.__unifiedResolutionWaitForAbort = true;
+  const pending = useGameStore.getState().submitAction('取消这次行动', 'narrative');
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  assert.equal(useGameStore.getState().turnStage, 'resolving');
+  useGameStore.getState().cancelCurrentTurn();
+  await pending;
+
+  assert.deepEqual(useGameStore.getState().gameState, queuedState);
+  assert.equal(pendingWorldTransactions().length, 1);
+  assert.equal(globalThis.__unifiedSnapshots.length, 1);
+  assert.equal(globalThis.__unifiedCharacterEvents.length, 0);
+  assert.equal(useGameStore.getState().isStreaming, false);
+  assert.equal(useGameStore.getState().turnStage, 'idle');
+});
+
+test('取消正文生成不会提交已经结算但尚未落盘的状态', async () => {
+  resetAtCanonBoundary();
+  queueItemEquip();
+  const queuedState = structuredClone(useGameStore.getState().gameState);
+  globalThis.__unifiedNarrativeWaitForAbort = true;
+  const pending = useGameStore.getState().submitAction('在结算后取消正文', 'narrative');
+  for (let attempt = 0; attempt < 20 && useGameStore.getState().turnStage !== 'narrating'; attempt += 1) {
+    await new Promise((resolve) => setTimeout(resolve, 0));
+  }
+  assert.equal(useGameStore.getState().turnStage, 'narrating');
+  useGameStore.getState().cancelCurrentTurn();
+  await pending;
+
+  assert.deepEqual(useGameStore.getState().gameState, queuedState);
+  assert.equal(pendingWorldTransactions().length, 1);
+  assert.equal(globalThis.__unifiedSnapshots.length, 1);
+  assert.equal(globalThis.__unifiedCharacterEvents.length, 0);
+  assert.equal(useGameStore.getState().turnStage, 'idle');
 });
 
 test('正文失败不产生快照、人物事件或队列消费', async () => {
