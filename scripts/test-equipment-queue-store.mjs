@@ -45,6 +45,7 @@ const dependencyStubs = {
       loader: 'js',
       contents: `
         export const db = {};
+        export async function loadLatestGameState() { return null; }
         export async function ensureTurnSnapshotBaseline() { return 'ready'; }
         export async function saveTurnSnapshot() {}
         export async function commitTurnAtomically() {}

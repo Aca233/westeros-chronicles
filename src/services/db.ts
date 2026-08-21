@@ -7,6 +7,7 @@ import {
   assertSupportedGameState,
   assertSupportedSaveEnvelope,
   isCompatibleTurnBaseline,
+  repairKnownTurnRevisionDrift,
 } from '../features/items/saveVersion';
 
 export interface GameSnapshot {
@@ -175,6 +176,25 @@ function assertSupportedSnapshot(snapshot: unknown): asserts snapshot is GameSna
   assertTurnCommitConsistency(supported.gameState);
 }
 
+/** Validate and detach a persisted snapshot before exposing it to live state. */
+export function gameStateFromSnapshot(snapshot: unknown): GameState {
+  if (typeof snapshot !== 'object' || snapshot === null
+    || (snapshot as { formatVersion?: unknown }).formatVersion !== ITEM_SAVE_FORMAT_VERSION) {
+    throw new Error('测试版存档格式已更新，请重置测试存档后重新开始。');
+  }
+  const candidate = snapshot as GameSnapshot;
+  const repairedState = repairKnownTurnRevisionDrift(candidate.gameState);
+  const repairedSnapshot: GameSnapshot = { ...candidate, gameState: repairedState };
+  assertSupportedSnapshot(repairedSnapshot);
+  return clone(repairedState);
+}
+
+/** Load the newest committed state without mutating or deleting persisted data. */
+export async function loadLatestGameState(): Promise<GameState | null> {
+  const latest = await db.snapshots.orderBy('turnNumber').reverse().first();
+  return latest ? gameStateFromSnapshot(latest) : null;
+}
+
 async function upsertWorldRun(gameState: GameState): Promise<void> {
   const ref = gameState.worldCharacters;
   if (!ref) return;
@@ -316,7 +336,7 @@ export async function importSaveData(jsonString: string): Promise<GameState | nu
     const latest = await db.snapshots.orderBy('turnNumber').reverse().first();
     if (!latest) return null;
     assertSupportedSnapshot(latest);
-    return latest.gameState;
+    return gameStateFromSnapshot(latest);
   } catch (err) {
     console.error('导入存档失败:', err);
     throw err;

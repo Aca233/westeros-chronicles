@@ -21,7 +21,7 @@ import { useMapUiStore } from './features/map/mapUiStore';
 const MapDrawer = lazy(() => import('./features/map/MapDrawer').then((module) => ({ default: module.MapDrawer })));
 
 export const App: React.FC = () => {
-  const { changesLog, isTvTimelineOpen, closeTvTimeline } = useGameStore();
+  const { changesLog, isTvTimelineOpen, closeTvTimeline, bootStatus, bootError, hydrateGameState, resetStoredGame } = useGameStore();
   const [booted, setBooted] = useState(false);
   const characterNavigation = useCharacterNavigation();
   const activeDrawer = useMapUiStore((state) => state.activeDrawer);
@@ -35,6 +35,10 @@ export const App: React.FC = () => {
   const returnFromAsset = useMapUiStore((state) => state.returnFromAsset);
   const selectedAssetId = useMapUiStore((state) => state.selectedAssetId);
   const assetSourceCharacterId = useMapUiStore((state) => state.assetSourceCharacterId);
+
+  useEffect(() => {
+    void hydrateGameState();
+  }, [hydrateGameState]);
 
   // 点击正文中的人名:打开对应卷宗;卷宗收于抽屉,两端都自动拉出
   const openStoryCharacter = useCallback((characterId: CharacterId) => {
@@ -85,6 +89,28 @@ export const App: React.FC = () => {
     const timeoutId = window.setTimeout(warm, 2000);
     return () => window.clearTimeout(timeoutId);
   }, []);
+
+  if (bootStatus !== 'ready') {
+    return (
+      <div className="relative flex h-screen w-screen items-center justify-center overflow-hidden bg-ink px-6 text-parchment">
+        <AmbientCanvas />
+        <div className="relative z-10 max-w-md border border-hairline bg-ink-2/90 p-6 text-center shadow-2xl">
+          <p className="eyebrow">维斯特洛编年史</p>
+          <h1 className="mt-3 font-serif text-xl font-bold text-parchment">
+            {bootStatus === 'loading' ? '正在恢复世界' : '存档无法载入'}
+          </h1>
+          <p className="mt-3 font-serif text-xs leading-relaxed text-parchment-dim">
+            {bootStatus === 'loading' ? '正在核对最近一次已提交的回合与世界账本。' : bootError}
+          </p>
+          {bootStatus === 'error' && (
+            <button type="button" className="btn-decree mt-5 !px-5 !py-2 !text-xs" onClick={() => void resetStoredGame()}>
+              重置不兼容存档
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   const dossierWindow = (
     <Ck3CharacterWindow

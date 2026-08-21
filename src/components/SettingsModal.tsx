@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useGameStore } from '../store/useGameStore';
 import { Settings, Key, Server, Cpu, Flame, X, Download, Upload, RefreshCw, CheckCircle2, AlertCircle } from 'lucide-react';
 import { stripEmoji } from '../services/textSanitizer';
-import { clearSaveData, exportSaveData, importSaveData } from '../services/db';
+import { exportSaveData, importSaveData } from '../services/db';
 import { fetchAvailableModels } from '../services/api';
 
 export const SettingsModal: React.FC = () => {
-  const { isSettingsOpen, closeSettings, apiConfig, setApiConfig } = useGameStore();
+  const { isSettingsOpen, closeSettings, apiConfig, setApiConfig, replaceGameState, resetStoredGame } = useGameStore();
 
   const [provider, setProvider] = useState(apiConfig.provider);
   const [baseUrl, setBaseUrl] = useState(apiConfig.baseUrl);
@@ -113,7 +113,8 @@ export const SettingsModal: React.FC = () => {
       const text = await file.text();
       const loaded = await importSaveData(text);
       if (loaded) {
-        window.location.reload();
+        replaceGameState(loaded);
+        closeSettings();
       }
     } catch (err) {
       alert('导入存档失败: ' + err);
@@ -124,8 +125,8 @@ export const SettingsModal: React.FC = () => {
     const confirmed = window.confirm('这会删除当前测试存档、人物事件与回合历史，且无法撤销。确认继续吗？');
     if (!confirmed) return;
     try {
-      await clearSaveData();
-      window.location.reload();
+      await resetStoredGame();
+      closeSettings();
     } catch (err) {
       alert('重置测试存档失败: ' + err);
     }

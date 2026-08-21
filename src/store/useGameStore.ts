@@ -6,7 +6,7 @@ import { performD20Check } from '../services/diceEngine';
 import { DiceMode, evaluateDiceRequirement } from '../services/dicePolicy';
 import { buildTurnResolutionMessages, prepareWorldTurn, requestTurnResolution, settleTurnDraft } from '../services/turnResolution';
 import { buildSettledNarrativeMessages, streamSettledNarrative } from '../services/turnNarration';
-import { saveTurnSnapshot, commitTurnAtomically, rollbackLastTurn, clearSaveData, ensureTurnSnapshotBaseline } from '../services/db';
+import { saveTurnSnapshot, commitTurnAtomically, rollbackLastTurn, clearSaveData, ensureTurnSnapshotBaseline, loadLatestGameState } from '../services/db';
 import { stripEmoji, stripEmojiDeep } from '../services/textSanitizer';
 import { normalizeCk3Attributes } from '../data/ck3Skills';
 import { migrateLordIdentityData, migrateLordTraitData } from '../data/characterTraits';
@@ -42,6 +42,8 @@ interface GameStore {
   activeDiceCheck: D20Check | null;
   changesLog: string[];
   characterTurnContext: CharacterTurnContext | null;
+  bootStatus: 'loading' | 'ready' | 'error';
+  bootError: string | null;
   
   // 模态弹窗状态
   isDiceModalOpen: boolean;
@@ -62,6 +64,9 @@ interface GameStore {
   queueWorldTransaction: (transaction: PendingWorldTransaction) => void;
   cancelWorldTransaction: (transactionId: string) => void;
   setCharacterTurnContext: (context: CharacterTurnContext | null) => void;
+  hydrateGameState: () => Promise<void>;
+  replaceGameState: (gameState: GameState) => void;
+  resetStoredGame: () => Promise<void>;
 
   // 游戏核心流程
   startNewGame: (lord: LordProfile, opening: { think?: string; narrate: string; speak?: Array<{ speaker: string; text: string }>; branches: string[] }, worldSetup?: NewGameWorldSetup) => Promise<void>;
@@ -109,33 +114,38 @@ function formatWorldDate(date: WorldDate): string {
   return `征服历 ${date.year} AC · ${date.month}月${date.day}日`;
 }
 
-const INITIAL_GAME_STATE: GameState = {
-  saveFormatVersion: ITEM_SAVE_FORMAT_VERSION,
-  currentYear: INITIAL_WORLD_DATE.year,
-  currentMonth: INITIAL_WORLD_DATE.month,
-  currentDay: INITIAL_WORLD_DATE.day,
-  currentSeason: defaultPreset.season,
-  turnCount: 1,
-  lord: defaultPreset.initialLord,
-  turns: [
-    {
-      id: 'turn_1',
-      turnNumber: 1,
-      playerInput: '开启维斯特洛传奇',
-      think: defaultPreset.initialOpening.think,
-      narrate: defaultPreset.initialOpening.narrate,
-      branches: defaultPreset.initialOpening.branches,
-      gameDate: formatWorldDate(INITIAL_WORLD_DATE),
-      timestamp: Date.now(),
-    },
-  ],
-  worldCharacters: { runId: createWorldRunId(), datasetHash: AGOT_DATASET_HASH, revision: 0 },
-  worldArtifacts: createInitialAgotArtifactWorldState(),
-  worldHistory: createInitialWorldHistory(INITIAL_WORLD_DATE),
-  worldRuntime: createWorldRuntimeState(),
-  worldFlags: {},
-  isGameOver: false,
-};
+function createInitialGameState(): GameState {
+  const startDate = { ...INITIAL_WORLD_DATE };
+  return {
+    saveFormatVersion: ITEM_SAVE_FORMAT_VERSION,
+    currentYear: startDate.year,
+    currentMonth: startDate.month,
+    currentDay: startDate.day,
+    currentSeason: defaultPreset.season,
+    turnCount: 1,
+    lord: structuredClone(defaultPreset.initialLord),
+    turns: [
+      {
+        id: 'turn_1',
+        turnNumber: 1,
+        playerInput: '开启维斯特洛传奇',
+        think: defaultPreset.initialOpening.think,
+        narrate: defaultPreset.initialOpening.narrate,
+        branches: [...defaultPreset.initialOpening.branches],
+        gameDate: formatWorldDate(startDate),
+        timestamp: Date.now(),
+      },
+    ],
+    worldCharacters: { runId: createWorldRunId(), datasetHash: AGOT_DATASET_HASH, revision: 0 },
+    worldArtifacts: createInitialAgotArtifactWorldState(),
+    worldHistory: createInitialWorldHistory(startDate),
+    worldRuntime: createWorldRuntimeState(),
+    worldFlags: {},
+    isGameOver: false,
+  };
+}
+
+const INITIAL_GAME_STATE = createInitialGameState();
 
 export const useGameStore = create<GameStore>((set, get) => ({
   gameState: INITIAL_GAME_STATE,
@@ -145,6 +155,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
   activeDiceCheck: null,
   changesLog: [],
   characterTurnContext: null,
+  bootStatus: 'loading',
+  bootError: null,
   isDiceModalOpen: false,
   isSettingsOpen: false,
   isCreatorOpen: false,
@@ -200,6 +212,53 @@ export const useGameStore = create<GameStore>((set, get) => ({
     }));
   },
   setCharacterTurnContext: (context) => set({ characterTurnContext: context ? { ...context, characters: context.characters.map((character) => ({ ...character })), promptContext: context.promptContext ? stripEmoji(context.promptContext) : undefined } : null }),
+  hydrateGameState: async () => {
+    if (get().bootStatus === 'ready') return;
+    set({ bootStatus: 'loading', bootError: null });
+    try {
+      const restored = await loadLatestGameState();
+      set({
+        ...(restored ? { gameState: stripEmojiDeep(restored) } : {}),
+        bootStatus: 'ready',
+        bootError: null,
+        changesLog: restored ? ['已恢复最近的维斯特洛存档'] : [],
+      });
+    } catch (error) {
+      set({
+        bootStatus: 'error',
+        bootError: error instanceof Error ? error.message : '存档读取失败',
+      });
+    }
+  },
+  replaceGameState: (gameState) => {
+    const restored = stripEmojiDeep(gameState);
+    restored.lord = migrateLordIdentityData(migrateLordTraitData(restored.lord));
+    restored.lord.attributes = normalizeCk3Attributes(restored.lord.attributes);
+    if (restored.lord.baseAttributes) restored.lord.baseAttributes = normalizeCk3Attributes(restored.lord.baseAttributes);
+    set({
+      gameState: restored,
+      bootStatus: 'ready',
+      bootError: null,
+      isStreaming: false,
+      streamingText: '',
+      characterTurnContext: null,
+      changesLog: ['已载入维斯特洛存档'],
+    });
+  },
+  resetStoredGame: async () => {
+    await clearSaveData();
+    const initialState = createInitialGameState();
+    await saveTurnSnapshot(initialState, '重置后的开局基线');
+    set({
+      gameState: initialState,
+      bootStatus: 'ready',
+      bootError: null,
+      isStreaming: false,
+      streamingText: '',
+      characterTurnContext: null,
+      changesLog: ['已重置本地测试存档'],
+    });
+  },
 
   // 开启新剧本
   startNewGame: async (lord, opening, worldSetup) => {

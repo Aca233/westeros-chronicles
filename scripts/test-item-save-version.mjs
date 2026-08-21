@@ -89,8 +89,10 @@ test('所有新游戏入口直接提供新物品状态', () => {
   assert.match(creatorSource, /items: customItems/);
 });
 
-test('设置界面提供显式测试存档重置且成功清除后才刷新', () => {
+test('设置界面通过 Store 重置当前世界且不再依赖刷新页面', () => {
   assert.match(settingsSource, /重置测试存档/);
-  assert.match(settingsSource, /await clearSaveData\(\)/);
-  assert.match(settingsSource, /window\.location\.reload\(\)/);
+  assert.match(settingsSource, /await resetStoredGame\(\)/);
+  assert.match(storeSource, /const initialState = createInitialGameState\(\)/);
+  assert.match(storeSource, /await saveTurnSnapshot\(initialState, '重置后的开局基线'\)/);
+  assert.doesNotMatch(settingsSource, /window\.location\.reload\(\)/);
 });

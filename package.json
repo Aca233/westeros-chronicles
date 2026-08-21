@@ -49,6 +49,7 @@
     "test:item-action-queue": "node scripts/test-item-action-queue.mjs",
     "test:item-definitions": "node scripts/test-item-definitions.mjs",
     "test:item-save-version": "node scripts/test-item-save-version.mjs",
+    "test:save-hydration": "node scripts/test-save-hydration.mjs",
     "test:item-state-commands": "node scripts/test-item-state-commands.mjs",
     "test:item-dice-integration": "node scripts/test-item-dice-integration.mjs",
     "test:item-view-model": "node scripts/test-item-view-model.mjs",
