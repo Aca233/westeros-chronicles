@@ -81,12 +81,12 @@
 - Produces: `WorldContextAvailability`
 - Produces: optional map dataset input for `prepareWorldTurn`
 
-- [ ] Write a failing integration test where every map fetch rejects but an ordinary dialogue action completes.
-- [ ] Write a test where an explicit travel action is rejected with a map-data reason without aborting the whole turn.
-- [ ] Split optional enrichment loading from map-dependent intent validation.
-- [ ] Ensure narration receives accepted/rejected facts even in degraded mode.
-- [ ] Run turn pipeline, unified turn and new degradation tests.
-- [ ] Commit `fix: decouple ordinary turns from map availability`.
+- [x] Write a failing integration test where every map fetch rejects but an ordinary dialogue action completes.
+- [x] Write a test where an explicit travel action is rejected with a map-data reason without aborting the whole turn.
+- [x] Split optional enrichment loading from map-dependent intent validation.
+- [x] Ensure narration receives accepted/rejected facts even in degraded mode.
+- [x] Run turn pipeline, unified turn and new degradation tests.
+- [x] Commit `fix: decouple ordinary turns from map availability`.
 
 ### Task 4: 世界事件可见性边界
 

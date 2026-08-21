@@ -79,6 +79,7 @@ export interface WorldTurnContext {
   narrativeLocation: NarrativeLocationContext;
   neighboringLocations: MapLocationSearchEntry[];
   recentWorldEvents: WorldEvent[];
+  mapAvailability: { status: 'available' | 'unavailable'; reason?: string };
   pendingTransactions: PendingWorldTransaction[];
 }
 
@@ -169,14 +170,26 @@ export async function buildWorldTurnContext(input: BuildWorldTurnContextInput): 
   const { gameState } = input;
   const currentDate = { year: gameState.currentYear, month: gameState.currentMonth, day: gameState.currentDay };
   const playerId = gameState.lord.canonicalCharacterId;
-  const [manifest, playerRecord, mentioned, mapLocations, semanticTitles, semanticMemberships] = await Promise.all([
+  const [manifest, playerRecord, mentioned, mapResult] = await Promise.all([
     repository.loadManifest(),
     playerId ? repository.get(playerId) : Promise.resolve(undefined),
     repository.findMentioned(input.actionText, { alive: true, canonTiers: ['canon', 'semicanon'], limit: 24 }),
-    locationRepository.loadSearchIndex(),
-    locationRepository.loadSemanticTitles().catch(() => [] as SemanticTitle[]),
-    locationRepository.loadSemanticMembership().catch(() => [] as SemanticMembership[]),
+    Promise.all([
+      locationRepository.loadSearchIndex(),
+      locationRepository.loadSemanticTitles().catch(() => [] as SemanticTitle[]),
+      locationRepository.loadSemanticMembership().catch(() => [] as SemanticMembership[]),
+    ]).then(([locations, titles, memberships]) => ({ status: 'available' as const, locations, titles, memberships }))
+      .catch((error: unknown) => ({
+        status: 'unavailable' as const,
+        locations: [] as MapLocationSearchEntry[],
+        titles: [] as SemanticTitle[],
+        memberships: [] as SemanticMembership[],
+        reason: error instanceof Error ? error.message : String(error),
+      })),
   ]);
+  const mapLocations = mapResult.locations;
+  const semanticTitles = mapResult.titles;
+  const semanticMemberships = mapResult.memberships;
   const directlyNamedIds = uniqueIds(mentioned.filter((hit) => hit.canonTier !== 'genealogy').map((hit) => hit.id));
   const strongRelationshipIds = relationIds(playerRecord);
   const recentInteractionIds = recentParticipantIds(gameState);
@@ -298,6 +311,9 @@ export async function buildWorldTurnContext(input: BuildWorldTurnContextInput): 
     narrativeLocation,
     neighboringLocations,
     recentWorldEvents,
+    mapAvailability: mapResult.status === 'available'
+      ? { status: 'available' }
+      : { status: 'unavailable', reason: mapResult.reason },
     pendingTransactions: gameState.worldRuntime.pendingTransactions.filter((entry) => entry.status === 'pending').slice(0, 12),
   };
 }
@@ -330,6 +346,7 @@ export function formatWorldTurnContext(context: WorldTurnContext): string {
   return [
     '### 【当前权威地点】',
     `- 位置：${narrativeLocation}`,
+    ...(context.mapAvailability.status === 'unavailable' ? ['- 地图资料暂不可用；不要推断新的地点、路线或抵达事实。'] : []),
     '- 地图位置、人物移动与旅程进度只由地图旅行系统和统一回合结算。',
     '### 【邻近地点】',
     ...neighborLines,

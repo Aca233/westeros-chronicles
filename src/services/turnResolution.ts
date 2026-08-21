@@ -165,6 +165,11 @@ export interface PrepareWorldTurnInput {
   routePlanner?: (request: RouteRequest) => Promise<RoutePlan>;
 }
 
+export interface WorldContextAvailability {
+  map: 'available' | 'unavailable' | 'not-required';
+  reason?: string;
+}
+
 export interface PreparedWorldTurn {
   transactionId: string;
   baseline: WorldBaselineSnapshot;
@@ -173,6 +178,8 @@ export interface PreparedWorldTurn {
   locations: readonly MapLocationSearchEntry[];
   resolvedIntents: ResolvedLocationWorldIntent[];
   rejectedIntents: RejectedWorldIntent[];
+  rejectedCommands?: RejectedWorldCommand[];
+  availability: WorldContextAvailability;
   rejectionReason?: string;
 }
 
@@ -454,11 +461,30 @@ function prepareTemporalCommand(
 
 export async function prepareWorldTurn(input: PrepareWorldTurnInput): Promise<PreparedWorldTurn> {
   const locationRepository = input.mapLocationRepository ?? mapRepository;
-  const [locations, memberships] = await Promise.all([
-    locationRepository.loadSearchIndex(),
-    locationRepository.loadSemanticMembership(),
+  const pending = input.pendingTransactions.filter((entry) => entry.status === 'pending');
+  const queuedTravelCommands = pending.flatMap((entry) => entry.travelCommands ?? []);
+  const locationStateCommands = input.draft.stateCommands.filter((command) => command.type === 'CHANGE_LOCATION');
+  const needsMap = (input.draft.worldIntents?.length ?? 0) > 0
+    || queuedTravelCommands.length > 0
+    || locationStateCommands.length > 0;
+  let locations: MapLocationSearchEntry[] = [];
+  let memberships: SemanticMembership[] = [];
+  let mapFailureReason: string | undefined;
+  if (needsMap) {
+    try {
+      [locations, memberships] = await Promise.all([
+        locationRepository.loadSearchIndex(),
+        locationRepository.loadSemanticMembership(),
+      ]);
+    } catch (error) {
+      mapFailureReason = `地图资料不可用：${stripEmoji(error instanceof Error ? error.message : String(error))}`;
+    }
+  }
+  const knownLocationIds = new Set([
+    input.gameState.lord.location.locationId,
+    ...(input.characterContext?.knownLocationIds ?? []),
+    ...locations.map((entry) => entry.id),
   ]);
-  const knownLocationIds = new Set(locations.map((entry) => entry.id));
   const fallbackContext: CharacterCommandBatchBaseContext = input.characterContext ?? {
     characters: [],
     currentLocationId: input.gameState.lord.location.locationId,
@@ -470,14 +496,25 @@ export async function prepareWorldTurn(input: PrepareWorldTurnInput): Promise<Pr
   const countyIdByLocationId = new Map(memberships.flatMap((entry) => entry.countyId
     ? [[entry.locationId, entry.countyId] as const]
     : []));
-  const resolution = resolveWorldIntents(input.draft.worldIntents ?? [], {
-    defaultActorId: playerId,
-    currentLocation: input.gameState.lord.location,
-    activeJourney: input.gameState.activeJourney,
-    locations,
-    countyIdByLocationId,
-    neighboringCountyIds: sameDuchyNeighborCounties(input.gameState.lord.location.locationId, memberships),
-  });
+  const resolution = mapFailureReason
+    ? {
+        resolved: [] as ResolvedLocationWorldIntent[],
+        rejected: (input.draft.worldIntents ?? []).map((intent) => ({ intent, reason: mapFailureReason })),
+      }
+    : resolveWorldIntents(input.draft.worldIntents ?? [], {
+        defaultActorId: playerId,
+        currentLocation: input.gameState.lord.location,
+        activeJourney: input.gameState.activeJourney,
+        locations,
+        countyIdByLocationId,
+        neighboringCountyIds: sameDuchyNeighborCounties(input.gameState.lord.location.locationId, memberships),
+      });
+  const mapRejectedCommands: RejectedWorldCommand[] = mapFailureReason
+    ? [
+        ...locationStateCommands.map((command) => ({ type: command.type, reason: mapFailureReason! })),
+        ...queuedTravelCommands.map((command) => ({ type: command.type, reason: mapFailureReason! })),
+      ]
+    : [];
   const transactionId = `turn:${input.nextTurnNumber}:world`;
   const transaction: WorldTransaction = {
     id: transactionId,
@@ -651,7 +688,6 @@ export async function prepareWorldTurn(input: PrepareWorldTurnInput): Promise<Pr
       });
     }
 
-    const pending = input.pendingTransactions.filter((entry) => entry.status === 'pending');
     for (const entry of pending) {
       for (const intent of entry.intents) {
         transaction.intents.push(intent);
@@ -675,8 +711,7 @@ export async function prepareWorldTurn(input: PrepareWorldTurnInput): Promise<Pr
         });
       }
     }
-    const queuedTravelCommands = pending.flatMap((entry) => entry.travelCommands ?? []);
-    if (queuedTravelCommands.length) {
+    if (queuedTravelCommands.length && !mapFailureReason) {
       const travel = applyTravelCommands(workingJourney, queuedTravelCommands, {
         currentLocation: input.gameState.lord.location,
         currentDate,
@@ -729,6 +764,8 @@ export async function prepareWorldTurn(input: PrepareWorldTurnInput): Promise<Pr
       locations,
       resolvedIntents: resolution.resolved,
       rejectedIntents: resolution.rejected,
+      rejectedCommands: mapRejectedCommands,
+      availability: { map: mapFailureReason ? 'unavailable' : needsMap ? 'available' : 'not-required', ...(mapFailureReason ? { reason: mapFailureReason } : {}) },
       rejectionReason: stripEmoji(error instanceof Error ? error.message : '世界事务准备失败'),
     };
   }
@@ -746,6 +783,8 @@ export async function prepareWorldTurn(input: PrepareWorldTurnInput): Promise<Pr
     locations,
     resolvedIntents: resolution.resolved,
     rejectedIntents: resolution.rejected,
+    rejectedCommands: mapRejectedCommands,
+    availability: { map: mapFailureReason ? 'unavailable' : needsMap ? 'available' : 'not-required', ...(mapFailureReason ? { reason: mapFailureReason } : {}) },
   };
 }
 
@@ -1237,7 +1276,10 @@ export function settleTurnDraft(input: SettleTurnDraftInput): SettledTurn {
   });
   if (prepared.rejectionReason) return rejectedPreparedTurn(input, base, prepared, prepared.rejectionReason);
 
-  const locationRejections = prepared.rejectedIntents.map((entry) => ({ type: entry.intent.kind, reason: entry.reason }));
+  const locationRejections = [
+    ...prepared.rejectedIntents.map((entry) => ({ type: entry.intent.kind, reason: entry.reason })),
+    ...(prepared.rejectedCommands ?? []),
+  ];
   if (!prepared.transaction) {
     const narrationContext = committedNarrationContext(base.worldLocation, prepared.locations, [], locationRejections.map((entry) => entry.reason));
     return {

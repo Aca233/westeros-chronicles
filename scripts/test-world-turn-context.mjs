@@ -134,6 +134,23 @@ const semanticFallbackContext = await buildWorldTurnContext({
 assert.deepEqual(semanticFallbackContext.narrativeLocation, { placeName: '临冬城', sceneName: '神木林', countyName: undefined, duchyName: undefined, kingdomName: undefined, empireName: undefined, hegemonName: undefined });
 assert.doesNotMatch(formatWorldTurnContext(semanticFallbackContext), /b_winterfell|baronyId|男爵领/);
 
+
+const unavailableMapContext = await buildWorldTurnContext({
+  gameState,
+  actionText: '继续与劳勃交谈',
+  repository,
+  eventStore,
+  mapLocationRepository: {
+    loadSearchIndex: async () => { throw new Error('fixture map unavailable'); },
+    loadSemanticTitles: async () => { throw new Error('fixture map unavailable'); },
+    loadSemanticMembership: async () => { throw new Error('fixture map unavailable'); },
+  },
+  timeline,
+});
+assert.equal(unavailableMapContext.mapAvailability.status, 'unavailable');
+assert.equal(unavailableMapContext.selection.full.some((entry) => entry.id === 'agot:named_1'), true);
+assert.match(formatWorldTurnContext(unavailableMapContext), /地图资料暂不可用/);
+
 characterEvents.set('agot:named_1', [
   { id: 'acquire-cloak', characterId: 'agot:named_1', turn: 3, sequence: 0, timestamp: 1, event: { type: 'ITEM_ACQUIRE', item: {
     instanceId: 'story:named:cloak', definitionId: 'clothing.plain_wool_cloak', ownerId: 'agot:named_1',
