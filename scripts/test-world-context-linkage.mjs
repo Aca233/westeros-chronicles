@@ -6,6 +6,7 @@ const bundle = await build({
   stdin: {
     contents: [
       "export * from './src/services/turnResolution.ts';",
+      "export { prepareWorldTurn as directPrepareWorldTurn } from './src/services/turn/worldPreparation.ts';",
       "export * from './src/data/presets.ts';",
       "export * from './src/features/items/worldArtifacts.ts';",
       "export { WORLD_CONTEXT_LIMITS } from './src/features/world/worldTurnContext.ts';",
@@ -25,9 +26,12 @@ const {
   PRESET_SCENARIOS,
   createInitialAgotArtifactWorldState,
   prepareWorldTurn,
+  directPrepareWorldTurn,
   settleTurnDraft,
   WORLD_CONTEXT_LIMITS,
 } = await import(url);
+
+assert.equal(prepareWorldTurn, directPrepareWorldTurn);
 
 const PLAYER_ID = 'agot:Stark_3';
 const locations = [
