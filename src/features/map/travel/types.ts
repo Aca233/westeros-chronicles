@@ -1,7 +1,7 @@
-import type { CharacterId } from '../../characters/types'
+import type { CharacterId } from '../../../domain/characterId'
 import type { ItemPlacement, ItemTransport } from '../../items/types'
-import type { WorldDate } from '../../world/worldHistory'
-import type { WorldLocationRef } from '../types'
+import type { WorldDate } from '../../../domain/worldDate'
+import type { WorldLocationRef } from '../../../domain/worldLocation'
 import type { RoutePlan } from '../routing/types'
 
 export type JourneyStatus = 'planned' | 'travelling' | 'paused' | 'interrupted' | 'arrived'

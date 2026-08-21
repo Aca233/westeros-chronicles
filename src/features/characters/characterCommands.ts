@@ -1,8 +1,8 @@
-import type { BodyZoneKey, WoundLevel } from '../../types/game';
+import type { BodyZoneKey, WoundLevel } from '../../domain/body';
+import type { CharacterId } from '../../domain/characterId';
 import type { EquipmentPosition } from '../items/types';
 import type {
   CharacterEvent,
-  CharacterId,
   CharacterItemRecord,
   CharacterMemory,
   CharacterRelationship,

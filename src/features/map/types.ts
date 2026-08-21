@@ -1,3 +1,5 @@
+export type { WorldLocationRef } from '../../domain/worldLocation'
+
 export type MapLocationType =
   | 'region'
   | 'castle'
@@ -12,11 +14,6 @@ export type TravelMode = 'walk' | 'horse' | 'carriage' | 'ship'
 export type RoutePreference = 'fastest' | 'safest' | 'cheapest'
 export type KnowledgeLevel = 'confirmed' | 'rumored' | 'stale' | 'unknown'
 export type SemanticRank = 'hegemon' | 'empire' | 'kingdom' | 'duchy' | 'county'
-
-export interface WorldLocationRef {
-  locationId: string
-  sceneLocation?: string
-}
 
 export interface MapPixelPoint {
   mapX: number

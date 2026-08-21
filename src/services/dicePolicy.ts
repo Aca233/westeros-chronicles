@@ -1,4 +1,4 @@
-import type { LordAttributes } from '../types/game.ts';
+import type { LordAttributes } from '../domain/character.ts';
 import type { TraitCheckDomain } from './traitEffectEngine.ts';
 
 export type DiceMode = 'auto' | 'force' | 'narrative';

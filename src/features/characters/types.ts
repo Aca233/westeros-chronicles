@@ -1,7 +1,9 @@
-import type { BodyZoneKey, LordAttributes, WoundLevel } from '../../types/game';
+import type { BodyZoneKey, WoundLevel } from '../../domain/body';
+import type { LordAttributes } from '../../domain/character';
+import type { CharacterId } from '../../domain/characterId';
+export type { CharacterId } from '../../domain/characterId';
 import type { EquipmentPosition } from '../items/types';
 
-export type CharacterId = `agot:${string}` | `save:${string}:${string}`;
 export type CharacterCanonTier = 'canon' | 'semicanon' | 'mod_supporting' | 'genealogy';
 export type KnowledgeVisibility = 'public' | 'player' | 'restricted' | 'rumor' | 'secret' | 'system';
 

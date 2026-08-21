@@ -6,25 +6,13 @@ import type { ItemStateCommand, ItemSystemState } from '../features/items/types'
 import type { WorldArtifactState } from '../features/items/worldArtifacts';
 import type { WorldHistoryState } from '../features/world/worldHistory';
 import type { WorldRuntimeState } from '../features/world/worldRuntimeTypes';
-import type { CharacterId } from '../features/characters/types';
-import type { WorldLocationRef } from '../features/map/types';
+import type { BodyZoneKey, WoundLevel } from '../domain/body';
+import type { LordAttributes } from '../domain/character';
+import type { CharacterId } from '../domain/characterId';
+import type { WorldLocationRef } from '../domain/worldLocation';
+export type { BodyZoneKey, WoundLevel } from '../domain/body';
+export type { LordAttributes } from '../domain/character';
 import type { ActiveJourney, TravelStateCommand } from '../features/map/travel/types';
-
-// CK3 同款六项角色能力。常见角色通常位于 0 - 30 区间，数值允许因加成继续提高。
-export interface LordAttributes {
-  diplomacy: number;   // 外交：谈判、结盟、说服
-  martial: number;     // 军事：统兵、战术、战争
-  stewardship: number; // 管理：税收、领地、后勤
-  intrigue: number;    // 谋略：密谋、侦破、暗杀
-  learning: number;    // 学识：历史、医术、神学
-  prowess: number;     // 勇武：决斗、个人战斗、体魄
-}
-
-// 自然身体部位 (头颅、躯干、双臂、双腿)
-export type BodyZoneKey = 'head' | 'torso' | 'arms' | 'legs';
-
-// 部位创伤等级
-export type WoundLevel = 'intact' | 'minor' | 'heavy' | 'critical';
 
 export interface BodyZoneStatus {
   key: BodyZoneKey;

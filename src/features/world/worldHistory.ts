@@ -1,18 +1,8 @@
-import type { CharacterId } from '../characters/types';
-import type { WorldLocationRef } from '../map/types';
+import type { CharacterId } from '../../domain/characterId';
+import type { WorldDate, WorldDateAdvance } from '../../domain/worldDate';
+import type { WorldLocationRef } from '../../domain/worldLocation';
+export type { WorldDate, WorldDateAdvance } from '../../domain/worldDate';
 import type { StateCommand } from '../../types/game';
-
-export interface WorldDate {
-  year: number;
-  month: number;
-  day: number;
-}
-
-export interface WorldDateAdvance {
-  days?: number;
-  months?: number;
-  years?: number;
-}
 
 export type CanonicalEventStatus = 'historical' | 'scheduled' | 'occurred' | 'diverged' | 'suppressed';
 

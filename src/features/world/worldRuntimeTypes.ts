@@ -1,8 +1,8 @@
-import type { CharacterId } from '../characters/types';
+import type { CharacterId } from '../../domain/characterId';
 import type { EquipmentPosition, ItemStateCommand, ItemSystemState } from '../items/types';
-import type { WorldLocationRef } from '../map/types';
+import type { WorldLocationRef } from '../../domain/worldLocation';
 import type { ActiveJourney, TravelStateCommand } from '../map/travel/types';
-import type { WorldDate, WorldDateAdvance } from './worldHistory';
+import type { WorldDate, WorldDateAdvance } from '../../domain/worldDate';
 
 export type WorldPrincipalRef =
   | { type: 'character'; characterId: CharacterId }

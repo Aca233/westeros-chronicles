@@ -205,7 +205,7 @@ export const LEGACY_UNIQUE_LEAVES = Object.freeze({
 const step = (script) => Object.freeze({ id: script, script });
 const suite = (scripts) => Object.freeze(scripts.map(step));
 
-export const STRUCTURE_GUARDS = Object.freeze(['test:verification-suites']);
+export const STRUCTURE_GUARDS = Object.freeze(['test:verification-suites', 'test:domain-contracts']);
 
 export const VERIFICATION_SUITES = Object.freeze({
   quick: suite([...LEGACY_UNIQUE_LEAVES.quick, ...STRUCTURE_GUARDS]),
