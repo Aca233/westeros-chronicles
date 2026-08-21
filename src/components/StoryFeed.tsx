@@ -5,6 +5,7 @@ import { WESTEROS_ENTITIES, EntityInfo } from '../data/entities';
 import { ArrowDown } from 'lucide-react';
 import { GameIcon, isGameIconId } from './GameIcon';
 import { stripEmoji } from '../services/textSanitizer';
+import { extractNarrativeContent, extractStreamingNarrativeContent, extractThinkingContent } from '../services/modelProtocol';
 import { OpeningCeremony } from './OpeningCeremony';
 import type { CharacterId } from '../features/characters/types';
 import type { WorldEvent } from '../features/world/worldRuntimeTypes';
@@ -104,7 +105,7 @@ export const StoryFeed: React.FC<StoryFeedProps> = ({
   const [showJump, setShowJump] = useState(false);
   const [dynamicEntities, setDynamicEntities] = useState<EntityInfo[]>([]);
   const narrativeCorpus = useMemo(
-    () => gameState.turns.map((turn) => `${turn.playerInput ?? ''}\n${turn.narrate ?? ''}`).join('\n'),
+    () => gameState.turns.map((turn) => `${turn.playerInput ?? ''}\n${extractNarrativeContent(turn.narrate ?? '')}`).join('\n'),
     [gameState.turns],
   );
   const storyEntities = useMemo(() => [...WESTEROS_ENTITIES, ...dynamicEntities], [dynamicEntities]);
@@ -422,7 +423,7 @@ function SceneBlock({
 
       {/* 正文:泥金首字起笔 */}
       <div className="deed-prose deed-prose--illuminated font-serif">
-        {turn.narrate.split(/\n+/).map((para, pIdx) => {
+        {extractNarrativeContent(turn.narrate).split(/\n+/).map((para, pIdx) => {
           const trimmed = stripEmoji(para);
           if (!trimmed) return null;
           return (
@@ -521,24 +522,15 @@ function DiceLedger({ check }: { check: NonNullable<StoryTurn['diceCheck']> }) {
 // 实时流式渲染器
 function LiveStreamingRenderer({ rawText }: { rawText: string }) {
   const safeRawText = stripEmoji(rawText);
-  if (!safeRawText) {
+  const liveThink = extractThinkingContent(safeRawText);
+  const cleanNarrate = extractStreamingNarrativeContent(safeRawText);
+  if (!cleanNarrate && !liveThink) {
     return (
       <div className="typing-cursor font-serif text-[14px] italic text-parchment-faint">
         羽笔蘸墨,正要落纸……
       </div>
     );
   }
-
-  let liveThink = '';
-  const thinkMatch = safeRawText.match(/<think>([\s\S]*?)(?:<\/think>|$)/i);
-  if (thinkMatch) {
-    liveThink = thinkMatch[1].trim();
-  }
-
-  const cleanNarrate = safeRawText
-    .replace(/<think>[\s\S]*?(?:<\/think>|$)/gi, '')
-    .replace(/<\/?(?:narrate|speak|branch|state_cmd)[^>]*>/gi, '')
-    .trim();
 
   return (
     <div className="flex flex-col gap-5">
@@ -548,7 +540,7 @@ function LiveStreamingRenderer({ rawText }: { rawText: string }) {
         </p>
       )}
       <div className="deed-prose typing-cursor whitespace-pre-wrap font-serif">
-        {cleanNarrate || (liveThink ? '正在措辞……' : safeRawText)}
+        {cleanNarrate || '正在措辞……'}
       </div>
     </div>
   );

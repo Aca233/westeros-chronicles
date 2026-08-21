@@ -67,6 +67,10 @@ mergedArtifacts.artifacts['artifact.dynasty'] = {
   instanceId: 'dynasty-asset', definitionId: 'artifact.dynasty', lawfulControllerId: 'agot:b',
   placement: { type: 'dynasty', dynastyId: 'dynn_stark' }, equipped: false, source: { file: '', line: 1, effectId: '' },
 };
+mergedArtifacts.artifacts['artifact.iron-throne'] = {
+  instanceId: 'world.artifact.generated.iron-throne', definitionId: 'artifact.generated.iron-throne', lawfulControllerId: 'agot:a',
+  placement: { type: 'title', titleId: 'b_the_red_keep', controllerId: 'agot:a' }, equipped: false, source: { file: '', line: 1, effectId: '' },
+};
 const mergedEquipment = projectNpcEquipment(ordinaryItems, mergedArtifacts, 'agot:a');
 assert.deepEqual(mergedEquipment.map((record) => record.instanceId).sort(), ['ordinary-worn', 'worn']);
 assert.equal(mergedEquipment.find((record) => record.instanceId === 'ordinary-worn').equippedPosition.layer, 'garment');
@@ -84,5 +88,6 @@ assert.equal(mergedAssets.find((record) => record.instanceId === 'ordinary-held'
 assert.equal(mergedAssets.find((record) => record.instanceId === 'ordinary-custody').relation, '代为保管');
 assert.equal(mergedAssets.find((record) => record.instanceId === 'titleAsset').relation, '领地资产');
 assert.equal(mergedAssets.find((record) => record.instanceId === 'dynasty-asset').relation, '家族资产');
+assert.equal(mergedAssets.some((record) => record.definitionId === 'artifact.generated.iron-throne'), false, '铁王座不得进入人物普通资产投影');
 
 console.log('World history projection tests passed.');

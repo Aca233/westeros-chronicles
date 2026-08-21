@@ -1,6 +1,7 @@
 import type { CharacterId, CharacterItemRecord } from '../characters/types';
 import type { EquipmentPosition } from '../items/types';
 import type { WorldArtifactRecord, WorldArtifactState } from '../items/worldArtifacts';
+import { isWorldArtifactAsset } from '../items/worldArtifactClassification';
 import type { CanonicalTimelineEvent } from './canonicalTimeline';
 import { compareWorldDates, type CanonicalEventStatus, type WorldDate, type WorldHistoryState } from './worldHistory';
 import { buildWorldEventIndex, eventsForCharacter, type WorldEventIndex } from './worldEventIndex';
@@ -129,6 +130,7 @@ export function visibleEquipmentForCharacter(
   characterId: CharacterId,
 ): WorldArtifactRecord[] {
   return Object.values(state.artifacts)
+    .filter(isWorldArtifactAsset)
     .filter((record) => record.equipped
       && Boolean(record.equippedPosition)
       && record.placement.type === 'character'
@@ -141,6 +143,7 @@ export function visibleAssetsForCharacter(
   characterId: CharacterId,
 ): WorldArtifactRecord[] {
   return Object.values(state.artifacts)
+    .filter(isWorldArtifactAsset)
     .filter((record) => record.lawfulControllerId === characterId
       || (record.placement.type === 'character' && record.placement.characterId === characterId)
       || (record.placement.type === 'title' && record.placement.controllerId === characterId))
@@ -243,7 +246,7 @@ export function projectNpcAssets(
       source: item.source,
     });
   }
-  for (const record of Object.values(state.artifacts).filter((item) => relatedArtifact(item, scope))) {
+  for (const record of Object.values(state.artifacts).filter(isWorldArtifactAsset).filter((item) => relatedArtifact(item, scope))) {
     merged.set(record.instanceId, {
       instanceId: record.instanceId,
       definitionId: record.definitionId,

@@ -54,6 +54,14 @@ const worldArtifacts = {
       equipped: false,
       source: { file: 'fixture', line: 2, effectId: 'title_scroll' },
     },
+    iron_throne: {
+      instanceId: 'world.artifact.generated.iron-throne',
+      definitionId: 'artifact.generated.iron-throne',
+      lawfulControllerId: 'agot:Baratheon_2',
+      placement: { type: 'title', titleId: 'b_the_red_keep', controllerId: 'agot:Baratheon_2' },
+      equipped: false,
+      source: { file: 'fixture', line: 3, effectId: 'iron_throne' },
+    },
   },
 };
 
@@ -70,6 +78,7 @@ test('玩家物品、容器和世界物品映射为稳定统一资产', () => {
   assert.deepEqual(assets.get('world-item:longclaw').custodian, { type: 'character', characterId: 'agot:Mormont_2' });
   assert.deepEqual(assets.get('world-item:title-scroll').lawfulOwner, { type: 'title', titleId: 'c_winterfell' });
   assert.equal(assets.get('world-item:title-scroll').placement, null);
+  assert.equal(assets.has('world-item:world.artifact.generated.iron-throne'), false, '铁王座由头衔系统表达，不得进入普通资产基线');
 });
 
 test('世界物品只有明确记录实际穿戴和槽位时才映射装备', () => {

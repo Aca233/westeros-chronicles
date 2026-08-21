@@ -41,6 +41,7 @@ import { WorldAssetSections } from './items/WorldAssetSections';
 import { factsForCharacter, worldEventDisplayTitle } from '../features/world/worldHistoryProjection';
 import type { WorldEvent } from '../features/world/worldRuntimeTypes';
 import { CANONICAL_TIMELINE } from '../data/generated/canonicalTimeline';
+import { extractNarrativeContent } from '../services/modelProtocol';
 
 const TABS = [
   { id: 'relations', label: '关系与家族', icon: UsersRound },
@@ -808,7 +809,7 @@ function PlayerHistoryTab({ turns, dossier }: { turns: StoryTurn[]; dossier: Pla
                   <strong className="font-mono text-[10px] tracking-wider text-gold">TURN {turn.turnNumber}</strong>
                   <span className="text-[9px] text-parchment-faint">{turn.gameDate || '日期未记录'}</span>
                 </div>
-                <p className="mt-1 line-clamp-2 font-serif text-[11px] leading-relaxed text-parchment-dim">{turn.narrate || turn.playerInput}</p>
+                <p className="mt-1 line-clamp-2 font-serif text-[11px] leading-relaxed text-parchment-dim">{extractNarrativeContent(turn.narrate) || turn.playerInput}</p>
               </li>
             ))}
           </ol>

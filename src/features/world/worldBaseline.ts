@@ -2,6 +2,7 @@ import type { StaticCharacterRepository } from '../characters/staticCharacterRep
 import type { CharacterId } from '../characters/types';
 import type { EquipmentPosition, ItemPlacement, ItemSystemState } from '../items/types';
 import type { WorldArtifactRecord, WorldArtifactState } from '../items/worldArtifacts';
+import { isWorldArtifactAsset } from '../items/worldArtifactClassification';
 import type { MapRepository } from '../map/repository';
 import type { MapLocation, WorldLocationRef } from '../map/types';
 import { worldAssetId } from './worldAssetId';
@@ -272,7 +273,7 @@ export function buildWorldAssetBaseline(input: BuildWorldAssetBaselineInput): Wo
       status: 'normal',
     });
   }
-  for (const record of Object.values(input.worldArtifacts.artifacts)) {
+  for (const record of Object.values(input.worldArtifacts.artifacts).filter(isWorldArtifactAsset)) {
     assets.push({
       id: worldAssetId.worldItem(record.instanceId),
       kind: 'item',

@@ -7,6 +7,7 @@ import { getItemDefinition } from '../features/items/catalog';
 import type { EquipmentPosition, ItemPlacement } from '../features/items/types';
 import { sameWorldLocation } from '../features/map/locationResolver';
 import { parseBranchOptions } from './branchOptions';
+import { extractNarrativeContent, normalizeModelProtocolMarkup } from './modelProtocol';
 
 // 解析模型输出的 XML 结构化标签 (小说流全融合 + 深度思考全捕获)
 export function parseModelOutput(
@@ -14,7 +15,7 @@ export function parseModelOutput(
   turnNumber: number,
   playerInput: string
 ): Omit<StoryTurn, 'id' | 'timestamp'> {
-  const safeRawText = stripEmoji(rawText);
+  const safeRawText = normalizeModelProtocolMarkup(stripEmoji(rawText));
   let think = '';
   const thinkMatch =
     safeRawText.match(/<think>([\s\S]*?)<\/think>/i) ||
@@ -25,21 +26,7 @@ export function parseModelOutput(
     think = thinkMatch[1].trim();
   }
 
-  let narrate = '';
-  const narrateMatch = safeRawText.match(/<narrate>([\s\S]*?)<\/narrate>/i);
-  if (narrateMatch) {
-    narrate = narrateMatch[1].trim();
-  } else {
-    // 兜底：如果模型没有返回 narrate 标签，去除其他标签后作为正文
-    narrate = safeRawText
-      .replace(/<think>[\s\S]*?<\/think>/gi, '')
-      .replace(/<thought>[\s\S]*?<\/thought>/gi, '')
-      .replace(/<reasoning>[\s\S]*?<\/reasoning>/gi, '')
-      .replace(/<branch>[\s\S]*?<\/branch>/gi, '')
-      .replace(/<state_cmd>[\s\S]*?<\/state_cmd>/gi, '')
-      .replace(/<world_intent>[\s\S]*?<\/world_intent>/gi, '')
-      .trim();
-  }
+  let narrate = extractNarrativeContent(safeRawText);
 
   // 如果某些模型依然输出了 <speak> 标签，将其无缝融入小说叙事流中，杜绝孤立卡片
   const speakRegex = /<speak(?:\s+speaker=["']([^"']*)["'])?>([\s\S]*?)<\/speak>/gi;

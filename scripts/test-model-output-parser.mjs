@@ -61,3 +61,28 @@ test('已保存的旧选项在显示前也会清除泄漏标签并拆分', () =>
     '<choice id="2">前往墓窖</choice><choice id="3">召集侍卫</choice>',
   ]), ['进入大厅', '前往墓窖', '召集侍卫']);
 });
+
+const protocolBundle = await build({
+  entryPoints: ['src/services/modelProtocol.ts'],
+  bundle: true,
+  write: false,
+  format: 'esm',
+  platform: 'node',
+});
+const protocolUrl = `data:text/javascript;base64,${Buffer.from(protocolBundle.outputFiles[0].text).toString('base64')}`;
+const { extractNarrativeContent, extractStreamingNarrativeContent, extractThinkingContent } = await import(protocolUrl);
+
+test('正文解析兼容反斜杠转义、HTML 编码和未闭合 narrate 标签', () => {
+  assert.equal(parseModelOutput(String.raw`\<narrate>正文甲。\</narrate>`, 3, '继续').narrate, '正文甲。');
+  assert.equal(parseModelOutput('&lt;narrate&gt;正文乙。&lt;/narrate&gt;', 3, '继续').narrate, '正文乙。');
+  assert.equal(parseModelOutput('<narrate>正文丙。', 3, '继续').narrate, '正文丙。');
+});
+
+test('流式与已保存正文不会显示协议标签或后续分支', () => {
+  assert.equal(extractThinkingContent('<think>暗线</think><narra'), '暗线');
+  assert.equal(extractStreamingNarrativeContent('<think>暗线</think><narra'), '');
+  assert.equal(extractStreamingNarrativeContent('&lt;narra'), '');
+  assert.equal(extractStreamingNarrativeContent(String.raw`\<narrate>正在落笔`), '正在落笔');
+  assert.equal(extractStreamingNarrativeContent('<narrate>正文。</narrate><branch>1. 选择</branch>'), '正文。');
+  assert.equal(extractNarrativeContent('&lt;narrate&gt;旧正文。&lt;/narrate&gt;'), '旧正文。');
+});
