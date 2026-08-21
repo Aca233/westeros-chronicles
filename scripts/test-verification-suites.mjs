@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
+import { readFile, readdir } from 'node:fs/promises';
 import test from 'node:test';
 import {
   LEGACY_UNIQUE_LEAVES,
@@ -44,6 +44,20 @@ test('旧 full 基线只有 115 个唯一叶子任务且不重复装备队列别
   assert.equal(new Set(LEGACY_UNIQUE_LEAVES.full).size, 115);
   assert.equal(LEGACY_UNIQUE_LEAVES.full.filter((script) => script === 'test:item-action-queue').length, 1);
   assert.equal(LEGACY_UNIQUE_LEAVES.full.includes('test:equipment-queue'), false);
+});
+
+
+test('历史研究工具不在根目录且不进入验证套件', async () => {
+  const rootPython = (await readdir(new URL('../', import.meta.url)))
+    .filter((name) => name.endsWith('.py'))
+    .sort();
+  assert.deepEqual(rootPython, []);
+  for (const steps of Object.values(VERIFICATION_SUITES)) {
+    assert.equal(
+      steps.some(({ script }) => packageJson.scripts[script].includes('tools/research/')),
+      false,
+    );
+  }
 });
 
 test('runner 串行执行并在首个失败处保留退出码', async () => {
