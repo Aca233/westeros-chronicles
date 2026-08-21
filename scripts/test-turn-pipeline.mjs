@@ -8,7 +8,7 @@ const bundle = await build({
       "export { parseTurnResolutionOutput as directParseTurnResolutionOutput, buildTurnResolutionMessages as directBuildTurnResolutionMessages, requestTurnResolution as directRequestTurnResolution } from './src/services/turn/resolutionProtocol.ts';",
       "export * from './src/services/turnNarration.ts';",
       "export { streamNarrativeCompletion } from './src/services/api.ts';",
-      "export * from './src/data/presets.ts';",
+      "export * from './scripts/fixtures/living-world-test.ts';",
       "export * from './src/features/items/worldArtifacts.ts';",
     ].join('\n'),
     resolveDir: process.cwd(),
@@ -22,7 +22,7 @@ const bundle = await build({
 });
 const url = `data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString('base64')}`;
 const {
-  PRESET_SCENARIOS,
+  createLivingWorldTestLord,
   buildSettledNarrativeMessages,
   buildTurnResolutionMessages,
   directBuildTurnResolutionMessages,
@@ -40,7 +40,7 @@ assert.equal(parseTurnResolutionOutput, directParseTurnResolutionOutput);
 assert.equal(buildTurnResolutionMessages, directBuildTurnResolutionMessages);
 assert.equal(requestTurnResolution, directRequestTurnResolution);
 
-const lord = structuredClone(PRESET_SCENARIOS[0].initialLord);
+const lord = structuredClone(createLivingWorldTestLord());
 const gameState = {
   saveFormatVersion: 9,
   currentYear: 298, currentMonth: 5, currentDay: 10, currentSeason: '暮春', turnCount: 1,

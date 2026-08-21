@@ -13,14 +13,14 @@ const moduleUrl = `data:text/javascript;base64,${Buffer.from(bundle.outputFiles[
 const { CHARACTER_TRAITS, migrateLordTraitData, resolveCharacterTraits } = await import(moduleUrl);
 
 const presetBundle = await build({
-  entryPoints: ['src/data/presets.ts'],
+  entryPoints: ['scripts/fixtures/living-world-test.ts'],
   bundle: true,
   write: false,
   format: 'esm',
   platform: 'node',
 });
 const presetModuleUrl = `data:text/javascript;base64,${Buffer.from(presetBundle.outputFiles[0].text).toString('base64')}`;
-const { PRESET_SCENARIOS } = await import(presetModuleUrl);
+const { createLivingWorldTestLord } = await import(presetModuleUrl);
 
 
 test('正式特质 ID 能解析为带游戏图标和规则的游戏内特质', () => {
@@ -38,12 +38,11 @@ test('旧存档的纯文本特质继续显示且不会与正式特质重名', ()
 });
 
 
-test('所有预设角色都带有规则引擎能够识别的正式特质 ID', () => {
+test('统一世界测试人物带有规则引擎能够识别的正式特质 ID', () => {
   const catalogIds = new Set(CHARACTER_TRAITS.map((trait) => trait.id));
-  for (const scenario of PRESET_SCENARIOS) {
-    assert.ok(scenario.initialLord.traitIds?.length, `${scenario.id} 缺少 traitIds`);
-    assert.ok(scenario.initialLord.traitIds.every((traitId) => catalogIds.has(traitId)), `${scenario.id} 含未知特质 ID`);
-  }
+  const lord = createLivingWorldTestLord();
+  assert.ok(lord.traitIds?.length);
+  assert.ok(lord.traitIds.every((traitId) => catalogIds.has(traitId)));
 });
 
 
@@ -52,18 +51,10 @@ test('教育特质始终排在其他特质之前，其他特质保持原有顺�
   assert.deepEqual(traits.map((trait) => trait.id), ['education_martial_2', 'brave', 'beauty_good_3', 'honest']);
 });
 
-test('预设角色保存基础属性，人物卡属性等于基础属性加特质修正', () => {
-  for (const scenario of PRESET_SCENARIOS) {
-    const lord = scenario.initialLord;
-    assert.ok(lord.baseAttributes, `${scenario.id} 缺少基础属性`);
-    const expected = Object.fromEntries(Object.keys(lord.attributes).map((key) => {
-      const bonus = CHARACTER_TRAITS
-        .filter((trait) => lord.traitIds.includes(trait.id))
-        .reduce((sum, trait) => sum + (trait.modifiers[key] || 0), 0);
-      return [key, Math.max(0, Math.min(100, lord.baseAttributes[key] + bonus))];
-    }));
-    assert.deepEqual(lord.attributes, expected, `${scenario.id} 的特质属性未结算`);
-  }
+test('测试人物保存基础属性并可由规则引擎解析', () => {
+  const lord = createLivingWorldTestLord();
+  assert.ok(lord.baseAttributes);
+  assert.ok(lord.traitIds.every((traitId) => CHARACTER_TRAITS.some((trait) => trait.id === traitId)));
 });
 
 

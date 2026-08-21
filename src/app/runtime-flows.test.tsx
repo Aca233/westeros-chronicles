@@ -3,10 +3,14 @@ import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import type { GameState } from '../types/game';
+import type { SaveSlotMeta } from '../services/db';
 
 const dbMocks = vi.hoisted(() => ({
   loadLatestGameState: vi.fn(),
+  listSaveSlots: vi.fn(),
   importSaveData: vi.fn(),
+  deleteSaveSlot: vi.fn(),
+  saveTurnSnapshot: vi.fn(async () => 1),
   ensureTurnSnapshotBaseline: vi.fn(async () => 'ready' as const),
   commitTurnAtomically: vi.fn(async () => 1),
 }));
@@ -22,7 +26,10 @@ vi.mock('../services/db', async (importOriginal) => {
   return {
     ...actual,
     loadLatestGameState: dbMocks.loadLatestGameState,
+    listSaveSlots: dbMocks.listSaveSlots,
     importSaveData: dbMocks.importSaveData,
+    deleteSaveSlot: dbMocks.deleteSaveSlot,
+    saveTurnSnapshot: dbMocks.saveTurnSnapshot,
     ensureTurnSnapshotBaseline: dbMocks.ensureTurnSnapshotBaseline,
     commitTurnAtomically: dbMocks.commitTurnAtomically,
   };
@@ -71,6 +78,23 @@ function stateWith(overrides: Partial<GameState> = {}): GameState {
   return { ...state, ...overrides };
 }
 
+function slotMetaWith(overrides: Partial<SaveSlotMeta> = {}): SaveSlotMeta {
+  return {
+    slotId: 'slot_test_1',
+    name: '艾德·史塔克 · 史塔克家族',
+    lordName: '艾德·史塔克',
+    houseName: '史塔克家族',
+    houseSigil: 'house-stark',
+    scenarioId: 'ned_stark',
+    dateLabel: '298 AC · 5月10日',
+    turnCount: 1,
+    isGameOver: false,
+    createdAt: 1700000000000,
+    updatedAt: 1700000000000,
+    ...overrides,
+  };
+}
+
 function resetStores(): void {
   useGameStore.setState({
     ...originalGameStoreState,
@@ -82,6 +106,11 @@ function resetStores(): void {
     streamingText: '',
     changesLog: [],
     isSettingsOpen: false,
+    activeScreen: 'menu',
+    menuView: 'title',
+    activeSlotId: null,
+    saveSlots: [],
+    slotActionError: null,
   });
   useMapUiStore.setState({
     ...originalMapUiState,
@@ -92,10 +121,30 @@ function resetStores(): void {
   });
 }
 
+/** 模拟"存在一个可继续的存档位"的启动环境,并返回该存档位元数据。 */
+function mockBootableSlot(state: GameState = stateWith()): SaveSlotMeta {
+  const meta = slotMetaWith();
+  dbMocks.listSaveSlots.mockResolvedValue([meta]);
+  dbMocks.loadLatestGameState.mockResolvedValue(state);
+  return meta;
+}
+
+/** 从标题屏点"继续传奇"进入游戏,并等待 HUD 年份出现。 */
+async function enterGameViaMenu(expectedYearLabel: string): Promise<void> {
+  const continueButton = await screen.findByRole('button', { name: /继续传奇/ });
+  await act(async () => {
+    continueButton.click();
+  });
+  await screen.findByText(expectedYearLabel);
+}
+
 beforeEach(() => {
   resetStores();
   dbMocks.loadLatestGameState.mockReset();
+  dbMocks.listSaveSlots.mockReset();
   dbMocks.importSaveData.mockReset();
+  dbMocks.deleteSaveSlot.mockReset();
+  dbMocks.saveTurnSnapshot.mockClear();
   dbMocks.ensureTurnSnapshotBaseline.mockClear();
   dbMocks.commitTurnAtomically.mockClear();
   turnMocks.buildWorldTurnContext.mockReset();
@@ -104,43 +153,57 @@ beforeEach(() => {
 });
 
 describe('critical rendered runtime flows', () => {
-  test('startup waits for hydration and renders the restored save', async () => {
-    let resolveSave!: (state: GameState) => void;
-    dbMocks.loadLatestGameState.mockReturnValue(new Promise<GameState>((resolve) => { resolveSave = resolve; }));
+  test('startup lands on the title screen and continue restores the save', async () => {
+    let resolveSlots!: (slots: SaveSlotMeta[]) => void;
+    dbMocks.listSaveSlots.mockReturnValue(new Promise<SaveSlotMeta[]>((resolve) => { resolveSlots = resolve; }));
     const restored = stateWith({ currentYear: 304, currentMonth: 2, currentDay: 3, turnCount: 7 });
+    dbMocks.loadLatestGameState.mockResolvedValue(restored);
 
     render(<App />);
-    expect(screen.getByRole('heading', { name: '正在恢复世界' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: '正在整理卷轴架' })).toBeInTheDocument();
 
-    resolveSave(restored);
+    resolveSlots([slotMetaWith({ turnCount: 7 })]);
+    const continueButton = await screen.findByRole('button', { name: /继续传奇/ });
+    expect(continueButton).toBeEnabled();
+
+    await act(async () => {
+      continueButton.click();
+    });
     expect(await screen.findByText('304 AC')).toBeInTheDocument();
     expect(screen.getByText('回合')).toHaveTextContent('7');
   });
 
-  test('importing a save replaces the rendered store without reloading', async () => {
-    dbMocks.loadLatestGameState.mockResolvedValue(null);
-    const imported = stateWith({ currentYear: 305, currentMonth: 6, currentDay: 9, turnCount: 12 });
-    dbMocks.importSaveData.mockResolvedValue(imported);
+  test('importing a save creates a new slot and loads it without reloading', async () => {
+    dbMocks.listSaveSlots.mockResolvedValue([]);
+    const importedState = stateWith({ currentYear: 305, currentMonth: 6, currentDay: 9, turnCount: 12 });
+    const importedMeta = slotMetaWith({ slotId: 'slot_imported', name: '丹妮莉丝 · 坦格利安家族', lordName: '丹妮莉丝', turnCount: 12 });
+    dbMocks.importSaveData.mockResolvedValue(importedMeta);
+    dbMocks.loadLatestGameState.mockResolvedValue(importedState);
     const user = userEvent.setup();
 
     render(<App />);
-    await screen.findByText('298 AC');
-    await user.click(screen.getByRole('button', { name: '设置' }));
-    await screen.findByRole('dialog', { name: '大模型 API 与游戏设置' });
-    const input = document.querySelector('input[type="file"]') as HTMLInputElement;
+    await user.click(await screen.findByRole('button', { name: '读取存档' }));
+    const input = await waitFor(() => {
+      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement | null;
+      expect(fileInput).not.toBeNull();
+      return fileInput as HTMLInputElement;
+    });
     await user.upload(input, new File(['{}'], 'save.json', { type: 'application/json' }));
 
+    const loadButton = await screen.findByRole('button', { name: /载入/ });
+    await user.click(loadButton);
+
     expect(await screen.findByText('305 AC')).toBeInTheDocument();
-    expect(screen.queryByRole('dialog', { name: '大模型 API 与游戏设置' })).not.toBeInTheDocument();
     expect(dbMocks.importSaveData).toHaveBeenCalledWith('{}');
+    expect(dbMocks.loadLatestGameState).toHaveBeenCalledWith('slot_imported');
   });
 
   test('a character mention in story opens that character dossier', async () => {
-    dbMocks.loadLatestGameState.mockResolvedValue(null);
+    mockBootableSlot();
     const user = userEvent.setup();
 
     render(<App />);
-    await screen.findByText('298 AC');
+    await enterGameViaMenu('298 AC');
     await user.click(screen.getByRole('button', { name: '查看凯特琳·徒利的人物档案' }));
 
     expect(screen.getByRole('dialog', { name: '人物卷宗' })).toBeInTheDocument();
@@ -148,11 +211,11 @@ describe('critical rendered runtime flows', () => {
   });
 
   test('asset detail returns to its source dossier', async () => {
-    dbMocks.loadLatestGameState.mockResolvedValue(null);
+    mockBootableSlot();
     const user = userEvent.setup();
 
     render(<App />);
-    await screen.findByText('298 AC');
+    await enterGameViaMenu('298 AC');
     await user.click(screen.getByRole('button', { name: '打开人物卷宗' }));
     await user.click(screen.getByRole('button', { name: '寒冰' }));
 
@@ -162,7 +225,7 @@ describe('critical rendered runtime flows', () => {
   });
 
   test('ordinary story action still completes when map context fails', async () => {
-    dbMocks.loadLatestGameState.mockResolvedValue(null);
+    mockBootableSlot();
     turnMocks.buildWorldTurnContext.mockRejectedValue(new Error('地图资料未能载入'));
     turnMocks.requestTurnResolution.mockResolvedValue({
       outcomeSummary: '守卫完成了换岗。',
@@ -176,7 +239,7 @@ describe('critical rendered runtime flows', () => {
     const user = userEvent.setup();
 
     render(<App />);
-    await screen.findByText('298 AC');
+    await enterGameViaMenu('298 AC');
     await user.type(screen.getByRole('textbox'), '继续讨论守城安排');
     await user.click(screen.getByRole('button', { name: '提交御令' }));
 

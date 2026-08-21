@@ -29,7 +29,7 @@ for (const iconId of traitIconIds) {
   }
 }
 
-for (const relativePath of ['src/data/entities.ts', 'src/data/houses.ts', 'src/data/presets.ts']) {
+for (const relativePath of ['src/data/entities.ts', 'src/data/houses.ts', 'content/world/playable-characters.json']) {
   const source = await readFile(join(projectRoot, relativePath), 'utf8');
   for (const match of source.matchAll(/(?:icon|sigil|avatarIcon|houseSigil):\s*'([^']+)'/g)) {
     if (!registeredIds.has(match[1])) failures.push(`Unknown game icon ID in ${relativePath}: ${match[1]}`);

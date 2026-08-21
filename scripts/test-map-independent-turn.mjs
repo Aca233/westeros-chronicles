@@ -6,7 +6,7 @@ const bundle = await build({
   stdin: {
     contents: [
       "export * from './src/services/turnResolution.ts';",
-      "export * from './src/data/presets.ts';",
+      "export * from './scripts/fixtures/living-world-test.ts';",
       "export * from './src/features/items/worldArtifacts.ts';",
     ].join('\n'),
     resolveDir: process.cwd(),
@@ -20,11 +20,11 @@ const bundle = await build({
   logLevel: 'silent',
 });
 const url = `data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString('base64')}`;
-const { PRESET_SCENARIOS, createInitialAgotArtifactWorldState, prepareWorldTurn, settleTurnDraft } = await import(url);
+const { createLivingWorldTestLord, createInitialAgotArtifactWorldState, prepareWorldTurn, settleTurnDraft } = await import(url);
 
 const PLAYER_ID = 'agot:Stark_3';
 function gameState() {
-  const lord = structuredClone(PRESET_SCENARIOS[0].initialLord);
+  const lord = structuredClone(createLivingWorldTestLord());
   lord.canonicalCharacterId = PLAYER_ID;
   lord.location = { locationId: 'b_winterfell' };
   lord.locationLabel = '临冬城';

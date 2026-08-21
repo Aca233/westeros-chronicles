@@ -6,7 +6,7 @@ const bundle = await build({
   stdin: {
     contents: [
       "export * from './src/services/stateReducer.ts';",
-      "export * from './src/data/presets.ts';",
+      "export * from './scripts/fixtures/living-world-test.ts';",
       "export * from './src/data/itemDefinitions.ts';",
       "export * from './src/features/items/state.ts';",
       "export * from './src/services/api.ts';",
@@ -16,10 +16,10 @@ const bundle = await build({
   bundle: true, write: false, format: 'esm', platform: 'node',
 });
 const url = `data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString('base64')}`;
-const { applyStateCommands, generateOfflineDemoResponse, PRESET_SCENARIOS, ITEM_CATALOG, createItemInstance } = await import(url);
+const { applyStateCommands, generateOfflineDemoResponse, createLivingWorldTestLord, ITEM_CATALOG, createItemInstance } = await import(url);
 
 function ned() {
-  return structuredClone(PRESET_SCENARIOS.find((preset) => preset.id === 'ned_stark').initialLord);
+  return structuredClone(createLivingWorldTestLord());
 }
 function historylessInstance(id, definitionId, overrides = {}) {
   return createItemInstance(ITEM_CATALOG, definitionId, id, overrides);

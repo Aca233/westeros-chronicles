@@ -157,7 +157,8 @@
     "check:bundle-budget": "node scripts/check-bundle-budget.mjs",
     "build:world-content": "node scripts/world-content/compiler.mjs",
     "test:world-content-compiler": "node scripts/test-world-content-compiler.mjs",
-    "test:world-content-runtime": "node --experimental-strip-types scripts/test-world-content-runtime.mjs"
+    "test:world-content-runtime": "node --experimental-strip-types scripts/test-world-content-runtime.mjs",
+    "test:living-world-start": "node scripts/test-living-world-start.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",

@@ -6,7 +6,7 @@ import { build } from 'esbuild';
 const dexieStub = `
 export default class Dexie {
   constructor() {}
-  version() { return { stores: () => undefined }; }
+  version() { return { stores: () => ({ upgrade: () => undefined }) }; }
   table() { return {}; }
 }
 export class Table {}
@@ -64,17 +64,17 @@ test('损坏或旧版本快照被拒绝，恢复函数不承担清空数据库�
   assert.throws(() => gameStateFromSnapshot({ ...validSnapshot, turnNumber: 2 }), /快照回合号与游戏状态不一致/);
 });
 
-test('应用启动和存档导入都通过 Store 恢复状态而不是刷新页面', async () => {
-  const [storeSource, appSource, settingsSource, dbSource] = await Promise.all([
+test('应用启动与存档导入都通过 Store 恢复状态而不是刷新页面', async () => {
+  const [storeSource, appSource, dbSource, loadScreenSource] = await Promise.all([
     readFile('src/store/useGameStore.ts', 'utf8'),
     readFile('src/App.tsx', 'utf8'),
-    readFile('src/components/SettingsModal.tsx', 'utf8'),
     readFile('src/services/db.ts', 'utf8'),
+    readFile('src/components/menu/LoadGameScreen.tsx', 'utf8'),
   ]);
   assert.match(dbSource, /export async function loadLatestGameState/);
-  assert.match(storeSource, /hydrateGameState:/);
-  assert.match(storeSource, /replaceGameState:/);
-  assert.match(appSource, /hydrateGameState\(\)/);
-  assert.doesNotMatch(settingsSource.slice(settingsSource.indexOf('const handleImportSave'), settingsSource.indexOf('const handleResetTestSave')), /window\.location\.reload/);
-  assert.match(settingsSource, /replaceGameState\(loaded\)/);
+  assert.match(storeSource, /hydrateSaveSlots:/);
+  assert.match(storeSource, /continueGame:/);
+  assert.match(storeSource, /importSlot:/);
+  assert.match(appSource, /hydrateSaveSlots\(\)/);
+  assert.doesNotMatch(loadScreenSource, /window\.location\.reload/);
 });

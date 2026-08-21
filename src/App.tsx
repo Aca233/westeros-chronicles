@@ -6,6 +6,7 @@ import { DiceModal } from './components/DiceModal';
 import { AmbientCanvas } from './components/AmbientCanvas';
 import { CursorGlow } from './components/CursorGlow';
 import { useGameStore } from './store/useGameStore';
+import { MainMenu } from './components/menu/MainMenu';
 import { X } from 'lucide-react';
 import { stripEmoji } from './services/textSanitizer';
 import { useCharacterNavigation } from './features/characters/useCharacterNavigation';
@@ -21,7 +22,7 @@ const CharacterCreator = lazy(() => import('./components/CharacterCreator').then
 const TvTimelineModal = lazy(() => import('./components/TvTimelineModal').then((module) => ({ default: module.TvTimelineModal })));
 
 export const App: React.FC = () => {
-  const { changesLog, isSettingsOpen, isCreatorOpen, isTvTimelineOpen, closeTvTimeline, bootStatus, bootError, hydrateGameState, resetStoredGame } = useGameStore();
+  const { changesLog, isSettingsOpen, isCreatorOpen, isTvTimelineOpen, closeTvTimeline, bootStatus, bootError, hydrateSaveSlots, resetStoredGame, activeScreen } = useGameStore();
   const [booted, setBooted] = useState(false);
   const characterNavigation = useCharacterNavigation();
   const activeDrawer = useMapUiStore((state) => state.activeDrawer);
@@ -37,8 +38,8 @@ export const App: React.FC = () => {
   const assetSourceCharacterId = useMapUiStore((state) => state.assetSourceCharacterId);
 
   useEffect(() => {
-    void hydrateGameState();
-  }, [hydrateGameState]);
+    void hydrateSaveSlots();
+  }, [hydrateSaveSlots]);
 
   // 点击正文中的人名:打开对应卷宗;卷宗收于抽屉,两端都自动拉出
   const openStoryCharacter = useCallback((characterId: CharacterId) => {
@@ -49,8 +50,9 @@ export const App: React.FC = () => {
     openAsset(assetId, characterNavigation.selectedCharacterId);
   }, [characterNavigation.selectedCharacterId, openAsset]);
 
-  // 全局快捷键:/ 聚焦命令行;C 开合卷宗;Esc 收起卷宗
+  // 全局快捷键:/ 聚焦命令行;C 开合卷宗;Esc 收起卷宗(仅游戏内生效)
   useEffect(() => {
+    if (activeScreen !== 'game') return;
     const handler = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement | null;
       const typing = target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable);
@@ -75,10 +77,11 @@ export const App: React.FC = () => {
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [activeDrawer, closeDrawer, dismissMapContext, toggleCharacter, toggleMap]);
+  }, [activeScreen, activeDrawer, closeDrawer, dismissMapContext, toggleCharacter, toggleMap]);
 
-  // 浏览器空闲时预热地图分包,首次开图无需等待下载
+  // 浏览器空闲时预热地图分包,首次开图无需等待下载(进入游戏后才开始)
   useEffect(() => {
+    if (activeScreen !== 'game') return;
     const warm = () => {
       void import('./features/map/MapDrawer').then((module) => module.prewarmMapRuntime());
     };
@@ -88,7 +91,7 @@ export const App: React.FC = () => {
     }
     const timeoutId = window.setTimeout(warm, 2000);
     return () => window.clearTimeout(timeoutId);
-  }, []);
+  }, [activeScreen]);
 
   if (bootStatus !== 'ready') {
     return (
@@ -97,14 +100,14 @@ export const App: React.FC = () => {
         <div className="relative z-10 max-w-md border border-hairline bg-ink-2/90 p-6 text-center shadow-2xl">
           <p className="eyebrow">维斯特洛编年史</p>
           <h1 className="mt-3 font-serif text-xl font-bold text-parchment">
-            {bootStatus === 'loading' ? '正在恢复世界' : '存档无法载入'}
+            {bootStatus === 'loading' ? '正在整理卷轴架' : '本地卷档无法开启'}
           </h1>
           <p className="mt-3 font-serif text-xs leading-relaxed text-parchment-dim">
-            {bootStatus === 'loading' ? '正在核对最近一次已提交的回合与世界账本。' : bootError}
+            {bootStatus === 'loading' ? '正在清点存档位与物品目录。' : bootError}
           </p>
           {bootStatus === 'error' && (
             <button type="button" className="btn-decree mt-5 !px-5 !py-2 !text-xs" onClick={() => void resetStoredGame()}>
-              重置不兼容存档
+              清空本地存档并重试
             </button>
           )}
         </div>
@@ -126,6 +129,25 @@ export const App: React.FC = () => {
     </Suspense>
   );
 
+  // 开机揭幕
+  const bootVeil = !booted && (
+    <div className="boot-veil" aria-hidden="true" onAnimationEnd={() => setBooted(true)} />
+  );
+
+  // 主菜单:标题屏 / 开局界面 / 读取存档
+  if (activeScreen === 'menu') {
+    return (
+      <div className="relative h-screen w-screen overflow-hidden bg-ink text-parchment">
+        <MainMenu />
+        {bootVeil}
+        <Suspense fallback={null}>
+          {isSettingsOpen && <SettingsModal />}
+          {isCreatorOpen && <CharacterCreator />}
+        </Suspense>
+      </div>
+    );
+  }
+
   return (
     <div className="relative flex h-screen w-screen flex-col overflow-hidden bg-ink text-parchment select-text">
       {/* 氛围层:余烬与尘埃、烛光、暗角、纸尘 */}
@@ -134,9 +156,7 @@ export const App: React.FC = () => {
       <div className="grain" aria-hidden="true" />
 
       {/* 开机揭幕 */}
-      {!booted && (
-        <div className="boot-veil" aria-hidden="true" onAnimationEnd={() => setBooted(true)} />
-      )}
+      {bootVeil}
 
       {/* 细顶栏:题名、纪年与铜件 */}
       <Header />

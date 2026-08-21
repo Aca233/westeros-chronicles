@@ -48,12 +48,16 @@ const stubs = {
       contents: `
         export const db = {};
         export async function loadLatestGameState() { return null; }
+        export async function listSaveSlots() { return []; }
+        export async function importSaveData() { return null; }
+        export async function deleteSaveSlot() {}
+        export function createSlotId() { return 'slot_character_store'; }
         export async function ensureTurnSnapshotBaseline() { return 'ready'; }
         export async function saveTurnSnapshot() {}
         export async function clearSaveData() {}
-        export async function commitTurnAtomically(state, events) {
+        export async function commitTurnAtomically(slotId, state, events) {
           if (globalThis.__characterStoreCommitFails) throw new Error('模拟原子提交失败');
-          globalThis.__characterStoreCommits.push({ state: structuredClone(state), events: structuredClone(events) });
+          globalThis.__characterStoreCommits.push({ slotId, state: structuredClone(state), events: structuredClone(events) });
         }
         export async function rollbackLastTurn() { return globalThis.__characterStoreRollbackState || null; }
       `,
@@ -84,7 +88,7 @@ function reset() {
   globalThis.__characterStoreRollbackState = null;
   useGameStore.setState({
     gameState: structuredClone(initial), isStreaming: false, turnStage: 'idle', streamingText: '', changesLog: [],
-    pendingTransactions: [], characterTurnContext: null,
+    pendingTransactions: [], characterTurnContext: null, activeSlotId: 'slot_character_store',
   });
 }
 

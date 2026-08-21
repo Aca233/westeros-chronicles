@@ -1,5 +1,5 @@
 import { cp, mkdir, mkdtemp, readFile, readdir, rename, rm, writeFile } from 'node:fs/promises';
-import { dirname, join, relative, resolve } from 'node:path';
+import { basename, dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { sha256Json, stableJson } from './hash.mjs';
 import { validateWorldSource } from './schemas.mjs';
@@ -135,15 +135,54 @@ async function writeOutputTree(directory, outputs) {
   }
 }
 
+async function listRelativeFiles(directory, prefix = '') {
+  const entries = await readdir(join(directory, prefix), { withFileTypes: true });
+  const files = [];
+  for (const entry of entries.sort((left, right) => left.name.localeCompare(right.name))) {
+    const relativePath = join(prefix, entry.name);
+    if (entry.isDirectory()) files.push(...await listRelativeFiles(directory, relativePath));
+    else files.push(relativePath);
+  }
+  return files;
+}
+
+async function replaceLockedDirectoryTransactionally(outputDir, stagedDir, backup) {
+  await cp(outputDir, backup, { recursive: true });
+  const files = await listRelativeFiles(stagedDir);
+  const manifest = files.find((name) => name === 'manifest.json');
+  const payloadFiles = files.filter((name) => name !== 'manifest.json');
+  try {
+    for (const relativePath of [...payloadFiles, ...(manifest ? [manifest] : [])]) {
+      const source = join(stagedDir, relativePath);
+      const target = join(outputDir, relativePath);
+      const pending = `${target}.pending-${process.pid}`;
+      await mkdir(dirname(target), { recursive: true });
+      await cp(source, pending);
+      await rename(pending, target);
+    }
+    await rm(stagedDir, { recursive: true, force: true });
+    await rm(backup, { recursive: true, force: true });
+  } catch (error) {
+    await cp(backup, outputDir, { recursive: true, force: true });
+    await rm(backup, { recursive: true, force: true });
+    throw error;
+  }
+}
+
 async function replaceDirectoryAtomically(outputDir, stagedDir) {
-  const parent = dirname(outputDir);
   const backup = `${outputDir}.previous-${process.pid}`;
   let hadPrevious = false;
   try {
     await rename(outputDir, backup);
     hadPrevious = true;
   } catch (error) {
-    if (error?.code !== 'ENOENT') throw error;
+    if (error?.code === 'ENOENT') {
+      // First publication has no previous generation.
+    } else if (error?.code === 'EPERM' || error?.code === 'EACCES') {
+      return replaceLockedDirectoryTransactionally(outputDir, stagedDir, backup);
+    } else {
+      throw error;
+    }
   }
   try {
     try {
@@ -172,7 +211,7 @@ export async function compileWorldContent(options = {}) {
   const dependencies = await readDatasetManifests(rootDir);
   const outputs = buildOutputs(source, dependencies);
   await mkdir(dirname(outputDir), { recursive: true });
-  const temporary = await mkdtemp(join(dirname(outputDir), `.${outputDir.split('/').at(-1)}-`));
+  const temporary = await mkdtemp(join(dirname(outputDir), `.${basename(outputDir)}-`));
   try {
     await writeOutputTree(temporary, outputs);
     await replaceDirectoryAtomically(outputDir, temporary);

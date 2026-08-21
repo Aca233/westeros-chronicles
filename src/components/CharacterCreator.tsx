@@ -27,8 +27,7 @@ import { dossierRepository } from '../features/characters/useCharacterDossier';
 import { resolveCharacter } from '../features/characters/characterProjector';
 import { characterDatasetYear, formatCharacterCulture, formatCharacterFaith } from '../features/characters/characterDossier';
 import type { CharacterId, ResolvedCharacter } from '../features/characters/types';
-import { createLordFromExistingCharacter } from '../features/characters/existingCharacterStart';
-import { createInitialAgotArtifactWorldState } from '../features/items/worldArtifacts';
+import { createLivingWorldGame, createCustomLivingWorldGame } from '../features/world/createLivingWorldGame';
 import { CoatOfArms } from './CoatOfArms';
 import { stripEmoji } from '../services/textSanitizer';
 import { CK3_SKILLS, getCk3SkillRank } from '../data/ck3Skills';
@@ -83,7 +82,7 @@ const RECOMMENDED_CHARACTER_IDS: CharacterId[] = [
 
 export const CharacterCreator: React.FC = () => {
   const { isCreatorOpen, closeCreator, startNewGame } = useGameStore();
-  const [tab, setTab] = useState<'existing' | 'custom'>('existing');
+  const [tab, setTab] = useState<'existing' | 'custom'>(() => useGameStore.getState().creatorInitialTab);
   const [recommendedCharacters, setRecommendedCharacters] = useState<ResolvedCharacter[]>([]);
   const [existingError, setExistingError] = useState<string | null>(null);
   const [startingCharacterId, setStartingCharacterId] = useState<CharacterId | null>(null);
@@ -239,16 +238,7 @@ export const CharacterCreator: React.FC = () => {
     try {
       const record = await dossierRepository.get(characterId);
       if (!record || !record.born || !record.alive || record.canonTier === 'genealogy') throw new Error('该人物不能用于当前开局');
-      const profile = await dossierRepository.getLoadoutProfile(characterId);
-      const resolved = resolveCharacter(record, [], {
-        datasetVersion: 'agot-local-dataset', currentYear: characterDatasetYear(298, record.birthDate), loadoutProfile: profile,
-      });
-      const lord = createLordFromExistingCharacter(resolved, createInitialAgotArtifactWorldState(), 298);
-      await startNewGame(lord, {
-        think: `${lord.name}的故事从既定历史尚未分岔之处开始。`,
-        narrate: `征服历二百九十八年，${lord.name}身处${lord.locationLabel}。旧有关系、身份与责任都已存在，但从这一刻起，接下来的选择将由你作出。`,
-        branches: ['查看当前处境与身边人物', '处理眼前最紧迫的事务', '了解自己的关系、装备与资产'],
-      }, { startDate: { year: 298, month: 5, day: 10 }, season: '暮春', canonicalCharacterId: characterId });
+      await startNewGame(await createLivingWorldGame(characterId));
     } catch (error) {
       setExistingError(error instanceof Error ? error.message : '无法以该人物开始游戏');
     } finally {
@@ -306,7 +296,9 @@ export const CharacterCreator: React.FC = () => {
         '巡视城堡粮仓与兵营，整顿领地防务',
       ],
     };
-    startNewGame(customLord, customOpening);
+    void createCustomLivingWorldGame(customLord, customOpening)
+      .then((game) => startNewGame(game))
+      .catch((error: unknown) => setExistingError(error instanceof Error ? error.message : '无法创建统一世界开局'));
   };
 
   return (

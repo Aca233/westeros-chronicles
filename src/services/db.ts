@@ -12,11 +12,57 @@ import {
 
 export interface GameSnapshot {
   id?: number;
+  slotId: string;
   formatVersion: typeof ITEM_SAVE_FORMAT_VERSION;
   turnNumber: number;
   timestamp: number;
   gameState: GameState;
   summaryNote?: string;
+}
+
+/** 存档位摘要:主菜单列表只需轻量元数据,不必加载完整 GameState。 */
+export interface SaveSlotMeta {
+  slotId: string;
+  name: string;
+  lordName: string;
+  houseName: string;
+  houseSigil?: string;
+  scenarioId?: string;
+  dateLabel: string;
+  turnCount: number;
+  isGameOver: boolean;
+  createdAt: number;
+  updatedAt: number;
+}
+
+export function createSlotId(): string {
+  return `slot_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 10)}`;
+}
+
+function createImportedRunId(): string {
+  return `run_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 10)}`;
+}
+
+function slotMetaFromGameState(
+  slotId: string,
+  gameState: GameState,
+  timestamps: { createdAt?: number; updatedAt: number },
+  scenarioId?: string,
+): SaveSlotMeta {
+  const lord = gameState.lord;
+  return {
+    slotId,
+    name: `${lord.name} · ${lord.house}`,
+    lordName: lord.name,
+    houseName: lord.house,
+    houseSigil: lord.houseSigil,
+    scenarioId,
+    dateLabel: `${gameState.currentYear} AC · ${gameState.currentMonth}月${gameState.currentDay}日`,
+    turnCount: gameState.turnCount,
+    isGameOver: gameState.isGameOver,
+    createdAt: timestamps.createdAt ?? timestamps.updatedAt,
+    updatedAt: timestamps.updatedAt,
+  };
 }
 
 export interface WorldRunRecord { runId: string; datasetHash: string; revision: number; createdAt: number; }
@@ -144,6 +190,7 @@ export function assertTurnSuccessor(previous: GameState, next: GameState): void 
 
 export class GotDatabase extends Dexie {
   snapshots!: Table<GameSnapshot, number>;
+  saveSlots!: Table<SaveSlotMeta, string>;
   worldRuns!: Table<WorldRunRecord, string>;
   characterEvents!: Table<CharacterEventEnvelope, [string, string]>;
   characterStateCache!: Table<CharacterStateCacheRecord, [string, CharacterId]>;
@@ -157,11 +204,58 @@ export class GotDatabase extends Dexie {
       characterEvents: '&[runId+id], [runId+turn], [runId+characterId], runId, turn, characterId',
       characterStateCache: '&[runId+characterId], runId, characterId, revision',
     });
+    // v3:多存档位。快照按 slotId 归属,新增轻量槽位元数据表;旧单链自动迁移为首个存档位。
+    this.version(3).stores({
+      snapshots: '++id, slotId, turnNumber, timestamp, [slotId+turnNumber]',
+      saveSlots: '&slotId, updatedAt',
+    }).upgrade(async (tx) => {
+      const snapshotsTable = tx.table('snapshots');
+      const legacy = (await snapshotsTable.toArray() as GameSnapshot[]).filter((snapshot) => snapshot.slotId == null);
+      if (!legacy.length) return;
+      const slotId = createSlotId();
+      await Promise.all(legacy
+        .filter((snapshot) => snapshot.id != null)
+        .map((snapshot) => snapshotsTable.update(snapshot.id as number, { slotId })));
+      const latest = legacy.reduce((left, right) => (right.turnNumber > left.turnNumber ? right : left));
+      await tx.table('saveSlots').put(slotMetaFromGameState(slotId, latest.gameState, { updatedAt: latest.timestamp || Date.now() }));
+    });
   }
 }
 
 export const db = new GotDatabase();
 const clone = <T>(value: T): T => JSON.parse(JSON.stringify(value));
+
+function slotChain(slotId: string) {
+  return db.snapshots.where('[slotId+turnNumber]').between(
+    [slotId, Dexie.minKey], [slotId, Dexie.maxKey], true, true,
+  );
+}
+
+async function latestSnapshotOf(slotId: string): Promise<GameSnapshot | undefined> {
+  return slotChain(slotId).reverse().first();
+}
+
+async function upsertSlotMeta(slotId: string, gameState: GameState, scenarioId?: string): Promise<SaveSlotMeta> {
+  const existing = await db.saveSlots.get(slotId);
+  const meta = slotMetaFromGameState(slotId, gameState, { createdAt: existing?.createdAt, updatedAt: Date.now() }, scenarioId ?? existing?.scenarioId);
+  await db.saveSlots.put(meta);
+  return meta;
+}
+
+/** 删除一个存档位的完整快照链及其 runId 关联的人物事件与缓存,不影响其他存档位。 */
+async function purgeSlotChain(slotId: string): Promise<void> {
+  const snapshots = await slotChain(slotId).toArray();
+  const runIds = new Set(snapshots
+    .map((snapshot) => snapshot.gameState.worldCharacters?.runId)
+    .filter((runId): runId is string => Boolean(runId)));
+  await db.snapshots.where('slotId').equals(slotId).delete();
+  await db.saveSlots.delete(slotId);
+  for (const runId of runIds) {
+    await db.characterEvents.where('runId').equals(runId).delete();
+    await db.characterStateCache.where('runId').equals(runId).delete();
+    await db.worldRuns.delete(runId);
+  }
+}
 
 function assertSupportedSnapshot(snapshot: unknown): asserts snapshot is GameSnapshot {
   if (typeof snapshot !== 'object' || snapshot === null
@@ -189,9 +283,14 @@ export function gameStateFromSnapshot(snapshot: unknown): GameState {
   return clone(repairedState);
 }
 
-/** Load the newest committed state without mutating or deleting persisted data. */
-export async function loadLatestGameState(): Promise<GameState | null> {
-  const latest = await db.snapshots.orderBy('turnNumber').reverse().first();
+/** 列出全部存档位,按最近更新排序。 */
+export async function listSaveSlots(): Promise<SaveSlotMeta[]> {
+  return db.saveSlots.orderBy('updatedAt').reverse().toArray();
+}
+
+/** Load the newest committed state of a slot without mutating or deleting persisted data. */
+export async function loadLatestGameState(slotId: string): Promise<GameState | null> {
+  const latest = await latestSnapshotOf(slotId);
   return latest ? gameStateFromSnapshot(latest) : null;
 }
 
@@ -206,14 +305,15 @@ async function upsertWorldRun(gameState: GameState): Promise<void> {
 /**
  * Keep the persisted predecessor aligned with the state the player can see.
  * Test builds deliberately do not migrate old save formats: an incompatible,
- * missing, or foreign baseline is discarded before any model request starts.
+ * missing, or foreign baseline is discarded (scoped to this slot only) before
+ * any model request starts.
  */
-export async function ensureTurnSnapshotBaseline(gameState: GameState): Promise<'ready' | 'reset'> {
+export async function ensureTurnSnapshotBaseline(slotId: string, gameState: GameState): Promise<'ready' | 'reset'> {
   assertSupportedGameState(gameState);
   assertTurnCommitConsistency(gameState);
 
-  return db.transaction('rw', db.snapshots, db.worldRuns, db.characterEvents, db.characterStateCache, async () => {
-    const latest = await db.snapshots.orderBy('turnNumber').reverse().first();
+  return db.transaction('rw', db.snapshots, db.saveSlots, db.worldRuns, db.characterEvents, db.characterStateCache, async () => {
+    const latest = await latestSnapshotOf(slotId);
     if (latest && isCompatibleTurnBaseline(latest, gameState)) {
       try {
         assertSupportedSnapshot(latest);
@@ -223,29 +323,39 @@ export async function ensureTurnSnapshotBaseline(gameState: GameState): Promise<
       }
     }
 
-    await Promise.all([db.snapshots.clear(), db.worldRuns.clear(), db.characterEvents.clear(), db.characterStateCache.clear()]);
+    await purgeSlotChain(slotId);
     await upsertWorldRun(gameState);
     await db.snapshots.add({
+      slotId,
       formatVersion: ITEM_SAVE_FORMAT_VERSION,
       turnNumber: gameState.turnCount,
       timestamp: Date.now(),
       gameState: clone(gameState),
       summaryNote: '自动重建测试存档基线',
     });
+    await upsertSlotMeta(slotId, gameState);
     return 'reset' as const;
   });
 }
 
-export async function saveTurnSnapshot(gameState: GameState, summaryNote?: string): Promise<number> {
+export async function saveTurnSnapshot(
+  slotId: string,
+  gameState: GameState,
+  summaryNote?: string,
+  scenarioId?: string,
+): Promise<number> {
   assertSupportedGameState(gameState);
   assertTurnCommitConsistency(gameState);
-  return db.transaction('rw', db.snapshots, db.worldRuns, async () => {
+  return db.transaction('rw', db.snapshots, db.saveSlots, db.worldRuns, async () => {
     await upsertWorldRun(gameState);
-    return db.snapshots.add({ formatVersion: ITEM_SAVE_FORMAT_VERSION, turnNumber: gameState.turnCount, timestamp: Date.now(), gameState: clone(gameState), summaryNote });
+    const snapshotId = await db.snapshots.add({ slotId, formatVersion: ITEM_SAVE_FORMAT_VERSION, turnNumber: gameState.turnCount, timestamp: Date.now(), gameState: clone(gameState), summaryNote });
+    await upsertSlotMeta(slotId, gameState, scenarioId);
+    return snapshotId;
   });
 }
 
 export async function commitTurnAtomically(
+  slotId: string,
   gameState: GameState,
   characterEvents: readonly CharacterEventInput[],
   summaryNote?: string,
@@ -254,8 +364,8 @@ export async function commitTurnAtomically(
   assertTurnCommitConsistency(gameState, characterEvents);
   const ref = gameState.worldCharacters;
   if (characterEvents.length && !ref) throw new Error('人物事件缺少世界运行标识，无法提交');
-  return db.transaction('rw', db.snapshots, db.worldRuns, db.characterEvents, db.characterStateCache, async () => {
-    const previousSnapshot = await db.snapshots.orderBy('turnNumber').reverse().first();
+  return db.transaction('rw', db.snapshots, db.saveSlots, db.worldRuns, db.characterEvents, db.characterStateCache, async () => {
+    const previousSnapshot = await latestSnapshotOf(slotId);
     if (!previousSnapshot) throw new Error('缺少前一回合快照，无法原子提交');
     assertSupportedSnapshot(previousSnapshot);
     assertTurnSuccessor(previousSnapshot.gameState, gameState);
@@ -275,22 +385,24 @@ export async function commitTurnAtomically(
       if (characterEvents.length) await db.characterStateCache.where('runId').equals(ref.runId).delete();
       await upsertWorldRun(gameState);
     }
-    return db.snapshots.add({ formatVersion: ITEM_SAVE_FORMAT_VERSION, turnNumber: gameState.turnCount, timestamp: Date.now(), gameState: clone(gameState), summaryNote });
+    const snapshotId = await db.snapshots.add({ slotId, formatVersion: ITEM_SAVE_FORMAT_VERSION, turnNumber: gameState.turnCount, timestamp: Date.now(), gameState: clone(gameState), summaryNote });
+    await upsertSlotMeta(slotId, gameState);
+    return snapshotId;
   });
 }
 
-export async function getRecentSnapshots(limit = 10): Promise<GameSnapshot[]> {
-  const snapshots = await db.snapshots.orderBy('turnNumber').reverse().limit(limit).toArray();
+export async function getRecentSnapshots(slotId: string, limit = 10): Promise<GameSnapshot[]> {
+  const snapshots = await slotChain(slotId).reverse().limit(limit).toArray();
   snapshots.forEach(assertSupportedSnapshot);
   return snapshots;
 }
 
-export async function rollbackLastTurn(): Promise<GameState | null> {
-  return db.transaction('rw', db.snapshots, db.worldRuns, db.characterEvents, db.characterStateCache, async () => {
-    const all = await db.snapshots.orderBy('turnNumber').reverse().toArray();
+export async function rollbackLastTurn(slotId: string): Promise<GameState | null> {
+  return db.transaction('rw', db.snapshots, db.saveSlots, db.worldRuns, db.characterEvents, db.characterStateCache, async () => {
+    const all = await slotChain(slotId).toArray();
     if (all.length < 2) return null;
-    const current = all[0];
-    const previous = all[1];
+    const current = all[all.length - 1];
+    const previous = all[all.length - 2];
     assertSupportedSnapshot(current);
     assertSupportedSnapshot(previous);
     assertTurnSuccessor(previous.gameState, current.gameState);
@@ -307,36 +419,71 @@ export async function rollbackLastTurn(): Promise<GameState | null> {
       } else await db.worldRuns.delete(ref.runId);
     }
     assertSupportedGameState(previous.gameState);
+    await upsertSlotMeta(slotId, previous.gameState);
     return clone(previous.gameState);
   });
 }
 
-export async function exportSaveData(): Promise<string> {
-  const [snapshots, worldRuns, characterEvents] = await Promise.all([
-    db.snapshots.toArray(), db.worldRuns.toArray(), db.characterEvents.toArray(),
-  ]);
-  snapshots.forEach(assertSupportedSnapshot);
-  return JSON.stringify({ version: ITEM_SAVE_FORMAT_VERSION, exportedAt: new Date().toISOString(), snapshots, worldRuns, characterEvents }, null, 2);
+export async function deleteSaveSlot(slotId: string): Promise<void> {
+  await db.transaction('rw', db.snapshots, db.saveSlots, db.worldRuns, db.characterEvents, db.characterStateCache, async () => {
+    await purgeSlotChain(slotId);
+  });
 }
 
-export async function importSaveData(jsonString: string): Promise<GameState | null> {
+export async function exportSaveData(slotId: string): Promise<string> {
+  const [snapshots, worldRuns, characterEvents] = await Promise.all([
+    slotChain(slotId).toArray(),
+    db.worldRuns.toArray(),
+    db.characterEvents.toArray(),
+  ]);
+  snapshots.sort((left, right) => left.turnNumber - right.turnNumber);
+  snapshots.forEach(assertSupportedSnapshot);
+  const runIds = new Set(snapshots
+    .map((snapshot) => snapshot.gameState.worldCharacters?.runId)
+    .filter((runId): runId is string => Boolean(runId)));
+  return JSON.stringify({
+    version: ITEM_SAVE_FORMAT_VERSION,
+    exportedAt: new Date().toISOString(),
+    slotId,
+    snapshots,
+    worldRuns: worldRuns.filter((record) => runIds.has(record.runId)),
+    characterEvents: characterEvents.filter((envelope) => runIds.has(envelope.runId)),
+  }, null, 2);
+}
+
+/**
+ * 导入存档为一个新的存档位,不影响现有周目。导入链会被铸上新的 runId,
+ * 避免与库中已有运行的人物事件键冲突;旧版(单链)导出包同样兼容。
+ */
+export async function importSaveData(jsonString: string): Promise<SaveSlotMeta | null> {
   try {
     const parsed: unknown = JSON.parse(jsonString);
     assertSupportedSaveEnvelope(parsed);
+    if (parsed.snapshots.length === 0) throw new Error('存档包中没有可用的快照');
     parsed.snapshots.forEach(assertSupportedSnapshot);
-    const snapshots = parsed.snapshots as GameSnapshot[];
-    const worldRuns = Array.isArray(parsed.worldRuns) ? parsed.worldRuns as WorldRunRecord[] : [];
-    const characterEvents = Array.isArray(parsed.characterEvents) ? parsed.characterEvents as CharacterEventEnvelope[] : [];
-    await db.transaction('rw', db.snapshots, db.worldRuns, db.characterEvents, db.characterStateCache, async () => {
-      await Promise.all([db.snapshots.clear(), db.worldRuns.clear(), db.characterEvents.clear(), db.characterStateCache.clear()]);
+    const slotId = createSlotId();
+    const importedRunId = createImportedRunId();
+    const snapshots = clone(parsed.snapshots as GameSnapshot[]).map((snapshot) => ({
+      ...snapshot,
+      id: undefined,
+      slotId,
+      gameState: {
+        ...snapshot.gameState,
+        worldCharacters: snapshot.gameState.worldCharacters
+          ? { ...snapshot.gameState.worldCharacters, runId: importedRunId }
+          : undefined,
+      },
+    }));
+    const rewriteRunId = <T extends { runId: string }>(rows: T[]): T[] => rows.map((row) => ({ ...row, runId: importedRunId }));
+    const worldRuns = Array.isArray(parsed.worldRuns) ? rewriteRunId(clone(parsed.worldRuns as WorldRunRecord[])) : [];
+    const characterEvents = Array.isArray(parsed.characterEvents) ? rewriteRunId(clone(parsed.characterEvents as CharacterEventEnvelope[])) : [];
+    await db.transaction('rw', db.snapshots, db.saveSlots, db.worldRuns, db.characterEvents, db.characterStateCache, async () => {
       await db.snapshots.bulkAdd(snapshots);
-      if (worldRuns.length) await db.worldRuns.bulkAdd(worldRuns);
-      if (characterEvents.length) await db.characterEvents.bulkAdd(characterEvents);
+      if (worldRuns.length) await db.worldRuns.bulkPut(worldRuns);
+      if (characterEvents.length) await db.characterEvents.bulkPut(characterEvents);
     });
-    const latest = await db.snapshots.orderBy('turnNumber').reverse().first();
-    if (!latest) return null;
-    assertSupportedSnapshot(latest);
-    return gameStateFromSnapshot(latest);
+    const latest = snapshots.reduce((left, right) => (right.turnNumber > left.turnNumber ? right : left));
+    return upsertSlotMeta(slotId, latest.gameState);
   } catch (err) {
     console.error('导入存档失败:', err);
     throw err;
@@ -344,7 +491,7 @@ export async function importSaveData(jsonString: string): Promise<GameState | nu
 }
 
 export async function clearSaveData(): Promise<void> {
-  await db.transaction('rw', db.snapshots, db.worldRuns, db.characterEvents, db.characterStateCache, async () => {
-    await Promise.all([db.snapshots.clear(), db.worldRuns.clear(), db.characterEvents.clear(), db.characterStateCache.clear()]);
+  await db.transaction('rw', db.snapshots, db.saveSlots, db.worldRuns, db.characterEvents, db.characterStateCache, async () => {
+    await Promise.all([db.snapshots.clear(), db.saveSlots.clear(), db.worldRuns.clear(), db.characterEvents.clear(), db.characterStateCache.clear()]);
   });
 }

@@ -6,7 +6,6 @@ const bundle = await build({
     contents: [
       "export * from './src/data/generated/canonicalTimeline.ts';",
       "export * from './src/features/world/canonicalTimeline.ts';",
-      "export * from './src/data/presets.ts';",
     ].join('\n'),
     resolveDir: process.cwd(),
     sourcefile: 'canonical-timeline-test-entry.ts',
@@ -20,7 +19,6 @@ const bundle = await build({
 const moduleUrl = `data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString('base64')}`;
 const {
   CANONICAL_TIMELINE,
-  PRESET_SCENARIOS,
   initializeCanonicalStates,
   resolveDueCanonicalEvents,
 } = await import(moduleUrl);
@@ -36,17 +34,9 @@ for (let index = 1; index < CANONICAL_TIMELINE.length; index += 1) {
 }
 assert.ok(CANONICAL_TIMELINE.every((event) => event.participants.every((participant) => participant.name)));
 
-const expectedPresets = new Map([
-  ['ned_stark', { canonicalCharacterId: 'agot:Stark_3', startDate: { year: 298, month: 5, day: 10 } }],
-  ['jon_snow', { canonicalCharacterId: 'agot:Stark_7', startDate: { year: 298, month: 6, day: 1 } }],
-  ['daenerys_targaryen', { canonicalCharacterId: 'agot:Targaryen_9', startDate: { year: 298, month: 5, day: 10 } }],
-]);
-for (const preset of PRESET_SCENARIOS) {
-  assert.deepEqual(
-    { canonicalCharacterId: preset.canonicalCharacterId, startDate: preset.startDate },
-    expectedPresets.get(preset.id),
-  );
-}
+const playable = JSON.parse(await (await import('node:fs/promises')).readFile('content/world/playable-characters.json', 'utf8'));
+assert.deepEqual(playable.map((entry) => entry.characterId), ['agot:Stark_3', 'agot:Stark_7', 'agot:Targaryen_9']);
+assert.equal(playable.every((entry) => entry.enabled), true);
 
 const fixture = [
   { id: 'past', date: { year: 298, month: 5, day: 5 }, title: '过去', summary: '', region: '', category: 'intrigue', participants: [], fatalities: [], consequences: [] },

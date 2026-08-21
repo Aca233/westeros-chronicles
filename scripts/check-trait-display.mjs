@@ -4,10 +4,10 @@ import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 const read = (path) => readFile(join(root, path), 'utf8');
-const [sheet, traits, presets, creator, db, types] = await Promise.all([
+const [sheet, traits, livingWorldFixture, creator, db, types] = await Promise.all([
   read('src/components/CharacterSheet.tsx'),
   read('src/data/characterTraits.ts'),
-  read('src/data/presets.ts'),
+  read('scripts/fixtures/living-world-test.ts'),
   read('src/components/CharacterCreator.tsx'),
   read('src/services/db.ts'),
   read('src/types/game.ts'),
@@ -19,13 +19,11 @@ requireMarker(sheet, '<GameIcon icon={trait.icon}', 'The in-game trait panel doe
 requireMarker(sheet, 'formatTraitRuleEffects(activeTrait.rules)', 'Trait rule effects are not inspectable in game.');
 requireMarker(traits, 'function resolveCharacterTraits', 'Legacy and catalog traits are not resolved for display.');
 requireMarker(traits, 'isLegacy: true', 'Legacy save traits have no display fallback.');
-for (const presetId of ['ned_stark', 'jon_snow', 'daenerys_targaryen']) {
-  requireMarker(presets, `id: '${presetId}'`, `Missing preset: ${presetId}`);
-}
-if ((presets.match(/traitIds:/g) || []).length < 3) failures.push('Not every preset has formal trait IDs.');
+requireMarker(livingWorldFixture, 'createLivingWorldTestLord', 'Living-world test lord fixture is missing.');
+requireMarker(livingWorldFixture, 'traitIds:', 'Living-world test lord has no formal trait IDs.');
 requireMarker(traits, 'function orderCharacterTraitsForDisplay', 'Education traits do not have a stable first-position ordering helper.');
 requireMarker(traits, 'function migrateLordTraitData', 'Legacy saves do not migrate trait IDs and attribute bonuses safely.');
-requireMarker(presets, 'attributes: calculateFinalAttributes(baseAttributes', 'Preset trait attribute modifiers are not included in final attributes.');
+requireMarker(traits, 'calculateFinalAttributes', 'Trait attribute modifiers are not available to character projection.');
 requireMarker(creator, 'orderCharacterTraitsForDisplay(CHARACTER_TRAITS.filter', 'The ruler designer does not keep education traits first.');
 requireMarker(creator, 'baseAttributes: { ...customAttributes }', 'Custom rulers do not retain unmodified base attributes.');
 requireMarker(db, 'assertSupportedSnapshot', 'Save loading does not reject unsupported test saves explicitly.');
@@ -34,4 +32,4 @@ if (failures.length) {
   console.error(failures.join('\n'));
   process.exit(1);
 }
-console.log('In-game trait display and preset trait IDs are connected.');
+console.log('In-game trait display and living-world trait IDs are connected.');

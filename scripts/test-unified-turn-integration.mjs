@@ -63,15 +63,19 @@ const storeStubs = {
       contents: `
         export const db = {};
         export async function loadLatestGameState() { return null; }
+        export async function listSaveSlots() { return []; }
+        export async function importSaveData() { return null; }
+        export async function deleteSaveSlot() {}
+        export function createSlotId() { return 'slot_unified'; }
         export async function ensureTurnSnapshotBaseline() { return 'ready'; }
-        export async function saveTurnSnapshot(state, summaryNote) {
+        export async function saveTurnSnapshot(slotId, state, summaryNote) {
           globalThis.__unifiedSnapshots.push({ state: structuredClone(state), summaryNote });
         }
         export async function clearSaveData() {
           globalThis.__unifiedSnapshots = [];
           globalThis.__unifiedCharacterEvents = [];
         }
-        export async function commitTurnAtomically(state, events, summaryNote) {
+        export async function commitTurnAtomically(slotId, state, events, summaryNote) {
           if (globalThis.__unifiedCommitFails) throw new Error('模拟原子提交失败');
           globalThis.__unifiedSnapshots.push({ state: structuredClone(state), summaryNote });
           globalThis.__unifiedCharacterEvents.push(...events.map((event, sequence) => ({
@@ -116,6 +120,15 @@ globalThis.__unifiedCommitFails = false;
 
 const storeUrl = `data:text/javascript;base64,${Buffer.from(storeBundle.outputFiles[0].text).toString('base64')}`;
 const { useGameStore } = await import(storeUrl);
+const fixtureBundle = await build({
+  entryPoints: ['scripts/fixtures/living-world-test.ts'],
+  bundle: true,
+  write: false,
+  format: 'esm',
+  platform: 'node',
+});
+const fixtureUrl = `data:text/javascript;base64,${Buffer.from(fixtureBundle.outputFiles[0].text).toString('base64')}`;
+const { createLivingWorldTestLord } = await import(fixtureUrl);
 const pristine = structuredClone(useGameStore.getState().gameState);
 
 const ARYA = 'agot:Stark_9';
@@ -144,7 +157,17 @@ function resetAtCanonBoundary() {
   state.currentDay = 14;
   state.currentSeason = '暮春';
   state.turnCount = 1;
-  state.turns = [{ ...state.turns[0], turnNumber: 1 }];
+  state.lord = structuredClone(createLivingWorldTestLord());
+  state.turns = [{
+    id: 'turn_1',
+    turnNumber: 1,
+    playerInput: '开启测试世界',
+    narrate: '测试世界已经开始。',
+    branches: ['继续'],
+    stateCommands: [],
+    gameDate: '征服历 298 AC · 5月14日',
+    timestamp: 0,
+  }];
   state.worldHistory.turns = [];
   state.worldRuntime = { schemaVersion: 1, revision: 0, characters: {}, titles: {}, assets: {}, events: [], pendingTransactions: [] };
   state.worldCharacters.revision = 0;
@@ -167,6 +190,7 @@ function resetAtCanonBoundary() {
     characterTurnContext: null,
     activeDiceCheck: null,
     isDiceModalOpen: false,
+    activeSlotId: 'slot_unified',
   });
   useGameStore.getState().setCharacterTurnContext(sceneContext());
   return structuredClone(state);

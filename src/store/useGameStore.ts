@@ -1,9 +1,21 @@
 import { create } from 'zustand';
-import { GameState, LordProfile, StoryTurn, ApiConfig, D20Check } from '../types/game';
-import { PRESET_SCENARIOS } from '../data/presets';
+import { GameState, StoryTurn, ApiConfig, D20Check } from '../types/game';
+import type { LivingWorldNewGame } from '../features/world/createLivingWorldGame';
 import type { CharacterCommandBatchBaseContext } from '../services/stateReducer';
 import type { DiceMode } from '../services/dicePolicy';
-import { saveTurnSnapshot, commitTurnAtomically, rollbackLastTurn, clearSaveData, ensureTurnSnapshotBaseline, loadLatestGameState } from '../services/db';
+import {
+  saveTurnSnapshot,
+  commitTurnAtomically,
+  rollbackLastTurn,
+  clearSaveData,
+  ensureTurnSnapshotBaseline,
+  loadLatestGameState,
+  listSaveSlots,
+  deleteSaveSlot,
+  importSaveData,
+  createSlotId,
+  type SaveSlotMeta,
+} from '../services/db';
 import { stripEmoji, stripEmojiDeep } from '../services/textSanitizer';
 import { normalizeCk3Attributes } from '../data/ck3Skills';
 import { migrateLordIdentityData, migrateLordTraitData } from '../data/characterTraits';
@@ -23,11 +35,7 @@ import {
 
 export interface CharacterTurnContext extends CharacterCommandBatchBaseContext { promptContext?: string; }
 
-export interface NewGameWorldSetup {
-  startDate?: WorldDate;
-  season?: string;
-  canonicalCharacterId?: CharacterId;
-}
+export type MenuView = 'title' | 'new' | 'load';
 
 interface GameStore {
   // 状态
@@ -41,11 +49,19 @@ interface GameStore {
   characterTurnContext: CharacterTurnContext | null;
   bootStatus: 'loading' | 'ready' | 'error';
   bootError: string | null;
-  
+
+  // 屏幕与存档位
+  activeScreen: 'menu' | 'game';
+  menuView: MenuView;
+  activeSlotId: string | null;
+  saveSlots: SaveSlotMeta[];
+  slotActionError: string | null;
+
   // 模态弹窗状态
   isDiceModalOpen: boolean;
   isSettingsOpen: boolean;
   isCreatorOpen: boolean;
+  creatorInitialTab: 'existing' | 'custom';
   isTvTimelineOpen: boolean;
 
   // 动作
@@ -53,7 +69,7 @@ interface GameStore {
   cancelCurrentTurn: () => void;
   openSettings: () => void;
   closeSettings: () => void;
-  openCreator: () => void;
+  openCreator: (tab?: 'existing' | 'custom') => void;
   closeCreator: () => void;
   openTvTimeline: () => void;
   closeTvTimeline: () => void;
@@ -61,12 +77,17 @@ interface GameStore {
   queueWorldTransaction: (transaction: PendingWorldTransaction) => void;
   cancelWorldTransaction: (transactionId: string) => void;
   setCharacterTurnContext: (context: CharacterTurnContext | null) => void;
-  hydrateGameState: () => Promise<void>;
-  replaceGameState: (gameState: GameState) => void;
+  hydrateSaveSlots: () => Promise<void>;
+  refreshSaveSlots: () => Promise<void>;
+  continueGame: (slotId?: string) => Promise<boolean>;
+  enterMenu: (view?: MenuView) => boolean;
+  setMenuView: (view: MenuView) => void;
+  deleteSlot: (slotId: string) => Promise<void>;
+  importSlot: (jsonString: string) => Promise<SaveSlotMeta | null>;
   resetStoredGame: () => Promise<void>;
 
   // 游戏核心流程
-  startNewGame: (lord: LordProfile, opening: { think?: string; narrate: string; speak?: Array<{ speaker: string; text: string }>; branches: string[] }, worldSetup?: NewGameWorldSetup) => Promise<void>;
+  startNewGame: (game: LivingWorldNewGame) => Promise<void>;
   submitAction: (actionText: string, diceMode?: DiceMode) => Promise<void>;
   undoTurn: () => Promise<void>;
 }
@@ -92,14 +113,12 @@ function loadStoredApiConfig(): ApiConfig {
   return DEFAULT_API_CONFIG;
 }
 
-const defaultPreset = PRESET_SCENARIOS[0];
 const AGOT_DATASET_HASH = AGOT_CHARACTER_DATASET_HASH;
 function createWorldRunId(): string {
   return "run_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 10);
 }
 
-const DEFAULT_CUSTOM_WORLD_DATE: WorldDate = { year: 298, month: 10, day: 15 };
-const INITIAL_WORLD_DATE: WorldDate = { ...defaultPreset.startDate };
+const INITIAL_WORLD_DATE: WorldDate = { year: 298, month: 5, day: 10 };
 
 function createInitialWorldHistory(startDate: WorldDate) {
   const history = createWorldHistoryState(startDate);
@@ -118,21 +137,17 @@ function createInitialGameState(): GameState {
     currentYear: startDate.year,
     currentMonth: startDate.month,
     currentDay: startDate.day,
-    currentSeason: defaultPreset.season,
+    currentSeason: '暮春',
     turnCount: 1,
-    lord: structuredClone(defaultPreset.initialLord),
-    turns: [
-      {
-        id: 'turn_1',
-        turnNumber: 1,
-        playerInput: '开启维斯特洛传奇',
-        think: defaultPreset.initialOpening.think,
-        narrate: defaultPreset.initialOpening.narrate,
-        branches: [...defaultPreset.initialOpening.branches],
-        gameDate: formatWorldDate(startDate),
-        timestamp: Date.now(),
-      },
-    ],
+    lord: {
+      name: '尚未选择人物', house: '尚未选择家族', houseWords: '—', houseSigil: 'unknown', title: '尚未开始', age: 18,
+      gender: '未指定', location: { locationId: 'b_unknown_westeros' }, locationLabel: '所在地未查明',
+      body: { head: { key: 'head', name: '头部与咽喉', level: 'intact', wounds: [], isFatalZone: true }, torso: { key: 'torso', name: '胸膛与躯干', level: 'intact', wounds: [], isFatalZone: true }, arms: { key: 'arms', name: '双臂与双手', level: 'intact', wounds: [], isFatalZone: false }, legs: { key: 'legs', name: '双腿与下肢', level: 'intact', wounds: [], isFatalZone: false }, isBleeding: false, isPoisoned: false, isInfected: false },
+      overallStatus: '强健', items: { schemaVersion: 1, instances: {}, placements: {}, sites: {}, vehicles: {} },
+      goldDragons: 0, silverStags: 0, prestige: 0, dread: 0,
+      attributes: { diplomacy: 0, martial: 0, stewardship: 0, intrigue: 0, learning: 0, prowess: 0 }, traits: [], traitIds: [],
+    },
+    turns: [],
     worldCharacters: { runId: createWorldRunId(), datasetHash: AGOT_DATASET_HASH, revision: 0 },
     worldArtifacts: createInitialAgotArtifactWorldState(),
     worldHistory: createInitialWorldHistory(startDate),
@@ -145,6 +160,15 @@ function createInitialGameState(): GameState {
 const INITIAL_GAME_STATE = createInitialGameState();
 let currentTurnController: AbortController | null = null;
 
+/** 载入存档时对领主数据做与导入一致的净化与迁移。 */
+function sanitizeRestoredState(restored: GameState): GameState {
+  const state = stripEmojiDeep(restored);
+  state.lord = migrateLordIdentityData(migrateLordTraitData(state.lord));
+  state.lord.attributes = normalizeCk3Attributes(state.lord.attributes);
+  if (state.lord.baseAttributes) state.lord.baseAttributes = normalizeCk3Attributes(state.lord.baseAttributes);
+  return state;
+}
+
 export const useGameStore = create<GameStore>((set, get) => ({
   gameState: INITIAL_GAME_STATE,
   apiConfig: loadStoredApiConfig(),
@@ -156,9 +180,15 @@ export const useGameStore = create<GameStore>((set, get) => ({
   characterTurnContext: null,
   bootStatus: 'loading',
   bootError: null,
+  activeScreen: 'menu',
+  menuView: 'title',
+  activeSlotId: null,
+  saveSlots: [],
+  slotActionError: null,
   isDiceModalOpen: false,
   isSettingsOpen: false,
   isCreatorOpen: false,
+  creatorInitialTab: 'existing',
   isTvTimelineOpen: false,
 
   setApiConfig: (config) => {
@@ -176,7 +206,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
   },
   openSettings: () => set({ isSettingsOpen: true }),
   closeSettings: () => set({ isSettingsOpen: false }),
-  openCreator: () => set({ isCreatorOpen: true }),
+  openCreator: (tab) => set({ isCreatorOpen: true, ...(tab ? { creatorInitialTab: tab } : {}) }),
   closeCreator: () => set({ isCreatorOpen: false }),
   openTvTimeline: () => set({ isTvTimelineOpen: true }),
   closeTvTimeline: () => set({ isTvTimelineOpen: false }),
@@ -213,64 +243,119 @@ export const useGameStore = create<GameStore>((set, get) => ({
     }));
   },
   setCharacterTurnContext: (context) => set({ characterTurnContext: context ? { ...context, characters: context.characters.map((character) => ({ ...character })), promptContext: context.promptContext ? stripEmoji(context.promptContext) : undefined } : null }),
-  hydrateGameState: async () => {
+  // 启动:只加载存档位摘要与物品目录,完整 GameState 留到玩家选择"继续/读档"时才载入
+  hydrateSaveSlots: async () => {
     if (get().bootStatus === 'ready') return;
     set({ bootStatus: 'loading', bootError: null });
     try {
-      const [restored] = await Promise.all([loadLatestGameState(), preloadItemCatalog()]);
-      set({
-        gameState: restored ? stripEmojiDeep(restored) : createInitialGameState(),
-        bootStatus: 'ready',
-        bootError: null,
-        changesLog: restored ? ['已恢复最近的维斯特洛存档'] : [],
-      });
+      const [slots] = await Promise.all([listSaveSlots(), preloadItemCatalog()]);
+      set({ saveSlots: slots, bootStatus: 'ready', bootError: null });
     } catch (error) {
       set({
         bootStatus: 'error',
-        bootError: error instanceof Error ? error.message : '存档读取失败',
+        bootError: error instanceof Error ? error.message : '本地数据库读取失败',
       });
     }
   },
-  replaceGameState: (gameState) => {
-    const restored = stripEmojiDeep(gameState);
-    restored.lord = migrateLordIdentityData(migrateLordTraitData(restored.lord));
-    restored.lord.attributes = normalizeCk3Attributes(restored.lord.attributes);
-    if (restored.lord.baseAttributes) restored.lord.baseAttributes = normalizeCk3Attributes(restored.lord.baseAttributes);
+  refreshSaveSlots: async () => {
+    try {
+      set({ saveSlots: await listSaveSlots() });
+    } catch {
+      // 刷新失败保持原列表,菜单仍可用
+    }
+  },
+  // 继续游戏:默认载入最近更新的存档位
+  continueGame: async (slotId) => {
+    const targetSlotId = slotId ?? get().saveSlots[0]?.slotId;
+    if (!targetSlotId) return false;
+    try {
+      const restored = await loadLatestGameState(targetSlotId);
+      if (!restored) throw new Error('该存档位没有任何已提交的回合。');
+      const slot = get().saveSlots.find((entry) => entry.slotId === targetSlotId);
+      set({
+        gameState: sanitizeRestoredState(restored),
+        activeSlotId: targetSlotId,
+        activeScreen: 'game',
+        bootStatus: 'ready',
+        bootError: null,
+        slotActionError: null,
+        isStreaming: false,
+        turnStage: 'idle',
+        streamingText: '',
+        characterTurnContext: null,
+        changesLog: [`已恢复存档: ${slot?.name ?? targetSlotId}`],
+      });
+      return true;
+    } catch (error) {
+      set({ slotActionError: error instanceof Error ? error.message : '存档读取失败' });
+      return false;
+    }
+  },
+  // 回到主菜单;叙事生成中禁止离开,避免半途状态与界面脱钩
+  enterMenu: (view) => {
+    if (get().isStreaming) return false;
     set({
-      gameState: restored,
-      bootStatus: 'ready',
-      bootError: null,
-      isStreaming: false,
-      turnStage: 'idle',
-      streamingText: '',
-      characterTurnContext: null,
-      changesLog: ['已载入维斯特洛存档'],
+      activeScreen: 'menu',
+      menuView: view ?? 'title',
+      isSettingsOpen: false,
+      isCreatorOpen: false,
+      isTvTimelineOpen: false,
+      slotActionError: null,
     });
+    void get().refreshSaveSlots();
+    return true;
+  },
+  setMenuView: (view) => set({ menuView: view, slotActionError: null }),
+  deleteSlot: async (slotId) => {
+    try {
+      await deleteSaveSlot(slotId);
+      set((state) => ({
+        saveSlots: state.saveSlots.filter((entry) => entry.slotId !== slotId),
+        slotActionError: null,
+        ...(state.activeSlotId === slotId ? { activeSlotId: null } : {}),
+      }));
+    } catch (error) {
+      set({ slotActionError: error instanceof Error ? error.message : '删除存档失败' });
+    }
+  },
+  // 导入存档包为新的存档位,不触碰现有周目
+  importSlot: async (jsonString) => {
+    try {
+      const meta = await importSaveData(jsonString);
+      if (meta) set((state) => ({ saveSlots: [meta, ...state.saveSlots.filter((entry) => entry.slotId !== meta.slotId)], slotActionError: null }));
+      return meta;
+    } catch (error) {
+      set({ slotActionError: error instanceof Error ? error.message : '存档导入失败' });
+      return null;
+    }
   },
   resetStoredGame: async () => {
     await clearSaveData();
-    const initialState = createInitialGameState();
-    await saveTurnSnapshot(initialState, '重置后的开局基线');
     set({
-      gameState: initialState,
+      gameState: createInitialGameState(),
+      activeSlotId: null,
+      activeScreen: 'menu',
+      menuView: 'title',
       bootStatus: 'ready',
       bootError: null,
+      saveSlots: [],
       isStreaming: false,
       turnStage: 'idle',
       streamingText: '',
       characterTurnContext: null,
-      changesLog: ['已重置本地测试存档'],
+      changesLog: ['已清空本地存档'],
     });
   },
 
-  // 开启新剧本
-  startNewGame: async (lord, opening, worldSetup) => {
+  // 开启新剧本:铸新的存档位,不再清空其他周目的进度
+  startNewGame: async (game) => {
     await preloadItemCatalog();
-    await clearSaveData();
-    const startDate = worldSetup?.startDate ? { ...worldSetup.startDate } : { ...DEFAULT_CUSTOM_WORLD_DATE };
-    const startSeason = stripEmoji(worldSetup?.season ?? '凛冬将至 (晚秋)');
-    const safeLord = migrateLordIdentityData(migrateLordTraitData(stripEmojiDeep(lord)));
-    if (worldSetup?.canonicalCharacterId) safeLord.canonicalCharacterId = worldSetup.canonicalCharacterId;
+    const slotId = createSlotId();
+    const scenarioId = game.legacyScenarioId ?? 'living-world';
+    const startDate = { ...game.startDate };
+    const startSeason = stripEmoji(game.season);
+    const safeLord = migrateLordIdentityData(migrateLordTraitData(stripEmojiDeep(game.lord)));
+    const opening = game.opening;
     safeLord.attributes = normalizeCk3Attributes(safeLord.attributes);
     if (safeLord.baseAttributes) safeLord.baseAttributes = normalizeCk3Attributes(safeLord.baseAttributes);
     const newTurn: StoryTurn = {
@@ -293,18 +378,35 @@ export const useGameStore = create<GameStore>((set, get) => ({
       turnCount: 1,
       lord: safeLord,
       turns: [newTurn],
-      worldCharacters: { runId: createWorldRunId(), datasetHash: AGOT_DATASET_HASH, revision: 0 },
-      worldArtifacts: createInitialAgotArtifactWorldState(),
+      worldCharacters: { runId: createWorldRunId(), datasetHash: game.characterDatasetHash || AGOT_DATASET_HASH, revision: 0 },
+      worldArtifacts: structuredClone(game.worldArtifacts),
       worldHistory: createInitialWorldHistory(startDate),
       worldRuntime: createWorldRuntimeState(),
       worldFlags: {},
       isGameOver: false,
     };
 
-    await saveTurnSnapshot(newGameState, '剧本开局');
+    await saveTurnSnapshot(slotId, newGameState, '剧本开局', scenarioId);
+
+    const slotMeta: SaveSlotMeta = {
+      slotId,
+      name: `${safeLord.name} · ${safeLord.house}`,
+      lordName: safeLord.name,
+      houseName: safeLord.house,
+      houseSigil: safeLord.houseSigil,
+      scenarioId,
+      dateLabel: `${startDate.year} AC · ${startDate.month}月${startDate.day}日`,
+      turnCount: 1,
+      isGameOver: false,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+    };
 
     set({
       gameState: newGameState,
+      activeSlotId: slotId,
+      activeScreen: 'game',
+      saveSlots: [slotMeta, ...get().saveSlots],
       isCreatorOpen: false,
       changesLog: [`维斯特洛新传奇开启: ${safeLord.house} · ${safeLord.name}`],
       streamingText: '',
@@ -316,11 +418,11 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
   // 提交领主行动
   submitAction: async (actionText: string, diceMode: DiceMode = 'auto') => {
-    const { gameState: visibleGameState, apiConfig, isStreaming, characterTurnContext } = get();
+    const { gameState: visibleGameState, apiConfig, isStreaming, characterTurnContext, activeSlotId } = get();
     let gameState = repairKnownTurnRevisionDrift(visibleGameState);
     if (gameState !== visibleGameState) set({ gameState });
     const safeActionText = stripEmoji(actionText);
-    if (isStreaming || gameState.isGameOver || !safeActionText) return;
+    if (isStreaming || gameState.isGameOver || !safeActionText || !activeSlotId) return;
 
     const submittedWorldTransactions = structuredClone(
       gameState.worldRuntime.pendingTransactions.filter((transaction) => transaction.status === 'pending'),
@@ -346,7 +448,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
         preloadItemCatalog(),
       ]);
       // 先丢弃不兼容的测试快照并建立当前回合基线，避免生成完叙事才发现无法提交。
-      await ensureTurnSnapshotBaseline(gameState);
+      await ensureTurnSnapshotBaseline(activeSlotId, gameState);
 
       // 1. 只有存在真实风险的行动才进行 D20 检定；叙事模式永不隐藏掷骰。
       const diceDecision = evaluateDiceRequirement(safeActionText, { overallStatus: gameState.lord.overallStatus });
@@ -482,6 +584,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       if (turnController.signal.aborted) throw turnController.signal.reason;
       set({ turnStage: 'settling' });
       await commitTurnAtomically(
+        activeSlotId,
         updatedGameState,
         settled.characterEvents,
         `回合 ${nextTurnNumber}: ${safeActionText.slice(0, 20)}`,
@@ -519,17 +622,16 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
   // 撤回上一回合 (时光机)
   undoTurn: async () => {
-    const { isStreaming } = get();
-    if (isStreaming) return;
+    const { isStreaming, activeSlotId } = get();
+    if (isStreaming || !activeSlotId) return;
 
-    const previousState = await rollbackLastTurn();
+    const previousState = await rollbackLastTurn(activeSlotId);
     if (previousState) {
-      const restoredState = stripEmojiDeep(previousState);
-      restoredState.lord = migrateLordIdentityData(migrateLordTraitData(restoredState.lord));
-      restoredState.lord.attributes = normalizeCk3Attributes(restoredState.lord.attributes);
-      if (restoredState.lord.baseAttributes) restoredState.lord.baseAttributes = normalizeCk3Attributes(restoredState.lord.baseAttributes);
       set({
-        gameState: restoredState,
+        gameState: sanitizeRestoredState(previousState),
+        saveSlots: get().saveSlots.map((slot) => slot.slotId === activeSlotId
+          ? { ...slot, turnCount: previousState.turnCount, dateLabel: `${previousState.currentYear} AC · ${previousState.currentMonth}月${previousState.currentDay}日`, updatedAt: Date.now() }
+          : slot),
         changesLog: ['时光倒流: 已回退到上一回合决策点'],
         characterTurnContext: null,
       });

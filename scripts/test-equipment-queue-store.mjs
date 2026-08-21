@@ -46,6 +46,10 @@ const dependencyStubs = {
       contents: `
         export const db = {};
         export async function loadLatestGameState() { return null; }
+        export async function listSaveSlots() { return []; }
+        export async function importSaveData() { return null; }
+        export async function deleteSaveSlot() {}
+        export function createSlotId() { return 'slot_queue'; }
         export async function ensureTurnSnapshotBaseline() { return 'ready'; }
         export async function saveTurnSnapshot() {}
         export async function commitTurnAtomically() {}
@@ -73,6 +77,7 @@ function resetQueue() {
     isStreaming: false,
     turnStage: 'idle',
     streamingText: '',
+    activeSlotId: 'slot_queue',
   });
 }
 

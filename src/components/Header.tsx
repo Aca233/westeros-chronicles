@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useGameStore } from '../store/useGameStore';
-import { Settings, RotateCcw, Feather, Moon, Sun, Calendar } from 'lucide-react';
+import { Settings, RotateCcw, Feather, Moon, Sun, Calendar, ScrollText } from 'lucide-react';
 
 export const Header: React.FC = () => {
-  const { gameState, isStreaming, openSettings, openCreator, openTvTimeline, undoTurn } = useGameStore();
+  const { gameState, isStreaming, openSettings, enterMenu, openTvTimeline, undoTurn } = useGameStore();
   const { currentYear, currentMonth, currentDay, currentSeason, turnCount } = gameState;
 
   // 日间 = 羊皮纸;夜间 = 烛下牛皮卷
@@ -60,13 +60,22 @@ export const Header: React.FC = () => {
           <span className="hidden md:inline">撤回</span>
         </button>
         <button
-          onClick={openCreator}
+          onClick={() => enterMenu('new')}
           disabled={isStreaming}
           className="btn-ghost !text-rubric hover:!text-rubric-bright"
           title="另起新局或重塑领主"
         >
           <Feather className="h-3.5 w-3.5" />
           <span className="hidden md:inline">新局</span>
+        </button>
+        <button
+          onClick={() => enterMenu('title')}
+          disabled={isStreaming}
+          className="btn-ghost"
+          title="回到主菜单"
+          aria-label="主菜单"
+        >
+          <ScrollText className="h-4 w-4" />
         </button>
         <button
           onClick={openTvTimeline}

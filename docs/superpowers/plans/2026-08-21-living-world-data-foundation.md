@@ -397,7 +397,7 @@ Expected: 验证通过并生成独立提交。
 - Produces: `LivingWorldNewGame = { lord: LordProfile; opening: StoryOpening; worldId: 'agot-298'; startDate: WorldDate; season: string; legacyScenarioId?: string }`。
 - Preserves: `SaveSlotMeta.scenarioId` 可读取旧值 `ned_stark`、`jon_snow`、`daenerys_targaryen`；新存档不依赖该字段决定世界状态。
 
-- [ ] **Step 1: 写失败测试，证明所有入口共享同一世界事实**
+- [x] **Step 1: 写失败测试，证明所有入口共享同一世界事实**
 
 `scripts/test-living-world-start.mjs` 必须覆盖三个入口：
 
@@ -422,7 +422,7 @@ test('可玩人物源不重复基础人物事实', async () => {
 });
 ```
 
-- [ ] **Step 2: 运行测试，确认仍依赖 `PRESET_SCENARIOS`**
+- [x] **Step 2: 运行测试，确认仍依赖 `PRESET_SCENARIOS`**
 
 Run:
 
@@ -432,7 +432,7 @@ node scripts/test-living-world-start.mjs
 
 Expected: FAIL，`createLivingWorldGame` 尚不存在或入口仍生成不同世界起点。
 
-- [ ] **Step 3: 填充可玩人物源并实现唯一世界新局工厂**
+- [x] **Step 3: 填充可玩人物源并实现唯一世界新局工厂**
 
 `content/world/playable-characters.json` 只保留三个人物 ID、启用状态、难度、关注点和选择卡文案；不保存姓名、年龄、家族、头衔、属性、特质、地点、装备、长篇开场或固定分支。
 
@@ -453,7 +453,7 @@ export async function createLivingWorldGame(
 
 开场只生成中性起点说明和三个通用行动建议；`focus` 作为提示上下文，不转成任务、胜利条件或强制事件。
 
-- [ ] **Step 4: 替换菜单和 Store 调用，保留旧存档显示兼容**
+- [x] **Step 4: 替换菜单和 Store 调用，保留旧存档显示兼容**
 
 `NewGameScreen` 异步读取卡片并调用 `createLivingWorldGame`；`useGameStore.startNewGame` 改收 `LivingWorldNewGame`，不允许传入任意产品开始日期。`CharacterCreator` 的现成人物入口也使用相同 manifest 日期；自定义统治者继续存在，但放入相同 `agot-298` 世界，不再使用 `298-10-15`。
 
@@ -469,7 +469,7 @@ const LEGACY_SCENARIO_LABELS: Readonly<Record<string, string>> = {
 
 删除 `PRESET_SCENARIOS` 后，将测试 fixture 改为 `createLivingWorldTestState('agot:Stark_3')` 或直接构造最小 `LordProfile`，不得在测试中重建第二套产品预设表。
 
-- [ ] **Step 5: 验证入口与存档兼容并提交**
+- [x] **Step 5: 验证入口与存档兼容并提交**
 
 Run:
 

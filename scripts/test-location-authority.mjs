@@ -15,7 +15,7 @@ const runtimeBundle = await build({
   stdin: {
     contents: [
       "export * from './src/services/turnResolution.ts'",
-      "export * from './src/data/presets.ts'",
+      "export * from './scripts/fixtures/living-world-test.ts'",
       "export * from './src/data/itemPresetState.ts'",
     ].join('\n'),
     resolveDir: process.cwd(),
@@ -29,7 +29,7 @@ const runtimeBundle = await build({
   logLevel: 'silent',
 })
 const runtimeUrl = `data:text/javascript;base64,${Buffer.from(runtimeBundle.outputFiles[0].text).toString('base64')}`
-const { PRESET_SCENARIOS, createCustomRulerItemState, settleTurnDraft } = await import(runtimeUrl)
+const { createLivingWorldTestLord, createCustomRulerItemState, settleTurnDraft } = await import(runtimeUrl)
 
 const known = new Set(['b_winterfell', 'b_castle_black', UNKNOWN_WESTEROS_LOCATION_ID])
 
@@ -70,17 +70,16 @@ test('测试版存档提升到版本 9 并明确拒绝版本 8', () => {
   }))
 })
 
-test('所有内置人物、据点和运输工具都保存稳定地点引用', () => {
-  for (const scenario of PRESET_SCENARIOS) {
-    assert.equal(validateWorldLocationRef(scenario.initialLord.location, known), true, scenario.id)
-    for (const site of Object.values(scenario.initialLord.items.sites)) {
-      assert.equal(validateWorldLocationRef(site.location, known), true, `${scenario.id}:${site.id}`)
-      assert.equal(typeof site.locationLabel, 'string')
-    }
-    for (const vehicle of Object.values(scenario.initialLord.items.vehicles)) {
-      assert.equal(validateWorldLocationRef(vehicle.location, known), true, `${scenario.id}:${vehicle.id}`)
-      assert.equal(typeof vehicle.locationLabel, 'string')
-    }
+test('测试人物、据点和运输工具都保存稳定地点引用', () => {
+  const lord = createLivingWorldTestLord()
+  assert.equal(validateWorldLocationRef(lord.location, known), true)
+  for (const site of Object.values(lord.items.sites)) {
+    assert.equal(validateWorldLocationRef(site.location, known), true, site.id)
+    assert.equal(typeof site.locationLabel, 'string')
+  }
+  for (const vehicle of Object.values(lord.items.vehicles)) {
+    assert.equal(validateWorldLocationRef(vehicle.location, known), true, vehicle.id)
+    assert.equal(typeof vehicle.locationLabel, 'string')
   }
   const customItems = createCustomRulerItemState()
   for (const container of [...Object.values(customItems.sites), ...Object.values(customItems.vehicles)]) {
@@ -96,7 +95,7 @@ function gameStateAtWinterfell() {
     currentDay: 10,
     currentSeason: '暮春',
     turnCount: 0,
-    lord: structuredClone(PRESET_SCENARIOS[0].initialLord),
+    lord: createLivingWorldTestLord(),
     turns: [],
     worldHistory: {
       schemaVersion: 1,

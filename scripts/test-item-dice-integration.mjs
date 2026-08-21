@@ -9,14 +9,14 @@ const bundle = await build({
       "export * from './src/services/stateReducer.ts';",
       "export * from './src/features/items/catalog.ts';",
       "export * from './src/features/items/state.ts';",
-      "export * from './src/data/presets.ts';",
+      "export * from './scripts/fixtures/living-world-test.ts';",
     ].join('\n'),
     resolveDir: process.cwd(), sourcefile: 'item-dice-integration-entry.ts', loader: 'ts',
   },
   bundle: true, write: false, format: 'esm', platform: 'node',
 });
 const url = `data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString('base64')}`;
-const { performD20Check, applyStateCommands, createItemCatalog, createEmptyItemSystem, PRESET_SCENARIOS } = await import(url);
+const { performD20Check, applyStateCommands, createItemCatalog, createEmptyItemSystem, createLivingWorldTestLord } = await import(url);
 
 function definition(overrides = {}) {
   return {
@@ -55,7 +55,7 @@ test('物品只修正匹配的 D20 行动并提供来源明细', () => {
 });
 
 function nedWithChainmail() {
-  const lord = structuredClone(PRESET_SCENARIOS.find((preset) => preset.id === 'ned_stark').initialLord);
+  const lord = structuredClone(createLivingWorldTestLord());
   lord.items.placements['ned.chainmail'] = { type: 'equipped', position: { group: 'torso', layer: 'armor' } };
   return lord;
 }

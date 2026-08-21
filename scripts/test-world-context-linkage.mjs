@@ -7,7 +7,7 @@ const bundle = await build({
     contents: [
       "export * from './src/services/turnResolution.ts';",
       "export { prepareWorldTurn as directPrepareWorldTurn } from './src/services/turn/worldPreparation.ts';",
-      "export * from './src/data/presets.ts';",
+      "export * from './scripts/fixtures/living-world-test.ts';",
       "export * from './src/features/items/worldArtifacts.ts';",
       "export { WORLD_CONTEXT_LIMITS } from './src/features/world/worldTurnContext.ts';",
     ].join('\n'),
@@ -23,7 +23,7 @@ const bundle = await build({
 });
 const url = `data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString('base64')}`;
 const {
-  PRESET_SCENARIOS,
+  createLivingWorldTestLord,
   createInitialAgotArtifactWorldState,
   prepareWorldTurn,
   directPrepareWorldTurn,
@@ -78,7 +78,7 @@ const routePlanner = async ({ from, to }) => ({
 });
 
 function gameState() {
-  const lord = structuredClone(PRESET_SCENARIOS[0].initialLord);
+  const lord = structuredClone(createLivingWorldTestLord());
   lord.canonicalCharacterId = PLAYER_ID;
   lord.location = { locationId: 'b_winterfell' };
   lord.locationLabel = '临冬城';

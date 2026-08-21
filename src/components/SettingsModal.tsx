@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useGameStore } from '../store/useGameStore';
-import { Settings, Key, Server, Cpu, Flame, X, Download, Upload, RefreshCw, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Settings, Key, Server, Cpu, Flame, X, RefreshCw, CheckCircle2, AlertCircle } from 'lucide-react';
 import { stripEmoji } from '../services/textSanitizer';
-import { exportSaveData, importSaveData } from '../services/db';
 import { fetchAvailableModels } from '../services/api';
 
 export const SettingsModal: React.FC = () => {
-  const { isSettingsOpen, closeSettings, apiConfig, setApiConfig, replaceGameState, resetStoredGame } = useGameStore();
+  const { isSettingsOpen, closeSettings, apiConfig, setApiConfig } = useGameStore();
 
   const [provider, setProvider] = useState(apiConfig.provider);
   const [baseUrl, setBaseUrl] = useState(apiConfig.baseUrl);
@@ -87,49 +86,6 @@ export const SettingsModal: React.FC = () => {
       temperature,
     });
     closeSettings();
-  };
-
-  // 导出存档
-  const handleExportSave = async () => {
-    try {
-      const json = await exportSaveData();
-      const blob = new Blob([json], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `westeros_save_${Date.now()}.json`;
-      a.click();
-      URL.revokeObjectURL(url);
-    } catch (e) {
-      alert('导出存档失败: ' + e);
-    }
-  };
-
-  // 导入存档
-  const handleImportSave = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    try {
-      const text = await file.text();
-      const loaded = await importSaveData(text);
-      if (loaded) {
-        replaceGameState(loaded);
-        closeSettings();
-      }
-    } catch (err) {
-      alert('导入存档失败: ' + err);
-    }
-  };
-
-  const handleResetTestSave = async () => {
-    const confirmed = window.confirm('这会删除当前测试存档、人物事件与回合历史，且无法撤销。确认继续吗？');
-    if (!confirmed) return;
-    try {
-      await resetStoredGame();
-      closeSettings();
-    } catch (err) {
-      alert('重置测试存档失败: ' + err);
-    }
   };
 
   // 推荐热门模型快速点击
@@ -339,24 +295,12 @@ export const SettingsModal: React.FC = () => {
           />
         </div>
 
-        {/* 存档管理 */}
+        {/* 存档管理入口提示:功能已移至主菜单 · 读取存档 */}
         <div className="flex flex-col gap-2 border-t border-hairline pt-3">
-          <span className="text-[11px] tracking-wide text-parchment-dim">本地 IndexedDB 存档管理</span>
-          <div className="grid grid-cols-2 gap-2 font-serif text-xs">
-            <button onClick={handleExportSave} className="btn-ghost justify-center !py-2">
-              <Download className="h-3.5 w-3.5 text-gold" />
-              <span>导出 JSON 存档</span>
-            </button>
-            <label className="btn-ghost cursor-pointer justify-center !py-2">
-              <Upload className="h-3.5 w-3.5 text-gold" />
-              <span>导入 JSON 存档</span>
-              <input type="file" accept=".json" onChange={handleImportSave} className="hidden" />
-            </label>
-            <button type="button" onClick={handleResetTestSave} className="btn-ghost col-span-2 justify-center !py-2 text-rubric-bright">
-              <RefreshCw className="h-3.5 w-3.5" />
-              <span>重置测试存档</span>
-            </button>
-          </div>
+          <span className="text-[11px] tracking-wide text-parchment-dim">存档管理</span>
+          <p className="font-serif text-[11px] leading-relaxed text-parchment-faint">
+            存档位的载入、导出、导入与删除,已移至主菜单的「读取存档」。
+          </p>
         </div>
 
         {/* 底部保存按钮 */}

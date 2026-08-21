@@ -12,7 +12,7 @@ async function bundleModule(entryPoint) {
 const { characterAgeAtYear, characterDatasetYear, createNpcDossier, createPlayerDossier, dynastySlug, relatedCharacterIds } = await bundleModule('src/features/characters/characterDossier.ts');
 const { resolveCharacter } = await bundleModule('src/features/characters/characterProjector.ts');
 const { migrateLordIdentityData } = await bundleModule('src/data/characterTraits.ts');
-const { PRESET_SCENARIOS } = await bundleModule('src/data/presets.ts');
+const { createLivingWorldTestLord } = await bundleModule('scripts/fixtures/living-world-test.ts');
 const { projectResolvedCharacterWorldFacts } = await bundleModule('src/features/world/characterWorldFacts.ts');
 const { projectLordFamilyRecords, projectRelationshipCharacter } = await bundleModule('src/features/characters/characterRelationshipProjection.ts');
 
@@ -201,7 +201,7 @@ test('玩家与 NPC 卷宗都暴露统一世界地点、头衔、资产和事件
   assert.ok(npc.assetGroups);
   assert.deepEqual(npc.worldEvents, []);
 
-  const player = createPlayerDossier(structuredClone(PRESET_SCENARIOS[0].initialLord), 298, 'save:test:player');
+  const player = createPlayerDossier(createLivingWorldTestLord(), 298, 'save:test:player');
   assert.equal(player.worldCharacterId, 'save:test:player');
   assert.deepEqual(player.worldLocation, player.player.location);
   assert.ok(player.assetGroups);
@@ -243,16 +243,14 @@ test('未知家族仍保留可读名称而不是伪造主要家族', () => {
   assert.equal(dossier.house, 'Flint of Widows Watch家族');
 });
 
-test('所有经典开局人物都显示可靠的文化与信仰', () => {
-  for (const preset of PRESET_SCENARIOS) {
-    const dossier = createPlayerDossier(preset.initialLord);
-    assert.notEqual(dossier.culture, '文化未记录', `${preset.id} 缺少文化`);
-    assert.notEqual(dossier.faith, '信仰未记录', `${preset.id} 缺少信仰`);
-  }
+test('统一世界测试人物显示可靠的文化与信仰', () => {
+  const dossier = createPlayerDossier(createLivingWorldTestLord());
+  assert.notEqual(dossier.culture, '文化未记录');
+  assert.notEqual(dossier.faith, '信仰未记录');
 });
 
 test('玩家卷宗不把内部英文特质 ID 当作旧特质名称展示', () => {
-  const lord = structuredClone(PRESET_SCENARIOS[0].initialLord);
+  const lord = createLivingWorldTestLord();
   lord.culture = 'northman';
   lord.faith = 'old_gods_wnw';
   lord.traits = [...lord.traits, 'education_martial_prowess_3', 'family_first'];
@@ -279,7 +277,7 @@ test('NPC 特质按年龄与呈现策略投影且不会暴露辅助 ID', () => {
 });
 
 test('现成人物成为玩家后仍由完整原始特质按年龄投影', () => {
-  const lord = structuredClone(PRESET_SCENARIOS[0].initialLord);
+  const lord = createLivingWorldTestLord();
   lord.age = 30;
   lord.importedTraitIds = ['education_martial_3', 'education_martial_prowess_2', 'rowdy', 'knight'];
   lord.traitIds = ['education_martial_3', 'rowdy', 'knight'];
@@ -513,7 +511,7 @@ test('经历去重逻辑正常运作', () => {
 });
 
 test('现成人物成为玩家后沿用同一份卷宗补充资料', () => {
-  const existingLord = structuredClone(PRESET_SCENARIOS[0].initialLord);
+  const existingLord = createLivingWorldTestLord();
   existingLord.canonicalCharacterId = 'agot:Stark_3';
   const dossier = createPlayerDossier(existingLord, 298);
   assert.equal(dossier.summary, CHARACTER_DOSSIER_SUPPLEMENTS['agot:Stark_3'].summary);

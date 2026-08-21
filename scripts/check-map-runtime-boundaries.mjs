@@ -5,6 +5,8 @@ import test from 'node:test'
 import { VERIFICATION_SUITES } from './verify/suites.mjs'
 
 const ROOTS = ['src/features/map']
+// Windows 上 readdirSync/join 产出反斜杠路径,统一转成 POSIX 斜杠再过滤
+const toPosix = (path) => path.replace(/\\/g, '/')
 const files = []
 for (const root of ROOTS) {
   const visit = (path) => {
@@ -47,14 +49,14 @@ test('运行时不在连续 zoom 事件重建政治、人物或资产 GeoJSON', 
 })
 
 test('三维地标只使用 MapLibre 共享 canvas/context 且没有第二渲染循环或交互系统', () => {
-  const landmarkFiles = files.filter((path) => path.includes('src/features/map/landmarks/'))
+  const landmarkFiles = files.filter((path) => toPosix(path).includes('src/features/map/landmarks/'))
   const landmarkSource = landmarkFiles
     .map((path) => readFileSync(path, 'utf8'))
     .join('\n')
   const layer = readFileSync('src/features/map/landmarks/landmarkCustomLayer.ts', 'utf8')
   const contactShadow = readFileSync('src/features/map/landmarks/landmarkContactShadow.ts', 'utf8')
   const canvasRuntimeSource = files
-    .filter((path) => path.includes('src/features/map/canvas/') || path.endsWith('src/features/map/MapCanvas.tsx'))
+    .filter((path) => toPosix(path).includes('src/features/map/canvas/') || toPosix(path).endsWith('src/features/map/MapCanvas.tsx'))
     .map((path) => readFileSync(path, 'utf8'))
     .join('\n')
   assert.match(runtimeSource, /setTerrain/)

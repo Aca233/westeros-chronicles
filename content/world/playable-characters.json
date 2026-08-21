@@ -1,1 +1,50 @@
-[]
+[
+  {
+    "characterId": "agot:Stark_3",
+    "enabled": true,
+    "difficulty": "normal",
+    "focus": [
+      "审视当前处境与关系",
+      "处理领地与家族事务",
+      "决定下一步行动"
+    ],
+    "card": {
+      "title": "北境之狼",
+      "tagline": "凛冬将至。",
+      "background": "从既定历史尚未分岔的共同世界起点开始，由你决定此后的行动。",
+      "avatarIcon": "house-stark"
+    }
+  },
+  {
+    "characterId": "agot:Stark_7",
+    "enabled": true,
+    "difficulty": "hard",
+    "focus": [
+      "审视当前处境与关系",
+      "了解职责与装备",
+      "决定下一步行动"
+    ],
+    "card": {
+      "title": "长城之狼",
+      "tagline": "守夜人的誓言仍在等待。",
+      "background": "从既定历史尚未分岔的共同世界起点开始，由你决定此后的行动。",
+      "avatarIcon": "house-stark"
+    }
+  },
+  {
+    "characterId": "agot:Targaryen_9",
+    "enabled": true,
+    "difficulty": "epic",
+    "focus": [
+      "审视当前处境与关系",
+      "了解流亡中的资产",
+      "决定下一步行动"
+    ],
+    "card": {
+      "title": "流亡真龙",
+      "tagline": "若我回头，我便迷失。",
+      "background": "从既定历史尚未分岔的共同世界起点开始，由你决定此后的行动。",
+      "avatarIcon": "house-targaryen"
+    }
+  }
+]
