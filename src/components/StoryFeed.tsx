@@ -10,14 +10,11 @@ import { OpeningCeremony } from './OpeningCeremony';
 import type { CharacterId } from '../features/characters/types';
 import type { WorldEvent } from '../features/world/worldRuntimeTypes';
 import type { WorldLocationRef } from '../features/map/types';
-import { StaticCharacterRepository } from '../features/characters/staticCharacterRepository';
-import { mapRepository } from '../features/map/repository';
-import { buildStoryMentionEntities, findNextStoryEntity, supplementMentionedCharacterIds } from '../features/world/storyEntityLinks';
+import { findNextStoryEntity } from '../features/world/storyEntityMatch';
 import { playerWorldEventViewer, selectVisibleWorldEvents } from '../features/world/worldEventVisibility';
 import { useWorldEventDisplays } from '../features/world/useWorldEventDisplays';
 import type { WorldEventDisplay } from '../features/world/worldDisplayResolver';
 
-const storyCharacterRepository = new StaticCharacterRepository();
 
 export interface StoryFeedProps {
   onSelectCharacter?: (characterId: CharacterId) => void;
@@ -119,13 +116,19 @@ export const StoryFeed: React.FC<StoryFeedProps> = ({
       return () => { cancelled = true; };
     }
     Promise.all([
-      storyCharacterRepository.findMentioned(narrativeCorpus, { includeGenealogy: false, limit: 100 }).then(async (mentioned) => {
-        const aliasIds = supplementMentionedCharacterIds(narrativeCorpus) as CharacterId[];
-        const aliases = await storyCharacterRepository.getSearchHits(aliasIds);
-        return [...new Map([...mentioned, ...aliases].map((hit) => [hit.id, hit])).values()];
-      }),
-      mapRepository.loadSearchIndex().catch(() => []),
-    ]).then(([characters, locations]) => {
+      import('../features/characters/staticCharacterRepository'),
+      import('../features/map/repository'),
+      import('../features/world/storyEntityLinks'),
+    ]).then(async ([{ StaticCharacterRepository }, { mapRepository }, { buildStoryMentionEntities, supplementMentionedCharacterIds }]) => {
+      const storyCharacterRepository = new StaticCharacterRepository();
+      const [characters, locations] = await Promise.all([
+        storyCharacterRepository.findMentioned(narrativeCorpus, { includeGenealogy: false, limit: 100 }).then(async (mentioned) => {
+          const aliasIds = supplementMentionedCharacterIds(narrativeCorpus) as CharacterId[];
+          const aliases = await storyCharacterRepository.getSearchHits(aliasIds);
+          return [...new Map([...mentioned, ...aliases].map((hit) => [hit.id, hit])).values()];
+        }),
+        mapRepository.loadSearchIndex().catch(() => []),
+      ]);
       if (!cancelled) setDynamicEntities(buildStoryMentionEntities(narrativeCorpus, characters, locations));
     }).catch(() => {
       if (!cancelled) setDynamicEntities([]);

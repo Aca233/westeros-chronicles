@@ -2,23 +2,19 @@ import { create } from 'zustand';
 import { GameState, LordProfile, StoryTurn, ApiConfig, D20Check } from '../types/game';
 import { PRESET_SCENARIOS } from '../data/presets';
 import type { CharacterCommandBatchBaseContext } from '../services/stateReducer';
-import { performD20Check } from '../services/diceEngine';
-import { DiceMode, evaluateDiceRequirement } from '../services/dicePolicy';
-import { buildTurnResolutionMessages, prepareWorldTurn, requestTurnResolution, settleTurnDraft } from '../services/turnResolution';
-import { buildSettledNarrativeMessages, streamSettledNarrative } from '../services/turnNarration';
+import type { DiceMode } from '../services/dicePolicy';
 import { saveTurnSnapshot, commitTurnAtomically, rollbackLastTurn, clearSaveData, ensureTurnSnapshotBaseline, loadLatestGameState } from '../services/db';
 import { stripEmoji, stripEmojiDeep } from '../services/textSanitizer';
 import { normalizeCk3Attributes } from '../data/ck3Skills';
 import { migrateLordIdentityData, migrateLordTraitData } from '../data/characterTraits';
 import { ITEM_SAVE_FORMAT_VERSION, repairKnownTurnRevisionDrift } from '../features/items/saveVersion';
-import { ITEM_CATALOG } from '../data/itemDefinitions';
+import { ITEM_CATALOG, preloadItemCatalog } from '../data/itemDefinitions';
 import { AGOT_CHARACTER_DATASET_HASH, createInitialAgotArtifactWorldState } from '../features/items/worldArtifacts';
 import { createWorldHistoryState, type WorldDate } from '../features/world/worldHistory';
 import { createWorldRuntimeState } from '../features/world/worldRuntimeState';
 import { CANONICAL_TIMELINE } from '../data/generated/canonicalTimeline';
 import { initializeCanonicalStates } from '../features/world/canonicalTimeline';
 import type { CharacterId } from '../features/characters/types';
-import { buildWorldTurnContext, formatWorldTurnContext } from '../features/world/worldTurnContext';
 import type { PendingWorldTransaction } from '../features/world/worldRuntimeTypes';
 import {
   cancelWorldTransaction as cancelQueuedWorldTransaction,
@@ -221,9 +217,9 @@ export const useGameStore = create<GameStore>((set, get) => ({
     if (get().bootStatus === 'ready') return;
     set({ bootStatus: 'loading', bootError: null });
     try {
-      const restored = await loadLatestGameState();
+      const [restored] = await Promise.all([loadLatestGameState(), preloadItemCatalog()]);
       set({
-        ...(restored ? { gameState: stripEmojiDeep(restored) } : {}),
+        gameState: restored ? stripEmojiDeep(restored) : createInitialGameState(),
         bootStatus: 'ready',
         bootError: null,
         changesLog: restored ? ['已恢复最近的维斯特洛存档'] : [],
@@ -269,6 +265,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
   // 开启新剧本
   startNewGame: async (lord, opening, worldSetup) => {
+    await preloadItemCatalog();
     await clearSaveData();
     const startDate = worldSetup?.startDate ? { ...worldSetup.startDate } : { ...DEFAULT_CUSTOM_WORLD_DATE };
     const startSeason = stripEmoji(worldSetup?.season ?? '凛冬将至 (晚秋)');
@@ -334,6 +331,20 @@ export const useGameStore = create<GameStore>((set, get) => ({
     set({ isStreaming: true, turnStage: 'resolving', streamingText: '' });
 
     try {
+      const [
+        { performD20Check },
+        { evaluateDiceRequirement },
+        { buildTurnResolutionMessages, prepareWorldTurn, requestTurnResolution, settleTurnDraft },
+        { buildSettledNarrativeMessages, streamSettledNarrative },
+        { buildWorldTurnContext, formatWorldTurnContext },
+      ] = await Promise.all([
+        import('../services/diceEngine'),
+        import('../services/dicePolicy'),
+        import('../services/turnResolution'),
+        import('../services/turnNarration'),
+        import('../features/world/worldTurnContext'),
+        preloadItemCatalog(),
+      ]);
       // 先丢弃不兼容的测试快照并建立当前回合基线，避免生成完叙事才发现无法提交。
       await ensureTurnSnapshotBaseline(gameState);
 

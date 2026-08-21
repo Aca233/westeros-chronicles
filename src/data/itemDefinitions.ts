@@ -1,6 +1,5 @@
 import { createItemCatalog } from '../features/items/catalog';
 import type { EquipmentPosition, ItemCategory, ItemDefinition, ItemImageRef } from '../features/items/types';
-import { AGOT_ARTIFACT_DEFINITIONS } from './generated/agotArtifactDefinitions';
 
 const defineItem = (definition: ItemDefinition): ItemDefinition => definition;
 
@@ -60,7 +59,7 @@ function dailyClothing(input: {
   });
 }
 
-export const ITEM_DEFINITIONS: readonly ItemDefinition[] = [
+export const ITEM_DEFINITIONS: ItemDefinition[] = [
   defineItem({
     id: 'clothing.northern_wool_tunic',
     name: '北境羊毛束腰衣',
@@ -1152,7 +1151,33 @@ export const ITEM_DEFINITIONS: readonly ItemDefinition[] = [
     effects: [{ kind: 'narrative', directive: '木剑用于练习与玩耍，不具备真正兵刃的杀伤力。' }],
     provenance: { origin: '临冬城木匠间' },
   }),
-  ...AGOT_ARTIFACT_DEFINITIONS,
 ];
 
-export const ITEM_CATALOG = createItemCatalog(ITEM_DEFINITIONS);
+const mutableItemCatalog = createItemCatalog(ITEM_DEFINITIONS) as Map<string, ItemDefinition>;
+export const ITEM_CATALOG = mutableItemCatalog;
+
+let itemCatalogPreload: Promise<void> | null = null;
+let itemCatalogLoaded = false;
+
+/** Load the generated AGOT artifact catalog only at a feature boundary that needs it. */
+export function preloadItemCatalog(): Promise<void> {
+  if (itemCatalogPreload) return itemCatalogPreload;
+  itemCatalogPreload = import('./generated/agotArtifactDefinitions')
+    .then(({ AGOT_ARTIFACT_DEFINITIONS }) => {
+      const completeDefinitions = [...ITEM_DEFINITIONS, ...AGOT_ARTIFACT_DEFINITIONS];
+      const completeCatalog = createItemCatalog(completeDefinitions);
+      ITEM_DEFINITIONS.splice(0, ITEM_DEFINITIONS.length, ...completeDefinitions);
+      mutableItemCatalog.clear();
+      for (const [id, definition] of completeCatalog) mutableItemCatalog.set(id, definition);
+      itemCatalogLoaded = true;
+    })
+    .catch((error) => {
+      itemCatalogPreload = null;
+      throw error;
+    });
+  return itemCatalogPreload;
+}
+
+export function isItemCatalogPreloaded(): boolean {
+  return itemCatalogLoaded;
+}

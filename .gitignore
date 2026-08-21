@@ -27,6 +27,7 @@ __pycache__/
 public/assets/audio/
 
 # Generated QA and reverse-engineering scratch files
+tmp/
 artifacts/
 scratch/
 scratch_*.html

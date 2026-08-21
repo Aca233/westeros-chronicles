@@ -1,13 +1,8 @@
 import React, { Suspense, lazy, useCallback, useEffect, useState } from 'react';
 import { Header } from './components/Header';
-import { Ck3CharacterWindow } from './components/Ck3CharacterWindow';
-import { WorldAssetDrawer } from './components/items/WorldAssetDrawer';
 import { StoryFeed } from './components/StoryFeed';
 import { ActionDock } from './components/ActionDock';
 import { DiceModal } from './components/DiceModal';
-import { SettingsModal } from './components/SettingsModal';
-import { CharacterCreator } from './components/CharacterCreator';
-import { TvTimelineModal } from './components/TvTimelineModal';
 import { AmbientCanvas } from './components/AmbientCanvas';
 import { CursorGlow } from './components/CursorGlow';
 import { useGameStore } from './store/useGameStore';
@@ -19,9 +14,14 @@ import { useMapUiStore } from './features/map/mapUiStore';
 
 // 地图抽屉按需分包:MapLibre 不进首屏,首次打开时才加载
 const MapDrawer = lazy(() => import('./features/map/MapDrawer').then((module) => ({ default: module.MapDrawer })));
+const Ck3CharacterWindow = lazy(() => import('./components/Ck3CharacterWindow').then((module) => ({ default: module.Ck3CharacterWindow })));
+const WorldAssetDrawer = lazy(() => import('./components/items/WorldAssetDrawer').then((module) => ({ default: module.WorldAssetDrawer })));
+const SettingsModal = lazy(() => import('./components/SettingsModal').then((module) => ({ default: module.SettingsModal })));
+const CharacterCreator = lazy(() => import('./components/CharacterCreator').then((module) => ({ default: module.CharacterCreator })));
+const TvTimelineModal = lazy(() => import('./components/TvTimelineModal').then((module) => ({ default: module.TvTimelineModal })));
 
 export const App: React.FC = () => {
-  const { changesLog, isTvTimelineOpen, closeTvTimeline, bootStatus, bootError, hydrateGameState, resetStoredGame } = useGameStore();
+  const { changesLog, isSettingsOpen, isCreatorOpen, isTvTimelineOpen, closeTvTimeline, bootStatus, bootError, hydrateGameState, resetStoredGame } = useGameStore();
   const [booted, setBooted] = useState(false);
   const characterNavigation = useCharacterNavigation();
   const activeDrawer = useMapUiStore((state) => state.activeDrawer);
@@ -113,15 +113,17 @@ export const App: React.FC = () => {
   }
 
   const dossierWindow = (
-    <Ck3CharacterWindow
-      selectedCharacterId={characterNavigation.selectedCharacterId}
-      onSelectCharacter={characterNavigation.openCharacter}
-      canGoBack={characterNavigation.canGoBack}
-      onBack={characterNavigation.goBack}
-      onReturnToPlayer={characterNavigation.returnToPlayer}
-      onOpenLocation={(locationId) => openMap({ kind: 'location', locationId })}
-      onOpenAsset={openDossierAsset}
-    />
+    <Suspense fallback={null}>
+      <Ck3CharacterWindow
+        selectedCharacterId={characterNavigation.selectedCharacterId}
+        onSelectCharacter={characterNavigation.openCharacter}
+        canGoBack={characterNavigation.canGoBack}
+        onBack={characterNavigation.goBack}
+        onReturnToPlayer={characterNavigation.returnToPlayer}
+        onOpenLocation={(locationId) => openMap({ kind: 'location', locationId })}
+        onOpenAsset={openDossierAsset}
+      />
+    </Suspense>
   );
 
   return (
@@ -217,28 +219,34 @@ export const App: React.FC = () => {
       )}
 
       {activeDrawer === 'asset' && selectedAssetId && (
-        <WorldAssetDrawer
-          assetId={selectedAssetId}
-          sourceCharacterId={assetSourceCharacterId}
-          onBack={returnFromAsset}
-          onClose={closeDrawer}
-          onOpenCharacter={openStoryCharacter}
-          onOpenLocation={(locationId) => openMap({ kind: 'location', locationId })}
-          onOpenAsset={openAsset}
-        />
+        <Suspense fallback={null}>
+          <WorldAssetDrawer
+            assetId={selectedAssetId}
+            sourceCharacterId={assetSourceCharacterId}
+            onBack={returnFromAsset}
+            onClose={closeDrawer}
+            onOpenCharacter={openStoryCharacter}
+            onOpenLocation={(locationId) => openMap({ kind: 'location', locationId })}
+            onOpenAsset={openAsset}
+          />
+        </Suspense>
       )}
 
       {/* 模态弹窗系统 */}
       <DiceModal />
-      <SettingsModal />
-      <CharacterCreator />
-      <TvTimelineModal
-        isOpen={isTvTimelineOpen}
-        onClose={closeTvTimeline}
-        onOpenCharacter={(characterId) => { closeTvTimeline(); openStoryCharacter(characterId); }}
-        onOpenLocation={(location) => { closeTvTimeline(); openMap({ kind: 'location', locationId: location.locationId }); }}
-        onOpenAsset={(assetId) => { closeTvTimeline(); openAsset(assetId); }}
-      />
+      <Suspense fallback={null}>
+        {isSettingsOpen && <SettingsModal />}
+        {isCreatorOpen && <CharacterCreator />}
+        {isTvTimelineOpen && (
+          <TvTimelineModal
+            isOpen
+            onClose={closeTvTimeline}
+            onOpenCharacter={(characterId) => { closeTvTimeline(); openStoryCharacter(characterId); }}
+            onOpenLocation={(location) => { closeTvTimeline(); openMap({ kind: 'location', locationId: location.locationId }); }}
+            onOpenAsset={(assetId) => { closeTvTimeline(); openAsset(assetId); }}
+          />
+        )}
+      </Suspense>
     </div>
   );
 };

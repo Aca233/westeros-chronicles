@@ -22,7 +22,9 @@ const assetSectionsSource = await read('src/components/items/WorldAssetSections.
 const dossierHookSource = await read('src/features/characters/useCharacterDossier.ts');
 
 if (!windowSource.includes('data-ck3-character-window')) failures.push('人物窗口缺少 CK3 根标记。');
-if (!appSource.includes("import { Ck3CharacterWindow } from './components/Ck3CharacterWindow'")) failures.push('App 尚未导入 CK3 人物窗口。');
+const importsCk3CharacterWindow = appSource.includes("import { Ck3CharacterWindow } from './components/Ck3CharacterWindow'")
+  || /import\(\s*['"]\.\/components\/Ck3CharacterWindow['"]\s*\)/.test(appSource);
+if (!importsCk3CharacterWindow) failures.push('App 尚未导入 CK3 人物窗口。');
 if (!appSource.includes('<Ck3CharacterWindow')) failures.push('App 尚未使用 CK3 人物窗口。');
 if (!windowSource.includes('CK3_SKILLS.map')) failures.push('人物窗口没有渲染 CK3 六项属性。');
 if (!windowSource.includes('data-character-identity-layout="split"')) failures.push('人物身份区没有使用左侧信息、右侧头像的双栏布局。');

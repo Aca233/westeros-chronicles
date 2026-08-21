@@ -22,12 +22,14 @@ const moduleUrl = `data:text/javascript;base64,${Buffer.from(bundle.outputFiles[
 const {
   ITEM_CATALOG,
   ITEM_DEFINITIONS,
+  preloadItemCatalog,
   createCustomRulerItemState,
   createDaenerysItemState,
   createJonItemState,
   createNedItemState,
   validateItemSystem,
 } = await import(moduleUrl);
+await preloadItemCatalog();
 
 const requiredIds = [
   'clothing.northern_wool_tunic',

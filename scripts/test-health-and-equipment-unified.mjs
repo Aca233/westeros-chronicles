@@ -14,7 +14,8 @@ async function bundleModule(entryPoint) {
   return import(`data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString('base64')}`);
 }
 
-const { ITEM_CATALOG, ITEM_DEFINITIONS } = await bundleModule('src/data/itemDefinitions.ts');
+const { ITEM_CATALOG, ITEM_DEFINITIONS, preloadItemCatalog } = await bundleModule('src/data/itemDefinitions.ts');
+await preloadItemCatalog();
 const { NPC_LOADOUT_TEMPLATES } = await bundleModule('src/data/npcLoadoutTemplates.ts');
 const { NPC_LOADOUT_OVERRIDES } = await bundleModule('src/data/npcLoadoutOverrides.ts');
 const { expandBaselineLoadout } = await bundleModule('src/features/characters/characterItems.ts');

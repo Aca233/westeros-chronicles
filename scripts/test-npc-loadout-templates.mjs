@@ -10,7 +10,8 @@ async function bundleModule(entryPoint) {
 
 const { NPC_LOADOUT_TEMPLATES } = await bundleModule('src/data/npcLoadoutTemplates.ts');
 const { NPC_LOADOUT_OVERRIDES } = await bundleModule('src/data/npcLoadoutOverrides.ts');
-const { ITEM_CATALOG } = await bundleModule('src/data/itemDefinitions.ts');
+const { ITEM_CATALOG, preloadItemCatalog } = await bundleModule('src/data/itemDefinitions.ts');
+await preloadItemCatalog();
 const { expandBaselineLoadout } = await bundleModule('src/features/characters/characterItems.ts');
 
 test('所有日常模板引用有效且位置兼容的非唯一物品', () => {

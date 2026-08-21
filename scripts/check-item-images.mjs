@@ -17,7 +17,8 @@ const bundle = await build({
   bundle: true, write: false, format: 'esm', platform: 'node',
 });
 const moduleUrl = `data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString('base64')}`;
-const { ITEM_DEFINITIONS } = await import(moduleUrl);
+const { ITEM_DEFINITIONS, preloadItemCatalog } = await import(moduleUrl);
+await preloadItemCatalog();
 assert.ok(ITEM_DEFINITIONS.length >= 48, `目录只有 ${ITEM_DEFINITIONS.length} 个定义，至少需要 48 个`);
 for (const category of categories) {
   const count = ITEM_DEFINITIONS.filter((definition) => definition.category === category).length;

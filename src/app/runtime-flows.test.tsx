@@ -126,6 +126,7 @@ describe('critical rendered runtime flows', () => {
     render(<App />);
     await screen.findByText('298 AC');
     await user.click(screen.getByRole('button', { name: '设置' }));
+    await screen.findByRole('dialog', { name: '大模型 API 与游戏设置' });
     const input = document.querySelector('input[type="file"]') as HTMLInputElement;
     await user.upload(input, new File(['{}'], 'save.json', { type: 'application/json' }));
 
@@ -179,8 +180,8 @@ describe('critical rendered runtime flows', () => {
     await user.type(screen.getByRole('textbox'), '继续讨论守城安排');
     await user.click(screen.getByRole('button', { name: '提交御令' }));
 
-    expect(await screen.findByText('守卫完成了换岗。')).toBeInTheDocument();
-    expect(useGameStore.getState().gameState.turnCount).toBe(2);
+    await waitFor(() => expect(useGameStore.getState().gameState.turnCount).toBe(2), { timeout: 10_000 });
+    expect(await screen.findByText('守卫完成了换岗。', {}, { timeout: 10_000 })).toBeInTheDocument();
     expect(dbMocks.commitTurnAtomically).toHaveBeenCalledOnce();
   });
 });

@@ -21,12 +21,14 @@ const bundle = await build({
 const moduleUrl = `data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString('base64')}`;
 const {
   ITEM_CATALOG,
+  preloadItemCatalog,
   createInitialAgotArtifactWorldState,
   isWorldArtifactAsset,
   listCharacterRecordedEquipment,
   validateWorldArtifactState,
   useGameStore,
 } = await import(moduleUrl);
+await preloadItemCatalog();
 
 const first = createInitialAgotArtifactWorldState();
 const second = createInitialAgotArtifactWorldState();
