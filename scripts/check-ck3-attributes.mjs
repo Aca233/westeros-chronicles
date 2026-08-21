@@ -6,8 +6,8 @@ const root = fileURLToPath(new URL('..', import.meta.url));
 const skills = ['diplomacy', 'martial', 'stewardship', 'intrigue', 'learning', 'prowess'];
 const failures = [];
 
-const types = await readFile(join(root, 'src/types/game.ts'), 'utf8');
-const attributesBlock = types.match(/export interface LordAttributes\s*\{([\s\S]*?)\}/)?.[1] ?? '';
+const characterDomain = await readFile(join(root, 'src/domain/character.ts'), 'utf8');
+const attributesBlock = characterDomain.match(/export interface LordAttributes\s*\{([\s\S]*?)\}/)?.[1] ?? '';
 for (const skill of skills) {
   if (!new RegExp(`\\b${skill}\\s*:`).test(attributesBlock)) failures.push(`LordAttributes is missing ${skill}.`);
 }
