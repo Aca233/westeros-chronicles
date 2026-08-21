@@ -70,20 +70,24 @@ def build_dem_tiles(
         raise MapImportError("DEM 范围超出高度图")
 
     mask_image: Image.Image | None = None
+    cropped_mask_image: Image.Image | None = None
+    water_elevation: float | None = None
     if land_mask is not None:
         mask_image = _open_copy(land_mask).convert("L")
         if mask_image.size == source_image.size:
-            cropped_mask = np.asarray(mask_image.crop((left, top, right, bottom)), dtype=np.uint8)
+            cropped_mask_image = mask_image.crop((left, top, right, bottom))
         elif mask_image.size == (cropped_source.shape[1], cropped_source.shape[0]):
-            cropped_mask = np.asarray(mask_image, dtype=np.uint8)
+            cropped_mask_image = mask_image.copy()
         else:
             mask_image.close()
             source_image.close()
             raise MapImportError("DEM 陆地蒙版尺寸必须匹配高度图或裁剪范围")
+        cropped_mask = np.asarray(cropped_mask_image, dtype=np.uint8)
         water = cropped_mask == 0
         if np.any(water):
             water_height = float(np.median(cropped_source[water]))
             cropped_source[water] = water_height
+            water_elevation = float(height_value_to_elevation(water_height, min_elevation, max_elevation))
 
     local_bounds = (0.0, 0.0, float(cropped_source.shape[1]), float(cropped_source.shape[0]))
     elevation_image = Image.fromarray(
@@ -104,7 +108,20 @@ def build_dem_tiles(
                         sample_bounds,
                         Image.Resampling.BILINEAR,
                     )
-                    encoded = encode_terrain_rgb(np.asarray(resized, dtype=np.float32))
+                    sampled_elevation = np.asarray(resized, dtype=np.float32)
+                    if cropped_mask_image is not None and water_elevation is not None:
+                        sampled_mask = cropped_mask_image.transform(
+                            (tile_size, tile_size),
+                            Image.Transform.EXTENT,
+                            sample_bounds,
+                            Image.Resampling.NEAREST,
+                        )
+                        sampled_elevation = np.where(
+                            np.asarray(sampled_mask, dtype=np.uint8) == 0,
+                            water_elevation,
+                            sampled_elevation,
+                        )
+                    encoded = encode_terrain_rgb(sampled_elevation)
                     relative = Path(str(zoom)) / str(tile_x) / f"{tile_y}.png"
                     target = staging / relative
                     target.parent.mkdir(parents=True, exist_ok=True)
@@ -126,6 +143,8 @@ def build_dem_tiles(
         raise
     finally:
         elevation_image.close()
+        if cropped_mask_image is not None:
+            cropped_mask_image.close()
         if mask_image is not None:
             mask_image.close()
         source_image.close()
