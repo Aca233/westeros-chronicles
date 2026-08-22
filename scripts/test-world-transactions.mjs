@@ -20,7 +20,7 @@ const bundle = await build({
   logLevel: 'silent',
 });
 const url = `data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString('base64')}`;
-const { commitWorldTransaction, createWorldBaselineSnapshot, createWorldRuntimeState } = await import(url);
+const { commitWorldTransaction, createWorldBaselineSnapshot, createWorldRuntimeState, siteAccessEventDrafts } = await import(url);
 
 const baseline = createWorldBaselineSnapshot({
   characters: [
@@ -119,10 +119,52 @@ test('人物、头衔、装备和日期变更在同一事务中提交', () => {
     ],
     dateAdvance: { days: 2 },
   }));
-  assert.equal(result.ok, true);
+  assert.equal(result.ok, true, 'reason=' + (result.ok === false ? result.reason : ''));
   assert.deepEqual(result.state.date, { year: 298, month: 5, day: 12 });
   assert.deepEqual(result.state.runtime.characters['agot:Stark_7'].location, { locationId: 'b_winterfell', sceneLocation: '神木林' });
   assert.equal(result.state.runtime.titles.c_winterfell.lawfulHolderId, 'agot:Stark_7');
   assert.deepEqual(result.state.runtime.assets.ice.equippedPosition, { group: 'mainhand' });
   assert.deepEqual(result.state.runtime.assets.ice.custodian, { type: 'character', characterId: 'agot:Stark_7' });
+});
+
+
+test('建站事务把站点写入物品系统并以带前缀资产镜像', () => {
+  const state = inputState();
+  const transaction = giftTransaction({
+    id: 'tx:create-site',
+    siteCreations: [{
+      id: 'turn2_site_0', name: '辎重帐', type: 'camp',
+      location: { locationId: 'b_winterfell' }, locationLabel: '临冬城',
+      description: '本回合经行动确立的储藏处。', capacity: 20,
+    }],
+  });
+  const result = commitWorldTransaction(state, baseline, transaction);
+  assert.equal(result.ok, true);
+  assert.ok(result.state.items.sites['turn2_site_0']);
+  assert.equal(result.state.runtime.revision, 1);
+  const duplicate = commitWorldTransaction(result.state, baseline, transaction);
+  assert.equal(duplicate.duplicate, true);
+});
+
+test('越权取用产生 site.access 事件，本人控制或无主据点不产生', () => {
+  const siteBaseline = createWorldBaselineSnapshot({
+    characters: [
+      { id: 'agot:Stark_3', alive: true, location: { locationId: 'b_winterfell' } },
+      { id: 'agot:Bolton_1', alive: true, location: { locationId: 'b_winterfell' } },
+    ],
+    titles: [{ id: 'b_winterfell', lawfulHolderId: 'agot:Stark_3', controllerId: 'agot:Stark_3', contestedByIds: [] }],
+    assets: [{
+      id: 'site:castle_cache', kind: 'site', lawfulOwner: null, controller: null, custodian: null,
+      placement: { type: 'location', location: { locationId: 'b_winterfell' } }, equippedPosition: null, status: 'normal',
+    }],
+    knownLocationIds: ['b_winterfell'],
+  });
+  const runtime = createWorldRuntimeState();
+  const violations = siteAccessEventDrafts([{ instanceId: 'item_x', siteId: 'castle_cache' }], 'agot:Bolton_1', siteBaseline, runtime);
+  assert.equal(violations.length, 1);
+  assert.equal(violations[0].type, 'site.access');
+  assert.equal(violations[0].visibility, 'public');
+
+  const byController = siteAccessEventDrafts([{ instanceId: 'item_x', siteId: 'castle_cache' }], 'agot:Stark_3', siteBaseline, runtime);
+  assert.equal(byController.length, 0);
 });

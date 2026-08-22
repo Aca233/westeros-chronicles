@@ -458,6 +458,24 @@ function SceneBlock({
         </Reveal>
       )}
 
+      {/* 思维链:一个安静的文字开关 */}
+      {turn.think && !isFirst && (
+        <div className="mb-7 select-none">
+          <button
+            onClick={() => setIsThinkOpen(!isThinkOpen)}
+            className="mx-auto flex items-center gap-2 text-[11px] tracking-[0.2em] text-parchment-faint transition-colors hover:text-gold"
+          >
+            <span className="inline-block h-1 w-1 rotate-45 bg-current" aria-hidden="true" />
+            {isThinkOpen ? '收起思维链' : '展开思维链'}
+          </button>
+          {isThinkOpen && (
+            <div className="panel-pop mt-4 whitespace-pre-wrap border-l border-hairline-bright/60 pl-4 font-mono text-[11px] leading-relaxed text-parchment-dim">
+              {stripEmoji(turn.think)}
+            </div>
+          )}
+        </div>
+      )}
+
       {/* 正文:泥金首字起笔 */}
       <div className="deed-prose deed-prose--illuminated font-serif">
         {extractNarrativeContent(turn.narrate).split(/\n+/).map((para, pIdx) => {
@@ -470,24 +488,6 @@ function SceneBlock({
           );
         })}
       </div>
-
-      {/* 幕后暗线:一个安静的文字开关 */}
-      {turn.think && (
-        <div className="mt-9 select-none">
-          <button
-            onClick={() => setIsThinkOpen(!isThinkOpen)}
-            className="mx-auto flex items-center gap-2 text-[11px] tracking-[0.2em] text-parchment-faint transition-colors hover:text-gold"
-          >
-            <span className="inline-block h-1 w-1 rotate-45 bg-current" aria-hidden="true" />
-            {isThinkOpen ? '收起幕后暗线' : '展开幕后暗线'}
-          </button>
-          {isThinkOpen && (
-            <div className="panel-pop mt-4 whitespace-pre-wrap border-l border-hairline-bright/60 pl-4 font-mono text-[11px] leading-relaxed text-parchment-dim">
-              {stripEmoji(turn.think)}
-            </div>
-          )}
-        </div>
-      )}
 
       {/* 名词旁注悬浮卡 */}
       {hoveredEntity && (

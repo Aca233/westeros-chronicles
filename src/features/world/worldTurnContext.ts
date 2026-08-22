@@ -18,7 +18,8 @@ import type { CanonicalTimelineEvent } from './canonicalTimeline';
 import { advanceWorldDate, compareWorldDates, type WorldDate } from './worldHistory';
 import { projectNpcAssets, projectNpcEquipment, worldEventParticipantIds, type NpcItemRelation } from './worldHistoryProjection';
 import { mapRepository } from '../map/repository';
-import { UNKNOWN_WESTEROS_LOCATION_ID } from '../map/locationResolver';
+import { sameWorldLocation, UNKNOWN_WESTEROS_LOCATION_ID } from '../map/locationResolver';
+import { worldAssetId } from './worldAssetId';
 import { formatNarrativeLocationContext, resolveNarrativeLocationContext, type NarrativeLocationContext } from '../map/narrativeLocationContext';
 import type { MapLocationSearchEntry, SemanticMembership, SemanticTitle } from '../map/types';
 import type { PendingWorldTransaction, WorldEvent } from './worldRuntimeTypes';
@@ -71,6 +72,15 @@ export interface VisibleWorldItem {
   source: string;
 }
 
+export interface VisibleWorldSite {
+  siteId: string;
+  name: string;
+  type: string;
+  capacity?: number;
+  itemCount: number;
+  locationTitle?: string;
+}
+
 export interface WorldTurnContext {
   selection: CharacterPromptSelection;
   directlyNamedIds: CharacterId[];
@@ -80,6 +90,7 @@ export interface WorldTurnContext {
   timelinePressures: CanonicalTimelineEvent[];
   visibleWorldEquipment: VisibleWorldItem[];
   visibleWorldAssets: VisibleWorldItem[];
+  currentLocationSites: VisibleWorldSite[];
   characterCommandContext: CharacterCommandBatchBaseContext;
   currentDate: WorldDate;
   narrativeLocation: NarrativeLocationContext;
@@ -324,6 +335,24 @@ export async function buildWorldTurnContext(input: BuildWorldTurnContextInput): 
     UNKNOWN_WESTEROS_LOCATION_ID,
   ])];
   const visibleItems = visibleCharacterItems(resolved, selectedIds, gameState);
+  // 当前地点据点：容器的在场可见性——名称、类型、容量与现存件数直接进入解析上下文。
+  const titlesByTitleId = new Map(semanticTitles.map((title) => [title.titleId, title.name]));
+  const itemSystem = gameState.lord.items;
+  const currentLocationSites: VisibleWorldSite[] = Object.values(itemSystem.sites)
+    .filter((site) => sameWorldLocation(site.location, gameState.lord.location))
+    .map((site) => ({
+      siteId: worldAssetId.site(site.id),
+      name: site.name,
+      type: site.type,
+      ...(site.capacity !== undefined ? { capacity: site.capacity } : {}),
+      itemCount: Object.values(itemSystem.placements)
+        .filter((placement) => placement.type === 'site' && placement.siteId === site.id)
+        .length,
+      ...(titlesByTitleId.has(site.location.locationId)
+        ? { locationTitle: titlesByTitleId.get(site.location.locationId) }
+        : {}),
+    }))
+    .sort((left, right) => left.name.localeCompare(right.name, 'zh-CN'));
   const narrativeLocation = resolveNarrativeLocationContext({
     location: gameState.lord.location,
     locations: mapLocations,
@@ -357,6 +386,7 @@ export async function buildWorldTurnContext(input: BuildWorldTurnContextInput): 
     timelinePressures,
     visibleWorldEquipment: visibleItems.equipment.slice(0, WORLD_CONTEXT_LIMITS.assets),
     visibleWorldAssets: visibleItems.assets.slice(0, WORLD_CONTEXT_LIMITS.assets),
+    currentLocationSites,
     characterCommandContext: {
       characters: resolved,
       currentLocationId: gameState.lord.location.locationId,
@@ -415,6 +445,13 @@ export function formatWorldTurnContext(context: WorldTurnContext): string {
   const pendingLines = context.pendingTransactions.length
     ? context.pendingTransactions.map((entry) => `- ${entry.id}：等待下一次成功回合结算。`)
     : ['- 当前没有待处理世界事务。'];
+  const siteLines = context.currentLocationSites.length
+    ? context.currentLocationSites.map((site) => {
+        const usage = site.capacity !== undefined ? `${site.itemCount}/${site.capacity}` : `${site.itemCount}`;
+        const title = site.locationTitle ? `，隶属领地：${site.locationTitle}` : '';
+        return `- ${site.name} [${site.siteId}]：${site.type}，现存 ${usage} 件${title}`;
+      })
+    : ['- 当前地点没有已知据点或储藏处。'];
   return [
     '### 【当前权威地点】',
     `- 位置：${narrativeLocation}`,
@@ -435,6 +472,10 @@ export function formatWorldTurnContext(context: WorldTurnContext): string {
     '### 【人物名下或保管资产】',
     '- 本段只说明所有权、领地/家族关联或保管关系，不代表当前随身携带。',
     ...assetLines,
+    '',
+    '### 【当前地点据点】',
+    '- 据点是当前地点的储藏容器；取用其中的物品必须通过物品命令，归属由所在领地的控制权决定。',
+    ...siteLines,
     '',
     '### 【近期已提交世界事件】',
     ...eventLines,

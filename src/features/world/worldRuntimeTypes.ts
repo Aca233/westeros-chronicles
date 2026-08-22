@@ -1,5 +1,5 @@
 import type { CharacterId } from '../../domain/characterId';
-import type { EquipmentPosition, ItemStateCommand, ItemSystemState } from '../items/types';
+import type { EquipmentPosition, ItemStateCommand, ItemStorageSite, ItemStorageSiteType, ItemSystemState } from '../items/types';
 import type { WorldLocationRef } from '../../domain/worldLocation';
 import type { ActiveJourney, TravelStateCommand } from '../map/travel/types';
 import type { WorldDate, WorldDateAdvance } from '../../domain/worldDate';
@@ -54,7 +54,8 @@ export type WorldIntent =
   | { kind: 'unequip_asset'; actorId: CharacterId; assetId: string; placement: AssetPlacement; evidenceText: string }
   | { kind: 'grant_title' | 'inherit_title' | 'settle_title_war'; actorId: CharacterId; titleId: string; recipientId: CharacterId; evidenceText: string }
   | { kind: 'revoke_title'; actorId: CharacterId; titleId: string; holderId: CharacterId; evidenceText: string }
-  | { kind: 'occupy_title'; actorId: CharacterId; titleId: string; evidenceText: string };
+  | { kind: 'occupy_title'; actorId: CharacterId; titleId: string; evidenceText: string }
+  | { kind: 'create_site'; actorId: CharacterId; siteType: ItemStorageSiteType; name?: string; evidenceText: string };
 
 export type WorldEventSource = 'player_input' | 'ui_action' | 'ai_resolution' | 'system_rule';
 export type WorldEventType = string;
@@ -131,6 +132,7 @@ export interface WorldTransaction {
   mutations: WorldMutation[];
   dateAdvance?: WorldDateAdvance;
   itemCommands?: ItemStateCommand[];
+  siteCreations?: ItemStorageSite[];
   nextJourney?: ActiveJourney | null;
   eventDrafts: Array<Omit<WorldEvent, 'id' | 'transactionId' | 'turn' | 'date' | 'source'>>;
 }

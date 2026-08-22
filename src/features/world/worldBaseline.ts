@@ -335,8 +335,9 @@ export function buildWorldAssetBaseline(input: BuildWorldAssetBaselineInput): Wo
     assets.push({
       id: worldAssetId.site(site.id),
       kind: 'site',
-      lawfulOwner: owner,
-      controller: owner,
+      // 站点归属不在此处落人：投影层按地点头衔派生，随政权易主自动跟随。
+      lawfulOwner: null,
+      controller: null,
       custodian: null,
       placement: { type: 'location', location: { ...site.location } },
       equippedPosition: null,

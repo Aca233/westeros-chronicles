@@ -135,7 +135,16 @@ export const LocationDetails: React.FC<LocationDetailsProps> = ({
           <section className="map-details-section map-local-intelligence">
             <h3>此地点的资产</h3>
             <div className="map-intel-list">
-              {knownAssets.map((asset) => <button key={asset.assetId} type="button" onClick={() => onOpenAsset(asset.assetId)}><Boxes /><span><small>{asset.assetType === 'site' ? '据点' : '运输工具'}</small><strong>{asset.name}</strong></span></button>)}
+              {knownAssets.map((asset) => {
+                const typeLabel = asset.containerTypeLabel ?? (asset.assetType === 'site' ? '据点' : '运输工具');
+                const usage = asset.capacity !== undefined ? `${asset.itemCount}/${asset.capacity}` : `${asset.itemCount}`;
+                return (
+                  <button key={asset.assetId} type="button" onClick={() => onOpenAsset(asset.assetId)}>
+                    <Boxes />
+                    <span><small>{typeLabel}</small><strong>{asset.name} · 现存 {usage} 件</strong></span>
+                  </button>
+                );
+              })}
               {knownAssets.length === 0 && <p>没有已确认的据点或运输工具。</p>}
             </div>
           </section>

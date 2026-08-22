@@ -64,7 +64,7 @@ export const CountyWorldDetails: React.FC<CountyWorldDetailsProps> = ({
         {view.siteAssetIds.map((assetId) => (
           <button key={assetId} type="button" onClick={() => onOpenAsset(assetId)}>
             <Castle />
-            <span><small>城堡、城市或村庄</small><strong>{assetLabel(assetId, assetNames, '未记录名称的据点')}</strong></span>
+            <span><small>据点</small><strong>{assetLabel(assetId, assetNames, '未记录名称的据点')}</strong></span>
           </button>
         ))}
         {view.vehicleAssetIds.map((assetId) => (

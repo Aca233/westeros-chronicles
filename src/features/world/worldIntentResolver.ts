@@ -1,4 +1,5 @@
 import type { CharacterId } from '../characters/types';
+import { SITE_TYPE_LABELS, type ItemStorageSiteType } from '../items/types';
 import {
   createWorldLocationRef,
   resolveUniqueLocationEntry,
@@ -22,8 +23,19 @@ export const LOCATION_WORLD_INTENT_KINDS = [
   'move_inside_location',
 ] as const satisfies readonly WorldIntent['kind'][];
 
+// 模型可直接发出的资产与据点意图：不需要地点检索，只做结构校验；
+// 语义校验（在场、保管链、ID 唯一）在结算规划器里完成。
+export const DIRECT_WORLD_INTENT_KINDS = [
+  'gift_asset',
+  'steal_asset',
+  'create_site',
+] as const satisfies readonly WorldIntent['kind'][];
+
 export type LocationWorldIntentKind = (typeof LOCATION_WORLD_INTENT_KINDS)[number];
+export type DirectWorldIntentKind = (typeof DIRECT_WORLD_INTENT_KINDS)[number];
 export type ResolvedLocationWorldIntent = Extract<WorldIntent, { kind: LocationWorldIntentKind }>;
+export type ResolvedDirectWorldIntent = Extract<WorldIntent, { kind: DirectWorldIntentKind }>;
+export type ResolvedWorldIntent = ResolvedLocationWorldIntent | ResolvedDirectWorldIntent;
 
 export interface UnresolvedWorldIntent {
   kind: WorldIntent['kind'];
@@ -32,6 +44,10 @@ export interface UnresolvedWorldIntent {
   targetId?: string;
   sceneLocation?: string;
   elapsedTime?: WorldDateAdvance;
+  assetId?: string;
+  recipientId?: CharacterId;
+  siteType?: string;
+  name?: string;
   evidenceText: string;
 }
 
@@ -46,11 +62,12 @@ export interface RejectedWorldIntent {
 }
 
 export interface ResolveWorldIntentsResult {
-  resolved: ResolvedLocationWorldIntent[];
+  resolved: ResolvedWorldIntent[];
   rejected: RejectedWorldIntent[];
 }
 
 const LOCATION_KIND_SET = new Set<string>(LOCATION_WORLD_INTENT_KINDS);
+const DIRECT_KIND_SET = new Set<string>(DIRECT_WORLD_INTENT_KINDS);
 const INTENT_FIELDS = new Set([
   'kind',
   'actorId',
@@ -58,8 +75,13 @@ const INTENT_FIELDS = new Set([
   'targetId',
   'sceneLocation',
   'elapsedTime',
+  'assetId',
+  'recipientId',
+  'siteType',
+  'name',
   'evidenceText',
 ]);
+const SITE_TYPE_SET = new Set<string>(Object.keys(SITE_TYPE_LABELS));
 const DATE_ADVANCE_FIELDS = new Set(['days', 'months', 'years']);
 const TARGET_REQUIRED_KINDS = new Set<LocationWorldIntentKind>([
   'mention',
@@ -114,20 +136,27 @@ function parseUnresolvedWorldIntent(value: unknown, index: number): UnresolvedWo
   const record = value as Record<string, unknown>;
   const unknownFields = Object.keys(record).filter((field) => !INTENT_FIELDS.has(field));
   if (unknownFields.length) throw new Error(`世界意图包含未知字段：${unknownFields.join('、')}`);
-  if (typeof record.kind !== 'string' || !LOCATION_KIND_SET.has(record.kind)) {
+  if (typeof record.kind !== 'string' || !(LOCATION_KIND_SET.has(record.kind) || DIRECT_KIND_SET.has(record.kind))) {
     throw new Error(`未知的世界意图类型：${String(record.kind ?? '')}`);
   }
   if (typeof record.evidenceText !== 'string' || !record.evidenceText.trim()) {
     throw new Error('世界意图证据文本不能为空');
   }
+  if (record.siteType !== undefined && !SITE_TYPE_SET.has(String(record.siteType))) {
+    throw new Error(`世界意图 siteType 无效：${String(record.siteType)}`);
+  }
 
   return {
-    kind: record.kind as LocationWorldIntentKind,
+    kind: record.kind as UnresolvedWorldIntent['kind'],
     ...(record.actorId !== undefined ? { actorId: parseOptionalCharacterId(record.actorId) } : {}),
     ...(record.targetText !== undefined ? { targetText: trimmedOptionalString(record.targetText, 'targetText') } : {}),
     ...(record.targetId !== undefined ? { targetId: trimmedOptionalString(record.targetId, 'targetId') } : {}),
     ...(record.sceneLocation !== undefined ? { sceneLocation: trimmedOptionalString(record.sceneLocation, 'sceneLocation') } : {}),
     ...(record.elapsedTime !== undefined ? { elapsedTime: parseWorldDateAdvance(record.elapsedTime) } : {}),
+    ...(record.assetId !== undefined ? { assetId: trimmedOptionalString(record.assetId, 'assetId') } : {}),
+    ...(record.recipientId !== undefined ? { recipientId: parseOptionalCharacterId(record.recipientId) } : {}),
+    ...(record.siteType !== undefined ? { siteType: String(record.siteType) } : {}),
+    ...(record.name !== undefined ? { name: trimmedOptionalString(record.name, 'name') } : {}),
     evidenceText: record.evidenceText.trim(),
   };
 }
@@ -152,7 +181,32 @@ function journeyCanVerifyArrival(journey: ActiveJourney | undefined, targetLocat
 export function resolveWorldIntent(
   unresolved: UnresolvedWorldIntent,
   context: ResolveWorldIntentContext,
-): ResolvedLocationWorldIntent {
+): ResolvedWorldIntent {
+  if (DIRECT_KIND_SET.has(unresolved.kind)) {
+    const kind = unresolved.kind as DirectWorldIntentKind;
+    const actorId = unresolved.actorId || context.defaultActorId;
+    if (!actorId.trim()) throw new Error('世界意图缺少行动人物');
+    const evidenceText = unresolved.evidenceText?.trim();
+    if (!evidenceText) throw new Error('世界意图证据文本不能为空');
+    if (kind === 'gift_asset') {
+      if (!unresolved.assetId) throw new Error('gift_asset 意图缺少 assetId');
+      if (!unresolved.recipientId) throw new Error('gift_asset 意图缺少 recipientId');
+      return { kind, actorId, assetId: unresolved.assetId, recipientId: unresolved.recipientId, evidenceText };
+    }
+    if (kind === 'steal_asset') {
+      if (!unresolved.assetId) throw new Error('steal_asset 意图缺少 assetId');
+      return { kind, actorId, assetId: unresolved.assetId, evidenceText };
+    }
+    if (!unresolved.siteType) throw new Error('create_site 意图缺少 siteType');
+    if (!context.currentLocation) throw new Error('缺少人物当前位置，不能创建据点');
+    return {
+      kind: 'create_site',
+      actorId,
+      siteType: unresolved.siteType as ItemStorageSiteType,
+      ...(unresolved.name ? { name: unresolved.name } : {}),
+      evidenceText,
+    };
+  }
   if (!LOCATION_KIND_SET.has(unresolved.kind)) {
     throw new Error(`未知的世界意图类型：${unresolved.kind}`);
   }
@@ -210,7 +264,7 @@ export function resolveWorldIntents(
   intents: readonly UnresolvedWorldIntent[],
   context: ResolveWorldIntentContext,
 ): ResolveWorldIntentsResult {
-  const resolved: ResolvedLocationWorldIntent[] = [];
+  const resolved: ResolvedWorldIntent[] = [];
   const rejected: RejectedWorldIntent[] = [];
   for (const intent of intents) {
     try {

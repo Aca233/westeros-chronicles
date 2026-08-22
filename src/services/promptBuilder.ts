@@ -40,7 +40,23 @@ export const WORLD_INTENT_RESOLUTION_PROMPT = `
   { "kind": "start_travel", "targetText": "君临", "evidenceText": "我骑马赶往君临" },
   { "kind": "arrive", "targetText": "红堡", "sceneLocation": "议事厅", "elapsedTime": { "days": 15 }, "evidenceText": "半个月后，我推开红堡议事厅的门" }
 ]
-</world_intent>`;
+</world_intent>
+
+### 【资产与据点意图】
+本回合出现资产转移或新储藏处时，同样写入 <world_intent>：
+
+| 场景 | kind | 关键字段 |
+| --- | --- | --- |
+| 在场 NPC 把自己直接保管的物品赠予他人 | gift_asset | assetId、recipientId |
+| 有人趁保管者不备窃取物品；必须同时在 <dice_request> 提出密谋检定，且只在成功轨输出本意图 | steal_asset | assetId |
+| 行动确立了新的储藏处（清点出一间库房、扎营建起辎重帐） | create_site | siteType（armory/wardrobe/room/warehouse/stable/camp/other）、可选 name |
+
+要求：
+1. assetId 只能使用世界切片或资产上下文中明确出现的稳定资产 ID，不得编造。
+2. gift 要求赠予者本人在场且物品在其直接保管中；steal 要求行动者与物品同地，且 evidenceText 引用原文。
+3. steal 未遂、被察觉或检定失败时，不得输出 steal_asset 意图；失败的后果走 state_cmd 的失败轨。
+4. create_site 建在行动者当前地点；程序按类型补默认容量，name 只在原文明确命名时填写。
+5. 从不由玩家控制的据点取用物品是可被世界记住的越权行为；确有必要时正常输出物品命令，不要隐瞒。`;
 
 // 规则解析阶段使用的法则宪章：只负责判定当前行动能否改变世界，不写小说。
 // 叙事阶段使用的文学宪章见 GOT_LITERARY_PROMPT；两者职责互不重叠，禁止再合并。
@@ -310,7 +326,33 @@ export function buildStateSlice(gameState: GameState): string {
     const placement = entry.placement.type === 'equipped' ? JSON.stringify(entry.placement.position) : '';
     return `${formatEntry(entry)},位置:${placement}`;
   }).join('；') || '无';
-  const accessibleSummary = accessibleEntries.map(formatEntry).join('；') || '无';
+  // 可访问物品按容器归组：随身、各据点、各运输工具分别成段，据点名直接进入上下文。
+  const carriedAccessible = accessibleEntries.filter((entry) => entry.placement.type === 'carried');
+  const accessibleBySite = new Map<string, typeof accessibleEntries>();
+  const accessibleByVehicle = new Map<string, typeof accessibleEntries>();
+  for (const entry of accessibleEntries) {
+    if (entry.placement.type === 'site') {
+      const list = accessibleBySite.get(entry.placement.siteId) ?? [];
+      list.push(entry);
+      accessibleBySite.set(entry.placement.siteId, list);
+    } else if (entry.placement.type === 'vehicle') {
+      const list = accessibleByVehicle.get(entry.placement.vehicleId) ?? [];
+      list.push(entry);
+      accessibleByVehicle.set(entry.placement.vehicleId, list);
+    }
+  }
+  const accessibleParts = [
+    ...(carriedAccessible.length ? [`随身：${carriedAccessible.map(formatEntry).join('；')}`] : []),
+    ...[...accessibleBySite.entries()].flatMap(([siteId, entries]) => {
+      const site = itemState.sites[siteId];
+      return site ? [`${site.name}中：${entries.map(formatEntry).join('；')}`] : [];
+    }),
+    ...[...accessibleByVehicle.entries()].flatMap(([vehicleId, entries]) => {
+      const vehicle = itemState.vehicles[vehicleId];
+      return vehicle ? [`${vehicle.name}上：${entries.map(formatEntry).join('；')}`] : [];
+    }),
+  ];
+  const accessibleSummary = accessibleParts.join('｜') || '无';
   const equippedEffects = aggregateEquippedItemEffects(itemState, ITEM_CATALOG);
   const burden = getEquipmentBurden(equippedEffects);
   const itemDirectives = formatItemNarrativeDirectives(equippedEffects).slice(0, 16).join('；') || '无额外装备事实';

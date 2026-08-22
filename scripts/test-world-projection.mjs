@@ -28,6 +28,7 @@ const {
   projectWorldCharacter,
   projectWorldTitle,
   resolveAssetMapLocation,
+  resolvePrincipalCharacter,
 } = await import(moduleUrl);
 
 function fixtureBaseline() {
@@ -133,4 +134,35 @@ test('按需基线加载不调用人物全量搜索并递归加载资产容器',
   assert.equal(snapshot.assets.has('wagon'), true);
   assert.equal(snapshot.titles.has('c_winterfell'), true);
   assert.equal(snapshot.knownLocationIds.has('b_winterfell'), true);
+});
+
+test('站点归属从地点头衔派生，并随头衔易主自动跟随', () => {
+  const baseline = createWorldBaselineSnapshot({
+    characters: [
+      { id: 'agot:Stark_3', alive: true, location: { locationId: 'b_winterfell' } },
+      { id: 'agot:Bolton_1', alive: true, location: { locationId: 'b_dreadfort' } },
+    ],
+    titles: [{ id: 'b_winterfell', lawfulHolderId: 'agot:Stark_3', controllerId: 'agot:Stark_3', contestedByIds: [] }],
+    assets: [{
+      id: 'site:winterfell_armory', kind: 'site', lawfulOwner: null, controller: null, custodian: null,
+      placement: { type: 'location', location: { locationId: 'b_winterfell' } }, equippedPosition: null, status: 'normal',
+    }],
+    knownLocationIds: ['b_winterfell', 'b_dreadfort'],
+  });
+  const empty = createWorldRuntimeState();
+  const site = projectWorldAsset(baseline, empty, 'site:winterfell_armory');
+  assert.equal(site.controller?.type, 'title');
+  assert.equal(site.controller?.type === 'title' ? site.controller.titleId : '', 'b_winterfell');
+  assert.equal(site.lawfulOwner?.type, 'title');
+
+  const flipped = { ...empty, titles: { b_winterfell: { controllerId: 'agot:Bolton_1' } } };
+  const afterFlip = projectWorldAsset(baseline, flipped, 'site:winterfell_armory');
+  assert.equal(afterFlip.controller?.type, 'title');
+  assert.equal(resolvePrincipalCharacter(baseline, flipped, afterFlip.controller, 'controllerId'), 'agot:Bolton_1');
+  assert.equal(resolvePrincipalCharacter(baseline, flipped, afterFlip.lawfulOwner, 'lawfulHolderId'), 'agot:Stark_3');
+
+  const explicit = { ...empty, assets: { 'site:winterfell_armory': { controller: { type: 'character', characterId: 'agot:Stark_3' } } } };
+  const explicitSite = projectWorldAsset(baseline, explicit, 'site:winterfell_armory');
+  assert.equal(explicitSite.controller?.type, 'character');
+  assert.equal(explicitSite.controller?.type === 'character' ? explicitSite.controller.characterId : '', 'agot:Stark_3');
 });

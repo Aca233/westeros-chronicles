@@ -16,9 +16,9 @@ import type { AssetWorldIntent, WorldRuntimeState, WorldIntent, WorldMutation, W
 import { buildWorldAssetBaseline, createWorldBaselineSnapshot, worldAssetId, type WorldBaselineSnapshot } from '../../features/world/worldBaseline';
 import { commitWorldTransaction } from '../../features/world/worldTransactions';
 import { planJourneyTransaction, planExplicitArrivalTransaction } from '../../features/world/worldTravelRules';
-import { projectWorldCharacter, resolveAssetMapLocation } from '../../features/world/worldProjection';
-import { resolveWorldIntents, type RejectedWorldIntent, type ResolvedLocationWorldIntent } from '../../features/world/worldIntentResolver';
-import { planAssetIntent } from '../../features/world/worldAssetRules';
+import { projectWorldAsset, projectWorldCharacter, resolveAssetMapLocation } from '../../features/world/worldProjection';
+import { resolveWorldIntents, type RejectedWorldIntent, type ResolvedLocationWorldIntent, type ResolvedWorldIntent } from '../../features/world/worldIntentResolver';
+import { planAssetIntent, planCreateSiteIntent } from '../../features/world/worldAssetRules';
 import { planTitleIntent } from '../../features/world/worldTitleRules';
 import type { RoutePlan, RouteRequest } from '../../features/map/routing/types';
 import { RouteClient } from '../../features/map/routing/routeClient';
@@ -255,6 +255,76 @@ export async function prepareWorldTurn(input: PrepareWorldTurnInput): Promise<Pr
   try {
     const planner = input.routePlanner ?? defaultRoutePlanner;
     for (const intent of resolution.resolved) {
+      // 模型直接发出的资产与据点意图：语义校验失败只拒绝该条，不拖垮整个回合。
+      if (intent.kind === 'gift_asset' || intent.kind === 'steal_asset' || intent.kind === 'create_site') {
+        try {
+          transaction.intents.push(intent);
+          if (intent.kind === 'create_site') {
+            const locationLabel = locations.find((entry) => entry.id === input.gameState.lord.location.locationId)?.name
+              ?? input.gameState.lord.location.locationId;
+            const site = planCreateSiteIntent(intent, {
+              baseline,
+              runtime: input.gameState.worldRuntime,
+              itemSites: input.gameState.lord.items.sites,
+              idSeed: `${transactionId}:site:${transaction.siteCreations?.length ?? 0}`,
+              locationLabel,
+            });
+            transaction.siteCreations = [...(transaction.siteCreations ?? []), site];
+            transaction.eventDrafts.push({
+              type: 'intent.create_site',
+              actorIds: [intent.actorId],
+              subjectRefs: [
+                { type: 'asset', assetId: worldAssetId.site(site.id) },
+                { type: 'location', location: { ...site.location } },
+              ],
+              location: { ...site.location },
+              reason: intent.evidenceText,
+              visibility: 'public',
+            });
+          } else if (intent.kind === 'steal_asset') {
+            transaction.mutations.push(...planAssetIntent(intent, { baseline, runtime: input.gameState.worldRuntime }));
+            // 行窃是秘密：只有窃贼、原主与在场者知道；世界账本留下可追溯的痕。
+            const asset = projectWorldAsset(baseline, input.gameState.worldRuntime, intent.assetId);
+            const assetLocation = asset ? resolveAssetMapLocation(baseline, input.gameState.worldRuntime, asset.id) : null;
+            const witnessIds = [intent.actorId];
+            for (const ref of [asset?.controller, asset?.lawfulOwner]) {
+              if (ref?.type === 'character') witnessIds.push(ref.characterId);
+            }
+            if (assetLocation && assetLocation.locationId === input.gameState.lord.location.locationId) {
+              witnessIds.push(playerId);
+            }
+            transaction.eventDrafts.push({
+              type: 'intent.steal_asset',
+              actorIds: [intent.actorId],
+              subjectRefs: [{ type: 'asset', assetId: intent.assetId }],
+              ...(assetLocation ? { location: { ...assetLocation } } : {}),
+              reason: intent.evidenceText,
+              visibility: 'secret',
+              knownBy: [...new Set(witnessIds)],
+            });
+          } else {
+            transaction.mutations.push(...planAssetIntent(intent, { baseline, runtime: input.gameState.worldRuntime }));
+            transaction.eventDrafts.push({
+              type: 'intent.gift_asset',
+              actorIds: [intent.actorId],
+              subjectRefs: [
+                { type: 'asset', assetId: intent.assetId },
+                { type: 'character', characterId: intent.recipientId },
+              ],
+              location: { ...input.gameState.lord.location },
+              reason: intent.evidenceText,
+              visibility: 'public',
+            });
+          }
+        } catch (error) {
+          resolution.rejected.push({
+            intent: { ...intent },
+            reason: stripEmoji(error instanceof Error ? error.message : '资产或据点意图无法结算'),
+          });
+          transaction.intents = transaction.intents.filter((kept) => kept !== intent);
+        }
+        continue;
+      }
       const target = intent.targetRef?.type === 'location' ? intent.targetRef.location : undefined;
       if (intent.kind === 'arrive') {
         if (!target) throw new Error('抵达意图缺少目标地点');
@@ -492,6 +562,7 @@ export async function prepareWorldTurn(input: PrepareWorldTurnInput): Promise<Pr
   const hasWork = transaction.intents.length > 0
     || transaction.mutations.length > 0
     || Boolean(transaction.itemCommands?.length)
+    || Boolean(transaction.siteCreations?.length)
     || transaction.nextJourney !== undefined
     || Boolean(transaction.dateAdvance);
   return {

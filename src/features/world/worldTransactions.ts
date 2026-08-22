@@ -1,8 +1,9 @@
 import { ITEM_CATALOG } from '../../data/itemDefinitions';
 import { applyItemActions, type ItemActionContext } from '../items/actions';
 import type { ItemAction, ItemPlacement, ItemStateCommand, ItemSystemState } from '../items/types';
-import { UNKNOWN_WESTEROS_LOCATION_ID } from '../map/locationResolver';
+import { sameWorldLocation, UNKNOWN_WESTEROS_LOCATION_ID } from '../map/locationResolver';
 import { advanceWorldDate } from './worldHistory';
+import { worldAssetId } from './worldAssetId';
 import {
   createWorldBaselineSnapshot,
   type WorldAssetBaseline,
@@ -13,6 +14,7 @@ import {
   projectWorldCharacter,
   projectWorldTitle,
   resolveAssetMapLocation,
+  resolvePrincipalCharacter,
 } from './worldProjection';
 import { cloneWorldRuntimeState, validateWorldRuntimeState } from './worldRuntimeState';
 import type {
@@ -67,12 +69,21 @@ function applyItemCommands(
   if (!actorId) throw new Error('物品命令缺少行动人物');
   const actor = projectWorldCharacter(baseline, state.runtime, actorId);
   if (!actor) throw new Error(`人物不存在：${actorId}`);
+  const actorLocation = actor.location ?? { locationId: UNKNOWN_WESTEROS_LOCATION_ID };
   const context: ItemActionContext = {
     actorId,
-    actorLocation: actor.location ?? { locationId: UNKNOWN_WESTEROS_LOCATION_ID },
+    actorLocation,
     gameDate: `${state.date.year}.${state.date.month}.${state.date.day}`,
-    accessibleSiteIds: new Set(Object.keys(state.items.sites)),
-    accessibleVehicleIds: new Set(Object.keys(state.items.vehicles)),
+    accessibleSiteIds: new Set(
+      Object.values(state.items.sites)
+        .filter((site) => sameWorldLocation(site.location, actorLocation))
+        .map((site) => site.id),
+    ),
+    accessibleVehicleIds: new Set(
+      Object.values(state.items.vehicles)
+        .filter((vehicle) => sameWorldLocation(vehicle.location, actorLocation))
+        .map((vehicle) => vehicle.id),
+    ),
   };
   const applied = applyItemActions(
     state.items,
@@ -88,8 +99,8 @@ function placementFromItem(
   placement: ItemPlacement,
   actorId: import('../characters/types').CharacterId | undefined,
 ): { placement: AssetPlacement | null; equippedPosition: WorldAssetBaseline['equippedPosition'] } {
-  if (placement.type === 'site') return { placement: { type: 'asset', assetId: placement.siteId }, equippedPosition: null };
-  if (placement.type === 'vehicle') return { placement: { type: 'asset', assetId: placement.vehicleId }, equippedPosition: null };
+  if (placement.type === 'site') return { placement: { type: 'asset', assetId: worldAssetId.site(placement.siteId) }, equippedPosition: null };
+  if (placement.type === 'vehicle') return { placement: { type: 'asset', assetId: worldAssetId.vehicle(placement.vehicleId) }, equippedPosition: null };
   if (placement.type === 'character') return { placement: { type: 'character', characterId: placement.characterId as import('../characters/types').CharacterId }, equippedPosition: null };
   if (placement.type === 'equipped') return { placement: actorId ? { type: 'character', characterId: actorId } : null, equippedPosition: placement.position };
   if (placement.type === 'carried') return { placement: actorId ? { type: 'character', characterId: actorId } : null, equippedPosition: null };
@@ -103,9 +114,10 @@ function itemDerivedAssets(
 ): WorldAssetBaseline[] {
   const assets = new Map(baseline.assets);
   for (const site of Object.values(items.sites)) {
-    const previous = assets.get(site.id);
-    assets.set(site.id, {
-      id: site.id,
+    const id = worldAssetId.site(site.id);
+    const previous = assets.get(id);
+    assets.set(id, {
+      id,
       kind: 'site',
       lawfulOwner: previous?.lawfulOwner ?? null,
       controller: previous?.controller ?? null,
@@ -116,9 +128,10 @@ function itemDerivedAssets(
     });
   }
   for (const vehicle of Object.values(items.vehicles)) {
-    const previous = assets.get(vehicle.id);
-    assets.set(vehicle.id, {
-      id: vehicle.id,
+    const id = worldAssetId.vehicle(vehicle.id);
+    const previous = assets.get(id);
+    assets.set(id, {
+      id,
       kind: 'vehicle',
       lawfulOwner: previous?.lawfulOwner ?? null,
       controller: previous?.controller ?? null,
@@ -299,6 +312,43 @@ function eventDrafts(transaction: WorldTransaction): WorldTransaction['eventDraf
   }];
 }
 
+export function siteAccessEventDrafts(
+  captures: ReadonlyArray<{ instanceId: string; siteId: string }>,
+  actorId: import('../characters/types').CharacterId | undefined,
+  baseline: WorldBaselineSnapshot,
+  runtime: WorldRuntimeState,
+): NonNullable<WorldTransaction['eventDrafts']> {
+  if (!captures.length) return [];
+  const drafts: WorldTransaction['eventDrafts'] = [];
+  for (const capture of captures) {
+    const siteAssetId = worldAssetId.site(capture.siteId);
+    const site = projectWorldAsset(baseline, runtime, siteAssetId);
+    if (!site) continue;
+    const controllerCharacter = resolvePrincipalCharacter(baseline, runtime, site.controller, 'controllerId');
+    // 无主据点或行动者本人控制：取用不产生代价事件；否则世界记得这次越权。
+    if (!site.controller || controllerCharacter === actorId) continue;
+    drafts.push({
+      type: 'site.access',
+      actorIds: actorId ? [actorId] : [],
+      subjectRefs: [
+        { type: 'asset', assetId: siteAssetId },
+        { type: 'asset', assetId: capture.instanceId },
+      ],
+      ...(site.placement?.type === 'location' ? { location: { ...site.placement.location } } : {}),
+      reason: '从不由其控制的据点取用了物品',
+      visibility: 'public',
+    });
+  }
+  return drafts;
+}
+
+function applySiteCreations(items: ItemSystemState, sites: readonly import('../items/types').ItemStorageSite[]): void {
+  for (const site of sites) {
+    if (items.sites[site.id]) throw new Error(`据点已存在：${site.id}`);
+    items.sites[site.id] = structuredClone(site);
+  }
+}
+
 export function commitWorldTransaction(
   state: WorldCommitSlice,
   baseline: WorldBaselineSnapshot,
@@ -314,6 +364,14 @@ export function commitWorldTransaction(
     if (!Number.isInteger(transaction.turn) || transaction.turn < 0) throw new Error('世界事务回合不合法');
     if (!transaction.reason.trim()) throw new Error('世界事务原因不能为空');
     const next = cloneCommitSlice(state);
+    // 取物前先记录来源据点：结算后用于判定是否发生越权取用。
+    const siteAccessCaptures = (transaction.itemCommands ?? []).flatMap((command) => {
+      if (command.type !== 'ITEM_TRANSFER' && command.type !== 'ITEM_SPLIT') return [];
+      const placement = next.items.placements[command.instanceId];
+      if (placement?.type !== 'site') return [];
+      return [{ instanceId: command.instanceId, siteId: placement.siteId }];
+    });
+    applySiteCreations(next.items, transaction.siteCreations ?? []);
     applyItemCommands(next, baseline, transaction);
     const rebuiltBaseline = rebuildBaseline(baseline, next.items, transaction);
     transaction.mutations.forEach((mutation) => applyMutation(next.runtime, rebuiltBaseline, mutation));
@@ -322,15 +380,19 @@ export function commitWorldTransaction(
     else if (transaction.nextJourney !== undefined) next.journey = structuredClone(transaction.nextJourney);
 
     validateFinalState(rebuiltBaseline, next.runtime);
-    const events: WorldEvent[] = eventDrafts(transaction).map((draft, index) => ({
+    const toEvent = (draft: NonNullable<WorldTransaction['eventDrafts']>[number], prefix: string, index: number): WorldEvent => ({
       ...structuredClone(draft),
-      id: `${transaction.id}:event:${String(index + 1).padStart(3, '0')}`,
+      id: `${transaction.id}:${prefix}:${String(index + 1).padStart(3, '0')}`,
       transactionId: transaction.id,
       turn: transaction.turn,
       date: { ...next.date },
       source: transaction.source,
-    }));
+    });
+    const events: WorldEvent[] = eventDrafts(transaction).map((draft, index) => toEvent(draft, 'event', index));
     next.runtime.events.push(...events);
+    const accessEvents = siteAccessEventDrafts(siteAccessCaptures, actorIdFor(transaction), rebuiltBaseline, next.runtime)
+      .map((draft, index) => toEvent(draft, 'site-access', index));
+    next.runtime.events.push(...accessEvents);
     next.runtime.revision += 1;
     validateWorldRuntimeState(next.runtime);
     return { ok: true, state: next, transactionId: transaction.id, duplicate: false, events };

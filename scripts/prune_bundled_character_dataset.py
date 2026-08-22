@@ -11,7 +11,9 @@ from typing import Any
 
 from scripts.agot_character_import.roster import (
     RosterReferences,
+    build_holder_summaries,
     partition_runtime_characters,
+    resolve_holder_succession,
     retention_reason_counts,
     sanitize_runtime_records,
 )
@@ -169,6 +171,56 @@ def _write_mapping_shards(root: Path, directory: str, mapping: dict[str, Any]) -
         (target / f"{shard}.json").write_bytes(_json_bytes(values))
 
 
+_SUCCESSOR_RANK_FIELDS = (
+    ("baronyId", "countyId"),
+    ("countyId", "duchyId"),
+    ("duchyId", "kingdomId"),
+    ("kingdomId", "empireId"),
+    ("empireId", "hegemonId"),
+)
+
+
+def _load_title_geography(repo_root: Path) -> tuple[dict[str, str], dict[str, tuple[float, float]]]:
+    """Feudal parent edges and per-title centroids from bundled AGOT map data.
+
+    Parent chains come from semantic membership rows (barony through hegemon);
+    centroids average member-baronies' map coordinates. Missing map data yields
+    empty maps so succession still runs with liege/proximity disabled.
+    """
+    parent: dict[str, str] = {}
+    centroid: dict[str, tuple[float, float]] = {}
+    coords: dict[str, tuple[float, float]] = {}
+    locations_root = repo_root / "public" / "data" / "agot-map" / "locations"
+    if locations_root.is_dir():
+        for path in sorted(locations_root.glob("*.json")):
+            for location in _read_json(path):
+                x, y = location.get("mapX"), location.get("mapY")
+                if isinstance(x, (int, float)) and isinstance(y, (int, float)):
+                    coords[str(location["id"])] = (float(x), float(y))
+    membership_path = repo_root / "public" / "data" / "agot-map" / "semantic" / "membership.json"
+    if membership_path.exists():
+        for row in _read_json(membership_path):
+            barony_id = str(row.get("baronyId") or "")
+            point = coords.get(barony_id)
+            titles = [str(row.get(field)) for field, _ in _SUCCESSOR_RANK_FIELDS]
+            titles = [title for title in titles if title and title != "None"]
+            if point is not None:
+                for title_id in titles:
+                    total_x, total_y, count = centroid.get(title_id, (0.0, 0.0, 0))
+                    centroid[title_id] = (total_x + point[0], total_y + point[1], count + 1)
+            for child_field, ancestor_field in _SUCCESSOR_RANK_FIELDS:
+                child = row.get(child_field)
+                liege = row.get(ancestor_field)
+                if child and liege:
+                    parent.setdefault(str(child), str(liege))
+    averaged = {
+        title_id: (total_x / count, total_y / count)
+        for title_id, (total_x, total_y, count) in centroid.items()
+        if count > 0
+    }
+    return parent, averaged
+
+
 def prune_bundled_dataset(root: Path, references: RosterReferences | None = None) -> dict[str, int]:
     root = root.resolve()
     manifest = _read_json(root / "manifest.json")
@@ -196,14 +248,27 @@ def prune_bundled_dataset(root: Path, references: RosterReferences | None = None
             str(summary["id"]): summary
             for summary in _read_json(previous_summaries_path).get("holders", [])
         }
-    retained_ids, holder_summaries = partition_runtime_characters(records, references, previous_summaries)
+    retained_ids, _ = partition_runtime_characters(records, references, previous_summaries)
+    title_parent, title_centroid = _load_title_geography(root.parents[2])
+    final_titles, succession_stats = resolve_holder_succession(
+        records,
+        references.title_holders,
+        retained_ids,
+        title_parent=title_parent,
+        title_centroid=title_centroid,
+        previous_summaries=previous_summaries,
+    )
+    final_titles = dict(sorted(final_titles.items()))
+    holder_summaries = {
+        str(summary["id"]): summary
+        for summary in build_holder_summaries(records, final_titles, retained_ids, previous_summaries)
+    }
     runtime_records = sanitize_runtime_records(records, retained_ids)
     final_kinship = _build_kinship_index(runtime_records)
     final_search = sorted(
         (entry for entry in search_index if entry["id"] in retained_ids),
         key=lambda entry: (entry["name"], entry["id"]),
     )
-    final_titles = dict(sorted(title_holders.items()))
     final_loadouts = {
         character_id: profile
         for character_id, profile in sorted(loadouts.items())
@@ -241,6 +306,9 @@ def prune_bundled_dataset(root: Path, references: RosterReferences | None = None
         "retainedByStartState": reason_counts["startState"],
         "retainedByArtifactHolder": reason_counts["artifactHolder"],
         "retainedByKinshipHop": reason_counts["kinshipHop"],
+        "reassignedTitleByLiege": succession_stats["reassignedByLiege"],
+        "reassignedTitleByProximity": succession_stats["reassignedByProximity"],
+        "unresolvedHolderSummaries": succession_stats["unresolvedHolders"],
     })
 
     search_by_id = {entry["id"]: entry for entry in final_search}

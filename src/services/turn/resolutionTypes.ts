@@ -93,7 +93,7 @@ export interface PreparedWorldTurn {
   transaction?: WorldTransaction;
   acceptedCommands: StateCommand[];
   locations: readonly MapLocationSearchEntry[];
-  resolvedIntents: ResolvedLocationWorldIntent[];
+  resolvedIntents: import('../../features/world/worldIntentResolver').ResolvedWorldIntent[];
   rejectedIntents: RejectedWorldIntent[];
   rejectedCommands?: RejectedWorldCommand[];
   availability: WorldContextAvailability;

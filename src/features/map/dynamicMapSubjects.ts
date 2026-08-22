@@ -1,4 +1,5 @@
 import type { CharacterId } from '../characters/types'
+import { SITE_TYPE_LABELS, VEHICLE_TYPE_LABELS } from '../items/types.ts'
 import type { ItemSystemState } from '../items/types'
 import { worldAssetId } from '../world/worldAssetId.ts'
 import type { MapBounds, MapLocationSearchEntry, MapPixelPoint } from './types'
@@ -18,6 +19,8 @@ export interface MapAssetPoint extends MapPixelPoint {
   assetId: string
   name: string
   assetType: 'site' | 'vehicle'
+  containerTypeLabel?: string
+  capacity?: number
   locationId: string
   locationName: string
   regionId: string
@@ -121,6 +124,8 @@ export function projectKnownAssetMapPoints(
       assetId: worldAssetId.site(site.id),
       name: site.name,
       assetType: 'site',
+      containerTypeLabel: SITE_TYPE_LABELS[site.type],
+      ...(site.capacity !== undefined ? { capacity: site.capacity } : {}),
       locationId: location.id,
       locationName: location.name,
       regionId: location.regionId,
@@ -138,6 +143,8 @@ export function projectKnownAssetMapPoints(
       assetId: worldAssetId.vehicle(vehicle.id),
       name: vehicle.name,
       assetType: 'vehicle',
+      containerTypeLabel: VEHICLE_TYPE_LABELS[vehicle.type],
+      capacity: vehicle.capacity,
       locationId: location.id,
       locationName: location.name,
       regionId: location.regionId,

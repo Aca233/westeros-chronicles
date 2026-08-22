@@ -7,6 +7,7 @@ import {
   projectWorldCharacter,
   projectWorldTitle,
   resolveAssetMapLocation,
+  resolvePrincipalCharacter,
 } from './worldProjection';
 import type { WorldEvent, WorldPrincipalRef, WorldRuntimeState } from './worldRuntimeTypes';
 
@@ -98,8 +99,19 @@ function immutableEvents(events: Iterable<WorldEvent>): readonly WorldEvent[] {
   return Object.freeze([...events]);
 }
 
-function principalIsCharacter(principal: WorldPrincipalRef | null, characterId: CharacterId): boolean {
-  return principal?.type === 'character' && principal.characterId === characterId;
+function principalIsCharacter(
+  principal: WorldPrincipalRef | null,
+  characterId: CharacterId,
+  context?: WorldSelectorContext,
+  field: 'lawfulHolderId' | 'controllerId' = 'controllerId',
+): boolean {
+  if (!principal) return false;
+  if (principal.type === 'character') return principal.characterId === characterId;
+  // 头衔引用按当前法理持有人或实际控制者解析后匹配。
+  if (principal.type === 'title' && context) {
+    return resolvePrincipalCharacter(context.baseline, context.runtime, principal, field) === characterId;
+  }
+  return false;
 }
 
 function directlyHeldBy(asset: WorldAssetBaseline, characterId: CharacterId): boolean {
@@ -109,9 +121,9 @@ function directlyHeldBy(asset: WorldAssetBaseline, characterId: CharacterId): bo
     && asset.custodian.characterId === characterId;
 }
 
-function relatedToCharacter(asset: WorldAssetBaseline, characterId: CharacterId): boolean {
-  return principalIsCharacter(asset.lawfulOwner, characterId)
-    || principalIsCharacter(asset.controller, characterId)
+function relatedToCharacter(asset: WorldAssetBaseline, characterId: CharacterId, context: WorldSelectorContext): boolean {
+  return principalIsCharacter(asset.lawfulOwner, characterId, context, 'lawfulHolderId')
+    || principalIsCharacter(asset.controller, characterId, context, 'controllerId')
     || (asset.custodian?.type === 'character' && asset.custodian.characterId === characterId)
     || (asset.placement?.type === 'character' && asset.placement.characterId === characterId);
 }
@@ -137,7 +149,7 @@ function buildCharacterAssetGroups(characterId: CharacterId, context: WorldSelec
     const directlyHeld = directlyHeldBy(asset, characterId);
     const equipped = asset.kind === 'item' && directlyHeld && Boolean(asset.equippedPosition);
     const carriedByCharacter = asset.kind === 'item' && directlyHeld && !asset.equippedPosition;
-    const related = relatedToCharacter(asset, characterId);
+    const related = relatedToCharacter(asset, characterId, context);
 
     if (equipped) equipment.push(asset);
     else if (carriedByCharacter) carried.push(asset);
@@ -147,15 +159,15 @@ function buildCharacterAssetGroups(characterId: CharacterId, context: WorldSelec
     if (asset.kind === 'site' && related) sites.push(asset);
 
     if (asset.kind !== 'vehicle'
-      && principalIsCharacter(asset.lawfulOwner, characterId)
+      && principalIsCharacter(asset.lawfulOwner, characterId, context, 'lawfulHolderId')
       && !equipped
       && !carriedByCharacter
       && !(asset.custodian?.type === 'character' && asset.custodian.characterId === characterId)) {
       ownedElsewhere.push(asset);
     }
     if (asset.kind !== 'vehicle'
-      && principalIsCharacter(asset.controller, characterId)
-      && !principalIsCharacter(asset.lawfulOwner, characterId)
+      && principalIsCharacter(asset.controller, characterId, context, 'controllerId')
+      && !principalIsCharacter(asset.lawfulOwner, characterId, context, 'lawfulHolderId')
       && !equipped
       && !carriedByCharacter) {
       controlled.push(asset);

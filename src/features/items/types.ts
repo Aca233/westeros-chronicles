@@ -145,6 +145,38 @@ export interface ItemTransport {
   description: string;
 }
 
+export type ItemStorageSiteType = ItemStorageSite['type'];
+
+export const SITE_TYPE_LABELS: Record<ItemStorageSiteType, string> = {
+  armory: '军械库',
+  wardrobe: '衣柜',
+  room: '房间',
+  warehouse: '仓库',
+  stable: '马厩',
+  camp: '营地',
+  other: '储存处',
+};
+
+// 运行时建站模板：模型提议 create_site 后由引擎按类型补默认容量与命名。
+export const SITE_TEMPLATES: Record<ItemStorageSiteType, { defaultCapacity: number }> = {
+  armory: { defaultCapacity: 80 },
+  wardrobe: { defaultCapacity: 12 },
+  room: { defaultCapacity: 24 },
+  warehouse: { defaultCapacity: 150 },
+  stable: { defaultCapacity: 60 },
+  camp: { defaultCapacity: 20 },
+  other: { defaultCapacity: 40 },
+};
+
+export type ItemTransportType = ItemTransport['type'];
+
+export const VEHICLE_TYPE_LABELS: Record<ItemTransportType, string> = {
+  packhorse: '驮马',
+  wagon: '货车',
+  ship: '船只',
+  other: '运输工具',
+};
+
 export interface ItemSystemState {
   schemaVersion: 1;
   instances: Record<string, ItemInstance>;

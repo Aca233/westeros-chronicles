@@ -231,3 +231,40 @@ test('地点意图协议不会泄漏到正文，离线解析也返回空意图�
   );
   assert.match(offline, /<world_intent>\[\]<\/world_intent>/);
 });
+
+test('资产与据点直接意图可解析并做结构校验', () => {
+  const context = { defaultActorId: PLAYER_ID, currentLocation: { locationId: 'b_winterfell' } };
+  const parsed = parseUnresolvedWorldIntents([
+    { kind: 'gift_asset', assetId: 'site:winterfell_armory', recipientId: 'agot:Stark_7', evidenceText: '把军械库钥匙交给你' },
+    { kind: 'steal_asset', assetId: 'world.artifact.ice', evidenceText: '趁守卫换岗取走寒冰' },
+    { kind: 'create_site', siteType: 'camp', name: '辎重帐', evidenceText: '在城墙下清点出一座辎重营帐' },
+  ]);
+  const resolved = parsed.map((intent) => resolveWorldIntent(intent, context));
+  assert.equal(resolved[0].kind, 'gift_asset');
+  assert.equal(resolved[0].actorId, PLAYER_ID);
+  assert.equal(resolved[0].recipientId, 'agot:Stark_7');
+  assert.equal(resolved[1].kind, 'steal_asset');
+  assert.equal(resolved[1].assetId, 'world.artifact.ice');
+  assert.equal(resolved[2].kind, 'create_site');
+  assert.equal(resolved[2].siteType, 'camp');
+  assert.equal(resolved[2].name, '辎重帐');
+
+  assert.throws(() => resolveWorldIntent(
+    parseUnresolvedWorldIntents([{ kind: 'gift_asset', evidenceText: '缺 assetId' }])[0],
+    context,
+  ), /assetId/);
+  assert.throws(() => parseUnresolvedWorldIntents([{ kind: 'create_site', siteType: 'vault', evidenceText: '非法类型' }]), /siteType/);
+  assert.throws(() => parseUnresolvedWorldIntents([{ kind: 'transfer_asset', evidenceText: '模型不得直发 transfer' }]), /未知的世界意图类型/);
+  const missingLocation = resolveWorldIntents(
+    [{ kind: 'create_site', siteType: 'camp', evidenceText: '没有当前位置' }],
+    { defaultActorId: PLAYER_ID },
+  );
+  assert.equal(missingLocation.rejected.length, 1);
+});
+
+test('宪章向模型文档化资产与据点意图', () => {
+  assert.match(WORLD_INTENT_RESOLUTION_PROMPT, /gift_asset/);
+  assert.match(WORLD_INTENT_RESOLUTION_PROMPT, /steal_asset/);
+  assert.match(WORLD_INTENT_RESOLUTION_PROMPT, /create_site/);
+  assert.match(WORLD_INTENT_RESOLUTION_PROMPT, /不得输出 steal_asset 意图/);
+});

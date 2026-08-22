@@ -9,6 +9,17 @@ from typing import Any, Iterable, Mapping
 CORE_TIERS = frozenset({"canon", "semicanon", "genealogy"})
 ARRAY_RELATION_FIELDS = ("spouseIds", "childIds", "siblingIds")
 TITLE_TIERS_BY_PRIORITY = ("empire", "kingdom", "duchy", "county", "barony")
+_TITLE_RANK_BY_PREFIX = {"b_": "barony", "c_": "county", "d_": "duchy", "k_": "kingdom", "e_": "empire", "h_": "hegemon"}
+_TIER_SORT_RANK = {"h_": 0, "e_": 1, "k_": 2, "d_": 3, "c_": 4, "b_": 5}
+
+
+def _title_rank(title_id: str) -> str:
+    return _TITLE_RANK_BY_PREFIX.get(title_id[:2], "unknown")
+
+
+def _title_sort_key(title: Mapping[str, Any]) -> tuple[int, str]:
+    title_id = str(title["id"])
+    return (_TIER_SORT_RANK.get(title_id[:2], 9), title_id)
 
 
 @dataclass(frozen=True)
@@ -108,6 +119,133 @@ def build_holder_summaries(
             "displayLabel": str(primary.get("name")) if primary and primary.get("name") else (record.get("name") or character_id),
         })
     return summaries
+
+
+def resolve_holder_succession(
+    records: Iterable[Mapping[str, Any]],
+    title_holders: Mapping[str, Any],
+    retained_ids: set[str],
+    *,
+    title_parent: Mapping[str, str] | None = None,
+    title_centroid: Mapping[str, tuple[float, float]] | None = None,
+    previous_summaries: Mapping[str, Mapping[str, Any]] | None = None,
+) -> tuple[dict[str, list[dict[str, Any]]], dict[str, int]]:
+    """Reassign titles held by pruned characters to retained successors.
+
+    Per orphaned title, in priority order:
+
+    1. Liege climb: walk the feudal parent chain and pick the first title
+       whose original holder is still retained (pruned intermediates are
+       skipped, so a barony whose count was also pruned goes to its duke).
+    2. Proximity: otherwise give it to the retained holder of a same-rank
+       title with the nearest centroid; ties prefer the same dynasty, then
+       the lexicographically smallest character id. If no same-rank holder
+       has a centroid, any retained title holder with one is considered.
+    3. Unresolved: keep the original mapping so the holder degrades to a
+       lightweight summary as before.
+
+    The candidate pool is built once from original holdings, so the result
+    is deterministic and independent of processing order; running against a
+    fully resolved map is a no-op.
+    """
+    records_by_id = {str(record["id"]): record for record in records}
+    holder_titles: dict[str, list[dict[str, Any]]] = {
+        str(holder): [dict(title) for title in titles]
+        for holder, titles in sorted((title_holders or {}).items())
+    }
+    retained = set(retained_ids)
+    parent = dict(title_parent or {})
+    centroid = dict(title_centroid or {})
+
+    def _dynasty_of(character_id: str) -> str | None:
+        record = records_by_id.get(character_id)
+        if record is not None and record.get("dynastyId"):
+            return str(record["dynastyId"])
+        summary = (previous_summaries or {}).get(character_id)
+        if summary is not None and summary.get("dynastyId"):
+            return str(summary["dynastyId"])
+        return None
+
+    title_to_holder: dict[str, str] = {}
+    for character_id, titles in holder_titles.items():
+        for title in titles:
+            title_to_holder.setdefault(str(title["id"]), character_id)
+
+    candidates_by_rank: dict[str, list[tuple[float, float, str]]] = {}
+    for character_id in sorted(retained):
+        for title in holder_titles.get(character_id, []):
+            point = centroid.get(str(title["id"]))
+            if point is not None:
+                candidates_by_rank.setdefault(_title_rank(str(title["id"])), []).append(
+                    (point[0], point[1], character_id)
+                )
+    all_candidates = [entry for entries in candidates_by_rank.values() for entry in entries]
+
+    stats = {"reassignedByLiege": 0, "reassignedByProximity": 0, "unresolvedHolders": 0}
+    for holder_id, titles in sorted(holder_titles.items()):
+        if holder_id in retained:
+            continue
+        holder_dynasty = _dynasty_of(holder_id)
+        for title in list(titles):
+            title_id = str(title["id"])
+            successor: tuple[str, str] | None = None
+            seen: set[str] = set()
+            ancestor = parent.get(title_id)
+            while ancestor is not None and ancestor not in seen:
+                seen.add(ancestor)
+                ancestor_holder = title_to_holder.get(ancestor)
+                if ancestor_holder is not None and ancestor_holder in retained:
+                    successor = ("reassignedByLiege", ancestor_holder)
+                    break
+                ancestor = parent.get(ancestor)
+            if successor is None:
+                base = centroid.get(title_id)
+                if base is not None:
+                    pool = candidates_by_rank.get(_title_rank(title_id)) or all_candidates
+                    best_key: tuple[float, int, str] | None = None
+                    best_character: str | None = None
+                    for x, y, candidate_id in pool:
+                        distance = (x - base[0]) ** 2 + (y - base[1]) ** 2
+                        dynasty_penalty = 0 if _dynasty_of(candidate_id) == holder_dynasty else 1
+                        key = (distance, dynasty_penalty, candidate_id)
+                        if best_key is None or key < best_key:
+                            best_key = key
+                            best_character = candidate_id
+                    if best_character is not None and best_character != holder_id:
+                        successor = ("reassignedByProximity", best_character)
+            if successor is None:
+                continue
+            kind, target_id = successor
+            stats[kind] += 1
+            holder_titles.setdefault(target_id, []).append(title)
+            titles.remove(title)
+            if not titles:
+                holder_titles.pop(holder_id, None)
+                break
+        if holder_titles.get(holder_id):
+            stats["unresolvedHolders"] += 1
+
+    merged: dict[str, list[dict[str, Any]]] = {}
+    for character_id, titles in holder_titles.items():
+        # Highest feudal tier first (primary title leads), then title id for
+        # determinism. Same-named holdings (CK3 often names a duchy after its
+        # capital county) collapse to the higher-tier entry so display lists
+        # never repeat a localized name.
+        ordered: list[dict[str, Any]] = []
+        seen_ids: set[str] = set()
+        seen_names: set[str] = set()
+        for title in sorted(titles, key=_title_sort_key):
+            title_id = str(title["id"])
+            if title_id in seen_ids:
+                continue
+            name = str(title.get("name") or "")
+            if name and name in seen_names:
+                continue
+            seen_names.add(name)
+            seen_ids.add(title_id)
+            ordered.append(title)
+        merged[character_id] = ordered
+    return merged, stats
 
 
 def partition_runtime_characters(

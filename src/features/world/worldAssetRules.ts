@@ -1,10 +1,14 @@
 import type { CharacterId } from '../characters/types';
+import { SITE_TEMPLATES, SITE_TYPE_LABELS, type ItemStorageSite } from '../items/types';
+import { stripEmoji } from '../../services/textSanitizer';
 import type { WorldAssetBaseline, WorldBaselineSnapshot } from './worldBaseline';
 import { projectWorldAsset, projectWorldCharacter, resolveAssetMapLocation } from './worldProjection';
+import { worldAssetId } from './worldAssetId';
 import type {
   AssetPlacement,
   AssetWorldIntent,
   WorldCustodianRef,
+  WorldIntent,
   WorldMutation,
   WorldRuntimeState,
 } from './worldRuntimeTypes';
@@ -116,11 +120,43 @@ export function planAssetIntent(
   }
 }
 
+export interface CreateSiteRuleContext extends WorldAssetRuleContext {
+  itemSites: Readonly<Record<string, unknown>>;
+  idSeed: string;
+  locationLabel: string;
+}
+
+/** 模型提议、引擎落成：按模板补默认容量与命名，建在行动人物当前所在地。 */
+export function planCreateSiteIntent(
+  intent: Extract<WorldIntent, { kind: 'create_site' }>,
+  context: CreateSiteRuleContext,
+): ItemStorageSite {
+  requireCharacter(context, intent.actorId);
+  const actor = projectWorldCharacter(context.baseline, context.runtime, intent.actorId);
+  if (!actor?.location) throw new Error(`人物 ${intent.actorId} 的所在地未确认，不能创建据点`);
+  const template = SITE_TEMPLATES[intent.siteType];
+  const label = SITE_TYPE_LABELS[intent.siteType];
+  const name = stripEmoji(intent.name ?? '').trim() || label;
+  const id = context.idSeed.toLowerCase().replace(/[^a-z0-9_]+/g, '_');
+  if (!id) throw new Error('据点 ID 生成失败');
+  if (context.baseline.assets.has(worldAssetId.site(id)) || context.itemSites[id]) {
+    throw new Error(`据点已存在：${id}`);
+  }
+  return {
+    id,
+    name,
+    type: intent.siteType,
+    location: { ...actor.location },
+    locationLabel: context.locationLabel,
+    description: stripEmoji(intent.evidenceText).slice(0, 80) || `${name}：本回合经行动确立的储藏处。`,
+    capacity: template.defaultCapacity,
+  };
+}
+
 export function planCharacterDeathAssets(
   deadCharacterId: CharacterId,
   context: WorldAssetRuleContext,
-): WorldMutation[] {
-  const character = projectWorldCharacter(context.baseline, context.runtime, deadCharacterId);
+): WorldMutation[] {  const character = projectWorldCharacter(context.baseline, context.runtime, deadCharacterId);
   if (!character) throw new Error(`人物不存在：${deadCharacterId}`);
   if (!character.location) throw new Error(`人物 ${deadCharacterId} 的死亡地点未确认`);
 

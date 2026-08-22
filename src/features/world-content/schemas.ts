@@ -92,8 +92,24 @@ const startStateSchema = z.object({
     status: z.enum(['normal', 'stolen', 'contested', 'inheritance_pending']),
     overrides: z.object({ customName: z.string().optional(), charges: z.number().int().nonnegative().optional(), renown: z.number().nonnegative().optional(), isHeirloom: z.boolean().optional() }).strict().optional(),
   }).strict()),
-  sites: z.array(z.unknown()),
-  vehicles: z.array(z.unknown()),
+  sites: z.array(z.object({
+    id: z.string().min(1),
+    name: z.string().min(1),
+    type: z.enum(['armory', 'wardrobe', 'room', 'warehouse', 'stable', 'camp', 'other']),
+    location,
+    locationLabel: z.string().min(1),
+    description: z.string().min(1),
+    capacity: z.number().int().nonnegative().optional(),
+  }).strict()),
+  vehicles: z.array(z.object({
+    id: z.string().min(1),
+    name: z.string().min(1),
+    type: z.enum(['packhorse', 'wagon', 'ship', 'other']),
+    location,
+    locationLabel: z.string().min(1),
+    capacity: z.number().int().nonnegative(),
+    description: z.string().min(1),
+  }).strict()),
 }).strict();
 
 const terminologySchema = z.object({
