@@ -25,7 +25,10 @@ import { CharacterSearch } from './CharacterSearch';
 import { CharacterPortrait } from './CharacterPortrait';
 import { dossierRepository } from '../features/characters/useCharacterDossier';
 import { resolveCharacter } from '../features/characters/characterProjector';
-import { characterDatasetYear, formatCharacterCulture, formatCharacterFaith } from '../features/characters/characterDossier';
+import { characterDatasetYear } from '../features/characters/characterDossier';
+import { formatWorldCulture, formatWorldFaith } from '../features/world-content/terminology';
+import type { WorldTerminology } from '../features/world-content/types';
+import { worldContentRepository } from '../features/world-content/repository';
 import type { CharacterId, ResolvedCharacter } from '../features/characters/types';
 import { createLivingWorldGame, createCustomLivingWorldGame } from '../features/world/createLivingWorldGame';
 import { CoatOfArms } from './CoatOfArms';
@@ -210,6 +213,15 @@ export const CharacterCreator: React.FC = () => {
     )));
   }, [customAge]);
 
+  const [terminology, setTerminology] = useState<WorldTerminology | undefined>(undefined);
+  useEffect(() => {
+    let cancelled = false;
+    worldContentRepository.loadTerminology()
+      .then((loaded) => { if (!cancelled) setTerminology(loaded); })
+      .catch(() => { if (!cancelled) setTerminology(undefined); });
+    return () => { cancelled = true; };
+  }, []);
+
   useEffect(() => {
     if (!isCreatorOpen || tab !== 'existing') return;
     let cancelled = false;
@@ -332,7 +344,7 @@ export const CharacterCreator: React.FC = () => {
               {recommendedCharacters.map((character) => (
                 <article key={character.id} className="flex flex-col border border-hairline bg-ink-2 p-4 hover:border-gold-deep">
                   <div className="flex items-center gap-3"><CharacterPortrait characterId={character.id} houseIcon={getHouseIconId((character.dynastyId ?? '').replace(/^dynn_/i, '').toLowerCase())} alt={`${character.name}的肖像`} deceased={!character.alive} className="h-12 w-12 shrink-0 border border-hairline-bright" /><div className="min-w-0"><h3 className="truncate font-serif text-sm font-bold text-gold">{character.name}</h3><p className="truncate text-[10px] text-parchment-faint">{character.titles[0] ?? '未持有封地'}</p></div></div>
-                  <p className="mt-3 line-clamp-2 min-h-8 font-serif text-[10.5px] text-parchment-dim">{formatCharacterCulture(character.cultureId)} · {formatCharacterFaith(character.faithId)}</p>
+                  <p className="mt-3 line-clamp-2 min-h-8 font-serif text-[10.5px] text-parchment-dim">{formatWorldCulture(character.cultureId, terminology)} · {formatWorldFaith(character.faithId, terminology)}</p>
                   <button type="button" disabled={startingCharacterId !== null} onClick={() => void handleStartExisting(character.id)} className="btn-ghost mt-3 w-full justify-center">{startingCharacterId === character.id ? '正在载入' : '以此人物开局'}</button>
                 </article>
               ))}

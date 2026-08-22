@@ -7,7 +7,9 @@ import type { ItemSystemState } from '../items/types';
 import type { WorldArtifactState } from '../items/worldArtifacts';
 import type { LordProfile } from '../../types/game';
 import { createDefaultBody } from '../../types/game';
-import { characterAgeAtYear, dynastySlug, formatCharacterCulture, formatCharacterFaith, formatDynastyName } from './characterDossier';
+import { characterAgeAtYear, dynastySlug, formatDynastyName } from './characterDossier';
+import { formatWorldCulture, formatWorldFaith } from '../world-content/terminology';
+import type { WorldTerminology } from '../world-content/types';
 import type { ResolvedCharacter } from './types';
 import {
   UNKNOWN_WESTEROS_LOCATION_ID,
@@ -20,6 +22,7 @@ export function createLordFromExistingCharacter(
   artifacts: WorldArtifactState,
   currentYear = 298,
   startItems?: ItemSystemState,
+  terminology?: Pick<WorldTerminology, 'cultures' | 'faiths'>,
 ): LordProfile {
   const items = startItems
     ? {
@@ -75,8 +78,8 @@ export function createLordFromExistingCharacter(
     title: character.titles[0] ?? '未持有封地',
     age,
     gender: '性别未记录',
-    culture: formatCharacterCulture(character.cultureId),
-    faith: formatCharacterFaith(character.faithId),
+    culture: formatWorldCulture(character.cultureId, terminology),
+    faith: formatWorldFaith(character.faithId, terminology),
     location,
     locationLabel,
     body: createDefaultBody(),

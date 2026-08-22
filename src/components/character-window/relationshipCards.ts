@@ -1,6 +1,8 @@
 import type { NpcCharacterDossier, PlayerCharacterDossier } from '../../features/characters/characterDossier';
 import type { LordFamilyRecords } from '../../features/characters/lordRelationshipResolver';
 import type { CharacterId, StaticCharacterRecord } from '../../features/characters/types';
+import { formatWorldRelationship } from '../../features/world-content/terminology';
+import type { WorldTerminology } from '../../features/world-content/types';
 
 export interface RelationshipCard {
   label: string;
@@ -17,6 +19,7 @@ export function playerRelationshipCards(
   family: LordFamilyRecords,
   dossier?: PlayerCharacterDossier,
   records?: ReadonlyMap<CharacterId, StaticCharacterRecord>,
+  terminology?: Pick<WorldTerminology, 'relationships'>,
 ): RelationshipCard[] {
   const cards: RelationshipCard[] = [];
   const spouses = family.spouses ?? (family.spouse ? [family.spouse] : []);
@@ -33,7 +36,7 @@ export function playerRelationshipCards(
   });
   if (dossier?.relations?.notableRelations && dossier.relations.notableRelations.length > 0 && records) {
     dossier.relations.notableRelations.forEach((relation) =>
-      cards.push({ label: relationLabel(relation.kind), person: records.get(relation.targetId), emptyText: relation.description, group: 'notable' })
+      cards.push({ label: relationLabel(relation.kind, terminology), person: records.get(relation.targetId), emptyText: relation.description, group: 'notable' })
     );
   } else {
     cards.push({ label: '继承人', group: 'notable' });
@@ -43,7 +46,11 @@ export function playerRelationshipCards(
   return cards;
 }
 
-export function npcRelationshipCards(dossier: NpcCharacterDossier, records: ReadonlyMap<CharacterId, StaticCharacterRecord>): RelationshipCard[] {
+export function npcRelationshipCards(
+  dossier: NpcCharacterDossier,
+  records: ReadonlyMap<CharacterId, StaticCharacterRecord>,
+  terminology?: Pick<WorldTerminology, 'relationships'>,
+): RelationshipCard[] {
   const cards: RelationshipCard[] = [];
   if (dossier.relations.spouseIds.length === 0) cards.push({ label: '配偶', group: 'spouse' });
   dossier.relations.spouseIds.forEach((id) => cards.push({ label: '配偶', person: records.get(id), group: 'spouse' }));
@@ -57,17 +64,16 @@ export function npcRelationshipCards(dossier: NpcCharacterDossier, records: Read
     group: 'parent',
   });
   dossier.relations.notableRelations.forEach((relation) =>
-    cards.push({ label: relationLabel(relation.kind), person: records.get(relation.targetId), emptyText: relation.description, group: 'notable' })
+    cards.push({ label: relationLabel(relation.kind, terminology), person: records.get(relation.targetId), emptyText: relation.description, group: 'notable' })
   );
   const existingIds = new Set(dossier.relations.notableRelations.map((relation) => relation.targetId));
   dossier.relations.relationships
     .filter((relation) => !existingIds.has(relation.targetId))
     .slice(0, 4)
-    .forEach((relation) => cards.push({ label: relation.kind ? relationLabel(relation.kind) : '重要关系', person: records.get(relation.targetId), group: 'notable' }));
+    .forEach((relation) => cards.push({ label: relation.kind ? relationLabel(relation.kind, terminology) : '重要关系', person: records.get(relation.targetId), group: 'notable' }));
   return cards;
 }
 
-export function relationLabel(kind: string): string {
-  const labels: Record<string, string> = { lover: '恋人', friend: '朋友', rival: '仇敌', nemesis: '死敌', guardian: '监护人' };
-  return labels[kind] ?? kind.replace(/_/g, ' ');
+export function relationLabel(kind: string, terminology?: Pick<WorldTerminology, 'relationships'>): string {
+  return formatWorldRelationship(kind, terminology);
 }

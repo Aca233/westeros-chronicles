@@ -18,6 +18,8 @@ const { projectLordFamilyRecords, projectRelationshipCharacter } = await bundleM
 
 const attributes = { diplomacy: 11, martial: 12, stewardship: 13, intrigue: 14, learning: 15, prowess: 16 };
 
+const worldTerminology = JSON.parse(await readFile('public/data/world/terminology.json', 'utf8'));
+
 const startCharacters = [
   { characterId: 'agot:Arryn_3', location: { locationId: 'b_the_red_keep' }, currentActivity: 'idle' },
   { characterId: 'agot:Tully_4', location: { locationId: 'b_winterfell' }, currentActivity: 'idle' },
@@ -260,7 +262,7 @@ test('未知家族仍保留可读名称而不是伪造主要家族', () => {
 });
 
 test('统一世界测试人物显示可靠的文化与信仰', () => {
-  const dossier = createPlayerDossier(createLivingWorldTestLord());
+  const dossier = createPlayerDossier(createLivingWorldTestLord(), 298, undefined, undefined, worldTerminology);
   assert.notEqual(dossier.culture, '文化未记录');
   assert.notEqual(dossier.faith, '信仰未记录');
 });
@@ -271,7 +273,7 @@ test('玩家卷宗不把内部英文特质 ID 当作旧特质名称展示', () =
   lord.faith = 'old_gods_wnw';
   lord.traits = [...lord.traits, 'education_martial_prowess_3', 'family_first'];
   lord.traitIds = [...(lord.traitIds ?? []), 'education_martial_prowess_3', 'family_first'];
-  const dossier = createPlayerDossier(lord);
+  const dossier = createPlayerDossier(lord, 298, undefined, undefined, worldTerminology);
   assert.equal(dossier.culture, '北境人');
   assert.equal(dossier.faith, '森林旧神');
   assert.equal(dossier.legacyTraits.includes('education_martial_prowess_3'), false);

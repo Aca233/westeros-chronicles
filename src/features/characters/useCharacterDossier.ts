@@ -26,7 +26,7 @@ import type { WorldArtifactState } from '../items/worldArtifacts';
 import type { LordProfile } from '../../types/game';
 import { mapRepository } from '../map/repository';
 import { worldContentRepository } from '../world-content/repository';
-import type { CharacterContentRecord } from '../world-content/types';
+import type { CharacterContentRecord, WorldTerminology } from '../world-content/types';
 import { characterWorldLocationLabel, projectResolvedCharacterWorldFacts } from '../world/characterWorldFacts';
 
 const dossierRepository = new StaticCharacterRepository();
@@ -161,17 +161,21 @@ export function useCharacterDossier(selectedCharacterId: CharacterId | null): Ch
   const { lord, currentYear, worldCharacters, worldArtifacts, worldHistory, worldRuntime } = useGameStore((state) => state.gameState);
   const playerId = playerCharacterId(lord, worldCharacters?.runId);
   const [playerContent, setPlayerContent] = useState<CharacterContentRecord | undefined>(undefined);
+  const [terminology, setTerminology] = useState<WorldTerminology | undefined>(undefined);
   useEffect(() => {
     let cancelled = false;
     setPlayerContent(undefined);
     worldContentRepository.loadCharacterContent(playerId)
       .then((content) => { if (!cancelled) setPlayerContent(content); })
       .catch(() => { if (!cancelled) setPlayerContent(undefined); });
+    worldContentRepository.loadTerminology()
+      .then((loaded) => { if (!cancelled) setTerminology(loaded); })
+      .catch(() => { if (!cancelled) setTerminology(undefined); });
     return () => { cancelled = true; };
   }, [playerId]);
   const playerDossier = useMemo(
-    () => createPlayerDossier(lord, currentYear, playerId, playerContent),
-    [lord, currentYear, playerId, playerContent],
+    () => createPlayerDossier(lord, currentYear, playerId, playerContent, terminology),
+    [lord, currentYear, playerId, playerContent, terminology],
   );
   const [dossier, setDossier] = useState<CharacterDossier | null>(selectedCharacterId ? null : playerDossier);
   const [relatedRecords, setRelatedRecords] = useState<ReadonlyMap<CharacterId, StaticCharacterRecord>>(new Map());
@@ -198,7 +202,7 @@ export function useCharacterDossier(selectedCharacterId: CharacterId | null): Ch
     const load = async () => {
       const record = await dossierRepository.get(selectedCharacterId);
       if (!record) throw new Error('没有找到这个人物的稳定 AGOT 档案');
-      const [events, kinship, loadoutProfile, mapLocations, startCharacters, characterContent] = await Promise.all([
+      const [events, kinship, loadoutProfile, mapLocations, startCharacters, characterContent, loadedTerminology] = await Promise.all([
         worldCharacters
           ? dossierEventStore.eventsForCharacter(worldCharacters.runId, selectedCharacterId)
           : Promise.resolve([]),
@@ -209,6 +213,7 @@ export function useCharacterDossier(selectedCharacterId: CharacterId | null): Ch
           .then((startState) => startState.characters)
           .catch(() => []),
         worldContentRepository.loadCharacterContent(selectedCharacterId).catch(() => undefined),
+        worldContentRepository.loadTerminology().catch(() => undefined),
       ]);
       const resolved = projectResolvedCharacterWorldFacts(resolveCharacter(record, events, {
         datasetVersion: worldCharacters?.datasetHash ?? 'agot-local-dataset',
@@ -222,7 +227,7 @@ export function useCharacterDossier(selectedCharacterId: CharacterId | null): Ch
         startCharacters,
       });
       const nextDossier = {
-        ...createNpcDossier(resolved, currentYear, kinship, characterContent),
+        ...createNpcDossier(resolved, currentYear, kinship, characterContent, loadedTerminology),
         location: characterWorldLocationLabel(resolved, mapLocations),
       };
       const relatives = await dossierRepository.getMany(relatedCharacterIds(nextDossier));

@@ -1,4 +1,25 @@
 {
   "schemaVersion": 1,
-  "labels": {}
+  "labels": {
+    "riverman_main": "河间人",
+    "reachman": "河湾人",
+    "stormlander_main": "风暴地人",
+    "westerman_main": "西境人",
+    "northman": "北境人",
+    "valeman_main": "谷地人",
+    "marcher": "边疆地人",
+    "ironborn": "铁种",
+    "crownlander": "王领人",
+    "stone_dornish": "石人多恩人",
+    "sand_dornish": "沙地多恩人",
+    "salt_dornish": "盐人多恩人",
+    "braavosi": "布拉佛斯人",
+    "pentoshi": "潘托斯人",
+    "myrish": "密尔人",
+    "qohorik": "科霍尔人",
+    "norvoshi": "诺佛斯人",
+    "first_man": "先民",
+    "high_valyrian": "高等瓦雷利亚人",
+    "valyrian": "瓦雷利亚人"
+  }
 }

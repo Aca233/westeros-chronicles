@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import type { CharacterDossier } from '../../features/characters/characterDossier';
 import type { CharacterId, StaticCharacterRecord } from '../../features/characters/types';
+import { worldContentRepository } from '../../features/world-content/repository';
+import type { WorldTerminology } from '../../features/world-content/types';
 import type { WorldHistoryState } from '../../features/world/worldHistory';
 import type { WorldRuntimeState } from '../../features/world/worldRuntimeTypes';
 import type { LordProfile, WorldCharacterStateRef } from '../../types/game';
@@ -39,9 +41,17 @@ export function CharacterRelationsTab({
   );
   const [showAllChildren, setShowAllChildren] = useState(false);
   useEffect(() => setShowAllChildren(false), [dossier.id]);
+  const [terminology, setTerminology] = useState<WorldTerminology | undefined>(undefined);
+  useEffect(() => {
+    let cancelled = false;
+    worldContentRepository.loadTerminology()
+      .then((loaded) => { if (!cancelled) setTerminology(loaded); })
+      .catch(() => { if (!cancelled) setTerminology(undefined); });
+    return () => { cancelled = true; };
+  }, []);
   const relationshipCards = dossier.kind === 'player'
-    ? playerRelationshipCards(family, dossier, relatedRecords)
-    : npcRelationshipCards(dossier, relatedRecords);
+    ? playerRelationshipCards(family, dossier, relatedRecords, terminology)
+    : npcRelationshipCards(dossier, relatedRecords, terminology);
   const byGroup = (group: RelationshipCard['group']) => relationshipCards.filter((card) => card.group === group);
 
   // 族谱次序:配偶 → 子女 → 父母 → 兄弟姐妹 → 重要关系

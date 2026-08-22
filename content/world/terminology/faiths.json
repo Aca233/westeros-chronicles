@@ -1,4 +1,18 @@
 {
   "schemaVersion": 1,
-  "labels": {}
+  "labels": {
+    "fots_seven": "七神信仰",
+    "fots_axe": "战斧七神",
+    "fots_oldnew": "新旧诸神",
+    "old_gods_wnw": "森林旧神",
+    "old_gods_btw_sas": "长城外旧神",
+    "old_gods_btw_pnv": "远北旧神",
+    "drowned_god": "淹神信仰",
+    "rhllor_fc": "拉赫洛信仰",
+    "mother_rhoyne": "洛恩母亲",
+    "valyrian_pan_freehold": "瓦雷利亚诸神",
+    "fc_pan_blackgoat": "黑山羊信仰",
+    "fc_pan_braavos": "布拉佛斯诸神",
+    "fc_pan_pentos": "潘托斯诸神"
+  }
 }

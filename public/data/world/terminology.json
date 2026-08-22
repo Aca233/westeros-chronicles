@@ -1,6 +1,47 @@
 {
-  "cultures": {},
-  "faiths": {},
-  "relationships": {},
+  "cultures": {
+    "braavosi": "布拉佛斯人",
+    "crownlander": "王领人",
+    "first_man": "先民",
+    "high_valyrian": "高等瓦雷利亚人",
+    "ironborn": "铁种",
+    "marcher": "边疆地人",
+    "myrish": "密尔人",
+    "northman": "北境人",
+    "norvoshi": "诺佛斯人",
+    "pentoshi": "潘托斯人",
+    "qohorik": "科霍尔人",
+    "reachman": "河湾人",
+    "riverman_main": "河间人",
+    "salt_dornish": "盐人多恩人",
+    "sand_dornish": "沙地多恩人",
+    "stone_dornish": "石人多恩人",
+    "stormlander_main": "风暴地人",
+    "valeman_main": "谷地人",
+    "valyrian": "瓦雷利亚人",
+    "westerman_main": "西境人"
+  },
+  "faiths": {
+    "drowned_god": "淹神信仰",
+    "fc_pan_blackgoat": "黑山羊信仰",
+    "fc_pan_braavos": "布拉佛斯诸神",
+    "fc_pan_pentos": "潘托斯诸神",
+    "fots_axe": "战斧七神",
+    "fots_oldnew": "新旧诸神",
+    "fots_seven": "七神信仰",
+    "mother_rhoyne": "洛恩母亲",
+    "old_gods_btw_pnv": "远北旧神",
+    "old_gods_btw_sas": "长城外旧神",
+    "old_gods_wnw": "森林旧神",
+    "rhllor_fc": "拉赫洛信仰",
+    "valyrian_pan_freehold": "瓦雷利亚诸神"
+  },
+  "relationships": {
+    "friend": "朋友",
+    "guardian": "监护人",
+    "lover": "恋人",
+    "nemesis": "死敌",
+    "rival": "仇敌"
+  },
   "schemaVersion": 1
 }

@@ -269,7 +269,16 @@ export function validateWorldSource(source) {
   for (const [name, terms] of Object.entries(source.terminology)) {
     const dictionary = record(terms, `${name}术语`);
     if (dictionary.schemaVersion !== 1) throw new Error(`${name}术语版本必须为 1`);
-    record(dictionary.labels, `${name}术语标签`);
+    const labels = record(dictionary.labels, `${name}术语标签`);
+    const trimmedKeys = new Map();
+    for (const [key, label] of Object.entries(labels)) {
+      if (['__proto__', 'constructor', 'prototype'].includes(key)) throw new Error(`${name}术语含危险键：${key}`);
+      const trimmedKey = key.trim();
+      if (!trimmedKey) throw new Error(`${name}术语含空键`);
+      if (trimmedKeys.has(trimmedKey)) throw new Error(`${name}术语含重复键：${trimmedKey}`);
+      trimmedKeys.set(trimmedKey, true);
+      if (typeof label !== 'string' || !label.trim()) throw new Error(`${name}术语含空标签：${key}`);
+    }
   }
   for (const [name, collectionKey] of [['ordinaryItems', 'items'], ['loadoutTemplates', 'templates'], ['loadoutOverrides', 'overrides']]) {
     const document = record(source[name], name);

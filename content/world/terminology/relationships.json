@@ -1,4 +1,10 @@
 {
   "schemaVersion": 1,
-  "labels": {}
+  "labels": {
+    "lover": "恋人",
+    "friend": "朋友",
+    "rival": "仇敌",
+    "nemesis": "死敌",
+    "guardian": "监护人"
+  }
 }

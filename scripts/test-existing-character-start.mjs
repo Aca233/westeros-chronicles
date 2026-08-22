@@ -1,12 +1,13 @@
-import { unlink } from 'node:fs/promises';
+import { readFile, unlink } from 'node:fs/promises';
 import assert from 'node:assert/strict';
 import { build } from 'esbuild';
 await build({ outfile: '.tmp-existing-start-test.bundle.mjs', stdin: { contents: "export { createLordFromExistingCharacter } from './src/features/characters/existingCharacterStart.ts'; export { resolveCharacter } from './src/features/characters/characterProjector.ts';", resolveDir: process.cwd(), sourcefile: 'existing-start-test.ts', loader: 'ts' }, bundle: true, format: 'esm', platform: 'node' });
 const { createLordFromExistingCharacter, resolveCharacter } = await import('../.tmp-existing-start-test.bundle.mjs');
+const worldTerminology = JSON.parse(await readFile('public/data/world/terminology.json', 'utf8'));
 const base = { id: 'agot:Stark_3', rawId: 'Stark_3', canonTier: 'canon', name: '艾德', dynastyId: 'dynn_Stark', cultureId: 'northman', faithId: 'old_gods_wnw', born: true, alive: true, birthDate: '8263.1.1', deathDate: null, deathReason: null, killerId: null, baseAttributes: { diplomacy: 10, martial: 12, stewardship: 11, intrigue: 8, learning: 9, prowess: 14 }, traits: ['education_martial_3', 'brave', 'education_martial_prowess_3', 'family_first', 'rowdy', 'knight'], spouseIds: [], relations: [], titleIds: ['k_north'], titles: ['北境'], hasDna: true, source: { file: 'fixture', line: 1 } };
 const resolved = resolveCharacter(base, [], { datasetVersion: 'fixture', currentYear: 8298, loadoutProfile: { characterId: base.id, templateId: 'northern_noble' } });
 const artifacts = { artifacts: { ice: { instanceId: 'world.ice', definitionId: 'artifact.ice', lawfulControllerId: base.id, placement: { type: 'character', characterId: base.id }, equipped: false, source: { file: '', line: 1, effectId: '' } } } };
-const lord = createLordFromExistingCharacter(resolved, artifacts, 298);
+const lord = createLordFromExistingCharacter(resolved, artifacts, 298, undefined, worldTerminology);
 assert.equal(lord.canonicalCharacterId, base.id);
 assert.equal(lord.name, '艾德');
 assert.equal(lord.title, '北境');

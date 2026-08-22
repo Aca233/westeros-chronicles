@@ -2,7 +2,8 @@ import { HOUSES } from '../../data/houses';
 import { migrateLordIdentityData } from '../../data/characterTraits';
 import { filterImportedCharacterTraits } from '../../data/importedCharacterTraitPolicy';
 import { filterVisibleExperiences } from './characterSupplementSchema';
-import type { CharacterContentRecord } from '../world-content/types';
+import { formatWorldCulture, formatWorldFaith } from '../world-content/terminology';
+import type { CharacterContentRecord, WorldTerminology } from '../world-content/types';
 import type {
   CharacterExperience,
   NotableNonKinRelation,
@@ -162,6 +163,7 @@ export function createPlayerDossier(
   currentYear = 298,
   worldCharacterId: CharacterId = lord.canonicalCharacterId ?? 'save:current:player',
   content?: CharacterContentRecord,
+  terminology?: Pick<WorldTerminology, 'cultures' | 'faiths'>,
 ): PlayerCharacterDossier {
   const identifiedLord = migrateLordIdentityData(lord);
   const importedTraits = identifiedLord.importedTraitIds
@@ -187,8 +189,8 @@ export function createPlayerDossier(
     titles: identifiedLord.title ? [identifiedLord.title] : [],
     age: identifiedLord.age,
     gender: identifiedLord.gender,
-    culture: formatCharacterCulture(identifiedLord.culture),
-    faith: formatCharacterFaith(identifiedLord.faith),
+    culture: formatWorldCulture(identifiedLord.culture, terminology),
+    faith: formatWorldFaith(identifiedLord.faith, terminology),
     location: identifiedLord.locationLabel,
     alive: identifiedLord.overallStatus !== '阵亡',
     deathReason: identifiedLord.overallStatus === '阵亡' ? '人物已经死亡' : undefined,
@@ -224,34 +226,7 @@ export function createPlayerDossier(
   };
 }
 
-const CULTURE_LABELS: Readonly<Record<string, string>> = {
-  riverman_main: '河间人', reachman: '河湾人', stormlander_main: '风暴地人', westerman_main: '西境人',
-  northman: '北境人', valeman_main: '谷地人', marcher: '边疆地人', ironborn: '铁种', crownlander: '王领人',
-  stone_dornish: '石人多恩人', sand_dornish: '沙地多恩人', salt_dornish: '盐人多恩人',
-  braavosi: '布拉佛斯人', pentoshi: '潘托斯人', myrish: '密尔人', qohorik: '科霍尔人', norvoshi: '诺佛斯人',
-  first_man: '先民', high_valyrian: '高等瓦雷利亚人', valyrian: '瓦雷利亚人',
-};
-
-const FAITH_LABELS: Readonly<Record<string, string>> = {
-  fots_seven: '七神信仰', fots_axe: '战斧七神', fots_oldnew: '新旧诸神',
-  old_gods_wnw: '森林旧神', old_gods_btw_sas: '长城外旧神', old_gods_btw_pnv: '远北旧神',
-  drowned_god: '淹神信仰', rhllor_fc: '拉赫洛信仰', mother_rhoyne: '洛恩母亲',
-  valyrian_pan_freehold: '瓦雷利亚诸神', fc_pan_blackgoat: '黑山羊信仰',
-  fc_pan_braavos: '布拉佛斯诸神', fc_pan_pentos: '潘托斯诸神',
-};
-
-function localizedRecordLabel(value: string | null | undefined, labels: Readonly<Record<string, string>>, fallback: string, untranslated: string): string {
-  if (!value) return fallback;
-  return labels[value] ?? (/\p{Script=Han}/u.test(value) ? value : untranslated);
-}
-
-export function formatCharacterCulture(value: string | null | undefined): string {
-  return localizedRecordLabel(value, CULTURE_LABELS, '文化未记录', '其他文化');
-}
-
-export function formatCharacterFaith(value: string | null | undefined): string {
-  return localizedRecordLabel(value, FAITH_LABELS, '信仰未记录', '其他信仰');
-}
+export { formatWorldCulture, formatWorldFaith } from '../world-content/terminology';
 
 function normalizeRelatedCharacterId(value: string): CharacterId | null {
   if (value.startsWith('agot:') || value.startsWith('save:')) return value as CharacterId;
@@ -264,6 +239,7 @@ export function createNpcDossier(
   currentYear: number,
   kinship: CharacterKinshipEntry = { spouseIds: character.spouseIds, childIds: [], siblingIds: [] },
   content?: CharacterContentRecord,
+  terminology?: Pick<WorldTerminology, 'cultures' | 'faiths'>,
 ): NpcCharacterDossier {
   const house = houseMetadata(character.dynastyId);
   const title = character.titles[0] || '未持有封地';
@@ -311,8 +287,8 @@ export function createNpcDossier(
     titles: [...character.titles],
     age,
     gender: character.female === true ? '女性' : character.female === false ? '男性' : '性别未记录',
-    culture: formatCharacterCulture(character.cultureId),
-    faith: formatCharacterFaith(character.faithId),
+    culture: formatWorldCulture(character.cultureId, terminology),
+    faith: formatWorldFaith(character.faithId, terminology),
     location: character.locationId || '所在地未记录',
     alive: character.alive,
     deathReason: character.deathReason || undefined,
