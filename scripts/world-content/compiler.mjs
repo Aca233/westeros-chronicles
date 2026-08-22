@@ -2,6 +2,7 @@ import { cp, mkdir, mkdtemp, readFile, readdir, rename, rm, writeFile } from 'no
 import { createHash } from 'node:crypto';
 import { basename, dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { build as esbuildBundle } from 'esbuild';
 import { sha256Json, stableJson } from './hash.mjs';
 import { validateWorldSource } from './schemas.mjs';
 
@@ -89,6 +90,27 @@ async function readDatasetManifests(rootDir) {
       throw new Error(`持有人摘要 dynastyId 无效：${record.id}`);
     }
   }
+  const [mapMemberships, routeGraph, timelineEvents] = await Promise.all([
+    readJson(join(rootDir, 'public', 'data', 'agot-map', 'semantic', 'membership.json'), '地图语义成员'),
+    (async () => {
+      const routesDirectory = join(rootDir, 'public', 'data', 'agot-map', 'routes');
+      const names = await readdir(routesDirectory);
+      const nodeIds = new Set();
+      const portIds = new Set();
+      for (const name of names.filter((entry) => entry.endsWith('.json')).sort()) {
+        const routes = await readJson(join(routesDirectory, name), `地图路线 ${name}`);
+        if (!Array.isArray(routes?.nodes)) throw new Error(`地图路线节点无效：${name}`);
+        for (const node of routes.nodes) {
+          const nodeId = node?.location_id ?? node?.id;
+          if (typeof nodeId !== 'string' || !nodeId) throw new Error(`地图路线节点 ID 无效：${name}`);
+          nodeIds.add(nodeId);
+          if (node.is_port) portIds.add(nodeId);
+        }
+      }
+      return { nodeIds, portIds };
+    })(),
+    loadCanonicalTimelineEvents(rootDir),
+  ]);
   return {
     characters,
     map,
@@ -96,8 +118,121 @@ async function readDatasetManifests(rootDir) {
     characterIds: new Set(characterIndex.map((entry) => entry.id)),
     characterIndexById: new Map(characterIndex.map((entry) => [entry.id, entry])),
     mapLocationIds: new Set(mapIndex.map((entry) => entry.id)),
+    mapLocationsById: new Map(mapIndex.map((entry) => [entry.id, entry])),
+    mapMemberships,
+    routeNodeIds: routeGraph.nodeIds,
+    routePortIds: routeGraph.portIds,
+    timelineEvents,
     artifactDefinitions: new Map(Object.entries(artifacts.artifacts)),
     holderSummaries,
+  };
+}
+
+async function loadCanonicalTimelineEvents(rootDir) {
+  try {
+    const bundle = await esbuildBundle({
+      entryPoints: [join(rootDir, 'src', 'data', 'generated', 'canonicalTimeline.ts')],
+      bundle: true,
+      write: false,
+      format: 'esm',
+      platform: 'node',
+      logLevel: 'silent',
+    });
+    const url = `data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString('base64')}`;
+    const { CANONICAL_TIMELINE } = await import(url);
+    return Array.isArray(CANONICAL_TIMELINE) ? CANONICAL_TIMELINE : [];
+  } catch {
+    return [];
+  }
+}
+
+const GAMEPLAY_REASON_ORDER = ['explicit', 'important-place', 'political-center', 'start-reference', 'event-reference', 'major-route-port'];
+
+function startStateLocationIds(startCharacters, startAssets) {
+  const ids = new Set();
+  for (const record of startCharacters) ids.add(record.location.locationId);
+  const collectLocationRef = (ref) => {
+    if (ref?.type === 'location') ids.add(ref.location.locationId);
+  };
+  for (const site of startAssets.sites) ids.add(site.location.locationId);
+  for (const vehicle of startAssets.vehicles) ids.add(vehicle.location.locationId);
+  for (const asset of startAssets.instances) collectLocationRef(asset.placement);
+  return ids;
+}
+
+function buildGameplayLocations(source, dependencies) {
+  const config = source.gameplayLocations;
+  const excluded = new Set(config.exclude);
+  const reasons = new Map();
+  const addReason = (locationId, reason) => {
+    if (excluded.has(locationId)) return;
+    const entry = dependencies.mapLocationsById.get(locationId);
+    if (!entry) return;
+    const set = reasons.get(locationId) ?? new Set();
+    set.add(reason);
+    reasons.set(locationId, set);
+  };
+  for (const locationId of config.include) addReason(locationId, 'explicit');
+  if (config.rules.includePoliticalCenters) {
+    const seats = new Map();
+    for (const membership of dependencies.mapMemberships) {
+      const entry = dependencies.mapLocationsById.get(membership.locationId);
+      if (!entry) continue;
+      for (const groupId of [membership.hegemonId, membership.kingdomId, membership.duchyId]) {
+        if (!groupId) continue;
+        const current = seats.get(groupId);
+        if (!current || entry.importance > current.importance
+          || (entry.importance === current.importance && entry.id < current.id)) {
+          seats.set(groupId, entry);
+        }
+      }
+    }
+    for (const entry of seats.values()) addReason(entry.id, 'political-center');
+  }
+  const types = new Set(config.rules.types);
+  for (const entry of dependencies.mapLocationsById.values()) {
+    if (types.has(entry.type) && entry.importance >= config.rules.minimumImportance) {
+      addReason(entry.id, 'important-place');
+    }
+  }
+  const startLocationIds = startStateLocationIds(source.startCharacters, source.startAssets);
+  if (config.rules.includeStartReferences) {
+    for (const locationId of startLocationIds) {
+      if (dependencies.routeNodeIds.has(locationId)) addReason(locationId, 'start-reference');
+    }
+  }
+  if (config.rules.includeEventReferences && dependencies.timelineEvents.length > 0) {
+    const corpus = dependencies.timelineEvents
+      .map((event) => `${event.title ?? ''}\n${event.summary ?? ''}`).join('\n');
+    for (const entry of dependencies.mapLocationsById.values()) {
+      if (entry.name.length >= 2 && corpus.includes(entry.name)) addReason(entry.id, 'event-reference');
+    }
+  }
+  if (config.rules.includeMajorRoutePorts) {
+    for (const locationId of dependencies.routePortIds) addReason(locationId, 'major-route-port');
+  }
+  const entries = [...reasons.entries()]
+    .sort((left, right) => left[0].localeCompare(right[0]))
+    .map(([locationId, set]) => ({
+      ...dependencies.mapLocationsById.get(locationId),
+      reasons: GAMEPLAY_REASON_ORDER.filter((reason) => set.has(reason)),
+    }));
+  const gameplayLocationIds = new Set(entries.map((entry) => entry.id));
+  for (const locationId of startLocationIds) {
+    if (locationId === UNKNOWN_LOCATION_SENTINEL) continue;
+    if (!gameplayLocationIds.has(locationId)) {
+      throw new Error(`起点位置不是游戏地点：${locationId}`);
+    }
+  }
+  const byReason = Object.fromEntries(GAMEPLAY_REASON_ORDER.map((reason) => [
+    reason,
+    entries.filter((entry) => entry.reasons.includes(reason)).length,
+  ]));
+  return {
+    schemaVersion: 1,
+    entries,
+    config,
+    counts: { total: entries.length, byReason },
   };
 }
 
@@ -218,7 +353,7 @@ function buildOutputs(source, dependencies) {
     faiths: source.terminology.faiths.labels,
     relationships: source.terminology.relationships.labels,
   };
-  const gameplayLocations = { schemaVersion: 1, entries: [], config: source.gameplayLocations };
+  const gameplayLocations = buildGameplayLocations(source, dependencies);
   const holderSummaries = { schemaVersion: 1, holders: dependencies.holderSummaries };
   const { index: characterContentIndex, shardRecords: characterContentShards } = buildCharacterContentShards(source.characterContents);
   const payload = {

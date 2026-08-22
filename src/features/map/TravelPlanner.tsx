@@ -120,7 +120,7 @@ export const TravelPlanner: React.FC<TravelPlannerProps> = ({ destinationId, ori
     }
     setWaypointLoading(true)
     const timer = window.setTimeout(() => {
-      mapRepository.searchLocations(query, 8)
+      mapRepository.searchGameplayLocations(query, 8)
         .then((entries) => {
           if (request !== waypointRequest.current) return
           const selected = new Set([originId, destinationId, ...waypoints.map((entry) => entry.id)])

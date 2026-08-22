@@ -1,4 +1,6 @@
 import { PromiseCache } from './cache.ts'
+import { worldContentRepository } from '../world-content/repository.ts'
+import type { GameplayLocationEntry } from '../world-content/types.ts'
 import {
   parseMapLocationSearchIndex,
   parseMapLocationShard,
@@ -71,6 +73,19 @@ export class MapRepository {
   async loadSearchIndex(): Promise<MapLocationSearchEntry[]> {
     const manifest = await this.loadManifest()
     return this.loadJson(manifest.paths.searchIndex, parseMapLocationSearchIndex)
+  }
+
+  /**
+   * Player-facing gameplay locations compiled from world content. Search,
+   * travel endpoints, and narrative links must use these; the full search
+   * index stays an internal drawing/hit-testing space.
+   */
+  loadGameplayLocations(): Promise<GameplayLocationEntry[]> {
+    return worldContentRepository.loadGameplayLocations()
+  }
+
+  searchGameplayLocations(query: string, limit = 20): Promise<GameplayLocationEntry[]> {
+    return worldContentRepository.searchGameplayLocations(query, limit)
   }
 
   async searchLocations(query: string, limit = 20): Promise<MapLocationSearchEntry[]> {

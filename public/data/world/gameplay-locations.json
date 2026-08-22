@@ -1,7 +1,11 @@
 {
   "config": {
     "exclude": [],
-    "include": [],
+    "include": [
+      "b_winterfell",
+      "b_castle_black",
+      "b_the_red_keep"
+    ],
     "rules": {
       "includeEventReferences": true,
       "includeMajorRoutePorts": true,
@@ -19,6 +23,6809 @@
     },
     "schemaVersion": 1
   },
-  "entries": [],
+  "counts": {
+    "byReason": {
+      "event-reference": 19,
+      "explicit": 3,
+      "important-place": 13,
+      "major-route-port": 364,
+      "political-center": 205,
+      "start-reference": 5
+    },
+    "total": 562
+  },
+  "entries": [
+    {
+      "id": "b_abercorn",
+      "importance": 20,
+      "mapX": 1572,
+      "mapY": 1948,
+      "name": "玉米河口",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "castle"
+    },
+    {
+      "id": "b_able_brook",
+      "importance": 20,
+      "mapX": 693,
+      "mapY": 1681,
+      "name": "埃布尔溪",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_absher",
+      "importance": 20,
+      "mapX": 1945,
+      "mapY": 3987,
+      "name": "厄运岛",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_dorne",
+      "type": "village"
+    },
+    {
+      "id": "b_acidwash",
+      "importance": 20,
+      "mapX": 1955,
+      "mapY": 4231,
+      "name": "酸洗滩",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_dorne",
+      "type": "village"
+    },
+    {
+      "id": "b_acorn_cape",
+      "importance": 20,
+      "mapX": 852,
+      "mapY": 3499,
+      "name": "橡子岬",
+      "reasons": [
+        "political-center",
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "village"
+    },
+    {
+      "id": "b_acorn_hall",
+      "importance": 20,
+      "mapX": 1308,
+      "mapY": 2858,
+      "name": "橡果厅",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_riverlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_adderdell",
+      "importance": 20,
+      "mapX": 1662,
+      "mapY": 3588,
+      "name": "蝮蛇谷",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "city"
+    },
+    {
+      "id": "b_addersflow",
+      "importance": 20,
+      "mapX": 1459,
+      "mapY": 3793,
+      "name": "毒蛇村",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_dorne",
+      "type": "city"
+    },
+    {
+      "id": "b_adderstone",
+      "importance": 20,
+      "mapX": 1410,
+      "mapY": 2552,
+      "name": "蛇石堡",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_riverlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_afskayl_cov",
+      "importance": 20,
+      "mapX": 1108,
+      "mapY": 151,
+      "name": "阿福斯卡·阔乌",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_beyond_the_wall",
+      "type": "village"
+    },
+    {
+      "id": "b_ain_dornk",
+      "importance": 20,
+      "mapX": 1721,
+      "mapY": 82,
+      "name": "艾恩·多克",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_beyond_the_wall",
+      "type": "village"
+    },
+    {
+      "id": "b_ain_haih",
+      "importance": 20,
+      "mapX": 1623,
+      "mapY": 51,
+      "name": "艾恩冰湖",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_beyond_the_wall",
+      "type": "village"
+    },
+    {
+      "id": "b_albatross_isle",
+      "importance": 20,
+      "mapX": 746,
+      "mapY": 4201,
+      "name": "信天翁岛",
+      "reasons": [
+        "political-center",
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "village"
+    },
+    {
+      "id": "b_albins_march",
+      "importance": 20,
+      "mapX": 1305,
+      "mapY": 3872,
+      "name": "艾尔宾之疆",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_dorne",
+      "type": "city"
+    },
+    {
+      "id": "b_alden_perch",
+      "importance": 20,
+      "mapX": 1392,
+      "mapY": 1618,
+      "name": "旧友巢",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_aldenstand",
+      "importance": 20,
+      "mapX": 855,
+      "mapY": 1246,
+      "name": "奥尔登台",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_alder_branch",
+      "importance": 20,
+      "mapX": 1572,
+      "mapY": 1653,
+      "name": "桤木林",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_aldercroft",
+      "importance": 20,
+      "mapX": 1733,
+      "mapY": 3270,
+      "name": "桤木农场",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "city"
+    },
+    {
+      "id": "b_alderedge",
+      "importance": 20,
+      "mapX": 1102,
+      "mapY": 2983,
+      "name": "桤树滩",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_westerlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_aldershot",
+      "importance": 20,
+      "mapX": 1152,
+      "mapY": 3104,
+      "name": "桤木森林",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_westerlands",
+      "type": "village"
+    },
+    {
+      "id": "b_aldodrin",
+      "importance": 20,
+      "mapX": 1784,
+      "mapY": 4078,
+      "name": "老湿地",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_dorne",
+      "type": "village"
+    },
+    {
+      "id": "b_ale_port",
+      "importance": 20,
+      "mapX": 1013,
+      "mapY": 1975,
+      "name": "麦酒港",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "city"
+    },
+    {
+      "id": "b_allfort",
+      "importance": 20,
+      "mapX": 737,
+      "mapY": 3221,
+      "name": "奥佛港",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_westerlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_allpine_hold",
+      "importance": 20,
+      "mapX": 1234,
+      "mapY": 1432,
+      "name": "奥松堡",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "castle"
+    },
+    {
+      "id": "b_allriver",
+      "importance": 20,
+      "mapX": 1369,
+      "mapY": 3271,
+      "name": "全河滩",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "village"
+    },
+    {
+      "id": "b_alsensward",
+      "importance": 20,
+      "mapX": 1705,
+      "mapY": 2497,
+      "name": "阿尔森厅",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "town"
+    },
+    {
+      "id": "b_altair",
+      "importance": 20,
+      "mapX": 1529,
+      "mapY": 3016,
+      "name": "阿尔泰镇",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_riverlands",
+      "type": "city"
+    },
+    {
+      "id": "b_altar_of_flame",
+      "importance": 20,
+      "mapX": 1047,
+      "mapY": 4129,
+      "name": "烈火台",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_dorne",
+      "type": "town"
+    },
+    {
+      "id": "b_altons_rock",
+      "importance": 20,
+      "mapX": 743,
+      "mapY": 1238,
+      "name": "阿尔顿岩",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_alynmill",
+      "importance": 20,
+      "mapX": 975,
+      "mapY": 2955,
+      "name": "埃林磨坊",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_westerlands",
+      "type": "city"
+    },
+    {
+      "id": "b_amarack",
+      "importance": 20,
+      "mapX": 1239,
+      "mapY": 2110,
+      "name": "紫色沼泽",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_amarwell",
+      "importance": 20,
+      "mapX": 1626,
+      "mapY": 4109,
+      "name": "阿玛尔井",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_dorne",
+      "type": "city"
+    },
+    {
+      "id": "b_amber_stand",
+      "importance": 20,
+      "mapX": 1752,
+      "mapY": 1725,
+      "name": "琥珀卫",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_amber_wells",
+      "importance": 20,
+      "mapX": 780,
+      "mapY": 3818,
+      "name": "琥珀之井",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "city"
+    },
+    {
+      "id": "b_amber_woods",
+      "importance": 20,
+      "mapX": 2073,
+      "mapY": 3665,
+      "name": "琥珀林",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "village"
+    },
+    {
+      "id": "b_anchor_point",
+      "importance": 20,
+      "mapX": 630,
+      "mapY": 2223,
+      "name": "船锚角",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_anchor_river",
+      "importance": 20,
+      "mapX": 2041,
+      "mapY": 2527,
+      "name": "铁锚河",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "city"
+    },
+    {
+      "id": "b_anchoran",
+      "importance": 20,
+      "mapX": 1251,
+      "mapY": 4266,
+      "name": "沙锚镇",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_dorne",
+      "type": "city"
+    },
+    {
+      "id": "b_anchorlight",
+      "importance": 20,
+      "mapX": 1888,
+      "mapY": 2235,
+      "name": "光锚镇",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "city"
+    },
+    {
+      "id": "b_andindale",
+      "importance": 20,
+      "mapX": 1236,
+      "mapY": 3289,
+      "name": "安谷镇",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "city"
+    },
+    {
+      "id": "b_andor",
+      "importance": 20,
+      "mapX": 1923,
+      "mapY": 3982,
+      "name": "安多尔镇",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_dorne",
+      "type": "city"
+    },
+    {
+      "id": "b_anglerage",
+      "importance": 20,
+      "mapX": 702,
+      "mapY": 1550,
+      "name": "狂暴角",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_angor",
+      "importance": 20,
+      "mapX": 1572,
+      "mapY": 3470,
+      "name": "苦痛堡",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "city"
+    },
+    {
+      "id": "b_ant_hill",
+      "importance": 20,
+      "mapX": 1209,
+      "mapY": 3700,
+      "name": "蚁丘堡",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "castle"
+    },
+    {
+      "id": "b_antler_ridge",
+      "importance": 20,
+      "mapX": 1449,
+      "mapY": 775,
+      "name": "鹿角岭",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_beyond_the_wall",
+      "type": "village"
+    },
+    {
+      "id": "b_antlerfell",
+      "importance": 20,
+      "mapX": 1598,
+      "mapY": 955,
+      "name": "破鹿角森林",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_wall",
+      "type": "city"
+    },
+    {
+      "id": "b_antlers",
+      "importance": 20,
+      "mapX": 1710,
+      "mapY": 2957,
+      "name": "鹿角堡",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_crownlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_anvil",
+      "importance": 20,
+      "mapX": 1986,
+      "mapY": 2908,
+      "name": "铁砧村",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_crownlands",
+      "type": "city"
+    },
+    {
+      "id": "b_apperly",
+      "importance": 20,
+      "mapX": 1484,
+      "mapY": 3456,
+      "name": "阿珀利镇",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "city"
+    },
+    {
+      "id": "b_apple_row",
+      "importance": 20,
+      "mapX": 1284,
+      "mapY": 3539,
+      "name": "苹果镇",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "village"
+    },
+    {
+      "id": "b_applebee",
+      "importance": 20,
+      "mapX": 844,
+      "mapY": 3827,
+      "name": "果蜂堡",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "castle"
+    },
+    {
+      "id": "b_applehill_castle",
+      "importance": 20,
+      "mapX": 1090,
+      "mapY": 3343,
+      "name": "苹丘城",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "castle"
+    },
+    {
+      "id": "b_appleroast",
+      "importance": 20,
+      "mapX": 1256,
+      "mapY": 3485,
+      "name": "苹果山",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "village"
+    },
+    {
+      "id": "b_archester",
+      "importance": 20,
+      "mapX": 1720,
+      "mapY": 3045,
+      "name": "安切斯特镇",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_crownlands",
+      "type": "city"
+    },
+    {
+      "id": "b_archwood",
+      "importance": 20,
+      "mapX": 1644,
+      "mapY": 3630,
+      "name": "傲慢原",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "village"
+    },
+    {
+      "id": "b_arerdryn",
+      "importance": 20,
+      "mapX": 2026,
+      "mapY": 850,
+      "name": "阿雷尔德里",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_arergludak",
+      "importance": 20,
+      "mapX": 1180,
+      "mapY": 298,
+      "name": "阿雷格鲁达克",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_beyond_the_wall",
+      "type": "village"
+    },
+    {
+      "id": "b_arganbrook",
+      "importance": 20,
+      "mapX": 1308,
+      "mapY": 2452,
+      "name": "坚果堡",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_riverlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_argent_mine",
+      "importance": 20,
+      "mapX": 1028,
+      "mapY": 3092,
+      "name": "银白矿镇",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_westerlands",
+      "type": "city"
+    },
+    {
+      "id": "b_armigan",
+      "importance": 20,
+      "mapX": 2024,
+      "mapY": 3741,
+      "name": "阿米根堡",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_arrendell",
+      "importance": 20,
+      "mapX": 1287,
+      "mapY": 1131,
+      "name": "亚伦谷",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_arrow_town",
+      "importance": 20,
+      "mapX": 908,
+      "mapY": 2932,
+      "name": "弓箭镇",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_westerlands",
+      "type": "city"
+    },
+    {
+      "id": "b_arrowcrest",
+      "importance": 20,
+      "mapX": 2132,
+      "mapY": 2450,
+      "name": "箭矢平原",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "village"
+    },
+    {
+      "id": "b_arrowfall",
+      "importance": 20,
+      "mapX": 1482,
+      "mapY": 3200,
+      "name": "箭落堡",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "castle"
+    },
+    {
+      "id": "b_arrowmouth",
+      "importance": 20,
+      "mapX": 1227,
+      "mapY": 3232,
+      "name": "箭嘴镇",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "city"
+    },
+    {
+      "id": "b_arrynmarket",
+      "importance": 20,
+      "mapX": 2150,
+      "mapY": 2616,
+      "name": "艾林集",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "city"
+    },
+    {
+      "id": "b_artysfort",
+      "importance": 20,
+      "mapX": 1977,
+      "mapY": 2798,
+      "name": "阿提斯堡",
+      "reasons": [
+        "political-center",
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "castle"
+    },
+    {
+      "id": "b_ashburn",
+      "importance": 20,
+      "mapX": 1694,
+      "mapY": 911,
+      "name": "灰烬地",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_wall",
+      "type": "village"
+    },
+    {
+      "id": "b_ashemark",
+      "importance": 20,
+      "mapX": 956,
+      "mapY": 2856,
+      "name": "烙印城",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_westerlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_ashfeld",
+      "importance": 20,
+      "mapX": 1953,
+      "mapY": 1172,
+      "name": "积灰场",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_ashford",
+      "importance": 20,
+      "mapX": 1316,
+      "mapY": 3579,
+      "name": "岑树滩镇",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "city"
+    },
+    {
+      "id": "b_ashlar",
+      "importance": 20,
+      "mapX": 786,
+      "mapY": 1532,
+      "name": "方石堡",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "castle"
+    },
+    {
+      "id": "b_ashlen",
+      "importance": 20,
+      "mapX": 1500,
+      "mapY": 2790,
+      "name": "阿什镇",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_riverlands",
+      "type": "city"
+    },
+    {
+      "id": "b_ashlerwell",
+      "importance": 20,
+      "mapX": 970,
+      "mapY": 3532,
+      "name": "琢石镇",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "city"
+    },
+    {
+      "id": "b_ashplain",
+      "importance": 20,
+      "mapX": 1307,
+      "mapY": 3990,
+      "name": "烬原",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_dorne",
+      "type": "village"
+    },
+    {
+      "id": "b_ashridge",
+      "importance": 20,
+      "mapX": 713,
+      "mapY": 3811,
+      "name": "岑树岭",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "castle"
+    },
+    {
+      "id": "b_ashwater",
+      "importance": 20,
+      "mapX": 738,
+      "mapY": 2876,
+      "name": "灰水山",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_westerlands",
+      "type": "village"
+    },
+    {
+      "id": "b_attadale",
+      "importance": 20,
+      "mapX": 1766,
+      "mapY": 3232,
+      "name": "艾塔谷",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_crownlands",
+      "type": "city"
+    },
+    {
+      "id": "b_auld_forest",
+      "importance": 20,
+      "mapX": 1578,
+      "mapY": 624,
+      "name": "凋零森林",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_beyond_the_wall",
+      "type": "village"
+    },
+    {
+      "id": "b_averdyre_hall",
+      "importance": 20,
+      "mapX": 1133,
+      "mapY": 3456,
+      "name": "阿维迪尔厅",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "castle"
+    },
+    {
+      "id": "b_awarded_isle",
+      "importance": 20,
+      "mapX": 2136,
+      "mapY": 2338,
+      "name": "荣誉岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "village"
+    },
+    {
+      "id": "b_awrey",
+      "importance": 20,
+      "mapX": 1607,
+      "mapY": 3093,
+      "name": "奥雷",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_crownlands",
+      "type": "city"
+    },
+    {
+      "id": "b_axe_lick",
+      "importance": 20,
+      "mapX": 1876,
+      "mapY": 1630,
+      "name": "斧犁原",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_axelodge",
+      "importance": 20,
+      "mapX": 1348,
+      "mapY": 650,
+      "name": "斧头屯",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_beyond_the_wall",
+      "type": "village"
+    },
+    {
+      "id": "b_axemoor",
+      "importance": 20,
+      "mapX": 2168,
+      "mapY": 4090,
+      "name": "斧摩尔",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_dorne",
+      "type": "city"
+    },
+    {
+      "id": "b_axfirth",
+      "importance": 20,
+      "mapX": 657,
+      "mapY": 2535,
+      "name": "斧头湾",
+      "reasons": [
+        "political-center",
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "castle"
+    },
+    {
+      "id": "b_back_water",
+      "importance": 20,
+      "mapX": 1459,
+      "mapY": 2126,
+      "name": "拜克湖",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_bad_apple",
+      "importance": 20,
+      "mapX": 1983,
+      "mapY": 2215,
+      "name": "烂苹果镇",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "city"
+    },
+    {
+      "id": "b_bad_path",
+      "importance": 20,
+      "mapX": 782,
+      "mapY": 464,
+      "name": "凄惨小径",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_beyond_the_wall",
+      "type": "village"
+    },
+    {
+      "id": "b_bad_rock",
+      "importance": 20,
+      "mapX": 1431,
+      "mapY": 4255,
+      "name": "恶岩滩",
+      "reasons": [
+        "political-center",
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_dorne",
+      "type": "village"
+    },
+    {
+      "id": "b_bad_waste",
+      "importance": 20,
+      "mapX": 867,
+      "mapY": 645,
+      "name": "凄惨荒原",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_beyond_the_wall",
+      "type": "village"
+    },
+    {
+      "id": "b_baden",
+      "importance": 20,
+      "mapX": 616,
+      "mapY": 2541,
+      "name": "巴登村",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "city"
+    },
+    {
+      "id": "b_baileywood",
+      "importance": 20,
+      "mapX": 1079,
+      "mapY": 1669,
+      "name": "壁林堡",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "castle"
+    },
+    {
+      "id": "b_bailwood",
+      "importance": 20,
+      "mapX": 1896,
+      "mapY": 1369,
+      "name": "贝尔林",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_bald_creek",
+      "importance": 20,
+      "mapX": 1785,
+      "mapY": 1991,
+      "name": "光秃溪流",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_baldcrest",
+      "importance": 20,
+      "mapX": 1084,
+      "mapY": 3891,
+      "name": "秃峰堡",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_dorne",
+      "type": "castle"
+    },
+    {
+      "id": "b_balkrain",
+      "importance": 20,
+      "mapX": 2124,
+      "mapY": 2882,
+      "name": "雨止林",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_crownlands",
+      "type": "village"
+    },
+    {
+      "id": "b_bandallon",
+      "importance": 20,
+      "mapX": 682,
+      "mapY": 3758,
+      "name": "半圆堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "castle"
+    },
+    {
+      "id": "b_banefort",
+      "importance": 20,
+      "mapX": 872,
+      "mapY": 2674,
+      "name": "祸垒",
+      "reasons": [
+        "political-center",
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_westerlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_banewood",
+      "importance": 20,
+      "mapX": 1325,
+      "mapY": 865,
+      "name": "灾厄林",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_beyond_the_wall",
+      "type": "village"
+    },
+    {
+      "id": "b_bannerfall",
+      "importance": 20,
+      "mapX": 1899,
+      "mapY": 2555,
+      "name": "落旗堡",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "castle"
+    },
+    {
+      "id": "b_bannerstead",
+      "importance": 20,
+      "mapX": 953,
+      "mapY": 3367,
+      "name": "纹章镇",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "city"
+    },
+    {
+      "id": "b_barbrook",
+      "importance": 20,
+      "mapX": 1466,
+      "mapY": 1844,
+      "name": "酒水溪",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_barewalls",
+      "importance": 20,
+      "mapX": 1716,
+      "mapY": 1021,
+      "name": "荒垣",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_bargrain",
+      "importance": 20,
+      "mapX": 1976,
+      "mapY": 3307,
+      "name": "谷物森林",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "village"
+    },
+    {
+      "id": "b_barkwood_sett",
+      "importance": 20,
+      "mapX": 1144,
+      "mapY": 1328,
+      "name": "吠林堡",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "castle"
+    },
+    {
+      "id": "b_barlace",
+      "importance": 20,
+      "mapX": 2032,
+      "mapY": 2312,
+      "name": "巴拉斯山",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "village"
+    },
+    {
+      "id": "b_barleycross",
+      "importance": 20,
+      "mapX": 947,
+      "mapY": 4014,
+      "name": "麦粒路口",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "city"
+    },
+    {
+      "id": "b_barnet",
+      "importance": 20,
+      "mapX": 878,
+      "mapY": 3733,
+      "name": "巴尼特",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "city"
+    },
+    {
+      "id": "b_barren_rock",
+      "importance": 20,
+      "mapX": 1502,
+      "mapY": 2310,
+      "name": "巴伦岩",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "castle"
+    },
+    {
+      "id": "b_barrentack",
+      "importance": 20,
+      "mapX": 2062,
+      "mapY": 2213,
+      "name": "贫指角",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "village"
+    },
+    {
+      "id": "b_barretton",
+      "importance": 20,
+      "mapX": 1228,
+      "mapY": 3006,
+      "name": "贝雷屯",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_riverlands",
+      "type": "city"
+    },
+    {
+      "id": "b_basemont",
+      "importance": 20,
+      "mapX": 949,
+      "mapY": 3910,
+      "name": "地下城",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "city"
+    },
+    {
+      "id": "b_basorflats",
+      "importance": 20,
+      "mapX": 1445,
+      "mapY": 210,
+      "name": "嗜血山",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_beyond_the_wall",
+      "type": "village"
+    },
+    {
+      "id": "b_bastards_cradle",
+      "importance": 20,
+      "mapX": 635,
+      "mapY": 4113,
+      "name": "野种湾",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "city"
+    },
+    {
+      "id": "b_bastards_dock",
+      "importance": 20,
+      "mapX": 754,
+      "mapY": 2944,
+      "name": "野种码头",
+      "reasons": [
+        "political-center",
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_westerlands",
+      "type": "city"
+    },
+    {
+      "id": "b_battle_beach",
+      "importance": 20,
+      "mapX": 746,
+      "mapY": 3571,
+      "name": "血战滩",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "city"
+    },
+    {
+      "id": "b_battle_hill",
+      "importance": 20,
+      "mapX": 1532,
+      "mapY": 4058,
+      "name": "金戈山",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_dorne",
+      "type": "village"
+    },
+    {
+      "id": "b_battle_stream",
+      "importance": 20,
+      "mapX": 1542,
+      "mapY": 1292,
+      "name": "战流山",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_battle_valley",
+      "importance": 20,
+      "mapX": 1254,
+      "mapY": 2676,
+      "name": "战争谷",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_riverlands",
+      "type": "village"
+    },
+    {
+      "id": "b_battram",
+      "importance": 20,
+      "mapX": 1248,
+      "mapY": 3129,
+      "name": "巴特拉姆堡",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "castle"
+    },
+    {
+      "id": "b_bayfall",
+      "importance": 20,
+      "mapX": 1645,
+      "mapY": 3737,
+      "name": "陨落湾",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_beach_hook",
+      "importance": 20,
+      "mapX": 769,
+      "mapY": 4131,
+      "name": "船锚岛",
+      "reasons": [
+        "political-center",
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "castle"
+    },
+    {
+      "id": "b_beachcastle",
+      "importance": 20,
+      "mapX": 807,
+      "mapY": 4113,
+      "name": "滨海堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "castle"
+    },
+    {
+      "id": "b_beachwort",
+      "importance": 20,
+      "mapX": 1709,
+      "mapY": 3956,
+      "name": "麦芽海岸",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_dorne",
+      "type": "village"
+    },
+    {
+      "id": "b_beaconbridge",
+      "importance": 20,
+      "mapX": 774,
+      "mapY": 3926,
+      "name": "灯塔桥",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "castle"
+    },
+    {
+      "id": "b_beacons_rock",
+      "importance": 20,
+      "mapX": 821,
+      "mapY": 3533,
+      "name": "岩灯堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "castle"
+    },
+    {
+      "id": "b_beaks_break",
+      "importance": 20,
+      "mapX": 1853,
+      "mapY": 3497,
+      "name": "碎喙林",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "village"
+    },
+    {
+      "id": "b_bear_ledge",
+      "importance": 20,
+      "mapX": 1111,
+      "mapY": 727,
+      "name": "熊架",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_beyond_the_wall",
+      "type": "village"
+    },
+    {
+      "id": "b_bear_root_hill",
+      "importance": 20,
+      "mapX": 1718,
+      "mapY": 799,
+      "name": "熊根山",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_beyond_the_wall",
+      "type": "village"
+    },
+    {
+      "id": "b_bearclaw",
+      "importance": 20,
+      "mapX": 1050,
+      "mapY": 1091,
+      "name": "熊爪林",
+      "reasons": [
+        "political-center",
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_bears_den",
+      "importance": 20,
+      "mapX": 1574,
+      "mapY": 571,
+      "name": "熊穴",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_beyond_the_wall",
+      "type": "village"
+    },
+    {
+      "id": "b_bearwood",
+      "importance": 20,
+      "mapX": 1411,
+      "mapY": 620,
+      "name": "狗熊林",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_beyond_the_wall",
+      "type": "village"
+    },
+    {
+      "id": "b_beastheric",
+      "importance": 20,
+      "mapX": 1427,
+      "mapY": 3128,
+      "name": "生灵厅",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "landmark"
+    },
+    {
+      "id": "b_bechester_hall",
+      "importance": 20,
+      "mapX": 1304,
+      "mapY": 3063,
+      "name": "贝切斯特厅",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_riverlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_beckwade",
+      "importance": 20,
+      "mapX": 1262,
+      "mapY": 2574,
+      "name": "涉溪树林",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_riverlands",
+      "type": "village"
+    },
+    {
+      "id": "b_bellmare",
+      "importance": 20,
+      "mapX": 815,
+      "mapY": 4017,
+      "name": "麋鹿镇",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "city"
+    },
+    {
+      "id": "b_bellport",
+      "importance": 20,
+      "mapX": 1723,
+      "mapY": 2421,
+      "name": "钟港",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "city"
+    },
+    {
+      "id": "b_beltside",
+      "importance": 20,
+      "mapX": 1350,
+      "mapY": 3951,
+      "name": "边带镇",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_dorne",
+      "type": "city"
+    },
+    {
+      "id": "b_bendburrow",
+      "importance": 20,
+      "mapX": 1227,
+      "mapY": 453,
+      "name": "曲斜道",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_beyond_the_wall",
+      "type": "village"
+    },
+    {
+      "id": "b_bendlet_rock",
+      "importance": 20,
+      "mapX": 1999,
+      "mapY": 3223,
+      "name": "缚岩堡",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_crownlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_bensing",
+      "importance": 20,
+      "mapX": 1410,
+      "mapY": 2813,
+      "name": "放歌原",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_riverlands",
+      "type": "village"
+    },
+    {
+      "id": "b_bentbranch_keep",
+      "importance": 20,
+      "mapX": 1789,
+      "mapY": 3021,
+      "name": "弯枝堡",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_crownlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_bentgreave",
+      "importance": 20,
+      "mapX": 864,
+      "mapY": 3172,
+      "name": "曲渣森林",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_westerlands",
+      "type": "village"
+    },
+    {
+      "id": "b_benthill",
+      "importance": 20,
+      "mapX": 1660,
+      "mapY": 2652,
+      "name": "驼背丘",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_riverlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_ber_skurt",
+      "importance": 20,
+      "mapX": 2205,
+      "mapY": 950,
+      "name": "博·斯卡尔特",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_berrydrink",
+      "importance": 20,
+      "mapX": 1467,
+      "mapY": 2677,
+      "name": "果汁村",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_riverlands",
+      "type": "city"
+    },
+    {
+      "id": "b_berrygrove",
+      "importance": 20,
+      "mapX": 1047,
+      "mapY": 3190,
+      "name": "树果村",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_westerlands",
+      "type": "village"
+    },
+    {
+      "id": "b_berryport",
+      "importance": 20,
+      "mapX": 1928,
+      "mapY": 3009,
+      "name": "贝里港",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_crownlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_bevy_town",
+      "importance": 20,
+      "mapX": 1570,
+      "mapY": 3117,
+      "name": "北味镇",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_crownlands",
+      "type": "city"
+    },
+    {
+      "id": "b_birch_keep",
+      "importance": 20,
+      "mapX": 1152,
+      "mapY": 2657,
+      "name": "白桦堡",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_westerlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_birchmoor",
+      "importance": 20,
+      "mapX": 1673,
+      "mapY": 2154,
+      "name": "白泽镇",
+      "reasons": [
+        "political-center",
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "city"
+    },
+    {
+      "id": "b_black_chain",
+      "importance": 20,
+      "mapX": 567,
+      "mapY": 2496,
+      "name": "黑链岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "castle"
+    },
+    {
+      "id": "b_black_pearl",
+      "importance": 20,
+      "mapX": 642,
+      "mapY": 2409,
+      "name": "黑珍珠山",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "village"
+    },
+    {
+      "id": "b_blackblood",
+      "importance": 20,
+      "mapX": 748,
+      "mapY": 2523,
+      "name": "黑血堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "castle"
+    },
+    {
+      "id": "b_blackchief",
+      "importance": 20,
+      "mapX": 1880,
+      "mapY": 2986,
+      "name": "黑酋村",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_crownlands",
+      "type": "city"
+    },
+    {
+      "id": "b_blackcove",
+      "importance": 20,
+      "mapX": 815,
+      "mapY": 2378,
+      "name": "黑湾",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "city"
+    },
+    {
+      "id": "b_blackcrown",
+      "importance": 20,
+      "mapX": 675,
+      "mapY": 3959,
+      "name": "黑冠城",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "castle"
+    },
+    {
+      "id": "b_blackenrose",
+      "importance": 20,
+      "mapX": 749,
+      "mapY": 3988,
+      "name": "黑玫村",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "city"
+    },
+    {
+      "id": "b_blackglass_port",
+      "importance": 20,
+      "mapX": 2059,
+      "mapY": 2973,
+      "name": "黑璃港",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_crownlands",
+      "type": "city"
+    },
+    {
+      "id": "b_blackheart",
+      "importance": 20,
+      "mapX": 1808,
+      "mapY": 3412,
+      "name": "黑心城",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_blackice_flats",
+      "importance": 20,
+      "mapX": 1517,
+      "mapY": 217,
+      "name": "黑冰原",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_beyond_the_wall",
+      "type": "village"
+    },
+    {
+      "id": "b_blacktown",
+      "importance": 20,
+      "mapX": 801,
+      "mapY": 1494,
+      "name": "黑城",
+      "reasons": [
+        "event-reference"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "city"
+    },
+    {
+      "id": "b_blacktree_thicket",
+      "importance": 20,
+      "mapX": 1539,
+      "mapY": 455,
+      "name": "黑树森林",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_beyond_the_wall",
+      "type": "village"
+    },
+    {
+      "id": "b_blackvine",
+      "importance": 20,
+      "mapX": 602,
+      "mapY": 2462,
+      "name": "黑藤林",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "village"
+    },
+    {
+      "id": "b_blanchland",
+      "importance": 20,
+      "mapX": 929,
+      "mapY": 3192,
+      "name": "银白之地",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_westerlands",
+      "type": "city"
+    },
+    {
+      "id": "b_blazewater_watch",
+      "importance": 20,
+      "mapX": 888,
+      "mapY": 2025,
+      "name": "明焰望",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "castle"
+    },
+    {
+      "id": "b_blemish",
+      "importance": 20,
+      "mapX": 1367,
+      "mapY": 3706,
+      "name": "污点村",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "city"
+    },
+    {
+      "id": "b_blendfeld",
+      "importance": 20,
+      "mapX": 975,
+      "mapY": 583,
+      "name": "混冰原",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_beyond_the_wall",
+      "type": "village"
+    },
+    {
+      "id": "b_blight_shore",
+      "importance": 20,
+      "mapX": 1872,
+      "mapY": 4222,
+      "name": "闪耀海岸",
+      "reasons": [
+        "political-center",
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_dorne",
+      "type": "town"
+    },
+    {
+      "id": "b_bloatstone",
+      "importance": 20,
+      "mapX": 665,
+      "mapY": 2621,
+      "name": "鼓石城",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "castle"
+    },
+    {
+      "id": "b_blondefield",
+      "importance": 20,
+      "mapX": 1431,
+      "mapY": 2929,
+      "name": "金发原",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_riverlands",
+      "type": "village"
+    },
+    {
+      "id": "b_bloodhorn",
+      "importance": 20,
+      "mapX": 622,
+      "mapY": 3962,
+      "name": "血角",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "castle"
+    },
+    {
+      "id": "b_bloodleaf",
+      "importance": 20,
+      "mapX": 807,
+      "mapY": 2461,
+      "name": "血叶",
+      "reasons": [
+        "political-center",
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "castle"
+    },
+    {
+      "id": "b_bloody_meadow",
+      "importance": 20,
+      "mapX": 1619,
+      "mapY": 2705,
+      "name": "溅血草场",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_riverlands",
+      "type": "city"
+    },
+    {
+      "id": "b_blottage",
+      "importance": 20,
+      "mapX": 1441,
+      "mapY": 2433,
+      "name": "墨水镇",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_riverlands",
+      "type": "city"
+    },
+    {
+      "id": "b_blubber",
+      "importance": 20,
+      "mapX": 1922,
+      "mapY": 1053,
+      "name": "鲸脂",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_blue_mount",
+      "importance": 20,
+      "mapX": 1315,
+      "mapY": 1007,
+      "name": "蓝山",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_bluetail",
+      "importance": 20,
+      "mapX": 1214,
+      "mapY": 2304,
+      "name": "蓝尾堡",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "castle"
+    },
+    {
+      "id": "b_blythedurn",
+      "importance": 20,
+      "mapX": 1641,
+      "mapY": 3260,
+      "name": "布莱斯敦堡",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_bocksten",
+      "importance": 20,
+      "mapX": 1218,
+      "mapY": 1990,
+      "name": "博克斯泽",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_bogmans_approach",
+      "importance": 20,
+      "mapX": 1443,
+      "mapY": 1952,
+      "name": "乡巴佬塔",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_boldingfield",
+      "importance": 20,
+      "mapX": 1448,
+      "mapY": 3617,
+      "name": "勇敢原",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_bonehead",
+      "importance": 20,
+      "mapX": 1948,
+      "mapY": 4027,
+      "name": "呆头丘",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_dorne",
+      "type": "village"
+    },
+    {
+      "id": "b_borespring",
+      "importance": 20,
+      "mapX": 1184,
+      "mapY": 2022,
+      "name": "石间溪流",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_borrhurst",
+      "importance": 20,
+      "mapX": 715,
+      "mapY": 2971,
+      "name": "金沙镇",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_westerlands",
+      "type": "city"
+    },
+    {
+      "id": "b_borrsbattle",
+      "importance": 20,
+      "mapX": 1884,
+      "mapY": 2683,
+      "name": "博斯战场",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "village"
+    },
+    {
+      "id": "b_bottle_house",
+      "importance": 20,
+      "mapX": 839,
+      "mapY": 4019,
+      "name": "瓶屋堡",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "castle"
+    },
+    {
+      "id": "b_bottom_run_island",
+      "importance": 20,
+      "mapX": 931,
+      "mapY": 1992,
+      "name": "洼流岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_bowlyn",
+      "importance": 20,
+      "mapX": 2200,
+      "mapY": 2426,
+      "name": "波利恩山",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "village"
+    },
+    {
+      "id": "b_brackenbrick",
+      "importance": 20,
+      "mapX": 2207,
+      "mapY": 2351,
+      "name": "蕨石村",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "city"
+    },
+    {
+      "id": "b_brackyore",
+      "importance": 20,
+      "mapX": 2166,
+      "mapY": 2829,
+      "name": "布拉克镇",
+      "reasons": [
+        "political-center",
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_crownlands",
+      "type": "city"
+    },
+    {
+      "id": "b_braddock",
+      "importance": 20,
+      "mapX": 1891,
+      "mapY": 2908,
+      "name": "铁钉堡",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_crownlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_bramblewood",
+      "importance": 20,
+      "mapX": 1815,
+      "mapY": 2373,
+      "name": "荆棘森林",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "village"
+    },
+    {
+      "id": "b_brandford",
+      "importance": 20,
+      "mapX": 1425,
+      "mapY": 1470,
+      "name": "火燎原",
+      "reasons": [
+        "event-reference"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_brandshore",
+      "importance": 20,
+      "mapX": 2084,
+      "mapY": 3633,
+      "name": "烙印海岸",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "village"
+    },
+    {
+      "id": "b_brandybottom",
+      "importance": 20,
+      "mapX": 891,
+      "mapY": 3390,
+      "name": "白兰底",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "city"
+    },
+    {
+      "id": "b_breakers_tower",
+      "importance": 20,
+      "mapX": 665,
+      "mapY": 3982,
+      "name": "破碎之塔",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "castle"
+    },
+    {
+      "id": "b_breaknabb",
+      "importance": 20,
+      "mapX": 1918,
+      "mapY": 2712,
+      "name": "碎布堡",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "castle"
+    },
+    {
+      "id": "b_breakwater_watch",
+      "importance": 20,
+      "mapX": 1709,
+      "mapY": 2122,
+      "name": "波浪望",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "castle"
+    },
+    {
+      "id": "b_briarwhite",
+      "importance": 20,
+      "mapX": 1563,
+      "mapY": 3006,
+      "name": "白荆庄",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_riverlands",
+      "type": "city"
+    },
+    {
+      "id": "b_brickrun",
+      "importance": 20,
+      "mapX": 823,
+      "mapY": 1988,
+      "name": "好汉原",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_bridgepebble",
+      "importance": 20,
+      "mapX": 1923,
+      "mapY": 2180,
+      "name": "卵石桥",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "village"
+    },
+    {
+      "id": "b_bright_tree",
+      "importance": 20,
+      "mapX": 2228,
+      "mapY": 3474,
+      "name": "闪光树",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "town"
+    },
+    {
+      "id": "b_brightbridge",
+      "importance": 20,
+      "mapX": 1696,
+      "mapY": 2881,
+      "name": "光明桥",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_riverlands",
+      "type": "landmark"
+    },
+    {
+      "id": "b_brightstone",
+      "importance": 20,
+      "mapX": 1985,
+      "mapY": 2394,
+      "name": "明石堡",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "city"
+    },
+    {
+      "id": "b_brighttail",
+      "importance": 20,
+      "mapX": 1073,
+      "mapY": 4045,
+      "name": "彗星镇",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_dorne",
+      "type": "city"
+    },
+    {
+      "id": "b_brindlegard",
+      "importance": 20,
+      "mapX": 675,
+      "mapY": 3240,
+      "name": "野猪堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_westerlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_bristlebunch",
+      "importance": 20,
+      "mapX": 989,
+      "mapY": 2997,
+      "name": "野猪森林",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_westerlands",
+      "type": "village"
+    },
+    {
+      "id": "b_broadpond",
+      "importance": 20,
+      "mapX": 1521,
+      "mapY": 1843,
+      "name": "大池塘",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_brockway",
+      "importance": 20,
+      "mapX": 1570,
+      "mapY": 3567,
+      "name": "獾行径",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "village"
+    },
+    {
+      "id": "b_broken_rookery",
+      "importance": 20,
+      "mapX": 644,
+      "mapY": 2464,
+      "name": "破巢城",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "castle"
+    },
+    {
+      "id": "b_broken_stone",
+      "importance": 20,
+      "mapX": 585,
+      "mapY": 1853,
+      "name": "残缺岩",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_broken_tusk_field",
+      "importance": 20,
+      "mapX": 846,
+      "mapY": 853,
+      "name": "断牙原",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_beyond_the_wall",
+      "type": "village"
+    },
+    {
+      "id": "b_bronzeguard",
+      "importance": 20,
+      "mapX": 2226,
+      "mapY": 2620,
+      "name": "青铜卫城",
+      "reasons": [
+        "political-center",
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "castle"
+    },
+    {
+      "id": "b_bronzeley",
+      "importance": 20,
+      "mapX": 2222,
+      "mapY": 2644,
+      "name": "铜牧场",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "city"
+    },
+    {
+      "id": "b_burned_hearth",
+      "importance": 20,
+      "mapX": 1391,
+      "mapY": 278,
+      "name": "烟灰炉",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_beyond_the_wall",
+      "type": "village"
+    },
+    {
+      "id": "b_burngluh",
+      "importance": 20,
+      "mapX": 2194,
+      "mapY": 926,
+      "name": "伯恩格鲁",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "castle"
+    },
+    {
+      "id": "b_butcher_island",
+      "importance": 20,
+      "mapX": 745,
+      "mapY": 3688,
+      "name": "屠夫岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "village"
+    },
+    {
+      "id": "b_candleflow",
+      "importance": 20,
+      "mapX": 1111,
+      "mapY": 845,
+      "name": "烛流屯",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_beyond_the_wall",
+      "type": "village"
+    },
+    {
+      "id": "b_casken",
+      "importance": 20,
+      "mapX": 2052,
+      "mapY": 3335,
+      "name": "木桶镇",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "city"
+    },
+    {
+      "id": "b_casterisle",
+      "importance": 20,
+      "mapX": 818,
+      "mapY": 2854,
+      "name": "凯岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_westerlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_casterly_rock",
+      "importance": 95,
+      "mapX": 786,
+      "mapY": 3022,
+      "name": "凯岩城",
+      "reasons": [
+        "important-place",
+        "political-center",
+        "start-reference"
+      ],
+      "regionId": "world_westeros_the_westerlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_castle_black",
+      "importance": 90,
+      "mapX": 1626,
+      "mapY": 866,
+      "name": "黑城堡",
+      "reasons": [
+        "explicit",
+        "important-place",
+        "political-center",
+        "start-reference",
+        "event-reference"
+      ],
+      "regionId": "world_westeros_the_wall",
+      "type": "castle"
+    },
+    {
+      "id": "b_castle_doorlan",
+      "importance": 20,
+      "mapX": 1763,
+      "mapY": 3572,
+      "name": "道兰堡",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_castle_farring",
+      "importance": 20,
+      "mapX": 1927,
+      "mapY": 3262,
+      "name": "法林堡",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_crownlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_catwood",
+      "importance": 20,
+      "mapX": 1580,
+      "mapY": 723,
+      "name": "猫木林",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_beyond_the_wall",
+      "type": "village"
+    },
+    {
+      "id": "b_checkered_square",
+      "importance": 20,
+      "mapX": 770,
+      "mapY": 3912,
+      "name": "方格广场",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "city"
+    },
+    {
+      "id": "b_chesterfield",
+      "importance": 20,
+      "mapX": 769,
+      "mapY": 3517,
+      "name": "切斯塔堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "castle"
+    },
+    {
+      "id": "b_chimney",
+      "importance": 20,
+      "mapX": 2001,
+      "mapY": 2206,
+      "name": "烟囱镇",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "city"
+    },
+    {
+      "id": "b_claychest",
+      "importance": 20,
+      "mapX": 782,
+      "mapY": 2501,
+      "name": "污泥厅",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "town"
+    },
+    {
+      "id": "b_cleft_tower",
+      "importance": 20,
+      "mapX": 711,
+      "mapY": 2482,
+      "name": "裂海塔",
+      "reasons": [
+        "political-center",
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "castle"
+    },
+    {
+      "id": "b_clifton",
+      "importance": 20,
+      "mapX": 771,
+      "mapY": 2853,
+      "name": "克莱夫顿镇",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_westerlands",
+      "type": "city"
+    },
+    {
+      "id": "b_cloudstone",
+      "importance": 20,
+      "mapX": 862,
+      "mapY": 2437,
+      "name": "云石堡",
+      "reasons": [
+        "political-center",
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "castle"
+    },
+    {
+      "id": "b_coarse_lair",
+      "importance": 20,
+      "mapX": 664,
+      "mapY": 2453,
+      "name": "粗巢礁",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "castle"
+    },
+    {
+      "id": "b_cockerels_nest",
+      "importance": 20,
+      "mapX": 1861,
+      "mapY": 4254,
+      "name": "雏鹫之巢",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_dorne",
+      "type": "village"
+    },
+    {
+      "id": "b_crabs_return",
+      "importance": 20,
+      "mapX": 2158,
+      "mapY": 2841,
+      "name": "螃蟹堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_crownlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_crabs_watch",
+      "importance": 20,
+      "mapX": 1983,
+      "mapY": 2816,
+      "name": "螃蟹望",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "castle"
+    },
+    {
+      "id": "b_cracked_sallow",
+      "importance": 20,
+      "mapX": 1530,
+      "mapY": 2533,
+      "name": "碎烛村",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_riverlands",
+      "type": "city"
+    },
+    {
+      "id": "b_crags_bay",
+      "importance": 20,
+      "mapX": 848,
+      "mapY": 2805,
+      "name": "峭岩湾",
+      "reasons": [
+        "political-center",
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_westerlands",
+      "type": "village"
+    },
+    {
+      "id": "b_crakehall",
+      "importance": 20,
+      "mapX": 700,
+      "mapY": 3240,
+      "name": "秧鸡厅",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_westerlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_crappclaw_isle",
+      "importance": 20,
+      "mapX": 2237,
+      "mapY": 2358,
+      "name": "蟹爪岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "castle"
+    },
+    {
+      "id": "b_craynes_nest",
+      "importance": 20,
+      "mapX": 2167,
+      "mapY": 2422,
+      "name": "鹤巢城",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "castle"
+    },
+    {
+      "id": "b_crow_spike_keep",
+      "importance": 20,
+      "mapX": 605,
+      "mapY": 2443,
+      "name": "鸦刺堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "castle"
+    },
+    {
+      "id": "b_crumbling_isle",
+      "importance": 20,
+      "mapX": 2225,
+      "mapY": 2491,
+      "name": "破碎岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "village"
+    },
+    {
+      "id": "b_dalchester",
+      "importance": 20,
+      "mapX": 955,
+      "mapY": 3592,
+      "name": "多切斯镇",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "city"
+    },
+    {
+      "id": "b_dalden_keep",
+      "importance": 20,
+      "mapX": 1182,
+      "mapY": 1987,
+      "name": "道尔登堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "castle"
+    },
+    {
+      "id": "b_dampening",
+      "importance": 20,
+      "mapX": 1939,
+      "mapY": 3683,
+      "name": "回潮森林",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "village"
+    },
+    {
+      "id": "b_daresbury",
+      "importance": 20,
+      "mapX": 777,
+      "mapY": 3966,
+      "name": "达斯伯里",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "city"
+    },
+    {
+      "id": "b_darkmullet",
+      "importance": 20,
+      "mapX": 2132,
+      "mapY": 2161,
+      "name": "乌鱼岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "village"
+    },
+    {
+      "id": "b_darkscale",
+      "importance": 20,
+      "mapX": 1554,
+      "mapY": 3882,
+      "name": "黑秤岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_dorne",
+      "type": "village"
+    },
+    {
+      "id": "b_deadlock",
+      "importance": 20,
+      "mapX": 582,
+      "mapY": 2485,
+      "name": "死锁堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "castle"
+    },
+    {
+      "id": "b_deep_lure",
+      "importance": 20,
+      "mapX": 600,
+      "mapY": 1676,
+      "name": "深饵堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "castle"
+    },
+    {
+      "id": "b_deepstone",
+      "importance": 20,
+      "mapX": 2077,
+      "mapY": 2753,
+      "name": "深石山",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "village"
+    },
+    {
+      "id": "b_deer_court",
+      "importance": 20,
+      "mapX": 2195,
+      "mapY": 2499,
+      "name": "鹿庭",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "village"
+    },
+    {
+      "id": "b_dellrose",
+      "importance": 20,
+      "mapX": 2132,
+      "mapY": 2269,
+      "name": "玫瑰谷镇",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "city"
+    },
+    {
+      "id": "b_demons_bump",
+      "importance": 20,
+      "mapX": 751,
+      "mapY": 2511,
+      "name": "魔鬼堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "castle"
+    },
+    {
+      "id": "b_dorridge_island",
+      "importance": 20,
+      "mapX": 2070,
+      "mapY": 1127,
+      "name": "多里奇岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_downlester",
+      "importance": 20,
+      "mapX": 2104,
+      "mapY": 3818,
+      "name": "下莱斯特岛",
+      "reasons": [
+        "political-center",
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "village"
+    },
+    {
+      "id": "b_dragonstone",
+      "importance": 95,
+      "mapX": 2074,
+      "mapY": 2966,
+      "name": "龙石岛",
+      "reasons": [
+        "important-place",
+        "political-center",
+        "event-reference"
+      ],
+      "regionId": "world_westeros_the_crownlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_drumm_tower",
+      "importance": 20,
+      "mapX": 685,
+      "mapY": 2495,
+      "name": "卓鼓塔",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "castle"
+    },
+    {
+      "id": "b_dryshore",
+      "importance": 20,
+      "mapX": 1781,
+      "mapY": 4202,
+      "name": "干炙海岸",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_dorne",
+      "type": "village"
+    },
+    {
+      "id": "b_dusk_keep",
+      "importance": 20,
+      "mapX": 585,
+      "mapY": 2464,
+      "name": "黄昏堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "castle"
+    },
+    {
+      "id": "b_dying_gull",
+      "importance": 20,
+      "mapX": 633,
+      "mapY": 2404,
+      "name": "死鸽山",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "village"
+    },
+    {
+      "id": "b_eagles_nest",
+      "importance": 20,
+      "mapX": 1567,
+      "mapY": 451,
+      "name": "鹰巢",
+      "reasons": [
+        "event-reference"
+      ],
+      "regionId": "world_westeros_beyond_the_wall",
+      "type": "village"
+    },
+    {
+      "id": "b_eaglewood",
+      "importance": 20,
+      "mapX": 1144,
+      "mapY": 2428,
+      "name": "雄鹰林",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_riverlands",
+      "type": "village"
+    },
+    {
+      "id": "b_eastwatch_by_the_sea",
+      "importance": 80,
+      "mapX": 1798,
+      "mapY": 866,
+      "name": "东海望",
+      "reasons": [
+        "important-place",
+        "event-reference",
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_wall",
+      "type": "port"
+    },
+    {
+      "id": "b_eckerdean",
+      "importance": 20,
+      "mapX": 725,
+      "mapY": 2937,
+      "name": "埃克岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_westerlands",
+      "type": "village"
+    },
+    {
+      "id": "b_eldress",
+      "importance": 20,
+      "mapX": 872,
+      "mapY": 2761,
+      "name": "老妪海岸",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_westerlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_erchester",
+      "importance": 20,
+      "mapX": 905,
+      "mapY": 3584,
+      "name": "艾切斯镇",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "city"
+    },
+    {
+      "id": "b_faircastle",
+      "importance": 20,
+      "mapX": 768,
+      "mapY": 2875,
+      "name": "仙女城",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_westerlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_faithkey",
+      "importance": 20,
+      "mapX": 2157,
+      "mapY": 2698,
+      "name": "信仰岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "village"
+    },
+    {
+      "id": "b_fangridge",
+      "importance": 20,
+      "mapX": 1194,
+      "mapY": 656,
+      "name": "匕首岭",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_beyond_the_wall",
+      "type": "village"
+    },
+    {
+      "id": "b_far_oar",
+      "importance": 20,
+      "mapX": 671,
+      "mapY": 2418,
+      "name": "远桨堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "castle"
+    },
+    {
+      "id": "b_far_pebble",
+      "importance": 20,
+      "mapX": 1911,
+      "mapY": 2191,
+      "name": "远卵石岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "village"
+    },
+    {
+      "id": "b_far_stone_keep",
+      "importance": 20,
+      "mapX": 559,
+      "mapY": 1852,
+      "name": "远石堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "castle"
+    },
+    {
+      "id": "b_farewell",
+      "importance": 20,
+      "mapX": 880,
+      "mapY": 3570,
+      "name": "诀别岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "village"
+    },
+    {
+      "id": "b_feastfires",
+      "importance": 20,
+      "mapX": 635,
+      "mapY": 3045,
+      "name": "宴火城",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_westerlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_felkragg",
+      "importance": 20,
+      "mapX": 2215,
+      "mapY": 780,
+      "name": "菲克拉格",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_fencefield",
+      "importance": 20,
+      "mapX": 784,
+      "mapY": 4083,
+      "name": "栅栏原",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "city"
+    },
+    {
+      "id": "b_final_cover",
+      "importance": 20,
+      "mapX": 722,
+      "mapY": 3496,
+      "name": "余烬岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "village"
+    },
+    {
+      "id": "b_firthfoot",
+      "importance": 20,
+      "mapX": 1100,
+      "mapY": 2286,
+      "name": "脚掌湾",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "city"
+    },
+    {
+      "id": "b_fishbait",
+      "importance": 20,
+      "mapX": 571,
+      "mapY": 1660,
+      "name": "捕鱼岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_fishwife",
+      "importance": 20,
+      "mapX": 693,
+      "mapY": 1514,
+      "name": "渔妇岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_fist_of_the_first_men",
+      "importance": 20,
+      "mapX": 1413,
+      "mapY": 666,
+      "name": "先民拳峰",
+      "reasons": [
+        "event-reference"
+      ],
+      "regionId": "world_westeros_beyond_the_wall",
+      "type": "ruin"
+    },
+    {
+      "id": "b_flame_coast",
+      "importance": 20,
+      "mapX": 1414,
+      "mapY": 4238,
+      "name": "烈焰海岸",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_dorne",
+      "type": "village"
+    },
+    {
+      "id": "b_flint_cove",
+      "importance": 20,
+      "mapX": 2065,
+      "mapY": 1807,
+      "name": "菲林特崖",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_flints_island",
+      "importance": 20,
+      "mapX": 2051,
+      "mapY": 1784,
+      "name": "菲林特岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_forgestones",
+      "importance": 20,
+      "mapX": 616,
+      "mapY": 1767,
+      "name": "匠锻岩",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_frettymont",
+      "importance": 20,
+      "mapX": 2056,
+      "mapY": 3084,
+      "name": "纹章村",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_crownlands",
+      "type": "city"
+    },
+    {
+      "id": "b_frostleaf",
+      "importance": 20,
+      "mapX": 1013,
+      "mapY": 1186,
+      "name": "霜叶林",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_fullock",
+      "importance": 20,
+      "mapX": 671,
+      "mapY": 1547,
+      "name": "全锁村",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "city"
+    },
+    {
+      "id": "b_ghaston_grey",
+      "importance": 20,
+      "mapX": 1665,
+      "mapY": 3900,
+      "name": "灰怖堡",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_dorne",
+      "type": "castle"
+    },
+    {
+      "id": "b_gillstone",
+      "importance": 20,
+      "mapX": 2046,
+      "mapY": 2264,
+      "name": "吉尔岩",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "village"
+    },
+    {
+      "id": "b_glinting",
+      "importance": 20,
+      "mapX": 888,
+      "mapY": 2450,
+      "name": "闪耀岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "village"
+    },
+    {
+      "id": "b_goldbluff",
+      "importance": 20,
+      "mapX": 737,
+      "mapY": 3502,
+      "name": "金号角森林",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "village"
+    },
+    {
+      "id": "b_graftons_holdfast",
+      "importance": 20,
+      "mapX": 2118,
+      "mapY": 2682,
+      "name": "格拉夫森坚堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "castle"
+    },
+    {
+      "id": "b_green_moor",
+      "importance": 20,
+      "mapX": 2171,
+      "mapY": 3709,
+      "name": "青沼岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "village"
+    },
+    {
+      "id": "b_green_watch",
+      "importance": 20,
+      "mapX": 772,
+      "mapY": 2125,
+      "name": "青绿望",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "castle"
+    },
+    {
+      "id": "b_greenwatch",
+      "importance": 20,
+      "mapX": 789,
+      "mapY": 3524,
+      "name": "绿望城",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "castle"
+    },
+    {
+      "id": "b_grey_cove",
+      "importance": 20,
+      "mapX": 909,
+      "mapY": 2472,
+      "name": "灰海湾",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "castle"
+    },
+    {
+      "id": "b_greymarsh",
+      "importance": 20,
+      "mapX": 781,
+      "mapY": 1472,
+      "name": "灰泽森林",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_greystone",
+      "importance": 20,
+      "mapX": 769,
+      "mapY": 1450,
+      "name": "灰岩岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_gryphonrock",
+      "importance": 20,
+      "mapX": 2165,
+      "mapY": 2804,
+      "name": "狮鹫岩",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_crownlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_gull_tower",
+      "importance": 20,
+      "mapX": 2166,
+      "mapY": 2671,
+      "name": "海鸥塔",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "castle"
+    },
+    {
+      "id": "b_gullet_tower",
+      "importance": 20,
+      "mapX": 2032,
+      "mapY": 3050,
+      "name": "喉道塔",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_crownlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_hackwater",
+      "importance": 20,
+      "mapX": 619,
+      "mapY": 2434,
+      "name": "断水厅",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "town"
+    },
+    {
+      "id": "b_half_hill",
+      "importance": 20,
+      "mapX": 910,
+      "mapY": 2660,
+      "name": "半截丘",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_westerlands",
+      "type": "village"
+    },
+    {
+      "id": "b_harchester",
+      "importance": 20,
+      "mapX": 1934,
+      "mapY": 3818,
+      "name": "切斯特树堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_hardhome",
+      "importance": 20,
+      "mapX": 1866,
+      "mapY": 638,
+      "name": "艰难港",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_beyond_the_wall",
+      "type": "village"
+    },
+    {
+      "id": "b_harkaway",
+      "importance": 20,
+      "mapX": 627,
+      "mapY": 2417,
+      "name": "低声堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "castle"
+    },
+    {
+      "id": "b_harlaw_hall",
+      "importance": 20,
+      "mapX": 938,
+      "mapY": 2527,
+      "name": "哈尔洛厅",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "castle"
+    },
+    {
+      "id": "b_harrenhal",
+      "importance": 20,
+      "mapX": 1571,
+      "mapY": 2841,
+      "name": "赫伦堡",
+      "reasons": [
+        "event-reference"
+      ],
+      "regionId": "world_westeros_the_riverlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_harvestport",
+      "importance": 20,
+      "mapX": 798,
+      "mapY": 3655,
+      "name": "丰收港",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "city"
+    },
+    {
+      "id": "b_hearday",
+      "importance": 20,
+      "mapX": 737,
+      "mapY": 2954,
+      "name": "聆听镇",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_westerlands",
+      "type": "city"
+    },
+    {
+      "id": "b_heavy_maul",
+      "importance": 20,
+      "mapX": 1072,
+      "mapY": 1107,
+      "name": "大熊堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "castle"
+    },
+    {
+      "id": "b_herons_rest",
+      "importance": 20,
+      "mapX": 615,
+      "mapY": 1590,
+      "name": "苍鹭之憩",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_herringby",
+      "importance": 20,
+      "mapX": 695,
+      "mapY": 2526,
+      "name": "捕鲱堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "castle"
+    },
+    {
+      "id": "b_hewettsmark",
+      "importance": 20,
+      "mapX": 812,
+      "mapY": 3569,
+      "name": "赫威特属地",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "village"
+    },
+    {
+      "id": "b_hiddenhall",
+      "importance": 20,
+      "mapX": 1175,
+      "mapY": 2392,
+      "name": "匿踪厅",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_riverlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_high_tide",
+      "importance": 20,
+      "mapX": 2044,
+      "mapY": 2997,
+      "name": "高潮城",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_crownlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_highgarden",
+      "importance": 95,
+      "mapX": 1077,
+      "mapY": 3621,
+      "name": "高庭",
+      "reasons": [
+        "important-place",
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "castle"
+    },
+    {
+      "id": "b_hoare_castle",
+      "importance": 20,
+      "mapX": 730,
+      "mapY": 2519,
+      "name": "霍尔城",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "castle"
+    },
+    {
+      "id": "b_holdwater",
+      "importance": 20,
+      "mapX": 1292,
+      "mapY": 1029,
+      "name": "滞水堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "castle"
+    },
+    {
+      "id": "b_horseshoe_rock",
+      "importance": 20,
+      "mapX": 614,
+      "mapY": 4090,
+      "name": "马蹄岩",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "village"
+    },
+    {
+      "id": "b_hrunvark",
+      "importance": 20,
+      "mapX": 2206,
+      "mapY": 793,
+      "name": "赫伦瓦克",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_inner_lester",
+      "importance": 20,
+      "mapX": 2112,
+      "mapY": 3803,
+      "name": "上莱斯特岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "village"
+    },
+    {
+      "id": "b_inviting_isle",
+      "importance": 20,
+      "mapX": 726,
+      "mapY": 3701,
+      "name": "盛宴岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "city"
+    },
+    {
+      "id": "b_iron_holt",
+      "importance": 20,
+      "mapX": 770,
+      "mapY": 2569,
+      "name": "铁林城",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "castle"
+    },
+    {
+      "id": "b_iron_keep",
+      "importance": 20,
+      "mapX": 793,
+      "mapY": 2488,
+      "name": "钢铁堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "castle"
+    },
+    {
+      "id": "b_iron_tooth",
+      "importance": 20,
+      "mapX": 956,
+      "mapY": 1133,
+      "name": "铁牙岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_irongrave",
+      "importance": 20,
+      "mapX": 850,
+      "mapY": 2689,
+      "name": "黑铁冢",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_westerlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_island_estrock",
+      "importance": 20,
+      "mapX": 2174,
+      "mapY": 2406,
+      "name": "埃斯特洛克岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "castle"
+    },
+    {
+      "id": "b_isle_nymeros",
+      "importance": 20,
+      "mapX": 2160,
+      "mapY": 4128,
+      "name": "纳梅洛斯岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_dorne",
+      "type": "castle"
+    },
+    {
+      "id": "b_isle_of_pigs",
+      "importance": 20,
+      "mapX": 610,
+      "mapY": 4238,
+      "name": "群猪岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "village"
+    },
+    {
+      "id": "b_johns_town",
+      "importance": 20,
+      "mapX": 821,
+      "mapY": 3500,
+      "name": "约翰镇",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "city"
+    },
+    {
+      "id": "b_kayce",
+      "importance": 20,
+      "mapX": 667,
+      "mapY": 2991,
+      "name": "凯切镇",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_westerlands",
+      "type": "city"
+    },
+    {
+      "id": "b_kedge_island",
+      "importance": 20,
+      "mapX": 2105,
+      "mapY": 2553,
+      "name": "肯基岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "village"
+    },
+    {
+      "id": "b_keep_of_corpses",
+      "importance": 20,
+      "mapX": 618,
+      "mapY": 2466,
+      "name": "死尸堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "castle"
+    },
+    {
+      "id": "b_keyguard",
+      "importance": 20,
+      "mapX": 1898,
+      "mapY": 1963,
+      "name": "钥卫岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "castle"
+    },
+    {
+      "id": "b_knar",
+      "importance": 20,
+      "mapX": 2152,
+      "mapY": 2244,
+      "name": "科纳岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "village"
+    },
+    {
+      "id": "b_lakepool",
+      "importance": 20,
+      "mapX": 2070,
+      "mapY": 3715,
+      "name": "湖池镇",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "city"
+    },
+    {
+      "id": "b_lapidwell",
+      "importance": 20,
+      "mapX": 882,
+      "mapY": 2474,
+      "name": "岩井山",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "village"
+    },
+    {
+      "id": "b_last_rite",
+      "importance": 20,
+      "mapX": 1510,
+      "mapY": 4265,
+      "name": "最后仪式厅",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_dorne",
+      "type": "landmark"
+    },
+    {
+      "id": "b_link_rock",
+      "importance": 20,
+      "mapX": 557,
+      "mapY": 2487,
+      "name": "铁链岩",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "village"
+    },
+    {
+      "id": "b_logs_head",
+      "importance": 20,
+      "mapX": 2123,
+      "mapY": 3762,
+      "name": "树首镇",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "city"
+    },
+    {
+      "id": "b_lonely_light",
+      "importance": 20,
+      "mapX": 191,
+      "mapY": 2512,
+      "name": "孤灯堡",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "castle"
+    },
+    {
+      "id": "b_longroll",
+      "importance": 20,
+      "mapX": 2073,
+      "mapY": 3346,
+      "name": "长滚路",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "village"
+    },
+    {
+      "id": "b_lord_hewetts_town",
+      "importance": 20,
+      "mapX": 826,
+      "mapY": 3559,
+      "name": "赫威特伯爵镇",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "city"
+    },
+    {
+      "id": "b_lords_mill",
+      "importance": 20,
+      "mapX": 1349,
+      "mapY": 2679,
+      "name": "领主坊",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_riverlands",
+      "type": "city"
+    },
+    {
+      "id": "b_lost_witch",
+      "importance": 20,
+      "mapX": 2313,
+      "mapY": 2584,
+      "name": "失落女巫岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "village"
+    },
+    {
+      "id": "b_lowell",
+      "importance": 20,
+      "mapX": 840,
+      "mapY": 2872,
+      "name": "洛厄尔镇",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_westerlands",
+      "type": "city"
+    },
+    {
+      "id": "b_lunker",
+      "importance": 20,
+      "mapX": 588,
+      "mapY": 1635,
+      "name": "伦克尔林",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_lurrkeep",
+      "importance": 20,
+      "mapX": 586,
+      "mapY": 2537,
+      "name": "吹奏堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "castle"
+    },
+    {
+      "id": "b_madding",
+      "importance": 20,
+      "mapX": 1913,
+      "mapY": 4006,
+      "name": "疯子镇",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_dorne",
+      "type": "city"
+    },
+    {
+      "id": "b_maidens_curse",
+      "importance": 20,
+      "mapX": 908,
+      "mapY": 2034,
+      "name": "少女之咒",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_markand",
+      "importance": 20,
+      "mapX": 2039,
+      "mapY": 2290,
+      "name": "马坎山",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "village"
+    },
+    {
+      "id": "b_martingale",
+      "importance": 20,
+      "mapX": 643,
+      "mapY": 2532,
+      "name": "狂风村",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "city"
+    },
+    {
+      "id": "b_meadsport",
+      "importance": 20,
+      "mapX": 755,
+      "mapY": 3702,
+      "name": "蜜酒港",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "castle"
+    },
+    {
+      "id": "b_merling_kings_town",
+      "importance": 20,
+      "mapX": 2302,
+      "mapY": 2579,
+      "name": "人鱼王塔",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "city"
+    },
+    {
+      "id": "b_mermaids_palace",
+      "importance": 20,
+      "mapX": 605,
+      "mapY": 4109,
+      "name": "美人鱼宫殿",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "castle"
+    },
+    {
+      "id": "b_midlor_rock",
+      "importance": 20,
+      "mapX": 2058,
+      "mapY": 2232,
+      "name": "中指岩",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "village"
+    },
+    {
+      "id": "b_midlors_fort",
+      "importance": 20,
+      "mapX": 2040,
+      "mapY": 2231,
+      "name": "中指堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "castle"
+    },
+    {
+      "id": "b_might_islands",
+      "importance": 20,
+      "mapX": 2135,
+      "mapY": 3375,
+      "name": "麦特群岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "city"
+    },
+    {
+      "id": "b_mightpoint",
+      "importance": 20,
+      "mapX": 2151,
+      "mapY": 3393,
+      "name": "麦特角",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_misty_isle",
+      "importance": 20,
+      "mapX": 1835,
+      "mapY": 2855,
+      "name": "迷雾岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_riverlands",
+      "type": "village"
+    },
+    {
+      "id": "b_moat_cailin",
+      "importance": 20,
+      "mapX": 1416,
+      "mapY": 1969,
+      "name": "卡林湾",
+      "reasons": [
+        "event-reference"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "castle"
+    },
+    {
+      "id": "b_moonport",
+      "importance": 20,
+      "mapX": 783,
+      "mapY": 2560,
+      "name": "月港",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "city"
+    },
+    {
+      "id": "b_moorhill",
+      "importance": 20,
+      "mapX": 2090,
+      "mapY": 2305,
+      "name": "荒丘",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "village"
+    },
+    {
+      "id": "b_moors_end",
+      "importance": 20,
+      "mapX": 2180,
+      "mapY": 2241,
+      "name": "尽泽角",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "village"
+    },
+    {
+      "id": "b_morgons_rise",
+      "importance": 20,
+      "mapX": 834,
+      "mapY": 2709,
+      "name": "傻瓜地",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_westerlands",
+      "type": "village"
+    },
+    {
+      "id": "b_morlescent",
+      "importance": 20,
+      "mapX": 2039,
+      "mapY": 3288,
+      "name": "土灰堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_morningside_castle",
+      "importance": 20,
+      "mapX": 2219,
+      "mapY": 3463,
+      "name": "朝阳城",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_morton",
+      "importance": 20,
+      "mapX": 676,
+      "mapY": 2451,
+      "name": "莫顿",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "city"
+    },
+    {
+      "id": "b_mouldering",
+      "importance": 20,
+      "mapX": 741,
+      "mapY": 2544,
+      "name": "腐坏堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "castle"
+    },
+    {
+      "id": "b_mullbry",
+      "importance": 20,
+      "mapX": 2040,
+      "mapY": 2708,
+      "name": "马尔伯里林",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "city"
+    },
+    {
+      "id": "b_mullbry_keep",
+      "importance": 20,
+      "mapX": 2042,
+      "mapY": 2684,
+      "name": "马尔伯里堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "castle"
+    },
+    {
+      "id": "b_naggas_hill",
+      "importance": 20,
+      "mapX": 673,
+      "mapY": 2492,
+      "name": "娜伽山丘",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "town"
+    },
+    {
+      "id": "b_neverharrow",
+      "importance": 20,
+      "mapX": 766,
+      "mapY": 2608,
+      "name": "强取堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "castle"
+    },
+    {
+      "id": "b_nightscore",
+      "importance": 20,
+      "mapX": 700,
+      "mapY": 3745,
+      "name": "夜痕森林",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "village"
+    },
+    {
+      "id": "b_noones_cove",
+      "importance": 20,
+      "mapX": 2182,
+      "mapY": 3475,
+      "name": "努恩湾",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "city"
+    },
+    {
+      "id": "b_norrens_step",
+      "importance": 20,
+      "mapX": 2020,
+      "mapY": 1429,
+      "name": "诺伦阶梯",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "castle"
+    },
+    {
+      "id": "b_notepost",
+      "importance": 20,
+      "mapX": 2098,
+      "mapY": 3338,
+      "name": "笔记岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "village"
+    },
+    {
+      "id": "b_oak_range",
+      "importance": 20,
+      "mapX": 2142,
+      "mapY": 2823,
+      "name": "橡木堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_crownlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_oaken_shore",
+      "importance": 20,
+      "mapX": 824,
+      "mapY": 2481,
+      "name": "橡木海岸",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "castle"
+    },
+    {
+      "id": "b_oakenshield_castle",
+      "importance": 20,
+      "mapX": 841,
+      "mapY": 3556,
+      "name": "橡盾堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "castle"
+    },
+    {
+      "id": "b_old_anchor",
+      "importance": 20,
+      "mapX": 2088,
+      "mapY": 2549,
+      "name": "老锚地",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "castle"
+    },
+    {
+      "id": "b_old_etch",
+      "importance": 20,
+      "mapX": 2217,
+      "mapY": 2556,
+      "name": "风化岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "village"
+    },
+    {
+      "id": "b_old_lure",
+      "importance": 20,
+      "mapX": 594,
+      "mapY": 1734,
+      "name": "旧吕尔村",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "city"
+    },
+    {
+      "id": "b_old_merling",
+      "importance": 20,
+      "mapX": 757,
+      "mapY": 3544,
+      "name": "古人鱼林",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "village"
+    },
+    {
+      "id": "b_old_rune",
+      "importance": 20,
+      "mapX": 2245,
+      "mapY": 2655,
+      "name": "老卢恩岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "village"
+    },
+    {
+      "id": "b_oldtown",
+      "importance": 20,
+      "mapX": 804,
+      "mapY": 3918,
+      "name": "旧镇",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "city"
+    },
+    {
+      "id": "b_orbank_isle",
+      "importance": 20,
+      "mapX": 774,
+      "mapY": 3642,
+      "name": "奥尔班克岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "village"
+    },
+    {
+      "id": "b_orchard_watch",
+      "importance": 20,
+      "mapX": 721,
+      "mapY": 4226,
+      "name": "果园望",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "castle"
+    },
+    {
+      "id": "b_orkwatch",
+      "importance": 20,
+      "mapX": 761,
+      "mapY": 2482,
+      "name": "橡岛望",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "castle"
+    },
+    {
+      "id": "b_orlester",
+      "importance": 20,
+      "mapX": 2130,
+      "mapY": 3796,
+      "name": "莱斯特堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_orstack",
+      "importance": 20,
+      "mapX": 807,
+      "mapY": 2871,
+      "name": "奥斯岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_westerlands",
+      "type": "village"
+    },
+    {
+      "id": "b_padcove",
+      "importance": 20,
+      "mapX": 1865,
+      "mapY": 1955,
+      "name": "帕德科夫",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_pale_island",
+      "importance": 20,
+      "mapX": 2133,
+      "mapY": 3935,
+      "name": "苍白岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_dorne",
+      "type": "castle"
+    },
+    {
+      "id": "b_pebbleton_tower",
+      "importance": 20,
+      "mapX": 711,
+      "mapY": 2555,
+      "name": "卵石镇之塔",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "castle"
+    },
+    {
+      "id": "b_pelicans_watch",
+      "importance": 20,
+      "mapX": 954,
+      "mapY": 4121,
+      "name": "鹈鹕望",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "castle"
+    },
+    {
+      "id": "b_pelltruth_hold",
+      "importance": 20,
+      "mapX": 2086,
+      "mapY": 3371,
+      "name": "佩尔特鲁斯堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_pens_point",
+      "importance": 20,
+      "mapX": 2037,
+      "mapY": 3396,
+      "name": "角笔堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_pepperpot",
+      "importance": 20,
+      "mapX": 844,
+      "mapY": 2747,
+      "name": "胡椒堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_westerlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_petrified_post",
+      "importance": 20,
+      "mapX": 894,
+      "mapY": 2484,
+      "name": "石哨站",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "city"
+    },
+    {
+      "id": "b_pigsmith",
+      "importance": 20,
+      "mapX": 698,
+      "mapY": 2603,
+      "name": "猪猡堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "castle"
+    },
+    {
+      "id": "b_pikerock",
+      "importance": 20,
+      "mapX": 2148,
+      "mapY": 3706,
+      "name": "梭鱼岩",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_pinkshield",
+      "importance": 20,
+      "mapX": 936,
+      "mapY": 4105,
+      "name": "粉盾堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "castle"
+    },
+    {
+      "id": "b_pinkstrath",
+      "importance": 20,
+      "mapX": 2075,
+      "mapY": 2261,
+      "name": "红粉堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "castle"
+    },
+    {
+      "id": "b_pinns_ledge",
+      "importance": 20,
+      "mapX": 1883,
+      "mapY": 1074,
+      "name": "尖岩架",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "castle"
+    },
+    {
+      "id": "b_pipstone",
+      "importance": 20,
+      "mapX": 2185,
+      "mapY": 2418,
+      "name": "种子岩",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "village"
+    },
+    {
+      "id": "b_polesworth",
+      "importance": 20,
+      "mapX": 1772,
+      "mapY": 2131,
+      "name": "高居地",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "village"
+    },
+    {
+      "id": "b_port_dormund",
+      "importance": 20,
+      "mapX": 2091,
+      "mapY": 1144,
+      "name": "多蒙德港",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "city"
+    },
+    {
+      "id": "b_pot_and_bowl",
+      "importance": 20,
+      "mapX": 774,
+      "mapY": 2095,
+      "name": "锅碗岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_pronged_port",
+      "importance": 20,
+      "mapX": 1590,
+      "mapY": 1873,
+      "name": "叉港",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "city"
+    },
+    {
+      "id": "b_pulp_beach",
+      "importance": 20,
+      "mapX": 1927,
+      "mapY": 4235,
+      "name": "果肉海岸",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_dorne",
+      "type": "village"
+    },
+    {
+      "id": "b_pyke",
+      "importance": 95,
+      "mapX": 775,
+      "mapY": 2624,
+      "name": "派克城",
+      "reasons": [
+        "important-place",
+        "political-center",
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "castle"
+    },
+    {
+      "id": "b_rangers_refuge",
+      "importance": 20,
+      "mapX": 2046,
+      "mapY": 1445,
+      "name": "护林员避难所",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_reavers_watch",
+      "importance": 20,
+      "mapX": 622,
+      "mapY": 1623,
+      "name": "游侠望",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "castle"
+    },
+    {
+      "id": "b_red_barrow",
+      "importance": 20,
+      "mapX": 891,
+      "mapY": 1969,
+      "name": "赤冢堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "castle"
+    },
+    {
+      "id": "b_red_drill",
+      "importance": 20,
+      "mapX": 1899,
+      "mapY": 4263,
+      "name": "红钻岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_dorne",
+      "type": "village"
+    },
+    {
+      "id": "b_red_whelk",
+      "importance": 20,
+      "mapX": 1914,
+      "mapY": 4260,
+      "name": "红螺岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_dorne",
+      "type": "castle"
+    },
+    {
+      "id": "b_redds_wing",
+      "importance": 20,
+      "mapX": 959,
+      "mapY": 2669,
+      "name": "红翼堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_westerlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_reece",
+      "importance": 20,
+      "mapX": 2070,
+      "mapY": 2738,
+      "name": "里斯",
+      "reasons": [
+        "event-reference",
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "city"
+    },
+    {
+      "id": "b_remembrance_isle",
+      "importance": 20,
+      "mapX": 2256,
+      "mapY": 2623,
+      "name": "纪念岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "village"
+    },
+    {
+      "id": "b_riptooth",
+      "importance": 20,
+      "mapX": 658,
+      "mapY": 2518,
+      "name": "裂口岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "village"
+    },
+    {
+      "id": "b_riverrun",
+      "importance": 95,
+      "mapX": 1259,
+      "mapY": 2745,
+      "name": "奔流城",
+      "reasons": [
+        "important-place",
+        "political-center",
+        "event-reference"
+      ],
+      "regionId": "world_westeros_the_riverlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_roosters_point",
+      "importance": 20,
+      "mapX": 1814,
+      "mapY": 4237,
+      "name": "雄鸡角",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_dorne",
+      "type": "village"
+    },
+    {
+      "id": "b_rootshield",
+      "importance": 20,
+      "mapX": 814,
+      "mapY": 3514,
+      "name": "盾牌森林",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "village"
+    },
+    {
+      "id": "b_rorter_isle",
+      "importance": 20,
+      "mapX": 2101,
+      "mapY": 3716,
+      "name": "骗子岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "village"
+    },
+    {
+      "id": "b_roundtop",
+      "importance": 20,
+      "mapX": 620,
+      "mapY": 1662,
+      "name": "圆顶坡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_ruddy_rose",
+      "importance": 20,
+      "mapX": 651,
+      "mapY": 2397,
+      "name": "红玫瑰堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "castle"
+    },
+    {
+      "id": "b_runeport",
+      "importance": 20,
+      "mapX": 2201,
+      "mapY": 2571,
+      "name": "符文港",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "city"
+    },
+    {
+      "id": "b_ruskstone",
+      "importance": 20,
+      "mapX": 890,
+      "mapY": 2650,
+      "name": "面包岩",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_westerlands",
+      "type": "village"
+    },
+    {
+      "id": "b_rutherton",
+      "importance": 20,
+      "mapX": 2143,
+      "mapY": 2359,
+      "name": "卢瑟屯",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "city"
+    },
+    {
+      "id": "b_ryamsport",
+      "importance": 20,
+      "mapX": 682,
+      "mapY": 4218,
+      "name": "莱安港",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "city"
+    },
+    {
+      "id": "b_salmon_stream",
+      "importance": 20,
+      "mapX": 981,
+      "mapY": 1117,
+      "name": "鲑鱼溪",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_sandy_bed",
+      "importance": 20,
+      "mapX": 653,
+      "mapY": 3942,
+      "name": "沙床镇",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "city"
+    },
+    {
+      "id": "b_sapflower",
+      "importance": 20,
+      "mapX": 2165,
+      "mapY": 2342,
+      "name": "兰花山",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "village"
+    },
+    {
+      "id": "b_scarford",
+      "importance": 20,
+      "mapX": 613,
+      "mapY": 1821,
+      "name": "伤痕堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_scatterback",
+      "importance": 20,
+      "mapX": 2126,
+      "mapY": 3966,
+      "name": "散碎滩",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_dorne",
+      "type": "village"
+    },
+    {
+      "id": "b_scrawl",
+      "importance": 20,
+      "mapX": 2072,
+      "mapY": 3401,
+      "name": "潦草岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "village"
+    },
+    {
+      "id": "b_scribes_isle",
+      "importance": 20,
+      "mapX": 2106,
+      "mapY": 3367,
+      "name": "书吏之岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "landmark"
+    },
+    {
+      "id": "b_scuttle",
+      "importance": 20,
+      "mapX": 924,
+      "mapY": 2455,
+      "name": "流亡厅",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "town"
+    },
+    {
+      "id": "b_sea_dragon_watch",
+      "importance": 20,
+      "mapX": 831,
+      "mapY": 1213,
+      "name": "海龙望",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "castle"
+    },
+    {
+      "id": "b_seagrave",
+      "importance": 20,
+      "mapX": 716,
+      "mapY": 2606,
+      "name": "海墓城",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "castle"
+    },
+    {
+      "id": "b_seal_rock",
+      "importance": 20,
+      "mapX": 1561,
+      "mapY": 1861,
+      "name": "海豹岩",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "castle"
+    },
+    {
+      "id": "b_sealskin_point",
+      "importance": 20,
+      "mapX": 640,
+      "mapY": 2439,
+      "name": "海豹皮角",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "castle"
+    },
+    {
+      "id": "b_seashell",
+      "importance": 20,
+      "mapX": 810,
+      "mapY": 2815,
+      "name": "海壳岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_westerlands",
+      "type": "village"
+    },
+    {
+      "id": "b_secondstone",
+      "importance": 20,
+      "mapX": 2140,
+      "mapY": 2150,
+      "name": "次石堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "castle"
+    },
+    {
+      "id": "b_selkie_rock",
+      "importance": 20,
+      "mapX": 707,
+      "mapY": 3527,
+      "name": "海豹岩",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "village"
+    },
+    {
+      "id": "b_serrys_isle",
+      "importance": 20,
+      "mapX": 794,
+      "mapY": 3572,
+      "name": "西瑞岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "city"
+    },
+    {
+      "id": "b_seven_shrines",
+      "importance": 20,
+      "mapX": 801,
+      "mapY": 3939,
+      "name": "七神殿",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "town"
+    },
+    {
+      "id": "b_sharp_point",
+      "importance": 20,
+      "mapX": 2044,
+      "mapY": 3074,
+      "name": "尖角",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_crownlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_shattered_finger",
+      "importance": 20,
+      "mapX": 1871,
+      "mapY": 2201,
+      "name": "破碎之指",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "village"
+    },
+    {
+      "id": "b_shatterstone",
+      "importance": 20,
+      "mapX": 699,
+      "mapY": 2471,
+      "name": "碎石堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "castle"
+    },
+    {
+      "id": "b_shelled_shore",
+      "importance": 20,
+      "mapX": 645,
+      "mapY": 1596,
+      "name": "去壳海岸",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_shieldport",
+      "importance": 20,
+      "mapX": 731,
+      "mapY": 3545,
+      "name": "盾港",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "city"
+    },
+    {
+      "id": "b_shieldrow",
+      "importance": 20,
+      "mapX": 904,
+      "mapY": 2456,
+      "name": "黑盾堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "castle"
+    },
+    {
+      "id": "b_shinys_hat",
+      "importance": 20,
+      "mapX": 2177,
+      "mapY": 3691,
+      "name": "闪帽镇",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "city"
+    },
+    {
+      "id": "b_shoalwatch",
+      "importance": 20,
+      "mapX": 1850,
+      "mapY": 4234,
+      "name": "沙洲望",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_dorne",
+      "type": "castle"
+    },
+    {
+      "id": "b_shores_hold",
+      "importance": 20,
+      "mapX": 828,
+      "mapY": 4153,
+      "name": "海滩堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "castle"
+    },
+    {
+      "id": "b_silvan_glen",
+      "importance": 20,
+      "mapX": 1144,
+      "mapY": 2155,
+      "name": "林谷",
+      "reasons": [
+        "event-reference"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_silverbrace",
+      "importance": 20,
+      "mapX": 891,
+      "mapY": 3515,
+      "name": "银革堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "castle"
+    },
+    {
+      "id": "b_silvergrail",
+      "importance": 20,
+      "mapX": 724,
+      "mapY": 3985,
+      "name": "银杯镇",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "city"
+    },
+    {
+      "id": "b_silverplate",
+      "importance": 20,
+      "mapX": 703,
+      "mapY": 3546,
+      "name": "银耀堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "castle"
+    },
+    {
+      "id": "b_sistercairn",
+      "importance": 20,
+      "mapX": 1797,
+      "mapY": 2133,
+      "name": "姐妹冢屯",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "city"
+    },
+    {
+      "id": "b_sisterton",
+      "importance": 20,
+      "mapX": 1737,
+      "mapY": 2123,
+      "name": "姐妹屯",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "city"
+    },
+    {
+      "id": "b_skipstone",
+      "importance": 20,
+      "mapX": 572,
+      "mapY": 1778,
+      "name": "蹦跳岩",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_skullsgate",
+      "importance": 20,
+      "mapX": 1530,
+      "mapY": 3879,
+      "name": "颅骨门",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_dorne",
+      "type": "castle"
+    },
+    {
+      "id": "b_slate_watch",
+      "importance": 20,
+      "mapX": 725,
+      "mapY": 1466,
+      "name": "史拉特望",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "castle"
+    },
+    {
+      "id": "b_slumberstone",
+      "importance": 20,
+      "mapX": 750,
+      "mapY": 3677,
+      "name": "贫民岩",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "city"
+    },
+    {
+      "id": "b_smallbait",
+      "importance": 20,
+      "mapX": 558,
+      "mapY": 1718,
+      "name": "小饵堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "castle"
+    },
+    {
+      "id": "b_smithsmark",
+      "importance": 20,
+      "mapX": 1948,
+      "mapY": 3792,
+      "name": "铁匠岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "village"
+    },
+    {
+      "id": "b_sourgrain",
+      "importance": 20,
+      "mapX": 721,
+      "mapY": 2503,
+      "name": "烂谷岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "village"
+    },
+    {
+      "id": "b_south_castle",
+      "importance": 20,
+      "mapX": 781,
+      "mapY": 3567,
+      "name": "南盾堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "castle"
+    },
+    {
+      "id": "b_spearmouth",
+      "importance": 20,
+      "mapX": 1193,
+      "mapY": 1957,
+      "name": "矛口城",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "castle"
+    },
+    {
+      "id": "b_spearwatch_island",
+      "importance": 20,
+      "mapX": 827,
+      "mapY": 2025,
+      "name": "矛望岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "castle"
+    },
+    {
+      "id": "b_sperry",
+      "importance": 20,
+      "mapX": 584,
+      "mapY": 2443,
+      "name": "斯佩里堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "castle"
+    },
+    {
+      "id": "b_spoutside",
+      "importance": 20,
+      "mapX": 712,
+      "mapY": 2521,
+      "name": "水流厅",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "town"
+    },
+    {
+      "id": "b_squallor",
+      "importance": 20,
+      "mapX": 2060,
+      "mapY": 3276,
+      "name": "史高岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "village"
+    },
+    {
+      "id": "b_squirrels_ground",
+      "importance": 20,
+      "mapX": 783,
+      "mapY": 1238,
+      "name": "松鼠地",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_starfall",
+      "importance": 20,
+      "mapX": 1052,
+      "mapY": 4059,
+      "name": "星坠城",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_dorne",
+      "type": "castle"
+    },
+    {
+      "id": "b_starfish_harbor",
+      "importance": 20,
+      "mapX": 630,
+      "mapY": 4143,
+      "name": "海星港",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "city"
+    },
+    {
+      "id": "b_steam_shore",
+      "importance": 20,
+      "mapX": 1541,
+      "mapY": 4246,
+      "name": "水汽海岸",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_dorne",
+      "type": "city"
+    },
+    {
+      "id": "b_sting_island",
+      "importance": 20,
+      "mapX": 656,
+      "mapY": 2422,
+      "name": "刺针岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "village"
+    },
+    {
+      "id": "b_stone_chain",
+      "importance": 20,
+      "mapX": 563,
+      "mapY": 2524,
+      "name": "链岩堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "castle"
+    },
+    {
+      "id": "b_stonebait",
+      "importance": 20,
+      "mapX": 565,
+      "mapY": 1680,
+      "name": "饵岩",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_stoneclaw",
+      "importance": 20,
+      "mapX": 629,
+      "mapY": 4236,
+      "name": "石螯堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "castle"
+    },
+    {
+      "id": "b_stonecrab_cay",
+      "importance": 20,
+      "mapX": 644,
+      "mapY": 4261,
+      "name": "石蟹礁",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "city"
+    },
+    {
+      "id": "b_stonehouse",
+      "importance": 20,
+      "mapX": 686,
+      "mapY": 2469,
+      "name": "石屋城",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "castle"
+    },
+    {
+      "id": "b_storms_end",
+      "importance": 95,
+      "mapX": 1967,
+      "mapY": 3501,
+      "name": "风息堡",
+      "reasons": [
+        "important-place",
+        "political-center"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_stowegard",
+      "importance": 20,
+      "mapX": 2135,
+      "mapY": 3744,
+      "name": "斯托镇",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "city"
+    },
+    {
+      "id": "b_straights_tower",
+      "importance": 20,
+      "mapX": 808,
+      "mapY": 4177,
+      "name": "直塔",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "castle"
+    },
+    {
+      "id": "b_strand_valley",
+      "importance": 20,
+      "mapX": 2029,
+      "mapY": 2750,
+      "name": "缕谷",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "village"
+    },
+    {
+      "id": "b_strongboar",
+      "importance": 20,
+      "mapX": 757,
+      "mapY": 2923,
+      "name": "壮猪岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_westerlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_sunbite",
+      "importance": 20,
+      "mapX": 1943,
+      "mapY": 2176,
+      "name": "咬日镇",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "city"
+    },
+    {
+      "id": "b_sunderland_hall",
+      "importance": 20,
+      "mapX": 1696,
+      "mapY": 2146,
+      "name": "桑德兰厅",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "castle"
+    },
+    {
+      "id": "b_sundkin_island",
+      "importance": 20,
+      "mapX": 1690,
+      "mapY": 2161,
+      "name": "桑德金岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "castle"
+    },
+    {
+      "id": "b_sunken_isles",
+      "importance": 20,
+      "mapX": 1987,
+      "mapY": 2196,
+      "name": "沉没岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "village"
+    },
+    {
+      "id": "b_sunset_swell",
+      "importance": 20,
+      "mapX": 663,
+      "mapY": 3727,
+      "name": "日落岩",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "village"
+    },
+    {
+      "id": "b_sunspear",
+      "importance": 95,
+      "mapX": 2130,
+      "mapY": 4137,
+      "name": "阳戟城",
+      "reasons": [
+        "important-place",
+        "political-center",
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_dorne",
+      "type": "castle"
+    },
+    {
+      "id": "b_sutton_islands",
+      "importance": 20,
+      "mapX": 2098,
+      "mapY": 2329,
+      "name": "萨顿群岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "castle"
+    },
+    {
+      "id": "b_tallor",
+      "importance": 20,
+      "mapX": 1917,
+      "mapY": 3964,
+      "name": "塔洛尔堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_dorne",
+      "type": "castle"
+    },
+    {
+      "id": "b_tallpine_keep",
+      "importance": 20,
+      "mapX": 1849,
+      "mapY": 2870,
+      "name": "高松宫",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_riverlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_tenby_island",
+      "importance": 20,
+      "mapX": 766,
+      "mapY": 4096,
+      "name": "滕比岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "village"
+    },
+    {
+      "id": "b_the_burning_tower",
+      "importance": 20,
+      "mapX": 2133,
+      "mapY": 2694,
+      "name": "燃烧塔",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "castle"
+    },
+    {
+      "id": "b_the_citadel",
+      "importance": 20,
+      "mapX": 803,
+      "mapY": 3884,
+      "name": "学城",
+      "reasons": [
+        "event-reference"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "city"
+    },
+    {
+      "id": "b_the_eyrie",
+      "importance": 95,
+      "mapX": 1794,
+      "mapY": 2552,
+      "name": "鹰巢城",
+      "reasons": [
+        "important-place",
+        "political-center",
+        "start-reference",
+        "event-reference"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "castle"
+    },
+    {
+      "id": "b_the_fist",
+      "importance": 20,
+      "mapX": 1367,
+      "mapY": 1185,
+      "name": "拳峰",
+      "reasons": [
+        "event-reference"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_the_hightower",
+      "importance": 20,
+      "mapX": 773,
+      "mapY": 3939,
+      "name": "参天塔",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "castle"
+    },
+    {
+      "id": "b_the_red_keep",
+      "importance": 100,
+      "mapX": 1707,
+      "mapY": 3169,
+      "name": "君临·红堡",
+      "reasons": [
+        "explicit",
+        "important-place",
+        "political-center",
+        "start-reference"
+      ],
+      "regionId": "world_westeros_the_crownlands",
+      "type": "city"
+    },
+    {
+      "id": "b_the_shadow_tower",
+      "importance": 80,
+      "mapX": 1422,
+      "mapY": 913,
+      "name": "影子塔",
+      "reasons": [
+        "important-place"
+      ],
+      "regionId": "world_westeros_the_wall",
+      "type": "castle"
+    },
+    {
+      "id": "b_the_shard",
+      "importance": 20,
+      "mapX": 2175,
+      "mapY": 2258,
+      "name": "无根岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "village"
+    },
+    {
+      "id": "b_the_shell",
+      "importance": 20,
+      "mapX": 2142,
+      "mapY": 3766,
+      "name": "贝壳岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "village"
+    },
+    {
+      "id": "b_the_starry_sept",
+      "importance": 20,
+      "mapX": 780,
+      "mapY": 3893,
+      "name": "繁星圣堂",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "town"
+    },
+    {
+      "id": "b_the_twins",
+      "importance": 20,
+      "mapX": 1325,
+      "mapY": 2404,
+      "name": "孪河城",
+      "reasons": [
+        "event-reference"
+      ],
+      "regionId": "world_westeros_the_riverlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_three_towers",
+      "importance": 20,
+      "mapX": 715,
+      "mapY": 4010,
+      "name": "三塔堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "castle"
+    },
+    {
+      "id": "b_threshcroft",
+      "importance": 20,
+      "mapX": 963,
+      "mapY": 2533,
+      "name": "斯雷斯港",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "city"
+    },
+    {
+      "id": "b_thunderhead",
+      "importance": 20,
+      "mapX": 2033,
+      "mapY": 3269,
+      "name": "雷首岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "village"
+    },
+    {
+      "id": "b_tidewell",
+      "importance": 20,
+      "mapX": 781,
+      "mapY": 2871,
+      "name": "潮汐林",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_westerlands",
+      "type": "village"
+    },
+    {
+      "id": "b_timber_rock",
+      "importance": 20,
+      "mapX": 1098,
+      "mapY": 1101,
+      "name": "木梁丘",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_tireless_island",
+      "importance": 20,
+      "mapX": 618,
+      "mapY": 3070,
+      "name": "不倦岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_westerlands",
+      "type": "village"
+    },
+    {
+      "id": "b_torch_tower",
+      "importance": 20,
+      "mapX": 836,
+      "mapY": 3531,
+      "name": "火炬塔",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "castle"
+    },
+    {
+      "id": "b_tormore_island",
+      "importance": 20,
+      "mapX": 1820,
+      "mapY": 2141,
+      "name": "托摩尔岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "castle"
+    },
+    {
+      "id": "b_tower_of_joy",
+      "importance": 20,
+      "mapX": 1263,
+      "mapY": 3799,
+      "name": "极乐塔",
+      "reasons": [
+        "event-reference"
+      ],
+      "regionId": "world_westeros_dorne",
+      "type": "ruin"
+    },
+    {
+      "id": "b_trawling",
+      "importance": 20,
+      "mapX": 831,
+      "mapY": 2468,
+      "name": "渔厅",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "castle"
+    },
+    {
+      "id": "b_tudbury_hall",
+      "importance": 20,
+      "mapX": 2188,
+      "mapY": 3692,
+      "name": "灵龟厅",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_tumult_point",
+      "importance": 20,
+      "mapX": 2177,
+      "mapY": 3619,
+      "name": "喧闹角",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "village"
+    },
+    {
+      "id": "b_upcliffs_haven",
+      "importance": 20,
+      "mapX": 2290,
+      "mapY": 2581,
+      "name": "厄利夫港",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "castle"
+    },
+    {
+      "id": "b_vallscale",
+      "importance": 20,
+      "mapX": 2151,
+      "mapY": 2882,
+      "name": "天平堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_crownlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_vikary_house",
+      "importance": 20,
+      "mapX": 776,
+      "mapY": 2924,
+      "name": "维卡瑞乡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_westerlands",
+      "type": "castle"
+    },
+    {
+      "id": "b_vinedocks",
+      "importance": 20,
+      "mapX": 735,
+      "mapY": 4202,
+      "name": "蔓藤船坞",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "city"
+    },
+    {
+      "id": "b_wakerock",
+      "importance": 20,
+      "mapX": 2074,
+      "mapY": 2697,
+      "name": "苏醒岩",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "village"
+    },
+    {
+      "id": "b_walnut_hall",
+      "importance": 20,
+      "mapX": 640,
+      "mapY": 3844,
+      "name": "胡桃厅",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "castle"
+    },
+    {
+      "id": "b_walrus_rock",
+      "importance": 20,
+      "mapX": 1270,
+      "mapY": 1007,
+      "name": "海象岩",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_wayward_bride",
+      "importance": 20,
+      "mapX": 611,
+      "mapY": 3826,
+      "name": "迷路新娘岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "village"
+    },
+    {
+      "id": "b_wharfton",
+      "importance": 20,
+      "mapX": 893,
+      "mapY": 3498,
+      "name": "码头镇",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "city"
+    },
+    {
+      "id": "b_whirl",
+      "importance": 20,
+      "mapX": 2220,
+      "mapY": 3601,
+      "name": "回旋岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "village"
+    },
+    {
+      "id": "b_whisper_isle",
+      "importance": 20,
+      "mapX": 682,
+      "mapY": 4010,
+      "name": "呓语岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "castle"
+    },
+    {
+      "id": "b_whispering_wood",
+      "importance": 20,
+      "mapX": 1297,
+      "mapY": 2612,
+      "name": "呓语森林",
+      "reasons": [
+        "event-reference"
+      ],
+      "regionId": "world_westeros_the_riverlands",
+      "type": "village"
+    },
+    {
+      "id": "b_whistle_ridge",
+      "importance": 20,
+      "mapX": 2255,
+      "mapY": 2587,
+      "name": "口哨丘",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "village"
+    },
+    {
+      "id": "b_white_harbor",
+      "importance": 20,
+      "mapX": 1564,
+      "mapY": 1835,
+      "name": "白港",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "city"
+    },
+    {
+      "id": "b_whitedrill",
+      "importance": 20,
+      "mapX": 1907,
+      "mapY": 4273,
+      "name": "白钻岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_dorne",
+      "type": "castle"
+    },
+    {
+      "id": "b_whitewater_watch",
+      "importance": 20,
+      "mapX": 806,
+      "mapY": 3638,
+      "name": "清水望",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "castle"
+    },
+    {
+      "id": "b_whoresons_isle",
+      "importance": 20,
+      "mapX": 647,
+      "mapY": 2985,
+      "name": "贱种岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_westerlands",
+      "type": "village"
+    },
+    {
+      "id": "b_wild_leaf",
+      "importance": 20,
+      "mapX": 789,
+      "mapY": 1192,
+      "name": "荒叶岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_wineblossom",
+      "importance": 20,
+      "mapX": 648,
+      "mapY": 4239,
+      "name": "酒花厅",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "landmark"
+    },
+    {
+      "id": "b_winterfell",
+      "importance": 100,
+      "mapX": 1360,
+      "mapY": 1447,
+      "name": "临冬城",
+      "reasons": [
+        "explicit",
+        "important-place",
+        "political-center",
+        "start-reference",
+        "event-reference"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "castle"
+    },
+    {
+      "id": "b_winters_paw",
+      "importance": 20,
+      "mapX": 1040,
+      "mapY": 1215,
+      "name": "冬之爪",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_witchs_mound",
+      "importance": 20,
+      "mapX": 700,
+      "mapY": 4232,
+      "name": "女巫堤",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "village"
+    },
+    {
+      "id": "b_wolfs_bend",
+      "importance": 20,
+      "mapX": 1363,
+      "mapY": 2697,
+      "name": "屈狼原",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_riverlands",
+      "type": "city"
+    },
+    {
+      "id": "b_woodfoot_rock",
+      "importance": 20,
+      "mapX": 1011,
+      "mapY": 1144,
+      "name": "伍德福特岩",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_woodfoot_watch",
+      "importance": 20,
+      "mapX": 998,
+      "mapY": 1116,
+      "name": "伍德福特望",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "castle"
+    },
+    {
+      "id": "b_woodkeel",
+      "importance": 20,
+      "mapX": 631,
+      "mapY": 2514,
+      "name": "骨树堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "castle"
+    },
+    {
+      "id": "b_wyldecove",
+      "importance": 20,
+      "mapX": 2127,
+      "mapY": 3626,
+      "name": "威尔德湾",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_stormlands",
+      "type": "city"
+    },
+    {
+      "id": "b_wynden",
+      "importance": 20,
+      "mapX": 623,
+      "mapY": 2451,
+      "name": "韦恩村",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "city"
+    },
+    {
+      "id": "b_wyndisle",
+      "importance": 20,
+      "mapX": 982,
+      "mapY": 2661,
+      "name": "文德岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_westerlands",
+      "type": "village"
+    },
+    {
+      "id": "b_wynegarde",
+      "importance": 20,
+      "mapX": 705,
+      "mapY": 4209,
+      "name": "护酒城",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_reach",
+      "type": "castle"
+    },
+    {
+      "id": "b_yellow_rock",
+      "importance": 20,
+      "mapX": 2116,
+      "mapY": 2701,
+      "name": "黄石滩",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_vale",
+      "type": "village"
+    },
+    {
+      "id": "b_yggs_spear",
+      "importance": 20,
+      "mapX": 658,
+      "mapY": 2489,
+      "name": "耶格之矛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_iron_islands",
+      "type": "castle"
+    },
+    {
+      "id": "b_younghorn",
+      "importance": 20,
+      "mapX": 1065,
+      "mapY": 2313,
+      "name": "幼角堡",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_westeros_the_north",
+      "type": "castle"
+    }
+  ],
   "schemaVersion": 1
 }

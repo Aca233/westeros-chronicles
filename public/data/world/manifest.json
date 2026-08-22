@@ -2,7 +2,7 @@
   "artifactDatasetHash": "d1d28241c0cce7bdcc9cd1d051e7a2cb169001126ea90f373e6e148bde3068c6",
   "artifactWorldStateHash": "73c7bfa8738c22b9b38b59e0c44dd90fe8996e3ad5a7257a7af9d1f59858094e",
   "characterDatasetHash": "5f54f711942c89c8303c30510394874bebe94cdcfcf3bc026f5a5ee2e4957283",
-  "contentHash": "0b194632fbc88f3ead05a034b9a4b87a17343e09d52e45bf183395e3b954ec26",
+  "contentHash": "0172cee2ad49ba8f3ec7ef14ed7f47303f467e7dd2b4656f155a8dcaead289df",
   "mapDatasetHash": "6c9c1f9a79ae632b29293a4ee6136eccd41f8b33de177e61ef1585caa630fa45",
   "paths": {
     "characterContentIndex": "/data/world/character-content/index.json",

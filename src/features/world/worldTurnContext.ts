@@ -56,6 +56,7 @@ export interface BuildWorldTurnContextInput {
     loadSemanticMembership(): Promise<SemanticMembership[]>;
   };
   startCharacters?: readonly WorldCharacterStartRecord[];
+  gameplayLocations?: readonly MapLocationSearchEntry[];
   timeline?: readonly CanonicalTimelineEvent[];
 }
 
@@ -178,7 +179,7 @@ export async function buildWorldTurnContext(input: BuildWorldTurnContextInput): 
     gameState.worldRuntime.events,
     playerWorldEventViewer(gameState),
   );
-  const [manifest, playerRecord, mentioned, mapResult, startCharacters] = await Promise.all([
+  const [manifest, playerRecord, mentioned, mapResult, startCharacters, gameplayLocations] = await Promise.all([
     repository.loadManifest(),
     playerId ? repository.get(playerId) : Promise.resolve(undefined),
     repository.findMentioned(input.actionText, { alive: true, canonTiers: ['canon', 'semicanon'], limit: 24 }),
@@ -199,6 +200,10 @@ export async function buildWorldTurnContext(input: BuildWorldTurnContextInput): 
       : worldContentRepository.loadStartState()
         .then((startState) => startState.characters)
         .catch(() => [] as WorldCharacterStartRecord[]),
+    input.gameplayLocations !== undefined
+      ? Promise.resolve(input.gameplayLocations)
+      : worldContentRepository.loadGameplayLocations()
+        .catch(() => [] as MapLocationSearchEntry[]),
   ]);
   const mapLocations = mapResult.locations;
   const semanticTitles = mapResult.titles;
@@ -279,8 +284,12 @@ export async function buildWorldTurnContext(input: BuildWorldTurnContextInput): 
     ...recentInteractionIds,
     ...resolved.filter((character) => character.locationId === gameState.lord.location.locationId).map((character) => character.id),
   ]).filter((id) => selectedIds.has(id));
+  // New MOVE/TRANSFER targets must be gameplay locations; the current
+  // location stays valid so pre-existing saves on hidden locations can
+  // still be referenced and left.
   const knownLocationIds = [...new Set([
-    ...mapLocations.map((location) => location.id),
+    ...gameplayLocations.map((location) => location.id),
+    gameState.lord.location.locationId,
     UNKNOWN_WESTEROS_LOCATION_ID,
   ])];
   const visibleItems = visibleCharacterItems(resolved, selectedIds, gameState);
@@ -292,7 +301,9 @@ export async function buildWorldTurnContext(input: BuildWorldTurnContextInput): 
   });
   const currentMembership = semanticMemberships.find((entry) => entry.locationId === gameState.lord.location.locationId);
   const membershipByLocationId = new Map(semanticMemberships.map((entry) => [entry.locationId, entry]));
-  const neighboringLocations = mapLocations
+  // LLM location candidates only accept gameplay locations; hidden map
+  // provinces and transit nodes stay out of the prompt context.
+  const neighboringLocations = gameplayLocations
     .filter((location) => location.id !== gameState.lord.location.locationId)
     .filter((location) => {
       const membership = membershipByLocationId.get(location.id);

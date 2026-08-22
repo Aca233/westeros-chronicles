@@ -111,6 +111,10 @@ const gameplaySchema = z.object({
     importance: z.number(), regionId: z.string().min(1), mapX: z.number(), mapY: z.number(),
     reasons: z.array(z.enum(['explicit', 'important-place', 'political-center', 'start-reference', 'event-reference', 'major-route-port'])).min(1),
   }).strict()),
+  counts: z.object({
+    total: z.number(),
+    byReason: z.record(z.string(), z.number()),
+  }).strict().optional(),
   config: z.object({
     schemaVersion: z.literal(1), include: z.array(z.string()), exclude: z.array(z.string()),
     rules: z.object({

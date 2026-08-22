@@ -16,6 +16,7 @@ import {
 import type {
   CharacterContentIndex,
   CharacterContentRecord,
+  GameplayLocationDataset,
   GameplayLocationEntry,
   HolderSummary,
   LivingWorldManifest,
@@ -61,6 +62,7 @@ export class WorldContentRepository {
     this.cache.clear();
     this.indexPromise = undefined;
     this.contentShardPromises.clear();
+    this.gameplayDatasetPromise = undefined;
   }
 
   private load<T>(path: string, parser: (value: unknown) => T): Promise<T> {
@@ -91,10 +93,33 @@ export class WorldContentRepository {
     return this.load(manifest.paths.terminology, parseWorldTerminology);
   }
 
+  private gameplayDatasetPromise?: Promise<GameplayLocationDataset>;
+
   async loadGameplayLocations(): Promise<GameplayLocationEntry[]> {
     const manifest = await this.loadManifest();
-    const dataset = await this.load(manifest.paths.gameplayLocations, parseGameplayLocationDataset);
+    this.gameplayDatasetPromise ??= this.load(manifest.paths.gameplayLocations, parseGameplayLocationDataset);
+    const dataset = await this.gameplayDatasetPromise;
     return dataset.entries;
+  }
+
+  async searchGameplayLocations(query: string, limit = 20): Promise<GameplayLocationEntry[]> {
+    const needle = query.trim().toLocaleLowerCase('zh-CN');
+    if (!needle || limit <= 0) return [];
+    const entries = await this.loadGameplayLocations();
+    return entries
+      .map((entry) => {
+        const values = [entry.id, entry.name, entry.englishName ?? ''].map((value) => value.toLocaleLowerCase('zh-CN'));
+        const score = values.some((value) => value === needle) ? 3
+          : values.some((value) => value.startsWith(needle)) ? 2
+            : values.some((value) => value.includes(needle)) ? 1 : 0;
+        return { entry, score };
+      })
+      .filter(({ score }) => score > 0)
+      .sort((left, right) => right.score - left.score
+        || right.entry.importance - left.entry.importance
+        || left.entry.name.localeCompare(right.entry.name, 'zh-CN'))
+      .slice(0, Math.max(0, Math.floor(limit)))
+      .map(({ entry }) => entry);
   }
 
   async loadHolderSummaries(): Promise<HolderSummary[]> {

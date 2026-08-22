@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "include": [],
+  "include": ["b_winterfell", "b_castle_black", "b_the_red_keep"],
   "exclude": [],
   "rules": {
     "minimumImportance": 45,

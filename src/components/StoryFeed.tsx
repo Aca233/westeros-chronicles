@@ -123,7 +123,7 @@ export const StoryFeed: React.FC<StoryFeedProps> = ({
     ]).then(async ([{ StaticCharacterRepository }, { mapRepository }, { buildStoryMentionEntities, supplementMentionedCharacterIds }, { worldContentRepository }]) => {
       const storyCharacterRepository = new StaticCharacterRepository();
       const [locations, characterContents] = await Promise.all([
-        mapRepository.loadSearchIndex().catch(() => []),
+        mapRepository.loadGameplayLocations().catch(() => []),
         worldContentRepository.loadAllCharacterContent().catch(() => []),
       ]);
       const characters = await storyCharacterRepository.findMentioned(narrativeCorpus, { includeGenealogy: false, limit: 100 }).then(async (mentioned) => {
