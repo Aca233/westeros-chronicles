@@ -1,6 +1,6 @@
 import { HOUSES } from '../../data/houses';
-import { CHARACTER_DOSSIER_SUPPLEMENTS } from '../../data/generated/characterDossierSupplements';
 import type { EntityInfo } from '../../data/entities';
+import type { CharacterContentRecord } from '../world-content/types';
 import type { CharacterSearchHit } from '../characters/types';
 import type { MapLocationSearchEntry } from '../map/types';
 
@@ -25,8 +25,9 @@ function characterKeywords(
   text: string,
   hit: CharacterSearchHit,
   sameNameCount: number,
+  contentByCharacter: ReadonlyMap<string, CharacterContentRecord>,
 ): string[] {
-  const supplement = CHARACTER_DOSSIER_SUPPLEMENTS[hit.id];
+  const supplement = contentByCharacter.get(hit.id);
   const keywords = new Set<string>();
   if (sameNameCount === 1 && usableKeyword(hit.name, text)) keywords.add(hit.name);
   const house = dynastyName(hit.dynastyId);
@@ -55,8 +56,11 @@ function locationAliases(location: MapLocationSearchEntry): string[] {
   return [...aliases];
 }
 
-export function supplementMentionedCharacterIds(text: string): string[] {
-  return Object.values(CHARACTER_DOSSIER_SUPPLEMENTS).flatMap((supplement) =>
+export function supplementMentionedCharacterIds(
+  text: string,
+  contents: readonly CharacterContentRecord[] = [],
+): string[] {
+  return contents.flatMap((supplement) =>
     (supplement.aliases ?? []).some((alias) => usableKeyword(alias, text)) ? [supplement.characterId] : []);
 }
 
@@ -64,14 +68,15 @@ export function buildStoryMentionEntities(
   text: string,
   characterHits: readonly CharacterSearchHit[],
   locations: readonly MapLocationSearchEntry[],
+  contentByCharacter: ReadonlyMap<string, CharacterContentRecord> = new Map(),
 ): EntityInfo[] {
   const nameCounts = new Map<string, number>();
   for (const hit of characterHits) nameCounts.set(hit.name, (nameCounts.get(hit.name) ?? 0) + 1);
 
   const characterEntities = characterHits.flatMap((hit) => {
-    const keywords = characterKeywords(text, hit, nameCounts.get(hit.name) ?? 1);
+    const keywords = characterKeywords(text, hit, nameCounts.get(hit.name) ?? 1, contentByCharacter);
     if (!keywords.length) return [];
-    const supplement = CHARACTER_DOSSIER_SUPPLEMENTS[hit.id];
+    const supplement = contentByCharacter.get(hit.id);
     return [{
       keywords,
       name: hit.name,

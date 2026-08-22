@@ -47,6 +47,7 @@ export interface LivingWorldStartDependencies {
   loadManifest(): Promise<LivingWorldManifest>;
   loadPlayableCharacters(): Promise<PlayableCharacterEntry[]>;
   loadStartState(): Promise<LivingWorldStartState>;
+  loadTerminology(): Promise<import('../world-content/types').WorldTerminology>;
   loadCharacterManifest(): Promise<CharacterDatasetManifest>;
   loadMapManifest(): Promise<MapManifest>;
   loadCharacter(characterId: CharacterId): Promise<StaticCharacterRecord | undefined>;
@@ -61,6 +62,7 @@ const defaultDependencies: LivingWorldStartDependencies = {
   loadManifest: () => worldRepository.loadManifest(),
   loadPlayableCharacters: () => worldRepository.loadPlayableCharacters(),
   loadStartState: () => worldRepository.loadStartState(),
+  loadTerminology: () => worldRepository.loadTerminology(),
   loadCharacterManifest: () => characterRepository.loadManifest(),
   loadMapManifest: () => mapRepository.loadManifest(),
   loadCharacter: (characterId) => characterRepository.get(characterId),
@@ -108,10 +110,11 @@ export async function createLivingWorldGame(
   characterId: CharacterId,
   dependencies: LivingWorldStartDependencies = defaultDependencies,
 ): Promise<LivingWorldNewGame> {
-  const [manifest, playableEntries, startState, characterManifest, mapManifest, record, loadout, artifacts] = await Promise.all([
+  const [manifest, playableEntries, startState, terminology, characterManifest, mapManifest, record, loadout, artifacts] = await Promise.all([
     dependencies.loadManifest(),
     dependencies.loadPlayableCharacters(),
     dependencies.loadStartState(),
+    dependencies.loadTerminology(),
     dependencies.loadCharacterManifest(),
     dependencies.loadMapManifest(),
     dependencies.loadCharacter(characterId),
@@ -132,6 +135,7 @@ export async function createLivingWorldGame(
     artifacts,
     manifest.startDate.year,
     createInitialLivingWorldItems(characterId, startState, ITEM_CATALOG),
+    terminology,
   );
   return {
     lord,
