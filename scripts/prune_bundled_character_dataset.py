@@ -386,6 +386,13 @@ def main() -> None:
     parser.add_argument("--characters", type=Path, default=Path("public/data/agot-characters"))
     args = parser.parse_args()
     counts = prune_bundled_dataset(args.characters)
+    unresolved = counts.get("unresolvedHolderSummaries", 0)
+    if unresolved:
+        # 守卫：无法解析继承的头衔持有人直接拒绝发布——
+        # 全量降级成摘要曾把 1144 条持有人数据砍到 347 条并通过所有检查。
+        raise SystemExit(
+            f"裁剪失败：{unresolved} 个头衔持有人无法解析继承（候选池为空或引用失效），拒绝发布退化数据。"
+        )
     print(json.dumps(counts, ensure_ascii=False, sort_keys=True))
 
 

@@ -60,7 +60,7 @@ console.log('Item catalog breadth and localized Wiki image provenance are valid.
 
 const generatedManifest = JSON.parse(await readFile('public/data/items/agot-artifact-import-manifest.json', 'utf8'));
 assert.equal(generatedManifest.schemaVersion, 1);
-assert.ok(generatedManifest.counts.emittedItems >= 400, `生成唯一物品只有 ${generatedManifest.counts.emittedItems} 件`);
+assert.equal(generatedManifest.counts.emittedItems, 463, `唯一物品目录锚点偏离：${generatedManifest.counts.emittedItems}`);
 assert.equal(generatedManifest.items.length, generatedManifest.counts.emittedItems);
 const generatedDefinitions = ITEM_DEFINITIONS.filter((definition) => definition.contentSource);
 assert.equal(generatedDefinitions.length, generatedManifest.counts.emittedItems);

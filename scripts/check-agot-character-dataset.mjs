@@ -53,6 +53,20 @@ if (JSON.stringify(manifest.source).includes('Crusader Kings III/game')) failure
 if ((manifest.counts?.totalSourceRecords ?? 0) < 100000) failures.push('Dataset source record count is unexpectedly small.');
 if ((manifest.counts?.projectedRecords ?? 0) < 120000) failures.push('Dataset projected source count is unexpectedly small.');
 if ((manifest.counts?.prunedRecords ?? 0) < 100000) failures.push('Dataset was not pruned to the approved runtime roster.');
+// 规模锚点：数量带断言防得住崩溃防不住塌陷——一次退化裁剪把持有人摘要
+// 砍掉三分之二仍通过全部检查。锚点偏离必须是有意的数据集变更并同步更新此处。
+const DATASET_ANCHORS = {
+  emittedRecords: 2241,
+  holderSummaryCount: 1144,
+  titleHolderCount: 1433,
+  heldTitleCount: 1873,
+};
+for (const [key, expected] of Object.entries(DATASET_ANCHORS)) {
+  const actual = manifest.counts?.[key];
+  if (actual !== expected) {
+    failures.push(`数据集锚点偏离：counts.${key} 应为 ${expected}，实际 ${actual}。若为有意变更请同步更新 DATASET_ANCHORS。`);
+  }
+}
 // The roster is sized by the living-world reference closure, not a fixed
 // headcount band; the closure itself is audited below against world content.
 if ((manifest.counts?.emittedRecords ?? 0) !== (manifest.counts?.fullRecordCount ?? -1)) failures.push('Full record count does not match emitted records.');
