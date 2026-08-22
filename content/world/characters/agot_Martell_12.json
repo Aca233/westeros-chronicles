@@ -1,0 +1,32 @@
+{
+  "aliases": [
+    "大沙蛇"
+  ],
+  "appearance": "身材高大粗壮无甚姿色，面容线条硬朗紧绷，黑发杂乱挽起，身穿粗糙皮甲，随身携带长矛与带刺皮鞭。",
+  "characterId": "agot:Martell_12",
+  "experiences": [
+    {
+      "date": "8272",
+      "description": "幼年在母亲哭泣争夺时毅然选择父亲扔在脚下的长矛，从此跟随奥柏伦受训成长为冷酷战士。",
+      "participantIds": [
+        "agot:Martell_8"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Obara_Sand",
+      "title": "选择长矛随父",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [],
+  "personality": "狂暴凶猛，好勇斗狠；崇尚纯粹的杀戮与复仇，行事雷厉风行，极度鄙视软弱妥协。",
+  "publicRoles": [
+    "沙蛇长女",
+    "多恩女战士"
+  ],
+  "reputation": "多恩全境最剽悍善战的女杀手战士，令多恩守军将领敬畏三分。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Obara_Sand",
+    "https://asoiaf.fandom.com/zh/wiki/Obara_Sand"
+  ],
+  "summary": "‘沙蛇’长女，奥柏伦·马泰尔与旧镇妓女所生。性格凶悍刚烈，精通长矛、短鞭与马术，以男子自居，热切渴望为父亲向兰尼斯特开战。"
+}

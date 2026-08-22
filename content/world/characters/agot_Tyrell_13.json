@@ -1,0 +1,39 @@
+{
+  "aliases": [
+    "百花骑士"
+  ],
+  "appearance": "容貌绝美俊秀，一头闪耀的金色波浪卷发，深褐眼眸光彩照人，身穿镶嵌千百朵鲜花与宝石的精美银甲。",
+  "characterId": "agot:Tyrell_13",
+  "experiences": [
+    {
+      "date": "8294",
+      "description": "十六岁首次参加全境大型比武大会便挑落数十位资深骑士一举斩获长枪冠军。",
+      "participantIds": [
+        "agot:Baratheon_4"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Loras_Tyrell",
+      "title": "奔流城比武大会夺冠",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "曾任蓝礼的侍从，两人维持着超越常人的亲密情谊与牢固的政治同盟。",
+      "kind": "挚友与侍从骑士",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Renly_Baratheon",
+      "targetId": "agot:Baratheon_4"
+    }
+  ],
+  "personality": "骄傲热烈，敢爱敢恨；充满浪漫的骑士激情，在比武与战场上追求极速与荣耀，偶显年轻气盛。",
+  "publicRoles": [
+    "百花骑士",
+    "比武冠军"
+  ],
+  "reputation": "全维斯特洛公认最耀眼迷人的少年骑士偶像与长枪比武王者。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Loras_Tyrell",
+    "https://asoiaf.fandom.com/zh/wiki/Loras_Tyrell"
+  ],
+  "summary": "梅斯·提利尔公爵幼子，誉满七国的百花骑士。长枪比武技艺超群绝伦，英俊非凡，深受全境贵族小姐与年轻骑士的狂热追捧，与蓝礼·拜拉席恩关系极为密切。"
+}

@@ -1,0 +1,39 @@
+{
+  "aliases": [
+    "大琼恩"
+  ],
+  "appearance": "身高近七英尺，魁梧如巨灵，黑发虬结，挥舞一柄寻常人无法提起的双刃双手重剑，身穿厚重钢甲。",
+  "characterId": "agot:Umber_8",
+  "experiences": [
+    {
+      "date": "8283",
+      "description": "随军南下参与三叉戟河诸役，在千军万马中以巨剑斩杀无数王军骑士。",
+      "participantIds": [
+        "agot:Stark_3"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Jon_Umber",
+      "title": "鸣钟之役浴血参战",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "对奈德公爵的威严与公正深感信服，甘愿为其冲锋陷阵。",
+      "kind": "敬重的北境守护",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Eddard_Stark",
+      "targetId": "agot:Stark_3"
+    }
+  ],
+  "personality": "豪迈粗犷，脾气火爆；崇尚绝对的武力与忠诚，一旦认可领袖便会奉献无可置疑的生死赤胆。",
+  "publicRoles": [
+    "最后壁炉堡伯爵",
+    "北境诸侯"
+  ],
+  "reputation": "北境公认的第一猛将与悍勇封臣，在任何宴席与战场上都是声势最骇人的存在。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Jon_Umber",
+    "https://asoiaf.fandom.com/zh/wiki/Jon_Umber"
+  ],
+  "summary": "最后壁炉堡领主，安柏家族族长。身形巨大无比，嗓门如雷，勇猛好斗且性格暴烈，是北境最靠近绝境长城的雄关统帅。"
+}

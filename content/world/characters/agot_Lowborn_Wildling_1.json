@@ -1,0 +1,40 @@
+{
+  "aliases": [
+    "火吻而生",
+    "红发耶哥蕊特"
+  ],
+  "appearance": "身材娇小矫健，一头如烈火般蓬乱卷曲的火红长发，雀斑小脸，牙齿洁白微斜，身披厚重海豹皮与粗劣皮甲，手握硬木短弓。",
+  "characterId": "agot:Lowborn_Wildling_1",
+  "experiences": [
+    {
+      "date": "8295",
+      "description": "追随曼斯·雷德集结南征，担任穿梭于峡谷密林中的先锋斥候射手。",
+      "participantIds": [
+        "agot:Rayder_1"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Ygritte",
+      "title": "加入曼斯大军斥候队",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "坚定追随曼斯跨越长城寻求生路。",
+      "kind": "追随的塞外之王",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Mance_Rayder",
+      "targetId": "agot:Rayder_1"
+    }
+  ],
+  "personality": "野性难驯，热情泼辣；崇尚自由与爱情，蔑视南方人虚伪的贵族跪拜礼节，口头禅为‘你什么都不懂’。",
+  "publicRoles": [
+    "自由民女矛妇",
+    "斥候神射手"
+  ],
+  "reputation": "塞外自由民中箭法最刁钻机敏的年轻女矛妇。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Ygritte",
+    "https://asoiaf.fandom.com/zh/wiki/Ygritte"
+  ],
+  "summary": "塞外自由民女矛妇。长着被野人视为鸿运当头的火红头发，擅长弓箭与雪地伏击，性格泼辣狂野、向往真正的自由与南方的温暖土地。"
+}

@@ -1,0 +1,39 @@
+{
+  "aliases": [
+    "丹尼斯爵士"
+  ],
+  "appearance": "身材高大削瘦挺拔，满头银发修剪整齐，蓝眼睛温和清亮，身披质地极佳的厚重纯黑丝绒披风与洗得发亮的精钢甲。",
+  "characterId": "agot:Mallister_6",
+  "experiences": [
+    {
+      "date": "8267",
+      "description": "三十年前接管长城最西端的险隘影子塔，数十年如一日挡住野人翻越峭壁峡谷的一切进攻。",
+      "participantIds": [
+        "agot:Mormont_2"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Denys_Mallister",
+      "title": "受命镇守影子塔",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "对断掌科林的骁勇与忠诚深信不疑，全权托付其前线巡逻重任。",
+      "kind": "倚重的首席游骑兵",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Qhorin_Halfhand",
+      "targetId": "agot:Shadow_Tower_1"
+    }
+  ],
+  "personality": "温文尔雅，严正自律；恪守传统贵族骑士道，治军严明得体，极具大局观与外交风度。",
+  "publicRoles": [
+    "影子塔指挥官",
+    "资深守夜人骑士"
+  ],
+  "reputation": "守夜人军团中最具贵族威仪与长者声望的资深统帅之一。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Denys_Mallister",
+    "https://asoiaf.fandom.com/zh/wiki/Denys_Mallister"
+  ],
+  "summary": "影子塔指挥官，海疆城老梅利斯特伯爵之弟。三十年来镇守绝境长城西段峡谷天堑，贵族风范高雅、威严沉稳，在守夜人军团享有崇高威望。"
+}

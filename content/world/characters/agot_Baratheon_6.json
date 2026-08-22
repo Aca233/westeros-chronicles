@@ -1,0 +1,39 @@
+{
+  "aliases": [
+    "弥赛菈公主"
+  ],
+  "appearance": "长相甜美秀丽，留着柔顺的金色卷发，绿眼睛清澈明亮，举止优雅文静。",
+  "characterId": "agot:Baratheon_6",
+  "experiences": [
+    {
+      "date": "8290",
+      "description": "在君临红堡诞生，成为拜拉席恩王室唯一的公主。",
+      "participantIds": [
+        "agot:Lannister_6",
+        "agot:Baratheon_2"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Myrcella_Baratheon",
+      "title": "降生君临红堡",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "与舅舅提利昂关系融洽，提利昂也非常喜爱这位懂事善良的外甥女。",
+      "kind": "亲善的舅舅",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Tyrion_Lannister",
+      "targetId": "agot:Lannister_8"
+    }
+  ],
+  "personality": "善良温和，知书达礼；对待身边所有人皆充满善意，没有母亲与长兄的傲慢暴戾。",
+  "publicRoles": [
+    "王室公主"
+  ],
+  "reputation": "君临红堡人见人爱的高贵小公主，以纯真与礼貌受到宫廷赞誉。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Myrcella_Baratheon",
+    "https://asoiaf.fandom.com/zh/wiki/Myrcella_Baratheon"
+  ],
+  "summary": "劳勃国王与瑟曦王后的独女。性情温顺甜美，聪慧知书懂礼，拥有兰尼斯特式的金色秀发，深受王室长辈与侍女宠爱。"
+}

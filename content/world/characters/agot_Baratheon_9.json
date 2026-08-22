@@ -1,0 +1,30 @@
+{
+  "aliases": [
+    "牛儿詹德利"
+  ],
+  "appearance": "身材极为高大结实强壮，一头浓密粗硬的乌黑卷发，下巴坚毅，深蓝眼眸与年轻时的劳勃·拜拉席恩如出一辙。",
+  "characterId": "agot:Baratheon_9",
+  "experiences": [
+    {
+      "date": "8293",
+      "description": "某位神秘贵族支付了巨额学费将其送入君临顶尖铁匠大师门下学习锻造秘艺。",
+      "participantIds": [],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Gendry",
+      "title": "入托博·莫特铁匠铺学徒",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [],
+  "personality": "耿直倔强，自尊心强；吃苦耐劳，对复杂人情与贵族政治一窍不通，只专注于锤炼精钢盔甲与兵刃。",
+  "publicRoles": [
+    "铁匠学徒",
+    "平民私生子"
+  ],
+  "reputation": "钢铁街上力气最大、手艺最扎实的青年铁匠学徒。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Gendry",
+    "https://asoiaf.fandom.com/zh/wiki/Gendry"
+  ],
+  "summary": "君临跳蚤窝出身的年轻铁匠学徒，在名匠托博·莫特的作坊学习锻造。身材高大结实，黑发蓝眼，在锻铁与使用战锤方面很有天赋。"
+}

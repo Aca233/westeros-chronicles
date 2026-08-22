@@ -1,0 +1,34 @@
+{
+  "aliases": [
+    "霍斯特公爵",
+    "老鳟鱼"
+  ],
+  "appearance": "晚年饱受水肿病痛折磨，身材枯瘦萎缩，灰红长须稀疏，面容枯槁憔悴，长年卧于奔流城主塔病榻。",
+  "characterId": "agot:Tully_1",
+  "experiences": [
+    {
+      "date": "8283",
+      "description": "在鸣钟之役后将长女凯特琳许配艾德、次女莱莎许配琼恩·艾林，带领河间地全境起兵加入反抗疯王联军。",
+      "participantIds": [
+        "agot:Stark_3",
+        "agot:Arryn_3"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Hoster_Tully",
+      "title": "缔结三叉戟河反叛同盟",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [],
+  "personality": "精明老练，以家族利益为第一准则；年轻时果断霸道，晚年在谵妄中对当年逼迫莱莎堕胎深感悔恨自责。",
+  "publicRoles": [
+    "奔流城公爵",
+    "三叉戟河最高领主"
+  ],
+  "reputation": "河间地备受爱戴的古老统治者与三叉戟河联盟的缔造者。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Hoster_Tully",
+    "https://asoiaf.fandom.com/zh/wiki/Hoster_Tully"
+  ],
+  "summary": "奔流城公爵兼三叉戟河最高领主。曾通过将双女联姻北境与谷地奠定篡夺者战争胜利，晚年深受重病折磨卧床不起，将政务托付独子艾德慕。"
+}

@@ -1,0 +1,46 @@
+{
+  "aliases": [
+    "小鸟"
+  ],
+  "appearance": "身材高挑优雅，继承了徒利家的浓密赤褐长发与明亮蓝眸，仪态端庄娇美，身边伴有温柔温顺的冰原狼淑女。",
+  "characterId": "agot:Stark_8",
+  "experiences": [
+    {
+      "date": "8286",
+      "description": "作为史塔克家族长女出生于临冬城，自幼接受严格的维斯特洛传统贵族礼仪教导。",
+      "participantIds": [
+        "agot:Stark_3",
+        "agot:Tully_4"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Sansa_Stark",
+      "title": "降生临冬城",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "茉丹修女负责珊莎的宫廷礼仪、针线女红与宗教教导，深得珊莎信赖。",
+      "kind": "礼仪导师",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Mordane",
+      "targetId": "agot:Tully_hh_4"
+    },
+    {
+      "description": "总管维扬·普尔之女，与珊莎形影不离，共同分享少女心事与骑士幻想。",
+      "kind": "挚友手足",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Jeyne_Poole",
+      "targetId": "agot:Poole_3"
+    }
+  ],
+  "personality": "温婉顺从，恪守礼仪教养；天真浪漫，对世界抱有美好幻想，极力回避粗鲁与冲突。",
+  "publicRoles": [
+    "临冬城长女",
+    "贵族淑女"
+  ],
+  "reputation": "临冬城内外公认的完美淑女，受到茉丹修女与诸侯夫人们的一致赞赏。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Sansa_Stark",
+    "https://asoiaf.fandom.com/zh/wiki/Sansa_Stark"
+  ],
+  "summary": "艾德·史塔克与凯特琳的长女。自幼受南方淑女礼仪熏陶，精通刺绣、音律与诗歌，对骑士传说与王廷浪漫生活充满向往。"
+}

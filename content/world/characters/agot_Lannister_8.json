@@ -1,0 +1,33 @@
+{
+  "aliases": [
+    "小恶魔",
+    "半人",
+    "侏儒"
+  ],
+  "appearance": "身材矮小畸形，长短脚，额头突起，长着一黑一绿的异色双眸，金白相间的杂乱头发，身着特制华贵短袍。",
+  "characterId": "agot:Lannister_8",
+  "experiences": [
+    {
+      "date": "8286",
+      "description": "十六岁成年后在西方与君临广泛游历，研读古籍与七国律法，精通财政与算术。",
+      "participantIds": [
+        "agot:Lannister_1"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Tyrion_Lannister",
+      "title": "游历君临与自由城邦",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [],
+  "personality": "毒舌狡黠，心智过人；嗜酒好色以自嘲掩盖痛苦，同情弱小与残缺者，渴望获得父亲与世人哪怕一丝真正的认可。",
+  "publicRoles": [
+    "兰尼斯特家族贵族学者"
+  ],
+  "reputation": "全境贵族口中的畸形怪物与下流恶魔，实际是罕见的博学之士与政治天才。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Tyrion_Lannister",
+    "https://asoiaf.fandom.com/zh/wiki/Tyrion_Lannister"
+  ],
+  "summary": "泰温·兰尼斯特公爵次子。天生侏儒畸形，自幼饱受家人与世人白眼，但他凭借过人智慧、渊博学识与尖锐毒舌在权谋世界中自保周旋。"
+}

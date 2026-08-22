@@ -1,0 +1,39 @@
+{
+  "aliases": [
+    "风息堡领主"
+  ],
+  "appearance": "相貌极其俊美，身材高大挺拔，乌黑卷发垂落肩头，深绿眼眸明亮迷人，酷爱穿戴翡翠色的奢华天鹅绒铠甲。",
+  "characterId": "agot:Baratheon_4",
+  "experiences": [
+    {
+      "date": "8284",
+      "description": "在劳勃登基后被跨过二哥史坦尼斯破格封为拜拉席恩家族祖地风息堡公爵。",
+      "participantIds": [
+        "agot:Baratheon_2"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Renly_Baratheon",
+      "title": "受封风息堡",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "与洛拉斯·提利尔形影不离，两人保持着极其亲密深厚的同盟与私交。",
+      "kind": "密友与侍从骑士",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Loras_Tyrell",
+      "targetId": "agot:Tyrell_13"
+    }
+  ],
+  "personality": "风趣迷人，擅长交际；极具政治号召力与野心，行事讲究仪态风度，深受骑士阶层青睐。",
+  "publicRoles": [
+    "风息堡公爵",
+    "法务大臣"
+  ],
+  "reputation": "王廷中最具人气的英俊年轻贵族，风暴地与河湾地封臣的心仪领袖。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Renly_Baratheon",
+    "https://asoiaf.fandom.com/zh/wiki/Renly_Baratheon"
+  ],
+  "summary": "风息堡公爵兼御前法务大臣，劳勃国王的幼弟。英俊潇洒、魅力非凡，酷似年轻时的劳勃，深受君临朝野与风暴地诸侯的狂热拥戴。"
+}

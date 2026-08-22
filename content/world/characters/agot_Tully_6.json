@@ -1,0 +1,33 @@
+{
+  "aliases": [
+    "莱莎夫人"
+  ],
+  "appearance": "身材丰腴发福，面色苍白略显浮肿，有着徒利家的浅蓝眼眸与泛红卷发，神情焦虑多疑，神态神经质。",
+  "characterId": "agot:Tully_6",
+  "experiences": [
+    {
+      "date": "8283",
+      "description": "在奔流城依父命与年过花甲的琼恩·艾林成婚，以换取艾林家族全力出兵参战。",
+      "participantIds": [
+        "agot:Tully_1",
+        "agot:Arryn_3"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Lysa_Arryn",
+      "title": "下嫁琼恩·艾林",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [],
+  "personality": "偏执疯狂，占有欲极强；对儿子劳勃病态溺爱过度保护，对外界一切人事充满猜疑与防备。",
+  "publicRoles": [
+    "艾林公爵夫人",
+    "谷地贵妇"
+  ],
+  "reputation": "谷地封臣眼中喜怒无常、难以理喻的神经质寡妇摄政。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Lysa_Arryn",
+    "https://asoiaf.fandom.com/zh/wiki/Lysa_Tully"
+  ],
+  "summary": "奔流城霍斯特公爵次女，琼恩·艾林公爵夫人。她长期生活在丈夫显赫地位与宫廷压力之下，性情敏感多疑，对年幼独子保护得近乎偏执。"
+}

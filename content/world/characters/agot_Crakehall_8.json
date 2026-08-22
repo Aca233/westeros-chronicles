@@ -1,0 +1,39 @@
+{
+  "aliases": [
+    "野猪莱尔"
+  ],
+  "appearance": "身材高大肥壮如山，胸毛浓密如毡，毛发黑粗，面孔红润粗旷，身着绘有野猪图案的坚固重铠。",
+  "characterId": "agot:Crakehall_8",
+  "experiences": [
+    {
+      "date": "8289",
+      "description": "在葛雷乔伊叛乱中随西境主力登岛破城，以巨斧劈碎敌军寨门。",
+      "participantIds": [
+        "agot:Lannister_1"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Lyle_Crakehall",
+      "title": "攻坚铁群岛",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "与詹姆私交甚笃，极度钦佩詹姆的剑术与武勇。",
+      "kind": "崇拜的军中统帅",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Jaime_Lannister",
+      "targetId": "agot:Lannister_7"
+    }
+  ],
+  "personality": "性格粗豪豪放，酷爱饮酒与肉搏；虽然行事粗鲁但心无城府，重义气，打仗勇往直前。",
+  "publicRoles": [
+    "骑士",
+    "西境勇将"
+  ],
+  "reputation": "西境仅次于魔山的大力士猛将，在军士中极有人缘与号召力。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Lyle_Crakehall",
+    "https://asoiaf.fandom.com/zh/wiki/Lyle_Crakehall"
+  ],
+  "summary": "峭岩堡罗兰·克雷赫伯爵次子，西境猛将。体格异常硕大粗壮，力大过人，常自夸能徒手扼死野猪，勇名传遍西境。"
+}

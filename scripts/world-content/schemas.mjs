@@ -14,11 +14,29 @@ const SITE_TYPES = new Set(['armory', 'wardrobe', 'room', 'warehouse', 'stable',
 const VEHICLE_TYPES = new Set(['packhorse', 'wagon', 'ship', 'other']);
 const SITE_KEYS = new Set(['id', 'name', 'type', 'location', 'locationLabel', 'description', 'capacity']);
 const VEHICLE_KEYS = new Set(['id', 'name', 'type', 'location', 'locationLabel', 'capacity', 'description']);
+const CHARACTER_CONTENT_KEYS = new Set([
+  'schemaVersion', 'characterId', 'summary', 'publicRoles', 'aliases', 'appearance', 'personality', 'reputation', 'experiences', 'notableRelations', 'sources',
+]);
+const CHARACTER_EXPERIENCE_KEYS = new Set(['id', 'date', 'title', 'description', 'participantIds', 'visibility', 'sourceUrl']);
+const CHARACTER_RELATION_KEYS = new Set(['targetId', 'kind', 'description', 'sourceUrl']);
+const RUNTIME_FACT_KEYS = new Set(['name', 'gender', 'birthDate', 'age', 'alive', 'location', 'titleIds', 'titles', 'items', 'equipment']);
+const SOURCE_HOSTS = new Set(['awoiaf.westeros.org', 'asoiaf.fandom.com']);
+
+function isValidSourceUrl(value) {
+  if (typeof value !== 'string' || !value.trim()) return false;
+  try {
+    const url = new URL(value.trim());
+    return (url.protocol === 'http:' || url.protocol === 'https:') && SOURCE_HOSTS.has(url.hostname.toLowerCase());
+  } catch {
+    return false;
+  }
+}
 
 function validateExactKeys(value, allowedKeys, label) {
   for (const key of Object.keys(value)) {
     if (!allowedKeys.has(key)) throw new Error(`${label}含未知字段：${key}`);
   }
+  return value;
 }
 
 function validateAssetLocation(value, label) {
@@ -165,6 +183,65 @@ export function validateStartCharacters(value) {
   return characters;
 }
 
+export function validateCharacterContents(records) {
+  const contents = array(records, '人物内容');
+  const ids = new Set();
+  for (const entry of contents) {
+    const record = validateExactKeys(entry, CHARACTER_CONTENT_KEYS, '人物内容');
+    for (const key of Object.keys(record)) {
+      if (RUNTIME_FACT_KEYS.has(key)) throw new Error(`人物内容包含运行时事实字段：${key}`);
+    }
+    if (record.schemaVersion !== 1) throw new Error('人物内容版本必须为 1');
+    if (typeof record.characterId !== 'string' || !/^agot:\S+/.test(record.characterId)) throw new Error(`人物内容 characterId 无效：${record.characterId}`);
+    if (ids.has(record.characterId)) throw new Error(`人物内容 ID 重复：${record.characterId}`);
+    ids.add(record.characterId);
+    for (const field of ['summary', 'appearance', 'personality', 'reputation']) {
+      if (field in record && (typeof record[field] !== 'string' || !record[field].trim())) {
+        throw new Error(`人物内容 ${field} 无效：${record.characterId}`);
+      }
+    }
+    for (const field of ['publicRoles', 'aliases']) {
+      if (field in record) {
+        if (!Array.isArray(record[field]) || record[field].some((value) => typeof value !== 'string' || !value.trim())) {
+          throw new Error(`人物内容 ${field} 无效：${record.characterId}`);
+        }
+      }
+    }
+    if ('experiences' in record) {
+      const experiences = array(record.experiences, '人物内容经历');
+      for (const experience of experiences) {
+        validateExactKeys(experience, CHARACTER_EXPERIENCE_KEYS, '人物内容经历');
+        if (typeof experience.date !== 'string' || !experience.date.trim()) throw new Error(`经历日期无效：${record.characterId}`);
+        if (typeof experience.title !== 'string' || !experience.title.trim()) throw new Error(`经历标题无效：${record.characterId}`);
+        if (typeof experience.description !== 'string' || !experience.description.trim()) throw new Error(`经历描述无效：${record.characterId}`);
+        if (experience.visibility !== 'public' && experience.visibility !== 'secret') throw new Error(`经历可见性无效：${record.characterId}`);
+        if (!isValidSourceUrl(experience.sourceUrl)) throw new Error(`经历来源无效：${record.characterId}`);
+        if ('participantIds' in experience) {
+          if (!Array.isArray(experience.participantIds) || experience.participantIds.some((id) => typeof id !== 'string' || !id.startsWith('agot:'))) {
+            throw new Error(`经历参与者无效：${record.characterId}`);
+          }
+        }
+      }
+    }
+    if ('notableRelations' in record) {
+      const relations = array(record.notableRelations, '人物内容重要关系');
+      const seenTargets = new Set();
+      for (const relation of relations) {
+        validateExactKeys(relation, CHARACTER_RELATION_KEYS, '人物内容重要关系');
+        if (typeof relation.targetId !== 'string' || !relation.targetId.startsWith('agot:')) throw new Error(`关系目标无效：${record.characterId}`);
+        if (relation.targetId === record.characterId) throw new Error(`关系目标不能指向自身：${record.characterId}`);
+        if (seenTargets.has(relation.targetId)) throw new Error(`关系目标重复：${record.characterId} -> ${relation.targetId}`);
+        seenTargets.add(relation.targetId);
+        if (typeof relation.kind !== 'string' || !relation.kind.trim()) throw new Error(`关系类型无效：${record.characterId}`);
+        if ('sourceUrl' in relation && !isValidSourceUrl(relation.sourceUrl)) throw new Error(`关系来源无效：${record.characterId}`);
+      }
+    }
+    if (!Array.isArray(record.sources) || record.sources.length === 0) throw new Error(`人物内容缺少来源：${record.characterId}`);
+    if (record.sources.some((url) => !isValidSourceUrl(url))) throw new Error(`人物内容来源无效：${record.characterId}`);
+  }
+  return contents;
+}
+
 export function validateWorldSource(source) {
   validateWorldManifest(source.manifest);
   const playable = array(source.playableCharacters, '可玩人物');
@@ -199,5 +276,6 @@ export function validateWorldSource(source) {
     if (document.schemaVersion !== 1) throw new Error(`${name}版本必须为 1`);
     array(document[collectionKey], `${name}.${collectionKey}`);
   }
+  validateCharacterContents(source.characterContents);
   return source;
 }

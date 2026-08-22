@@ -1,0 +1,32 @@
+{
+  "aliases": [
+    "艾里沙爵士"
+  ],
+  "appearance": "身材精瘦削挺，黑发染灰，目光刻毒如蛇蝎，薄唇常挂嘲讽冷笑，身穿洗得泛白的黑色锁甲。",
+  "characterId": "agot:Thorne_3",
+  "experiences": [
+    {
+      "date": "8283",
+      "description": "作为王室守军在君临陷落后被泰温·兰尼斯特俘获，在斩首与长城黑衣之间被迫选择前往绝境长城。",
+      "participantIds": [
+        "agot:Lannister_1"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Alliser_Thorne",
+      "title": "君临被俘流放长城",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [],
+  "personality": "尖酸刻薄，充满怨恨；对自身流放遭遇满腔怒火，极力用言语羞辱与皮鞭折磨新兵来宣泄怨念。",
+  "publicRoles": [
+    "黑城堡教头",
+    "守夜人骑士"
+  ],
+  "reputation": "黑城堡新兵闻风丧胆的恶毒教头，在老兵中亦极不讨人喜欢。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Alliser_Thorne",
+    "https://asoiaf.fandom.com/zh/wiki/Alliser_Thorne"
+  ],
+  "summary": "黑城堡新兵总教头，王领前坦格利安效忠派骑士。篡夺者战争后被逼发配绝境长城，性格刻薄阴鸷、手段严苛残忍，专门负责折磨训练新兵。"
+}

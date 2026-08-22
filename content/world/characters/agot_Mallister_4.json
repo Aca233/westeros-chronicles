@@ -1,0 +1,39 @@
+{
+  "aliases": [
+    "杰森勋爵"
+  ],
+  "appearance": "身材高大英武，面容端正高贵，灰白相间的头发与锐利深蓝眼眸，身披绘有展翅紫海鹰的华丽银甲。",
+  "characterId": "agot:Mallister_4",
+  "experiences": [
+    {
+      "date": "8289",
+      "description": "在葛雷乔伊叛乱中率部击退铁民抢滩，在城墙下单挑斩杀铁群岛王储罗德利克·葛雷乔伊并击溃铁民大军。",
+      "participantIds": [
+        "agot:Tully_1"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Jason_Mallister",
+      "title": "海疆城城下斩将",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "徒利家族最忠诚有力的柱石封臣之一。",
+      "kind": "效忠的封君",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Hoster_Tully",
+      "targetId": "agot:Tully_1"
+    }
+  ],
+  "personality": "英勇高贵，极重荣誉；治军严密，对抵御铁群岛劫掠怀有崇高责任心，是一位无可挑剔的骑士典范。",
+  "publicRoles": [
+    "海疆城伯爵",
+    "河间地防御大将"
+  ],
+  "reputation": "河间地享有崇高威望的老牌名将，海疆城坚不可摧的守护神。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Jason_Mallister",
+    "https://asoiaf.fandom.com/zh/wiki/Jason_Mallister"
+  ],
+  "summary": "海疆城伯爵，河间地西海岸门户统帅。在葛雷乔伊叛乱中亲手斩杀巴隆·葛雷乔伊长子罗德利克，以英武、高贵与坚定防御铁民闻名遐迩。"
+}

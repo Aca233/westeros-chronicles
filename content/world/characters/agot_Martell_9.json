@@ -1,0 +1,38 @@
+{
+  "aliases": [
+    "亚莲恩公主"
+  ],
+  "appearance": "身材娇小丰满曼妙，拥有如丝缎般的浓密黑卷发与橄榄色肌肤，一双黑色大眼睛充满诱惑与果决神采。",
+  "characterId": "agot:Martell_9",
+  "experiences": [
+    {
+      "date": "8276",
+      "description": "作为道朗亲王与梅拉莉欧夫人的长女诞生，依据多恩律法成为无可争议的第一继承人。",
+      "participantIds": [
+        "agot:Martell_4"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Arianne_Martell",
+      "title": "降生阳戟城",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "与特蕾妮·沙德情同闺中密友，两人无话不谈共同策划行动。",
+      "kind": "最亲密的沙蛇姐妹",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Tyene_Sand",
+      "targetId": "agot:Martell_14"
+    }
+  ],
+  "personality": "热情奔放，敢作敢当；极具自信与野心，行事偶显急躁冒险，对多恩的继承传统誓死捍卫。",
+  "publicRoles": [
+    "多恩继承人大公主"
+  ],
+  "reputation": "多恩全境最美艳迷人的大公主，无数南方骑士倾慕的对象。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Arianne_Martell",
+    "https://asoiaf.fandom.com/zh/wiki/Arianne_Martell"
+  ],
+  "summary": "阳戟城继承人兼多恩大公主，道朗亲王长女。美艳热烈、野心勃勃，因误以为父亲偏心弟弟昆廷欲剥夺其继承权而对父亲心存叛逆戒备。"
+}

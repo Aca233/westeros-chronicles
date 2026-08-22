@@ -1,0 +1,230 @@
+{
+  "agot:Baratheon_2": {
+    "aliases": [
+      "野猪王",
+      "篡夺者"
+    ],
+    "appearance": "身材极为高大魁梧，体态日渐肥胖，浓密的黑须遮住下颌与胸口，双目明亮带笑，嗓门洪亮如雷。",
+    "characterId": "agot:Baratheon_2",
+    "experiences": [
+      {
+        "date": "8283",
+        "description": "在红宝石滩挥舞双手战锤亲手击杀雷加·坦格利安王子，彻底奠定篡夺者战争的胜利。",
+        "participantIds": [
+          "agot:Stark_3",
+          "agot:Arryn_3"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Robert_I_Baratheon",
+        "title": "三叉戟河决战",
+        "visibility": "public"
+      },
+      {
+        "date": "8289",
+        "description": "御驾亲征铁群岛平定葛雷乔伊叛乱，迫使巴隆·葛雷乔伊屈膝臣服。",
+        "participantIds": [
+          "agot:Stark_3",
+          "agot:Lannister_1",
+          "agot:Greyjoy_5"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Greyjoy%27s_Rebellion",
+        "title": "亲征派克城",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "视奈德为一生中最信任的朋友，在前首相艾林去世后亲自北上邀请其担任国王之手。",
+        "kind": "情同手足的生死兄弟",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Eddard_Stark",
+        "targetId": "agot:Stark_3"
+      },
+      {
+        "description": "琼恩·艾林如同其养父，在位十五年来一直代劳勃处理繁杂的国家政务。",
+        "kind": "如父导师与首任首相",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Jon_Arryn",
+        "targetId": "agot:Arryn_3"
+      }
+    ],
+    "personality": "豪爽慷慨，嗜酒如命；热爱打仗比武胜过治国理政，脾气暴躁但易于妥协，深切怀念早逝的挚爱莱安娜·史塔克。",
+    "publicRoles": [
+      "安达尔人与先民的国王",
+      "全境守护者"
+    ],
+    "reputation": "全境闻名的传奇战士与铁锤猛将，但在治国与内政上被普遍认为怠惰挥霍。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Robert_I_Baratheon",
+      "https://asoiaf.fandom.com/zh/wiki/Robert_Baratheon"
+    ],
+    "summary": "七大王国统治者兼铁王座之主，在篡夺者战争中推翻坦格利安王朝。年轻时勇猛无敌，登基后沉溺于酒色与比武游猎，王国财政日渐窘迫。"
+  },
+  "agot:Baratheon_7": {
+    "aliases": [
+      "托曼王子"
+    ],
+    "appearance": "圆脸蛋，微胖稚嫩，金发柔软蓬松，碧绿大眼透着孩子特有的天真与胆怯。",
+    "characterId": "agot:Baratheon_7",
+    "experiences": [
+      {
+        "date": "8291",
+        "description": "在君临红堡诞生，为拜拉席恩与兰尼斯特王室增添幼子。",
+        "participantIds": [
+          "agot:Lannister_6",
+          "agot:Baratheon_2"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Tommen_Baratheon",
+        "title": "降生君临红堡",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [],
+    "personality": "温顺善良，易受摆布；讨厌暴力与流血冲突，极易顺从长辈与兄长的安排。",
+    "publicRoles": [
+      "王室小王子"
+    ],
+    "reputation": "宫廷中天真无邪的幼子，待人随和友好，没有王室骄纵之气。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Tommen_Baratheon",
+      "https://asoiaf.fandom.com/zh/wiki/Tommen_Baratheon"
+    ],
+    "summary": "劳勃国王与瑟曦王后的幼子。生性温厚善良胆小，喜爱小动物与小猫，在强势专横的长兄乔佛里阴影下受庇护长大。"
+  },
+  "agot:Glover_4": {
+    "aliases": [
+      "葛洛佛大人"
+    ],
+    "appearance": "面容冷峻刚毅，披着深色皮毛大氅，锁子甲胸前饰有葛洛佛家族的铁护手徽记，身材精悍矫健。",
+    "characterId": "agot:Glover_4",
+    "experiences": [
+      {
+        "date": "8289",
+        "description": "在葛雷乔伊叛乱中坚守深林堡海岸线，成功击退铁民舰队的试探性偷袭。",
+        "participantIds": [
+          "agot:Stark_3"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Galbart_Glover",
+        "title": "防御铁民袭扰",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "坚定追随艾德·史塔克治理北境，是史塔克家族核心军事支柱之一。",
+        "kind": "效忠的封君",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Eddard_Stark",
+        "targetId": "agot:Stark_3"
+      }
+    ],
+    "personality": "忠诚坦荡，性格耿直；在北境军务与诸侯议事中以公正无私与勇于担当著称。",
+    "publicRoles": [
+      "深林堡主",
+      "北境诸侯"
+    ],
+    "reputation": "深受北境诸侯信赖的资深指挥官与坚守誓言的重臣。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Galbart_Glover",
+      "https://asoiaf.fandom.com/zh/wiki/Galbart_Glover"
+    ],
+    "summary": "深林堡领主，葛洛佛家族族长。忠诚骁勇的北境老派诸侯，长年镇守北境西海岸要隘，抵御铁民劫掠与狼林盗匪。"
+  },
+  "agot:Greyjoy_13": {
+    "aliases": [
+      "阿莎"
+    ],
+    "appearance": "身材高挑矫健如母豹，黑发短促利落，面容英气勃勃，双眼锐利如刀，腰间常插两柄沉重飞斧。",
+    "characterId": "agot:Greyjoy_13",
+    "experiences": [
+      {
+        "date": "8294",
+        "description": "十六岁获赐长船黑风号，率领亡命海盗转战落日之海屡立奇功树立威名。",
+        "participantIds": [
+          "agot:Greyjoy_5"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Asha_Greyjoy",
+        "title": "掌舵黑风号远洋掠夺",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "读书人罗德利克是阿莎最信任的幕后顾问与家族亲人。",
+        "kind": "睿智博学的二舅",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Rodrik_Harlaw",
+        "targetId": "agot:Harlaw_9"
+      }
+    ],
+    "personality": "大胆直率，善于在粗野玩笑与强硬姿态之间掌握主动；富有船长的判断力，也清楚铁民对女性领袖的成见。",
+    "publicRoles": [
+      "黑风号船长",
+      "铁群岛女战士"
+    ],
+    "reputation": "以善于航海、敢于亲自登船作战和治下船员服从命令闻名，是铁群岛少见的女性船长。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Asha_Greyjoy",
+      "https://asoiaf.fandom.com/zh/wiki/Asha_Greyjoy"
+    ],
+    "summary": "巴隆·葛雷乔伊的长女与黑风号船长，自幼随长船出海，熟悉航海、掠袭与飞斧。她凭实际能力在轻视女性的铁民社会中赢得一席之地。"
+  },
+  "agot:Moore_2": {
+    "aliases": [
+      "曼登爵士"
+    ],
+    "appearance": "身材高大精瘦，面容僵硬冷漠毫无表情，一双灰死如鱼的眼眸毫无生气，白袍下散发着冰冷杀意。",
+    "characterId": "agot:Moore_2",
+    "experiences": [
+      {
+        "date": "8288",
+        "description": "由时任首相琼恩·艾林从谷地骑士中引荐入宫，被劳勃国王册封为御林铁卫。",
+        "participantIds": [
+          "agot:Arryn_3",
+          "agot:Baratheon_2"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Mandon_Moore",
+        "title": "受荐披上白袍",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "詹姆对其精湛武艺与毫无破绽的冷血眼神始终心存三分戒心。",
+        "kind": "戒备的铁卫同僚",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Jaime_Lannister",
+        "targetId": "agot:Lannister_7"
+      }
+    ],
+    "personality": "沉默冷酷，无喜无悲；宛如毫无情感的杀人兵器，从不与任何同僚交心交友。",
+    "publicRoles": [
+      "御林铁卫骑士"
+    ],
+    "reputation": "御林铁卫中最令人捉摸不透且暗中胆寒的冷面死士剑客。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Mandon_Moore",
+      "https://asoiaf.fandom.com/zh/wiki/Mandon_Moore"
+    ],
+    "summary": "御林铁卫白袍骑士，谷地出身。由琼恩·艾林引荐入卫，剑术极强但面无表情如同死尸，被詹姆·兰尼斯特评价为最危险的同僚。"
+  },
+  "agot:Tarly_2": {
+    "aliases": [
+      "山姆"
+    ],
+    "appearance": "体型异常肥胖如巨型酒桶，圆脸多肉，面色苍白，眼神怯弱恐慌，身着宽大厚重的黑布长袍。",
+    "characterId": "agot:Tarly_2",
+    "experiences": [],
+    "notableRelations": [],
+    "personality": "胆小自卑，善良诚恳；嗜书如命，富有同理心与求知欲，在逆境中展现出罕见的忠诚与坚韧内心。",
+    "publicRoles": [
+      "角陵继承人"
+    ],
+    "reputation": "在角陵以不擅武艺和酷爱读书闻名，常被父亲与武人轻视，但熟悉历史、家谱、地图和诸多学术知识。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Samwell_Tarly",
+      "https://asoiaf.fandom.com/zh/wiki/Samwell_Tarly"
+    ],
+    "summary": "角陵蓝道·塔利伯爵长子与继承人。体态肥胖，不喜武艺与狩猎，却博览群书、记忆力出众；温和怯懦的性格使他长期承受父亲的失望与严厉管束。"
+  }
+}

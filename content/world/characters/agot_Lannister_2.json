@@ -1,0 +1,32 @@
+{
+  "aliases": [
+    "凯冯爵士"
+  ],
+  "appearance": "相貌与泰温相仿但线条更为柔和温厚，金发微秃，灰须整齐，目光沉着坚定，身穿实用的精钢锁甲。",
+  "characterId": "agot:Lannister_2",
+  "experiences": [
+    {
+      "date": "8261",
+      "description": "从九铜板王之战起便与兄长泰温并肩作战，在诛灭雷恩与塔贝克家族战役中统帅西境左翼。",
+      "participantIds": [
+        "agot:Lannister_1"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Kevan_Lannister",
+      "title": "协助平定九铜板王之战与西境叛乱",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [],
+  "personality": "务实忠诚，谦逊自省；极富军政才干但从不争功抢风头，是兰尼斯特家族最稳定可靠的基石。",
+  "publicRoles": [
+    "西境副统帅",
+    "骑士"
+  ],
+  "reputation": "在西境被视为稳健可靠的副手，熟悉军政事务，并以长期辅佐兄长泰温、很少争夺个人风头著称。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Kevan_Lannister",
+    "https://asoiaf.fandom.com/zh/wiki/Kevan_Lannister"
+  ],
+  "summary": "泰温·兰尼斯特的亲弟兼首席副帅。性格沉稳老练，执行力极强，毕生甘于居于兄长阴影之下辅佐军政，深受西境军民爱戴。"
+}

@@ -1,0 +1,39 @@
+{
+  "aliases": [
+    "希琳小贵女"
+  ],
+  "appearance": "身材瘦小单薄，蓝眼睛与黑卷发，左脸与脖颈布满如石化开裂的灰斑，平时喜爱读书与听小丑讲故事。",
+  "characterId": "agot:Baratheon_13",
+  "experiences": [
+    {
+      "date": "8289",
+      "description": "婴儿时期罹患灰鳞病，在学士们的拼死医治下成功遏制扩散，但半边面容终生石化。",
+      "participantIds": [
+        "agot:Baratheon_3",
+        "agot:Florent_10"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Shireen_Baratheon",
+      "title": "灰鳞病痊愈",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "与戴佛斯情同父女，经常陪伴戴佛斯并教导其认字读书。",
+      "kind": "亲近的长辈导师",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Davos_Seaworth",
+      "targetId": "agot:Seaworth_1"
+    }
+  ],
+  "personality": "乖巧恬静，懂事敏感；对世间丑恶毫无戒心，十分渴望得到父母的关注与关爱。",
+  "publicRoles": [
+    "龙石岛继承人"
+  ],
+  "reputation": "龙石岛上下怜悯同情的小贵女，以纯洁善良和灰鳞病瘢痕闻名。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Shireen_Baratheon",
+    "https://asoiaf.fandom.com/zh/wiki/Shireen_Baratheon"
+  ],
+  "summary": "史坦尼斯·拜拉席恩公爵的独女兼继承人。幼年患上致命的灰鳞病并奇迹般幸存，半边面孔留下灰石般的鳞状斑痕，性格安静善良。"
+}

@@ -1,0 +1,77 @@
+{
+  "aliases": [
+    "奈德",
+    "安静的狼"
+  ],
+  "appearance": "面容削瘦严肃，留着灰黑斑白的短胡须，灰眸如冬日之水。身材匀称结实，常着朴素深灰皮甲与厚重羊皮大氅。",
+  "characterId": "agot:Stark_3",
+  "experiences": [
+    {
+      "date": "8281",
+      "description": "随父亲与兄妹前往赫伦堡参加盛大比武大会，见证雷加·坦格利安将爱与美的王冠献给莱安娜·史塔克。",
+      "participantIds": [
+        "agot:Baratheon_2",
+        "agot:Reed_1"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Eddard_Stark",
+      "title": "赫伦堡比武会",
+      "visibility": "public"
+    },
+    {
+      "date": "8283",
+      "description": "在父兄惨遭疯王杀害后，与劳勃及琼恩·艾林在谷地起兵讨伐坦格利安王室，并迎娶凯特琳·徒利巩固同盟。",
+      "participantIds": [
+        "agot:Baratheon_2",
+        "agot:Arryn_3",
+        "agot:Tully_4"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Robert%27s_Rebellion",
+      "title": "篡夺者战争",
+      "visibility": "public"
+    },
+    {
+      "date": "8289",
+      "description": "与国王劳勃合兵征讨发动叛乱的巴隆·葛雷乔伊，攻破派克城后将巴隆幼子席恩带回临冬城作为人质抚养。",
+      "participantIds": [
+        "agot:Baratheon_2",
+        "agot:Greyjoy_5",
+        "agot:Greyjoy_14"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Greyjoy%27s_Rebellion",
+      "title": "葛雷乔伊叛乱",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "两人自幼在艾林谷作为琼恩·艾林的养子共同成长，并在战争中结下生死情谊。",
+      "kind": "挚友与封君",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Eddard_Stark",
+      "targetId": "agot:Baratheon_2"
+    },
+    {
+      "description": "琼恩·艾林如同第二个父亲，在疯王要求交出养子时毅然起兵保护奈德与劳勃。",
+      "kind": "养父与导师",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Jon_Arryn",
+      "targetId": "agot:Arryn_3"
+    },
+    {
+      "description": "霍兰曾与奈德并肩经历极乐塔之战，此后仍是北境中受到奈德信任的旧友。",
+      "kind": "生死战友",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Howland_Reed",
+      "targetId": "agot:Reed_1"
+    }
+  ],
+  "personality": "言语简练谨慎，极度看重誓言与荣誉；处事公正无私，对家人温厚爱护，面对谎言与阴谋时绝不妥协。",
+  "publicRoles": [
+    "临冬城公爵",
+    "北境守护"
+  ],
+  "reputation": "在北境诸侯与临冬城臣属间以公正、克制和重视誓言著称，其严肃作风也让不熟悉他的人感到疏离。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Eddard_Stark",
+    "https://asoiaf.fandom.com/zh/wiki/Eddard_Stark"
+  ],
+  "summary": "临冬城公爵兼北境守护，曾参与推翻坦格利安王朝的战争。性情沉静克制，以荣誉、责任和对家族的忠诚闻名七国。"
+}

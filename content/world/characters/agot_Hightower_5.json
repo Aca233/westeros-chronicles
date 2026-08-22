@@ -1,0 +1,32 @@
+{
+  "aliases": [
+    "旧镇疯老头",
+    "参天塔的雷顿伯爵"
+  ],
+  "appearance": "常年未露面的苍老隐士领主，相传留着如雪长须，身披法师般的厚重斗篷，在塔顶俯瞰回音湾。",
+  "characterId": "agot:Hightower_5",
+  "experiences": [
+    {
+      "date": "8289",
+      "description": "在葛雷乔伊叛乱后彻底搬入参天塔顶楼潜心闭关研读古卷，已有十年不曾下塔。",
+      "participantIds": [],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Leyton_Hightower",
+      "title": "退隐参天塔顶",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [],
+  "personality": "神秘古怪，深居简出；沉醉于古老预言、星象与法术古卷，对世俗争端冷眼旁观但底蕴极深。",
+  "publicRoles": [
+    "旧镇伯爵",
+    "参天塔领主",
+    "学城守护者"
+  ],
+  "reputation": "河湾地最神秘且最具历史威望的古老领主，旧镇繁荣的基石。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Leyton_Hightower",
+    "https://asoiaf.fandom.com/zh/wiki/Leyton_Hightower"
+  ],
+  "summary": "旧镇之声、参天塔伯爵、港口之主兼绿之领域卫士。多年隐居于数百尺高的参天塔顶层研究星象法术，极少踏出高塔一步，旧镇诸事交由儿女治理。"
+}

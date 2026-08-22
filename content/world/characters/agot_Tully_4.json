@@ -1,0 +1,40 @@
+{
+  "aliases": [
+    "凯特夫人"
+  ],
+  "appearance": "端庄秀美，拥有徒利家族经典的赤褐色长发、湛蓝眼眸与白皙肤色，举止从容优雅，兼具南方教养与北境坚韧。",
+  "characterId": "agot:Tully_4",
+  "experiences": [
+    {
+      "date": "8283",
+      "description": "在原未婚夫布兰登·史塔克遇害后，依约改嫁其弟艾德以缔结北境与河间地的反抗疯王军事同盟。",
+      "participantIds": [
+        "agot:Stark_3",
+        "agot:Tully_1"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Catelyn_Stark",
+      "title": "与艾德·史塔克联姻",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "培提尔自幼在奔流城长大并深爱凯特琳，甚至曾为她向布兰登·史塔克发起决斗。",
+      "kind": "幼时养弟与崇慕者",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Petyr_Baelish",
+      "targetId": "agot:Baelish_2"
+    }
+  ],
+  "personality": "忠诚顾家，政治直觉敏锐但偶有感情用事；对子女爱护备至，对私生子琼恩·雪诺心怀介蒂与冷淡戒备。",
+  "publicRoles": [
+    "临冬城公爵夫人",
+    "奔流城贵女"
+  ],
+  "reputation": "被河间地与北境诸侯视为极具教养与尊严的贵族主母，以果断与忠贞著称。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Catelyn_Stark",
+    "https://asoiaf.fandom.com/zh/wiki/Catelyn_Tully"
+  ],
+  "summary": "奔流城霍斯特·徒利公爵长女，临冬城公爵夫人。恪守“家族、责任、荣誉”的箴言，全心辅佐丈夫并守护子女，深受北境人民敬重。"
+}

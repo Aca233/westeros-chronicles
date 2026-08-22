@@ -1,0 +1,31 @@
+{
+  "aliases": [
+    "恐怖堡的私生子"
+  ],
+  "appearance": "体格粗壮硕大，皮肤白而多粉刺，嘴唇厚实肥润，长着与卢斯如出一辙的阴冷幽白眼睛，头发黑长油腻。",
+  "characterId": "agot:Bolton_5",
+  "experiences": [
+    {
+      "date": "8282",
+      "description": "卢斯·波顿强暴磨坊主之妻后所生，后被卢斯暗中接济并招入恐怖堡。",
+      "participantIds": [
+        "agot:Bolton_1"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Ramsay_Snow",
+      "title": "降生哭泣河磨坊",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [],
+  "personality": "残忍嗜血，狡黠乖戾；以折磨他人为乐，对私生子身份极度敏感自卑，充满暴虐的统治欲望。",
+  "publicRoles": [
+    "恐怖堡私生子"
+  ],
+  "reputation": "恐怖堡周围百姓噤若寒蝉的恶魔，以冷血残暴闻名北境乡野。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Ramsay_Snow",
+    "https://asoiaf.fandom.com/zh/wiki/Ramsay_Snow"
+  ],
+  "summary": "恐怖堡卢斯·波顿公爵的私生子。自幼在磨坊长大，后被接至恐怖堡效力，行事残虐狡诈疯狂，嗜好剥皮与猎杀活人。"
+}

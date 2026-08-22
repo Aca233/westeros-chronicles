@@ -1,0 +1,37 @@
+{
+  "aliases": [
+    "断掌科林"
+  ],
+  "appearance": "身材高大精瘦如铁桩，黑发灰眼，下巴剃得精光，残缺的右手戴着厚皮手套，浑身散发着冰原野兽般的警觉。",
+  "characterId": "agot:Shadow_Tower_1",
+  "experiences": [
+    {
+      "date": "8280",
+      "description": "在霜雪之牙遭遇野人精锐伏击，右手三指被削断后以惊人毅力改练左手重剑，武艺更胜从前。",
+      "participantIds": [],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Qhorin_Halfhand",
+      "title": "断掌重生苦练左手剑",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "丹尼斯·梅利斯特爵士麾下最无可替代的前线尖刀重臣。",
+      "kind": "效忠的影子塔指挥官",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Denys_Mallister",
+      "targetId": "agot:Mallister_6"
+    }
+  ],
+  "personality": "冷酷刚毅，牺牲精神至高无上；视守夜人誓言高于一切个人生死荣誉，一切决断皆为击败异族守护长城。",
+  "publicRoles": [
+    "影子塔游骑兵统领",
+    "传奇游骑兵"
+  ],
+  "reputation": "长城外野人部落中人人闻名胆寒的游骑兵战神，守夜人战士心中的活传奇。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Qhorin_Halfhand",
+    "https://asoiaf.fandom.com/zh/wiki/Qhorin_Halfhand"
+  ],
+  "summary": "影子塔首席游骑兵指挥官。常年在塞外极北雪峰与野人死战，右手除两指外皆被野人斧头削断，改练左手剑后剑法更臻化境，是塞外野人最敬畏的黑衣死神。"
+}

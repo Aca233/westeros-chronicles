@@ -1,0 +1,45 @@
+{
+  "aliases": [
+    "凯岩城雄狮",
+    "老狮子"
+  ],
+  "appearance": "身材高大削瘦挺拔，剃光头发以掩饰秃顶，两鬓留着修剪整齐的金须，双眼呈透着金斑的冷酷淡绿。",
+  "characterId": "agot:Lannister_1",
+  "experiences": [
+    {
+      "date": "8261",
+      "description": "以雷霆手段水淹卡斯特梅、夷平塔贝克厅彻底诛灭叛乱家族，写就《卡斯特梅的雨季》震慑西境。",
+      "participantIds": [
+        "agot:Lannister_2"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Tywin_Lannister",
+      "title": "剿灭雷恩与塔贝克",
+      "visibility": "public"
+    },
+    {
+      "date": "8283",
+      "description": "在篡夺者战争尾声率西境大军进驻君临攻破红堡，终结疯王伊里斯统治并向劳勃献上投名状。",
+      "participantIds": [
+        "agot:Baratheon_2",
+        "agot:Clegane_3"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Sack_of_King%27s_Landing",
+      "title": "君临陷落",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [],
+  "personality": "冷酷严厉，极度自尊与务实；视家族荣耀与威严为最高使命，绝不宽恕敌人的软弱与挑衅，从不大笑。",
+  "publicRoles": [
+    "凯岩城公爵",
+    "西境守护",
+    "西境统帅"
+  ],
+  "reputation": "全七国公认最具统治手腕与财力的霸主，‘兰尼斯特有债必偿’的实际缔造者。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Tywin_Lannister",
+    "https://asoiaf.fandom.com/zh/wiki/Tywin_Lannister"
+  ],
+  "summary": "凯岩城公爵、西境守护兼赫伦堡前首相。以铁腕统治西境数十年，曾一手扑灭雷耶斯与塔贝克叛乱，是全维斯特洛最富庶且令人生畏的政治巨擘。"
+}

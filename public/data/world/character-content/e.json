@@ -1,0 +1,396 @@
+{
+  "agot:Baratheon_3": {
+    "aliases": [
+      "龙石岛公爵"
+    ],
+    "appearance": "身材高瘦挺拔，面容如雕刻般严酷削瘦，深蓝眼眸冰冷刺骨，头发稀疏后退，下颚常紧紧咬合咬牙切齿。",
+    "characterId": "agot:Baratheon_3",
+    "experiences": [
+      {
+        "date": "8283",
+        "description": "在篡夺者战争中率少数守军坚守风息堡近一年，弹尽粮绝之际靠戴佛斯走私洋葱救活全城守军。",
+        "participantIds": [
+          "agot:Seaworth_1",
+          "agot:Tyrell_8"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Stannis_Baratheon",
+        "title": "风息堡围城死守",
+        "visibility": "public"
+      },
+      {
+        "date": "8289",
+        "description": "在葛雷乔伊叛乱中指挥王家舰队在仙民岛海域彻底击溃维克塔利昂的铁舰队，奠定平叛大局。",
+        "participantIds": [
+          "agot:Greyjoy_7",
+          "agot:Baratheon_2"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Stannis_Baratheon",
+        "title": "仙民岛海战大捷",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "封戴佛斯为洋葱骑士同时切除其指节以示公正，但视其为唯一敢于直言进谏的心腹助手。",
+        "kind": "唯一挚信的封臣",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Davos_Seaworth",
+        "targetId": "agot:Seaworth_1"
+      }
+    ],
+    "personality": "死板严苛，绝不通融；没有幽默感与社交温情，但具有无与伦比的坚韧意志与战术才能。",
+    "publicRoles": [
+      "龙石岛领主",
+      "海政大臣"
+    ],
+    "reputation": "全境公认最冷酷执拗的将领，治军极严，公正到不近人情，深受敬畏但鲜有人喜爱。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Stannis_Baratheon",
+      "https://asoiaf.fandom.com/zh/wiki/Stannis_Baratheon"
+    ],
+    "summary": "龙石岛领主兼御前海政大臣，劳勃国王的大弟。性格坚韧如铁、不苟言笑，恪守法律与规矩，因未获封风息堡而常年对兄长心怀怨怼。"
+  },
+  "agot:Baratheon_5": {
+    "aliases": [
+      "乔佛里王子"
+    ],
+    "appearance": "相貌英俊，留着兰尼斯特式的金色卷发，碧绿眼眸与厚翘的嘴唇，常着裁剪精致的金丝天鹅绒华服。",
+    "characterId": "agot:Baratheon_5",
+    "experiences": [
+      {
+        "date": "8286",
+        "description": "作为王室长子在君临降生，举国欢庆其诞生并册封其为王位法定继承人。",
+        "participantIds": [
+          "agot:Baratheon_2",
+          "agot:Lannister_6"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Joffrey_Baratheon",
+        "title": "诞生于红堡",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "猎狗桑铎·克里冈被指定为其贴身护卫，负责执行乔佛里各种任性残忍的命令。",
+        "kind": "贴身侍卫与恶犬",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Sandor_Clegane",
+        "targetId": "agot:Clegane_4"
+      }
+    ],
+    "personality": "任性暴戾，自大怯懦；极度热衷炫耀王家权威，缺乏共点心，在逆境时容易歇斯底里。",
+    "publicRoles": [
+      "铁王座王储",
+      "多恩领亲王"
+    ],
+    "reputation": "君临廷臣与侍从私下畏惧的残暴王子，在外人面前则维持着虚伪的礼貌与贵族派头。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Joffrey_Baratheon",
+      "https://asoiaf.fandom.com/zh/wiki/Joffrey_Baratheon"
+    ],
+    "summary": "铁王座王储兼劳勃国王的长子。自幼受母亲过度娇惯纵容，性格傲慢残忍且喜怒无常，对平民与弱小充满鄙夷与虐待倾向。"
+  },
+  "agot:Eastwatch_By_The_Sea_1": {
+    "aliases": [
+      "卡特·派克大人"
+    ],
+    "appearance": "身材精瘦硬朗，相貌粗陋凶悍，长着铁民典型的硬脸与断齿，长年身着海盐浸渍的防潮皮甲与黑斗篷。",
+    "characterId": "agot:Eastwatch_By_The_Sea_1",
+    "experiences": [
+      {
+        "date": "8285",
+        "description": "凭借出色的铁民航海武艺被推举为东海望要塞指挥官，统领守夜人战船防线。",
+        "participantIds": [
+          "agot:Mormont_2"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Cotter_Pyke",
+        "title": "出任东海望指挥官",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "与影子塔的贵族老将丹尼斯·梅利斯特互相看不起，常年因军费调配产生摩擦争吵。",
+        "kind": "针锋相对的竞争对手",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Denys_Mallister",
+        "targetId": "agot:Mallister_6"
+      }
+    ],
+    "personality": "粗暴凶悍，直来直去；讨厌繁文缛节与贵族虚礼，在海上指挥果决狠辣。",
+    "publicRoles": [
+      "东海望指挥官",
+      "守夜人海军统帅"
+    ],
+    "reputation": "东海望黑衣水手与游骑兵畏服的强悍首领，海豹湾走私者的克星。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Cotter_Pyke",
+      "https://asoiaf.fandom.com/zh/wiki/Cotter_Pyke"
+    ],
+    "summary": "东海望指挥官，铁群岛私生子出身。性情粗暴野蛮、精通海战航运，统领守夜人仅存的战船巡弋海豹湾，常年捕杀走私犯与塞外野人。"
+  },
+  "agot:Greyjoy_5": {
+    "aliases": [
+      "巴隆九世",
+      "铁岛大王"
+    ],
+    "appearance": "身材高瘦佝偻，面容枯干如风化岩石，灰白乱发垂落，双眼阴冷如灰色坚冰，身披粗糙海豹皮斗篷。",
+    "characterId": "agot:Greyjoy_5",
+    "experiences": [
+      {
+        "date": "8289",
+        "description": "自立为铁群岛之王发动叛变，烧毁兰尼斯特舰队，后遭劳勃与史塔克联军合围攻破派克城屈膝归降。",
+        "participantIds": [
+          "agot:Baratheon_2",
+          "agot:Stark_3",
+          "agot:Greyjoy_14"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Balon_Greyjoy",
+        "title": "掀起铁群岛叛乱",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [],
+    "personality": "狂妄顽固，执拗残忍；对大陆安达尔人文明充满仇视，一心恢复铁民四处烧杀劫掠的古老荣耀。",
+    "publicRoles": [
+      "派克岛收割者",
+      "铁群岛领主"
+    ],
+    "reputation": "七大王国眼中死不悔改的叛逆海盗王，铁群岛狂热信徒的暴戾首领。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Balon_Greyjoy",
+      "https://asoiaf.fandom.com/zh/wiki/Balon_Greyjoy"
+    ],
+    "summary": "派克岛收割者、铁群岛大王兼盐王与岩王。死硬信奉铁民古道‘强取胜于苦耕’，曾掀起叛乱称王被劳勃击溃，十年来在海崖孤城暗中窥伺重起战端的时机。"
+  },
+  "agot:Lannister_2": {
+    "aliases": [
+      "凯冯爵士"
+    ],
+    "appearance": "相貌与泰温相仿但线条更为柔和温厚，金发微秃，灰须整齐，目光沉着坚定，身穿实用的精钢锁甲。",
+    "characterId": "agot:Lannister_2",
+    "experiences": [
+      {
+        "date": "8261",
+        "description": "从九铜板王之战起便与兄长泰温并肩作战，在诛灭雷恩与塔贝克家族战役中统帅西境左翼。",
+        "participantIds": [
+          "agot:Lannister_1"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Kevan_Lannister",
+        "title": "协助平定九铜板王之战与西境叛乱",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [],
+    "personality": "务实忠诚，谦逊自省；极富军政才干但从不争功抢风头，是兰尼斯特家族最稳定可靠的基石。",
+    "publicRoles": [
+      "西境副统帅",
+      "骑士"
+    ],
+    "reputation": "在西境被视为稳健可靠的副手，熟悉军政事务，并以长期辅佐兄长泰温、很少争夺个人风头著称。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Kevan_Lannister",
+      "https://asoiaf.fandom.com/zh/wiki/Kevan_Lannister"
+    ],
+    "summary": "泰温·兰尼斯特的亲弟兼首席副帅。性格沉稳老练，执行力极强，毕生甘于居于兄长阴影之下辅佐军政，深受西境军民爱戴。"
+  },
+  "agot:Martell_14": {
+    "aliases": [
+      "白蛇特蕾妮"
+    ],
+    "appearance": "金发如瀑，大蓝眼睛清澈纯真无邪，面容甜美娇弱，常穿圣洁素雅的修女长袍，袖中藏着剧毒金针与药瓶。",
+    "characterId": "agot:Martell_14",
+    "experiences": [
+      {
+        "date": "8279",
+        "description": "跟随奥柏伦研习古籍中记载的数百种剧毒配方，调制出无色无味的致命毒剂。",
+        "participantIds": [
+          "agot:Martell_8"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Tyene_Sand",
+        "title": "研习草药与毒物",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "与亚莲恩大公主形影不离，是亚莲恩最信赖的心腹智囊。",
+        "kind": "莫逆之交堂姐",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Arianne_Martell",
+        "targetId": "agot:Martell_9"
+      }
+    ],
+    "personality": "外表乖巧柔顺，内心毒如蛇蝎；最擅长用人畜无害的天真微笑麻痹对手并将其无声鸩杀。",
+    "publicRoles": [
+      "沙蛇三女",
+      "药剂与毒物大师"
+    ],
+    "reputation": "多恩上下深知其致命毒术的狠角色，被称为‘最甜美也最危险的沙蛇’。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Tyene_Sand",
+      "https://asoiaf.fandom.com/zh/wiki/Tyene_Sand"
+    ],
+    "summary": "‘沙蛇’三女，奥柏伦·马泰尔与修女所生。外表纯洁圣洁如修女，实则深谙世间各种致命剧毒与草药学，手段极其阴毒致命。"
+  },
+  "agot:Payne_16": {
+    "aliases": [
+      "波德"
+    ],
+    "appearance": "身材瘦小单薄，棕色软发，神情常显羞涩慌乱，经常紧张得低下头绞弄衣角。",
+    "characterId": "agot:Payne_16",
+    "experiences": [],
+    "notableRelations": [
+      {
+        "description": "惧怕无舌行刑官伊林爵士的阴冷面孔，但依附于家族名声求生。",
+        "kind": "同族远亲伯父",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Ilyn_Payne",
+        "targetId": "agot:Payne_6"
+      }
+    ],
+    "personality": "忠诚体贴，腼腆寡言；虽然胆小怕生但内心极为忠厚老实，懂得感恩且做事细致入微。",
+    "publicRoles": [
+      "侍从贵族子弟"
+    ],
+    "reputation": "军营与贵族子弟间常被忽视戏耍的小跟班侍从。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Podrick_Payne",
+      "https://asoiaf.fandom.com/zh/wiki/Podrick_Payne"
+    ],
+    "summary": "派恩家族远支遗孤。性格极度腼腆胆怯，说话结巴，被远亲安排到兰尼斯特军营担任杂役侍从，渴望成为一名合格骑士。"
+  },
+  "agot:Stark_9": {
+    "aliases": [
+      "马面艾莉亚",
+      "下水道的阿利"
+    ],
+    "appearance": "长着典型的史塔克长脸、灰眸与褐色乱发，身材瘦小灵活，常弄脏衣裳，身边伴有凶猛野性的冰原狼娜梅莉亚。",
+    "characterId": "agot:Stark_9",
+    "experiences": [
+      {
+        "date": "8289",
+        "description": "在葛雷乔伊叛乱结束之年诞生于临冬城，自幼展现出与众不同的野性与好奇心。",
+        "participantIds": [
+          "agot:Stark_3",
+          "agot:Tully_4"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Arya_Stark",
+        "title": "降生临冬城",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [],
+    "personality": "叛逆倔强，直率无畏；极具正义感，绝不掩饰喜恶，渴望像骑士和战士一样掌握自己的命运。",
+    "publicRoles": [
+      "临冬城次女"
+    ],
+    "reputation": "临冬城内出了名的顽皮假小子，常令侍女和修女头疼不已。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Arya_Stark",
+      "https://asoiaf.fandom.com/zh/wiki/Arya_Stark"
+    ],
+    "summary": "艾德·史塔克公爵的次女。厌恶淑女规训与针线纺织，热衷于骑马、射箭与舞剑，常在临冬城回廊与残墙间攀爬探索。"
+  },
+  "agot:Stark_hh_2": {
+    "aliases": [
+      "阿多"
+    ],
+    "appearance": "身高超过七英尺的巨人般青年，膀大腰圆，目光温和甚至略带怯意，常着简陋粗布麻衣。",
+    "characterId": "agot:Stark_hh_2",
+    "experiences": [],
+    "notableRelations": [
+      {
+        "description": "经常听从命令背负布兰在城堡内外活动。",
+        "kind": "背负与侍奉的少主",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Bran_Stark",
+        "targetId": "agot:Stark_10"
+      }
+    ],
+    "personality": "温顺怯弱，毫无攻击性；容易受惊，对史塔克家族的孩子们极其顺从友善。",
+    "publicRoles": [
+      "马厩杂工"
+    ],
+    "reputation": "临冬城人尽皆知的敦厚大个子，以老实听话、力大无穷闻名。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Hodor",
+      "https://asoiaf.fandom.com/zh/wiki/Hodor"
+    ],
+    "summary": "临冬城马厩杂工，老奶妈的曾孙。原名瓦德，身形极其魁梧，智力停留在幼童阶段，口中只能反复念叨‘阿多’一词。"
+  },
+  "agot:Trant_2": {
+    "aliases": [
+      "马林爵士"
+    ],
+    "appearance": "面容干瘪丑陋，眼袋深重，面色苍白，留着灰白髭须，身着御林铁卫纯白板甲与披风。",
+    "characterId": "agot:Trant_2",
+    "experiences": [
+      {
+        "date": "8286",
+        "description": "劳勃国王即位后为拉拢风暴地与王领贵族，由宫廷遴选披上白袍。",
+        "participantIds": [
+          "agot:Baratheon_2"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Meryn_Trant",
+        "title": "入选御林铁卫",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "深得瑟曦信任，是王后用来执行见不得光暗杀与逼迫任务的死忠爪牙。",
+        "kind": "听命的主使者",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Cersei_Lannister",
+        "targetId": "agot:Lannister_6"
+      }
+    ],
+    "personality": "冷酷阴鸷，毫无道德底线；以盲从上峰命令为借口残害妇孺弱小，毫无骑士荣誉感。",
+    "publicRoles": [
+      "御林铁卫骑士"
+    ],
+    "reputation": "朝廷中人尽皆知的冷血走狗，以残忍听话闻名。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Meryn_Trant",
+      "https://asoiaf.fandom.com/zh/wiki/Meryn_Trant"
+    ],
+    "summary": "御林铁卫白袍骑士，风暴地特兰家族出身。冷酷残忍、缺乏同情心，甘愿充当瑟曦王后与乔佛里王子处理脏事的冷血打手。"
+  },
+  "agot:Tully_6": {
+    "aliases": [
+      "莱莎夫人"
+    ],
+    "appearance": "身材丰腴发福，面色苍白略显浮肿，有着徒利家的浅蓝眼眸与泛红卷发，神情焦虑多疑，神态神经质。",
+    "characterId": "agot:Tully_6",
+    "experiences": [
+      {
+        "date": "8283",
+        "description": "在奔流城依父命与年过花甲的琼恩·艾林成婚，以换取艾林家族全力出兵参战。",
+        "participantIds": [
+          "agot:Tully_1",
+          "agot:Arryn_3"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Lysa_Arryn",
+        "title": "下嫁琼恩·艾林",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [],
+    "personality": "偏执疯狂，占有欲极强；对儿子劳勃病态溺爱过度保护，对外界一切人事充满猜疑与防备。",
+    "publicRoles": [
+      "艾林公爵夫人",
+      "谷地贵妇"
+    ],
+    "reputation": "谷地封臣眼中喜怒无常、难以理喻的神经质寡妇摄政。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Lysa_Arryn",
+      "https://asoiaf.fandom.com/zh/wiki/Lysa_Tully"
+    ],
+    "summary": "奔流城霍斯特公爵次女，琼恩·艾林公爵夫人。她长期生活在丈夫显赫地位与宫廷压力之下，性情敏感多疑，对年幼独子保护得近乎偏执。"
+  }
+}

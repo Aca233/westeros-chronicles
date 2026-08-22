@@ -1,0 +1,46 @@
+{
+  "aliases": [
+    "塞外之王",
+    "吟游诗人曼斯"
+  ],
+  "appearance": "相貌平平、中等身材，灰发蓬乱，眼神敏锐机警带笑，身穿缝补着红色丝绸破布的褪色黑斗篷。",
+  "characterId": "agot:Rayder_1",
+  "experiences": [
+    {
+      "date": "8288",
+      "description": "在塞外巡逻负伤被野人妇女用红丝绸缝补黑斗篷后，因抗拒长官责令换掉斗篷而决然翻越长城投奔自由民。",
+      "participantIds": [],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Mance_Rayder",
+      "title": "叛离守夜人军团",
+      "visibility": "public"
+    },
+    {
+      "date": "8295",
+      "description": "在霜雪之牙与瑟恩高地先后击败马格拿与托蒙德等强悍酋长，以琴声与武力统一塞外诸部。",
+      "participantIds": [],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Mance_Rayder",
+      "title": "击败野人诸酋加冕塞外之王",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "昔日曾是莫尔蒙麾下最优秀的游骑兵之一，如今成为长城两端殊死博弈的统帅对手。",
+      "kind": "对抗的旧日总司令",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Jeor_Mormont",
+      "targetId": "agot:Mormont_2"
+    }
+  ],
+  "personality": "崇尚自由，极富个人魅力与谋略；热爱诗歌与音乐，并非盲目嗜杀之辈，旨在带领十万自由民南渡长城逃避远古凛冬严寒。",
+  "publicRoles": [
+    "塞外之王",
+    "守夜人叛誓者"
+  ],
+  "reputation": "绝境长城黑衣军团眼中的头号叛徒大敌，塞外数十万自由民共同拥戴的传奇王者。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Mance_Rayder",
+    "https://asoiaf.fandom.com/zh/wiki/Mance_Rayder"
+  ],
+  "summary": "塞外之王，前守夜人军团精锐游骑兵。因厌恶黑衣戒律叛出长城，凭借非凡武艺、鲁特琴歌声与王者魅力将数百个水火不容的野人部落统一为庞大大军。"
+}

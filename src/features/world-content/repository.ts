@@ -131,6 +131,23 @@ export class WorldContentRepository {
     }
     return (await pending)[characterId];
   }
+
+  async loadAllCharacterContent(): Promise<CharacterContentRecord[]> {
+    const index = await this.loadCharacterContentIndex();
+    const shardIds = Object.keys(index.shards).sort();
+    const shards = await Promise.all(shardIds.map(async (shardId) => {
+      let pending = this.contentShardPromises.get(shardId);
+      if (!pending) {
+        const path = index.shards[shardId];
+        pending = this.load(path, parseCharacterContentShard);
+        this.contentShardPromises.set(shardId, pending);
+      }
+      return pending;
+    }));
+    return shards
+      .flatMap((shard) => Object.values(shard))
+      .sort((left, right) => left.characterId.localeCompare(right.characterId));
+  }
 }
 
 export const worldContentRepository = new WorldContentRepository();

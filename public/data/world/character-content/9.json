@@ -1,0 +1,320 @@
+{
+  "agot:Arryn_8": {
+    "aliases": [
+      "乖罗宾",
+      "小劳勃"
+    ],
+    "appearance": "身材瘦小孱弱，面色蜡黄，大眼睛水汪汪且充斥着恐慌，常常蜷缩在母亲怀中剧烈颤抖或啼哭。",
+    "characterId": "agot:Arryn_8",
+    "experiences": [
+      {
+        "date": "8292",
+        "description": "历经多次流产后在君临红堡诞生，以国王劳勃·拜拉席恩之名命名。",
+        "participantIds": [
+          "agot:Arryn_3",
+          "agot:Tully_6",
+          "agot:Baratheon_2"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Robert_Arryn",
+        "title": "降生君临红堡",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [],
+    "personality": "胆怯任性，喜怒无常；极度依赖母亲，对不顺心的人动辄扬言‘让他们飞出月门摔死’。",
+    "publicRoles": [
+      "鹰巢城公爵",
+      "谷地守护者"
+    ],
+    "reputation": "谷地诸侯眼中极其羸弱且令人担忧的家族末裔独苗公爵。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Robert_Arryn",
+      "https://asoiaf.fandom.com/zh/wiki/Robert_Arryn"
+    ],
+    "summary": "鹰巢城公爵兼谷地守护，琼恩·艾林与莱莎幼子。年仅六岁，体弱多病常发癫痫抽搐，在母亲过度的母乳喂养与溺爱下娇纵任性。"
+  },
+  "agot:Baratheon_4": {
+    "aliases": [
+      "风息堡领主"
+    ],
+    "appearance": "相貌极其俊美，身材高大挺拔，乌黑卷发垂落肩头，深绿眼眸明亮迷人，酷爱穿戴翡翠色的奢华天鹅绒铠甲。",
+    "characterId": "agot:Baratheon_4",
+    "experiences": [
+      {
+        "date": "8284",
+        "description": "在劳勃登基后被跨过二哥史坦尼斯破格封为拜拉席恩家族祖地风息堡公爵。",
+        "participantIds": [
+          "agot:Baratheon_2"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Renly_Baratheon",
+        "title": "受封风息堡",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "与洛拉斯·提利尔形影不离，两人保持着极其亲密深厚的同盟与私交。",
+        "kind": "密友与侍从骑士",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Loras_Tyrell",
+        "targetId": "agot:Tyrell_13"
+      }
+    ],
+    "personality": "风趣迷人，擅长交际；极具政治号召力与野心，行事讲究仪态风度，深受骑士阶层青睐。",
+    "publicRoles": [
+      "风息堡公爵",
+      "法务大臣"
+    ],
+    "reputation": "王廷中最具人气的英俊年轻贵族，风暴地与河湾地封臣的心仪领袖。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Renly_Baratheon",
+      "https://asoiaf.fandom.com/zh/wiki/Renly_Baratheon"
+    ],
+    "summary": "风息堡公爵兼御前法务大臣，劳勃国王的幼弟。英俊潇洒、魅力非凡，酷似年轻时的劳勃，深受君临朝野与风暴地诸侯的狂热拥戴。"
+  },
+  "agot:Baratheon_6": {
+    "aliases": [
+      "弥赛菈公主"
+    ],
+    "appearance": "长相甜美秀丽，留着柔顺的金色卷发，绿眼睛清澈明亮，举止优雅文静。",
+    "characterId": "agot:Baratheon_6",
+    "experiences": [
+      {
+        "date": "8290",
+        "description": "在君临红堡诞生，成为拜拉席恩王室唯一的公主。",
+        "participantIds": [
+          "agot:Lannister_6",
+          "agot:Baratheon_2"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Myrcella_Baratheon",
+        "title": "降生君临红堡",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "与舅舅提利昂关系融洽，提利昂也非常喜爱这位懂事善良的外甥女。",
+        "kind": "亲善的舅舅",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Tyrion_Lannister",
+        "targetId": "agot:Lannister_8"
+      }
+    ],
+    "personality": "善良温和，知书达礼；对待身边所有人皆充满善意，没有母亲与长兄的傲慢暴戾。",
+    "publicRoles": [
+      "王室公主"
+    ],
+    "reputation": "君临红堡人见人爱的高贵小公主，以纯真与礼貌受到宫廷赞誉。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Myrcella_Baratheon",
+      "https://asoiaf.fandom.com/zh/wiki/Myrcella_Baratheon"
+    ],
+    "summary": "劳勃国王与瑟曦王后的独女。性情温顺甜美，聪慧知书懂礼，拥有兰尼斯特式的金色秀发，深受王室长辈与侍女宠爱。"
+  },
+  "agot:Mallister_6": {
+    "aliases": [
+      "丹尼斯爵士"
+    ],
+    "appearance": "身材高大削瘦挺拔，满头银发修剪整齐，蓝眼睛温和清亮，身披质地极佳的厚重纯黑丝绒披风与洗得发亮的精钢甲。",
+    "characterId": "agot:Mallister_6",
+    "experiences": [
+      {
+        "date": "8267",
+        "description": "三十年前接管长城最西端的险隘影子塔，数十年如一日挡住野人翻越峭壁峡谷的一切进攻。",
+        "participantIds": [
+          "agot:Mormont_2"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Denys_Mallister",
+        "title": "受命镇守影子塔",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "对断掌科林的骁勇与忠诚深信不疑，全权托付其前线巡逻重任。",
+        "kind": "倚重的首席游骑兵",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Qhorin_Halfhand",
+        "targetId": "agot:Shadow_Tower_1"
+      }
+    ],
+    "personality": "温文尔雅，严正自律；恪守传统贵族骑士道，治军严明得体，极具大局观与外交风度。",
+    "publicRoles": [
+      "影子塔指挥官",
+      "资深守夜人骑士"
+    ],
+    "reputation": "守夜人军团中最具贵族威仪与长者声望的资深统帅之一。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Denys_Mallister",
+      "https://asoiaf.fandom.com/zh/wiki/Denys_Mallister"
+    ],
+    "summary": "影子塔指挥官，海疆城老梅利斯特伯爵之弟。三十年来镇守绝境长城西段峡谷天堑，贵族风范高雅、威严沉稳，在守夜人军团享有崇高威望。"
+  },
+  "agot:Reed_1": {
+    "aliases": [
+      "泽地人霍兰"
+    ],
+    "appearance": "身材矮小削瘦，目光敏锐灵动，身穿编织水草皮毛与泥沼鳞甲的独特沼泽装束，常持三叉戟与捕网。",
+    "characterId": "agot:Reed_1",
+    "experiences": [
+      {
+        "date": "8281",
+        "description": "年轻时泛舟前往神秘的千面屿向绿先知求知，后前往赫伦堡参加比武大会结识史塔克家族众兄妹。",
+        "participantIds": [
+          "agot:Stark_3"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Howland_Reed",
+        "title": "前往神眼湖千面屿",
+        "visibility": "public"
+      },
+      {
+        "date": "8283",
+        "description": "随艾德·史塔克在极乐塔与亚瑟·戴恩等三位御林铁卫死战，在千钧一发之际救下奈德性命。",
+        "participantIds": [
+          "agot:Stark_3"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Howland_Reed",
+        "title": "极乐塔之战幸存",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "两人曾共同经历赫伦堡比武会与极乐塔之战，战后仍维持少见而牢固的信任。",
+        "kind": "生死挚友",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Eddard_Stark",
+        "targetId": "agot:Stark_3"
+      }
+    ],
+    "personality": "寡言谨慎，重视旧神传统与待客之道；更擅长利用湿地、隐蔽和耐心取胜，而非正面展示武力。",
+    "publicRoles": [
+      "灰水望伯爵",
+      "泽地人领主"
+    ],
+    "reputation": "南方人很少见到的泽地领主，在北境以忠于史塔克家族、熟悉颈泽地形和行事隐秘闻名。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Howland_Reed",
+      "https://asoiaf.fandom.com/zh/wiki/Howland_Reed"
+    ],
+    "summary": "灰水望领主与颈泽泽地人首领，长期居于难以定位的沼泽城堡。熟悉颈泽水道、草木与伏击战法，也是极乐塔之战少数生还者之一。"
+  },
+  "agot:Stark_4": {
+    "aliases": [
+      "班扬"
+    ],
+    "appearance": "身材高瘦干练，双眸呈尖锐警惕的蓝灰色，面庞如风霜雕琢的岩石般坚毅，常年身穿厚实黑羊毛与巡逻皮甲。",
+    "characterId": "agot:Stark_4",
+    "experiences": [
+      {
+        "date": "8283",
+        "description": "在父兄南下参战期间担任临冬城的留守史塔克，战后选择穿上黑衣加入守夜人军团。",
+        "participantIds": [
+          "agot:Stark_3"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Benjen_Stark",
+        "title": "临冬城留守",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "杰奥·莫尔蒙极为器重的首席游骑兵指挥官，负责军团前线最重要的侦察任务。",
+        "kind": "军团总司令与长官",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Jeor_Mormont",
+        "targetId": "agot:Mormont_2"
+      }
+    ],
+    "personality": "沉着冷静，坚韧不拔；对绝境长城和鬼影森林了如指掌，对黑衣誓言怀有崇高奉献精神。",
+    "publicRoles": [
+      "守夜人首席游骑兵",
+      "史塔克家族成员"
+    ],
+    "reputation": "绝境长城内外最受尊敬的游骑兵领袖之一，野人与守夜人皆知其威名。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Benjen_Stark",
+      "https://asoiaf.fandom.com/zh/wiki/Benjen_Stark"
+    ],
+    "summary": "艾德·史塔克的幼弟，守夜人军团首席游骑兵。在篡夺者战争结束后自愿加入守夜人，常年率队深入塞外冰原巡逻，深受黑衣誓言兄弟爱戴。"
+  },
+  "agot:Tyrell_13": {
+    "aliases": [
+      "百花骑士"
+    ],
+    "appearance": "容貌绝美俊秀，一头闪耀的金色波浪卷发，深褐眼眸光彩照人，身穿镶嵌千百朵鲜花与宝石的精美银甲。",
+    "characterId": "agot:Tyrell_13",
+    "experiences": [
+      {
+        "date": "8294",
+        "description": "十六岁首次参加全境大型比武大会便挑落数十位资深骑士一举斩获长枪冠军。",
+        "participantIds": [
+          "agot:Baratheon_4"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Loras_Tyrell",
+        "title": "奔流城比武大会夺冠",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "曾任蓝礼的侍从，两人维持着超越常人的亲密情谊与牢固的政治同盟。",
+        "kind": "挚友与侍从骑士",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Renly_Baratheon",
+        "targetId": "agot:Baratheon_4"
+      }
+    ],
+    "personality": "骄傲热烈，敢爱敢恨；充满浪漫的骑士激情，在比武与战场上追求极速与荣耀，偶显年轻气盛。",
+    "publicRoles": [
+      "百花骑士",
+      "比武冠军"
+    ],
+    "reputation": "全维斯特洛公认最耀眼迷人的少年骑士偶像与长枪比武王者。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Loras_Tyrell",
+      "https://asoiaf.fandom.com/zh/wiki/Loras_Tyrell"
+    ],
+    "summary": "梅斯·提利尔公爵幼子，誉满七国的百花骑士。长枪比武技艺超群绝伦，英俊非凡，深受全境贵族小姐与年轻骑士的狂热追捧，与蓝礼·拜拉席恩关系极为密切。"
+  },
+  "agot:Uller_6": {
+    "aliases": [
+      "艾拉莉亚"
+    ],
+    "appearance": "相貌虽然并非传统绝美但极具异域风情与野性吸引力，黑发浓密，眼神深邃多情，举止奔放从容。",
+    "characterId": "agot:Uller_6",
+    "experiences": [
+      {
+        "date": "8290",
+        "description": "不顾世俗私生子名分偏见，公开作为奥柏伦的终生正伴侣出入多恩王廷与流水花园。",
+        "participantIds": [
+          "agot:Martell_8"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Ellaria_Sand",
+        "title": "与奥柏伦结为终生伴侣",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "两人心心相印，共同享受生命自由与激情，情深意笃。",
+        "kind": "至爱亲王伴侣",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Oberyn_Martell",
+        "targetId": "agot:Martell_8"
+      }
+    ],
+    "personality": "崇尚自由与真爱，痛恨毫无意义的战争与杀戮；在狂野外表下拥有极其清醒仁慈的母性内心。",
+    "publicRoles": [
+      "多恩贵妇",
+      "亲王情妇"
+    ],
+    "reputation": "多恩公认深受奥柏伦亲王专宠的非凡女人，在阳戟城享有崇高地位。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Ellaria_Sand",
+      "https://asoiaf.fandom.com/zh/wiki/Ellaria_Sand"
+    ],
+    "summary": "地狱修道院哈曼·乌勒伯爵的私生女，奥柏伦·马泰尔亲王毕生挚爱的伴侣。性格狂野坦荡，与奥柏伦共同育有四位年幼的沙蛇女儿。"
+  }
+}

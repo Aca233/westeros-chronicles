@@ -1,0 +1,33 @@
+{
+  "aliases": [
+    "湿发伊伦"
+  ],
+  "appearance": "身材枯瘦高大，黑发杂乱如海草般长垂至腰际且编入发丝海草，身着破烂粗麻布袍，赤足行走岩石海岸，目光狂热幽深。",
+  "characterId": "agot:Greyjoy_9",
+  "experiences": [
+    {
+      "date": "8289",
+      "description": "在仙民岛海难中战舰沉没溺死重生，从此顿悟神启，成为铁群岛最具威望的淹神先知。",
+      "participantIds": [
+        "agot:Greyjoy_5",
+        "agot:Greyjoy_7"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Aeron_Greyjoy",
+      "title": "溺水获救皈依淹神",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [],
+  "personality": "狂热虔诚，清心寡欲；不近女色不饮美酒只饮海水，将整个人生奉献给淹神的潮汐与古道圣战。",
+  "publicRoles": [
+    "淹神先知",
+    "淹神主祭"
+  ],
+  "reputation": "铁群岛上下顶礼膜拜的圣者与活先知，其口中所念淹神圣谕能轻易煽动全岛民众。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Aeron_Greyjoy",
+    "https://asoiaf.fandom.com/zh/wiki/Aeron_Greyjoy"
+  ],
+  "summary": "淹神最高祭司，巴隆·葛雷乔伊幼弟。年轻时荒唐好酒，在仙民岛海难溺水被冲上海滩后自称得淹神启示重生，从此身披海草披发赤足，以狂热布道震慑铁岛。"
+}

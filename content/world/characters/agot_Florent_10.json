@@ -1,0 +1,39 @@
+{
+  "aliases": [
+    "赛丽丝夫人"
+  ],
+  "appearance": "身材高瘦干瘪，面容缺乏美感，长着佛罗伦家族标志性的大耳朵与淡淡的唇须，神色焦虑刻板。",
+  "characterId": "agot:Florent_10",
+  "experiences": [
+    {
+      "date": "8286",
+      "description": "依政治联姻安排嫁入龙石岛，但婚后多年仅育有一女希琳·拜拉席恩。",
+      "participantIds": [
+        "agot:Baratheon_3"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Selyse_Florent",
+      "title": "与史坦尼斯完婚",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "对梅丽珊卓的光之王神迹深信不疑，成为红神在龙石岛最坚定的拥护者。",
+      "kind": "崇拜的宗教导师",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Melisandre",
+      "targetId": "agot:Melisandre_1"
+    }
+  ],
+  "personality": "狂热执拗，心胸狭隘；在夫妻与家庭生活中深感挫败，转而将全部精神寄托于光之王信仰。",
+  "publicRoles": [
+    "龙石岛公爵夫人",
+    "河湾地贵女"
+  ],
+  "reputation": "龙石岛封臣眼中神经质且严苛排外的公爵夫人，难于接近。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Selyse_Florent",
+    "https://asoiaf.fandom.com/zh/wiki/Selyse_Florent"
+  ],
+  "summary": "龙石岛公爵夫人，亮水城亚勒斯特·佛罗伦伯爵的侄女。与史坦尼斯夫妻关系冷淡疏离，近期深受拉赫洛红袍僧梅丽珊卓的宗教影响。"
+}

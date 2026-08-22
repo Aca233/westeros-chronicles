@@ -1,0 +1,41 @@
+{
+  "aliases": [
+    "洋葱骑士",
+    "短指头戴佛斯"
+  ],
+  "appearance": "相貌朴实无华，褐发黑眼，胡须微白，左手四根手指被切去第一指节，颈间挂着装有指骨的小皮袋以求好运。",
+  "characterId": "agot:Seaworth_1",
+  "experiences": [
+    {
+      "date": "8283",
+      "description": "驾驶走私小船穿过红斑蜘蛛雷加的封锁网，将一船洋葱和咸鱼送入围城中的风息堡拯救史坦尼斯。",
+      "participantIds": [
+        "agot:Baratheon_3"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Davos_Seaworth",
+      "title": "风息堡走私救城",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "将史坦尼斯视作赋予自己新生与荣耀的明主，誓死为其效力。",
+      "kind": "效忠的君主与主公",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Stannis_Baratheon",
+      "targetId": "agot:Baratheon_3"
+    }
+  ],
+  "personality": "谦卑务实，刚直不阿；极度忠诚于史坦尼斯，行事从不谋求私利，敢于冒死说出逆耳忠言。",
+  "publicRoles": [
+    "雨林岬领主",
+    "骑士",
+    "走私船长"
+  ],
+  "reputation": "维斯特洛贵族中备受嘲讽但私下敬重的平民骑士，以铁骨铮铮与忠诚扬名。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Davos_Seaworth",
+    "https://asoiaf.fandom.com/zh/wiki/Davos_Seaworth"
+  ],
+  "summary": "跳蚤窝出身的前走私贩，现为雨林岬领主兼史坦尼斯·拜拉席恩最忠诚的心腹封臣。以诚实、正直和直言进谏著称。"
+}

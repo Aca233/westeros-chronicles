@@ -119,17 +119,22 @@ export const StoryFeed: React.FC<StoryFeedProps> = ({
       import('../features/characters/staticCharacterRepository'),
       import('../features/map/repository'),
       import('../features/world/storyEntityLinks'),
-    ]).then(async ([{ StaticCharacterRepository }, { mapRepository }, { buildStoryMentionEntities, supplementMentionedCharacterIds }]) => {
+      import('../features/world-content/repository'),
+    ]).then(async ([{ StaticCharacterRepository }, { mapRepository }, { buildStoryMentionEntities, supplementMentionedCharacterIds }, { worldContentRepository }]) => {
       const storyCharacterRepository = new StaticCharacterRepository();
-      const [characters, locations] = await Promise.all([
-        storyCharacterRepository.findMentioned(narrativeCorpus, { includeGenealogy: false, limit: 100 }).then(async (mentioned) => {
-          const aliasIds = supplementMentionedCharacterIds(narrativeCorpus) as CharacterId[];
-          const aliases = await storyCharacterRepository.getSearchHits(aliasIds);
-          return [...new Map([...mentioned, ...aliases].map((hit) => [hit.id, hit])).values()];
-        }),
+      const [locations, characterContents] = await Promise.all([
         mapRepository.loadSearchIndex().catch(() => []),
+        worldContentRepository.loadAllCharacterContent().catch(() => []),
       ]);
-      if (!cancelled) setDynamicEntities(buildStoryMentionEntities(narrativeCorpus, characters, locations));
+      const characters = await storyCharacterRepository.findMentioned(narrativeCorpus, { includeGenealogy: false, limit: 100 }).then(async (mentioned) => {
+        const aliasIds = supplementMentionedCharacterIds(narrativeCorpus, characterContents) as CharacterId[];
+        const aliases = await storyCharacterRepository.getSearchHits(aliasIds);
+        return [...new Map([...mentioned, ...aliases].map((hit) => [hit.id, hit])).values()];
+      });
+      if (!cancelled) {
+        const contentByCharacter = new Map(characterContents.map((record) => [record.characterId as string, record]));
+        setDynamicEntities(buildStoryMentionEntities(narrativeCorpus, characters, locations, contentByCharacter));
+      }
     }).catch(() => {
       if (!cancelled) setDynamicEntities([]);
     });

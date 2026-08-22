@@ -1,0 +1,49 @@
+{
+  "aliases": [
+    "泽地人霍兰"
+  ],
+  "appearance": "身材矮小削瘦，目光敏锐灵动，身穿编织水草皮毛与泥沼鳞甲的独特沼泽装束，常持三叉戟与捕网。",
+  "characterId": "agot:Reed_1",
+  "experiences": [
+    {
+      "date": "8281",
+      "description": "年轻时泛舟前往神秘的千面屿向绿先知求知，后前往赫伦堡参加比武大会结识史塔克家族众兄妹。",
+      "participantIds": [
+        "agot:Stark_3"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Howland_Reed",
+      "title": "前往神眼湖千面屿",
+      "visibility": "public"
+    },
+    {
+      "date": "8283",
+      "description": "随艾德·史塔克在极乐塔与亚瑟·戴恩等三位御林铁卫死战，在千钧一发之际救下奈德性命。",
+      "participantIds": [
+        "agot:Stark_3"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Howland_Reed",
+      "title": "极乐塔之战幸存",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "两人曾共同经历赫伦堡比武会与极乐塔之战，战后仍维持少见而牢固的信任。",
+      "kind": "生死挚友",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Eddard_Stark",
+      "targetId": "agot:Stark_3"
+    }
+  ],
+  "personality": "寡言谨慎，重视旧神传统与待客之道；更擅长利用湿地、隐蔽和耐心取胜，而非正面展示武力。",
+  "publicRoles": [
+    "灰水望伯爵",
+    "泽地人领主"
+  ],
+  "reputation": "南方人很少见到的泽地领主，在北境以忠于史塔克家族、熟悉颈泽地形和行事隐秘闻名。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Howland_Reed",
+    "https://asoiaf.fandom.com/zh/wiki/Howland_Reed"
+  ],
+  "summary": "灰水望领主与颈泽泽地人首领，长期居于难以定位的沼泽城堡。熟悉颈泽水道、草木与伏击战法，也是极乐塔之战少数生还者之一。"
+}

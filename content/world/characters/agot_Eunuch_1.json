@@ -1,0 +1,51 @@
+{
+  "aliases": [
+    "八爪蜘蛛",
+    "情报总管"
+  ],
+  "appearance": "身材肥白圆润，光头无须，身上常年散发着浓郁丁香甜香，动作轻盈无声，能在瞬息间变换各种伪装与嗓音。",
+  "characterId": "agot:Eunuch_1",
+  "experiences": [
+    {
+      "date": "8279",
+      "description": "被疯王伊里斯二世从潘托斯招入君临担任情报总管，揭发多起针对王室的阴谋叛变。",
+      "participantIds": [
+        "agot:Mopatis_1"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Varys",
+      "title": "入仕疯王廷臣",
+      "visibility": "secret"
+    },
+    {
+      "date": "8283",
+      "description": "在泰温·兰尼斯特率军兵临城下时曾力劝疯王紧闭城门，但疯王听信派席尔致使君临陷落。",
+      "participantIds": [
+        "agot:Lannister_1",
+        "agot:Pycelle_1"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Varys",
+      "title": "劝阻疯王开门",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "清楚培提尔对混乱的渴望，在宫廷中时刻监视并防范其破坏王国的脆弱平衡。",
+      "kind": "暗流涌动的博弈对手",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Petyr_Baelish",
+      "targetId": "agot:Baelish_2"
+    }
+  ],
+  "personality": "圆滑谦恭，深不可测；表面逢迎各派权贵，内心怀揣极其宏大隐秘的天下复兴棋局，从不行差踏错。",
+  "publicRoles": [
+    "御前情报大臣",
+    "太监"
+  ],
+  "reputation": "君临红堡人人心怀戒备的密探之王，无人知晓其真正底细与忠诚归属。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Varys",
+    "https://asoiaf.fandom.com/zh/wiki/Varys"
+  ],
+  "summary": "御前情报大臣兼红堡太监。来自厄索斯自由城邦里斯，掌控遍布君临与七大王国的庞大‘小小鸟儿’谍报网络，自称一生皆为‘为了王国’服务。"
+}

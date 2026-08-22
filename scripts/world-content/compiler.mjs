@@ -1,4 +1,5 @@
 import { cp, mkdir, mkdtemp, readFile, readdir, rename, rm, writeFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
 import { basename, dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { sha256Json, stableJson } from './hash.mjs';
@@ -65,6 +66,7 @@ async function readDatasetManifests(rootDir) {
     map,
     artifacts,
     characterIds: new Set(characterIndex.map((entry) => entry.id)),
+    characterIndexById: new Map(characterIndex.map((entry) => [entry.id, entry])),
     mapLocationIds: new Set(mapIndex.map((entry) => entry.id)),
     artifactDefinitions: new Map(Object.entries(artifacts.artifacts)),
   };
@@ -77,6 +79,26 @@ function validateStartCharacterReferences(startCharacters, dependencies) {
     }
     if (!dependencies.mapLocationIds.has(record.location.locationId)) {
       throw new Error(`人物起点位置不在地图数据集中：${record.characterId} -> ${record.location.locationId}`);
+    }
+  }
+}
+
+function validateCharacterContentReferences(contents, dependencies) {
+  for (const record of contents) {
+    const character = dependencies.characterIndexById.get(record.characterId);
+    if (!character) throw new Error(`人物内容引用未知人物：${record.characterId}`);
+    if (!character.alive) throw new Error(`人物内容主体在开局不在世：${record.characterId}`);
+    for (const experience of record.experiences ?? []) {
+      for (const participantId of experience.participantIds ?? []) {
+        if (!dependencies.characterIds.has(participantId)) {
+          throw new Error(`人物内容经历参与者不存在：${record.characterId} -> ${participantId}`);
+        }
+      }
+    }
+    for (const relation of record.notableRelations ?? []) {
+      if (!dependencies.characterIds.has(relation.targetId)) {
+        throw new Error(`人物内容关系目标不存在：${record.characterId} -> ${relation.targetId}`);
+      }
     }
   }
 }
@@ -136,6 +158,22 @@ function validateStartAssetReferences(startAssets, dependencies) {
   for (const vehicle of startAssets.vehicles) assertKnownLocationRef(vehicle.location, `载具 ${vehicle.id}`, dependencies);
 }
 
+function buildCharacterContentShards(contents) {
+  const shards = {};
+  const characters = {};
+  for (const record of [...contents].sort((left, right) => left.characterId.localeCompare(right.characterId))) {
+    const shardId = createHash('sha256').update(record.characterId).digest('hex')[0];
+    (shards[shardId] ??= {})[record.characterId] = record;
+    characters[record.characterId] = shardId;
+  }
+  const index = {
+    schemaVersion: 1,
+    shards: Object.fromEntries(Object.keys(shards).sort().map((shardId) => [shardId, `/data/world/character-content/${shardId}.json`])),
+    characters,
+  };
+  return { index, shardRecords: shards };
+}
+
 function buildOutputs(source, dependencies) {
   const startState = {
     schemaVersion: 1,
@@ -153,7 +191,7 @@ function buildOutputs(source, dependencies) {
   };
   const gameplayLocations = { schemaVersion: 1, entries: [], config: source.gameplayLocations };
   const holderSummaries = { schemaVersion: 1, holders: [] };
-  const characterContentIndex = { schemaVersion: 1, shards: {}, characters: {} };
+  const { index: characterContentIndex, shardRecords: characterContentShards } = buildCharacterContentShards(source.characterContents);
   const payload = {
     startState,
     playableCharacters: source.playableCharacters,
@@ -189,7 +227,7 @@ function buildOutputs(source, dependencies) {
       loadouts: '/data/world/loadouts.json'
     },
   };
-  return { manifest, payload, contentHash };
+  return { manifest, payload, contentHash, characterContentShards };
 }
 
 async function writeOutputTree(directory, outputs) {
@@ -205,6 +243,9 @@ async function writeOutputTree(directory, outputs) {
     'ordinary-items.json': outputs.payload.ordinaryItems,
     'loadouts.json': outputs.payload.loadouts,
   };
+  for (const [shardId, records] of Object.entries(outputs.characterContentShards)) {
+    files[join('character-content', `${shardId}.json`)] = records;
+  }
   for (const [name, value] of Object.entries(files)) {
     const target = join(directory, name);
     await mkdir(dirname(target), { recursive: true });
@@ -288,6 +329,7 @@ export async function compileWorldContent(options = {}) {
   const dependencies = await readDatasetManifests(rootDir);
   validateStartCharacterReferences(source.startCharacters, dependencies);
   validateStartAssetReferences(source.startAssets, dependencies);
+  validateCharacterContentReferences(source.characterContents, dependencies);
   const outputs = buildOutputs(source, dependencies);
   await mkdir(dirname(outputDir), { recursive: true });
   const temporary = await mkdtemp(join(dirname(outputDir), `.${basename(outputDir)}-`));

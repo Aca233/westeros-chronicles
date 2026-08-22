@@ -1,0 +1,265 @@
+{
+  "agot:Dondarrion_2": {
+    "aliases": [
+      "闪电伯爵"
+    ],
+    "appearance": "金红发色，相貌英俊俊朗，身材挺拔，身披绣有唐德利恩家族分叉闪电徽章的深黑披风与闪亮板甲。",
+    "characterId": "agot:Dondarrion_2",
+    "experiences": [],
+    "notableRelations": [
+      {
+        "description": "与密尔的红袍僧索罗斯在君临宴饮结识，两人性情相投结为莫逆之交。",
+        "kind": "挚友与比武同僚",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Thoros_of_Myr",
+        "targetId": "agot:Brotherhood_8"
+      }
+    ],
+    "personality": "英勇正直，恪守骑士道；热衷比武与冒险，对弱小充满骑士护佑之情。",
+    "publicRoles": [
+      "黑港伯爵",
+      "骑士"
+    ],
+    "reputation": "风暴地久负盛名的年轻贵族模范，在王廷贵族中享有极高声誉。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Beric_Dondarrion",
+      "https://asoiaf.fandom.com/zh/wiki/Beric_Dondarrion"
+    ],
+    "summary": "黑港伯爵，风暴地年轻俊朗的名门骑士。枪术出众、荣誉感极强，在君临比武大会中备受瞩目，与艾利斯塔·罗宛小姐订有婚约。"
+  },
+  "agot:Frey_1": {
+    "aliases": [
+      "迟到的佛雷大人",
+      "老佛雷"
+    ],
+    "appearance": "九十岁高龄的秃顶枯瘦老者，下巴无牙凹陷，长着黄褐斑点与如黄鼠狼般警惕的小眼睛，常年坐于轮椅或高椅上。",
+    "characterId": "agot:Frey_1",
+    "experiences": [
+      {
+        "date": "8283",
+        "description": "在篡夺者决战大局已定后才率佛雷全军慢吞吞赶到战场，招致各方诸侯的鄙视嘲笑。",
+        "participantIds": [
+          "agot:Tully_1",
+          "agot:Baratheon_2"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Walder_Frey",
+        "title": "三叉戟河迟到参战",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "痛恨霍斯特公爵多年来对佛雷家族暴发户身份的傲慢与轻慢。",
+        "kind": "心怀不满的封君",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Hoster_Tully",
+        "targetId": "agot:Tully_1"
+      }
+    ],
+    "personality": "敏感多疑，睚眦必报；对他人的一丝轻慢怀恨在心，极度看重渡口过路费与为庞大子嗣谋求贵族联姻利益。",
+    "publicRoles": [
+      "孪河城侯爵",
+      "渡口领主"
+    ],
+    "reputation": "维斯特洛诸侯私下鄙夷嘲笑的自私老滑头，因三叉戟河战后才赶到被劳勃讥为‘迟到的佛雷’。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Walder_Frey",
+      "https://asoiaf.fandom.com/zh/wiki/Walder_Frey"
+    ],
+    "summary": "孪河城侯爵兼绿叉河渡口领主。年近九旬，拥有庞大无比的子孙后裔家族群，掌控扼守南北交通要道的孪河城石桥，贪婪记仇、极重家族利益。"
+  },
+  "agot:Harlaw_9": {
+    "aliases": [
+      "读书人罗德利克"
+    ],
+    "appearance": "身材高瘦文雅，满头银发，目光深邃睿智，鼻梁上偶尔架着老花镜，身着精致而低调的黑色羊毛长袍。",
+    "characterId": "agot:Harlaw_9",
+    "experiences": [
+      {
+        "date": "8289",
+        "description": "在葛雷乔伊叛乱中失去两名长子，从此更加坚信盲目劫掠战争乃自取灭亡之道。",
+        "participantIds": [
+          "agot:Greyjoy_5"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Rodrik_Harlaw",
+        "title": "痛失爱子稳守十塔城",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "视阿莎为自己家族未来的希望，常年在十塔城为其提供军费与明智指引。",
+        "kind": "最关爱的外甥女",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Asha_Greyjoy",
+        "targetId": "agot:Greyjoy_13"
+      }
+    ],
+    "personality": "博学理智，务实清醒；深知铁群岛落后封闭的弊端，反对盲目侵略大陆，酷爱哲学与历史典籍。",
+    "publicRoles": [
+      "十塔城伯爵",
+      "哈劳家族族长"
+    ],
+    "reputation": "铁群岛唯一因嗜书如命被称为‘读书人’的异类智者伯爵，受各岛诸侯普遍敬重。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Rodrik_Harlaw",
+      "https://asoiaf.fandom.com/zh/wiki/Rodrik_Harlaw"
+    ],
+    "summary": "哈劳岛十塔城伯爵，铁群岛最富庶显赫的诸侯领袖。酷爱搜集古籍与读书思考，在崇尚武力的铁群岛独树一帜，是铁民中罕见的明智长者。"
+  },
+  "agot:Hightower_5": {
+    "aliases": [
+      "旧镇疯老头",
+      "参天塔的雷顿伯爵"
+    ],
+    "appearance": "常年未露面的苍老隐士领主，相传留着如雪长须，身披法师般的厚重斗篷，在塔顶俯瞰回音湾。",
+    "characterId": "agot:Hightower_5",
+    "experiences": [
+      {
+        "date": "8289",
+        "description": "在葛雷乔伊叛乱后彻底搬入参天塔顶楼潜心闭关研读古卷，已有十年不曾下塔。",
+        "participantIds": [],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Leyton_Hightower",
+        "title": "退隐参天塔顶",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [],
+    "personality": "神秘古怪，深居简出；沉醉于古老预言、星象与法术古卷，对世俗争端冷眼旁观但底蕴极深。",
+    "publicRoles": [
+      "旧镇伯爵",
+      "参天塔领主",
+      "学城守护者"
+    ],
+    "reputation": "河湾地最神秘且最具历史威望的古老领主，旧镇繁荣的基石。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Leyton_Hightower",
+      "https://asoiaf.fandom.com/zh/wiki/Leyton_Hightower"
+    ],
+    "summary": "旧镇之声、参天塔伯爵、港口之主兼绿之领域卫士。多年隐居于数百尺高的参天塔顶层研究星象法术，极少踏出高塔一步，旧镇诸事交由儿女治理。"
+  },
+  "agot:Lannister_1": {
+    "aliases": [
+      "凯岩城雄狮",
+      "老狮子"
+    ],
+    "appearance": "身材高大削瘦挺拔，剃光头发以掩饰秃顶，两鬓留着修剪整齐的金须，双眼呈透着金斑的冷酷淡绿。",
+    "characterId": "agot:Lannister_1",
+    "experiences": [
+      {
+        "date": "8261",
+        "description": "以雷霆手段水淹卡斯特梅、夷平塔贝克厅彻底诛灭叛乱家族，写就《卡斯特梅的雨季》震慑西境。",
+        "participantIds": [
+          "agot:Lannister_2"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Tywin_Lannister",
+        "title": "剿灭雷恩与塔贝克",
+        "visibility": "public"
+      },
+      {
+        "date": "8283",
+        "description": "在篡夺者战争尾声率西境大军进驻君临攻破红堡，终结疯王伊里斯统治并向劳勃献上投名状。",
+        "participantIds": [
+          "agot:Baratheon_2",
+          "agot:Clegane_3"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Sack_of_King%27s_Landing",
+        "title": "君临陷落",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [],
+    "personality": "冷酷严厉，极度自尊与务实；视家族荣耀与威严为最高使命，绝不宽恕敌人的软弱与挑衅，从不大笑。",
+    "publicRoles": [
+      "凯岩城公爵",
+      "西境守护",
+      "西境统帅"
+    ],
+    "reputation": "全七国公认最具统治手腕与财力的霸主，‘兰尼斯特有债必偿’的实际缔造者。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Tywin_Lannister",
+      "https://asoiaf.fandom.com/zh/wiki/Tywin_Lannister"
+    ],
+    "summary": "凯岩城公爵、西境守护兼赫伦堡前首相。以铁腕统治西境数十年，曾一手扑灭雷耶斯与塔贝克叛乱，是全维斯特洛最富庶且令人生畏的政治巨擘。"
+  },
+  "agot:Marsh_5": {
+    "aliases": [
+      "波文大人",
+      "老石榴"
+    ],
+    "appearance": "身材圆滚微胖，红扑扑的面庞如熟透石榴，留着稀疏棕须，常年在黑城堡库房翻阅厚重账簿与清单。",
+    "characterId": "agot:Marsh_5",
+    "experiences": [
+      {
+        "date": "8292",
+        "description": "在长夜将至寒冬逼近前，以高超算术重新整肃十九座要塞废墟与黑城堡全部粮秣配额。",
+        "participantIds": [
+          "agot:Mormont_2"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Bowen_Marsh",
+        "title": "统筹全长城补给防务",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "尽忠职守协助总司令管理后勤与城堡内务。",
+        "kind": "辅佐的总司令",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Jeor_Mormont",
+        "targetId": "agot:Mormont_2"
+      }
+    ],
+    "personality": "刻板严谨，按部就班；极度重视军粮储备与规章制度，对超出规制的冒险行为持坚决反对态度。",
+    "publicRoles": [
+      "守夜人首席事务官"
+    ],
+    "reputation": "守夜人军团无可替代的优秀大管家，以严守库房底线著称。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Bowen_Marsh",
+      "https://asoiaf.fandom.com/zh/wiki/Bowen_Marsh"
+    ],
+    "summary": "守夜人军团首席事务官。颈泽名门出身，精通算术、粮秣调配与后勤储备，恪守军团条例，在莫尔蒙总司令麾下总管长城各要塞物资运转。"
+  },
+  "agot:Umber_8": {
+    "aliases": [
+      "大琼恩"
+    ],
+    "appearance": "身高近七英尺，魁梧如巨灵，黑发虬结，挥舞一柄寻常人无法提起的双刃双手重剑，身穿厚重钢甲。",
+    "characterId": "agot:Umber_8",
+    "experiences": [
+      {
+        "date": "8283",
+        "description": "随军南下参与三叉戟河诸役，在千军万马中以巨剑斩杀无数王军骑士。",
+        "participantIds": [
+          "agot:Stark_3"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Jon_Umber",
+        "title": "鸣钟之役浴血参战",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "对奈德公爵的威严与公正深感信服，甘愿为其冲锋陷阵。",
+        "kind": "敬重的北境守护",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Eddard_Stark",
+        "targetId": "agot:Stark_3"
+      }
+    ],
+    "personality": "豪迈粗犷，脾气火爆；崇尚绝对的武力与忠诚，一旦认可领袖便会奉献无可置疑的生死赤胆。",
+    "publicRoles": [
+      "最后壁炉堡伯爵",
+      "北境诸侯"
+    ],
+    "reputation": "北境公认的第一猛将与悍勇封臣，在任何宴席与战场上都是声势最骇人的存在。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Jon_Umber",
+      "https://asoiaf.fandom.com/zh/wiki/Jon_Umber"
+    ],
+    "summary": "最后壁炉堡领主，安柏家族族长。身形巨大无比，嗓门如雷，勇猛好斗且性格暴烈，是北境最靠近绝境长城的雄关统帅。"
+  }
+}

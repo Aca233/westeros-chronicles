@@ -1,0 +1,39 @@
+{
+  "aliases": [
+    "月门堡奈斯特爵士"
+  ],
+  "appearance": "身材高大结实，灰发粗短，面容严肃精悍，留着厚重的灰白髭须，身披饰有黑色铁栅与罗伊斯纹章的铁甲。",
+  "characterId": "agot:RoyceGOTM_1",
+  "experiences": [
+    {
+      "date": "8284",
+      "description": "在琼恩·艾林公爵前往君临担任国王之手前，被正式托付月门堡与艾林谷日常驻军防务。",
+      "participantIds": [
+        "agot:Arryn_3"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Nestor_Royce",
+      "title": "受封月门堡大元帅",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "数十年来兢兢业业替琼恩·艾林镇守谷地大门。",
+      "kind": "效忠的公爵主公",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Jon_Arryn",
+      "targetId": "agot:Arryn_3"
+    }
+  ],
+  "personality": "老成持重，忠于职守；办事一丝不苟，虽然地位不如符石城本家显赫但极有担当。",
+  "publicRoles": [
+    "月门堡大元帅",
+    "谷地防务统领"
+  ],
+  "reputation": "艾林谷无可替代的干练元帅，谷地上下公认的防务支柱。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Nestor_Royce",
+    "https://asoiaf.fandom.com/zh/wiki/Nestor_Royce"
+  ],
+  "summary": "艾林谷月门堡大元帅兼符石城罗伊斯家族远支。长年在琼恩·艾林离谷期间尽忠职守代掌月门堡与谷地日常防务，深得谷地诸侯信赖。"
+}

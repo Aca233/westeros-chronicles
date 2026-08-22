@@ -1,0 +1,43 @@
+{
+  "aliases": [
+    "派席尔大学士"
+  ],
+  "appearance": "白须垂胸如银瀑的高大老者，身披缀满各色重金项环的繁复学士长袍，常作步履蹒跚、昏昏欲睡状。",
+  "characterId": "agot:Pycelle_1",
+  "experiences": [
+    {
+      "date": "8259",
+      "description": "由学城总枢机派往君临侍奉杰赫里斯二世国王，从此深植红堡核心枢纽数十年。",
+      "participantIds": [
+        "agot:Lannister_1"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Pycelle",
+      "title": "受命出任大学士",
+      "visibility": "public"
+    },
+    {
+      "date": "8283",
+      "description": "在泰温大军兵临君临时竭力说服疯王打开城门迎接‘盟友’，直接促成红堡陷落。",
+      "participantIds": [
+        "agot:Lannister_1",
+        "agot:Eunuch_1"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Pycelle",
+      "title": "力劝疯王开城献关",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [],
+  "personality": "伪善狡诈，奴颜婢膝；擅长以衰老软弱伪装自我，在关键政治风暴中坚定维护泰温·兰尼斯特的利益。",
+  "publicRoles": [
+    "大学士",
+    "御前会议成员"
+  ],
+  "reputation": "侍奉多代君王的资深大学士，熟悉宫廷礼制与王国政务；其政治立场常被认为更亲近兰尼斯特家族。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Pycelle",
+    "https://asoiaf.fandom.com/zh/wiki/Pycelle"
+  ],
+  "summary": "学城派驻君临的御前大学士。侍奉过坦格利安四代君王与劳勃国王，历经数十年风云，表面苍老龙钟，实则是兰尼斯特家族在朝廷最坚定的暗子。"
+}

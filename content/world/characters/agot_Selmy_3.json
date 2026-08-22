@@ -1,0 +1,66 @@
+{
+  "aliases": [
+    "无畏的巴利斯坦",
+    "巴利斯坦爵士"
+  ],
+  "appearance": "身材高大挺拔如松，满头银发但目光湛蓝锐利如鹰，身着一尘不染的纯白板甲与及地白袍，威严不可侵犯。",
+  "characterId": "agot:Selmy_3",
+  "experiences": [
+    {
+      "date": "8260",
+      "description": "在石阶列岛决战中单枪匹马突破重围，亲手格杀九铜板王之一的凶怪马里斯·黑火终结黑火叛乱。",
+      "participantIds": [
+        "agot:Lannister_1"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Barristan_Selmy",
+      "title": "九铜板王之战斩杀末代黑火",
+      "visibility": "public"
+    },
+    {
+      "date": "8277",
+      "description": "在暮谷镇叛乱中一人潜入敌巢，在万军之中成功救出被囚禁的伊里斯国王并击杀达克林家叛将。",
+      "participantIds": [
+        "agot:Lannister_1"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Defiance_of_Duskendale",
+      "title": "暮谷镇单骑救疯王",
+      "visibility": "public"
+    },
+    {
+      "date": "8283",
+      "description": "在三叉戟河为雷加王子血战受重伤，劳勃国王敬其忠勇派御医全力救治并封其为御林铁卫队长。",
+      "participantIds": [
+        "agot:Baratheon_2"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Barristan_Selmy",
+      "title": "三叉戟河血战负伤受赦",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "虽然曾为坦格利安死战，但在劳勃赦免后全心恪守白袍誓言保卫劳勃与王室。",
+      "kind": "誓死护卫的君主",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Robert_I_Baratheon",
+      "targetId": "agot:Baratheon_2"
+    },
+    {
+      "description": "叹息詹姆傲世天赋的同时，深深不齿其刺杀疯王的背誓行为。",
+      "kind": "痛惜而提防的铁卫同僚",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Jaime_Lannister",
+      "targetId": "agot:Lannister_7"
+    }
+  ],
+  "personality": "正直高洁，恪守誓言；将骑士精神与铁卫操守视作生命全部，不涉党争，纯粹以剑护主。",
+  "publicRoles": [
+    "御林铁卫队长",
+    "传奇骑士"
+  ],
+  "reputation": "七大王国活着的最伟大传奇骑士，举国骑士阶层膜拜的标杆榜样。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Barristan_Selmy",
+    "https://asoiaf.fandom.com/zh/wiki/Barristan_Selmy"
+  ],
+  "summary": "御林铁卫队长，维斯特洛无可争议的传奇骑士。侍奉过疯王伊里斯与劳勃·拜拉席恩，以卓越无匹的剑术武功、高尚武德与无可动摇的忠诚享誉全境。"
+}

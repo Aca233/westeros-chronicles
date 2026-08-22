@@ -1,0 +1,40 @@
+{
+  "aliases": [
+    "青铜约恩"
+  ],
+  "appearance": "身材异常高大壮硕，灰发披肩，面庞如花岗岩般粗砺刻板，常年身披刻满古代先民符文的暗青铜重甲。",
+  "characterId": "agot:Royce_1",
+  "experiences": [
+    {
+      "date": "8283",
+      "description": "随琼恩·艾林公爵起兵反抗疯王，在三叉戟河诸役中指挥谷地重骑兵浴血奋战。",
+      "participantIds": [
+        "agot:Arryn_3",
+        "agot:Stark_3"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Yohn_Royce",
+      "title": "率谷地大军参战",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "琼恩·艾林最信任的谷地同僚将领，誓死维护艾林家族在谷地的正统统治。",
+      "kind": "效忠的封君挚友",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Jon_Arryn",
+      "targetId": "agot:Arryn_3"
+    }
+  ],
+  "personality": "刚烈耿直，恪守古风荣誉；治军严明，对谷地事务有极强责任感，鄙薄宫廷谄媚之风。",
+  "publicRoles": [
+    "符石城伯爵",
+    "谷地诸侯领袖"
+  ],
+  "reputation": "谷地诸侯公认的军事领袖与精神支柱，在七大王国武术比武界享有崇高声誉。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Yohn_Royce",
+    "https://asoiaf.fandom.com/zh/wiki/Yohn_Royce"
+  ],
+  "summary": "符石城伯爵，谷地声望最隆的重臣封臣。身形威武庞大，长年身穿铭刻远古符文的青铜铠甲，枪术剑术超群，对艾林家族忠贞不渝。"
+}

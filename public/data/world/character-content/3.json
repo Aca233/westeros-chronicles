@@ -1,0 +1,418 @@
+{
+  "agot:Baratheon_13": {
+    "aliases": [
+      "希琳小贵女"
+    ],
+    "appearance": "身材瘦小单薄，蓝眼睛与黑卷发，左脸与脖颈布满如石化开裂的灰斑，平时喜爱读书与听小丑讲故事。",
+    "characterId": "agot:Baratheon_13",
+    "experiences": [
+      {
+        "date": "8289",
+        "description": "婴儿时期罹患灰鳞病，在学士们的拼死医治下成功遏制扩散，但半边面容终生石化。",
+        "participantIds": [
+          "agot:Baratheon_3",
+          "agot:Florent_10"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Shireen_Baratheon",
+        "title": "灰鳞病痊愈",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "与戴佛斯情同父女，经常陪伴戴佛斯并教导其认字读书。",
+        "kind": "亲近的长辈导师",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Davos_Seaworth",
+        "targetId": "agot:Seaworth_1"
+      }
+    ],
+    "personality": "乖巧恬静，懂事敏感；对世间丑恶毫无戒心，十分渴望得到父母的关注与关爱。",
+    "publicRoles": [
+      "龙石岛继承人"
+    ],
+    "reputation": "龙石岛上下怜悯同情的小贵女，以纯洁善良和灰鳞病瘢痕闻名。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Shireen_Baratheon",
+      "https://asoiaf.fandom.com/zh/wiki/Shireen_Baratheon"
+    ],
+    "summary": "史坦尼斯·拜拉席恩公爵的独女兼继承人。幼年患上致命的灰鳞病并奇迹般幸存，半边面孔留下灰石般的鳞状斑痕，性格安静善良。"
+  },
+  "agot:Blackwater_1": {
+    "aliases": [
+      "黑水河的波隆"
+    ],
+    "appearance": "身材精瘦矫健，黑发黑眼，下巴留着杂乱硬胡茬，眼神冷酷敏锐如狼，身着破旧但保养极佳的皮甲与锁甲。",
+    "characterId": "agot:Blackwater_1",
+    "experiences": [
+      {
+        "date": "8295",
+        "description": "长年在三叉戟河、国王大道与君临周边承接贵族护卫与佣兵任务。",
+        "participantIds": [],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Bronn",
+        "title": "游荡河间地与王领",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [],
+    "personality": "冷酷务实，毫无道德包袱；不讲骑士虚礼，唯以金钱与自身生存为第一考量，战斗中极善抓住对手破绽一击毙命。",
+    "publicRoles": [
+      "佣兵剑客"
+    ],
+    "reputation": "酒馆与佣兵营地中令人不敢招惹的致命游侠剑客。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Bronn",
+      "https://asoiaf.fandom.com/zh/wiki/Bronn"
+    ],
+    "summary": "出身底层的无名佣兵剑客。剑法阴险实用、身手极度敏捷，唯利是图、实用主义至上，在维斯特洛各地的战乱与商道中讨生活。"
+  },
+  "agot:Blount_3": {
+    "aliases": [
+      "柏洛斯爵士",
+      "肚腩柏洛斯"
+    ],
+    "appearance": "身材肥胖臃肿，下垂的双颊如斗牛犬，目光浑浊，身穿紧绷的白色御林铁卫铠甲。",
+    "characterId": "agot:Blount_3",
+    "experiences": [
+      {
+        "date": "8290",
+        "description": "在劳勃国王时期依靠兰尼斯特家族的宫廷运作被选入御林铁卫。",
+        "participantIds": [
+          "agot:Lannister_6",
+          "agot:Baratheon_2"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Boros_Blount",
+        "title": "受封御林铁卫",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "完全唯瑟曦王后之命是从，在宫廷中充当瑟曦的铁卫帮手。",
+        "kind": "附庸效忠的王后",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Cersei_Lannister",
+        "targetId": "agot:Lannister_6"
+      }
+    ],
+    "personality": "傲慢欺软，贪生怕死；面对强敌时懦弱退缩，面对弱小与平民时蛮横粗暴。",
+    "publicRoles": [
+      "御林铁卫骑士"
+    ],
+    "reputation": "白袍铁卫中声名最差、最缺乏骑士美德的平庸之辈。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Boros_Blount",
+      "https://asoiaf.fandom.com/zh/wiki/Boros_Blount"
+    ],
+    "summary": "御林铁卫白袍骑士，王领布劳恩家族出身。体态肥胖沉重，性情暴躁胆怯，剑术平庸，在宫廷中深受瑟曦王后拉拢驱使。"
+  },
+  "agot:Bracken_3": {
+    "aliases": [
+      "布雷肯大人"
+    ],
+    "appearance": "身材魁梧粗壮，红棕色头发，浓密的大胡子，身披饰有红底黑马纹章的厚实战甲。",
+    "characterId": "agot:Bracken_3",
+    "experiences": [
+      {
+        "date": "8283",
+        "description": "响应奔流城征召出兵参战，在多场围城战中立下赫赫战功。",
+        "participantIds": [
+          "agot:Tully_1"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Jonos_Bracken",
+        "title": "随军征战篡夺者之役",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "与泰陀斯·布莱伍德针锋相对，两家族在每一寸交界土地上皆爆发过流血冲突。",
+        "kind": "仇深似海的死敌",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Tytos_Blackwood",
+        "targetId": "agot:Blackwood_6"
+      }
+    ],
+    "personality": "傲慢好斗，脾气暴躁；极度重视个人与家族利益，在军事上勇猛但偶显短视与投机。",
+    "publicRoles": [
+      "石篱城伯爵",
+      "河间地诸侯"
+    ],
+    "reputation": "河间地威名赫赫的悍勇领主，石篱城铁骑的强悍统帅。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Jonos_Bracken",
+      "https://asoiaf.fandom.com/zh/wiki/Jonos_Bracken"
+    ],
+    "summary": "石篱城伯爵，河间地古老的大诸侯之一。信奉七神，长年与邻近的布莱伍德家族就土地、林地与世仇纷争不断，武勇好斗、心高气傲。"
+  },
+  "agot:Frey_2": {
+    "aliases": [
+      "史提夫隆爵士"
+    ],
+    "appearance": "满头白发的老骑士，容貌亦带有些许佛罗家族典型的黄鼠狼相貌，神态疲惫沉稳，身穿实用锁甲。",
+    "characterId": "agot:Frey_2",
+    "experiences": [
+      {
+        "date": "8283",
+        "description": "作为佛雷家族前锋指挥官随父亲出征，协助维系河间地后方防线秩序。",
+        "participantIds": [
+          "agot:Frey_1"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Stevron_Frey",
+        "title": "随军参战三叉戟河",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [],
+    "personality": "温和谨慎，顾全大局；恪守骑士操守与长子职责，时刻提醒子侄们‘家和万事兴’。",
+    "publicRoles": [
+      "孪河城继承人",
+      "骑士"
+    ],
+    "reputation": "佛雷家族中极少数真正赢得外族诸侯尊重与信任的正派长辈。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Stevron_Frey",
+      "https://asoiaf.fandom.com/zh/wiki/Stevron_Frey"
+    ],
+    "summary": "孪河城继承人，瓦德·佛雷侯爵的长子。年过六旬，性格谨慎稳重，极力维系庞大而勾心斗角的佛雷家族内部和睦与对外名誉。"
+  },
+  "agot:Greyjoy_6": {
+    "aliases": [
+      "鸦眼",
+      "疯子攸伦"
+    ],
+    "appearance": "相貌英俊却透着邪异，黑发如鸦羽，左眼戴着皮眼罩，右眼呈狂热深蓝，嘴唇因常年饮用夜影之水而泛出诡异深蓝幽光。",
+    "characterId": "agot:Greyjoy_6",
+    "experiences": [
+      {
+        "date": "8289",
+        "description": "在葛雷乔伊叛乱初期亲自谋划并率长船突袭兰尼斯港，纵火将泰温·兰尼斯特的整支舰队焚毁在锚地。",
+        "participantIds": [
+          "agot:Greyjoy_5",
+          "agot:Greyjoy_7",
+          "agot:Lannister_1"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Euron_Greyjoy",
+        "title": "策划火烧兰尼斯特舰队",
+        "visibility": "public"
+      },
+      {
+        "date": "8297",
+        "description": "因通奸丑闻遭兄长下令放逐，乘宁静号拔锚扬帆消失在落日之海深处。",
+        "participantIds": [
+          "agot:Greyjoy_5",
+          "agot:Greyjoy_7"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Euron_Greyjoy",
+        "title": "遭巴隆放逐流亡深海",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [],
+    "personality": "冷酷大胆，擅长以神秘传闻和不可预测的暴力震慑他人；对禁忌知识抱有兴趣，但其远航经历多来自本人宣称。",
+    "publicRoles": [
+      "宁静号船长",
+      "流亡海盗王"
+    ],
+    "reputation": "以残忍、冒险和船上水手皆被割去舌头而令人畏惧；关于其远航收获与巫术经历的说法真假难辨。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Euron_Greyjoy",
+      "https://asoiaf.fandom.com/zh/wiki/Euron_Greyjoy"
+    ],
+    "summary": "宁静号船长与遭放逐的铁群岛亲王，因侵犯弟媳而被巴隆逐出群岛。此后在远海劫掠，并散布自己到过瓦雷利亚等危险海域的说法。"
+  },
+  "agot:Martell_12": {
+    "aliases": [
+      "大沙蛇"
+    ],
+    "appearance": "身材高大粗壮无甚姿色，面容线条硬朗紧绷，黑发杂乱挽起，身穿粗糙皮甲，随身携带长矛与带刺皮鞭。",
+    "characterId": "agot:Martell_12",
+    "experiences": [
+      {
+        "date": "8272",
+        "description": "幼年在母亲哭泣争夺时毅然选择父亲扔在脚下的长矛，从此跟随奥柏伦受训成长为冷酷战士。",
+        "participantIds": [
+          "agot:Martell_8"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Obara_Sand",
+        "title": "选择长矛随父",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [],
+    "personality": "狂暴凶猛，好勇斗狠；崇尚纯粹的杀戮与复仇，行事雷厉风行，极度鄙视软弱妥协。",
+    "publicRoles": [
+      "沙蛇长女",
+      "多恩女战士"
+    ],
+    "reputation": "多恩全境最剽悍善战的女杀手战士，令多恩守军将领敬畏三分。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Obara_Sand",
+      "https://asoiaf.fandom.com/zh/wiki/Obara_Sand"
+    ],
+    "summary": "‘沙蛇’长女，奥柏伦·马泰尔与旧镇妓女所生。性格凶悍刚烈，精通长矛、短鞭与马术，以男子自居，热切渴望为父亲向兰尼斯特开战。"
+  },
+  "agot:Redwyne_4": {
+    "aliases": [
+      "雷德温伯爵"
+    ],
+    "appearance": "身材高大结实，带有浓郁航海人特色的红润饱经风霜面庞，红发微卷，身穿华贵的深蓝航海丝袍与甲胄。",
+    "characterId": "agot:Redwyne_4",
+    "experiences": [
+      {
+        "date": "8283",
+        "description": "在篡夺者战争期间率青亭岛舰队封锁破船湾，完全切断风息堡的海上补给达一年之久。",
+        "participantIds": [
+          "agot:Tyrell_8",
+          "agot:Baratheon_3"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Paxter_Redwyne",
+        "title": "海路封锁风息堡",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "与奥莲娜夫人保持紧密的家族政治协商，始终与高庭保持同进同退。",
+        "kind": "亲姑姑与家族智囊",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Olenna_Redwyne",
+        "targetId": "agot:Redwyne_2"
+      }
+    ],
+    "personality": "精明老练，擅长海战与航运垄断；在七国内战中长于审时度势，牢牢守护家族的海上霸权与财富。",
+    "publicRoles": [
+      "青亭岛伯爵",
+      "青亭岛舰队司令"
+    ],
+    "reputation": "全境最具实力的海上霸主诸侯，掌控七国最重要的葡萄酒航运与舰队。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Paxter_Redwyne",
+      "https://asoiaf.fandom.com/zh/wiki/Paxter_Redwyne"
+    ],
+    "summary": "青亭岛伯爵兼青亭岛舰队司令。掌控维斯特洛规模最庞大富庶的海上贸易商队与武装战舰，与高庭提利尔家族有着紧密的血亲盟约。"
+  },
+  "agot:Rowan_1": {
+    "aliases": [
+      "罗宛大人"
+    ],
+    "appearance": "身材修长挺拔，面容沉静威严，留着整齐的短髭，身披绣有金色大树纹章的华丽深绿天鹅绒披风。",
+    "characterId": "agot:Rowan_1",
+    "experiences": [
+      {
+        "date": "8283",
+        "description": "统领金树城精锐骑兵随梅斯·提利尔参与围城，始终维持军纪严明。",
+        "participantIds": [
+          "agot:Tyrell_8"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Mathis_Rowan",
+        "title": "随军参战篡夺者之役",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "梅斯·提利尔在战役谋划中最依赖与倾听意见的诸侯大将。",
+        "kind": "效忠的封君统帅",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Mace_Tyrell",
+        "targetId": "agot:Tyrell_8"
+      }
+    ],
+    "personality": "沉着冷静，深谋远虑；富有正义感，做事顾全大局，在河湾地军事会议中极有分量与威信。",
+    "publicRoles": [
+      "金树城伯爵",
+      "河湾地诸侯重臣"
+    ],
+    "reputation": "河湾地公认最值得信赖与才干过人的骨干领主将领。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Mathis_Rowan",
+      "https://asoiaf.fandom.com/zh/wiki/Mathis_Rowan"
+    ],
+    "summary": "金树城伯爵，河湾地最有声望与实力的资深诸侯之一。性格稳重正直、长于谋略统军，是高庭公爵梅斯最核心的军事智囊与大将。"
+  },
+  "agot:Royce_1": {
+    "aliases": [
+      "青铜约恩"
+    ],
+    "appearance": "身材异常高大壮硕，灰发披肩，面庞如花岗岩般粗砺刻板，常年身披刻满古代先民符文的暗青铜重甲。",
+    "characterId": "agot:Royce_1",
+    "experiences": [
+      {
+        "date": "8283",
+        "description": "随琼恩·艾林公爵起兵反抗疯王，在三叉戟河诸役中指挥谷地重骑兵浴血奋战。",
+        "participantIds": [
+          "agot:Arryn_3",
+          "agot:Stark_3"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Yohn_Royce",
+        "title": "率谷地大军参战",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "琼恩·艾林最信任的谷地同僚将领，誓死维护艾林家族在谷地的正统统治。",
+        "kind": "效忠的封君挚友",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Jon_Arryn",
+        "targetId": "agot:Arryn_3"
+      }
+    ],
+    "personality": "刚烈耿直，恪守古风荣誉；治军严明，对谷地事务有极强责任感，鄙薄宫廷谄媚之风。",
+    "publicRoles": [
+      "符石城伯爵",
+      "谷地诸侯领袖"
+    ],
+    "reputation": "谷地诸侯公认的军事领袖与精神支柱，在七大王国武术比武界享有崇高声誉。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Yohn_Royce",
+      "https://asoiaf.fandom.com/zh/wiki/Yohn_Royce"
+    ],
+    "summary": "符石城伯爵，谷地声望最隆的重臣封臣。身形威武庞大，长年身穿铭刻远古符文的青铜铠甲，枪术剑术超群，对艾林家族忠贞不渝。"
+  },
+  "agot:Tyrell_14": {
+    "aliases": [
+      "高庭小玫瑰"
+    ],
+    "appearance": "一头浓密的棕色长卷发，鹿一般灵动的棕色大眼睛，身材婀娜多姿，笑容温暖甜美，举止优雅绝伦。",
+    "characterId": "agot:Tyrell_14",
+    "experiences": [
+      {
+        "date": "8283",
+        "description": "作为提利尔家族最小的孩子兼独女在高庭诞生，自幼接受严格的贵族统治者熏陶。",
+        "participantIds": [
+          "agot:Tyrell_8",
+          "agot:Redwyne_2"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Margaery_Tyrell",
+        "title": "降生高庭城堡",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "随祖母奥莲娜学习洞察人心与政治博弈，两人情同心腹盟友。",
+        "kind": "言传身教的祖母导师",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Olenna_Redwyne",
+        "targetId": "agot:Redwyne_2"
+      }
+    ],
+    "personality": "聪慧敏锐，善解人意；极具政治直觉与亲和力，善于伪装野心，在民意经营与贵族交往上极有手腕。",
+    "publicRoles": [
+      "高庭贵女",
+      "河湾地明珠"
+    ],
+    "reputation": "七大王国最具魅力与好评的贵族少女，河湾地上下倾倒的完美名媛。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Margaery_Tyrell",
+      "https://asoiaf.fandom.com/zh/wiki/Margaery_Tyrell"
+    ],
+    "summary": "高庭公爵梅斯·提利尔独女。容貌娇艳动人，深得祖母奥莲娜亲传，天生擅长赢得民心与宫廷社交，是河湾地最耀眼的名门贵女。"
+  }
+}

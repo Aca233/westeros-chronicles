@@ -1,0 +1,38 @@
+{
+  "aliases": [
+    "琼恩·雪诺"
+  ],
+  "appearance": "身材修长精干，面容带有史塔克家族典型的先民特征，长脸黑发，灰眸深邃，神态较同龄人更为沉静谨慎。",
+  "characterId": "agot:Stark_7",
+  "experiences": [
+    {
+      "date": "8283",
+      "description": "篡夺者战争结束后被艾德·史塔克带回临冬城抚养，其生母身份成为奈德绝口不提的秘密。",
+      "participantIds": [
+        "agot:Stark_3"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Jon_Snow",
+      "title": "随父返回临冬城",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "将身为守夜人首席游骑兵的班扬视为楷模，也是促使其决定北上绝境长城的重要原因。",
+      "kind": "崇拜的叔叔",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Benjen_Stark",
+      "targetId": "agot:Stark_4"
+    }
+  ],
+  "personality": "敏锐内敛，自尊心极强；渴望在远离世俗偏见的绝境长城依靠能力赢得荣誉，对待弱者充满同情心。",
+  "publicRoles": [
+    "临冬城公爵的私生子"
+  ],
+  "reputation": "被外界视为奈德公爵唯一的名誉污点，在临冬城侍卫与下人间以剑术出众、性格沉稳受到认可。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Jon_Snow",
+    "https://asoiaf.fandom.com/zh/wiki/Jon_Snow"
+  ],
+  "summary": "艾德·史塔克带回临冬城并公开承认的私生子，自幼与史塔克子女一同受教。性情敏锐内敛，在私生身份带来的隔阂中，渴望凭自身能力赢得立足之地。"
+}

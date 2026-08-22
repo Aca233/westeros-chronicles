@@ -1,0 +1,40 @@
+{
+  "aliases": [
+    "柏洛斯爵士",
+    "肚腩柏洛斯"
+  ],
+  "appearance": "身材肥胖臃肿，下垂的双颊如斗牛犬，目光浑浊，身穿紧绷的白色御林铁卫铠甲。",
+  "characterId": "agot:Blount_3",
+  "experiences": [
+    {
+      "date": "8290",
+      "description": "在劳勃国王时期依靠兰尼斯特家族的宫廷运作被选入御林铁卫。",
+      "participantIds": [
+        "agot:Lannister_6",
+        "agot:Baratheon_2"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Boros_Blount",
+      "title": "受封御林铁卫",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "完全唯瑟曦王后之命是从，在宫廷中充当瑟曦的铁卫帮手。",
+      "kind": "附庸效忠的王后",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Cersei_Lannister",
+      "targetId": "agot:Lannister_6"
+    }
+  ],
+  "personality": "傲慢欺软，贪生怕死；面对强敌时懦弱退缩，面对弱小与平民时蛮横粗暴。",
+  "publicRoles": [
+    "御林铁卫骑士"
+  ],
+  "reputation": "白袍铁卫中声名最差、最缺乏骑士美德的平庸之辈。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Boros_Blount",
+    "https://asoiaf.fandom.com/zh/wiki/Boros_Blount"
+  ],
+  "summary": "御林铁卫白袍骑士，王领布劳恩家族出身。体态肥胖沉重，性情暴躁胆怯，剑术平庸，在宫廷中深受瑟曦王后拉拢驱使。"
+}

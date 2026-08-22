@@ -1,0 +1,32 @@
+{
+  "aliases": [
+    "娜姆夫人"
+  ],
+  "appearance": "身材修长高挑，黑发编成长辫，皮肤白皙，深黑眼眸冷艳逼人，裙下藏着数十把淬毒精钢飞刀。",
+  "characterId": "agot:Martell_13",
+  "experiences": [
+    {
+      "date": "8279",
+      "description": "随生母接受了自由城邦瓦兰提斯最高等贵族礼仪与暗杀技艺教导后返回多恩。",
+      "participantIds": [
+        "agot:Martell_8"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Nymeria_Sand",
+      "title": "受教厄索斯宫廷",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [],
+  "personality": "优雅沉静，阴狠毒辣；言语温和得体但杀伐极其决绝，擅长在贵族社交中无形夺人性命。",
+  "publicRoles": [
+    "沙蛇次女",
+    "贵族名媛刺客"
+  ],
+  "reputation": "多恩贵族公认最优雅危险的绝色毒蝎美人。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Nymeria_Sand",
+    "https://asoiaf.fandom.com/zh/wiki/Nymeria_Sand"
+  ],
+  "summary": "‘沙蛇’次女，奥柏伦·马泰尔与瓦兰提斯贵妇所生。容貌高贵冷艳，精通暗器飞刀与宫廷礼仪，举止优雅迷人但暗藏致命杀机。"
+}

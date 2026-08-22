@@ -1,0 +1,32 @@
+{
+  "aliases": [
+    "伊利里欧总督"
+  ],
+  "appearance": "身躯极其肥胖庞大，满头黄发，留着分叉的金黄色长须，十指戴满硕大宝石金戒，身披华美绚烂的东方丝绸长袍。",
+  "characterId": "agot:Mopatis_1",
+  "experiences": [
+    {
+      "date": "8279",
+      "description": "年轻时在潘托斯与瓦里斯联手建立起遍布狭海的盗窃与情报网络，一跃成为富可敌国的城邦总督。",
+      "participantIds": [
+        "agot:Eunuch_1"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Illyrio_Mopatis",
+      "title": "与瓦里斯结盟发迹",
+      "visibility": "secret"
+    }
+  ],
+  "notableRelations": [],
+  "personality": "圆滑精明，擅长以美食、礼物和恭维建立人情，也习惯把政治庇护与商业投资结合起来衡量得失。",
+  "publicRoles": [
+    "潘托斯总督",
+    "巨商权贵"
+  ],
+  "reputation": "潘托斯最富有且消息灵通的商人之一，狭海两岸许多流亡者、船主和权贵都与他保持往来。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Illyrio_Mopatis",
+    "https://asoiaf.fandom.com/zh/wiki/Illyrio_Mopatis"
+  ],
+  "summary": "潘托斯富商兼总督议会议员，经营香料、丝绸等跨海贸易，拥有庞大宅邸、船只与商业人脉。待客热情而精于算计，是自由贸易城邦中颇具影响力的权贵。"
+}

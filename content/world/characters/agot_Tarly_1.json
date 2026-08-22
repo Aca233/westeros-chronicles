@@ -1,0 +1,41 @@
+{
+  "aliases": [
+    "蓝道大人"
+  ],
+  "appearance": "身材高瘦挺拔如铁枪，面颊削瘦无肉，目光冰冷严酷，身背双手巨剑碎心，浑身散发着森然肃杀之气。",
+  "characterId": "agot:Tarly_1",
+  "experiences": [
+    {
+      "date": "8282",
+      "description": "在岑树滩战役中率河湾地先锋彻底击溃劳勃·拜拉席恩的叛军，取得篡夺者战争中王室军唯一的陆战大捷。",
+      "participantIds": [
+        "agot:Baratheon_2",
+        "agot:Tyrell_8"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Randyll_Tarly",
+      "title": "岑树滩之战击败劳勃",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "虽然看不起梅斯·提利尔的军事才能，但恪守封臣职责为高庭效命。",
+      "kind": "效忠的封君",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Mace_Tyrell",
+      "targetId": "agot:Tyrell_8"
+    }
+  ],
+  "personality": "铁血严酷，崇尚纯粹的武力与服从；对软弱与读书深恶痛绝，极度专横无情。",
+  "publicRoles": [
+    "角陵伯爵",
+    "河湾地统帅",
+    "边疆地诸侯"
+  ],
+  "reputation": "全维斯特洛公认治军最严明、最令敌军生畏的铁血战术大将。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Randyll_Tarly",
+    "https://asoiaf.fandom.com/zh/wiki/Randyll_Tarly"
+  ],
+  "summary": "角陵伯爵兼河湾地第一名将。治军极其冷酷严苛，手握瓦雷利亚钢巨剑碎心，曾在篡夺者战争中于岑树滩之战击败劳勃·拜拉席恩。"
+}

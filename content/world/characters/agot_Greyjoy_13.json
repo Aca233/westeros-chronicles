@@ -1,0 +1,39 @@
+{
+  "aliases": [
+    "阿莎"
+  ],
+  "appearance": "身材高挑矫健如母豹，黑发短促利落，面容英气勃勃，双眼锐利如刀，腰间常插两柄沉重飞斧。",
+  "characterId": "agot:Greyjoy_13",
+  "experiences": [
+    {
+      "date": "8294",
+      "description": "十六岁获赐长船黑风号，率领亡命海盗转战落日之海屡立奇功树立威名。",
+      "participantIds": [
+        "agot:Greyjoy_5"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Asha_Greyjoy",
+      "title": "掌舵黑风号远洋掠夺",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "读书人罗德利克是阿莎最信任的幕后顾问与家族亲人。",
+      "kind": "睿智博学的二舅",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Rodrik_Harlaw",
+      "targetId": "agot:Harlaw_9"
+    }
+  ],
+  "personality": "大胆直率，善于在粗野玩笑与强硬姿态之间掌握主动；富有船长的判断力，也清楚铁民对女性领袖的成见。",
+  "publicRoles": [
+    "黑风号船长",
+    "铁群岛女战士"
+  ],
+  "reputation": "以善于航海、敢于亲自登船作战和治下船员服从命令闻名，是铁群岛少见的女性船长。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Asha_Greyjoy",
+    "https://asoiaf.fandom.com/zh/wiki/Asha_Greyjoy"
+  ],
+  "summary": "巴隆·葛雷乔伊的长女与黑风号船长，自幼随长船出海，熟悉航海、掠袭与飞斧。她凭实际能力在轻视女性的铁民社会中赢得一席之地。"
+}

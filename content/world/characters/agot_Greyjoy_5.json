@@ -1,0 +1,35 @@
+{
+  "aliases": [
+    "巴隆九世",
+    "铁岛大王"
+  ],
+  "appearance": "身材高瘦佝偻，面容枯干如风化岩石，灰白乱发垂落，双眼阴冷如灰色坚冰，身披粗糙海豹皮斗篷。",
+  "characterId": "agot:Greyjoy_5",
+  "experiences": [
+    {
+      "date": "8289",
+      "description": "自立为铁群岛之王发动叛变，烧毁兰尼斯特舰队，后遭劳勃与史塔克联军合围攻破派克城屈膝归降。",
+      "participantIds": [
+        "agot:Baratheon_2",
+        "agot:Stark_3",
+        "agot:Greyjoy_14"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Balon_Greyjoy",
+      "title": "掀起铁群岛叛乱",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [],
+  "personality": "狂妄顽固，执拗残忍；对大陆安达尔人文明充满仇视，一心恢复铁民四处烧杀劫掠的古老荣耀。",
+  "publicRoles": [
+    "派克岛收割者",
+    "铁群岛领主"
+  ],
+  "reputation": "七大王国眼中死不悔改的叛逆海盗王，铁群岛狂热信徒的暴戾首领。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Balon_Greyjoy",
+    "https://asoiaf.fandom.com/zh/wiki/Balon_Greyjoy"
+  ],
+  "summary": "派克岛收割者、铁群岛大王兼盐王与岩王。死硬信奉铁民古道‘强取胜于苦耕’，曾掀起叛乱称王被劳勃击溃，十年来在海崖孤城暗中窥伺重起战端的时机。"
+}

@@ -1,0 +1,40 @@
+{
+  "aliases": [
+    "美人布蕾妮",
+    "塔斯的布蕾妮"
+  ],
+  "appearance": "身材高逾六尺，膀大腰圆，胸部扁平，面庞扁阔布满雀斑，牙齿歪斜，但拥有一双极其清澈诚挚的大蓝眼睛。",
+  "characterId": "agot:Tarth_6",
+  "experiences": [
+    {
+      "date": "8293",
+      "description": "拒绝包办婚姻与淑女规训，在父亲默许下跟随老教头格温·古德兄弟刻苦磨练剑盾与马术。",
+      "participantIds": [
+        "agot:Tarth_1"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Brienne_of_Tarth",
+      "title": "受训剑术武艺",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "在蓝礼巡视塔斯岛时受到其唯一不带嘲弄的温柔对待，从此将蓝礼奉为心中神明与唯一效忠对象。",
+      "kind": "暗恋与效忠的领主",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Renly_Baratheon",
+      "targetId": "agot:Baratheon_4"
+    }
+  ],
+  "personality": "纯朴刚毅，重诺守信；内心极度敏感脆弱但绝不在外表屈服，誓死追求最纯粹的骑士美德。",
+  "publicRoles": [
+    "塔斯岛继承人",
+    "女战士"
+  ],
+  "reputation": "贵族阶层口中被戏谑为‘美人’的异类丑女，战场上令普通骑士胆寒的强悍勇士。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Brienne_of_Tarth",
+    "https://asoiaf.fandom.com/zh/wiki/Brienne_of_Tarth"
+  ],
+  "summary": "暮星城塞尔温·塔斯伯爵独女兼继承人。体格异常高大强壮，武艺精湛，热切向往骑士精神与荣誉，常因相貌粗陋而受尽贵族冷嘲热讽。"
+}

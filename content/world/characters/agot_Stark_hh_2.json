@@ -1,0 +1,27 @@
+{
+  "aliases": [
+    "阿多"
+  ],
+  "appearance": "身高超过七英尺的巨人般青年，膀大腰圆，目光温和甚至略带怯意，常着简陋粗布麻衣。",
+  "characterId": "agot:Stark_hh_2",
+  "experiences": [],
+  "notableRelations": [
+    {
+      "description": "经常听从命令背负布兰在城堡内外活动。",
+      "kind": "背负与侍奉的少主",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Bran_Stark",
+      "targetId": "agot:Stark_10"
+    }
+  ],
+  "personality": "温顺怯弱，毫无攻击性；容易受惊，对史塔克家族的孩子们极其顺从友善。",
+  "publicRoles": [
+    "马厩杂工"
+  ],
+  "reputation": "临冬城人尽皆知的敦厚大个子，以老实听话、力大无穷闻名。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Hodor",
+    "https://asoiaf.fandom.com/zh/wiki/Hodor"
+  ],
+  "summary": "临冬城马厩杂工，老奶妈的曾孙。原名瓦德，身形极其魁梧，智力停留在幼童阶段，口中只能反复念叨‘阿多’一词。"
+}

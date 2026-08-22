@@ -1,0 +1,56 @@
+{
+  "aliases": [
+    "黑鱼"
+  ],
+  "appearance": "身材高大矫健，满头灰白短发，线条如刀削般冷硬刚毅，深蓝眼眸如鹰隼般锐利，披风上绣有黑色跃水鳟鱼徽记。",
+  "characterId": "agot:Tully_9",
+  "experiences": [
+    {
+      "date": "8260",
+      "description": "年轻时随军远征石阶列岛立下奇功，以过人勇武与战术指挥扬名维斯特洛。",
+      "participantIds": [
+        "agot:Tully_1"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Brynden_Tully",
+      "title": "九铜板王之战成名",
+      "visibility": "public"
+    },
+    {
+      "date": "8283",
+      "description": "随侄女莱莎前往艾林谷，被琼恩·艾林委以重任任命为扼守谷地天险的血门骑士统帅。",
+      "participantIds": [
+        "agot:Arryn_3",
+        "agot:Tully_6"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Brynden_Tully",
+      "title": "出任艾林谷血门骑士",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "自幼将凯特琳视若己出，在凯特琳遇到任何危难时都会毫不犹豫拔剑相助。",
+      "kind": "最疼爱的侄女",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Catelyn_Stark",
+      "targetId": "agot:Tully_4"
+    },
+    {
+      "description": "琼恩·艾林生前最倚重的军事防务大将。",
+      "kind": "赏识信任的至交",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Jon_Arryn",
+      "targetId": "agot:Arryn_3"
+    }
+  ],
+  "personality": "桀骜不驯，刚烈正直；富有极高军事战术天赋与领导力，鄙视政治算计，一生未娶。",
+  "publicRoles": [
+    "血门骑士",
+    "谷地防务大将"
+  ],
+  "reputation": "全七国公认的顶级战术大师与顽强勇将，深受谷地与河间地骑士的崇敬。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Brynden_Tully",
+    "https://asoiaf.fandom.com/zh/wiki/Brynden_Tully"
+  ],
+  "summary": "霍斯特·徒利的亲弟兼血门骑士，因拒绝包办联姻而自称“黑鱼”。武艺娴熟，熟悉斥候与山地防务，是经历过多场战争的老将。"
+}

@@ -1,0 +1,33 @@
+{
+  "aliases": [
+    "艾德慕爵士",
+    "小鳟鱼"
+  ],
+  "appearance": "身材高大英挺，浓密的红棕色卷发与修剪整齐的胡子，湛蓝眼眸闪烁热情，身穿饰有跳跃银鳟鱼的精美铠甲。",
+  "characterId": "agot:Tully_7",
+  "experiences": [
+    {
+      "date": "8295",
+      "description": "在父亲霍斯特公爵病重后接管河间地封臣调遣与城堡日常防御事务。",
+      "participantIds": [
+        "agot:Tully_1"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Edmure_Tully",
+      "title": "代掌奔流城政务",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [],
+  "personality": "心地善良，同情弱小；深切关心平民死活，极重家族荣誉与面子，容易因冲动而做出战术失误。",
+  "publicRoles": [
+    "奔流城继承人",
+    "河间地统领"
+  ],
+  "reputation": "河间地百姓口中仁慈亲民的少主，在军事贵族眼中则稍欠老练火候。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Edmure_Tully",
+    "https://asoiaf.fandom.com/zh/wiki/Edmure_Tully"
+  ],
+  "summary": "奔流城继承人兼河间地代掌领主。性格热忱和善、体恤领民，渴望成为受人敬仰的英雄领主，但作战指挥上偶显急躁缺乏深谋远虑。"
+}

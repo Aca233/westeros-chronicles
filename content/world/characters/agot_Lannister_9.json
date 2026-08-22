@@ -1,0 +1,33 @@
+{
+  "aliases": [
+    "蓝赛尔侍从"
+  ],
+  "appearance": "相貌极具兰尼斯特特征，留着金色卷发与绿眼睛，容貌与詹姆有几分神似但缺乏男儿英武之气。",
+  "characterId": "agot:Lannister_9",
+  "experiences": [
+    {
+      "date": "8297",
+      "description": "由瑟曦王后举荐成为劳勃国王身边的侍从，负责在宴饮和游猎中为国王斟酒照料盔甲。",
+      "participantIds": [
+        "agot:Baratheon_2",
+        "agot:Lannister_6"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Lancel_Lannister",
+      "title": "受荐成为国王侍从",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [],
+  "personality": "虚荣自负，胆小懦弱；渴望赢得骑士荣耀却易于被权势摆布，对瑟曦充满迷恋与盲从。",
+  "publicRoles": [
+    "国王侍从",
+    "兰尼斯特家族子弟"
+  ],
+  "reputation": "宫廷侍从中依靠显赫家族背景获得优待的年轻贵胄，缺乏真才实学。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Lancel_Lannister",
+    "https://asoiaf.fandom.com/zh/wiki/Lancel_Lannister"
+  ],
+  "summary": "凯冯·兰尼斯特爵士长子，年轻英俊但阅历尚浅，被安排担任劳勃·拜拉席恩国王的王室侍从，在红堡学习宫廷礼仪与侍从职责。"
+}

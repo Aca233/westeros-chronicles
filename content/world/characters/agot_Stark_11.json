@@ -1,0 +1,32 @@
+{
+  "aliases": [
+    "瑞肯"
+  ],
+  "appearance": "圆脸蛋，浅棕色乱发与明亮蓝眼，年纪尚幼，步履蹒跚但充满精力。",
+  "characterId": "agot:Stark_11",
+  "experiences": [
+    {
+      "date": "8295",
+      "description": "作为史塔克夫妇最小的孩子在临冬城降生。",
+      "participantIds": [
+        "agot:Stark_3",
+        "agot:Tully_4"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Rickon_Stark",
+      "title": "降生临冬城",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [],
+  "personality": "任性倔强，情绪强烈；尚未完全理解贵族规矩与世事变迁，极度依恋母亲与兄弟姐妹。",
+  "publicRoles": [
+    "临冬城幼子"
+  ],
+  "reputation": "临冬城备受呵护的幼子，偶因冰原狼毛毛狗的凶性而令人敬畏。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Rickon_Stark",
+    "https://asoiaf.fandom.com/zh/wiki/Rickon_Stark"
+  ],
+  "summary": "艾德·史塔克与凯特琳幼子。年仅三岁，性情活泼懵懂，紧紧跟随着哥哥姐姐与凶悍暴躁的黑色冰原狼毛毛狗在城堡奔跑。"
+}

@@ -1,0 +1,33 @@
+{
+  "aliases": [
+    "艾勒莉夫人"
+  ],
+  "appearance": "容貌高雅秀丽，拥有一头银灰色的长发与典雅的贵族仪态，身穿绣有海塔尔白塔与提利尔玫瑰的华丽丝袍。",
+  "characterId": "agot:Hightower_9",
+  "experiences": [
+    {
+      "date": "8275",
+      "description": "由旧镇海塔尔家族嫁入高庭，促成河湾地两大最强古老豪门的强强联合。",
+      "participantIds": [
+        "agot:Tyrell_8",
+        "agot:Hightower_5"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Alerie_Hightower",
+      "title": "联姻高庭提利尔家族",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [],
+  "personality": "温婉端庄，恪尽母职；在婆婆奥莲娜的强势面前保持谦逊平和，全心料理高庭内廷与子女教养。",
+  "publicRoles": [
+    "高庭公爵夫人",
+    "旧镇贵女"
+  ],
+  "reputation": "河湾地贵妇阶层中极具威望与教养的楷模主母。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Alerie_Hightower",
+    "https://asoiaf.fandom.com/zh/wiki/Alerie_Hightower"
+  ],
+  "summary": "高庭公爵夫人，旧镇雷顿·海塔尔伯爵长女。端庄高贵、血统极其显赫，是提利尔四位杰出子女的母亲，在河湾地内廷深受尊崇。"
+}

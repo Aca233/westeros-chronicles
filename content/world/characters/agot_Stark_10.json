@@ -1,0 +1,40 @@
+{
+  "aliases": [
+    "布兰",
+    "攀爬者布兰"
+  ],
+  "appearance": "容貌清秀，留着赤褐色卷发，眼睛呈明亮深蓝，身体柔韧矫捷，身旁跟随着敏捷机警的冰原狼夏天。",
+  "characterId": "agot:Stark_10",
+  "experiences": [
+    {
+      "date": "8290",
+      "description": "以其英年早逝的伯父布兰登·史塔克之名命名，诞生于北境临冬城。",
+      "participantIds": [
+        "agot:Stark_3",
+        "agot:Tully_4"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Bran_Stark",
+      "title": "降生临冬城",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "身材魁梧的高大马夫，性情温厚纯真，常背负布兰穿行于城堡内外。",
+      "kind": "忠诚的仆从与陪伴者",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Hodor",
+      "targetId": "agot:Stark_hh_2"
+    }
+  ],
+  "personality": "天真热忱，好奇心旺盛；充满对英雄骑士冒险的向往，行事勇敢但有时欠缺对危险的防备。",
+  "publicRoles": [
+    "临冬城次子"
+  ],
+  "reputation": "临冬城里身手最矫健的攀爬小能手，深受守军和仆役们的喜爱。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Bran_Stark",
+    "https://asoiaf.fandom.com/zh/wiki/Bran_Stark"
+  ],
+  "summary": "艾德·史塔克公爵的次子。热爱攀爬临冬城的古老高塔与残垣断壁，向往成为御林铁卫般的英勇骑士，深得临冬城上下喜爱。"
+}

@@ -1,0 +1,39 @@
+{
+  "aliases": [
+    "卡史塔克大人"
+  ],
+  "appearance": "身材高大威猛如北方巨熊，浓密的灰白胡须垂胸，目光如铁，披裹着厚重沉重的黑色毛皮大氅与锁甲。",
+  "characterId": "agot:Karstark_4",
+  "experiences": [
+    {
+      "date": "8283",
+      "description": "率领卡史塔克全族精锐南下追随艾德·史塔克征战，立下赫赫威名。",
+      "participantIds": [
+        "agot:Stark_3"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Rickard_Karstark",
+      "title": "起兵响应篡夺者战争",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "虽然自豪于卡史塔克的先民独立血脉，但在大义上始终拥护临冬城奔狼号令。",
+      "kind": "同族宗主与封君",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Eddard_Stark",
+      "targetId": "agot:Stark_3"
+    }
+  ],
+  "personality": "勇猛倔强，直来直去；极度重视家族血仇与荣誉，一旦受到背叛或伤害便誓死追讨到底。",
+  "publicRoles": [
+    "卡霍城伯爵",
+    "北境诸侯"
+  ],
+  "reputation": "以勇武善战和固执刚强著称的北境老将，卡霍城军队的绝对领袖。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Rickard_Karstark",
+    "https://asoiaf.fandom.com/zh/wiki/Rickard_Karstark"
+  ],
+  "summary": "卡霍城伯爵，史塔克家族的远支亲族。性格刚烈剽悍忠勇，在北境拥有极高威望，率领卡霍城铁骑坚定效忠临冬城。"
+}

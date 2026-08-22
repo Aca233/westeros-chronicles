@@ -1,0 +1,50 @@
+{
+  "aliases": [
+    "弑君者",
+    "金袍骑士"
+  ],
+  "appearance": "面容英俊绝伦，身形高大矫健，一头浓密飘逸的金发，碧绿眼眸闪烁傲慢光芒，身披镀金铠甲或御林铁卫纯白披风。",
+  "characterId": "agot:Lannister_7",
+  "experiences": [
+    {
+      "date": "8281",
+      "description": "在赫伦堡比武会上由疯王伊里斯二世亲手披上白袍，成为历史上最年轻的御林铁卫。",
+      "participantIds": [
+        "agot:Selmy_3"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Jaime_Lannister",
+      "title": "晋升御林铁卫",
+      "visibility": "public"
+    },
+    {
+      "date": "8283",
+      "description": "在君临陷落之际，为阻止疯王引爆全城野火炸毁君临而拔剑刺穿伊里斯喉咙，后坐在铁王座上等待联军。",
+      "participantIds": [
+        "agot:Stark_3",
+        "agot:Baratheon_2"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Jaime_Lannister",
+      "title": "铁王座前刺杀疯王",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "敬仰巴利斯坦的武艺与武德，但彼此在誓言理解与处世原则上有着难以逾越的鸿沟。",
+      "kind": "铁卫队长与前辈",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Barristan_Selmy",
+      "targetId": "agot:Selmy_3"
+    }
+  ],
+  "personality": "桀骜不驯，玩世不恭；极度鄙视世俗道德虚伪，内心深处渴望真正的骑士荣耀但从不辩解‘弑君’背后的救城真相。",
+  "publicRoles": [
+    "御林铁卫骑士"
+  ],
+  "reputation": "维斯特洛公认最顶尖但名声最臭名昭著的剑客，被世人唾弃为背誓者与弑君者。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Jaime_Lannister",
+    "https://asoiaf.fandom.com/zh/wiki/Jaime_Lannister"
+  ],
+  "summary": "御林铁卫白袍骑士，泰温·兰尼斯特长子。十五岁破格入卫，因在篡夺者战争中刺杀疯王而背负‘弑君者’骂名，剑术冠绝全境。"
+}

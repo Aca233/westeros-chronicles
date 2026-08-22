@@ -1,0 +1,58 @@
+{
+  "aliases": [
+    "艾林公爵",
+    "老首相"
+  ],
+  "appearance": "身材高大挺拔，晚年满头银白霜发，蓝眼慈祥而睿智，面容布满治国操劳的深邃皱纹，身披天蓝与月白丝袍。",
+  "characterId": "agot:Arryn_3",
+  "experiences": [
+    {
+      "date": "8282",
+      "description": "在疯王索要奈德与劳勃首级时拒不遵从，在海鸥镇斩断王室锁链正式掀起篡夺者战争。",
+      "participantIds": [
+        "agot:Baratheon_2",
+        "agot:Stark_3"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Jon_Arryn",
+      "title": "鸣钟起兵反抗疯王",
+      "visibility": "public"
+    },
+    {
+      "date": "8284",
+      "description": "战争结束后亲往阳戟城归还亲王遗骨，以高超外交手腕平息多恩怒火化解危机。",
+      "participantIds": [
+        "agot:Martell_4"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Jon_Arryn",
+      "title": "出使多恩缔结和平",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "既是劳勃的君臣首相，更是劳勃终生敬爱的养父与治国向导。",
+      "kind": "养子与君主",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Robert_I_Baratheon",
+      "targetId": "agot:Baratheon_2"
+    },
+    {
+      "description": "视奈德为最骄傲的养子，两人在荣誉与治国理念上高度契合。",
+      "kind": "如子至亲",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Eddard_Stark",
+      "targetId": "agot:Stark_3"
+    }
+  ],
+  "personality": "仁慈威严，公正审慎；富有崇高政治远见与长者智慧，一心维系王国和平与各方势力平衡。",
+  "publicRoles": [
+    "鹰巢城公爵",
+    "谷地守护",
+    "国王之手"
+  ],
+  "reputation": "在谷地和王廷享有资深领主与调停者的声望，长期主持政务使许多诸侯将他视为劳勃王朝的重要支柱。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Jon_Arryn",
+    "https://asoiaf.fandom.com/zh/wiki/Jon_Arryn"
+  ],
+  "summary": "鹰巢城公爵、谷地守护兼国王之手，也是劳勃与艾德的养父。篡夺者战争后长期主持王国政务，以稳健、宽厚和善于调和诸侯闻名。"
+}

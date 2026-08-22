@@ -1,0 +1,40 @@
+{
+  "aliases": [
+    "雷德温伯爵"
+  ],
+  "appearance": "身材高大结实，带有浓郁航海人特色的红润饱经风霜面庞，红发微卷，身穿华贵的深蓝航海丝袍与甲胄。",
+  "characterId": "agot:Redwyne_4",
+  "experiences": [
+    {
+      "date": "8283",
+      "description": "在篡夺者战争期间率青亭岛舰队封锁破船湾，完全切断风息堡的海上补给达一年之久。",
+      "participantIds": [
+        "agot:Tyrell_8",
+        "agot:Baratheon_3"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Paxter_Redwyne",
+      "title": "海路封锁风息堡",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "与奥莲娜夫人保持紧密的家族政治协商，始终与高庭保持同进同退。",
+      "kind": "亲姑姑与家族智囊",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Olenna_Redwyne",
+      "targetId": "agot:Redwyne_2"
+    }
+  ],
+  "personality": "精明老练，擅长海战与航运垄断；在七国内战中长于审时度势，牢牢守护家族的海上霸权与财富。",
+  "publicRoles": [
+    "青亭岛伯爵",
+    "青亭岛舰队司令"
+  ],
+  "reputation": "全境最具实力的海上霸主诸侯，掌控七国最重要的葡萄酒航运与舰队。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Paxter_Redwyne",
+    "https://asoiaf.fandom.com/zh/wiki/Paxter_Redwyne"
+  ],
+  "summary": "青亭岛伯爵兼青亭岛舰队司令。掌控维斯特洛规模最庞大富庶的海上贸易商队与武装战舰，与高庭提利尔家族有着紧密的血亲盟约。"
+}

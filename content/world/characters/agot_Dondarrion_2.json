@@ -1,0 +1,28 @@
+{
+  "aliases": [
+    "闪电伯爵"
+  ],
+  "appearance": "金红发色，相貌英俊俊朗，身材挺拔，身披绣有唐德利恩家族分叉闪电徽章的深黑披风与闪亮板甲。",
+  "characterId": "agot:Dondarrion_2",
+  "experiences": [],
+  "notableRelations": [
+    {
+      "description": "与密尔的红袍僧索罗斯在君临宴饮结识，两人性情相投结为莫逆之交。",
+      "kind": "挚友与比武同僚",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Thoros_of_Myr",
+      "targetId": "agot:Brotherhood_8"
+    }
+  ],
+  "personality": "英勇正直，恪守骑士道；热衷比武与冒险，对弱小充满骑士护佑之情。",
+  "publicRoles": [
+    "黑港伯爵",
+    "骑士"
+  ],
+  "reputation": "风暴地久负盛名的年轻贵族模范，在王廷贵族中享有极高声誉。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Beric_Dondarrion",
+    "https://asoiaf.fandom.com/zh/wiki/Beric_Dondarrion"
+  ],
+  "summary": "黑港伯爵，风暴地年轻俊朗的名门骑士。枪术出众、荣誉感极强，在君临比武大会中备受瞩目，与艾利斯塔·罗宛小姐订有婚约。"
+}

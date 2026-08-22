@@ -1,0 +1,112 @@
+{
+  "agot:Baratheon_9": {
+    "aliases": [
+      "牛儿詹德利"
+    ],
+    "appearance": "身材极为高大结实强壮，一头浓密粗硬的乌黑卷发，下巴坚毅，深蓝眼眸与年轻时的劳勃·拜拉席恩如出一辙。",
+    "characterId": "agot:Baratheon_9",
+    "experiences": [
+      {
+        "date": "8293",
+        "description": "某位神秘贵族支付了巨额学费将其送入君临顶尖铁匠大师门下学习锻造秘艺。",
+        "participantIds": [],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Gendry",
+        "title": "入托博·莫特铁匠铺学徒",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [],
+    "personality": "耿直倔强，自尊心强；吃苦耐劳，对复杂人情与贵族政治一窍不通，只专注于锤炼精钢盔甲与兵刃。",
+    "publicRoles": [
+      "铁匠学徒",
+      "平民私生子"
+    ],
+    "reputation": "钢铁街上力气最大、手艺最扎实的青年铁匠学徒。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Gendry",
+      "https://asoiaf.fandom.com/zh/wiki/Gendry"
+    ],
+    "summary": "君临跳蚤窝出身的年轻铁匠学徒，在名匠托博·莫特的作坊学习锻造。身材高大结实，黑发蓝眼，在锻铁与使用战锤方面很有天赋。"
+  },
+  "agot:Stark_hh_1": {
+    "aliases": [
+      "鲁温师傅"
+    ],
+    "appearance": "矮小瘦削的秃顶老人，白发稀疏，灰袍袖口极其宽大，常在袖中藏有各种药水、书籍、卷轴与小玩具。",
+    "characterId": "agot:Stark_hh_1",
+    "experiences": [
+      {
+        "date": "8283",
+        "description": "自罗柏起为临冬城接生了所有史塔克家子女，并悉心教授他们算术、历史与礼仪。",
+        "participantIds": [
+          "agot:Stark_3",
+          "agot:Tully_4"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Luwin",
+        "title": "接生史塔克子嗣",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "艾德·史塔克在政务与机要密信处理上最倚重的智囊助手。",
+        "kind": "顾问与挚友",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Eddard_Stark",
+        "targetId": "agot:Stark_3"
+      }
+    ],
+    "personality": "温和睿智，耐心仁慈；思维理性务实，对所谓魔法持怀疑态度，全心辅佐史塔克家族事务。",
+    "publicRoles": [
+      "学士",
+      "临冬城学士顾问"
+    ],
+    "reputation": "学识渊博且深受史塔克全家信赖的长者，北境公认的良医与贤者。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Luwin",
+      "https://asoiaf.fandom.com/zh/wiki/Luwin"
+    ],
+    "summary": "临冬城驻城学士与智囊顾问。精通医术、历史、天文、草药学与城堡运转，颈间戴着多环项链，包括极其罕见的高等瓦雷利亚钢金属环。"
+  },
+  "agot:Tully_4": {
+    "aliases": [
+      "凯特夫人"
+    ],
+    "appearance": "端庄秀美，拥有徒利家族经典的赤褐色长发、湛蓝眼眸与白皙肤色，举止从容优雅，兼具南方教养与北境坚韧。",
+    "characterId": "agot:Tully_4",
+    "experiences": [
+      {
+        "date": "8283",
+        "description": "在原未婚夫布兰登·史塔克遇害后，依约改嫁其弟艾德以缔结北境与河间地的反抗疯王军事同盟。",
+        "participantIds": [
+          "agot:Stark_3",
+          "agot:Tully_1"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Catelyn_Stark",
+        "title": "与艾德·史塔克联姻",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "培提尔自幼在奔流城长大并深爱凯特琳，甚至曾为她向布兰登·史塔克发起决斗。",
+        "kind": "幼时养弟与崇慕者",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Petyr_Baelish",
+        "targetId": "agot:Baelish_2"
+      }
+    ],
+    "personality": "忠诚顾家，政治直觉敏锐但偶有感情用事；对子女爱护备至，对私生子琼恩·雪诺心怀介蒂与冷淡戒备。",
+    "publicRoles": [
+      "临冬城公爵夫人",
+      "奔流城贵女"
+    ],
+    "reputation": "被河间地与北境诸侯视为极具教养与尊严的贵族主母，以果断与忠贞著称。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Catelyn_Stark",
+      "https://asoiaf.fandom.com/zh/wiki/Catelyn_Tully"
+    ],
+    "summary": "奔流城霍斯特·徒利公爵长女，临冬城公爵夫人。恪守“家族、责任、荣誉”的箴言，全心辅佐丈夫并守护子女，深受北境人民敬重。"
+  }
+}

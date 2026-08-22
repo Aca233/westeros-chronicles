@@ -1,0 +1,39 @@
+{
+  "aliases": [
+    "班扬"
+  ],
+  "appearance": "身材高瘦干练，双眸呈尖锐警惕的蓝灰色，面庞如风霜雕琢的岩石般坚毅，常年身穿厚实黑羊毛与巡逻皮甲。",
+  "characterId": "agot:Stark_4",
+  "experiences": [
+    {
+      "date": "8283",
+      "description": "在父兄南下参战期间担任临冬城的留守史塔克，战后选择穿上黑衣加入守夜人军团。",
+      "participantIds": [
+        "agot:Stark_3"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Benjen_Stark",
+      "title": "临冬城留守",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "杰奥·莫尔蒙极为器重的首席游骑兵指挥官，负责军团前线最重要的侦察任务。",
+      "kind": "军团总司令与长官",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Jeor_Mormont",
+      "targetId": "agot:Mormont_2"
+    }
+  ],
+  "personality": "沉着冷静，坚韧不拔；对绝境长城和鬼影森林了如指掌，对黑衣誓言怀有崇高奉献精神。",
+  "publicRoles": [
+    "守夜人首席游骑兵",
+    "史塔克家族成员"
+  ],
+  "reputation": "绝境长城内外最受尊敬的游骑兵领袖之一，野人与守夜人皆知其威名。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Benjen_Stark",
+    "https://asoiaf.fandom.com/zh/wiki/Benjen_Stark"
+  ],
+  "summary": "艾德·史塔克的幼弟，守夜人军团首席游骑兵。在篡夺者战争结束后自愿加入守夜人，常年率队深入塞外冰原巡逻，深受黑衣誓言兄弟爱戴。"
+}

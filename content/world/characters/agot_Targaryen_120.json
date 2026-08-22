@@ -1,0 +1,38 @@
+{
+  "aliases": [
+    "伊蒙学士",
+    "盲眼伊蒙"
+  ],
+  "appearance": "年逾百岁，身形枯槁如干瘪果核，满头雪白细丝，双眼覆着白翳失明，身披质朴泛白的宽大黑袍。",
+  "characterId": "agot:Targaryen_120",
+  "experiences": [
+    {
+      "date": "8233",
+      "description": "在御前会议意欲拥立其为七国之王时坚辞不受，主动前往绝境长城加入守夜人以让位其弟伊耿五世。",
+      "participantIds": [],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Aemon",
+      "title": "拒绝铁王座北上长城",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "以近百年的学识与政治远见辅佐莫尔蒙总司令治理绝境长城。",
+      "kind": "辅佐的总司令",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Jeor_Mormont",
+      "targetId": "agot:Mormont_2"
+    }
+  ],
+  "personality": "睿智仁慈，平静超然；早已看透世俗权力浮华，全心守护守夜人誓言与长夜传说中的古老秘密。",
+  "publicRoles": [
+    "守夜人学士",
+    "真龙宗亲亲王"
+  ],
+  "reputation": "绝境长城内外所有游骑兵、平民乃至诸侯由衷敬仰的活圣贤。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Aemon",
+    "https://asoiaf.fandom.com/zh/wiki/Aemon_(son_of_Maekar_I)"
+  ],
+  "summary": "黑城堡驻城学士，坦格利安王朝戴隆二世之孙。百岁高龄，双目失明，曾主动放弃铁王座继承权披上黑衣北上长城，侍奉守夜人六十余载，是维斯特洛最古老的活历史。"
+}

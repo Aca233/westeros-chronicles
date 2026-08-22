@@ -1,0 +1,364 @@
+{
+  "agot:Bolton_1": {
+    "aliases": [
+      "水蛭大人"
+    ],
+    "appearance": "相貌平平但极具压迫感，皮肤苍白如死人，双眼呈奇异冰冷的淡白幽光，常年定期用水蛭吸血以保持平静。",
+    "characterId": "agot:Bolton_1",
+    "experiences": [
+      {
+        "date": "8283",
+        "description": "随艾德·史塔克南下作战，在战役结束后曾冷酷建议处决负伤被俘的巴利斯坦·赛尔弥。",
+        "participantIds": [
+          "agot:Stark_3",
+          "agot:Selmy_3"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Roose_Bolton",
+        "title": "三叉戟河之役参战",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "表面恭顺服从临冬城号令，但内心对艾德的道德洁癖与统治心存轻慢。",
+        "kind": "封君与提防对象",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Eddard_Stark",
+        "targetId": "agot:Stark_3"
+      }
+    ],
+    "personality": "说话声音轻柔微弱，行事冷酷严密；绝不表露真实情感，深信‘剥皮人没有秘密’与‘安静的人活得长久’。",
+    "publicRoles": [
+      "恐怖堡伯爵",
+      "北境诸侯"
+    ],
+    "reputation": "北境诸侯中令人忌惮畏惧的阴鸷角色，以严酷手段与难以捉摸的心思闻名。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Roose_Bolton",
+      "https://asoiaf.fandom.com/zh/wiki/Roose_Bolton"
+    ],
+    "summary": "恐怖堡领主，北境最具势力的古老诸侯之一。精于算计、冷酷阴沉，深谙自保与扩张之道，虽臣服于史塔克家族但暗怀异心。"
+  },
+  "agot:Clegane_4": {
+    "aliases": [
+      "猎狗"
+    ],
+    "appearance": "身材高大魁梧，左脸布满被烈火灼烧扭曲的狰狞暗红焦疤，头戴标志性的龇牙狂吠精钢狗头盔。",
+    "characterId": "agot:Clegane_4",
+    "experiences": [
+      {
+        "date": "8283",
+        "description": "离开克里冈祖地加入凯岩城侍卫军，凭借凶悍武艺成为兰尼斯特家族的核心打手。",
+        "participantIds": [
+          "agot:Lannister_1"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Sandor_Clegane",
+        "title": "受雇兰尼斯特家族",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "受命贴身保护乔佛里，虽然看不起这位任性残忍的王子但忠实执行护卫职责。",
+        "kind": "护卫与侍奉的主子",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Joffrey_Baratheon",
+        "targetId": "agot:Baratheon_5"
+      }
+    ],
+    "personality": "冷酷粗暴，愤世嫉俗；极度厌恶骑士虚名，内心残存未泯的良知，对烈火怀有深入骨髓的本能恐惧。",
+    "publicRoles": [
+      "王室侍卫",
+      "近卫战士"
+    ],
+    "reputation": "君临红堡中最令人畏惧退避的凶悍恶犬，以杀伐果断与毒舌无情闻名。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Sandor_Clegane",
+      "https://asoiaf.fandom.com/zh/wiki/Sandor_Clegane"
+    ],
+    "summary": "兰尼斯特家族侍卫兼乔佛里王子贴身保镖。幼年遭亲兄魔山毁容，厌恶骑士的虚伪口号而坚拒受封骑士头衔，剑术凶悍凌厉。"
+  },
+  "agot:Mallister_4": {
+    "aliases": [
+      "杰森勋爵"
+    ],
+    "appearance": "身材高大英武，面容端正高贵，灰白相间的头发与锐利深蓝眼眸，身披绘有展翅紫海鹰的华丽银甲。",
+    "characterId": "agot:Mallister_4",
+    "experiences": [
+      {
+        "date": "8289",
+        "description": "在葛雷乔伊叛乱中率部击退铁民抢滩，在城墙下单挑斩杀铁群岛王储罗德利克·葛雷乔伊并击溃铁民大军。",
+        "participantIds": [
+          "agot:Tully_1"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Jason_Mallister",
+        "title": "海疆城城下斩将",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "徒利家族最忠诚有力的柱石封臣之一。",
+        "kind": "效忠的封君",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Hoster_Tully",
+        "targetId": "agot:Tully_1"
+      }
+    ],
+    "personality": "英勇高贵，极重荣誉；治军严密，对抵御铁群岛劫掠怀有崇高责任心，是一位无可挑剔的骑士典范。",
+    "publicRoles": [
+      "海疆城伯爵",
+      "河间地防御大将"
+    ],
+    "reputation": "河间地享有崇高威望的老牌名将，海疆城坚不可摧的守护神。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Jason_Mallister",
+      "https://asoiaf.fandom.com/zh/wiki/Jason_Mallister"
+    ],
+    "summary": "海疆城伯爵，河间地西海岸门户统帅。在葛雷乔伊叛乱中亲手斩杀巴隆·葛雷乔伊长子罗德利克，以英武、高贵与坚定防御铁民闻名遐迩。"
+  },
+  "agot:Selmy_3": {
+    "aliases": [
+      "无畏的巴利斯坦",
+      "巴利斯坦爵士"
+    ],
+    "appearance": "身材高大挺拔如松，满头银发但目光湛蓝锐利如鹰，身着一尘不染的纯白板甲与及地白袍，威严不可侵犯。",
+    "characterId": "agot:Selmy_3",
+    "experiences": [
+      {
+        "date": "8260",
+        "description": "在石阶列岛决战中单枪匹马突破重围，亲手格杀九铜板王之一的凶怪马里斯·黑火终结黑火叛乱。",
+        "participantIds": [
+          "agot:Lannister_1"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Barristan_Selmy",
+        "title": "九铜板王之战斩杀末代黑火",
+        "visibility": "public"
+      },
+      {
+        "date": "8277",
+        "description": "在暮谷镇叛乱中一人潜入敌巢，在万军之中成功救出被囚禁的伊里斯国王并击杀达克林家叛将。",
+        "participantIds": [
+          "agot:Lannister_1"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Defiance_of_Duskendale",
+        "title": "暮谷镇单骑救疯王",
+        "visibility": "public"
+      },
+      {
+        "date": "8283",
+        "description": "在三叉戟河为雷加王子血战受重伤，劳勃国王敬其忠勇派御医全力救治并封其为御林铁卫队长。",
+        "participantIds": [
+          "agot:Baratheon_2"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Barristan_Selmy",
+        "title": "三叉戟河血战负伤受赦",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "虽然曾为坦格利安死战，但在劳勃赦免后全心恪守白袍誓言保卫劳勃与王室。",
+        "kind": "誓死护卫的君主",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Robert_I_Baratheon",
+        "targetId": "agot:Baratheon_2"
+      },
+      {
+        "description": "叹息詹姆傲世天赋的同时，深深不齿其刺杀疯王的背誓行为。",
+        "kind": "痛惜而提防的铁卫同僚",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Jaime_Lannister",
+        "targetId": "agot:Lannister_7"
+      }
+    ],
+    "personality": "正直高洁，恪守誓言；将骑士精神与铁卫操守视作生命全部，不涉党争，纯粹以剑护主。",
+    "publicRoles": [
+      "御林铁卫队长",
+      "传奇骑士"
+    ],
+    "reputation": "七大王国活着的最伟大传奇骑士，举国骑士阶层膜拜的标杆榜样。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Barristan_Selmy",
+      "https://asoiaf.fandom.com/zh/wiki/Barristan_Selmy"
+    ],
+    "summary": "御林铁卫队长，维斯特洛无可争议的传奇骑士。侍奉过疯王伊里斯与劳勃·拜拉席恩，以卓越无匹的剑术武功、高尚武德与无可动摇的忠诚享誉全境。"
+  },
+  "agot:Stark_8": {
+    "aliases": [
+      "小鸟"
+    ],
+    "appearance": "身材高挑优雅，继承了徒利家的浓密赤褐长发与明亮蓝眸，仪态端庄娇美，身边伴有温柔温顺的冰原狼淑女。",
+    "characterId": "agot:Stark_8",
+    "experiences": [
+      {
+        "date": "8286",
+        "description": "作为史塔克家族长女出生于临冬城，自幼接受严格的维斯特洛传统贵族礼仪教导。",
+        "participantIds": [
+          "agot:Stark_3",
+          "agot:Tully_4"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Sansa_Stark",
+        "title": "降生临冬城",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "茉丹修女负责珊莎的宫廷礼仪、针线女红与宗教教导，深得珊莎信赖。",
+        "kind": "礼仪导师",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Mordane",
+        "targetId": "agot:Tully_hh_4"
+      },
+      {
+        "description": "总管维扬·普尔之女，与珊莎形影不离，共同分享少女心事与骑士幻想。",
+        "kind": "挚友手足",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Jeyne_Poole",
+        "targetId": "agot:Poole_3"
+      }
+    ],
+    "personality": "温婉顺从，恪守礼仪教养；天真浪漫，对世界抱有美好幻想，极力回避粗鲁与冲突。",
+    "publicRoles": [
+      "临冬城长女",
+      "贵族淑女"
+    ],
+    "reputation": "临冬城内外公认的完美淑女，受到茉丹修女与诸侯夫人们的一致赞赏。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Sansa_Stark",
+      "https://asoiaf.fandom.com/zh/wiki/Sansa_Stark"
+    ],
+    "summary": "艾德·史塔克与凯特琳的长女。自幼受南方淑女礼仪熏陶，精通刺绣、音律与诗歌，对骑士传说与王廷浪漫生活充满向往。"
+  },
+  "agot:Tarly_1": {
+    "aliases": [
+      "蓝道大人"
+    ],
+    "appearance": "身材高瘦挺拔如铁枪，面颊削瘦无肉，目光冰冷严酷，身背双手巨剑碎心，浑身散发着森然肃杀之气。",
+    "characterId": "agot:Tarly_1",
+    "experiences": [
+      {
+        "date": "8282",
+        "description": "在岑树滩战役中率河湾地先锋彻底击溃劳勃·拜拉席恩的叛军，取得篡夺者战争中王室军唯一的陆战大捷。",
+        "participantIds": [
+          "agot:Baratheon_2",
+          "agot:Tyrell_8"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Randyll_Tarly",
+        "title": "岑树滩之战击败劳勃",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "虽然看不起梅斯·提利尔的军事才能，但恪守封臣职责为高庭效命。",
+        "kind": "效忠的封君",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Mace_Tyrell",
+        "targetId": "agot:Tyrell_8"
+      }
+    ],
+    "personality": "铁血严酷，崇尚纯粹的武力与服从；对软弱与读书深恶痛绝，极度专横无情。",
+    "publicRoles": [
+      "角陵伯爵",
+      "河湾地统帅",
+      "边疆地诸侯"
+    ],
+    "reputation": "全维斯特洛公认治军最严明、最令敌军生畏的铁血战术大将。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Randyll_Tarly",
+      "https://asoiaf.fandom.com/zh/wiki/Randyll_Tarly"
+    ],
+    "summary": "角陵伯爵兼河湾地第一名将。治军极其冷酷严苛，手握瓦雷利亚钢巨剑碎心，曾在篡夺者战争中于岑树滩之战击败劳勃·拜拉席恩。"
+  },
+  "agot:Tully_9": {
+    "aliases": [
+      "黑鱼"
+    ],
+    "appearance": "身材高大矫健，满头灰白短发，线条如刀削般冷硬刚毅，深蓝眼眸如鹰隼般锐利，披风上绣有黑色跃水鳟鱼徽记。",
+    "characterId": "agot:Tully_9",
+    "experiences": [
+      {
+        "date": "8260",
+        "description": "年轻时随军远征石阶列岛立下奇功，以过人勇武与战术指挥扬名维斯特洛。",
+        "participantIds": [
+          "agot:Tully_1"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Brynden_Tully",
+        "title": "九铜板王之战成名",
+        "visibility": "public"
+      },
+      {
+        "date": "8283",
+        "description": "随侄女莱莎前往艾林谷，被琼恩·艾林委以重任任命为扼守谷地天险的血门骑士统帅。",
+        "participantIds": [
+          "agot:Arryn_3",
+          "agot:Tully_6"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Brynden_Tully",
+        "title": "出任艾林谷血门骑士",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "自幼将凯特琳视若己出，在凯特琳遇到任何危难时都会毫不犹豫拔剑相助。",
+        "kind": "最疼爱的侄女",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Catelyn_Stark",
+        "targetId": "agot:Tully_4"
+      },
+      {
+        "description": "琼恩·艾林生前最倚重的军事防务大将。",
+        "kind": "赏识信任的至交",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Jon_Arryn",
+        "targetId": "agot:Arryn_3"
+      }
+    ],
+    "personality": "桀骜不驯，刚烈正直；富有极高军事战术天赋与领导力，鄙视政治算计，一生未娶。",
+    "publicRoles": [
+      "血门骑士",
+      "谷地防务大将"
+    ],
+    "reputation": "全七国公认的顶级战术大师与顽强勇将，深受谷地与河间地骑士的崇敬。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Brynden_Tully",
+      "https://asoiaf.fandom.com/zh/wiki/Brynden_Tully"
+    ],
+    "summary": "霍斯特·徒利的亲弟兼血门骑士，因拒绝包办联姻而自称“黑鱼”。武艺娴熟，熟悉斥候与山地防务，是经历过多场战争的老将。"
+  },
+  "agot:Tyrell_8": {
+    "aliases": [
+      "充气鱼",
+      "高庭公爵"
+    ],
+    "appearance": "身材高大但体态微胖，留着修剪成卷曲黑桃形状的栗色胡须，红润满面，喜穿饰有金色玫瑰的华贵天鹅绒礼服。",
+    "characterId": "agot:Tyrell_8",
+    "experiences": [
+      {
+        "date": "8283",
+        "description": "在篡夺者战争中统帅河湾地大军围困风息堡近一年，最终在奈德率军解围后向劳勃屈膝归降。",
+        "participantIds": [
+          "agot:Baratheon_3",
+          "agot:Stark_3"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Mace_Tyrell",
+        "title": "风息堡长年围城",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [],
+    "personality": "虚荣自大，渴望战场功名与王室联姻；性格好大喜功但并不残暴，极度重视提利尔家族的显赫门面。",
+    "publicRoles": [
+      "高庭公爵",
+      "南境守护",
+      "河湾地最高领主"
+    ],
+    "reputation": "全境诸侯眼中富有但缺乏真才实学的‘充气鱼’公爵，靠庞大军力和母亲智谋维持威势。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Mace_Tyrell",
+      "https://asoiaf.fandom.com/zh/wiki/Mace_Tyrell"
+    ],
+    "summary": "高庭公爵、河湾地最高领主兼南境守护。坐拥全维斯特洛最庞大的军队与最富庶的粮仓，野心勃勃但军事才能平庸，决策多依赖母亲奥莲娜夫人指导。"
+  }
+}

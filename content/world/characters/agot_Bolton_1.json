@@ -1,0 +1,40 @@
+{
+  "aliases": [
+    "水蛭大人"
+  ],
+  "appearance": "相貌平平但极具压迫感，皮肤苍白如死人，双眼呈奇异冰冷的淡白幽光，常年定期用水蛭吸血以保持平静。",
+  "characterId": "agot:Bolton_1",
+  "experiences": [
+    {
+      "date": "8283",
+      "description": "随艾德·史塔克南下作战，在战役结束后曾冷酷建议处决负伤被俘的巴利斯坦·赛尔弥。",
+      "participantIds": [
+        "agot:Stark_3",
+        "agot:Selmy_3"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Roose_Bolton",
+      "title": "三叉戟河之役参战",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "表面恭顺服从临冬城号令，但内心对艾德的道德洁癖与统治心存轻慢。",
+      "kind": "封君与提防对象",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Eddard_Stark",
+      "targetId": "agot:Stark_3"
+    }
+  ],
+  "personality": "说话声音轻柔微弱，行事冷酷严密；绝不表露真实情感，深信‘剥皮人没有秘密’与‘安静的人活得长久’。",
+  "publicRoles": [
+    "恐怖堡伯爵",
+    "北境诸侯"
+  ],
+  "reputation": "北境诸侯中令人忌惮畏惧的阴鸷角色，以严酷手段与难以捉摸的心思闻名。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Roose_Bolton",
+    "https://asoiaf.fandom.com/zh/wiki/Roose_Bolton"
+  ],
+  "summary": "恐怖堡领主，北境最具势力的古老诸侯之一。精于算计、冷酷阴沉，深谙自保与扩张之道，虽臣服于史塔克家族但暗怀异心。"
+}

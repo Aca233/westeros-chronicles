@@ -1,0 +1,313 @@
+{
+  "agot:Baelish_2": {
+    "aliases": [
+      "小指头"
+    ],
+    "appearance": "身材短小瘦削，留着精心修剪的黑灰小山羊胡，一双灰绿如猫的双眼闪烁狡黠智慧，常着裁剪讲究的灰蓝丝绒短袍。",
+    "characterId": "agot:Baelish_2",
+    "experiences": [
+      {
+        "date": "8281",
+        "description": "年轻时为争夺凯特琳·徒利向布兰登·史塔克发起生死决斗，重伤落败后被逐出奔流城。",
+        "participantIds": [
+          "agot:Tully_4",
+          "agot:Tully_1"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Petyr_Baelish",
+        "title": "奔流城决斗惨败",
+        "visibility": "public"
+      },
+      {
+        "date": "8293",
+        "description": "在莱莎引荐与海鸥镇海关显赫政绩推动下，被琼恩·艾林招入御前会议主管全国财政税收。",
+        "participantIds": [
+          "agot:Arryn_3",
+          "agot:Tully_6",
+          "agot:Baratheon_2"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Petyr_Baelish",
+        "title": "晋升御前财政大臣",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "自幼深爱凯特琳，其一生对权力的狂热追逐皆始于当年因地位悬殊被夺爱的屈辱。",
+        "kind": "毕生执念与初恋",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Catelyn_Stark",
+        "targetId": "agot:Tully_4"
+      },
+      {
+        "description": "与情报总管瓦里斯在红堡深宫中心照不宣地博弈对抗，彼此提防对方的暗棋。",
+        "kind": "宫廷棋局宿敌兼智谋对手",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Varys",
+        "targetId": "agot:Eunuch_1"
+      }
+    ],
+    "personality": "野心勃勃，城府深不可测；擅长伪装人畜无害，擅长挑起混乱并视混乱为向权力巅峰攀爬的天梯。",
+    "publicRoles": [
+      "御前财政大臣",
+      "五指半岛领主"
+    ],
+    "reputation": "朝廷上下人尽皆知的理财奇才，看似无害但私下令王室重臣摸不透底细。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Petyr_Baelish",
+      "https://asoiaf.fandom.com/zh/wiki/Petyr_Baelish"
+    ],
+    "summary": "御前财政大臣兼五指半岛微末领主。出身寒微但精通理财与投机权谋，掌控王家海关与庞大商业网络，在君临暗中布局翻云覆雨。"
+  },
+  "agot:Bolton_5": {
+    "aliases": [
+      "恐怖堡的私生子"
+    ],
+    "appearance": "体格粗壮硕大，皮肤白而多粉刺，嘴唇厚实肥润，长着与卢斯如出一辙的阴冷幽白眼睛，头发黑长油腻。",
+    "characterId": "agot:Bolton_5",
+    "experiences": [
+      {
+        "date": "8282",
+        "description": "卢斯·波顿强暴磨坊主之妻后所生，后被卢斯暗中接济并招入恐怖堡。",
+        "participantIds": [
+          "agot:Bolton_1"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Ramsay_Snow",
+        "title": "降生哭泣河磨坊",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [],
+    "personality": "残忍嗜血，狡黠乖戾；以折磨他人为乐，对私生子身份极度敏感自卑，充满暴虐的统治欲望。",
+    "publicRoles": [
+      "恐怖堡私生子"
+    ],
+    "reputation": "恐怖堡周围百姓噤若寒蝉的恶魔，以冷血残暴闻名北境乡野。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Ramsay_Snow",
+      "https://asoiaf.fandom.com/zh/wiki/Ramsay_Snow"
+    ],
+    "summary": "恐怖堡卢斯·波顿公爵的私生子。自幼在磨坊长大，后被接至恐怖堡效力，行事残虐狡诈疯狂，嗜好剥皮与猎杀活人。"
+  },
+  "agot:Crakehall_8": {
+    "aliases": [
+      "野猪莱尔"
+    ],
+    "appearance": "身材高大肥壮如山，胸毛浓密如毡，毛发黑粗，面孔红润粗旷，身着绘有野猪图案的坚固重铠。",
+    "characterId": "agot:Crakehall_8",
+    "experiences": [
+      {
+        "date": "8289",
+        "description": "在葛雷乔伊叛乱中随西境主力登岛破城，以巨斧劈碎敌军寨门。",
+        "participantIds": [
+          "agot:Lannister_1"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Lyle_Crakehall",
+        "title": "攻坚铁群岛",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "与詹姆私交甚笃，极度钦佩詹姆的剑术与武勇。",
+        "kind": "崇拜的军中统帅",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Jaime_Lannister",
+        "targetId": "agot:Lannister_7"
+      }
+    ],
+    "personality": "性格粗豪豪放，酷爱饮酒与肉搏；虽然行事粗鲁但心无城府，重义气，打仗勇往直前。",
+    "publicRoles": [
+      "骑士",
+      "西境勇将"
+    ],
+    "reputation": "西境仅次于魔山的大力士猛将，在军士中极有人缘与号召力。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Lyle_Crakehall",
+      "https://asoiaf.fandom.com/zh/wiki/Lyle_Crakehall"
+    ],
+    "summary": "峭岩堡罗兰·克雷赫伯爵次子，西境猛将。体格异常硕大粗壮，力大过人，常自夸能徒手扼死野猪，勇名传遍西境。"
+  },
+  "agot:Eunuch_1": {
+    "aliases": [
+      "八爪蜘蛛",
+      "情报总管"
+    ],
+    "appearance": "身材肥白圆润，光头无须，身上常年散发着浓郁丁香甜香，动作轻盈无声，能在瞬息间变换各种伪装与嗓音。",
+    "characterId": "agot:Eunuch_1",
+    "experiences": [
+      {
+        "date": "8279",
+        "description": "被疯王伊里斯二世从潘托斯招入君临担任情报总管，揭发多起针对王室的阴谋叛变。",
+        "participantIds": [
+          "agot:Mopatis_1"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Varys",
+        "title": "入仕疯王廷臣",
+        "visibility": "secret"
+      },
+      {
+        "date": "8283",
+        "description": "在泰温·兰尼斯特率军兵临城下时曾力劝疯王紧闭城门，但疯王听信派席尔致使君临陷落。",
+        "participantIds": [
+          "agot:Lannister_1",
+          "agot:Pycelle_1"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Varys",
+        "title": "劝阻疯王开门",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "清楚培提尔对混乱的渴望，在宫廷中时刻监视并防范其破坏王国的脆弱平衡。",
+        "kind": "暗流涌动的博弈对手",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Petyr_Baelish",
+        "targetId": "agot:Baelish_2"
+      }
+    ],
+    "personality": "圆滑谦恭，深不可测；表面逢迎各派权贵，内心怀揣极其宏大隐秘的天下复兴棋局，从不行差踏错。",
+    "publicRoles": [
+      "御前情报大臣",
+      "太监"
+    ],
+    "reputation": "君临红堡人人心怀戒备的密探之王，无人知晓其真正底细与忠诚归属。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Varys",
+      "https://asoiaf.fandom.com/zh/wiki/Varys"
+    ],
+    "summary": "御前情报大臣兼红堡太监。来自厄索斯自由城邦里斯，掌控遍布君临与七大王国的庞大‘小小鸟儿’谍报网络，自称一生皆为‘为了王国’服务。"
+  },
+  "agot:Lannister_6": {
+    "aliases": [
+      "瑟曦王后",
+      "西境之光"
+    ],
+    "appearance": "金发如瀑，碧绿如翡翠的眼眸光彩照人，体态优雅高贵，常着华丽红金丝袍与缀满珠宝的礼服。",
+    "characterId": "agot:Lannister_6",
+    "experiences": [
+      {
+        "date": "8284",
+        "description": "在篡夺者战争结束后嫁给劳勃·拜拉席恩国王，成为七大王国王后以巩固西境与铁王座的同盟。",
+        "participantIds": [
+          "agot:Baratheon_2",
+          "agot:Lannister_1"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Cersei_Lannister",
+        "title": "大婚君临贝勒大圣堂",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [],
+    "personality": "骄傲自负，多疑善妒；极度护短三个子女，对任何潜在的权力威胁充满敌意与反击冲动。",
+    "publicRoles": [
+      "七国王后",
+      "兰尼斯特家族贵女"
+    ],
+    "reputation": "君临红堡最有权势与美貌的女人，但在贵族与重臣眼中以傲慢跋扈、难以相处著称。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Cersei_Lannister",
+      "https://asoiaf.fandom.com/zh/wiki/Cersei_Lannister"
+    ],
+    "summary": "七大王国王后，泰温·兰尼斯特公爵的独女。以出众容貌、强烈自尊和对家族地位的维护闻名，在红堡宫廷拥有仅次于国王的公开影响力。"
+  },
+  "agot:Lannister_9": {
+    "aliases": [
+      "蓝赛尔侍从"
+    ],
+    "appearance": "相貌极具兰尼斯特特征，留着金色卷发与绿眼睛，容貌与詹姆有几分神似但缺乏男儿英武之气。",
+    "characterId": "agot:Lannister_9",
+    "experiences": [
+      {
+        "date": "8297",
+        "description": "由瑟曦王后举荐成为劳勃国王身边的侍从，负责在宴饮和游猎中为国王斟酒照料盔甲。",
+        "participantIds": [
+          "agot:Baratheon_2",
+          "agot:Lannister_6"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Lancel_Lannister",
+        "title": "受荐成为国王侍从",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [],
+    "personality": "虚荣自负，胆小懦弱；渴望赢得骑士荣耀却易于被权势摆布，对瑟曦充满迷恋与盲从。",
+    "publicRoles": [
+      "国王侍从",
+      "兰尼斯特家族子弟"
+    ],
+    "reputation": "宫廷侍从中依靠显赫家族背景获得优待的年轻贵胄，缺乏真才实学。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Lancel_Lannister",
+      "https://asoiaf.fandom.com/zh/wiki/Lancel_Lannister"
+    ],
+    "summary": "凯冯·兰尼斯特爵士长子，年轻英俊但阅历尚浅，被安排担任劳勃·拜拉席恩国王的王室侍从，在红堡学习宫廷礼仪与侍从职责。"
+  },
+  "agot:Slynt_1": {
+    "aliases": [
+      "青蛙脸司令"
+    ],
+    "appearance": "身材矮胖结实，脖子粗短，青蛙般凸出的双眼与阔嘴，留着稀疏黑发，身穿华丽耀眼的金边黑铠与金袍。",
+    "characterId": "agot:Slynt_1",
+    "experiences": [
+      {
+        "date": "8293",
+        "description": "在前任司令去世后，凭借培提尔·贝里席的幕后运作成功当上君临金袍子最高统帅。",
+        "participantIds": [
+          "agot:Baratheon_2"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Janos_Slynt",
+        "title": "升任都城守备队总司令",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [],
+    "personality": "贪婪狂妄，见风使舵；热衷聚敛财富与巴结权贵，极度渴望跻身贵族领主之列。",
+    "publicRoles": [
+      "都城守备队司令",
+      "金袍子司令官"
+    ],
+    "reputation": "君临平民与正直贵族眼中臭名昭著的贪渎黑官，但在宫廷权贵眼中是绝佳的收买工具。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Janos_Slynt",
+      "https://asoiaf.fandom.com/zh/wiki/Janos_Slynt"
+    ],
+    "summary": "君临都城守备队的司令，出身屠夫家庭，依靠宫廷经营与利益交换逐步升迁。以贪婪、卖官鬻爵和牢牢控制金袍子闻名。"
+  },
+  "agot:Tully_7": {
+    "aliases": [
+      "艾德慕爵士",
+      "小鳟鱼"
+    ],
+    "appearance": "身材高大英挺，浓密的红棕色卷发与修剪整齐的胡子，湛蓝眼眸闪烁热情，身穿饰有跳跃银鳟鱼的精美铠甲。",
+    "characterId": "agot:Tully_7",
+    "experiences": [
+      {
+        "date": "8295",
+        "description": "在父亲霍斯特公爵病重后接管河间地封臣调遣与城堡日常防御事务。",
+        "participantIds": [
+          "agot:Tully_1"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Edmure_Tully",
+        "title": "代掌奔流城政务",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [],
+    "personality": "心地善良，同情弱小；深切关心平民死活，极重家族荣誉与面子，容易因冲动而做出战术失误。",
+    "publicRoles": [
+      "奔流城继承人",
+      "河间地统领"
+    ],
+    "reputation": "河间地百姓口中仁慈亲民的少主，在军事贵族眼中则稍欠老练火候。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Edmure_Tully",
+      "https://asoiaf.fandom.com/zh/wiki/Edmure_Tully"
+    ],
+    "summary": "奔流城继承人兼河间地代掌领主。性格热忱和善、体恤领民，渴望成为受人敬仰的英雄领主，但作战指挥上偶显急躁缺乏深谋远虑。"
+  }
+}

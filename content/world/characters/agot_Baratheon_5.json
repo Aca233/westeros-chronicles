@@ -1,0 +1,40 @@
+{
+  "aliases": [
+    "乔佛里王子"
+  ],
+  "appearance": "相貌英俊，留着兰尼斯特式的金色卷发，碧绿眼眸与厚翘的嘴唇，常着裁剪精致的金丝天鹅绒华服。",
+  "characterId": "agot:Baratheon_5",
+  "experiences": [
+    {
+      "date": "8286",
+      "description": "作为王室长子在君临降生，举国欢庆其诞生并册封其为王位法定继承人。",
+      "participantIds": [
+        "agot:Baratheon_2",
+        "agot:Lannister_6"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Joffrey_Baratheon",
+      "title": "诞生于红堡",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "猎狗桑铎·克里冈被指定为其贴身护卫，负责执行乔佛里各种任性残忍的命令。",
+      "kind": "贴身侍卫与恶犬",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Sandor_Clegane",
+      "targetId": "agot:Clegane_4"
+    }
+  ],
+  "personality": "任性暴戾，自大怯懦；极度热衷炫耀王家权威，缺乏共点心，在逆境时容易歇斯底里。",
+  "publicRoles": [
+    "铁王座王储",
+    "多恩领亲王"
+  ],
+  "reputation": "君临廷臣与侍从私下畏惧的残暴王子，在外人面前则维持着虚伪的礼貌与贵族派头。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Joffrey_Baratheon",
+    "https://asoiaf.fandom.com/zh/wiki/Joffrey_Baratheon"
+  ],
+  "summary": "铁王座王储兼劳勃国王的长子。自幼受母亲过度娇惯纵容，性格傲慢残忍且喜怒无常，对平民与弱小充满鄙夷与虐待倾向。"
+}

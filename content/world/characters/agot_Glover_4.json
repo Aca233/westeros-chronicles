@@ -1,0 +1,39 @@
+{
+  "aliases": [
+    "葛洛佛大人"
+  ],
+  "appearance": "面容冷峻刚毅，披着深色皮毛大氅，锁子甲胸前饰有葛洛佛家族的铁护手徽记，身材精悍矫健。",
+  "characterId": "agot:Glover_4",
+  "experiences": [
+    {
+      "date": "8289",
+      "description": "在葛雷乔伊叛乱中坚守深林堡海岸线，成功击退铁民舰队的试探性偷袭。",
+      "participantIds": [
+        "agot:Stark_3"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Galbart_Glover",
+      "title": "防御铁民袭扰",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "坚定追随艾德·史塔克治理北境，是史塔克家族核心军事支柱之一。",
+      "kind": "效忠的封君",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Eddard_Stark",
+      "targetId": "agot:Stark_3"
+    }
+  ],
+  "personality": "忠诚坦荡，性格耿直；在北境军务与诸侯议事中以公正无私与勇于担当著称。",
+  "publicRoles": [
+    "深林堡主",
+    "北境诸侯"
+  ],
+  "reputation": "深受北境诸侯信赖的资深指挥官与坚守誓言的重臣。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Galbart_Glover",
+    "https://asoiaf.fandom.com/zh/wiki/Galbart_Glover"
+  ],
+  "summary": "深林堡领主，葛洛佛家族族长。忠诚骁勇的北境老派诸侯，长年镇守北境西海岸要隘，抵御铁民劫掠与狼林盗匪。"
+}

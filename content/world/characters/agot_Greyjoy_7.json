@@ -1,0 +1,33 @@
+{
+  "aliases": [
+    "铁舰队总司令"
+  ],
+  "appearance": "身材高大粗壮如公牛，满头灰发，满脸风霜皱纹，常年披挂重达几十斤的带刺全覆式板甲与巨盾战斧。",
+  "characterId": "agot:Greyjoy_7",
+  "experiences": [
+    {
+      "date": "8289",
+      "description": "在葛雷乔伊叛乱海战中指挥铁舰队遭遇史坦尼斯王家舰队伏击合围，损失惨重但凭借一身重铠血战脱险。",
+      "participantIds": [
+        "agot:Baratheon_3",
+        "agot:Greyjoy_5"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Victarion_Greyjoy",
+      "title": "仙民岛海战惨败",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [],
+  "personality": "虔诚刚毅，死板忠勇；恪守淹神教义与铁民秩序，极重武力威仪，脑筋固执缺乏变通。",
+  "publicRoles": [
+    "铁舰队总司令",
+    "派克岛统帅"
+  ],
+  "reputation": "铁群岛公认海上接舷战第一猛将，铁舰队所有铁民战士最畏服的长官。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Victarion_Greyjoy",
+    "https://asoiaf.fandom.com/zh/wiki/Victarion_Greyjoy"
+  ],
+  "summary": "铁舰队总司令，巴隆·葛雷乔伊二弟。身穿全套精钢重铠跳帮作战的铁民无敌猛将，恪守淹神古道与服从兄长号令，勇猛无比但在政治谋略上极其呆板。"
+}

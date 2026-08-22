@@ -1,0 +1,33 @@
+{
+  "aliases": [
+    "勇武的加兰"
+  ],
+  "appearance": "身材高大魁梧匀称，容貌英武，蓄着浓密有型的短胡须，身着优质精钢战铠，气度沉稳自信。",
+  "characterId": "agot:Tyrell_12",
+  "experiences": [
+    {
+      "date": "8295",
+      "description": "在比武场与操练中展现出惊人的群战剑术，被册封为正式骑士并由祖母赐予‘勇武’绰号。",
+      "participantIds": [
+        "agot:Tyrell_8",
+        "agot:Redwyne_2"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Garlan_Tyrell",
+      "title": "受封骑士头衔",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [],
+  "personality": "谦和宽厚，勇冠三军；从不张扬炫耀武艺，待人诚恳温和，是维斯特洛极少数兼具真正武德与高超剑术的完美骑士。",
+  "publicRoles": [
+    "骑士",
+    "河湾地剑客"
+  ],
+  "reputation": "河湾地封臣眼中最低调却最具战斗力的顶尖骑士领袖。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Garlan_Tyrell",
+    "https://asoiaf.fandom.com/zh/wiki/Garlan_Tyrell"
+  ],
+  "summary": "梅斯·提利尔公爵次子。剑术造诣甚至超越胞弟洛拉斯，长年以一敌三练习剑法，性情谦逊豁达、正直坦荡，深得骑士阶层敬服。"
+}

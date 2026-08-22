@@ -1,0 +1,40 @@
+{
+  "aliases": [
+    "乞丐王",
+    "唤醒真龙者"
+  ],
+  "appearance": "身材瘦削挺拔，留着坦格利安标志性的银金色长发，浅紫色眼眸中闪烁着狂躁不安的神经质光芒，衣衫华贵但磨损严重。",
+  "characterId": "agot:Targaryen_8",
+  "experiences": [
+    {
+      "date": "8283",
+      "description": "在篡夺者战争末期由母亲蕾拉王后带离君临避难龙石岛，在王室倾覆后开始了颠沛流离的流亡生涯。",
+      "participantIds": [
+        "agot:Targaryen_9"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Viserys_Targaryen",
+      "title": "逃离君临避难龙石岛",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "依附于伊利里欧的豪宅与财富，对其虚假承诺深信不疑。",
+      "kind": "赞助商人与野心合伙人",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Illyrio_Mopatis",
+      "targetId": "agot:Mopatis_1"
+    }
+  ],
+  "personality": "残暴狂躁，傲慢自大；在长年流亡屈辱中精神日渐扭曲偏执，动辄以‘唤醒真龙之怒’虐待威吓妹妹丹妮莉丝。",
+  "publicRoles": [
+    "流亡真龙合法继承人",
+    "自封七国之王"
+  ],
+  "reputation": "厄索斯自由城邦权贵酒宴间被当做笑柄的落魄‘乞丐王’。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Viserys_Targaryen",
+    "https://asoiaf.fandom.com/zh/wiki/Viserys_Targaryen"
+  ],
+  "summary": "坦格利安王朝的流亡王子，自称铁王座合法继承人。家族覆灭后辗转东大陆诸城邦，长期依靠旧日支持者与富商接济，性格日益暴躁偏执。"
+}

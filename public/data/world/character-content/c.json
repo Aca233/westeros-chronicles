@@ -1,0 +1,284 @@
+{
+  "agot:Arryn_3": {
+    "aliases": [
+      "艾林公爵",
+      "老首相"
+    ],
+    "appearance": "身材高大挺拔，晚年满头银白霜发，蓝眼慈祥而睿智，面容布满治国操劳的深邃皱纹，身披天蓝与月白丝袍。",
+    "characterId": "agot:Arryn_3",
+    "experiences": [
+      {
+        "date": "8282",
+        "description": "在疯王索要奈德与劳勃首级时拒不遵从，在海鸥镇斩断王室锁链正式掀起篡夺者战争。",
+        "participantIds": [
+          "agot:Baratheon_2",
+          "agot:Stark_3"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Jon_Arryn",
+        "title": "鸣钟起兵反抗疯王",
+        "visibility": "public"
+      },
+      {
+        "date": "8284",
+        "description": "战争结束后亲往阳戟城归还亲王遗骨，以高超外交手腕平息多恩怒火化解危机。",
+        "participantIds": [
+          "agot:Martell_4"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Jon_Arryn",
+        "title": "出使多恩缔结和平",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "既是劳勃的君臣首相，更是劳勃终生敬爱的养父与治国向导。",
+        "kind": "养子与君主",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Robert_I_Baratheon",
+        "targetId": "agot:Baratheon_2"
+      },
+      {
+        "description": "视奈德为最骄傲的养子，两人在荣誉与治国理念上高度契合。",
+        "kind": "如子至亲",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Eddard_Stark",
+        "targetId": "agot:Stark_3"
+      }
+    ],
+    "personality": "仁慈威严，公正审慎；富有崇高政治远见与长者智慧，一心维系王国和平与各方势力平衡。",
+    "publicRoles": [
+      "鹰巢城公爵",
+      "谷地守护",
+      "国王之手"
+    ],
+    "reputation": "在谷地和王廷享有资深领主与调停者的声望，长期主持政务使许多诸侯将他视为劳勃王朝的重要支柱。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Jon_Arryn",
+      "https://asoiaf.fandom.com/zh/wiki/Jon_Arryn"
+    ],
+    "summary": "鹰巢城公爵、谷地守护兼国王之手，也是劳勃与艾德的养父。篡夺者战争后长期主持王国政务，以稳健、宽厚和善于调和诸侯闻名。"
+  },
+  "agot:Clegane_3": {
+    "aliases": [
+      "魔山",
+      "骑马的巨怪"
+    ],
+    "appearance": "身高达八英尺，重逾三十石，肩膀宽阔如城门，着全套厚重实心精钢重铠，单手挥舞一柄重型巨剑。",
+    "characterId": "agot:Clegane_3",
+    "experiences": [
+      {
+        "date": "8283",
+        "description": "攻破红堡梅葛楼，残忍摔死雷加王子的幼子伊耿并强暴杀害了多恩公主伊莉亚·马泰尔。",
+        "participantIds": [
+          "agot:Lannister_1"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Gregor_Clegane",
+        "title": "洗劫君临与杀害坦格利安幼嗣",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "泰温公爵手中最致命也是最骇人的杀戮工具，负责执行一切毁灭性任务。",
+        "kind": "效忠的主公",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Tywin_Lannister",
+        "targetId": "agot:Lannister_1"
+      }
+    ],
+    "personality": "嗜血残暴，凶蛮嗜杀；毫无道德与同理心，对暴力与虐杀充满本能渴望，只听从泰温·兰尼斯特的残酷号令。",
+    "publicRoles": [
+      "方石城领主",
+      "骑士"
+    ],
+    "reputation": "全维斯特洛人人谈之色变的战争凶兽与刽子手，恶名昭彰于七大王国。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Gregor_Clegane",
+      "https://asoiaf.fandom.com/zh/wiki/Gregor_Clegane"
+    ],
+    "summary": "克里冈家族领主兼泰温·兰尼斯特麾下最凶残的封臣骑士。身躯异常庞大如巨怪，嗜杀成性，常年头痛需大量饮用罂粟花奶止痛。"
+  },
+  "agot:Greyjoy_7": {
+    "aliases": [
+      "铁舰队总司令"
+    ],
+    "appearance": "身材高大粗壮如公牛，满头灰发，满脸风霜皱纹，常年披挂重达几十斤的带刺全覆式板甲与巨盾战斧。",
+    "characterId": "agot:Greyjoy_7",
+    "experiences": [
+      {
+        "date": "8289",
+        "description": "在葛雷乔伊叛乱海战中指挥铁舰队遭遇史坦尼斯王家舰队伏击合围，损失惨重但凭借一身重铠血战脱险。",
+        "participantIds": [
+          "agot:Baratheon_3",
+          "agot:Greyjoy_5"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Victarion_Greyjoy",
+        "title": "仙民岛海战惨败",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [],
+    "personality": "虔诚刚毅，死板忠勇；恪守淹神教义与铁民秩序，极重武力威仪，脑筋固执缺乏变通。",
+    "publicRoles": [
+      "铁舰队总司令",
+      "派克岛统帅"
+    ],
+    "reputation": "铁群岛公认海上接舷战第一猛将，铁舰队所有铁民战士最畏服的长官。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Victarion_Greyjoy",
+      "https://asoiaf.fandom.com/zh/wiki/Victarion_Greyjoy"
+    ],
+    "summary": "铁舰队总司令，巴隆·葛雷乔伊二弟。身穿全套精钢重铠跳帮作战的铁民无敌猛将，恪守淹神古道与服从兄长号令，勇猛无比但在政治谋略上极其呆板。"
+  },
+  "agot:Melisandre_1": {
+    "aliases": [
+      "红袍女",
+      "亚夏的梅丽珊卓"
+    ],
+    "appearance": "容貌妖娆绝伦，身材丰满修长，拥有铜红色的长发与赤红如火的眼眸，长年身着深红丝袍，颈间戴着镶嵌发光红宝石的纯金项圈。",
+    "characterId": "agot:Melisandre_1",
+    "experiences": [
+      {
+        "date": "8297",
+        "description": "从厄索斯狭海对岸来到龙石岛，凭借预言与幻象成功让赛丽丝夫人及部分守军皈依拉赫洛信仰。",
+        "participantIds": [
+          "agot:Florent_10",
+          "agot:Baratheon_3"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Melisandre",
+        "title": "抵达龙石岛传教",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "坚信史坦尼斯是带领生者战胜远古严寒的唯一真王，全力辅佐其夺取大权。",
+        "kind": "预言中的救世王者",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Stannis_Baratheon",
+        "targetId": "agot:Baratheon_3"
+      }
+    ],
+    "personality": "自信冷酷，狂热虔诚；行事神秘而目标明确，深信黑暗即将吞噬世界，必须依靠火魔法与铁血手段力挽狂澜。",
+    "publicRoles": [
+      "光之王女祭司",
+      "阴影缚术士"
+    ],
+    "reputation": "龙石岛上下敬畏猜忌的异域巫女，以展现火焰预言与神秘莫测的法力闻名。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Melisandre",
+      "https://asoiaf.fandom.com/zh/wiki/Melisandre"
+    ],
+    "summary": "来自亚夏的红袍女祭司，拉赫洛光之王忠实信徒。跨越狭海来到龙石岛，深信史坦尼斯·拜拉席恩就是预言中重生的救世英雄亚梭尔·亚亥。"
+  },
+  "agot:Mormont_4": {
+    "aliases": [
+      "梅姬夫人"
+    ],
+    "appearance": "身形敦实强健，带有久居北境海岛的粗砺气质；衣着以便于骑乘和处理领地事务的厚实毛料、皮革为主。",
+    "characterId": "agot:Mormont_4",
+    "experiences": [
+      {
+        "date": "8293",
+        "description": "在乔拉·莫尔蒙因贩奴畏罪潜逃后，毅然收拾家族乱局，恢复熊岛的安定与秩序。",
+        "participantIds": [
+          "agot:Mormont_3"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Maege_Mormont",
+        "title": "接管熊岛统治",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "感谢艾德公爵对熊岛的庇护，同时坚决支持临冬城对贩奴罪犯的严正法令。",
+        "kind": "尊敬的守护领主",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Eddard_Stark",
+        "targetId": "agot:Stark_3"
+      }
+    ],
+    "personality": "直率顽强，不拘泥南方贵族礼法；重视家族、领民与熊岛的独立传统，面对威胁时态度坚决。",
+    "publicRoles": [
+      "熊岛伯爵夫人",
+      "北境女诸侯"
+    ],
+    "reputation": "以强硬、能干和不畏艰苦著称，是北境少数公开执掌领地与军务的女性领主之一。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Maege_Mormont",
+      "https://asoiaf.fandom.com/zh/wiki/Maege_Mormont"
+    ],
+    "summary": "熊岛女伯爵与莫尔蒙家族族长，在侄子乔拉流亡后接掌熊岛。她作风强硬务实，熟悉这座贫瘠海岛长期面对的铁民袭扰与防务压力。"
+  },
+  "agot:Redwyne_2": {
+    "aliases": [
+      "荆棘女王",
+      "奥莲娜夫人"
+    ],
+    "appearance": "身材娇小干瘪如干枣的老妇人，白发苍苍，戴着精致的白色无沿帽，眼神锐利如刀，拄着拐杖但步履稳健。",
+    "characterId": "agot:Redwyne_2",
+    "experiences": [
+      {
+        "date": "8250",
+        "description": "年轻时凭借机智巧妙避开了与戴隆·坦格利安王子的政治婚约，后改嫁高庭公爵路瑟·提利尔。",
+        "participantIds": [],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Olenna_Tyrell",
+        "title": "巧妙摆脱坦格利安王室联姻",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "将最心爱的孙女玛格丽视作家族未来的无价之宝并亲授其宫廷权谋与生存之道。",
+        "kind": "悉心栽培的掌上明珠",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Margaery_Tyrell",
+        "targetId": "agot:Tyrell_14"
+      }
+    ],
+    "personality": "机智刻薄，一针见血；极度厌恶愚蠢与虚伪，对家族利益与孙辈前程呵护备至，手段老辣果决。",
+    "publicRoles": [
+      "高庭公爵太夫人",
+      "提利尔家族幕后掌门人"
+    ],
+    "reputation": "全维斯特洛公认最不能招惹的政坛老祖母，无人能在言语交锋中从其手中占得便宜。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Olenna_Tyrell",
+      "https://asoiaf.fandom.com/zh/wiki/Olenna_Redwyne"
+    ],
+    "summary": "高庭公爵太夫人，梅斯·提利尔之母。人称‘荆棘女王’，以尖酸刻薄的毒舌、老辣深邃的政治洞察力和对家族前程的绝对掌控力闻名于七大王国。"
+  },
+  "agot:Tyrell_12": {
+    "aliases": [
+      "勇武的加兰"
+    ],
+    "appearance": "身材高大魁梧匀称，容貌英武，蓄着浓密有型的短胡须，身着优质精钢战铠，气度沉稳自信。",
+    "characterId": "agot:Tyrell_12",
+    "experiences": [
+      {
+        "date": "8295",
+        "description": "在比武场与操练中展现出惊人的群战剑术，被册封为正式骑士并由祖母赐予‘勇武’绰号。",
+        "participantIds": [
+          "agot:Tyrell_8",
+          "agot:Redwyne_2"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Garlan_Tyrell",
+        "title": "受封骑士头衔",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [],
+    "personality": "谦和宽厚，勇冠三军；从不张扬炫耀武艺，待人诚恳温和，是维斯特洛极少数兼具真正武德与高超剑术的完美骑士。",
+    "publicRoles": [
+      "骑士",
+      "河湾地剑客"
+    ],
+    "reputation": "河湾地封臣眼中最低调却最具战斗力的顶尖骑士领袖。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Garlan_Tyrell",
+      "https://asoiaf.fandom.com/zh/wiki/Garlan_Tyrell"
+    ],
+    "summary": "梅斯·提利尔公爵次子。剑术造诣甚至超越胞弟洛拉斯，长年以一敌三练习剑法，性情谦逊豁达、正直坦荡，深得骑士阶层敬服。"
+  }
+}

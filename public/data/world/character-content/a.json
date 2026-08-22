@@ -1,0 +1,243 @@
+{
+  "agot:Florent_10": {
+    "aliases": [
+      "赛丽丝夫人"
+    ],
+    "appearance": "身材高瘦干瘪，面容缺乏美感，长着佛罗伦家族标志性的大耳朵与淡淡的唇须，神色焦虑刻板。",
+    "characterId": "agot:Florent_10",
+    "experiences": [
+      {
+        "date": "8286",
+        "description": "依政治联姻安排嫁入龙石岛，但婚后多年仅育有一女希琳·拜拉席恩。",
+        "participantIds": [
+          "agot:Baratheon_3"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Selyse_Florent",
+        "title": "与史坦尼斯完婚",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "对梅丽珊卓的光之王神迹深信不疑，成为红神在龙石岛最坚定的拥护者。",
+        "kind": "崇拜的宗教导师",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Melisandre",
+        "targetId": "agot:Melisandre_1"
+      }
+    ],
+    "personality": "狂热执拗，心胸狭隘；在夫妻与家庭生活中深感挫败，转而将全部精神寄托于光之王信仰。",
+    "publicRoles": [
+      "龙石岛公爵夫人",
+      "河湾地贵女"
+    ],
+    "reputation": "龙石岛封臣眼中神经质且严苛排外的公爵夫人，难于接近。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Selyse_Florent",
+      "https://asoiaf.fandom.com/zh/wiki/Selyse_Florent"
+    ],
+    "summary": "龙石岛公爵夫人，亮水城亚勒斯特·佛罗伦伯爵的侄女。与史坦尼斯夫妻关系冷淡疏离，近期深受拉赫洛红袍僧梅丽珊卓的宗教影响。"
+  },
+  "agot:Greyjoy_14": {
+    "aliases": [
+      "席恩王子"
+    ],
+    "appearance": "身材修长匀称，黑发微卷，面容英俊且常带有一丝轻浮嘲弄的微笑，箭术超群，身着华美北方丝缎与皮衣。",
+    "characterId": "agot:Greyjoy_14",
+    "experiences": [
+      {
+        "date": "8289",
+        "description": "在葛雷乔伊叛乱平定后被艾德·史塔克带离铁群岛，作为保证巴隆恭顺的政治人质抚养。",
+        "participantIds": [
+          "agot:Stark_3",
+          "agot:Greyjoy_5"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Theon_Greyjoy",
+        "title": "作为人质入质临冬城",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "视罗柏为唯一的知心兄弟，甘愿为罗柏执旗冲锋。",
+        "kind": "并肩成长的挚友兄弟",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Robb_Stark",
+        "targetId": "agot:Stark_6"
+      },
+      {
+        "description": "奈德虽然待其如子但席恩始终知晓若生父再反自己将被奈德依法斩首。",
+        "kind": "敬畏的养父兼处刑威胁者",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Eddard_Stark",
+        "targetId": "agot:Stark_3"
+      }
+    ],
+    "personality": "虚荣傲慢，渴望被认可；内心常年在铁民狂暴血脉与临冬城养育之恩间撕裂摇摆，极度缺乏安全感。",
+    "publicRoles": [
+      "派克岛继承人",
+      "临冬城贵族人质兼侍从"
+    ],
+    "reputation": "临冬城内外箭术第一的帅气侍从，但北境老人常戒备其叛逆铁种血统。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Theon_Greyjoy",
+      "https://asoiaf.fandom.com/zh/wiki/Theon_Greyjoy"
+    ],
+    "summary": "巴隆·葛雷乔伊仅存的幼子兼派克岛法定继承人。十年前作为人质被带回临冬城抚养，在史塔克家中锦衣玉食受教，性格浮华骄傲但内心极度缺乏归属感。"
+  },
+  "agot:Rayder_1": {
+    "aliases": [
+      "塞外之王",
+      "吟游诗人曼斯"
+    ],
+    "appearance": "相貌平平、中等身材，灰发蓬乱，眼神敏锐机警带笑，身穿缝补着红色丝绸破布的褪色黑斗篷。",
+    "characterId": "agot:Rayder_1",
+    "experiences": [
+      {
+        "date": "8288",
+        "description": "在塞外巡逻负伤被野人妇女用红丝绸缝补黑斗篷后，因抗拒长官责令换掉斗篷而决然翻越长城投奔自由民。",
+        "participantIds": [],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Mance_Rayder",
+        "title": "叛离守夜人军团",
+        "visibility": "public"
+      },
+      {
+        "date": "8295",
+        "description": "在霜雪之牙与瑟恩高地先后击败马格拿与托蒙德等强悍酋长，以琴声与武力统一塞外诸部。",
+        "participantIds": [],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Mance_Rayder",
+        "title": "击败野人诸酋加冕塞外之王",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "昔日曾是莫尔蒙麾下最优秀的游骑兵之一，如今成为长城两端殊死博弈的统帅对手。",
+        "kind": "对抗的旧日总司令",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Jeor_Mormont",
+        "targetId": "agot:Mormont_2"
+      }
+    ],
+    "personality": "崇尚自由，极富个人魅力与谋略；热爱诗歌与音乐，并非盲目嗜杀之辈，旨在带领十万自由民南渡长城逃避远古凛冬严寒。",
+    "publicRoles": [
+      "塞外之王",
+      "守夜人叛誓者"
+    ],
+    "reputation": "绝境长城黑衣军团眼中的头号叛徒大敌，塞外数十万自由民共同拥戴的传奇王者。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Mance_Rayder",
+      "https://asoiaf.fandom.com/zh/wiki/Mance_Rayder"
+    ],
+    "summary": "塞外之王，前守夜人军团精锐游骑兵。因厌恶黑衣戒律叛出长城，凭借非凡武艺、鲁特琴歌声与王者魅力将数百个水火不容的野人部落统一为庞大大军。"
+  },
+  "agot:Seaworth_1": {
+    "aliases": [
+      "洋葱骑士",
+      "短指头戴佛斯"
+    ],
+    "appearance": "相貌朴实无华，褐发黑眼，胡须微白，左手四根手指被切去第一指节，颈间挂着装有指骨的小皮袋以求好运。",
+    "characterId": "agot:Seaworth_1",
+    "experiences": [
+      {
+        "date": "8283",
+        "description": "驾驶走私小船穿过红斑蜘蛛雷加的封锁网，将一船洋葱和咸鱼送入围城中的风息堡拯救史坦尼斯。",
+        "participantIds": [
+          "agot:Baratheon_3"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Davos_Seaworth",
+        "title": "风息堡走私救城",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "将史坦尼斯视作赋予自己新生与荣耀的明主，誓死为其效力。",
+        "kind": "效忠的君主与主公",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Stannis_Baratheon",
+        "targetId": "agot:Baratheon_3"
+      }
+    ],
+    "personality": "谦卑务实，刚直不阿；极度忠诚于史坦尼斯，行事从不谋求私利，敢于冒死说出逆耳忠言。",
+    "publicRoles": [
+      "雨林岬领主",
+      "骑士",
+      "走私船长"
+    ],
+    "reputation": "维斯特洛贵族中备受嘲讽但私下敬重的平民骑士，以铁骨铮铮与忠诚扬名。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Davos_Seaworth",
+      "https://asoiaf.fandom.com/zh/wiki/Davos_Seaworth"
+    ],
+    "summary": "跳蚤窝出身的前走私贩，现为雨林岬领主兼史坦尼斯·拜拉席恩最忠诚的心腹封臣。以诚实、正直和直言进谏著称。"
+  },
+  "agot:Shadow_Tower_1": {
+    "aliases": [
+      "断掌科林"
+    ],
+    "appearance": "身材高大精瘦如铁桩，黑发灰眼，下巴剃得精光，残缺的右手戴着厚皮手套，浑身散发着冰原野兽般的警觉。",
+    "characterId": "agot:Shadow_Tower_1",
+    "experiences": [
+      {
+        "date": "8280",
+        "description": "在霜雪之牙遭遇野人精锐伏击，右手三指被削断后以惊人毅力改练左手重剑，武艺更胜从前。",
+        "participantIds": [],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Qhorin_Halfhand",
+        "title": "断掌重生苦练左手剑",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "丹尼斯·梅利斯特爵士麾下最无可替代的前线尖刀重臣。",
+        "kind": "效忠的影子塔指挥官",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Denys_Mallister",
+        "targetId": "agot:Mallister_6"
+      }
+    ],
+    "personality": "冷酷刚毅，牺牲精神至高无上；视守夜人誓言高于一切个人生死荣誉，一切决断皆为击败异族守护长城。",
+    "publicRoles": [
+      "影子塔游骑兵统领",
+      "传奇游骑兵"
+    ],
+    "reputation": "长城外野人部落中人人闻名胆寒的游骑兵战神，守夜人战士心中的活传奇。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Qhorin_Halfhand",
+      "https://asoiaf.fandom.com/zh/wiki/Qhorin_Halfhand"
+    ],
+    "summary": "影子塔首席游骑兵指挥官。常年在塞外极北雪峰与野人死战，右手除两指外皆被野人斧头削断，改练左手剑后剑法更臻化境，是塞外野人最敬畏的黑衣死神。"
+  },
+  "agot:Thorne_3": {
+    "aliases": [
+      "艾里沙爵士"
+    ],
+    "appearance": "身材精瘦削挺，黑发染灰，目光刻毒如蛇蝎，薄唇常挂嘲讽冷笑，身穿洗得泛白的黑色锁甲。",
+    "characterId": "agot:Thorne_3",
+    "experiences": [
+      {
+        "date": "8283",
+        "description": "作为王室守军在君临陷落后被泰温·兰尼斯特俘获，在斩首与长城黑衣之间被迫选择前往绝境长城。",
+        "participantIds": [
+          "agot:Lannister_1"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Alliser_Thorne",
+        "title": "君临被俘流放长城",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [],
+    "personality": "尖酸刻薄，充满怨恨；对自身流放遭遇满腔怒火，极力用言语羞辱与皮鞭折磨新兵来宣泄怨念。",
+    "publicRoles": [
+      "黑城堡教头",
+      "守夜人骑士"
+    ],
+    "reputation": "黑城堡新兵闻风丧胆的恶毒教头，在老兵中亦极不讨人喜欢。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Alliser_Thorne",
+      "https://asoiaf.fandom.com/zh/wiki/Alliser_Thorne"
+    ],
+    "summary": "黑城堡新兵总教头，王领前坦格利安效忠派骑士。篡夺者战争后被逼发配绝境长城，性格刻薄阴鸷、手段严苛残忍，专门负责折磨训练新兵。"
+  }
+}

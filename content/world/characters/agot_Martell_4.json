@@ -1,0 +1,34 @@
+{
+  "aliases": [
+    "道朗亲王",
+    "痛风亲王"
+  ],
+  "appearance": "体态苍老憔悴，双腿与关节因痛风红肿变形，需依靠轮椅代步，但双眼深邃如墨，沉着冷静。",
+  "characterId": "agot:Martell_4",
+  "experiences": [
+    {
+      "date": "8283",
+      "description": "在妹妹伊莉亚公主遭兰尼斯特军队残忍杀害后，与琼恩·艾林签署和平协议，将怒火压入心底。",
+      "participantIds": [
+        "agot:Arryn_3",
+        "agot:Martell_8"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Doran_Martell",
+      "title": "妹妹惨死隐忍媾和",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [],
+  "personality": "极度隐忍，谋定后动；深通政治长线棋局，自比‘静待成熟落地的血橙’，宁愿承受软弱骂名也绝不轻举妄动致使人民流血。",
+  "publicRoles": [
+    "多恩亲王",
+    "阳戟城领主"
+  ],
+  "reputation": "多恩境内激进派封臣眼中软弱可欺的轮椅亲王，实则为天下至深之阴谋家。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Doran_Martell",
+    "https://asoiaf.fandom.com/zh/wiki/Doran_Martell"
+  ],
+  "summary": "阳戟城公爵兼多恩亲王，因严重痛风行动不便。性情沉静审慎，习惯在流水花园远离喧闹，以耐心、克制和避免无谓冲突治理多恩。"
+}

@@ -1,0 +1,41 @@
+{
+  "aliases": [
+    "迟到的佛雷大人",
+    "老佛雷"
+  ],
+  "appearance": "九十岁高龄的秃顶枯瘦老者，下巴无牙凹陷，长着黄褐斑点与如黄鼠狼般警惕的小眼睛，常年坐于轮椅或高椅上。",
+  "characterId": "agot:Frey_1",
+  "experiences": [
+    {
+      "date": "8283",
+      "description": "在篡夺者决战大局已定后才率佛雷全军慢吞吞赶到战场，招致各方诸侯的鄙视嘲笑。",
+      "participantIds": [
+        "agot:Tully_1",
+        "agot:Baratheon_2"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Walder_Frey",
+      "title": "三叉戟河迟到参战",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "痛恨霍斯特公爵多年来对佛雷家族暴发户身份的傲慢与轻慢。",
+      "kind": "心怀不满的封君",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Hoster_Tully",
+      "targetId": "agot:Tully_1"
+    }
+  ],
+  "personality": "敏感多疑，睚眦必报；对他人的一丝轻慢怀恨在心，极度看重渡口过路费与为庞大子嗣谋求贵族联姻利益。",
+  "publicRoles": [
+    "孪河城侯爵",
+    "渡口领主"
+  ],
+  "reputation": "维斯特洛诸侯私下鄙夷嘲笑的自私老滑头，因三叉戟河战后才赶到被劳勃讥为‘迟到的佛雷’。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Walder_Frey",
+    "https://asoiaf.fandom.com/zh/wiki/Walder_Frey"
+  ],
+  "summary": "孪河城侯爵兼绿叉河渡口领主。年近九旬，拥有庞大无比的子孙后裔家族群，掌控扼守南北交通要道的孪河城石桥，贪婪记仇、极重家族利益。"
+}

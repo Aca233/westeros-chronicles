@@ -1,0 +1,29 @@
+{
+  "aliases": [
+    "黑水河的波隆"
+  ],
+  "appearance": "身材精瘦矫健，黑发黑眼，下巴留着杂乱硬胡茬，眼神冷酷敏锐如狼，身着破旧但保养极佳的皮甲与锁甲。",
+  "characterId": "agot:Blackwater_1",
+  "experiences": [
+    {
+      "date": "8295",
+      "description": "长年在三叉戟河、国王大道与君临周边承接贵族护卫与佣兵任务。",
+      "participantIds": [],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Bronn",
+      "title": "游荡河间地与王领",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [],
+  "personality": "冷酷务实，毫无道德包袱；不讲骑士虚礼，唯以金钱与自身生存为第一考量，战斗中极善抓住对手破绽一击毙命。",
+  "publicRoles": [
+    "佣兵剑客"
+  ],
+  "reputation": "酒馆与佣兵营地中令人不敢招惹的致命游侠剑客。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Bronn",
+    "https://asoiaf.fandom.com/zh/wiki/Bronn"
+  ],
+  "summary": "出身底层的无名佣兵剑客。剑法阴险实用、身手极度敏捷，唯利是图、实用主义至上，在维斯特洛各地的战乱与商道中讨生活。"
+}

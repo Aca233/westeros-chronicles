@@ -1,0 +1,32 @@
+{
+  "aliases": [
+    "托曼王子"
+  ],
+  "appearance": "圆脸蛋，微胖稚嫩，金发柔软蓬松，碧绿大眼透着孩子特有的天真与胆怯。",
+  "characterId": "agot:Baratheon_7",
+  "experiences": [
+    {
+      "date": "8291",
+      "description": "在君临红堡诞生，为拜拉席恩与兰尼斯特王室增添幼子。",
+      "participantIds": [
+        "agot:Lannister_6",
+        "agot:Baratheon_2"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Tommen_Baratheon",
+      "title": "降生君临红堡",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [],
+  "personality": "温顺善良，易受摆布；讨厌暴力与流血冲突，极易顺从长辈与兄长的安排。",
+  "publicRoles": [
+    "王室小王子"
+  ],
+  "reputation": "宫廷中天真无邪的幼子，待人随和友好，没有王室骄纵之气。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Tommen_Baratheon",
+    "https://asoiaf.fandom.com/zh/wiki/Tommen_Baratheon"
+  ],
+  "summary": "劳勃国王与瑟曦王后的幼子。生性温厚善良胆小，喜爱小动物与小猫，在强势专横的长兄乔佛里阴影下受庇护长大。"
+}

@@ -1,0 +1,34 @@
+{
+  "aliases": [
+    "瑟曦王后",
+    "西境之光"
+  ],
+  "appearance": "金发如瀑，碧绿如翡翠的眼眸光彩照人，体态优雅高贵，常着华丽红金丝袍与缀满珠宝的礼服。",
+  "characterId": "agot:Lannister_6",
+  "experiences": [
+    {
+      "date": "8284",
+      "description": "在篡夺者战争结束后嫁给劳勃·拜拉席恩国王，成为七大王国王后以巩固西境与铁王座的同盟。",
+      "participantIds": [
+        "agot:Baratheon_2",
+        "agot:Lannister_1"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Cersei_Lannister",
+      "title": "大婚君临贝勒大圣堂",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [],
+  "personality": "骄傲自负，多疑善妒；极度护短三个子女，对任何潜在的权力威胁充满敌意与反击冲动。",
+  "publicRoles": [
+    "七国王后",
+    "兰尼斯特家族贵女"
+  ],
+  "reputation": "君临红堡最有权势与美貌的女人，但在贵族与重臣眼中以傲慢跋扈、难以相处著称。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Cersei_Lannister",
+    "https://asoiaf.fandom.com/zh/wiki/Cersei_Lannister"
+  ],
+  "summary": "七大王国王后，泰温·兰尼斯特公爵的独女。以出众容貌、强烈自尊和对家族地位的维护闻名，在红堡宫廷拥有仅次于国王的公开影响力。"
+}

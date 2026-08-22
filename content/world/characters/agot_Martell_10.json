@@ -1,0 +1,33 @@
+{
+  "aliases": [
+    "青蛙王子",
+    "昆廷王子"
+  ],
+  "appearance": "相貌平平，身材矮胖敦实，棕发扁鼻，神态拘谨严肃，缺乏乃叔奥柏伦的潇洒俊逸但神情极其坚毅。",
+  "characterId": "agot:Martell_10",
+  "experiences": [
+    {
+      "date": "8288",
+      "description": "为弥补奥柏伦决斗杀死前任伊伦伍德伯爵的过节，被道朗亲王送往伊伦伍德堡充当养子侍从。",
+      "participantIds": [
+        "agot:Martell_4"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Quentyn_Martell",
+      "title": "送往伊伦伍德寄养",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [],
+  "personality": "忠厚老实，责任感极强；渴望履行王子义务获得父亲认可，即便面对凶险绝境也绝不临阵退缩。",
+  "publicRoles": [
+    "多恩王子",
+    "骑士"
+  ],
+  "reputation": "多恩封臣眼中低调务实、毫无骄纵之气的年轻王子。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Quentyn_Martell",
+    "https://asoiaf.fandom.com/zh/wiki/Quentyn_Martell"
+  ],
+  "summary": "道朗亲王次子。自幼被送往伊伦伍德家族抚养作为政治质子，性情内向质朴、尽忠职守，在伊伦伍德伯爵麾下受封骑士。"
+}

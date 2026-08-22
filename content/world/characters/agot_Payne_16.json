@@ -1,0 +1,27 @@
+{
+  "aliases": [
+    "波德"
+  ],
+  "appearance": "身材瘦小单薄，棕色软发，神情常显羞涩慌乱，经常紧张得低下头绞弄衣角。",
+  "characterId": "agot:Payne_16",
+  "experiences": [],
+  "notableRelations": [
+    {
+      "description": "惧怕无舌行刑官伊林爵士的阴冷面孔，但依附于家族名声求生。",
+      "kind": "同族远亲伯父",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Ilyn_Payne",
+      "targetId": "agot:Payne_6"
+    }
+  ],
+  "personality": "忠诚体贴，腼腆寡言；虽然胆小怕生但内心极为忠厚老实，懂得感恩且做事细致入微。",
+  "publicRoles": [
+    "侍从贵族子弟"
+  ],
+  "reputation": "军营与贵族子弟间常被忽视戏耍的小跟班侍从。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Podrick_Payne",
+    "https://asoiaf.fandom.com/zh/wiki/Podrick_Payne"
+  ],
+  "summary": "派恩家族远支遗孤。性格极度腼腆胆怯，说话结巴，被远亲安排到兰尼斯特军营担任杂役侍从，渴望成为一名合格骑士。"
+}

@@ -1,0 +1,35 @@
+{
+  "aliases": [
+    "充气鱼",
+    "高庭公爵"
+  ],
+  "appearance": "身材高大但体态微胖，留着修剪成卷曲黑桃形状的栗色胡须，红润满面，喜穿饰有金色玫瑰的华贵天鹅绒礼服。",
+  "characterId": "agot:Tyrell_8",
+  "experiences": [
+    {
+      "date": "8283",
+      "description": "在篡夺者战争中统帅河湾地大军围困风息堡近一年，最终在奈德率军解围后向劳勃屈膝归降。",
+      "participantIds": [
+        "agot:Baratheon_3",
+        "agot:Stark_3"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Mace_Tyrell",
+      "title": "风息堡长年围城",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [],
+  "personality": "虚荣自大，渴望战场功名与王室联姻；性格好大喜功但并不残暴，极度重视提利尔家族的显赫门面。",
+  "publicRoles": [
+    "高庭公爵",
+    "南境守护",
+    "河湾地最高领主"
+  ],
+  "reputation": "全境诸侯眼中富有但缺乏真才实学的‘充气鱼’公爵，靠庞大军力和母亲智谋维持威势。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Mace_Tyrell",
+    "https://asoiaf.fandom.com/zh/wiki/Mace_Tyrell"
+  ],
+  "summary": "高庭公爵、河湾地最高领主兼南境守护。坐拥全维斯特洛最庞大的军队与最富庶的粮仓，野心勃勃但军事才能平庸，决策多依赖母亲奥莲娜夫人指导。"
+}

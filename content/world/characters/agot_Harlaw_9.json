@@ -1,0 +1,39 @@
+{
+  "aliases": [
+    "读书人罗德利克"
+  ],
+  "appearance": "身材高瘦文雅，满头银发，目光深邃睿智，鼻梁上偶尔架着老花镜，身着精致而低调的黑色羊毛长袍。",
+  "characterId": "agot:Harlaw_9",
+  "experiences": [
+    {
+      "date": "8289",
+      "description": "在葛雷乔伊叛乱中失去两名长子，从此更加坚信盲目劫掠战争乃自取灭亡之道。",
+      "participantIds": [
+        "agot:Greyjoy_5"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Rodrik_Harlaw",
+      "title": "痛失爱子稳守十塔城",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "视阿莎为自己家族未来的希望，常年在十塔城为其提供军费与明智指引。",
+      "kind": "最关爱的外甥女",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Asha_Greyjoy",
+      "targetId": "agot:Greyjoy_13"
+    }
+  ],
+  "personality": "博学理智，务实清醒；深知铁群岛落后封闭的弊端，反对盲目侵略大陆，酷爱哲学与历史典籍。",
+  "publicRoles": [
+    "十塔城伯爵",
+    "哈劳家族族长"
+  ],
+  "reputation": "铁群岛唯一因嗜书如命被称为‘读书人’的异类智者伯爵，受各岛诸侯普遍敬重。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Rodrik_Harlaw",
+    "https://asoiaf.fandom.com/zh/wiki/Rodrik_Harlaw"
+  ],
+  "summary": "哈劳岛十塔城伯爵，铁群岛最富庶显赫的诸侯领袖。酷爱搜集古籍与读书思考，在崇尚武力的铁群岛独树一帜，是铁民中罕见的明智长者。"
+}

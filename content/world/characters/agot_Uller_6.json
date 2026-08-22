@@ -1,0 +1,39 @@
+{
+  "aliases": [
+    "艾拉莉亚"
+  ],
+  "appearance": "相貌虽然并非传统绝美但极具异域风情与野性吸引力，黑发浓密，眼神深邃多情，举止奔放从容。",
+  "characterId": "agot:Uller_6",
+  "experiences": [
+    {
+      "date": "8290",
+      "description": "不顾世俗私生子名分偏见，公开作为奥柏伦的终生正伴侣出入多恩王廷与流水花园。",
+      "participantIds": [
+        "agot:Martell_8"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Ellaria_Sand",
+      "title": "与奥柏伦结为终生伴侣",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "两人心心相印，共同享受生命自由与激情，情深意笃。",
+      "kind": "至爱亲王伴侣",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Oberyn_Martell",
+      "targetId": "agot:Martell_8"
+    }
+  ],
+  "personality": "崇尚自由与真爱，痛恨毫无意义的战争与杀戮；在狂野外表下拥有极其清醒仁慈的母性内心。",
+  "publicRoles": [
+    "多恩贵妇",
+    "亲王情妇"
+  ],
+  "reputation": "多恩公认深受奥柏伦亲王专宠的非凡女人，在阳戟城享有崇高地位。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Ellaria_Sand",
+    "https://asoiaf.fandom.com/zh/wiki/Ellaria_Sand"
+  ],
+  "summary": "地狱修道院哈曼·乌勒伯爵的私生女，奥柏伦·马泰尔亲王毕生挚爱的伴侣。性格狂野坦荡，与奥柏伦共同育有四位年幼的沙蛇女儿。"
+}

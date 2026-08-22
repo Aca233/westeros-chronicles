@@ -1,0 +1,46 @@
+{
+  "aliases": [
+    "席恩王子"
+  ],
+  "appearance": "身材修长匀称，黑发微卷，面容英俊且常带有一丝轻浮嘲弄的微笑，箭术超群，身着华美北方丝缎与皮衣。",
+  "characterId": "agot:Greyjoy_14",
+  "experiences": [
+    {
+      "date": "8289",
+      "description": "在葛雷乔伊叛乱平定后被艾德·史塔克带离铁群岛，作为保证巴隆恭顺的政治人质抚养。",
+      "participantIds": [
+        "agot:Stark_3",
+        "agot:Greyjoy_5"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Theon_Greyjoy",
+      "title": "作为人质入质临冬城",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "视罗柏为唯一的知心兄弟，甘愿为罗柏执旗冲锋。",
+      "kind": "并肩成长的挚友兄弟",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Robb_Stark",
+      "targetId": "agot:Stark_6"
+    },
+    {
+      "description": "奈德虽然待其如子但席恩始终知晓若生父再反自己将被奈德依法斩首。",
+      "kind": "敬畏的养父兼处刑威胁者",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Eddard_Stark",
+      "targetId": "agot:Stark_3"
+    }
+  ],
+  "personality": "虚荣傲慢，渴望被认可；内心常年在铁民狂暴血脉与临冬城养育之恩间撕裂摇摆，极度缺乏安全感。",
+  "publicRoles": [
+    "派克岛继承人",
+    "临冬城贵族人质兼侍从"
+  ],
+  "reputation": "临冬城内外箭术第一的帅气侍从，但北境老人常戒备其叛逆铁种血统。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Theon_Greyjoy",
+    "https://asoiaf.fandom.com/zh/wiki/Theon_Greyjoy"
+  ],
+  "summary": "巴隆·葛雷乔伊仅存的幼子兼派克岛法定继承人。十年前作为人质被带回临冬城抚养，在史塔克家中锦衣玉食受教，性格浮华骄傲但内心极度缺乏归属感。"
+}

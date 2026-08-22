@@ -1,0 +1,51 @@
+{
+  "aliases": [
+    "龙石岛公爵"
+  ],
+  "appearance": "身材高瘦挺拔，面容如雕刻般严酷削瘦，深蓝眼眸冰冷刺骨，头发稀疏后退，下颚常紧紧咬合咬牙切齿。",
+  "characterId": "agot:Baratheon_3",
+  "experiences": [
+    {
+      "date": "8283",
+      "description": "在篡夺者战争中率少数守军坚守风息堡近一年，弹尽粮绝之际靠戴佛斯走私洋葱救活全城守军。",
+      "participantIds": [
+        "agot:Seaworth_1",
+        "agot:Tyrell_8"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Stannis_Baratheon",
+      "title": "风息堡围城死守",
+      "visibility": "public"
+    },
+    {
+      "date": "8289",
+      "description": "在葛雷乔伊叛乱中指挥王家舰队在仙民岛海域彻底击溃维克塔利昂的铁舰队，奠定平叛大局。",
+      "participantIds": [
+        "agot:Greyjoy_7",
+        "agot:Baratheon_2"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Stannis_Baratheon",
+      "title": "仙民岛海战大捷",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "封戴佛斯为洋葱骑士同时切除其指节以示公正，但视其为唯一敢于直言进谏的心腹助手。",
+      "kind": "唯一挚信的封臣",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Davos_Seaworth",
+      "targetId": "agot:Seaworth_1"
+    }
+  ],
+  "personality": "死板严苛，绝不通融；没有幽默感与社交温情，但具有无与伦比的坚韧意志与战术才能。",
+  "publicRoles": [
+    "龙石岛领主",
+    "海政大臣"
+  ],
+  "reputation": "全境公认最冷酷执拗的将领，治军极严，公正到不近人情，深受敬畏但鲜有人喜爱。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Stannis_Baratheon",
+    "https://asoiaf.fandom.com/zh/wiki/Stannis_Baratheon"
+  ],
+  "summary": "龙石岛领主兼御前海政大臣，劳勃国王的大弟。性格坚韧如铁、不苟言笑，恪守法律与规矩，因未获封风息堡而常年对兄长心怀怨怼。"
+}

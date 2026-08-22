@@ -1,0 +1,20 @@
+{
+  "aliases": [
+    "山姆"
+  ],
+  "appearance": "体型异常肥胖如巨型酒桶，圆脸多肉，面色苍白，眼神怯弱恐慌，身着宽大厚重的黑布长袍。",
+  "characterId": "agot:Tarly_2",
+  "experiences": [],
+  "notableRelations": [],
+  "personality": "胆小自卑，善良诚恳；嗜书如命，富有同理心与求知欲，在逆境中展现出罕见的忠诚与坚韧内心。",
+  "publicRoles": [
+    "角陵继承人"
+  ],
+  "reputation": "在角陵以不擅武艺和酷爱读书闻名，常被父亲与武人轻视，但熟悉历史、家谱、地图和诸多学术知识。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Samwell_Tarly",
+    "https://asoiaf.fandom.com/zh/wiki/Samwell_Tarly"
+  ],
+  "summary": "角陵蓝道·塔利伯爵长子与继承人。体态肥胖，不喜武艺与狩猎，却博览群书、记忆力出众；温和怯懦的性格使他长期承受父亲的失望与严厉管束。"
+}

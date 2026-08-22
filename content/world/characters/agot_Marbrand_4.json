@@ -1,0 +1,41 @@
+{
+  "aliases": [
+    "亚当爵士"
+  ],
+  "appearance": "身材匀称挺拔，留着铜红色的披肩长发，面容英俊开朗，身穿绘有燃烧之树纹章的华丽亮银板甲。",
+  "characterId": "agot:Marbrand_4",
+  "experiences": [
+    {
+      "date": "8289",
+      "description": "随西境大军渡海征讨铁民，在先锋抢滩战中战功卓著。",
+      "participantIds": [
+        "agot:Lannister_1",
+        "agot:Lannister_7"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Addam_Marbrand",
+      "title": "平定铁群岛叛乱",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "与詹姆在凯岩城一同受训长大，是詹姆极少数推心置腹的骑士兄弟。",
+      "kind": "儿时至交好友",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Jaime_Lannister",
+      "targetId": "agot:Lannister_7"
+    }
+  ],
+  "personality": "勇敢机敏，豪迈大度；深通斥候战术与骑兵突袭，在军中极有威望与人缘。",
+  "publicRoles": [
+    "烙印城继承人",
+    "骑士",
+    "前锋统领"
+  ],
+  "reputation": "西境公认最骁勇善战的先锋骑兵大将，深受泰温与詹姆的极高评价。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Addam_Marbrand",
+    "https://asoiaf.fandom.com/zh/wiki/Addam_Marbrand"
+  ],
+  "summary": "烙印城继承人兼西境骑兵先锋统领。詹姆·兰尼斯特的儿时挚友，擅长长矛骑战与前线侦察，是西境年轻一代中最优秀的将领之一。"
+}

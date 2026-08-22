@@ -1,4 +1,5 @@
 import type { CharacterId } from './types';
+import type { CharacterContentRecord } from '../world-content/types';
 import type {
   CharacterDossierSupplement,
   CharacterExperience,
@@ -6,6 +7,7 @@ import type {
 } from './characterSupplementTypes';
 
 const KNOWN_FIELDS = new Set([
+  'schemaVersion',
   'characterId',
   'summary',
   'publicRoles',
@@ -15,7 +17,7 @@ const KNOWN_FIELDS = new Set([
   'reputation',
   'experiences',
   'notableRelations',
-  'sourceUrls',
+  'sources',
 ]);
 
 const KNOWN_EXPERIENCE_FIELDS = new Set([
@@ -191,7 +193,7 @@ export function validateNotableRelation(candidate: unknown, characterId: Charact
   };
 }
 
-export function validateCharacterSupplement(candidate: unknown): CharacterDossierSupplement {
+export function validateCharacterSupplement(candidate: unknown): CharacterContentRecord {
   if (!candidate || typeof candidate !== 'object' || Array.isArray(candidate)) {
     throw new Error('人物卷宗补充资料必须为非空对象');
   }
@@ -200,6 +202,10 @@ export function validateCharacterSupplement(candidate: unknown): CharacterDossie
     if (!KNOWN_FIELDS.has(key)) {
       throw new Error(`人物卷宗补充资料包含未知字段 '${key}'`);
     }
+  }
+
+  if (raw.schemaVersion !== 1) {
+    throw new Error('人物内容版本必须为 1');
   }
 
   if (!isValidAgotId(raw.characterId)) {
@@ -269,17 +275,18 @@ export function validateCharacterSupplement(candidate: unknown): CharacterDossie
     }
   }
 
-  if (!Array.isArray(raw.sourceUrls) || raw.sourceUrls.length === 0) {
-    throw new Error(`人物卷宗缺少来源 sourceUrls (人物: ${characterId})`);
+  if (!Array.isArray(raw.sources) || raw.sources.length === 0) {
+    throw new Error(`人物卷宗缺少来源 sources (人物: ${characterId})`);
   }
-  const sourceUrls = raw.sourceUrls.map((url) => {
+  const sources = raw.sources.map((url) => {
     if (!isValidHttpUrl(url)) {
-      throw new Error(`人物卷宗包含无效 sourceUrl: ${String(url)} (人物: ${characterId})`);
+      throw new Error(`人物卷宗包含无效来源 URL: ${String(url)} (人物: ${characterId})`);
     }
     return (url as string).trim();
   });
 
   return {
+    schemaVersion: 1,
     characterId,
     ...(typeof raw.summary === 'string' && raw.summary.trim() ? { summary: raw.summary.trim() } : {}),
     ...(publicRoles && publicRoles.length > 0 ? { publicRoles } : {}),
@@ -289,16 +296,16 @@ export function validateCharacterSupplement(candidate: unknown): CharacterDossie
     ...(typeof raw.reputation === 'string' && raw.reputation.trim() ? { reputation: raw.reputation.trim() } : {}),
     ...(experiences && experiences.length > 0 ? { experiences } : {}),
     ...(notableRelations && notableRelations.length > 0 ? { notableRelations } : {}),
-    sourceUrls,
+    sources,
   };
 }
 
-export function parseCharacterSupplementIndex(value: unknown): Record<CharacterId, CharacterDossierSupplement> {
+export function parseCharacterSupplementIndex(value: unknown): Record<CharacterId, CharacterContentRecord> {
   if (!value || typeof value !== 'object' || Array.isArray(value)) {
     throw new Error('人物卷宗补充数据集必须为以 characterId 为键的对象');
   }
   const raw = value as Record<string, unknown>;
-  const result: Record<CharacterId, CharacterDossierSupplement> = {};
+  const result: Record<CharacterId, CharacterContentRecord> = {};
 
   for (const [key, entry] of Object.entries(raw)) {
     if (!isValidAgotId(key)) {

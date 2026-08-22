@@ -1,0 +1,32 @@
+{
+  "aliases": [
+    "青蛙脸司令"
+  ],
+  "appearance": "身材矮胖结实，脖子粗短，青蛙般凸出的双眼与阔嘴，留着稀疏黑发，身穿华丽耀眼的金边黑铠与金袍。",
+  "characterId": "agot:Slynt_1",
+  "experiences": [
+    {
+      "date": "8293",
+      "description": "在前任司令去世后，凭借培提尔·贝里席的幕后运作成功当上君临金袍子最高统帅。",
+      "participantIds": [
+        "agot:Baratheon_2"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Janos_Slynt",
+      "title": "升任都城守备队总司令",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [],
+  "personality": "贪婪狂妄，见风使舵；热衷聚敛财富与巴结权贵，极度渴望跻身贵族领主之列。",
+  "publicRoles": [
+    "都城守备队司令",
+    "金袍子司令官"
+  ],
+  "reputation": "君临平民与正直贵族眼中臭名昭著的贪渎黑官，但在宫廷权贵眼中是绝佳的收买工具。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Janos_Slynt",
+    "https://asoiaf.fandom.com/zh/wiki/Janos_Slynt"
+  ],
+  "summary": "君临都城守备队的司令，出身屠夫家庭，依靠宫廷经营与利益交换逐步升迁。以贪婪、卖官鬻爵和牢牢控制金袍子闻名。"
+}

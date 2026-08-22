@@ -1,0 +1,39 @@
+{
+  "aliases": [
+    "梅姬夫人"
+  ],
+  "appearance": "身形敦实强健，带有久居北境海岛的粗砺气质；衣着以便于骑乘和处理领地事务的厚实毛料、皮革为主。",
+  "characterId": "agot:Mormont_4",
+  "experiences": [
+    {
+      "date": "8293",
+      "description": "在乔拉·莫尔蒙因贩奴畏罪潜逃后，毅然收拾家族乱局，恢复熊岛的安定与秩序。",
+      "participantIds": [
+        "agot:Mormont_3"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Maege_Mormont",
+      "title": "接管熊岛统治",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "感谢艾德公爵对熊岛的庇护，同时坚决支持临冬城对贩奴罪犯的严正法令。",
+      "kind": "尊敬的守护领主",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Eddard_Stark",
+      "targetId": "agot:Stark_3"
+    }
+  ],
+  "personality": "直率顽强，不拘泥南方贵族礼法；重视家族、领民与熊岛的独立传统，面对威胁时态度坚决。",
+  "publicRoles": [
+    "熊岛伯爵夫人",
+    "北境女诸侯"
+  ],
+  "reputation": "以强硬、能干和不畏艰苦著称，是北境少数公开执掌领地与军务的女性领主之一。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Maege_Mormont",
+    "https://asoiaf.fandom.com/zh/wiki/Maege_Mormont"
+  ],
+  "summary": "熊岛女伯爵与莫尔蒙家族族长，在侄子乔拉流亡后接掌熊岛。她作风强硬务实，熟悉这座贫瘠海岛长期面对的铁民袭扰与防务压力。"
+}

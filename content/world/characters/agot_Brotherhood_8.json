@@ -1,0 +1,58 @@
+{
+  "aliases": [
+    "密尔的索罗斯",
+    "红袍索罗斯"
+  ],
+  "appearance": "身材高大但因酗酒发福，一头杂乱黑发，常穿一件洗得发白褪色的油腻宽大红袍，腰间挂着大酒囊与长剑。",
+  "characterId": "agot:Brotherhood_8",
+  "experiences": [
+    {
+      "date": "8282",
+      "description": "受密尔红神庙派遣前往君临试图感化疯王，失败后转而在劳勃朝廷中混迹成为比武冠军。",
+      "participantIds": [
+        "agot:Baratheon_2"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Thoros_of_Myr",
+      "title": "出使君临传教",
+      "visibility": "public"
+    },
+    {
+      "date": "8289",
+      "description": "在葛雷乔伊叛乱攻城战中，挥舞燃烧的烈火宝剑第一个顺着城墙缺口杀入派克城立下头功。",
+      "participantIds": [
+        "agot:Baratheon_2",
+        "agot:Stark_3"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Thoros_of_Myr",
+      "title": "手持火剑先登派克城",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "经常陪伴劳勃畅饮狂欢，深受劳勃国王的恩宠与纵容。",
+      "kind": "投契的国王酒友",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Robert_I_Baratheon",
+      "targetId": "agot:Baratheon_2"
+    },
+    {
+      "description": "在君临多次比武盛会中与年轻的闪电伯爵贝里结下深厚骑士友谊。",
+      "kind": "比武结识的莫逆之交",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Beric_Dondarrion",
+      "targetId": "agot:Dondarrion_2"
+    }
+  ],
+  "personality": "豪爽不羁，嗜酒如命；早已将祭司清规戒律抛在脑后，但生性重义气，打起仗来悍不畏死狂热无比。",
+  "publicRoles": [
+    "红袍僧",
+    "比武骑士",
+    "宫廷酒友"
+  ],
+  "reputation": "君临比武场与酒馆里的传奇狂僧，以挥舞烈火之剑劈开敌阵闻名。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Thoros_of_Myr",
+    "https://asoiaf.fandom.com/zh/wiki/Thoros_of_Myr"
+  ],
+  "summary": "来自自由城邦密尔的拉赫洛红袍僧兼劳勃国王的比武酒友。常年沉溺于烈酒与妓院，在比武场上手持浸泡野火燃烧的长剑冲锋夺冠，深得劳勃宠爱。"
+}

@@ -1,0 +1,39 @@
+{
+  "aliases": [
+    "卡特·派克大人"
+  ],
+  "appearance": "身材精瘦硬朗，相貌粗陋凶悍，长着铁民典型的硬脸与断齿，长年身着海盐浸渍的防潮皮甲与黑斗篷。",
+  "characterId": "agot:Eastwatch_By_The_Sea_1",
+  "experiences": [
+    {
+      "date": "8285",
+      "description": "凭借出色的铁民航海武艺被推举为东海望要塞指挥官，统领守夜人战船防线。",
+      "participantIds": [
+        "agot:Mormont_2"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Cotter_Pyke",
+      "title": "出任东海望指挥官",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "与影子塔的贵族老将丹尼斯·梅利斯特互相看不起，常年因军费调配产生摩擦争吵。",
+      "kind": "针锋相对的竞争对手",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Denys_Mallister",
+      "targetId": "agot:Mallister_6"
+    }
+  ],
+  "personality": "粗暴凶悍，直来直去；讨厌繁文缛节与贵族虚礼，在海上指挥果决狠辣。",
+  "publicRoles": [
+    "东海望指挥官",
+    "守夜人海军统帅"
+  ],
+  "reputation": "东海望黑衣水手与游骑兵畏服的强悍首领，海豹湾走私者的克星。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Cotter_Pyke",
+    "https://asoiaf.fandom.com/zh/wiki/Cotter_Pyke"
+  ],
+  "summary": "东海望指挥官，铁群岛私生子出身。性情粗暴野蛮、精通海战航运，统领守夜人仅存的战船巡弋海豹湾，常年捕杀走私犯与塞外野人。"
+}

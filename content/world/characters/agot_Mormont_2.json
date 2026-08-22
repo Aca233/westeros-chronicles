@@ -1,0 +1,46 @@
+{
+  "aliases": [
+    "熊老"
+  ],
+  "appearance": "身材极其魁梧强壮，白发苍苍，秃顶，留着如大扫帚般的浓密白须，肩头常年停着一只会说话的黑羽老渡鸦。",
+  "characterId": "agot:Mormont_2",
+  "experiences": [
+    {
+      "date": "8288",
+      "description": "凭借在军团中的卓越威望被全体黑衣守夜人兄弟推选为第997任总司令官。",
+      "participantIds": [
+        "agot:Targaryen_120",
+        "agot:Stark_4"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Jeor_Mormont",
+      "title": "当选守夜人总司令",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "遇有军团重大难题必向伊蒙学士求教，两人维系着黑城堡数十年稳定。",
+      "kind": "倚重的智者长者",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Aemon",
+      "targetId": "agot:Targaryen_120"
+    },
+    {
+      "description": "将塞外最关键的侦察任务全权托付给班扬·史塔克。",
+      "kind": "最信任的巡逻先锋",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Benjen_Stark",
+      "targetId": "agot:Stark_4"
+    }
+  ],
+  "personality": "刚毅坚毅，公正严明；深通军务与长城局势，将全部心血倾注于守卫生者疆界，威严而富长者关怀。",
+  "publicRoles": [
+    "守夜人军团总司令",
+    "前熊岛伯爵"
+  ],
+  "reputation": "绝境长城军民上下共同爱戴敬畏的最高领袖与不朽长城支柱。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Jeor_Mormont",
+    "https://asoiaf.fandom.com/zh/wiki/Jeor_Mormont"
+  ],
+  "summary": "守夜人军团第997任总司令，原熊岛伯爵。为让位给儿子乔拉而自愿披上黑衣北上长城，以铁腕治军、坚毅威严维系着衰微军团的最后尊严与防线。"
+}

@@ -1,0 +1,31 @@
+{
+  "aliases": [
+    "崔斯丹王子"
+  ],
+  "appearance": "面容清秀俊朗，留着多恩人典型的柔顺黑卷发与清亮眼睛，衣着轻快华丽。",
+  "characterId": "agot:Martell_11",
+  "experiences": [
+    {
+      "date": "8287",
+      "description": "作为道朗亲王最小的孩子在阳戟城诞生。",
+      "participantIds": [
+        "agot:Martell_4"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Trystane_Martell",
+      "title": "降生阳戟城",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [],
+  "personality": "天真单纯，性情温柔；对宫廷权谋一无所知，深受侍从与宫廷侍女们的喜爱。",
+  "publicRoles": [
+    "多恩幼子王子"
+  ],
+  "reputation": "流水花园里备受呵护的小王子。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Trystane_Martell",
+    "https://asoiaf.fandom.com/zh/wiki/Trystane_Martell"
+  ],
+  "summary": "道朗亲王幼子。年幼懵懂，性格温和乖巧纯真，常年在流水花园的喷泉与柑橘林间无忧无虑玩耍戏水，深受仆从喜爱。"
+}

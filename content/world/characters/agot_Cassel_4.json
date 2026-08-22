@@ -1,0 +1,38 @@
+{
+  "aliases": [
+    "乔里"
+  ],
+  "appearance": "身材高大挺拔，褐色头发与机敏的灰眼睛，身着饰有史塔克冰原狼徽章的优质皮甲与锁甲。",
+  "characterId": "agot:Cassel_4",
+  "experiences": [
+    {
+      "date": "8289",
+      "description": "在葛雷乔伊叛乱后凭过人武艺与忠诚被奈德公爵任命为临冬城侍卫队长。",
+      "participantIds": [
+        "agot:Stark_3"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Jory_Cassel",
+      "title": "晋升侍卫队长",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "甘愿为艾德公爵与史塔克家族赴汤蹈火的忠勇近卫队长。",
+      "kind": "誓死护卫的主公",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Eddard_Stark",
+      "targetId": "agot:Stark_3"
+    }
+  ],
+  "personality": "沉着警觉，忠勇果敢；行事雷厉风行，与临冬城上下相处融洽，是艾德最贴身的卫队长。",
+  "publicRoles": [
+    "侍卫队长"
+  ],
+  "reputation": "艾德公爵最得力的贴身护卫，备受北境卫士们的信赖与尊重。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Jory_Cassel",
+    "https://asoiaf.fandom.com/zh/wiki/Jory_Cassel"
+  ],
+  "summary": "临冬城侍卫队长，马丁·凯索之子。年轻精干，剑术高强出众，负责艾德·史塔克公爵贴身安全与城堡各处防务。"
+}

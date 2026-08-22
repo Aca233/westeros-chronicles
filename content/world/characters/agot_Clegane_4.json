@@ -1,0 +1,39 @@
+{
+  "aliases": [
+    "猎狗"
+  ],
+  "appearance": "身材高大魁梧，左脸布满被烈火灼烧扭曲的狰狞暗红焦疤，头戴标志性的龇牙狂吠精钢狗头盔。",
+  "characterId": "agot:Clegane_4",
+  "experiences": [
+    {
+      "date": "8283",
+      "description": "离开克里冈祖地加入凯岩城侍卫军，凭借凶悍武艺成为兰尼斯特家族的核心打手。",
+      "participantIds": [
+        "agot:Lannister_1"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Sandor_Clegane",
+      "title": "受雇兰尼斯特家族",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "受命贴身保护乔佛里，虽然看不起这位任性残忍的王子但忠实执行护卫职责。",
+      "kind": "护卫与侍奉的主子",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Joffrey_Baratheon",
+      "targetId": "agot:Baratheon_5"
+    }
+  ],
+  "personality": "冷酷粗暴，愤世嫉俗；极度厌恶骑士虚名，内心残存未泯的良知，对烈火怀有深入骨髓的本能恐惧。",
+  "publicRoles": [
+    "王室侍卫",
+    "近卫战士"
+  ],
+  "reputation": "君临红堡中最令人畏惧退避的凶悍恶犬，以杀伐果断与毒舌无情闻名。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Sandor_Clegane",
+    "https://asoiaf.fandom.com/zh/wiki/Sandor_Clegane"
+  ],
+  "summary": "兰尼斯特家族侍卫兼乔佛里王子贴身保镖。幼年遭亲兄魔山毁容，厌恶骑士的虚伪口号而坚拒受封骑士头衔，剑术凶悍凌厉。"
+}

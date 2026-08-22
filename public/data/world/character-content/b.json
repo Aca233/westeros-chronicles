@@ -1,0 +1,180 @@
+{
+  "agot:Manderly_6": {
+    "aliases": [
+      "白港鳗鱼大人",
+      "臃肿伯爵"
+    ],
+    "appearance": "体积极其庞大，肥硕得无法骑马，需乘坐特制马车，双下巴重叠，但笑意盈盈的双眼中藏着敏锐深邃的光芒。",
+    "characterId": "agot:Manderly_6",
+    "experiences": [
+      {
+        "date": "8283",
+        "description": "在篡夺者战争中为联军提供港口转运与精锐战船，稳固了北境与三叉戟河的海上补给线。",
+        "participantIds": [
+          "agot:Stark_3"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Wyman_Manderly",
+        "title": "筑港扩军效忠北境",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "曼德勒家族自古受史塔克庇护迁居白港，世世代代誓死捍卫北境古神之狼。",
+        "kind": "效忠的宗主领主",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Eddard_Stark",
+        "targetId": "agot:Stark_3"
+      }
+    ],
+    "personality": "圆滑隐忍，城府极深；擅长以荒唐可笑的外表迷惑敌人，内心深处对史塔克家族怀有数百年的忠诚与誓言。",
+    "publicRoles": [
+      "白港伯爵",
+      "白刃河守卫"
+    ],
+    "reputation": "常被南方贵族嘲笑为贪吃嗜睡的北境肥猪，实则是极具战略眼光与财力的智谋诸侯。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Wyman_Manderly",
+      "https://asoiaf.fandom.com/zh/wiki/Wyman_Manderly"
+    ],
+    "summary": "白港伯爵兼新堡领主，北境唯一的城市领主。掌控白刃河入海口与庞大舰队，财富雄厚，信奉七神，对外装作体态臃肿的享乐贵族。"
+  },
+  "agot:Martell_13": {
+    "aliases": [
+      "娜姆夫人"
+    ],
+    "appearance": "身材修长高挑，黑发编成长辫，皮肤白皙，深黑眼眸冷艳逼人，裙下藏着数十把淬毒精钢飞刀。",
+    "characterId": "agot:Martell_13",
+    "experiences": [
+      {
+        "date": "8279",
+        "description": "随生母接受了自由城邦瓦兰提斯最高等贵族礼仪与暗杀技艺教导后返回多恩。",
+        "participantIds": [
+          "agot:Martell_8"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Nymeria_Sand",
+        "title": "受教厄索斯宫廷",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [],
+    "personality": "优雅沉静，阴狠毒辣；言语温和得体但杀伐极其决绝，擅长在贵族社交中无形夺人性命。",
+    "publicRoles": [
+      "沙蛇次女",
+      "贵族名媛刺客"
+    ],
+    "reputation": "多恩贵族公认最优雅危险的绝色毒蝎美人。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Nymeria_Sand",
+      "https://asoiaf.fandom.com/zh/wiki/Nymeria_Sand"
+    ],
+    "summary": "‘沙蛇’次女，奥柏伦·马泰尔与瓦兰提斯贵妇所生。容貌高贵冷艳，精通暗器飞刀与宫廷礼仪，举止优雅迷人但暗藏致命杀机。"
+  },
+  "agot:Stark_11": {
+    "aliases": [
+      "瑞肯"
+    ],
+    "appearance": "圆脸蛋，浅棕色乱发与明亮蓝眼，年纪尚幼，步履蹒跚但充满精力。",
+    "characterId": "agot:Stark_11",
+    "experiences": [
+      {
+        "date": "8295",
+        "description": "作为史塔克夫妇最小的孩子在临冬城降生。",
+        "participantIds": [
+          "agot:Stark_3",
+          "agot:Tully_4"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Rickon_Stark",
+        "title": "降生临冬城",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [],
+    "personality": "任性倔强，情绪强烈；尚未完全理解贵族规矩与世事变迁，极度依恋母亲与兄弟姐妹。",
+    "publicRoles": [
+      "临冬城幼子"
+    ],
+    "reputation": "临冬城备受呵护的幼子，偶因冰原狼毛毛狗的凶性而令人敬畏。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Rickon_Stark",
+      "https://asoiaf.fandom.com/zh/wiki/Rickon_Stark"
+    ],
+    "summary": "艾德·史塔克与凯特琳幼子。年仅三岁，性情活泼懵懂，紧紧跟随着哥哥姐姐与凶悍暴躁的黑色冰原狼毛毛狗在城堡奔跑。"
+  },
+  "agot:Targaryen_8": {
+    "aliases": [
+      "乞丐王",
+      "唤醒真龙者"
+    ],
+    "appearance": "身材瘦削挺拔，留着坦格利安标志性的银金色长发，浅紫色眼眸中闪烁着狂躁不安的神经质光芒，衣衫华贵但磨损严重。",
+    "characterId": "agot:Targaryen_8",
+    "experiences": [
+      {
+        "date": "8283",
+        "description": "在篡夺者战争末期由母亲蕾拉王后带离君临避难龙石岛，在王室倾覆后开始了颠沛流离的流亡生涯。",
+        "participantIds": [
+          "agot:Targaryen_9"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Viserys_Targaryen",
+        "title": "逃离君临避难龙石岛",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "依附于伊利里欧的豪宅与财富，对其虚假承诺深信不疑。",
+        "kind": "赞助商人与野心合伙人",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Illyrio_Mopatis",
+        "targetId": "agot:Mopatis_1"
+      }
+    ],
+    "personality": "残暴狂躁，傲慢自大；在长年流亡屈辱中精神日渐扭曲偏执，动辄以‘唤醒真龙之怒’虐待威吓妹妹丹妮莉丝。",
+    "publicRoles": [
+      "流亡真龙合法继承人",
+      "自封七国之王"
+    ],
+    "reputation": "厄索斯自由城邦权贵酒宴间被当做笑柄的落魄‘乞丐王’。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Viserys_Targaryen",
+      "https://asoiaf.fandom.com/zh/wiki/Viserys_Targaryen"
+    ],
+    "summary": "坦格利安王朝的流亡王子，自称铁王座合法继承人。家族覆灭后辗转东大陆诸城邦，长期依靠旧日支持者与富商接济，性格日益暴躁偏执。"
+  },
+  "agot:Tully_1": {
+    "aliases": [
+      "霍斯特公爵",
+      "老鳟鱼"
+    ],
+    "appearance": "晚年饱受水肿病痛折磨，身材枯瘦萎缩，灰红长须稀疏，面容枯槁憔悴，长年卧于奔流城主塔病榻。",
+    "characterId": "agot:Tully_1",
+    "experiences": [
+      {
+        "date": "8283",
+        "description": "在鸣钟之役后将长女凯特琳许配艾德、次女莱莎许配琼恩·艾林，带领河间地全境起兵加入反抗疯王联军。",
+        "participantIds": [
+          "agot:Stark_3",
+          "agot:Arryn_3"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Hoster_Tully",
+        "title": "缔结三叉戟河反叛同盟",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [],
+    "personality": "精明老练，以家族利益为第一准则；年轻时果断霸道，晚年在谵妄中对当年逼迫莱莎堕胎深感悔恨自责。",
+    "publicRoles": [
+      "奔流城公爵",
+      "三叉戟河最高领主"
+    ],
+    "reputation": "河间地备受爱戴的古老统治者与三叉戟河联盟的缔造者。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Hoster_Tully",
+      "https://asoiaf.fandom.com/zh/wiki/Hoster_Tully"
+    ],
+    "summary": "奔流城公爵兼三叉戟河最高领主。曾通过将双女联姻北境与谷地奠定篡夺者战争胜利，晚年深受重病折磨卧床不起，将政务托付独子艾德慕。"
+  }
+}

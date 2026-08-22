@@ -1,0 +1,38 @@
+{
+  "aliases": [
+    "荆棘女王",
+    "奥莲娜夫人"
+  ],
+  "appearance": "身材娇小干瘪如干枣的老妇人，白发苍苍，戴着精致的白色无沿帽，眼神锐利如刀，拄着拐杖但步履稳健。",
+  "characterId": "agot:Redwyne_2",
+  "experiences": [
+    {
+      "date": "8250",
+      "description": "年轻时凭借机智巧妙避开了与戴隆·坦格利安王子的政治婚约，后改嫁高庭公爵路瑟·提利尔。",
+      "participantIds": [],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Olenna_Tyrell",
+      "title": "巧妙摆脱坦格利安王室联姻",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "将最心爱的孙女玛格丽视作家族未来的无价之宝并亲授其宫廷权谋与生存之道。",
+      "kind": "悉心栽培的掌上明珠",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Margaery_Tyrell",
+      "targetId": "agot:Tyrell_14"
+    }
+  ],
+  "personality": "机智刻薄，一针见血；极度厌恶愚蠢与虚伪，对家族利益与孙辈前程呵护备至，手段老辣果决。",
+  "publicRoles": [
+    "高庭公爵太夫人",
+    "提利尔家族幕后掌门人"
+  ],
+  "reputation": "全维斯特洛公认最不能招惹的政坛老祖母，无人能在言语交锋中从其手中占得便宜。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Olenna_Tyrell",
+    "https://asoiaf.fandom.com/zh/wiki/Olenna_Redwyne"
+  ],
+  "summary": "高庭公爵太夫人，梅斯·提利尔之母。人称‘荆棘女王’，以尖酸刻薄的毒舌、老辣深邃的政治洞察力和对家族前程的绝对掌控力闻名于七大王国。"
+}

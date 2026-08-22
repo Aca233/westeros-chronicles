@@ -1,0 +1,39 @@
+{
+  "aliases": [
+    "亚历斯爵士"
+  ],
+  "appearance": "面容英俊端正，身材高大匀称，留着浅金棕色头发与温和的棕色眼睛，白袍白甲一尘不染。",
+  "characterId": "agot:Oakheart_4",
+  "experiences": [
+    {
+      "date": "8290",
+      "description": "凭借出众武艺与古橡城名门贵族教养被劳勃国王选入御林铁卫。",
+      "participantIds": [
+        "agot:Baratheon_2",
+        "agot:Selmy_3"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Arys_Oakheart",
+      "title": "披上白袍入卫",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "长期担任弥赛菈公主的专属护卫骑士，对公主忠心耿耿爱护有加。",
+      "kind": "誓死护卫的小公主",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Myrcella_Baratheon",
+      "targetId": "agot:Baratheon_6"
+    }
+  ],
+  "personality": "正直热诚，恪尽职守；对骑士誓言抱有赤诚之心，但在面对情感与道义冲突时内心容易挣扎。",
+  "publicRoles": [
+    "御林铁卫骑士"
+  ],
+  "reputation": "御林铁卫中为数不多仍保留传统骑士风范与良好声誉的贵族楷模。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Arys_Oakheart",
+    "https://asoiaf.fandom.com/zh/wiki/Arys_Oakheart"
+  ],
+  "summary": "御林铁卫白袍骑士，河湾地古老贵族古橡城出身。恪守传统骑士信条，温和有礼，常年被指派贴身护卫弥赛菈公主的安全。"
+}

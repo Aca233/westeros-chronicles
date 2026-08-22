@@ -1,0 +1,39 @@
+{
+  "aliases": [
+    "罗宛大人"
+  ],
+  "appearance": "身材修长挺拔，面容沉静威严，留着整齐的短髭，身披绣有金色大树纹章的华丽深绿天鹅绒披风。",
+  "characterId": "agot:Rowan_1",
+  "experiences": [
+    {
+      "date": "8283",
+      "description": "统领金树城精锐骑兵随梅斯·提利尔参与围城，始终维持军纪严明。",
+      "participantIds": [
+        "agot:Tyrell_8"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Mathis_Rowan",
+      "title": "随军参战篡夺者之役",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "梅斯·提利尔在战役谋划中最依赖与倾听意见的诸侯大将。",
+      "kind": "效忠的封君统帅",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Mace_Tyrell",
+      "targetId": "agot:Tyrell_8"
+    }
+  ],
+  "personality": "沉着冷静，深谋远虑；富有正义感，做事顾全大局，在河湾地军事会议中极有分量与威信。",
+  "publicRoles": [
+    "金树城伯爵",
+    "河湾地诸侯重臣"
+  ],
+  "reputation": "河湾地公认最值得信赖与才干过人的骨干领主将领。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Mathis_Rowan",
+    "https://asoiaf.fandom.com/zh/wiki/Mathis_Rowan"
+  ],
+  "summary": "金树城伯爵，河湾地最有声望与实力的资深诸侯之一。性格稳重正直、长于谋略统军，是高庭公爵梅斯最核心的军事智囊与大将。"
+}

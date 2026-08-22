@@ -1,0 +1,58 @@
+{
+  "aliases": [
+    "小指头"
+  ],
+  "appearance": "身材短小瘦削，留着精心修剪的黑灰小山羊胡，一双灰绿如猫的双眼闪烁狡黠智慧，常着裁剪讲究的灰蓝丝绒短袍。",
+  "characterId": "agot:Baelish_2",
+  "experiences": [
+    {
+      "date": "8281",
+      "description": "年轻时为争夺凯特琳·徒利向布兰登·史塔克发起生死决斗，重伤落败后被逐出奔流城。",
+      "participantIds": [
+        "agot:Tully_4",
+        "agot:Tully_1"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Petyr_Baelish",
+      "title": "奔流城决斗惨败",
+      "visibility": "public"
+    },
+    {
+      "date": "8293",
+      "description": "在莱莎引荐与海鸥镇海关显赫政绩推动下，被琼恩·艾林招入御前会议主管全国财政税收。",
+      "participantIds": [
+        "agot:Arryn_3",
+        "agot:Tully_6",
+        "agot:Baratheon_2"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Petyr_Baelish",
+      "title": "晋升御前财政大臣",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "自幼深爱凯特琳，其一生对权力的狂热追逐皆始于当年因地位悬殊被夺爱的屈辱。",
+      "kind": "毕生执念与初恋",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Catelyn_Stark",
+      "targetId": "agot:Tully_4"
+    },
+    {
+      "description": "与情报总管瓦里斯在红堡深宫中心照不宣地博弈对抗，彼此提防对方的暗棋。",
+      "kind": "宫廷棋局宿敌兼智谋对手",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Varys",
+      "targetId": "agot:Eunuch_1"
+    }
+  ],
+  "personality": "野心勃勃，城府深不可测；擅长伪装人畜无害，擅长挑起混乱并视混乱为向权力巅峰攀爬的天梯。",
+  "publicRoles": [
+    "御前财政大臣",
+    "五指半岛领主"
+  ],
+  "reputation": "朝廷上下人尽皆知的理财奇才，看似无害但私下令王室重臣摸不透底细。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Petyr_Baelish",
+    "https://asoiaf.fandom.com/zh/wiki/Petyr_Baelish"
+  ],
+  "summary": "御前财政大臣兼五指半岛微末领主。出身寒微但精通理财与投机权谋，掌控王家海关与庞大商业网络，在君临暗中布局翻云覆雨。"
+}

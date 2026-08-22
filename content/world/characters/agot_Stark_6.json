@@ -1,0 +1,39 @@
+{
+  "aliases": [
+    "临冬城少主"
+  ],
+  "appearance": "相貌承袭母亲的徒利家族特征，身材高大壮硕，红棕色卷发，蓝眸明亮有神，身旁跟随着形影不离的冰原狼灰风。",
+  "characterId": "agot:Stark_6",
+  "experiences": [
+    {
+      "date": "8283",
+      "description": "在篡夺者战争期间诞生于母亲的家族城堡奔流城，战后随母亲移居北境临冬城。",
+      "participantIds": [
+        "agot:Tully_4",
+        "agot:Stark_3"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Robb_Stark",
+      "title": "奔流城降生",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "席恩作为人质在临冬城生活近十年，与罗柏情同知交好友与并肩骑士。",
+      "kind": "亲密同伴与侍从",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Theon_Greyjoy",
+      "targetId": "agot:Greyjoy_14"
+    }
+  ],
+  "personality": "勇敢刚毅，胸怀坦荡；继承了父亲的荣誉感与责任心，在重大决断前迅速展现出与年龄不相称的威严。",
+  "publicRoles": [
+    "临冬城继承人"
+  ],
+  "reputation": "临冬城军民普遍爱戴的年轻少主，被北境封臣视为合格的未来北境守护。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Robb_Stark",
+    "https://asoiaf.fandom.com/zh/wiki/Robb_Stark"
+  ],
+  "summary": "临冬城继承人，艾德·史塔克与凯特琳的长子。在父亲悉心培养下成长为一名正直勇敢、擅长马术与剑术的年轻领袖。"
+}

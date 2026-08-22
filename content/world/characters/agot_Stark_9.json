@@ -1,0 +1,33 @@
+{
+  "aliases": [
+    "马面艾莉亚",
+    "下水道的阿利"
+  ],
+  "appearance": "长着典型的史塔克长脸、灰眸与褐色乱发，身材瘦小灵活，常弄脏衣裳，身边伴有凶猛野性的冰原狼娜梅莉亚。",
+  "characterId": "agot:Stark_9",
+  "experiences": [
+    {
+      "date": "8289",
+      "description": "在葛雷乔伊叛乱结束之年诞生于临冬城，自幼展现出与众不同的野性与好奇心。",
+      "participantIds": [
+        "agot:Stark_3",
+        "agot:Tully_4"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Arya_Stark",
+      "title": "降生临冬城",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [],
+  "personality": "叛逆倔强，直率无畏；极具正义感，绝不掩饰喜恶，渴望像骑士和战士一样掌握自己的命运。",
+  "publicRoles": [
+    "临冬城次女"
+  ],
+  "reputation": "临冬城内出了名的顽皮假小子，常令侍女和修女头疼不已。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Arya_Stark",
+    "https://asoiaf.fandom.com/zh/wiki/Arya_Stark"
+  ],
+  "summary": "艾德·史塔克公爵的次女。厌恶淑女规训与针线纺织，热衷于骑马、射箭与舞剑，常在临冬城回廊与残墙间攀爬探索。"
+}

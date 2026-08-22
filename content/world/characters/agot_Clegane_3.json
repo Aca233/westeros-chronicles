@@ -1,0 +1,40 @@
+{
+  "aliases": [
+    "魔山",
+    "骑马的巨怪"
+  ],
+  "appearance": "身高达八英尺，重逾三十石，肩膀宽阔如城门，着全套厚重实心精钢重铠，单手挥舞一柄重型巨剑。",
+  "characterId": "agot:Clegane_3",
+  "experiences": [
+    {
+      "date": "8283",
+      "description": "攻破红堡梅葛楼，残忍摔死雷加王子的幼子伊耿并强暴杀害了多恩公主伊莉亚·马泰尔。",
+      "participantIds": [
+        "agot:Lannister_1"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Gregor_Clegane",
+      "title": "洗劫君临与杀害坦格利安幼嗣",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "泰温公爵手中最致命也是最骇人的杀戮工具，负责执行一切毁灭性任务。",
+      "kind": "效忠的主公",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Tywin_Lannister",
+      "targetId": "agot:Lannister_1"
+    }
+  ],
+  "personality": "嗜血残暴，凶蛮嗜杀；毫无道德与同理心，对暴力与虐杀充满本能渴望，只听从泰温·兰尼斯特的残酷号令。",
+  "publicRoles": [
+    "方石城领主",
+    "骑士"
+  ],
+  "reputation": "全维斯特洛人人谈之色变的战争凶兽与刽子手，恶名昭彰于七大王国。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Gregor_Clegane",
+    "https://asoiaf.fandom.com/zh/wiki/Gregor_Clegane"
+  ],
+  "summary": "克里冈家族领主兼泰温·兰尼斯特麾下最凶残的封臣骑士。身躯异常庞大如巨怪，嗜杀成性，常年头痛需大量饮用罂粟花奶止痛。"
+}

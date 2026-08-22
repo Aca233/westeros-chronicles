@@ -1,0 +1,40 @@
+{
+  "aliases": [
+    "高庭小玫瑰"
+  ],
+  "appearance": "一头浓密的棕色长卷发，鹿一般灵动的棕色大眼睛，身材婀娜多姿，笑容温暖甜美，举止优雅绝伦。",
+  "characterId": "agot:Tyrell_14",
+  "experiences": [
+    {
+      "date": "8283",
+      "description": "作为提利尔家族最小的孩子兼独女在高庭诞生，自幼接受严格的贵族统治者熏陶。",
+      "participantIds": [
+        "agot:Tyrell_8",
+        "agot:Redwyne_2"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Margaery_Tyrell",
+      "title": "降生高庭城堡",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "随祖母奥莲娜学习洞察人心与政治博弈，两人情同心腹盟友。",
+      "kind": "言传身教的祖母导师",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Olenna_Redwyne",
+      "targetId": "agot:Redwyne_2"
+    }
+  ],
+  "personality": "聪慧敏锐，善解人意；极具政治直觉与亲和力，善于伪装野心，在民意经营与贵族交往上极有手腕。",
+  "publicRoles": [
+    "高庭贵女",
+    "河湾地明珠"
+  ],
+  "reputation": "七大王国最具魅力与好评的贵族少女，河湾地上下倾倒的完美名媛。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Margaery_Tyrell",
+    "https://asoiaf.fandom.com/zh/wiki/Margaery_Tyrell"
+  ],
+  "summary": "高庭公爵梅斯·提利尔独女。容貌娇艳动人，深得祖母奥莲娜亲传，天生擅长赢得民心与宫廷社交，是河湾地最耀眼的名门贵女。"
+}

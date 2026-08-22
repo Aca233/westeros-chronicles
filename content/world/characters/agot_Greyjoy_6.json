@@ -1,0 +1,46 @@
+{
+  "aliases": [
+    "鸦眼",
+    "疯子攸伦"
+  ],
+  "appearance": "相貌英俊却透着邪异，黑发如鸦羽，左眼戴着皮眼罩，右眼呈狂热深蓝，嘴唇因常年饮用夜影之水而泛出诡异深蓝幽光。",
+  "characterId": "agot:Greyjoy_6",
+  "experiences": [
+    {
+      "date": "8289",
+      "description": "在葛雷乔伊叛乱初期亲自谋划并率长船突袭兰尼斯港，纵火将泰温·兰尼斯特的整支舰队焚毁在锚地。",
+      "participantIds": [
+        "agot:Greyjoy_5",
+        "agot:Greyjoy_7",
+        "agot:Lannister_1"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Euron_Greyjoy",
+      "title": "策划火烧兰尼斯特舰队",
+      "visibility": "public"
+    },
+    {
+      "date": "8297",
+      "description": "因通奸丑闻遭兄长下令放逐，乘宁静号拔锚扬帆消失在落日之海深处。",
+      "participantIds": [
+        "agot:Greyjoy_5",
+        "agot:Greyjoy_7"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Euron_Greyjoy",
+      "title": "遭巴隆放逐流亡深海",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [],
+  "personality": "冷酷大胆，擅长以神秘传闻和不可预测的暴力震慑他人；对禁忌知识抱有兴趣，但其远航经历多来自本人宣称。",
+  "publicRoles": [
+    "宁静号船长",
+    "流亡海盗王"
+  ],
+  "reputation": "以残忍、冒险和船上水手皆被割去舌头而令人畏惧；关于其远航收获与巫术经历的说法真假难辨。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Euron_Greyjoy",
+    "https://asoiaf.fandom.com/zh/wiki/Euron_Greyjoy"
+  ],
+  "summary": "宁静号船长与遭放逐的铁群岛亲王，因侵犯弟媳而被巴隆逐出群岛。此后在远海劫掠，并散布自己到过瓦雷利亚等危险海域的说法。"
+}

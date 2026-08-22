@@ -1,0 +1,40 @@
+{
+  "aliases": [
+    "无舌刽子手"
+  ],
+  "appearance": "身材高瘦干枯如骷髅，面容枯槁无血色，无发无须，眼神阴鸷死寂，背负一柄沉重锋利的双手双手巨剑。",
+  "characterId": "agot:Payne_6",
+  "experiences": [
+    {
+      "date": "8276",
+      "description": "因言获罪被疯王伊里斯拔去舌头，劳勃登基后为安抚西境将其任命为皇家御前行刑官。",
+      "participantIds": [
+        "agot:Lannister_1",
+        "agot:Baratheon_2"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Ilyn_Payne",
+      "title": "遭疯王拔舌受刑",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "听从国王手谕执行帝国所有的死刑判决。",
+      "kind": "效忠的国王",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Robert_I_Baratheon",
+      "targetId": "agot:Baratheon_2"
+    }
+  ],
+  "personality": "阴冷死寂，毫无言语；沉醉于行刑与斩首的机械快感中，对死亡与鲜血习以为常。",
+  "publicRoles": [
+    "国王正义使者",
+    "王室行刑官"
+  ],
+  "reputation": "君临红堡地牢与贝勒大圣堂外令人毛骨悚然的活死人行刑官。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Ilyn_Payne",
+    "https://asoiaf.fandom.com/zh/wiki/Ilyn_Payne"
+  ],
+  "summary": "国王正义使者（御前行刑官），派恩家族骑士。曾因夸口泰温统治实权超过疯王而被疯王用火钳拔去舌头，从此沉默无声、形如枯骨。"
+}

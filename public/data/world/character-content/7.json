@@ -1,0 +1,311 @@
+{
+  "agot:Blackwood_6": {
+    "aliases": [
+      "泰陀斯伯爵"
+    ],
+    "appearance": "身材高大削瘦，蓄着修长的灰须，身披标志性的乌鸦黑羽毛华丽大氅，腰佩精钢长剑，神态冷峻威严。",
+    "characterId": "agot:Blackwood_6",
+    "experiences": [
+      {
+        "date": "8283",
+        "description": "随徒利家族全力投入篡夺者战争，在战场上以乌鸦羽大氅扬名四方。",
+        "participantIds": [
+          "agot:Tully_1"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Tytos_Blackwood",
+        "title": "血战三叉戟河",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "两大家族因领地边界、宗教信仰与古老血仇互不相让争斗千年。",
+        "kind": "世代死敌领主",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Jonos_Bracken",
+        "targetId": "agot:Bracken_3"
+      },
+      {
+        "description": "虽然自豪于先民古神传统，但对奔流城徒利家族的号令始终忠贞不二。",
+        "kind": "忠诚效顺的封君",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Hoster_Tully",
+        "targetId": "agot:Tully_1"
+      }
+    ],
+    "personality": "坚毅傲岸，忠诚重诺；恪守先民古神信仰与传统，在家族世仇面前寸步不让。",
+    "publicRoles": [
+      "鸦树城伯爵",
+      "河间地诸侯"
+    ],
+    "reputation": "河间地公认最骁勇忠诚、富有威严的古老旧神诸侯领袖。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Tytos_Blackwood",
+      "https://asoiaf.fandom.com/zh/wiki/Tytos_Blackwood"
+    ],
+    "summary": "鸦树城伯爵，河间地先民后裔与旧神信仰守护者。与邻近的布雷肯家族世仇延续数千年，治军严明，精明强干，深得部众拥戴。"
+  },
+  "agot:Cassel_3": {
+    "aliases": [
+      "罗德利克爵士"
+    ],
+    "appearance": "粗壮敦实的老战士，蓄着一对标志性的大白连鬓胡须，说话时胡须随之抖动，常着皮铠佩精钢长剑。",
+    "characterId": "agot:Cassel_3",
+    "experiences": [
+      {
+        "date": "8289",
+        "description": "跟随奈德公爵攻入派克岛，在此战中英勇杀敌，失去了两名兄长但立下赫赫战功。",
+        "participantIds": [
+          "agot:Stark_3"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Rodrik_Cassel",
+        "title": "葛雷乔伊叛乱参战",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "乔里是其已故兄长马丁之子，由罗德利克悉心带大并推举为侍卫队长。",
+        "kind": "亲侄与下属",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Jory_Cassel",
+        "targetId": "agot:Cassel_4"
+      }
+    ],
+    "personality": "忠诚严正，脾气耿直；对待军事操练极其严苛，但对少主们怀有深切的关怀与长辈之爱。",
+    "publicRoles": [
+      "临冬城教头",
+      "骑士"
+    ],
+    "reputation": "北境享有崇高声誉的老牌教头，以无可挑剔的忠诚与练兵之能著称。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Rodrik_Cassel",
+      "https://asoiaf.fandom.com/zh/wiki/Rodrik_Cassel"
+    ],
+    "summary": "临冬城教头兼侍卫长。忠心耿耿侍奉史塔克家族数十年，负责训练城堡驻军与少主们的剑术武艺，经验丰富老道。"
+  },
+  "agot:Greyjoy_9": {
+    "aliases": [
+      "湿发伊伦"
+    ],
+    "appearance": "身材枯瘦高大，黑发杂乱如海草般长垂至腰际且编入发丝海草，身着破烂粗麻布袍，赤足行走岩石海岸，目光狂热幽深。",
+    "characterId": "agot:Greyjoy_9",
+    "experiences": [
+      {
+        "date": "8289",
+        "description": "在仙民岛海难中战舰沉没溺死重生，从此顿悟神启，成为铁群岛最具威望的淹神先知。",
+        "participantIds": [
+          "agot:Greyjoy_5",
+          "agot:Greyjoy_7"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Aeron_Greyjoy",
+        "title": "溺水获救皈依淹神",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [],
+    "personality": "狂热虔诚，清心寡欲；不近女色不饮美酒只饮海水，将整个人生奉献给淹神的潮汐与古道圣战。",
+    "publicRoles": [
+      "淹神先知",
+      "淹神主祭"
+    ],
+    "reputation": "铁群岛上下顶礼膜拜的圣者与活先知，其口中所念淹神圣谕能轻易煽动全岛民众。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Aeron_Greyjoy",
+      "https://asoiaf.fandom.com/zh/wiki/Aeron_Greyjoy"
+    ],
+    "summary": "淹神最高祭司，巴隆·葛雷乔伊幼弟。年轻时荒唐好酒，在仙民岛海难溺水被冲上海滩后自称得淹神启示重生，从此身披海草披发赤足，以狂热布道震慑铁岛。"
+  },
+  "agot:Stark_3": {
+    "aliases": [
+      "奈德",
+      "安静的狼"
+    ],
+    "appearance": "面容削瘦严肃，留着灰黑斑白的短胡须，灰眸如冬日之水。身材匀称结实，常着朴素深灰皮甲与厚重羊皮大氅。",
+    "characterId": "agot:Stark_3",
+    "experiences": [
+      {
+        "date": "8281",
+        "description": "随父亲与兄妹前往赫伦堡参加盛大比武大会，见证雷加·坦格利安将爱与美的王冠献给莱安娜·史塔克。",
+        "participantIds": [
+          "agot:Baratheon_2",
+          "agot:Reed_1"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Eddard_Stark",
+        "title": "赫伦堡比武会",
+        "visibility": "public"
+      },
+      {
+        "date": "8283",
+        "description": "在父兄惨遭疯王杀害后，与劳勃及琼恩·艾林在谷地起兵讨伐坦格利安王室，并迎娶凯特琳·徒利巩固同盟。",
+        "participantIds": [
+          "agot:Baratheon_2",
+          "agot:Arryn_3",
+          "agot:Tully_4"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Robert%27s_Rebellion",
+        "title": "篡夺者战争",
+        "visibility": "public"
+      },
+      {
+        "date": "8289",
+        "description": "与国王劳勃合兵征讨发动叛乱的巴隆·葛雷乔伊，攻破派克城后将巴隆幼子席恩带回临冬城作为人质抚养。",
+        "participantIds": [
+          "agot:Baratheon_2",
+          "agot:Greyjoy_5",
+          "agot:Greyjoy_14"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Greyjoy%27s_Rebellion",
+        "title": "葛雷乔伊叛乱",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "两人自幼在艾林谷作为琼恩·艾林的养子共同成长，并在战争中结下生死情谊。",
+        "kind": "挚友与封君",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Eddard_Stark",
+        "targetId": "agot:Baratheon_2"
+      },
+      {
+        "description": "琼恩·艾林如同第二个父亲，在疯王要求交出养子时毅然起兵保护奈德与劳勃。",
+        "kind": "养父与导师",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Jon_Arryn",
+        "targetId": "agot:Arryn_3"
+      },
+      {
+        "description": "霍兰曾与奈德并肩经历极乐塔之战，此后仍是北境中受到奈德信任的旧友。",
+        "kind": "生死战友",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Howland_Reed",
+        "targetId": "agot:Reed_1"
+      }
+    ],
+    "personality": "言语简练谨慎，极度看重誓言与荣誉；处事公正无私，对家人温厚爱护，面对谎言与阴谋时绝不妥协。",
+    "publicRoles": [
+      "临冬城公爵",
+      "北境守护"
+    ],
+    "reputation": "在北境诸侯与临冬城臣属间以公正、克制和重视誓言著称，其严肃作风也让不熟悉他的人感到疏离。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Eddard_Stark",
+      "https://asoiaf.fandom.com/zh/wiki/Eddard_Stark"
+    ],
+    "summary": "临冬城公爵兼北境守护，曾参与推翻坦格利安王朝的战争。性情沉静克制，以荣誉、责任和对家族的忠诚闻名七国。"
+  },
+  "agot:Stark_7": {
+    "aliases": [
+      "琼恩·雪诺"
+    ],
+    "appearance": "身材修长精干，面容带有史塔克家族典型的先民特征，长脸黑发，灰眸深邃，神态较同龄人更为沉静谨慎。",
+    "characterId": "agot:Stark_7",
+    "experiences": [
+      {
+        "date": "8283",
+        "description": "篡夺者战争结束后被艾德·史塔克带回临冬城抚养，其生母身份成为奈德绝口不提的秘密。",
+        "participantIds": [
+          "agot:Stark_3"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Jon_Snow",
+        "title": "随父返回临冬城",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "将身为守夜人首席游骑兵的班扬视为楷模，也是促使其决定北上绝境长城的重要原因。",
+        "kind": "崇拜的叔叔",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Benjen_Stark",
+        "targetId": "agot:Stark_4"
+      }
+    ],
+    "personality": "敏锐内敛，自尊心极强；渴望在远离世俗偏见的绝境长城依靠能力赢得荣誉，对待弱者充满同情心。",
+    "publicRoles": [
+      "临冬城公爵的私生子"
+    ],
+    "reputation": "被外界视为奈德公爵唯一的名誉污点，在临冬城侍卫与下人间以剑术出众、性格沉稳受到认可。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Jon_Snow",
+      "https://asoiaf.fandom.com/zh/wiki/Jon_Snow"
+    ],
+    "summary": "艾德·史塔克带回临冬城并公开承认的私生子，自幼与史塔克子女一同受教。性情敏锐内敛，在私生身份带来的隔阂中，渴望凭自身能力赢得立足之地。"
+  },
+  "agot:Targaryen_120": {
+    "aliases": [
+      "伊蒙学士",
+      "盲眼伊蒙"
+    ],
+    "appearance": "年逾百岁，身形枯槁如干瘪果核，满头雪白细丝，双眼覆着白翳失明，身披质朴泛白的宽大黑袍。",
+    "characterId": "agot:Targaryen_120",
+    "experiences": [
+      {
+        "date": "8233",
+        "description": "在御前会议意欲拥立其为七国之王时坚辞不受，主动前往绝境长城加入守夜人以让位其弟伊耿五世。",
+        "participantIds": [],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Aemon",
+        "title": "拒绝铁王座北上长城",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "以近百年的学识与政治远见辅佐莫尔蒙总司令治理绝境长城。",
+        "kind": "辅佐的总司令",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Jeor_Mormont",
+        "targetId": "agot:Mormont_2"
+      }
+    ],
+    "personality": "睿智仁慈，平静超然；早已看透世俗权力浮华，全心守护守夜人誓言与长夜传说中的古老秘密。",
+    "publicRoles": [
+      "守夜人学士",
+      "真龙宗亲亲王"
+    ],
+    "reputation": "绝境长城内外所有游骑兵、平民乃至诸侯由衷敬仰的活圣贤。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Aemon",
+      "https://asoiaf.fandom.com/zh/wiki/Aemon_(son_of_Maekar_I)"
+    ],
+    "summary": "黑城堡驻城学士，坦格利安王朝戴隆二世之孙。百岁高龄，双目失明，曾主动放弃铁王座继承权披上黑衣北上长城，侍奉守夜人六十余载，是维斯特洛最古老的活历史。"
+  },
+  "agot:Waynwood_5": {
+    "aliases": [
+      "安雅夫人"
+    ],
+    "appearance": "面容清瘦严正，灰发盘起，神态威严沉着，身穿优雅高贵的墨绿天鹅绒贵妇长袍。",
+    "characterId": "agot:Waynwood_5",
+    "experiences": [
+      {
+        "date": "8283",
+        "description": "在篡夺者战争中统筹后勤与领地防御，派遣诸子随琼恩·艾林征战。",
+        "participantIds": [
+          "agot:Arryn_3"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Anya_Waynwood",
+        "title": "稳固铁橡城后方",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "与符石城罗伊斯家族保持世代通婚与紧密的谷地政治军事同盟。",
+        "kind": "政治盟友同僚",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Yohn_Royce",
+        "targetId": "agot:Royce_1"
+      }
+    ],
+    "personality": "威严干练，精通家族事务；行事极其讲究规矩与信誉，对谷地后辈的管教甚严。",
+    "publicRoles": [
+      "铁橡城女伯爵",
+      "谷地诸侯重臣"
+    ],
+    "reputation": "谷地诸侯极其敬重的长者与智谋贵妇，在谷地政局中话语权极重。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Anya_Waynwood",
+      "https://asoiaf.fandom.com/zh/wiki/Anya_Waynwood"
+    ],
+    "summary": "铁橡城女伯爵，谷地最具声望与家族底蕴的女诸侯。精明强干，恪守古老荣誉与贵族礼节，在谷地各大家族联姻与调解中举足轻重。"
+  }
+}

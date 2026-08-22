@@ -1,0 +1,39 @@
+{
+  "aliases": [
+    "白蛇特蕾妮"
+  ],
+  "appearance": "金发如瀑，大蓝眼睛清澈纯真无邪，面容甜美娇弱，常穿圣洁素雅的修女长袍，袖中藏着剧毒金针与药瓶。",
+  "characterId": "agot:Martell_14",
+  "experiences": [
+    {
+      "date": "8279",
+      "description": "跟随奥柏伦研习古籍中记载的数百种剧毒配方，调制出无色无味的致命毒剂。",
+      "participantIds": [
+        "agot:Martell_8"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Tyene_Sand",
+      "title": "研习草药与毒物",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "与亚莲恩大公主形影不离，是亚莲恩最信赖的心腹智囊。",
+      "kind": "莫逆之交堂姐",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Arianne_Martell",
+      "targetId": "agot:Martell_9"
+    }
+  ],
+  "personality": "外表乖巧柔顺，内心毒如蛇蝎；最擅长用人畜无害的天真微笑麻痹对手并将其无声鸩杀。",
+  "publicRoles": [
+    "沙蛇三女",
+    "药剂与毒物大师"
+  ],
+  "reputation": "多恩上下深知其致命毒术的狠角色，被称为‘最甜美也最危险的沙蛇’。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Tyene_Sand",
+    "https://asoiaf.fandom.com/zh/wiki/Tyene_Sand"
+  ],
+  "summary": "‘沙蛇’三女，奥柏伦·马泰尔与修女所生。外表纯洁圣洁如修女，实则深谙世间各种致命剧毒与草药学，手段极其阴毒致命。"
+}

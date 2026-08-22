@@ -1,0 +1,39 @@
+{
+  "aliases": [
+    "布雷肯大人"
+  ],
+  "appearance": "身材魁梧粗壮，红棕色头发，浓密的大胡子，身披饰有红底黑马纹章的厚实战甲。",
+  "characterId": "agot:Bracken_3",
+  "experiences": [
+    {
+      "date": "8283",
+      "description": "响应奔流城征召出兵参战，在多场围城战中立下赫赫战功。",
+      "participantIds": [
+        "agot:Tully_1"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Jonos_Bracken",
+      "title": "随军征战篡夺者之役",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "与泰陀斯·布莱伍德针锋相对，两家族在每一寸交界土地上皆爆发过流血冲突。",
+      "kind": "仇深似海的死敌",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Tytos_Blackwood",
+      "targetId": "agot:Blackwood_6"
+    }
+  ],
+  "personality": "傲慢好斗，脾气暴躁；极度重视个人与家族利益，在军事上勇猛但偶显短视与投机。",
+  "publicRoles": [
+    "石篱城伯爵",
+    "河间地诸侯"
+  ],
+  "reputation": "河间地威名赫赫的悍勇领主，石篱城铁骑的强悍统帅。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Jonos_Bracken",
+    "https://asoiaf.fandom.com/zh/wiki/Jonos_Bracken"
+  ],
+  "summary": "石篱城伯爵，河间地古老的大诸侯之一。信奉七神，长年与邻近的布莱伍德家族就土地、林地与世仇纷争不断，武勇好斗、心高气傲。"
+}

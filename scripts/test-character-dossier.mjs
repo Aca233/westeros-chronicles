@@ -163,6 +163,14 @@ test('当前所在地只使用场景基线与运行时移动，不以领地或�
   assert.equal(moved.locationId, 'b_casterly_rock');
 });
 
+test('无人工内容仍可从 AGOT 基础记录生成卷宗', () => {
+  const base = resolved({ id: 'agot:no_content', name: '无名骑士' });
+  const dossier = createNpcDossier(base, 298, { spouseIds: [], childIds: [], siblingIds: [] }, undefined);
+  assert.equal(dossier.name, '无名骑士');
+  assert.equal(dossier.summary, '暂无可靠的公开生平摘要。');
+  assert.equal(dossier.sourceUrls, undefined);
+});
+
 test('NPC 人物栏教育特质固定第一且动态资料完整投影', () => {
   const dossier = createNpcDossier(resolved(), 298);
   assert.equal(dossier.kind, 'npc');
@@ -306,7 +314,13 @@ test('旧存档只补齐已知家族身份且不会覆盖自建内容', () => {
   );
 });
 
-const { CHARACTER_DOSSIER_SUPPLEMENTS, getCharacterDossierSupplement } = await bundleModule('src/data/generated/characterDossierSupplements.ts');
+const characterContentDirectory = new URL('../public/data/world/character-content/', import.meta.url);
+const characterContentShardNames = (await readdir(characterContentDirectory))
+  .filter((name) => name.endsWith('.json') && name !== 'index.json');
+const characterContentRecords = (await Promise.all(characterContentShardNames
+  .map((name) => readFile(new URL(name, characterContentDirectory), 'utf8').then(JSON.parse))))
+  .flatMap((shard) => Object.values(shard));
+const CHARACTER_DOSSIER_SUPPLEMENTS = Object.fromEntries(characterContentRecords.map((record) => [record.characterId, record]));
 const {
   filterVisibleExperiences,
   deduplicateExperiences,
@@ -315,43 +329,6 @@ const {
 } = await bundleModule('src/features/characters/characterSupplementSchema.ts');
 const { default: searchIndex } = await import('../public/data/agot-characters/search-index.json', { with: { type: 'json' } });
 const searchIndexMap = new Map(searchIndex.map((c) => [c.id, c]));
-const rawSupplementModules = await Promise.all([
-  import('./data/character-dossier/raw_supplements_part1.mjs'),
-  import('./data/character-dossier/raw_supplements_part2.mjs'),
-  import('./data/character-dossier/raw_supplements_part3.mjs'),
-  import('./data/character-dossier/raw_supplements_part4.mjs'),
-  import('./data/character-dossier/raw_supplements_part5.mjs'),
-]);
-const rawSupplements = rawSupplementModules.flatMap((module, index) => (
-  module.RAW_SUPPLEMENTS ?? module[`RAW_SUPPLEMENTS_PART${index + 1}`]
-));
-
-test('原始补充资料声明的主体姓名与基础人物 ID 一致', () => {
-  assert.equal(rawSupplements.length, Object.keys(CHARACTER_DOSSIER_SUPPLEMENTS).length);
-  for (const supplement of rawSupplements) {
-    const character = searchIndexMap.get(supplement.characterId);
-    assert.ok(character, `人物 ID ${supplement.characterId} 在基础数据中不存在`);
-    assert.equal(
-      supplement.subjectNameKey,
-      character.nameKey,
-      `人物 ${supplement.characterId} 的姓名声明与基础数据不一致`,
-    );
-    for (const relation of supplement.notableRelations ?? []) {
-      assert.equal(
-        relation.targetNameKey,
-        searchIndexMap.get(relation.targetId)?.nameKey,
-        `人物 ${supplement.characterId} 的关系目标 ${relation.targetId} 身份不一致`,
-      );
-    }
-    for (const experience of supplement.experiences ?? []) {
-      assert.deepEqual(
-        experience.participantNameKeys,
-        (experience.participantIds ?? []).map((id) => searchIndexMap.get(id)?.nameKey),
-        `人物 ${supplement.characterId} 的经历参与者身份不一致：${experience.title}`,
-      );
-    }
-  }
-});
 
 test('补充资料库包含至少 100 名重要人物且所有 ID 均在基础数据索引中存在', () => {
   const count = Object.keys(CHARACTER_DOSSIER_SUPPLEMENTS).length;
@@ -404,8 +381,8 @@ test('非亲属关系 targetId 存在于 search-index.json 且来源 URL 格式�
         assert.match(rel.sourceUrl, /^https?:\/\//, `人物 ${id} 关系的 sourceUrl 格式不正确: ${rel.sourceUrl}`);
       }
     }
-    for (const url of supplement.sourceUrls ?? []) {
-      assert.match(url, /^https?:\/\//, `人物 ${id} 的 sourceUrl 格式不正确: ${url}`);
+    for (const url of supplement.sources ?? []) {
+      assert.match(url, /^https?:\/\//, `人物 ${id} 的来源 URL 格式不正确: ${url}`);
     }
   }
 });
@@ -423,8 +400,9 @@ test('非亲属关系不得重复人物、指向自身或混入基础亲属关�
   ), /不能指向人物自身/);
 
   assert.throws(() => validateCharacterSupplement({
+    schemaVersion: 1,
     characterId: 'agot:test_person',
-    sourceUrls: ['https://awoiaf.westeros.org/index.php/Test'],
+    sources: ['https://awoiaf.westeros.org/index.php/Test'],
     notableRelations: [
       { targetId: 'agot:friend', kind: '朋友' },
       { targetId: 'agot:friend', kind: '盟友' },
@@ -456,13 +434,15 @@ test('非亲属关系不得重复人物、指向自身或混入基础亲属关�
 
 test('资料来源只接受项目允许的冰火维基域名', () => {
   assert.throws(() => validateCharacterSupplement({
+    schemaVersion: 1,
     characterId: 'agot:test_person',
-    sourceUrls: ['https://example.com/wiki/Test'],
-  }), /(?:来源 URL 无效|无效 sourceUrl)/);
+    sources: ['https://example.com/wiki/Test'],
+  }), /(?:无效来源 URL|来源 URL 无效|无效 sourceUrl)/);
   assert.throws(() => validateCharacterSupplement({
+    schemaVersion: 1,
     characterId: 'agot:test_person',
-    sourceUrls: ['https://awoiaf.westeros.org.evil.example/wiki/Test'],
-  }), /(?:来源 URL 无效|无效 sourceUrl)/);
+    sources: ['https://awoiaf.westeros.org.evil.example/wiki/Test'],
+  }), /(?:无效来源 URL|来源 URL 无效|无效 sourceUrl)/);
 });
 
 test('静态开局资料不包含 298 AC 年内未来事件或已知秘密', () => {
@@ -521,7 +501,7 @@ test('经历去重逻辑正常运作', () => {
 test('现成人物成为玩家后沿用同一份卷宗补充资料', () => {
   const existingLord = createLivingWorldTestLord();
   existingLord.canonicalCharacterId = 'agot:Stark_3';
-  const dossier = createPlayerDossier(existingLord, 298);
+  const dossier = createPlayerDossier(existingLord, 298, existingLord.canonicalCharacterId, CHARACTER_DOSSIER_SUPPLEMENTS['agot:Stark_3']);
   assert.equal(dossier.summary, CHARACTER_DOSSIER_SUPPLEMENTS['agot:Stark_3'].summary);
   assert.ok(dossier.supplementExperiences?.length > 0);
   assert.ok(dossier.relations.notableRelations.some((relation) => relation.targetId === 'agot:Baratheon_2'));
@@ -536,7 +516,7 @@ test('现成人物成为玩家后沿用同一份卷宗补充资料', () => {
 
 test('NPC 卷宗正确合并叙事补充资料层', () => {
   const nedResolved = resolved({ id: 'agot:Stark_3', name: '艾德·史塔克' });
-  const dossier = createNpcDossier(nedResolved, 298);
+  const dossier = createNpcDossier(nedResolved, 298, undefined, CHARACTER_DOSSIER_SUPPLEMENTS['agot:Stark_3']);
   assert.ok(dossier.summary, '艾德·史塔克卷宗应包含简介');
   assert.ok(dossier.aliases && dossier.aliases.length > 0, '艾德·史塔克卷宗应包含别名');
   assert.ok(dossier.appearance, '艾德·史塔克卷宗应包含外貌');

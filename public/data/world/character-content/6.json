@@ -1,0 +1,165 @@
+{
+  "agot:Hightower_9": {
+    "aliases": [
+      "艾勒莉夫人"
+    ],
+    "appearance": "容貌高雅秀丽，拥有一头银灰色的长发与典雅的贵族仪态，身穿绣有海塔尔白塔与提利尔玫瑰的华丽丝袍。",
+    "characterId": "agot:Hightower_9",
+    "experiences": [
+      {
+        "date": "8275",
+        "description": "由旧镇海塔尔家族嫁入高庭，促成河湾地两大最强古老豪门的强强联合。",
+        "participantIds": [
+          "agot:Tyrell_8",
+          "agot:Hightower_5"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Alerie_Hightower",
+        "title": "联姻高庭提利尔家族",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [],
+    "personality": "温婉端庄，恪尽母职；在婆婆奥莲娜的强势面前保持谦逊平和，全心料理高庭内廷与子女教养。",
+    "publicRoles": [
+      "高庭公爵夫人",
+      "旧镇贵女"
+    ],
+    "reputation": "河湾地贵妇阶层中极具威望与教养的楷模主母。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Alerie_Hightower",
+      "https://asoiaf.fandom.com/zh/wiki/Alerie_Hightower"
+    ],
+    "summary": "高庭公爵夫人，旧镇雷顿·海塔尔伯爵长女。端庄高贵、血统极其显赫，是提利尔四位杰出子女的母亲，在河湾地内廷深受尊崇。"
+  },
+  "agot:Payne_6": {
+    "aliases": [
+      "无舌刽子手"
+    ],
+    "appearance": "身材高瘦干枯如骷髅，面容枯槁无血色，无发无须，眼神阴鸷死寂，背负一柄沉重锋利的双手双手巨剑。",
+    "characterId": "agot:Payne_6",
+    "experiences": [
+      {
+        "date": "8276",
+        "description": "因言获罪被疯王伊里斯拔去舌头，劳勃登基后为安抚西境将其任命为皇家御前行刑官。",
+        "participantIds": [
+          "agot:Lannister_1",
+          "agot:Baratheon_2"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Ilyn_Payne",
+        "title": "遭疯王拔舌受刑",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "听从国王手谕执行帝国所有的死刑判决。",
+        "kind": "效忠的国王",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Robert_I_Baratheon",
+        "targetId": "agot:Baratheon_2"
+      }
+    ],
+    "personality": "阴冷死寂，毫无言语；沉醉于行刑与斩首的机械快感中，对死亡与鲜血习以为常。",
+    "publicRoles": [
+      "国王正义使者",
+      "王室行刑官"
+    ],
+    "reputation": "君临红堡地牢与贝勒大圣堂外令人毛骨悚然的活死人行刑官。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Ilyn_Payne",
+      "https://asoiaf.fandom.com/zh/wiki/Ilyn_Payne"
+    ],
+    "summary": "国王正义使者（御前行刑官），派恩家族骑士。曾因夸口泰温统治实权超过疯王而被疯王用火钳拔去舌头，从此沉默无声、形如枯骨。"
+  },
+  "agot:RoyceGOTM_1": {
+    "aliases": [
+      "月门堡奈斯特爵士"
+    ],
+    "appearance": "身材高大结实，灰发粗短，面容严肃精悍，留着厚重的灰白髭须，身披饰有黑色铁栅与罗伊斯纹章的铁甲。",
+    "characterId": "agot:RoyceGOTM_1",
+    "experiences": [
+      {
+        "date": "8284",
+        "description": "在琼恩·艾林公爵前往君临担任国王之手前，被正式托付月门堡与艾林谷日常驻军防务。",
+        "participantIds": [
+          "agot:Arryn_3"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Nestor_Royce",
+        "title": "受封月门堡大元帅",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "数十年来兢兢业业替琼恩·艾林镇守谷地大门。",
+        "kind": "效忠的公爵主公",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Jon_Arryn",
+        "targetId": "agot:Arryn_3"
+      }
+    ],
+    "personality": "老成持重，忠于职守；办事一丝不苟，虽然地位不如符石城本家显赫但极有担当。",
+    "publicRoles": [
+      "月门堡大元帅",
+      "谷地防务统领"
+    ],
+    "reputation": "艾林谷无可替代的干练元帅，谷地上下公认的防务支柱。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Nestor_Royce",
+      "https://asoiaf.fandom.com/zh/wiki/Nestor_Royce"
+    ],
+    "summary": "艾林谷月门堡大元帅兼符石城罗伊斯家族远支。长年在琼恩·艾林离谷期间尽忠职守代掌月门堡与谷地日常防务，深得谷地诸侯信赖。"
+  },
+  "agot:Targaryen_9": {
+    "aliases": [
+      "风暴降生",
+      "龙石岛公主"
+    ],
+    "appearance": "拥有坦格利安标志性的银金长发与淡紫色眼眸，容貌娇柔绝美，身材纤细轻盈，眼神中初显坚韧神采。",
+    "characterId": "agot:Targaryen_9",
+    "experiences": [
+      {
+        "date": "8284",
+        "description": "在摧毁王室舰队的夏日风暴中诞生于龙石岛，母亲蕾拉王后在难产中逝世，随后在忠臣护送下渡海流亡。",
+        "participantIds": [
+          "agot:Targaryen_8"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Daenerys_Targaryen",
+        "title": "风暴降生龙石岛",
+        "visibility": "public"
+      },
+      {
+        "date": "8297",
+        "description": "与兄长韦赛里斯受到潘托斯总督伊利里欧·摩帕提斯接纳，住进其高墙豪宅中筹划借兵夺国。",
+        "participantIds": [
+          "agot:Targaryen_8",
+          "agot:Mopatis_1"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Illyrio_Mopatis",
+        "title": "庇护于潘托斯",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "潘托斯富商总督，为流亡的坦格利安兄妹提供住所与生活所需。",
+        "kind": "庇护赞助者",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Illyrio_Mopatis",
+        "targetId": "agot:Mopatis_1"
+      }
+    ],
+    "personality": "初时怯懦柔顺，在兄长的暴躁压迫下求生；内心深处怀揣对故土与归宿的渴望，逐渐展露出真龙血脉的勇气与威严。",
+    "publicRoles": [
+      "流亡公主",
+      "真龙末裔"
+    ],
+    "reputation": "在厄索斯城邦间被称为流亡的末代王女，君临红堡则视其为必须严密防范的余孽隐患。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Daenerys_Targaryen",
+      "https://asoiaf.fandom.com/zh/wiki/Daenerys_Targaryen"
+    ],
+    "summary": "坦格利安王朝流亡公主，诞生于龙石岛的风暴之夜。家族覆灭后随兄长辗转自由贸易城邦，长期寄居他人门下，受制于兄长的复国野心。"
+  }
+}

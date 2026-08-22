@@ -1,0 +1,55 @@
+{
+  "aliases": [
+    "红毒蛇",
+    "奥柏伦亲王"
+  ],
+  "appearance": "身材修长精悍如黑豹，黑发如蛇信卷曲，浓眉下长着一双黑曜石般深邃狂傲的黑眸，身穿轻便金鳞软甲，手持长枪。",
+  "characterId": "agot:Martell_8",
+  "experiences": [
+    {
+      "date": "8274",
+      "description": "年轻时在学城铸造多枚学士环后游历厄索斯，加入并创建佣兵团转战自由城邦。",
+      "participantIds": [],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Oberyn_Martell",
+      "title": "旧镇学城铸链与流亡佣兵",
+      "visibility": "public"
+    },
+    {
+      "date": "8283",
+      "description": "在得知伊莉亚公主与外甥惨遭魔山杀害后，欲在多恩起兵为韦赛里斯复辟，后被道朗按捺转入潜伏。",
+      "participantIds": [
+        "agot:Martell_4"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Oberyn_Martell",
+      "title": "誓血为伊莉亚复仇",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "地狱修道院领主私生女，与奥柏伦相伴多年育有四女，彼此深爱忠贞。",
+      "kind": "挚爱伴侣与灵魂知己",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Ellaria_Sand",
+      "targetId": "agot:Uller_6"
+    },
+    {
+      "description": "发誓一定要亲手将淬毒长矛刺入魔山胸膛为姐姐伊莉亚复仇。",
+      "kind": "誓杀的血海仇敌",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Gregor_Clegane",
+      "targetId": "agot:Clegane_3"
+    }
+  ],
+  "personality": "狂野桀骜，锋芒毕露；极度重情重义，蔑视世俗规矩，对仇敌毫不留情，对自由与欢愉充满无尽渴望。",
+  "publicRoles": [
+    "多恩亲王",
+    "红毒蛇",
+    "次子团前指挥官"
+  ],
+  "reputation": "全七国令人闻风丧胆的剧毒骑士与决斗死神，多恩人民崇拜的热血英雄。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Oberyn_Martell",
+    "https://asoiaf.fandom.com/zh/wiki/Oberyn_Martell"
+  ],
+  "summary": "多恩亲王道朗之弟。精通枪术、毒物、学问与自由城邦游击战术，性格狂放不羁、嗜血复仇，为给惨死的姐姐伊莉亚讨还公道而誓死与兰尼斯特为敌。"
+}

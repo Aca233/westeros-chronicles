@@ -1,0 +1,41 @@
+{
+  "aliases": [
+    "红袍女",
+    "亚夏的梅丽珊卓"
+  ],
+  "appearance": "容貌妖娆绝伦，身材丰满修长，拥有铜红色的长发与赤红如火的眼眸，长年身着深红丝袍，颈间戴着镶嵌发光红宝石的纯金项圈。",
+  "characterId": "agot:Melisandre_1",
+  "experiences": [
+    {
+      "date": "8297",
+      "description": "从厄索斯狭海对岸来到龙石岛，凭借预言与幻象成功让赛丽丝夫人及部分守军皈依拉赫洛信仰。",
+      "participantIds": [
+        "agot:Florent_10",
+        "agot:Baratheon_3"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Melisandre",
+      "title": "抵达龙石岛传教",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "坚信史坦尼斯是带领生者战胜远古严寒的唯一真王，全力辅佐其夺取大权。",
+      "kind": "预言中的救世王者",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Stannis_Baratheon",
+      "targetId": "agot:Baratheon_3"
+    }
+  ],
+  "personality": "自信冷酷，狂热虔诚；行事神秘而目标明确，深信黑暗即将吞噬世界，必须依靠火魔法与铁血手段力挽狂澜。",
+  "publicRoles": [
+    "光之王女祭司",
+    "阴影缚术士"
+  ],
+  "reputation": "龙石岛上下敬畏猜忌的异域巫女，以展现火焰预言与神秘莫测的法力闻名。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Melisandre",
+    "https://asoiaf.fandom.com/zh/wiki/Melisandre"
+  ],
+  "summary": "来自亚夏的红袍女祭司，拉赫洛光之王忠实信徒。跨越狭海来到龙石岛，深信史坦尼斯·拜拉席恩就是预言中重生的救世英雄亚梭尔·亚亥。"
+}

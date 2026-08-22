@@ -1,0 +1,317 @@
+{
+  "agot:Brotherhood_8": {
+    "aliases": [
+      "密尔的索罗斯",
+      "红袍索罗斯"
+    ],
+    "appearance": "身材高大但因酗酒发福，一头杂乱黑发，常穿一件洗得发白褪色的油腻宽大红袍，腰间挂着大酒囊与长剑。",
+    "characterId": "agot:Brotherhood_8",
+    "experiences": [
+      {
+        "date": "8282",
+        "description": "受密尔红神庙派遣前往君临试图感化疯王，失败后转而在劳勃朝廷中混迹成为比武冠军。",
+        "participantIds": [
+          "agot:Baratheon_2"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Thoros_of_Myr",
+        "title": "出使君临传教",
+        "visibility": "public"
+      },
+      {
+        "date": "8289",
+        "description": "在葛雷乔伊叛乱攻城战中，挥舞燃烧的烈火宝剑第一个顺着城墙缺口杀入派克城立下头功。",
+        "participantIds": [
+          "agot:Baratheon_2",
+          "agot:Stark_3"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Thoros_of_Myr",
+        "title": "手持火剑先登派克城",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "经常陪伴劳勃畅饮狂欢，深受劳勃国王的恩宠与纵容。",
+        "kind": "投契的国王酒友",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Robert_I_Baratheon",
+        "targetId": "agot:Baratheon_2"
+      },
+      {
+        "description": "在君临多次比武盛会中与年轻的闪电伯爵贝里结下深厚骑士友谊。",
+        "kind": "比武结识的莫逆之交",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Beric_Dondarrion",
+        "targetId": "agot:Dondarrion_2"
+      }
+    ],
+    "personality": "豪爽不羁，嗜酒如命；早已将祭司清规戒律抛在脑后，但生性重义气，打起仗来悍不畏死狂热无比。",
+    "publicRoles": [
+      "红袍僧",
+      "比武骑士",
+      "宫廷酒友"
+    ],
+    "reputation": "君临比武场与酒馆里的传奇狂僧，以挥舞烈火之剑劈开敌阵闻名。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Thoros_of_Myr",
+      "https://asoiaf.fandom.com/zh/wiki/Thoros_of_Myr"
+    ],
+    "summary": "来自自由城邦密尔的拉赫洛红袍僧兼劳勃国王的比武酒友。常年沉溺于烈酒与妓院，在比武场上手持浸泡野火燃烧的长剑冲锋夺冠，深得劳勃宠爱。"
+  },
+  "agot:Cassel_4": {
+    "aliases": [
+      "乔里"
+    ],
+    "appearance": "身材高大挺拔，褐色头发与机敏的灰眼睛，身着饰有史塔克冰原狼徽章的优质皮甲与锁甲。",
+    "characterId": "agot:Cassel_4",
+    "experiences": [
+      {
+        "date": "8289",
+        "description": "在葛雷乔伊叛乱后凭过人武艺与忠诚被奈德公爵任命为临冬城侍卫队长。",
+        "participantIds": [
+          "agot:Stark_3"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Jory_Cassel",
+        "title": "晋升侍卫队长",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "甘愿为艾德公爵与史塔克家族赴汤蹈火的忠勇近卫队长。",
+        "kind": "誓死护卫的主公",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Eddard_Stark",
+        "targetId": "agot:Stark_3"
+      }
+    ],
+    "personality": "沉着警觉，忠勇果敢；行事雷厉风行，与临冬城上下相处融洽，是艾德最贴身的卫队长。",
+    "publicRoles": [
+      "侍卫队长"
+    ],
+    "reputation": "艾德公爵最得力的贴身护卫，备受北境卫士们的信赖与尊重。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Jory_Cassel",
+      "https://asoiaf.fandom.com/zh/wiki/Jory_Cassel"
+    ],
+    "summary": "临冬城侍卫队长，马丁·凯索之子。年轻精干，剑术高强出众，负责艾德·史塔克公爵贴身安全与城堡各处防务。"
+  },
+  "agot:Greenfield_3": {
+    "aliases": [
+      "普列斯顿爵士"
+    ],
+    "appearance": "身材高大健硕的老牌骑士，胡须花白，目光沉静，身着全套白色铠甲与纯白长披风。",
+    "characterId": "agot:Greenfield_3",
+    "experiences": [
+      {
+        "date": "8285",
+        "description": "在篡夺者战争后补选入御林铁卫，驻守红堡历经十余年风雨。",
+        "participantIds": [
+          "agot:Baratheon_2",
+          "agot:Selmy_3"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Preston_Greenfield",
+        "title": "入选御林铁卫",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "坚定遵从巴利斯坦队长的号令操练值守。",
+        "kind": "敬服的长官",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Barristan_Selmy",
+        "targetId": "agot:Selmy_3"
+      }
+    ],
+    "personality": "忠厚沉稳，尽忠职守；不喜宫廷勾心斗角，唯以守卫王室宗亲为己任。",
+    "publicRoles": [
+      "御林铁卫骑士"
+    ],
+    "reputation": "红堡中低调可靠的资深铁卫骑士。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Preston_Greenfield",
+      "https://asoiaf.fandom.com/zh/wiki/Preston_Greenfield"
+    ],
+    "summary": "御林铁卫白袍骑士，西境格林菲尔家族出身。老成持重，长年默默履行卫戍誓言职责，在复杂的宫廷斗争中保持中立克制。"
+  },
+  "agot:Lannister_7": {
+    "aliases": [
+      "弑君者",
+      "金袍骑士"
+    ],
+    "appearance": "面容英俊绝伦，身形高大矫健，一头浓密飘逸的金发，碧绿眼眸闪烁傲慢光芒，身披镀金铠甲或御林铁卫纯白披风。",
+    "characterId": "agot:Lannister_7",
+    "experiences": [
+      {
+        "date": "8281",
+        "description": "在赫伦堡比武会上由疯王伊里斯二世亲手披上白袍，成为历史上最年轻的御林铁卫。",
+        "participantIds": [
+          "agot:Selmy_3"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Jaime_Lannister",
+        "title": "晋升御林铁卫",
+        "visibility": "public"
+      },
+      {
+        "date": "8283",
+        "description": "在君临陷落之际，为阻止疯王引爆全城野火炸毁君临而拔剑刺穿伊里斯喉咙，后坐在铁王座上等待联军。",
+        "participantIds": [
+          "agot:Stark_3",
+          "agot:Baratheon_2"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Jaime_Lannister",
+        "title": "铁王座前刺杀疯王",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "敬仰巴利斯坦的武艺与武德，但彼此在誓言理解与处世原则上有着难以逾越的鸿沟。",
+        "kind": "铁卫队长与前辈",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Barristan_Selmy",
+        "targetId": "agot:Selmy_3"
+      }
+    ],
+    "personality": "桀骜不驯，玩世不恭；极度鄙视世俗道德虚伪，内心深处渴望真正的骑士荣耀但从不辩解‘弑君’背后的救城真相。",
+    "publicRoles": [
+      "御林铁卫骑士"
+    ],
+    "reputation": "维斯特洛公认最顶尖但名声最臭名昭著的剑客，被世人唾弃为背誓者与弑君者。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Jaime_Lannister",
+      "https://asoiaf.fandom.com/zh/wiki/Jaime_Lannister"
+    ],
+    "summary": "御林铁卫白袍骑士，泰温·兰尼斯特长子。十五岁破格入卫，因在篡夺者战争中刺杀疯王而背负‘弑君者’骂名，剑术冠绝全境。"
+  },
+  "agot:Lannister_8": {
+    "aliases": [
+      "小恶魔",
+      "半人",
+      "侏儒"
+    ],
+    "appearance": "身材矮小畸形，长短脚，额头突起，长着一黑一绿的异色双眸，金白相间的杂乱头发，身着特制华贵短袍。",
+    "characterId": "agot:Lannister_8",
+    "experiences": [
+      {
+        "date": "8286",
+        "description": "十六岁成年后在西方与君临广泛游历，研读古籍与七国律法，精通财政与算术。",
+        "participantIds": [
+          "agot:Lannister_1"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Tyrion_Lannister",
+        "title": "游历君临与自由城邦",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [],
+    "personality": "毒舌狡黠，心智过人；嗜酒好色以自嘲掩盖痛苦，同情弱小与残缺者，渴望获得父亲与世人哪怕一丝真正的认可。",
+    "publicRoles": [
+      "兰尼斯特家族贵族学者"
+    ],
+    "reputation": "全境贵族口中的畸形怪物与下流恶魔，实际是罕见的博学之士与政治天才。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Tyrion_Lannister",
+      "https://asoiaf.fandom.com/zh/wiki/Tyrion_Lannister"
+    ],
+    "summary": "泰温·兰尼斯特公爵次子。天生侏儒畸形，自幼饱受家人与世人白眼，但他凭借过人智慧、渊博学识与尖锐毒舌在权谋世界中自保周旋。"
+  },
+  "agot:Martell_11": {
+    "aliases": [
+      "崔斯丹王子"
+    ],
+    "appearance": "面容清秀俊朗，留着多恩人典型的柔顺黑卷发与清亮眼睛，衣着轻快华丽。",
+    "characterId": "agot:Martell_11",
+    "experiences": [
+      {
+        "date": "8287",
+        "description": "作为道朗亲王最小的孩子在阳戟城诞生。",
+        "participantIds": [
+          "agot:Martell_4"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Trystane_Martell",
+        "title": "降生阳戟城",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [],
+    "personality": "天真单纯，性情温柔；对宫廷权谋一无所知，深受侍从与宫廷侍女们的喜爱。",
+    "publicRoles": [
+      "多恩幼子王子"
+    ],
+    "reputation": "流水花园里备受呵护的小王子。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Trystane_Martell",
+      "https://asoiaf.fandom.com/zh/wiki/Trystane_Martell"
+    ],
+    "summary": "道朗亲王幼子。年幼懵懂，性格温和乖巧纯真，常年在流水花园的喷泉与柑橘林间无忧无虑玩耍戏水，深受仆从喜爱。"
+  },
+  "agot:Martell_4": {
+    "aliases": [
+      "道朗亲王",
+      "痛风亲王"
+    ],
+    "appearance": "体态苍老憔悴，双腿与关节因痛风红肿变形，需依靠轮椅代步，但双眼深邃如墨，沉着冷静。",
+    "characterId": "agot:Martell_4",
+    "experiences": [
+      {
+        "date": "8283",
+        "description": "在妹妹伊莉亚公主遭兰尼斯特军队残忍杀害后，与琼恩·艾林签署和平协议，将怒火压入心底。",
+        "participantIds": [
+          "agot:Arryn_3",
+          "agot:Martell_8"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Doran_Martell",
+        "title": "妹妹惨死隐忍媾和",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [],
+    "personality": "极度隐忍，谋定后动；深通政治长线棋局，自比‘静待成熟落地的血橙’，宁愿承受软弱骂名也绝不轻举妄动致使人民流血。",
+    "publicRoles": [
+      "多恩亲王",
+      "阳戟城领主"
+    ],
+    "reputation": "多恩境内激进派封臣眼中软弱可欺的轮椅亲王，实则为天下至深之阴谋家。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Doran_Martell",
+      "https://asoiaf.fandom.com/zh/wiki/Doran_Martell"
+    ],
+    "summary": "阳戟城公爵兼多恩亲王，因严重痛风行动不便。性情沉静审慎，习惯在流水花园远离喧闹，以耐心、克制和避免无谓冲突治理多恩。"
+  },
+  "agot:Mopatis_1": {
+    "aliases": [
+      "伊利里欧总督"
+    ],
+    "appearance": "身躯极其肥胖庞大，满头黄发，留着分叉的金黄色长须，十指戴满硕大宝石金戒，身披华美绚烂的东方丝绸长袍。",
+    "characterId": "agot:Mopatis_1",
+    "experiences": [
+      {
+        "date": "8279",
+        "description": "年轻时在潘托斯与瓦里斯联手建立起遍布狭海的盗窃与情报网络，一跃成为富可敌国的城邦总督。",
+        "participantIds": [
+          "agot:Eunuch_1"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Illyrio_Mopatis",
+        "title": "与瓦里斯结盟发迹",
+        "visibility": "secret"
+      }
+    ],
+    "notableRelations": [],
+    "personality": "圆滑精明，擅长以美食、礼物和恭维建立人情，也习惯把政治庇护与商业投资结合起来衡量得失。",
+    "publicRoles": [
+      "潘托斯总督",
+      "巨商权贵"
+    ],
+    "reputation": "潘托斯最富有且消息灵通的商人之一，狭海两岸许多流亡者、船主和权贵都与他保持往来。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Illyrio_Mopatis",
+      "https://asoiaf.fandom.com/zh/wiki/Illyrio_Mopatis"
+    ],
+    "summary": "潘托斯富商兼总督议会议员，经营香料、丝绸等跨海贸易，拥有庞大宅邸、船只与商业人脉。待客热情而精于算计，是自由贸易城邦中颇具影响力的权贵。"
+  }
+}

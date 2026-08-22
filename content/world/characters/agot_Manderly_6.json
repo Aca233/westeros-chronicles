@@ -1,0 +1,40 @@
+{
+  "aliases": [
+    "白港鳗鱼大人",
+    "臃肿伯爵"
+  ],
+  "appearance": "体积极其庞大，肥硕得无法骑马，需乘坐特制马车，双下巴重叠，但笑意盈盈的双眼中藏着敏锐深邃的光芒。",
+  "characterId": "agot:Manderly_6",
+  "experiences": [
+    {
+      "date": "8283",
+      "description": "在篡夺者战争中为联军提供港口转运与精锐战船，稳固了北境与三叉戟河的海上补给线。",
+      "participantIds": [
+        "agot:Stark_3"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Wyman_Manderly",
+      "title": "筑港扩军效忠北境",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "曼德勒家族自古受史塔克庇护迁居白港，世世代代誓死捍卫北境古神之狼。",
+      "kind": "效忠的宗主领主",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Eddard_Stark",
+      "targetId": "agot:Stark_3"
+    }
+  ],
+  "personality": "圆滑隐忍，城府极深；擅长以荒唐可笑的外表迷惑敌人，内心深处对史塔克家族怀有数百年的忠诚与誓言。",
+  "publicRoles": [
+    "白港伯爵",
+    "白刃河守卫"
+  ],
+  "reputation": "常被南方贵族嘲笑为贪吃嗜睡的北境肥猪，实则是极具战略眼光与财力的智谋诸侯。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Wyman_Manderly",
+    "https://asoiaf.fandom.com/zh/wiki/Wyman_Manderly"
+  ],
+  "summary": "白港伯爵兼新堡领主，北境唯一的城市领主。掌控白刃河入海口与庞大舰队，财富雄厚，信奉七神，对外装作体态臃肿的享乐贵族。"
+}

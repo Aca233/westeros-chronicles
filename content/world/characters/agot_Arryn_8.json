@@ -1,0 +1,35 @@
+{
+  "aliases": [
+    "乖罗宾",
+    "小劳勃"
+  ],
+  "appearance": "身材瘦小孱弱，面色蜡黄，大眼睛水汪汪且充斥着恐慌，常常蜷缩在母亲怀中剧烈颤抖或啼哭。",
+  "characterId": "agot:Arryn_8",
+  "experiences": [
+    {
+      "date": "8292",
+      "description": "历经多次流产后在君临红堡诞生，以国王劳勃·拜拉席恩之名命名。",
+      "participantIds": [
+        "agot:Arryn_3",
+        "agot:Tully_6",
+        "agot:Baratheon_2"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Robert_Arryn",
+      "title": "降生君临红堡",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [],
+  "personality": "胆怯任性，喜怒无常；极度依赖母亲，对不顺心的人动辄扬言‘让他们飞出月门摔死’。",
+  "publicRoles": [
+    "鹰巢城公爵",
+    "谷地守护者"
+  ],
+  "reputation": "谷地诸侯眼中极其羸弱且令人担忧的家族末裔独苗公爵。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Robert_Arryn",
+    "https://asoiaf.fandom.com/zh/wiki/Robert_Arryn"
+  ],
+  "summary": "鹰巢城公爵兼谷地守护，琼恩·艾林与莱莎幼子。年仅六岁，体弱多病常发癫痫抽搐，在母亲过度的母乳喂养与溺爱下娇纵任性。"
+}

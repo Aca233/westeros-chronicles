@@ -1,0 +1,45 @@
+{
+  "aliases": [
+    "泰陀斯伯爵"
+  ],
+  "appearance": "身材高大削瘦，蓄着修长的灰须，身披标志性的乌鸦黑羽毛华丽大氅，腰佩精钢长剑，神态冷峻威严。",
+  "characterId": "agot:Blackwood_6",
+  "experiences": [
+    {
+      "date": "8283",
+      "description": "随徒利家族全力投入篡夺者战争，在战场上以乌鸦羽大氅扬名四方。",
+      "participantIds": [
+        "agot:Tully_1"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Tytos_Blackwood",
+      "title": "血战三叉戟河",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "两大家族因领地边界、宗教信仰与古老血仇互不相让争斗千年。",
+      "kind": "世代死敌领主",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Jonos_Bracken",
+      "targetId": "agot:Bracken_3"
+    },
+    {
+      "description": "虽然自豪于先民古神传统，但对奔流城徒利家族的号令始终忠贞不二。",
+      "kind": "忠诚效顺的封君",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Hoster_Tully",
+      "targetId": "agot:Tully_1"
+    }
+  ],
+  "personality": "坚毅傲岸，忠诚重诺；恪守先民古神信仰与传统，在家族世仇面前寸步不让。",
+  "publicRoles": [
+    "鸦树城伯爵",
+    "河间地诸侯"
+  ],
+  "reputation": "河间地公认最骁勇忠诚、富有威严的古老旧神诸侯领袖。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Tytos_Blackwood",
+    "https://asoiaf.fandom.com/zh/wiki/Tytos_Blackwood"
+  ],
+  "summary": "鸦树城伯爵，河间地先民后裔与旧神信仰守护者。与邻近的布雷肯家族世仇延续数千年，治军严明，精明强干，深得部众拥戴。"
+}

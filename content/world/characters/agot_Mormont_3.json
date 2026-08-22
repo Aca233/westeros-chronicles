@@ -1,0 +1,44 @@
+{
+  "aliases": [
+    "乔拉爵士"
+  ],
+  "appearance": "身材高大结实粗壮，胸毛浓密如熊，发际线后退但体魄极其强悍，身披磨损严重的维斯特洛绿色锁甲与战袍。",
+  "characterId": "agot:Mormont_3",
+  "experiences": [
+    {
+      "date": "8289",
+      "description": "在葛雷乔伊叛乱中跟随劳勃与奈德率先攻破派克城城墙立下奇功，由劳勃国王亲手册封为骑士。",
+      "participantIds": [
+        "agot:Baratheon_2",
+        "agot:Stark_3"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Jorah_Mormont",
+      "title": "派克城先锋立功受封骑士",
+      "visibility": "public"
+    },
+    {
+      "date": "8293",
+      "description": "为满足妻子琳妮丝的奢靡生活私贩偷猎者为奴，被奈德公爵追捕前夕携妻仓皇登船逃亡厄索斯。",
+      "participantIds": [
+        "agot:Stark_3"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Jorah_Mormont",
+      "title": "贩奴畏罪流亡狭海",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [],
+  "personality": "坚忍务实，熟悉战斗与流亡生活；对失去的领地和名誉怀有复杂悔意，也仍保留维斯特洛骑士的骄傲。",
+  "publicRoles": [
+    "流亡骑士",
+    "前熊岛领主",
+    "佣兵"
+  ],
+  "reputation": "维斯特洛诸侯眼中畏罪潜逃的耻辱贩奴犯，厄索斯大陆经验丰富的老牌骑士雇佣兵。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Jorah_Mormont",
+    "https://asoiaf.fandom.com/zh/wiki/Jorah_Mormont"
+  ],
+  "summary": "熊岛前伯爵兼流亡骑士，杰奥·莫尔蒙独子。因贩卖偷猎者为奴而逃离维斯特洛，在厄索斯辗转担任佣兵，熟悉狭海两岸的道路与势力。"
+}

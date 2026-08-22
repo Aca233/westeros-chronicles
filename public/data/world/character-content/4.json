@@ -1,0 +1,242 @@
+{
+  "agot:Martell_10": {
+    "aliases": [
+      "青蛙王子",
+      "昆廷王子"
+    ],
+    "appearance": "相貌平平，身材矮胖敦实，棕发扁鼻，神态拘谨严肃，缺乏乃叔奥柏伦的潇洒俊逸但神情极其坚毅。",
+    "characterId": "agot:Martell_10",
+    "experiences": [
+      {
+        "date": "8288",
+        "description": "为弥补奥柏伦决斗杀死前任伊伦伍德伯爵的过节，被道朗亲王送往伊伦伍德堡充当养子侍从。",
+        "participantIds": [
+          "agot:Martell_4"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Quentyn_Martell",
+        "title": "送往伊伦伍德寄养",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [],
+    "personality": "忠厚老实，责任感极强；渴望履行王子义务获得父亲认可，即便面对凶险绝境也绝不临阵退缩。",
+    "publicRoles": [
+      "多恩王子",
+      "骑士"
+    ],
+    "reputation": "多恩封臣眼中低调务实、毫无骄纵之气的年轻王子。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Quentyn_Martell",
+      "https://asoiaf.fandom.com/zh/wiki/Quentyn_Martell"
+    ],
+    "summary": "道朗亲王次子。自幼被送往伊伦伍德家族抚养作为政治质子，性情内向质朴、尽忠职守，在伊伦伍德伯爵麾下受封骑士。"
+  },
+  "agot:Martell_9": {
+    "aliases": [
+      "亚莲恩公主"
+    ],
+    "appearance": "身材娇小丰满曼妙，拥有如丝缎般的浓密黑卷发与橄榄色肌肤，一双黑色大眼睛充满诱惑与果决神采。",
+    "characterId": "agot:Martell_9",
+    "experiences": [
+      {
+        "date": "8276",
+        "description": "作为道朗亲王与梅拉莉欧夫人的长女诞生，依据多恩律法成为无可争议的第一继承人。",
+        "participantIds": [
+          "agot:Martell_4"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Arianne_Martell",
+        "title": "降生阳戟城",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "与特蕾妮·沙德情同闺中密友，两人无话不谈共同策划行动。",
+        "kind": "最亲密的沙蛇姐妹",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Tyene_Sand",
+        "targetId": "agot:Martell_14"
+      }
+    ],
+    "personality": "热情奔放，敢作敢当；极具自信与野心，行事偶显急躁冒险，对多恩的继承传统誓死捍卫。",
+    "publicRoles": [
+      "多恩继承人大公主"
+    ],
+    "reputation": "多恩全境最美艳迷人的大公主，无数南方骑士倾慕的对象。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Arianne_Martell",
+      "https://asoiaf.fandom.com/zh/wiki/Arianne_Martell"
+    ],
+    "summary": "阳戟城继承人兼多恩大公主，道朗亲王长女。美艳热烈、野心勃勃，因误以为父亲偏心弟弟昆廷欲剥夺其继承权而对父亲心存叛逆戒备。"
+  },
+  "agot:Mormont_3": {
+    "aliases": [
+      "乔拉爵士"
+    ],
+    "appearance": "身材高大结实粗壮，胸毛浓密如熊，发际线后退但体魄极其强悍，身披磨损严重的维斯特洛绿色锁甲与战袍。",
+    "characterId": "agot:Mormont_3",
+    "experiences": [
+      {
+        "date": "8289",
+        "description": "在葛雷乔伊叛乱中跟随劳勃与奈德率先攻破派克城城墙立下奇功，由劳勃国王亲手册封为骑士。",
+        "participantIds": [
+          "agot:Baratheon_2",
+          "agot:Stark_3"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Jorah_Mormont",
+        "title": "派克城先锋立功受封骑士",
+        "visibility": "public"
+      },
+      {
+        "date": "8293",
+        "description": "为满足妻子琳妮丝的奢靡生活私贩偷猎者为奴，被奈德公爵追捕前夕携妻仓皇登船逃亡厄索斯。",
+        "participantIds": [
+          "agot:Stark_3"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Jorah_Mormont",
+        "title": "贩奴畏罪流亡狭海",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [],
+    "personality": "坚忍务实，熟悉战斗与流亡生活；对失去的领地和名誉怀有复杂悔意，也仍保留维斯特洛骑士的骄傲。",
+    "publicRoles": [
+      "流亡骑士",
+      "前熊岛领主",
+      "佣兵"
+    ],
+    "reputation": "维斯特洛诸侯眼中畏罪潜逃的耻辱贩奴犯，厄索斯大陆经验丰富的老牌骑士雇佣兵。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Jorah_Mormont",
+      "https://asoiaf.fandom.com/zh/wiki/Jorah_Mormont"
+    ],
+    "summary": "熊岛前伯爵兼流亡骑士，杰奥·莫尔蒙独子。因贩卖偷猎者为奴而逃离维斯特洛，在厄索斯辗转担任佣兵，熟悉狭海两岸的道路与势力。"
+  },
+  "agot:Oakheart_4": {
+    "aliases": [
+      "亚历斯爵士"
+    ],
+    "appearance": "面容英俊端正，身材高大匀称，留着浅金棕色头发与温和的棕色眼睛，白袍白甲一尘不染。",
+    "characterId": "agot:Oakheart_4",
+    "experiences": [
+      {
+        "date": "8290",
+        "description": "凭借出众武艺与古橡城名门贵族教养被劳勃国王选入御林铁卫。",
+        "participantIds": [
+          "agot:Baratheon_2",
+          "agot:Selmy_3"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Arys_Oakheart",
+        "title": "披上白袍入卫",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "长期担任弥赛菈公主的专属护卫骑士，对公主忠心耿耿爱护有加。",
+        "kind": "誓死护卫的小公主",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Myrcella_Baratheon",
+        "targetId": "agot:Baratheon_6"
+      }
+    ],
+    "personality": "正直热诚，恪尽职守；对骑士誓言抱有赤诚之心，但在面对情感与道义冲突时内心容易挣扎。",
+    "publicRoles": [
+      "御林铁卫骑士"
+    ],
+    "reputation": "御林铁卫中为数不多仍保留传统骑士风范与良好声誉的贵族楷模。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Arys_Oakheart",
+      "https://asoiaf.fandom.com/zh/wiki/Arys_Oakheart"
+    ],
+    "summary": "御林铁卫白袍骑士，河湾地古老贵族古橡城出身。恪守传统骑士信条，温和有礼，常年被指派贴身护卫弥赛菈公主的安全。"
+  },
+  "agot:Tarth_6": {
+    "aliases": [
+      "美人布蕾妮",
+      "塔斯的布蕾妮"
+    ],
+    "appearance": "身材高逾六尺，膀大腰圆，胸部扁平，面庞扁阔布满雀斑，牙齿歪斜，但拥有一双极其清澈诚挚的大蓝眼睛。",
+    "characterId": "agot:Tarth_6",
+    "experiences": [
+      {
+        "date": "8293",
+        "description": "拒绝包办婚姻与淑女规训，在父亲默许下跟随老教头格温·古德兄弟刻苦磨练剑盾与马术。",
+        "participantIds": [
+          "agot:Tarth_1"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Brienne_of_Tarth",
+        "title": "受训剑术武艺",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "在蓝礼巡视塔斯岛时受到其唯一不带嘲弄的温柔对待，从此将蓝礼奉为心中神明与唯一效忠对象。",
+        "kind": "暗恋与效忠的领主",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Renly_Baratheon",
+        "targetId": "agot:Baratheon_4"
+      }
+    ],
+    "personality": "纯朴刚毅，重诺守信；内心极度敏感脆弱但绝不在外表屈服，誓死追求最纯粹的骑士美德。",
+    "publicRoles": [
+      "塔斯岛继承人",
+      "女战士"
+    ],
+    "reputation": "贵族阶层口中被戏谑为‘美人’的异类丑女，战场上令普通骑士胆寒的强悍勇士。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Brienne_of_Tarth",
+      "https://asoiaf.fandom.com/zh/wiki/Brienne_of_Tarth"
+    ],
+    "summary": "暮星城塞尔温·塔斯伯爵独女兼继承人。体格异常高大强壮，武艺精湛，热切向往骑士精神与荣誉，常因相貌粗陋而受尽贵族冷嘲热讽。"
+  },
+  "agot:Tyrell_11": {
+    "aliases": [
+      "瘸子维拉斯"
+    ],
+    "appearance": "身材高大俊雅，留着修剪整齐的棕发与温和明亮的眼睛，右腿残疾行走需拄拐杖，着装简素优雅。",
+    "characterId": "agot:Tyrell_11",
+    "experiences": [
+      {
+        "date": "8290",
+        "description": "在成年后的初次比武中长矛对决奥柏伦·马泰尔，坐骑受惊倒下压碎右腿落下终身残疾。",
+        "participantIds": [
+          "agot:Martell_8",
+          "agot:Tyrell_8"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Willas_Tyrell",
+        "title": "比武受创致残",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "理解当年的意外伤残，两人常年互通书信交流培育猎鹰与良马心得。",
+        "kind": "不计前嫌的笔友",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Oberyn_Martell",
+        "targetId": "agot:Martell_8"
+      },
+      {
+        "description": "深得祖母奥莲娜的赞赏与喜爱，被奥莲娜视为孙辈中最聪慧理智之人。",
+        "kind": "最器重的长孙",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Olenna_Redwyne",
+        "targetId": "agot:Redwyne_2"
+      }
+    ],
+    "personality": "睿智博学，心胸宽广；未因伤残而怨恨奥柏伦，反而与其保持书信往来，是提利尔家族中最具战略头脑的继承人。",
+    "publicRoles": [
+      "高庭继承人",
+      "学者型贵族"
+    ],
+    "reputation": "河湾地诸侯一致钦佩的年轻智者与高庭未来的明主。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Willas_Tyrell",
+      "https://asoiaf.fandom.com/zh/wiki/Willas_Tyrell"
+    ],
+    "summary": "高庭继承人，梅斯·提利尔长子。在比武中被奥柏伦·马泰尔误伤致残一腿，从此潜心研读古籍与训鹰育马，以睿智、博学与温和在封臣中享有盛誉。"
+  }
+}

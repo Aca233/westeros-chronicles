@@ -1,0 +1,39 @@
+{
+  "aliases": [
+    "曼登爵士"
+  ],
+  "appearance": "身材高大精瘦，面容僵硬冷漠毫无表情，一双灰死如鱼的眼眸毫无生气，白袍下散发着冰冷杀意。",
+  "characterId": "agot:Moore_2",
+  "experiences": [
+    {
+      "date": "8288",
+      "description": "由时任首相琼恩·艾林从谷地骑士中引荐入宫，被劳勃国王册封为御林铁卫。",
+      "participantIds": [
+        "agot:Arryn_3",
+        "agot:Baratheon_2"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Mandon_Moore",
+      "title": "受荐披上白袍",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "詹姆对其精湛武艺与毫无破绽的冷血眼神始终心存三分戒心。",
+      "kind": "戒备的铁卫同僚",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Jaime_Lannister",
+      "targetId": "agot:Lannister_7"
+    }
+  ],
+  "personality": "沉默冷酷，无喜无悲；宛如毫无情感的杀人兵器，从不与任何同僚交心交友。",
+  "publicRoles": [
+    "御林铁卫骑士"
+  ],
+  "reputation": "御林铁卫中最令人捉摸不透且暗中胆寒的冷面死士剑客。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Mandon_Moore",
+    "https://asoiaf.fandom.com/zh/wiki/Mandon_Moore"
+  ],
+  "summary": "御林铁卫白袍骑士，谷地出身。由琼恩·艾林引荐入卫，剑术极强但面无表情如同死尸，被詹姆·兰尼斯特评价为最危险的同僚。"
+}

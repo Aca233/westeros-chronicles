@@ -1,0 +1,39 @@
+{
+  "aliases": [
+    "波文大人",
+    "老石榴"
+  ],
+  "appearance": "身材圆滚微胖，红扑扑的面庞如熟透石榴，留着稀疏棕须，常年在黑城堡库房翻阅厚重账簿与清单。",
+  "characterId": "agot:Marsh_5",
+  "experiences": [
+    {
+      "date": "8292",
+      "description": "在长夜将至寒冬逼近前，以高超算术重新整肃十九座要塞废墟与黑城堡全部粮秣配额。",
+      "participantIds": [
+        "agot:Mormont_2"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Bowen_Marsh",
+      "title": "统筹全长城补给防务",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "尽忠职守协助总司令管理后勤与城堡内务。",
+      "kind": "辅佐的总司令",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Jeor_Mormont",
+      "targetId": "agot:Mormont_2"
+    }
+  ],
+  "personality": "刻板严谨，按部就班；极度重视军粮储备与规章制度，对超出规制的冒险行为持坚决反对态度。",
+  "publicRoles": [
+    "守夜人首席事务官"
+  ],
+  "reputation": "守夜人军团无可替代的优秀大管家，以严守库房底线著称。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Bowen_Marsh",
+    "https://asoiaf.fandom.com/zh/wiki/Bowen_Marsh"
+  ],
+  "summary": "守夜人军团首席事务官。颈泽名门出身，精通算术、粮秣调配与后勤储备，恪守军团条例，在莫尔蒙总司令麾下总管长城各要塞物资运转。"
+}

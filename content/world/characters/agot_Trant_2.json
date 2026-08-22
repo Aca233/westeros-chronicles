@@ -1,0 +1,38 @@
+{
+  "aliases": [
+    "马林爵士"
+  ],
+  "appearance": "面容干瘪丑陋，眼袋深重，面色苍白，留着灰白髭须，身着御林铁卫纯白板甲与披风。",
+  "characterId": "agot:Trant_2",
+  "experiences": [
+    {
+      "date": "8286",
+      "description": "劳勃国王即位后为拉拢风暴地与王领贵族，由宫廷遴选披上白袍。",
+      "participantIds": [
+        "agot:Baratheon_2"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Meryn_Trant",
+      "title": "入选御林铁卫",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "深得瑟曦信任，是王后用来执行见不得光暗杀与逼迫任务的死忠爪牙。",
+      "kind": "听命的主使者",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Cersei_Lannister",
+      "targetId": "agot:Lannister_6"
+    }
+  ],
+  "personality": "冷酷阴鸷，毫无道德底线；以盲从上峰命令为借口残害妇孺弱小，毫无骑士荣誉感。",
+  "publicRoles": [
+    "御林铁卫骑士"
+  ],
+  "reputation": "朝廷中人尽皆知的冷血走狗，以残忍听话闻名。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Meryn_Trant",
+    "https://asoiaf.fandom.com/zh/wiki/Meryn_Trant"
+  ],
+  "summary": "御林铁卫白袍骑士，风暴地特兰家族出身。冷酷残忍、缺乏同情心，甘愿充当瑟曦王后与乔佛里王子处理脏事的冷血打手。"
+}

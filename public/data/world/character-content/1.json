@@ -1,0 +1,345 @@
+{
+  "agot:Karstark_4": {
+    "aliases": [
+      "卡史塔克大人"
+    ],
+    "appearance": "身材高大威猛如北方巨熊，浓密的灰白胡须垂胸，目光如铁，披裹着厚重沉重的黑色毛皮大氅与锁甲。",
+    "characterId": "agot:Karstark_4",
+    "experiences": [
+      {
+        "date": "8283",
+        "description": "率领卡史塔克全族精锐南下追随艾德·史塔克征战，立下赫赫威名。",
+        "participantIds": [
+          "agot:Stark_3"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Rickard_Karstark",
+        "title": "起兵响应篡夺者战争",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "虽然自豪于卡史塔克的先民独立血脉，但在大义上始终拥护临冬城奔狼号令。",
+        "kind": "同族宗主与封君",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Eddard_Stark",
+        "targetId": "agot:Stark_3"
+      }
+    ],
+    "personality": "勇猛倔强，直来直去；极度重视家族血仇与荣誉，一旦受到背叛或伤害便誓死追讨到底。",
+    "publicRoles": [
+      "卡霍城伯爵",
+      "北境诸侯"
+    ],
+    "reputation": "以勇武善战和固执刚强著称的北境老将，卡霍城军队的绝对领袖。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Rickard_Karstark",
+      "https://asoiaf.fandom.com/zh/wiki/Rickard_Karstark"
+    ],
+    "summary": "卡霍城伯爵，史塔克家族的远支亲族。性格刚烈剽悍忠勇，在北境拥有极高威望，率领卡霍城铁骑坚定效忠临冬城。"
+  },
+  "agot:Lowborn_Wildling_1": {
+    "aliases": [
+      "火吻而生",
+      "红发耶哥蕊特"
+    ],
+    "appearance": "身材娇小矫健，一头如烈火般蓬乱卷曲的火红长发，雀斑小脸，牙齿洁白微斜，身披厚重海豹皮与粗劣皮甲，手握硬木短弓。",
+    "characterId": "agot:Lowborn_Wildling_1",
+    "experiences": [
+      {
+        "date": "8295",
+        "description": "追随曼斯·雷德集结南征，担任穿梭于峡谷密林中的先锋斥候射手。",
+        "participantIds": [
+          "agot:Rayder_1"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Ygritte",
+        "title": "加入曼斯大军斥候队",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "坚定追随曼斯跨越长城寻求生路。",
+        "kind": "追随的塞外之王",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Mance_Rayder",
+        "targetId": "agot:Rayder_1"
+      }
+    ],
+    "personality": "野性难驯，热情泼辣；崇尚自由与爱情，蔑视南方人虚伪的贵族跪拜礼节，口头禅为‘你什么都不懂’。",
+    "publicRoles": [
+      "自由民女矛妇",
+      "斥候神射手"
+    ],
+    "reputation": "塞外自由民中箭法最刁钻机敏的年轻女矛妇。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Ygritte",
+      "https://asoiaf.fandom.com/zh/wiki/Ygritte"
+    ],
+    "summary": "塞外自由民女矛妇。长着被野人视为鸿运当头的火红头发，擅长弓箭与雪地伏击，性格泼辣狂野、向往真正的自由与南方的温暖土地。"
+  },
+  "agot:Marbrand_4": {
+    "aliases": [
+      "亚当爵士"
+    ],
+    "appearance": "身材匀称挺拔，留着铜红色的披肩长发，面容英俊开朗，身穿绘有燃烧之树纹章的华丽亮银板甲。",
+    "characterId": "agot:Marbrand_4",
+    "experiences": [
+      {
+        "date": "8289",
+        "description": "随西境大军渡海征讨铁民，在先锋抢滩战中战功卓著。",
+        "participantIds": [
+          "agot:Lannister_1",
+          "agot:Lannister_7"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Addam_Marbrand",
+        "title": "平定铁群岛叛乱",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "与詹姆在凯岩城一同受训长大，是詹姆极少数推心置腹的骑士兄弟。",
+        "kind": "儿时至交好友",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Jaime_Lannister",
+        "targetId": "agot:Lannister_7"
+      }
+    ],
+    "personality": "勇敢机敏，豪迈大度；深通斥候战术与骑兵突袭，在军中极有威望与人缘。",
+    "publicRoles": [
+      "烙印城继承人",
+      "骑士",
+      "前锋统领"
+    ],
+    "reputation": "西境公认最骁勇善战的先锋骑兵大将，深受泰温与詹姆的极高评价。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Addam_Marbrand",
+      "https://asoiaf.fandom.com/zh/wiki/Addam_Marbrand"
+    ],
+    "summary": "烙印城继承人兼西境骑兵先锋统领。詹姆·兰尼斯特的儿时挚友，擅长长矛骑战与前线侦察，是西境年轻一代中最优秀的将领之一。"
+  },
+  "agot:Martell_8": {
+    "aliases": [
+      "红毒蛇",
+      "奥柏伦亲王"
+    ],
+    "appearance": "身材修长精悍如黑豹，黑发如蛇信卷曲，浓眉下长着一双黑曜石般深邃狂傲的黑眸，身穿轻便金鳞软甲，手持长枪。",
+    "characterId": "agot:Martell_8",
+    "experiences": [
+      {
+        "date": "8274",
+        "description": "年轻时在学城铸造多枚学士环后游历厄索斯，加入并创建佣兵团转战自由城邦。",
+        "participantIds": [],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Oberyn_Martell",
+        "title": "旧镇学城铸链与流亡佣兵",
+        "visibility": "public"
+      },
+      {
+        "date": "8283",
+        "description": "在得知伊莉亚公主与外甥惨遭魔山杀害后，欲在多恩起兵为韦赛里斯复辟，后被道朗按捺转入潜伏。",
+        "participantIds": [
+          "agot:Martell_4"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Oberyn_Martell",
+        "title": "誓血为伊莉亚复仇",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "地狱修道院领主私生女，与奥柏伦相伴多年育有四女，彼此深爱忠贞。",
+        "kind": "挚爱伴侣与灵魂知己",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Ellaria_Sand",
+        "targetId": "agot:Uller_6"
+      },
+      {
+        "description": "发誓一定要亲手将淬毒长矛刺入魔山胸膛为姐姐伊莉亚复仇。",
+        "kind": "誓杀的血海仇敌",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Gregor_Clegane",
+        "targetId": "agot:Clegane_3"
+      }
+    ],
+    "personality": "狂野桀骜，锋芒毕露；极度重情重义，蔑视世俗规矩，对仇敌毫不留情，对自由与欢愉充满无尽渴望。",
+    "publicRoles": [
+      "多恩亲王",
+      "红毒蛇",
+      "次子团前指挥官"
+    ],
+    "reputation": "全七国令人闻风丧胆的剧毒骑士与决斗死神，多恩人民崇拜的热血英雄。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Oberyn_Martell",
+      "https://asoiaf.fandom.com/zh/wiki/Oberyn_Martell"
+    ],
+    "summary": "多恩亲王道朗之弟。精通枪术、毒物、学问与自由城邦游击战术，性格狂放不羁、嗜血复仇，为给惨死的姐姐伊莉亚讨还公道而誓死与兰尼斯特为敌。"
+  },
+  "agot:Mormont_2": {
+    "aliases": [
+      "熊老"
+    ],
+    "appearance": "身材极其魁梧强壮，白发苍苍，秃顶，留着如大扫帚般的浓密白须，肩头常年停着一只会说话的黑羽老渡鸦。",
+    "characterId": "agot:Mormont_2",
+    "experiences": [
+      {
+        "date": "8288",
+        "description": "凭借在军团中的卓越威望被全体黑衣守夜人兄弟推选为第997任总司令官。",
+        "participantIds": [
+          "agot:Targaryen_120",
+          "agot:Stark_4"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Jeor_Mormont",
+        "title": "当选守夜人总司令",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "遇有军团重大难题必向伊蒙学士求教，两人维系着黑城堡数十年稳定。",
+        "kind": "倚重的智者长者",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Aemon",
+        "targetId": "agot:Targaryen_120"
+      },
+      {
+        "description": "将塞外最关键的侦察任务全权托付给班扬·史塔克。",
+        "kind": "最信任的巡逻先锋",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Benjen_Stark",
+        "targetId": "agot:Stark_4"
+      }
+    ],
+    "personality": "刚毅坚毅，公正严明；深通军务与长城局势，将全部心血倾注于守卫生者疆界，威严而富长者关怀。",
+    "publicRoles": [
+      "守夜人军团总司令",
+      "前熊岛伯爵"
+    ],
+    "reputation": "绝境长城军民上下共同爱戴敬畏的最高领袖与不朽长城支柱。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Jeor_Mormont",
+      "https://asoiaf.fandom.com/zh/wiki/Jeor_Mormont"
+    ],
+    "summary": "守夜人军团第997任总司令，原熊岛伯爵。为让位给儿子乔拉而自愿披上黑衣北上长城，以铁腕治军、坚毅威严维系着衰微军团的最后尊严与防线。"
+  },
+  "agot:Pycelle_1": {
+    "aliases": [
+      "派席尔大学士"
+    ],
+    "appearance": "白须垂胸如银瀑的高大老者，身披缀满各色重金项环的繁复学士长袍，常作步履蹒跚、昏昏欲睡状。",
+    "characterId": "agot:Pycelle_1",
+    "experiences": [
+      {
+        "date": "8259",
+        "description": "由学城总枢机派往君临侍奉杰赫里斯二世国王，从此深植红堡核心枢纽数十年。",
+        "participantIds": [
+          "agot:Lannister_1"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Pycelle",
+        "title": "受命出任大学士",
+        "visibility": "public"
+      },
+      {
+        "date": "8283",
+        "description": "在泰温大军兵临君临时竭力说服疯王打开城门迎接‘盟友’，直接促成红堡陷落。",
+        "participantIds": [
+          "agot:Lannister_1",
+          "agot:Eunuch_1"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Pycelle",
+        "title": "力劝疯王开城献关",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [],
+    "personality": "伪善狡诈，奴颜婢膝；擅长以衰老软弱伪装自我，在关键政治风暴中坚定维护泰温·兰尼斯特的利益。",
+    "publicRoles": [
+      "大学士",
+      "御前会议成员"
+    ],
+    "reputation": "侍奉多代君王的资深大学士，熟悉宫廷礼制与王国政务；其政治立场常被认为更亲近兰尼斯特家族。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Pycelle",
+      "https://asoiaf.fandom.com/zh/wiki/Pycelle"
+    ],
+    "summary": "学城派驻君临的御前大学士。侍奉过坦格利安四代君王与劳勃国王，历经数十年风云，表面苍老龙钟，实则是兰尼斯特家族在朝廷最坚定的暗子。"
+  },
+  "agot:Stark_10": {
+    "aliases": [
+      "布兰",
+      "攀爬者布兰"
+    ],
+    "appearance": "容貌清秀，留着赤褐色卷发，眼睛呈明亮深蓝，身体柔韧矫捷，身旁跟随着敏捷机警的冰原狼夏天。",
+    "characterId": "agot:Stark_10",
+    "experiences": [
+      {
+        "date": "8290",
+        "description": "以其英年早逝的伯父布兰登·史塔克之名命名，诞生于北境临冬城。",
+        "participantIds": [
+          "agot:Stark_3",
+          "agot:Tully_4"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Bran_Stark",
+        "title": "降生临冬城",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "身材魁梧的高大马夫，性情温厚纯真，常背负布兰穿行于城堡内外。",
+        "kind": "忠诚的仆从与陪伴者",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Hodor",
+        "targetId": "agot:Stark_hh_2"
+      }
+    ],
+    "personality": "天真热忱，好奇心旺盛；充满对英雄骑士冒险的向往，行事勇敢但有时欠缺对危险的防备。",
+    "publicRoles": [
+      "临冬城次子"
+    ],
+    "reputation": "临冬城里身手最矫健的攀爬小能手，深受守军和仆役们的喜爱。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Bran_Stark",
+      "https://asoiaf.fandom.com/zh/wiki/Bran_Stark"
+    ],
+    "summary": "艾德·史塔克公爵的次子。热爱攀爬临冬城的古老高塔与残垣断壁，向往成为御林铁卫般的英勇骑士，深得临冬城上下喜爱。"
+  },
+  "agot:Stark_6": {
+    "aliases": [
+      "临冬城少主"
+    ],
+    "appearance": "相貌承袭母亲的徒利家族特征，身材高大壮硕，红棕色卷发，蓝眸明亮有神，身旁跟随着形影不离的冰原狼灰风。",
+    "characterId": "agot:Stark_6",
+    "experiences": [
+      {
+        "date": "8283",
+        "description": "在篡夺者战争期间诞生于母亲的家族城堡奔流城，战后随母亲移居北境临冬城。",
+        "participantIds": [
+          "agot:Tully_4",
+          "agot:Stark_3"
+        ],
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Robb_Stark",
+        "title": "奔流城降生",
+        "visibility": "public"
+      }
+    ],
+    "notableRelations": [
+      {
+        "description": "席恩作为人质在临冬城生活近十年，与罗柏情同知交好友与并肩骑士。",
+        "kind": "亲密同伴与侍从",
+        "sourceUrl": "https://awoiaf.westeros.org/index.php/Theon_Greyjoy",
+        "targetId": "agot:Greyjoy_14"
+      }
+    ],
+    "personality": "勇敢刚毅，胸怀坦荡；继承了父亲的荣誉感与责任心，在重大决断前迅速展现出与年龄不相称的威严。",
+    "publicRoles": [
+      "临冬城继承人"
+    ],
+    "reputation": "临冬城军民普遍爱戴的年轻少主，被北境封臣视为合格的未来北境守护。",
+    "schemaVersion": 1,
+    "sources": [
+      "https://awoiaf.westeros.org/index.php/Robb_Stark",
+      "https://asoiaf.fandom.com/zh/wiki/Robb_Stark"
+    ],
+    "summary": "临冬城继承人，艾德·史塔克与凯特琳的长子。在父亲悉心培养下成长为一名正直勇敢、擅长马术与剑术的年轻领袖。"
+  }
+}

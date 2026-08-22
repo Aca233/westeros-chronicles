@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "野猪王",
+    "篡夺者"
+  ],
+  "appearance": "身材极为高大魁梧，体态日渐肥胖，浓密的黑须遮住下颌与胸口，双目明亮带笑，嗓门洪亮如雷。",
+  "characterId": "agot:Baratheon_2",
+  "experiences": [
+    {
+      "date": "8283",
+      "description": "在红宝石滩挥舞双手战锤亲手击杀雷加·坦格利安王子，彻底奠定篡夺者战争的胜利。",
+      "participantIds": [
+        "agot:Stark_3",
+        "agot:Arryn_3"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Robert_I_Baratheon",
+      "title": "三叉戟河决战",
+      "visibility": "public"
+    },
+    {
+      "date": "8289",
+      "description": "御驾亲征铁群岛平定葛雷乔伊叛乱，迫使巴隆·葛雷乔伊屈膝臣服。",
+      "participantIds": [
+        "agot:Stark_3",
+        "agot:Lannister_1",
+        "agot:Greyjoy_5"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Greyjoy%27s_Rebellion",
+      "title": "亲征派克城",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "视奈德为一生中最信任的朋友，在前首相艾林去世后亲自北上邀请其担任国王之手。",
+      "kind": "情同手足的生死兄弟",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Eddard_Stark",
+      "targetId": "agot:Stark_3"
+    },
+    {
+      "description": "琼恩·艾林如同其养父，在位十五年来一直代劳勃处理繁杂的国家政务。",
+      "kind": "如父导师与首任首相",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Jon_Arryn",
+      "targetId": "agot:Arryn_3"
+    }
+  ],
+  "personality": "豪爽慷慨，嗜酒如命；热爱打仗比武胜过治国理政，脾气暴躁但易于妥协，深切怀念早逝的挚爱莱安娜·史塔克。",
+  "publicRoles": [
+    "安达尔人与先民的国王",
+    "全境守护者"
+  ],
+  "reputation": "全境闻名的传奇战士与铁锤猛将，但在治国与内政上被普遍认为怠惰挥霍。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Robert_I_Baratheon",
+    "https://asoiaf.fandom.com/zh/wiki/Robert_Baratheon"
+  ],
+  "summary": "七大王国统治者兼铁王座之主，在篡夺者战争中推翻坦格利安王朝。年轻时勇猛无敌，登基后沉溺于酒色与比武游猎，王国财政日渐窘迫。"
+}

@@ -1,0 +1,51 @@
+{
+  "aliases": [
+    "风暴降生",
+    "龙石岛公主"
+  ],
+  "appearance": "拥有坦格利安标志性的银金长发与淡紫色眼眸，容貌娇柔绝美，身材纤细轻盈，眼神中初显坚韧神采。",
+  "characterId": "agot:Targaryen_9",
+  "experiences": [
+    {
+      "date": "8284",
+      "description": "在摧毁王室舰队的夏日风暴中诞生于龙石岛，母亲蕾拉王后在难产中逝世，随后在忠臣护送下渡海流亡。",
+      "participantIds": [
+        "agot:Targaryen_8"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Daenerys_Targaryen",
+      "title": "风暴降生龙石岛",
+      "visibility": "public"
+    },
+    {
+      "date": "8297",
+      "description": "与兄长韦赛里斯受到潘托斯总督伊利里欧·摩帕提斯接纳，住进其高墙豪宅中筹划借兵夺国。",
+      "participantIds": [
+        "agot:Targaryen_8",
+        "agot:Mopatis_1"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Illyrio_Mopatis",
+      "title": "庇护于潘托斯",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "潘托斯富商总督，为流亡的坦格利安兄妹提供住所与生活所需。",
+      "kind": "庇护赞助者",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Illyrio_Mopatis",
+      "targetId": "agot:Mopatis_1"
+    }
+  ],
+  "personality": "初时怯懦柔顺，在兄长的暴躁压迫下求生；内心深处怀揣对故土与归宿的渴望，逐渐展露出真龙血脉的勇气与威严。",
+  "publicRoles": [
+    "流亡公主",
+    "真龙末裔"
+  ],
+  "reputation": "在厄索斯城邦间被称为流亡的末代王女，君临红堡则视其为必须严密防范的余孽隐患。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Daenerys_Targaryen",
+    "https://asoiaf.fandom.com/zh/wiki/Daenerys_Targaryen"
+  ],
+  "summary": "坦格利安王朝流亡公主，诞生于龙石岛的风暴之夜。家族覆灭后随兄长辗转自由贸易城邦，长期寄居他人门下，受制于兄长的复国野心。"
+}

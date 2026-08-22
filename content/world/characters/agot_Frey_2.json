@@ -1,0 +1,32 @@
+{
+  "aliases": [
+    "史提夫隆爵士"
+  ],
+  "appearance": "满头白发的老骑士，容貌亦带有些许佛罗家族典型的黄鼠狼相貌，神态疲惫沉稳，身穿实用锁甲。",
+  "characterId": "agot:Frey_2",
+  "experiences": [
+    {
+      "date": "8283",
+      "description": "作为佛雷家族前锋指挥官随父亲出征，协助维系河间地后方防线秩序。",
+      "participantIds": [
+        "agot:Frey_1"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Stevron_Frey",
+      "title": "随军参战三叉戟河",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [],
+  "personality": "温和谨慎，顾全大局；恪守骑士操守与长子职责，时刻提醒子侄们‘家和万事兴’。",
+  "publicRoles": [
+    "孪河城继承人",
+    "骑士"
+  ],
+  "reputation": "佛雷家族中极少数真正赢得外族诸侯尊重与信任的正派长辈。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Stevron_Frey",
+    "https://asoiaf.fandom.com/zh/wiki/Stevron_Frey"
+  ],
+  "summary": "孪河城继承人，瓦德·佛雷侯爵的长子。年过六旬，性格谨慎稳重，极力维系庞大而勾心斗角的佛雷家族内部和睦与对外名誉。"
+}

@@ -1,0 +1,39 @@
+{
+  "aliases": [
+    "罗德利克爵士"
+  ],
+  "appearance": "粗壮敦实的老战士，蓄着一对标志性的大白连鬓胡须，说话时胡须随之抖动，常着皮铠佩精钢长剑。",
+  "characterId": "agot:Cassel_3",
+  "experiences": [
+    {
+      "date": "8289",
+      "description": "跟随奈德公爵攻入派克岛，在此战中英勇杀敌，失去了两名兄长但立下赫赫战功。",
+      "participantIds": [
+        "agot:Stark_3"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Rodrik_Cassel",
+      "title": "葛雷乔伊叛乱参战",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "乔里是其已故兄长马丁之子，由罗德利克悉心带大并推举为侍卫队长。",
+      "kind": "亲侄与下属",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Jory_Cassel",
+      "targetId": "agot:Cassel_4"
+    }
+  ],
+  "personality": "忠诚严正，脾气耿直；对待军事操练极其严苛，但对少主们怀有深切的关怀与长辈之爱。",
+  "publicRoles": [
+    "临冬城教头",
+    "骑士"
+  ],
+  "reputation": "北境享有崇高声誉的老牌教头，以无可挑剔的忠诚与练兵之能著称。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Rodrik_Cassel",
+    "https://asoiaf.fandom.com/zh/wiki/Rodrik_Cassel"
+  ],
+  "summary": "临冬城教头兼侍卫长。忠心耿耿侍奉史塔克家族数十年，负责训练城堡驻军与少主们的剑术武艺，经验丰富老道。"
+}

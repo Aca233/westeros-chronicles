@@ -1,0 +1,39 @@
+{
+  "aliases": [
+    "普列斯顿爵士"
+  ],
+  "appearance": "身材高大健硕的老牌骑士，胡须花白，目光沉静，身着全套白色铠甲与纯白长披风。",
+  "characterId": "agot:Greenfield_3",
+  "experiences": [
+    {
+      "date": "8285",
+      "description": "在篡夺者战争后补选入御林铁卫，驻守红堡历经十余年风雨。",
+      "participantIds": [
+        "agot:Baratheon_2",
+        "agot:Selmy_3"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Preston_Greenfield",
+      "title": "入选御林铁卫",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "坚定遵从巴利斯坦队长的号令操练值守。",
+      "kind": "敬服的长官",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Barristan_Selmy",
+      "targetId": "agot:Selmy_3"
+    }
+  ],
+  "personality": "忠厚沉稳，尽忠职守；不喜宫廷勾心斗角，唯以守卫王室宗亲为己任。",
+  "publicRoles": [
+    "御林铁卫骑士"
+  ],
+  "reputation": "红堡中低调可靠的资深铁卫骑士。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Preston_Greenfield",
+    "https://asoiaf.fandom.com/zh/wiki/Preston_Greenfield"
+  ],
+  "summary": "御林铁卫白袍骑士，西境格林菲尔家族出身。老成持重，长年默默履行卫戍誓言职责，在复杂的宫廷斗争中保持中立克制。"
+}

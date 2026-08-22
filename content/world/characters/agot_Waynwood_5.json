@@ -1,0 +1,39 @@
+{
+  "aliases": [
+    "安雅夫人"
+  ],
+  "appearance": "面容清瘦严正，灰发盘起，神态威严沉着，身穿优雅高贵的墨绿天鹅绒贵妇长袍。",
+  "characterId": "agot:Waynwood_5",
+  "experiences": [
+    {
+      "date": "8283",
+      "description": "在篡夺者战争中统筹后勤与领地防御，派遣诸子随琼恩·艾林征战。",
+      "participantIds": [
+        "agot:Arryn_3"
+      ],
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Anya_Waynwood",
+      "title": "稳固铁橡城后方",
+      "visibility": "public"
+    }
+  ],
+  "notableRelations": [
+    {
+      "description": "与符石城罗伊斯家族保持世代通婚与紧密的谷地政治军事同盟。",
+      "kind": "政治盟友同僚",
+      "sourceUrl": "https://awoiaf.westeros.org/index.php/Yohn_Royce",
+      "targetId": "agot:Royce_1"
+    }
+  ],
+  "personality": "威严干练，精通家族事务；行事极其讲究规矩与信誉，对谷地后辈的管教甚严。",
+  "publicRoles": [
+    "铁橡城女伯爵",
+    "谷地诸侯重臣"
+  ],
+  "reputation": "谷地诸侯极其敬重的长者与智谋贵妇，在谷地政局中话语权极重。",
+  "schemaVersion": 1,
+  "sources": [
+    "https://awoiaf.westeros.org/index.php/Anya_Waynwood",
+    "https://asoiaf.fandom.com/zh/wiki/Anya_Waynwood"
+  ],
+  "summary": "铁橡城女伯爵，谷地最具声望与家族底蕴的女诸侯。精明强干，恪守古老荣誉与贵族礼节，在谷地各大家族联姻与调解中举足轻重。"
+}

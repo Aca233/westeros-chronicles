@@ -1,10 +1,9 @@
 import { HOUSES } from '../../data/houses';
 import { migrateLordIdentityData } from '../../data/characterTraits';
 import { filterImportedCharacterTraits } from '../../data/importedCharacterTraitPolicy';
-import { getCharacterDossierSupplement } from '../../data/generated/characterDossierSupplements';
 import { filterVisibleExperiences } from './characterSupplementSchema';
+import type { CharacterContentRecord } from '../world-content/types';
 import type {
-  CharacterDossierSupplement,
   CharacterExperience,
   NotableNonKinRelation,
 } from './characterSupplementTypes';
@@ -162,14 +161,13 @@ export function createPlayerDossier(
   lord: LordProfile,
   currentYear = 298,
   worldCharacterId: CharacterId = lord.canonicalCharacterId ?? 'save:current:player',
+  content?: CharacterContentRecord,
 ): PlayerCharacterDossier {
   const identifiedLord = migrateLordIdentityData(lord);
   const importedTraits = identifiedLord.importedTraitIds
     ? filterImportedCharacterTraits(identifiedLord.importedTraitIds, identifiedLord.age)
     : undefined;
-  const supplement = identifiedLord.canonicalCharacterId
-    ? getCharacterDossierSupplement(identifiedLord.canonicalCharacterId)
-    : undefined;
+  const supplement = identifiedLord.canonicalCharacterId ? content : undefined;
   const supplementExperiences = filterVisibleExperiences(supplement?.experiences, currentYear);
   const notableRelations = (supplement?.notableRelations ?? []).map((rel) => ({
     kind: rel.kind,
@@ -215,7 +213,7 @@ export function createPlayerDossier(
     personality: supplement?.personality,
     reputation: supplement?.reputation,
     supplementExperiences: supplementExperiences.length ? supplementExperiences : undefined,
-    sourceUrls: supplement?.sourceUrls,
+    sourceUrls: supplement?.sources,
     worldCharacterId,
     worldLocation: { ...identifiedLord.location },
     worldActivity: 'idle',
@@ -265,12 +263,13 @@ export function createNpcDossier(
   character: ResolvedCharacter,
   currentYear: number,
   kinship: CharacterKinshipEntry = { spouseIds: character.spouseIds, childIds: [], siblingIds: [] },
+  content?: CharacterContentRecord,
 ): NpcCharacterDossier {
   const house = houseMetadata(character.dynastyId);
   const title = character.titles[0] || '未持有封地';
   const age = characterAgeAtYear(character.birthDate, currentYear, character.deathDate, character.alive);
   const importedTraits = filterImportedCharacterTraits(character.traits, age);
-  const supplement = getCharacterDossierSupplement(character.id);
+  const supplement = content;
   const supplementExperiences = filterVisibleExperiences(supplement?.experiences, currentYear);
 
   const baseRelations = character.relations.flatMap((relation) => {
@@ -334,14 +333,14 @@ export function createNpcDossier(
     wounds: [...character.wounds],
     woundLevels: { ...character.woundLevels },
     memories: [...character.memories],
-    summary: supplement?.summary,
+    summary: supplement?.summary ?? '暂无可靠的公开生平摘要。',
     publicRoles: supplement?.publicRoles,
     aliases: supplement?.aliases,
     appearance: supplement?.appearance,
     personality: supplement?.personality,
     reputation: supplement?.reputation,
     supplementExperiences: supplementExperiences.length ? supplementExperiences : undefined,
-    sourceUrls: supplement?.sourceUrls,
+    sourceUrls: supplement?.sources,
     worldCharacterId: character.id,
     worldLocation: character.locationId
       ? { locationId: character.locationId, ...(character.sceneLocation ? { sceneLocation: character.sceneLocation } : {}) }
