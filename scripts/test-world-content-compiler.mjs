@@ -31,7 +31,7 @@ async function createWorldFixture(manifest = WORLD_MANIFEST) {
   await writeJson(join(contentDir, 'start-state', 'assets.json'), { schemaVersion: 1, instances: [], sites: [], vehicles: [] });
   await writeJson(join(contentDir, 'locations', 'gameplay-locations.json'), {
     schemaVersion: 1,
-    include: [],
+    include: ['b_winterfell'],
     exclude: [],
     rules: {
       minimumImportance: 45,
@@ -67,6 +67,8 @@ async function createWorldFixture(manifest = WORLD_MANIFEST) {
     paths: { searchIndex: '/data/agot-map/location-search-index.json' },
   });
   await writeJson(join(rootDir, 'public', 'data', 'agot-map', 'location-search-index.json'), []);
+  await writeJson(join(rootDir, 'public', 'data', 'agot-map', 'semantic', 'membership.json'), []);
+  await mkdir(join(rootDir, 'public', 'data', 'agot-map', 'routes'), { recursive: true });
   await writeJson(join(rootDir, 'public', 'data', 'items', 'agot-artifact-world-state.json'), {
     schemaVersion: 1,
     artifactDatasetHash: 'artifacts-hash',

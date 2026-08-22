@@ -4,14 +4,21 @@ import { build } from 'esbuild';
 
 async function bundleModule(entryPoint) {
   const bundle = await build({
-    entryPoints: [entryPoint],
+    stdin: {
+      contents: `export * from './${entryPoint}'; export { preloadItemCatalog } from './src/data/itemDefinitions.ts';`,
+      resolveDir: process.cwd(),
+      sourcefile: 'character-commands-test-entry.ts',
+      loader: 'ts',
+    },
     bundle: true,
     write: false,
     format: 'esm',
     platform: 'node',
   });
   const url = `data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString('base64')}`;
-  return import(url);
+  const module = await import(url);
+  await module.preloadItemCatalog();
+  return module;
 }
 
 const { validateCharacterCommand } = await bundleModule('src/features/characters/characterCommandValidator.ts');

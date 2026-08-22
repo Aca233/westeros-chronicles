@@ -4,7 +4,7 @@ import { build } from 'esbuild';
 
 const bundle = await build({
   stdin: {
-    contents: "export * from './src/services/stateReducer.ts'; export * from './scripts/fixtures/living-world-items.ts';",
+    contents: "export * from './src/services/stateReducer.ts'; export * from './scripts/fixtures/living-world-items.ts'; export { preloadItemCatalog } from './src/data/itemDefinitions.ts';",
     resolveDir: process.cwd(), sourcefile: 'state-reducer-entry.ts', loader: 'ts',
   },
   bundle: true,
@@ -15,7 +15,9 @@ const bundle = await build({
   logLevel: 'silent',
 });
 const moduleUrl = `data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString('base64')}`;
-const { applyStateCommands, createNedItemState } = await import(moduleUrl);
+const reducerModule = await import(moduleUrl);
+await reducerModule.preloadItemCatalog();
+const { applyStateCommands, createNedItemState } = reducerModule;
 
 const createLord = (traitIds = []) => ({
   name: '测试角色', house: '测试家族', houseWords: '测试箴言', houseSigil: 'house-stark', title: '测试领主', age: 24, gender: '男',

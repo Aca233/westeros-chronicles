@@ -4,19 +4,27 @@ import { build } from 'esbuild';
 
 async function bundleModule(entryPoint) {
   const bundle = await build({
-    entryPoints: [entryPoint],
+    stdin: {
+      contents: `export * from './${entryPoint}'; export { preloadItemCatalog } from './src/data/itemDefinitions.ts';`,
+      resolveDir: process.cwd(),
+      sourcefile: 'character-prompt-test-entry.ts',
+      loader: 'ts',
+    },
     bundle: true,
     write: false,
     format: 'esm',
     platform: 'node',
   });
   const url = `data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString('base64')}`;
-  return import(url);
+  const module = await import(url);
+  await module.preloadItemCatalog();
+  return module;
 }
 
 const { buildCharacterPromptSlice } = await bundleModule('src/features/characters/characterPromptSlice.ts');
 const { buildChatMessages } = await bundleModule('src/services/promptBuilder.ts');
-const { createLivingWorldTestLord } = await bundleModule('scripts/fixtures/living-world-test.ts');
+const { createLivingWorldTestLord, ordinaryCatalogReady } = await bundleModule('scripts/fixtures/living-world-test.ts');
+await ordinaryCatalogReady;
 
 const PLAYER = {
   viewerId: 'player',

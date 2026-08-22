@@ -152,7 +152,44 @@ export const parseCharacterContentShard = (value: unknown): Record<string, Chara
   for (const [id, record] of Object.entries(value)) result[id] = parse(characterContentSchema, record, `人物内容 ${id}`) as CharacterContentRecord;
   return result;
 };
-export const parseOrdinaryItems = (value: unknown) => parse(z.array(z.unknown()), value, '普通物品');
+const itemEffectSchema = z.union([
+  z.object({
+    kind: z.literal('check_modifier'),
+    domain: z.enum(['diplomacy', 'martial', 'stewardship', 'intrigue', 'learning', 'prowess', 'duel', 'battle']),
+    value: z.number(), stackGroup: z.string().min(1), cap: z.number().optional(),
+    condition: z.record(z.string(), z.unknown()).optional(), label: z.string().min(1),
+  }).strict(),
+  z.object({ kind: z.literal('action_unlock'), actionId: z.string().min(1), label: z.string().min(1), condition: z.record(z.string(), z.unknown()).optional() }).strict(),
+  z.object({ kind: z.literal('protection'), zones: z.array(z.enum(['head', 'torso', 'arms', 'legs'])), damageTags: z.array(z.string()), value: z.number(), stackGroup: z.string().min(1), cap: z.number().optional(), label: z.string().min(1) }).strict(),
+  z.object({ kind: z.literal('social'), contextTags: z.array(z.string()), value: z.number(), stackGroup: z.string().min(1), cap: z.number().optional(), label: z.string().min(1) }).strict(),
+  z.object({ kind: z.literal('burden'), value: z.number(), stackGroup: z.string().min(1), cap: z.number().optional(), label: z.string().min(1) }).strict(),
+  z.object({ kind: z.literal('fatigue'), contextTags: z.array(z.string()), value: z.number(), stackGroup: z.string().min(1), cap: z.number().optional(), label: z.string().min(1) }).strict(),
+  z.object({ kind: z.literal('heat'), contextTags: z.array(z.string()), value: z.number(), stackGroup: z.string().min(1), cap: z.number().optional(), label: z.string().min(1) }).strict(),
+  z.object({ kind: z.literal('resource'), target: z.enum(['goldGain', 'prestigeGain', 'dreadGain', 'recoverySpeed']), value: z.number(), stackGroup: z.string().min(1), cap: z.number().optional(), label: z.string().min(1) }).strict(),
+  z.object({ kind: z.literal('capacity'), categories: z.array(z.string()), units: z.number(), stackGroup: z.string().min(1), cap: z.number().optional(), label: z.string().min(1) }).strict(),
+  z.object({ kind: z.literal('narrative'), directive: z.string().min(1), condition: z.record(z.string(), z.unknown()).optional() }).strict(),
+]);
+
+const itemImageSchema = z.union([
+  z.object({ type: z.literal('game'), icon: z.string().min(1) }).strict(),
+  z.object({ type: z.literal('wiki'), path: z.string().min(1), fallbackIcon: z.string().min(1) }).strict(),
+  z.object({ type: z.literal('asset'), path: z.string().min(1), fallbackIcon: z.string().min(1) }).strict(),
+  z.object({ type: z.literal('library'), iconName: z.string().min(1) }).strict(),
+]);
+
+const itemDefinitionSchema = z.object({
+  id: z.string().min(1), name: z.string().min(1), description: z.string().min(1), roleplayText: z.string().min(1),
+  category: z.enum(['weapon', 'armor', 'clothing', 'jewelry', 'tool', 'document', 'medicine', 'poison', 'supply', 'keepsake']),
+  subcategory: z.string().min(1), tags: z.array(z.string()), material: z.string().min(1), image: itemImageSchema,
+  baseQuality: z.enum(['rough', 'common', 'fine', 'masterwork', 'legendary']), rarity: z.enum(['common', 'uncommon', 'rare', 'unique', 'illustrious']),
+  bulk: z.enum(['tiny', 'small', 'medium', 'large']), stackable: z.boolean(), maxStack: z.number().int().min(1),
+  unique: z.boolean(), equippable: z.boolean(), allowedPositions: z.array(equipmentPosition),
+  handedness: z.enum(['one', 'two']).optional(), baseValue: z.number().nonnegative(),
+  effects: z.array(itemEffectSchema), provenance: z.record(z.string(), z.unknown()).optional(),
+  contentSource: z.record(z.string(), z.unknown()).optional(),
+}).strict();
+
+export const parseOrdinaryItems = (value: unknown) => parse(z.array(itemDefinitionSchema), value, '普通物品') as import('./types').OrdinaryItemContent[];
 export const parseWorldLoadouts = (value: unknown): WorldLoadoutContent => {
   const parsed = parse(loadoutsSchema, value, 'NPC 装备') as { schemaVersion: 1; templates: unknown[]; overrides: unknown[] };
   return { templates: parsed.templates as WorldLoadoutContent['templates'], overrides: parsed.overrides as WorldLoadoutContent['overrides'] };

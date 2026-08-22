@@ -16,7 +16,9 @@ const bundle = await build({
   bundle: true, write: false, format: 'esm', platform: 'node',
 });
 const url = `data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString('base64')}`;
-const { performD20Check, applyStateCommands, createItemCatalog, createEmptyItemSystem, createLivingWorldTestLord } = await import(url);
+const diceModule = await import(url);
+await diceModule.ordinaryCatalogReady;
+const { performD20Check, applyStateCommands, createItemCatalog, createEmptyItemSystem, createLivingWorldTestLord } = diceModule;
 
 function definition(overrides = {}) {
   return {

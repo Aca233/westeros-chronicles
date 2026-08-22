@@ -17,6 +17,7 @@ const runtimeBundle = await build({
       "export * from './src/services/turnResolution.ts'",
       "export * from './scripts/fixtures/living-world-test.ts'",
       "export * from './src/features/characters/customRulerStart.ts'",
+      "export { preloadItemCatalog } from './src/data/itemDefinitions.ts'",
     ].join('\n'),
     resolveDir: process.cwd(),
     sourcefile: 'location-authority-runtime.ts',
@@ -29,7 +30,9 @@ const runtimeBundle = await build({
   logLevel: 'silent',
 })
 const runtimeUrl = `data:text/javascript;base64,${Buffer.from(runtimeBundle.outputFiles[0].text).toString('base64')}`
-const { createLivingWorldTestLord, createCustomRulerItemState, settleTurnDraft } = await import(runtimeUrl)
+const runtimeModule = await import(runtimeUrl)
+await runtimeModule.preloadItemCatalog()
+const { createLivingWorldTestLord, createCustomRulerItemState, settleTurnDraft } = runtimeModule
 
 const known = new Set(['b_winterfell', 'b_castle_black', UNKNOWN_WESTEROS_LOCATION_ID])
 

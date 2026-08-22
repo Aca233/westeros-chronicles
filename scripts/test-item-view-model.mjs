@@ -14,7 +14,9 @@ const bundle = await build({
   bundle: true, write: false, format: 'esm', platform: 'node',
 });
 const url = `data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString('base64')}`;
-const { buildItemCardModels, buildEquipmentGroupModels, createNedItemState, ITEM_CATALOG } = await import(url);
+const viewModule = await import(url);
+await viewModule.preloadItemCatalog();
+const { buildItemCardModels, buildEquipmentGroupModels, createNedItemState, ITEM_CATALOG } = viewModule;
 
 function stateWithEveryCustodyTab() {
   const state = createNedItemState();

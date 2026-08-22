@@ -90,7 +90,7 @@ async function readDatasetManifests(rootDir) {
       throw new Error(`持有人摘要 dynastyId 无效：${record.id}`);
     }
   }
-  const [mapMemberships, routeGraph, timelineEvents] = await Promise.all([
+  const [mapMemberships, routeGraph, timelineEvents, artifactDefinitionIds] = await Promise.all([
     readJson(join(rootDir, 'public', 'data', 'agot-map', 'semantic', 'membership.json'), '地图语义成员'),
     (async () => {
       const routesDirectory = join(rootDir, 'public', 'data', 'agot-map', 'routes');
@@ -110,6 +110,7 @@ async function readDatasetManifests(rootDir) {
       return { nodeIds, portIds };
     })(),
     loadCanonicalTimelineEvents(rootDir),
+    loadArtifactDefinitionIds(rootDir),
   ]);
   return {
     characters,
@@ -123,6 +124,7 @@ async function readDatasetManifests(rootDir) {
     routeNodeIds: routeGraph.nodeIds,
     routePortIds: routeGraph.portIds,
     timelineEvents,
+    artifactDefinitionIds,
     artifactDefinitions: new Map(Object.entries(artifacts.artifacts)),
     holderSummaries,
   };
@@ -144,6 +146,28 @@ async function loadCanonicalTimelineEvents(rootDir) {
   } catch {
     return [];
   }
+}
+
+async function loadArtifactDefinitionIds(rootDir) {
+  // Generated artifact ids follow the fixture/dataset root. Curated story
+  // artifacts stay in source, so their ids always come from this repository.
+  const compilerRoot = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
+  const manifestPath = join(rootDir, 'public', 'data', 'items', 'agot-artifact-import-manifest.json');
+  const generatedIds = await readFile(manifestPath, 'utf8')
+    .then(JSON.parse)
+    .then((manifest) => manifest.items.map((item) => item.itemId))
+    .catch(() => []);
+  const curatedIds = await esbuildBundle({
+    entryPoints: [join(compilerRoot, 'src', 'features', 'items', 'curatedArtifacts.ts')],
+    bundle: true,
+    write: false,
+    format: 'esm',
+    platform: 'node',
+    logLevel: 'silent',
+  }).then((bundle) => import(`data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString('base64')}`))
+    .then((module) => module.CURATED_ARTIFACT_DEFINITION_IDS)
+    .catch(() => []);
+  return new Set([...generatedIds, ...curatedIds]);
 }
 
 const GAMEPLAY_REASON_ORDER = ['explicit', 'important-place', 'political-center', 'start-reference', 'event-reference', 'major-route-port'];
@@ -284,6 +308,9 @@ function validateStartAssetReferences(startAssets, dependencies) {
   const vehicleIds = new Set(startAssets.vehicles.map((vehicle) => vehicle.id));
   const uniqueDefinitionOwners = new Map();
   for (const instance of startAssets.instances) {
+    if (!dependencies.itemDefinitionIds.has(instance.definitionId)) {
+      throw new Error(`资产实例引用未知物品定义：${instance.instanceId} -> ${instance.definitionId}`);
+    }
     for (const [field, ref] of [
       ['lawfulOwner', instance.lawfulOwner],
       ['controller', instance.controller],
@@ -491,6 +518,10 @@ export async function compileWorldContent(options = {}) {
   }
   const source = await readAndValidateWorldSource(contentDir);
   const dependencies = await readDatasetManifests(rootDir);
+  dependencies.itemDefinitionIds = new Set([
+    ...source.ordinaryItems.items.map((item) => item.id),
+    ...dependencies.artifactDefinitionIds,
+  ]);
   validateStartCharacterReferences(source.startCharacters, dependencies);
   validateStartAssetReferences(source.startAssets, dependencies);
   validateCharacterContentReferences(source.characterContents, dependencies);

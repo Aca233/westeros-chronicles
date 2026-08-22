@@ -21,7 +21,9 @@ const {
   createNedItemState,
   getEquipmentReplacementChoices,
   getTransferDestinationChoices,
+  preloadItemCatalog,
 } = await import(url);
+await preloadItemCatalog();
 
 test('更换返回全部可接触的兼容装备而不是直接取第一个', () => {
   const state = createNedItemState();

@@ -163,7 +163,8 @@
     "test:living-world-start": "node scripts/test-living-world-start.mjs",
     "test:world-start-characters": "node scripts/test-world-start-characters.mjs",
     "test:world-start-assets": "node scripts/test-world-start-assets.mjs",
-    "test:world-terminology": "node scripts/test-world-terminology.mjs"
+    "test:world-terminology": "node scripts/test-world-terminology.mjs",
+    "test:world-ordinary-items": "node scripts/test-world-ordinary-items.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",

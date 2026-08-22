@@ -20,7 +20,9 @@ const bundle = await build({
   logLevel: 'silent',
 });
 const url = `data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString('base64')}`;
-const { createLivingWorldTestLord, createInitialAgotArtifactWorldState, prepareWorldTurn, settleTurnDraft } = await import(url);
+const turnModule = await import(url);
+await turnModule.ordinaryCatalogReady;
+const { createLivingWorldTestLord, createInitialAgotArtifactWorldState, prepareWorldTurn, settleTurnDraft } = turnModule;
 
 const PLAYER_ID = 'agot:Stark_3';
 function gameState() {

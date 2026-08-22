@@ -242,6 +242,81 @@ export function validateCharacterContents(records) {
   return contents;
 }
 
+const ITEM_EFFECT_KINDS = new Set([
+  'check_modifier', 'action_unlock', 'protection', 'social', 'burden', 'fatigue', 'heat', 'resource', 'capacity', 'narrative',
+]);
+const ITEM_CATEGORIES = new Set(['weapon', 'armor', 'clothing', 'jewelry', 'tool', 'document', 'medicine', 'poison', 'supply', 'keepsake']);
+const ITEM_QUALITIES = new Set(['rough', 'common', 'fine', 'masterwork', 'legendary']);
+const ITEM_RARITIES = new Set(['common', 'uncommon', 'rare', 'illustrious', 'unique']);
+const ITEM_BULKS = new Set(['tiny', 'small', 'medium', 'large']);
+const ITEM_IMAGE_TYPES = new Set(['game', 'wiki', 'asset', 'library']);
+
+function isValidEquipmentPosition(position) {
+  if (!position || typeof position !== 'object') return false;
+  const keys = Object.keys(position);
+  if (keys.includes('group') && ['head', 'mainhand', 'offhand'].includes(position.group) && keys.length === 1) return true;
+  if (position.group === 'torso' && ['garment', 'armor', 'outerwear'].includes(position.layer) && keys.length === 2) return true;
+  if (position.group === 'legs' && ['legwear', 'footwear'].includes(position.layer) && keys.length === 2) return true;
+  if (position.group === 'accessories' && [0, 1, 2].includes(position.index) && keys.length === 2) return true;
+  return false;
+}
+
+function validateItemImage(image, label) {
+  if (!image || typeof image !== 'object' || !ITEM_IMAGE_TYPES.has(image.type)) throw new Error(`${label}图片引用无效`);
+  if (image.type === 'game' && typeof image.icon === 'string' && image.icon) return;
+  if (image.type === 'library' && typeof image.iconName === 'string' && image.iconName) return;
+  if ((image.type === 'wiki' || image.type === 'asset')
+    && typeof image.path === 'string' && image.path.startsWith('/')
+    && typeof image.fallbackIcon === 'string' && image.fallbackIcon) return;
+  throw new Error(`${label}图片引用字段不完整`);
+}
+
+export function validateOrdinaryItems(value) {
+  const document = record(value, '普通物品');
+  if (document.schemaVersion !== 1) throw new Error('普通物品版本必须为 1');
+  const items = array(document.items, '普通物品.items');
+  const ids = new Set();
+  for (const entry of items) {
+    const item = record(entry, '普通物品条目');
+    if (typeof item.id !== 'string' || !item.id.trim()) throw new Error('普通物品 ID 无效');
+    if (item.id.startsWith('artifact.')) throw new Error(`神器不得混入普通物品编辑源：${item.id}`);
+    if (ids.has(item.id)) throw new Error(`物品 ID 重复：${item.id}`);
+    ids.add(item.id);
+    for (const field of ['name', 'description', 'roleplayText', 'subcategory', 'material']) {
+      if (typeof item[field] !== 'string' || !item[field].trim()) throw new Error(`普通物品 ${item.id} 字段 ${field} 无效`);
+    }
+    if (!ITEM_CATEGORIES.has(item.category)) throw new Error(`普通物品 ${item.id} 类别无效：${item.category}`);
+    if (!ITEM_QUALITIES.has(item.baseQuality)) throw new Error(`普通物品 ${item.id} 品质无效：${item.baseQuality}`);
+    if (!ITEM_RARITIES.has(item.rarity)) throw new Error(`普通物品 ${item.id} 稀有度无效：${item.rarity}`);
+    if (!ITEM_BULKS.has(item.bulk)) throw new Error(`普通物品 ${item.id} 体积无效：${item.bulk}`);
+    validateItemImage(item.image, `普通物品 ${item.id} `);
+    if (typeof item.stackable !== 'boolean') throw new Error(`普通物品 ${item.id} stackable 无效`);
+    if (!Number.isInteger(item.maxStack) || item.maxStack < 1) throw new Error(`普通物品 ${item.id} maxStack 无效`);
+    if (item.stackable && item.unique) throw new Error(`唯一物品不能堆叠：${item.id}`);
+    if (!item.stackable && item.maxStack !== 1) throw new Error(`不可堆叠物品的 maxStack 必须为 1：${item.id}`);
+    if (item.stackable && item.maxStack <= 1) throw new Error(`可堆叠物品的 maxStack 必须大于 1：${item.id}`);
+    if (typeof item.equippable !== 'boolean') throw new Error(`普通物品 ${item.id} equippable 无效`);
+    const positions = array(item.allowedPositions ?? [], `普通物品 ${item.id} allowedPositions`);
+    if (item.equippable && positions.length === 0) throw new Error(`可装备物品必须声明装备位置：${item.id}`);
+    if (!item.equippable && positions.length > 0) throw new Error(`不可装备物品不能声明装备位置：${item.id}`);
+    for (const position of positions) {
+      if (!isValidEquipmentPosition(position)) throw new Error(`普通物品 ${item.id} 装备位置无效`);
+    }
+    if (item.handedness !== undefined && !['one', 'two'].includes(item.handedness)) throw new Error(`普通物品 ${item.id} handedness 无效`);
+    if (item.handedness !== undefined && !positions.some((position) => position.group === 'mainhand' || position.group === 'offhand')) {
+      throw new Error(`非手持物品不能声明单双手要求：${item.id}`);
+    }
+    if (!Number.isFinite(item.baseValue) || item.baseValue < 0) throw new Error(`普通物品 ${item.id} 价值无效`);
+    const effects = array(item.effects, `普通物品 ${item.id} effects`);
+    for (const effect of effects) {
+      if (!effect || typeof effect !== 'object' || !ITEM_EFFECT_KINDS.has(effect.kind)) {
+        throw new Error(`未知物品效果：${item.id} ${String(effect?.kind)}`);
+      }
+    }
+  }
+  return document;
+}
+
 export function validateWorldSource(source) {
   validateWorldManifest(source.manifest);
   const playable = array(source.playableCharacters, '可玩人物');
@@ -285,6 +360,7 @@ export function validateWorldSource(source) {
     if (document.schemaVersion !== 1) throw new Error(`${name}版本必须为 1`);
     array(document[collectionKey], `${name}.${collectionKey}`);
   }
+  validateOrdinaryItems(source.ordinaryItems);
   validateCharacterContents(source.characterContents);
   return source;
 }

@@ -98,7 +98,12 @@ const storeStubs = {
 };
 
 const storeBundle = await build({
-  entryPoints: ['src/store/useGameStore.ts'],
+  stdin: {
+    contents: "export * from './src/store/useGameStore.ts'; export { preloadItemCatalog } from './src/data/itemDefinitions.ts';",
+    resolveDir: process.cwd(),
+    sourcefile: 'unified-turn-store-entry.ts',
+    loader: 'ts',
+  },
   bundle: true,
   write: false,
   format: 'esm',
@@ -119,7 +124,9 @@ globalThis.__unifiedNarrativeWaitForAbort = false;
 globalThis.__unifiedCommitFails = false;
 
 const storeUrl = `data:text/javascript;base64,${Buffer.from(storeBundle.outputFiles[0].text).toString('base64')}`;
-const { useGameStore } = await import(storeUrl);
+const storeModule = await import(storeUrl);
+await storeModule.preloadItemCatalog();
+const { useGameStore } = storeModule;
 const fixtureBundle = await build({
   entryPoints: ['scripts/fixtures/living-world-test.ts'],
   bundle: true,
@@ -128,7 +135,9 @@ const fixtureBundle = await build({
   platform: 'node',
 });
 const fixtureUrl = `data:text/javascript;base64,${Buffer.from(fixtureBundle.outputFiles[0].text).toString('base64')}`;
-const { createLivingWorldTestLord } = await import(fixtureUrl);
+const fixtureModule = await import(fixtureUrl);
+await fixtureModule.ordinaryCatalogReady;
+const { createLivingWorldTestLord } = fixtureModule;
 const pristine = structuredClone(useGameStore.getState().gameState);
 
 const ARYA = 'agot:Stark_9';

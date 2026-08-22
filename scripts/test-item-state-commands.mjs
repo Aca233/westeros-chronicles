@@ -16,7 +16,9 @@ const bundle = await build({
   bundle: true, write: false, format: 'esm', platform: 'node',
 });
 const url = `data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString('base64')}`;
-const { applyStateCommands, generateOfflineDemoResponse, createLivingWorldTestLord, ITEM_CATALOG, createItemInstance } = await import(url);
+const commandModule = await import(url);
+await commandModule.ordinaryCatalogReady;
+const { applyStateCommands, generateOfflineDemoResponse, createLivingWorldTestLord, ITEM_CATALOG, createItemInstance } = commandModule;
 
 function ned() {
   return structuredClone(createLivingWorldTestLord());
