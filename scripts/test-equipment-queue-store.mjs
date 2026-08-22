@@ -60,11 +60,36 @@ const dependencyStubs = {
   },
 };
 
-const bundle = await build({ entryPoints: ['src/store/useGameStore.ts'], bundle: true, write: false, format: 'esm', platform: 'node', plugins: [dependencyStubs] });
+const bundle = await build({
+  stdin: {
+    contents: "export * from './src/store/useGameStore.ts'; export { preloadItemCatalog } from './src/data/itemDefinitions.ts';",
+    resolveDir: process.cwd(),
+    sourcefile: 'equipment-queue-store-entry.ts',
+    loader: 'ts',
+  },
+  bundle: true,
+  write: false,
+  format: 'esm',
+  platform: 'node',
+  plugins: [dependencyStubs],
+});
 globalThis.alert = () => {};
 globalThis.__itemQueueRequestShouldFail = false;
 const moduleUrl = `data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString('base64')}`;
-const { useGameStore } = await import(moduleUrl);
+const storeModule = await import(moduleUrl);
+await storeModule.preloadItemCatalog();
+const { useGameStore } = storeModule;
+const fixtureBundle = await build({
+  entryPoints: ['scripts/fixtures/living-world-test.ts'],
+  bundle: true,
+  write: false,
+  format: 'esm',
+  platform: 'node',
+});
+const fixtureUrl = `data:text/javascript;base64,${Buffer.from(fixtureBundle.outputFiles[0].text).toString('base64')}`;
+const fixtureModule = await import(fixtureUrl);
+await fixtureModule.ordinaryCatalogReady;
+const { createLivingWorldTestLord } = fixtureModule;
 
 let transactionSequence = 0;
 function resetQueue() {
@@ -72,6 +97,7 @@ function resetQueue() {
   useGameStore.setState({
     gameState: {
       ...current.gameState,
+      lord: structuredClone(createLivingWorldTestLord()),
       worldRuntime: { ...current.gameState.worldRuntime, pendingTransactions: [] },
     },
     isStreaming: false,

@@ -211,12 +211,14 @@ export const STRUCTURE_GUARDS = Object.freeze([
   'test:module-cycles',
   'check:module-cycles',
   'test:world-content-runtime',
+  'check:living-world-content-boundaries',
+  'test:living-world-closure',
 ]);
 
 export const VERIFICATION_SUITES = Object.freeze({
   quick: suite([...LEGACY_UNIQUE_LEAVES.quick, ...STRUCTURE_GUARDS]),
-  world: suite(LEGACY_UNIQUE_LEAVES.world),
-  map: suite(LEGACY_UNIQUE_LEAVES.map),
+  world: suite([...LEGACY_UNIQUE_LEAVES.world, 'test:living-world-closure']),
+  map: suite([...LEGACY_UNIQUE_LEAVES.map, 'test:gameplay-locations']),
   full: suite([...LEGACY_UNIQUE_LEAVES.full, ...STRUCTURE_GUARDS]),
 });
 

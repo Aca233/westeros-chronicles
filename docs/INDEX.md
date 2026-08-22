@@ -13,6 +13,8 @@
 
 - [`superpowers/specs/2026-08-21-project-structure-consolidation-design.md`](superpowers/specs/2026-08-21-project-structure-consolidation-design.md)：项目结构收敛设计。
 - [`superpowers/plans/2026-08-21-project-structure-consolidation.md`](superpowers/plans/2026-08-21-project-structure-consolidation.md)：项目结构收敛实施计划与验证记录。
+- [`superpowers/specs/2026-08-21-living-world-data-foundation-design.md`](superpowers/specs/2026-08-21-living-world-data-foundation-design.md)：活世界数据基础与硬编码收敛设计。
+- [`superpowers/plans/2026-08-21-living-world-data-foundation.md`](superpowers/plans/2026-08-21-living-world-data-foundation.md)：活世界数据基础实施计划与验证记录。
 
 ## 历史记录
 

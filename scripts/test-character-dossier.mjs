@@ -12,7 +12,9 @@ async function bundleModule(entryPoint) {
 const { characterAgeAtYear, characterDatasetYear, createNpcDossier, createPlayerDossier, dynastySlug, relatedCharacterIds } = await bundleModule('src/features/characters/characterDossier.ts');
 const { resolveCharacter } = await bundleModule('src/features/characters/characterProjector.ts');
 const { migrateLordIdentityData } = await bundleModule('src/data/characterTraits.ts');
-const { createLivingWorldTestLord } = await bundleModule('scripts/fixtures/living-world-test.ts');
+const livingWorldFixture = await bundleModule('scripts/fixtures/living-world-test.ts');
+await livingWorldFixture.ordinaryCatalogReady;
+const { createLivingWorldTestLord } = livingWorldFixture;
 const { projectResolvedCharacterWorldFacts } = await bundleModule('src/features/world/characterWorldFacts.ts');
 const { projectLordFamilyRecords, projectRelationshipCharacter } = await bundleModule('src/features/characters/characterRelationshipProjection.ts');
 

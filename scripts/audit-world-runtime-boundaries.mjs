@@ -62,6 +62,7 @@ const lordLocationAllowlist = new Set([
   'src/services/turn/settlement.ts',
   'src/services/turn/worldPreparation.ts',
   'src/services/stateReducer.ts',
+  'src/features/world/createLivingWorldGame.ts',
   'src/features/world/worldTurnContext.ts',
   'src/features/world/worldDisplayResolver.ts',
   'src/features/world/useWorldEventDisplays.ts',

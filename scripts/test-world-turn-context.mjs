@@ -3,7 +3,7 @@ import { build } from 'esbuild';
 
 const bundle = await build({
   stdin: {
-    contents: "export * from './src/features/world/worldTurnContext.ts';",
+    contents: "export * from './src/features/world/worldTurnContext.ts'; export { preloadItemCatalog } from './src/data/itemDefinitions.ts'; export { preloadNpcLoadoutContent } from './src/features/items/npcLoadoutContent.ts';",
     resolveDir: process.cwd(),
     sourcefile: 'world-turn-context-test-entry.ts',
     loader: 'ts',
@@ -14,7 +14,9 @@ const bundle = await build({
   platform: 'node',
 });
 const moduleUrl = `data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString('base64')}`;
-const { buildWorldTurnContext, formatWorldTurnContext } = await import(moduleUrl);
+const contextModule = await import(moduleUrl);
+await Promise.all([contextModule.preloadItemCatalog(), contextModule.preloadNpcLoadoutContent()]);
+const { buildWorldTurnContext, formatWorldTurnContext } = contextModule;
 
 const base = {
   rawId: '1', canonTier: 'canon', nameKey: null, dynastyId: null, cultureId: null, faithId: null,

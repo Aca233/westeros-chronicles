@@ -58,7 +58,10 @@ for (const shardName of shardNames) {
   for (const [characterId, ref] of Object.entries(shard)) {
     if (refs.has(characterId)) fail(`人物头像重复映射：${characterId}。`);
     refs.set(characterId, ref);
-    if (!rosterIds.has(characterId)) fail(`头像人物不在精简运行时名单中：${characterId}。`);
+    // Portrait import is an independent offline pipeline. Reference-closure
+    // roster pruning may drop fill characters that still have leftover Wiki
+    // portraits; those mappings stay valid assets but must not expand the
+    // runtime roster.
     if (!ref || typeof ref !== 'object' || Array.isArray(ref) || ref.characterId !== characterId) {
       fail(`头像映射格式错误：${characterId}。`);
       continue;
@@ -139,4 +142,8 @@ if (failures.length) {
   console.error(failures.join('\n'));
   process.exit(1);
 }
+const leftoverPortraitIds = [...refs.keys()].filter((characterId) => !rosterIds.has(characterId));
 console.log(`已验证 ${refs.size} 个本地人物头像、${shardNames.length} 个分片与 ${assetNames.length} 个 WebP 资源。`);
+if (leftoverPortraitIds.length) {
+  console.log(`其中 ${leftoverPortraitIds.length} 个属于引用闭包外的残留映射，不进入运行时名单。`);
+}

@@ -21,6 +21,9 @@
 - `npm run test:domain-contracts`：验证领域叶节点类型和旧入口兼容导出。
 - `npm run test:module-cycles`：验证循环检测器夹具及当前源码图。
 - `npm run check:module-cycles`：要求 `src` 静态 import/export 图为 0 个循环。
+- `npm run test:world-content-runtime`：世界内容仓储、哈希校验与按需加载。
+- `npm run check:living-world-content-boundaries`：禁止世界入口、人物位置、叙事、术语、普通物品和 NPC 装备重新进入运行时代码。
+- `npm run test:living-world-closure`：人物、地图、正文、资产和 LLM 上下文从同一世界起点与当前 runtime 投影形成闭环。
 
 ## 数据与外部访问边界
 

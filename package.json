@@ -165,7 +165,9 @@
     "test:world-start-assets": "node scripts/test-world-start-assets.mjs",
     "test:world-terminology": "node scripts/test-world-terminology.mjs",
     "test:world-ordinary-items": "node scripts/test-world-ordinary-items.mjs",
-    "test:world-loadouts": "node scripts/test-world-loadouts.mjs"
+    "test:world-loadouts": "node scripts/test-world-loadouts.mjs",
+    "check:living-world-content-boundaries": "node scripts/check-living-world-content-boundaries.mjs",
+    "test:living-world-closure": "node scripts/test-living-world-closure.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",

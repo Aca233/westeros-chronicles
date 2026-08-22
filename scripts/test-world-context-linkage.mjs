@@ -22,6 +22,8 @@ const bundle = await build({
   logLevel: 'silent',
 });
 const url = `data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString('base64')}`;
+const turnModule = await import(url);
+await turnModule.ordinaryCatalogReady;
 const {
   createLivingWorldTestLord,
   createInitialAgotArtifactWorldState,
@@ -29,7 +31,7 @@ const {
   directPrepareWorldTurn,
   settleTurnDraft,
   WORLD_CONTEXT_LIMITS,
-} = await import(url);
+} = turnModule;
 
 assert.equal(prepareWorldTurn, directPrepareWorldTurn);
 

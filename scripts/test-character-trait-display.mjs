@@ -20,7 +20,9 @@ const presetBundle = await build({
   platform: 'node',
 });
 const presetModuleUrl = `data:text/javascript;base64,${Buffer.from(presetBundle.outputFiles[0].text).toString('base64')}`;
-const { createLivingWorldTestLord } = await import(presetModuleUrl);
+const livingWorldFixture = await import(presetModuleUrl);
+await livingWorldFixture.ordinaryCatalogReady;
+const { createLivingWorldTestLord } = livingWorldFixture;
 
 
 test('正式特质 ID 能解析为带游戏图标和规则的游戏内特质', () => {

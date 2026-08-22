@@ -7,6 +7,7 @@ import { useMapUiStore } from '../src/features/map/mapUiStore.ts';
 const mapUiStore = readFileSync('src/features/map/mapUiStore.ts', 'utf8');
 const app = readFileSync('src/App.tsx', 'utf8');
 const characterWindow = readFileSync('src/components/Ck3CharacterWindow.tsx', 'utf8');
+const characterAssetsTab = readFileSync('src/components/character-window/CharacterAssetsTab.tsx', 'utf8');
 const assetSections = readFileSync('src/components/items/WorldAssetSections.tsx', 'utf8');
 const itemManagement = readFileSync('src/components/items/ItemManagementPanel.tsx', 'utf8');
 const itemCard = readFileSync('src/components/items/ItemCard.tsx', 'utf8');
@@ -33,9 +34,12 @@ test('抽屉状态支持打开资产并返回来源抽屉', () => {
 
 test('正文事实与实际时间线提供人物、地点和资产的只读跳转', () => {
   for (const source of [storyFeed, timeline]) {
-    assert.match(source, /subjectRefs/);
+    assert.match(source, /worldEventDisplays/);
     assert.match(source, /onOpenLocation/);
     assert.match(source, /onOpenAsset/);
+    assert.match(source, /entity\.kind === 'character'/);
+    assert.match(source, /entity\.kind === 'location'/);
+    assert.match(source, /entity\.kind === 'asset'/);
   }
   assert.match(storyFeed, /onSelectCharacter/);
   assert.match(timeline, /onOpenCharacter/);
@@ -100,6 +104,7 @@ test('玩家物品与资产按存放地点组织且常用操作不藏进详情',
   assert.match(itemCard, /item\.actions\.map/);
   assert.match(itemCard, /取消操作/);
   assert.match(itemCard, /assetContext/);
-  assert.match(characterWindow, /<ItemManagementPanel[\s\S]*?dossier=\{dossier\}/);
-  assert.doesNotMatch(characterWindow, /<details[^>]*data-player-item-management[\s\S]*?<ItemManagementPanel/);
+  assert.match(characterWindow, /<CharacterAssetsTab[\s\S]*?dossier=\{dossier\}/);
+  assert.match(characterAssetsTab, /<ItemManagementPanel[\s\S]*?dossier=\{dossier\}/);
+  assert.doesNotMatch(characterAssetsTab, /<details[^>]*data-player-item-management[\s\S]*?<ItemManagementPanel/);
 });

@@ -199,7 +199,18 @@ describe('critical rendered runtime flows', () => {
   });
 
   test('a character mention in story opens that character dossier', async () => {
-    mockBootableSlot();
+    mockBootableSlot(stateWith({
+      turns: [{
+        id: 'turn_1',
+        turnNumber: 1,
+        playerInput: '开启测试世界',
+        narrate: '凯特琳·徒利站在大厅里等候回信。',
+        branches: ['继续'],
+        stateCommands: [],
+        gameDate: '征服历 298 AC · 5月10日',
+        timestamp: 0,
+      }],
+    }));
     const user = userEvent.setup();
 
     render(<App />);

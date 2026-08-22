@@ -1,6 +1,6 @@
 # 活世界数据基础与硬编码收敛实施计划
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** 将项目收敛为从 298 AC 5 月 10 日启动的唯一世界，把人物入口、起点事实、人物叙事、术语、普通物品、NPC 装备与游戏地点迁出运行时代码，并用引用闭包缩减无职责人物，同时保持现有存档、地图视觉和玩法规则兼容。
 
@@ -512,7 +512,7 @@ Expected: 三个入口日期均为 `298-05-10`，版本 9 存档测试通过，�
 - Produces: `getStartCharacterState(characterId): WorldCharacterStartRecord | undefined` 和 `projectStartCharacterFacts(character, startState, runtime): ResolvedCharacter`。
 - Precedence: AGOT 基础记录 → 固定起点记录 → 已提交 runtime patch；runtime patch 始终优先。
 
-- [ ] **Step 1: 写失败测试，锁定开局人物位置与运行时覆盖优先级**
+- [x] **Step 1: 写失败测试，锁定开局人物位置与运行时覆盖优先级**
 
 ```js
 test('开局人物位置来自统一起点且与玩家视角无关', async () => {
@@ -530,7 +530,7 @@ test('已提交移动覆盖固定起点位置', () => {
 });
 ```
 
-- [ ] **Step 2: 运行测试，确认位置仍来自硬编码表**
+- [x] **Step 2: 运行测试，确认位置仍来自硬编码表**
 
 Run:
 
@@ -540,7 +540,7 @@ node scripts/test-world-start-characters.mjs
 
 Expected: FAIL，起点读取接口不存在。
 
-- [ ] **Step 3: 将 `OPENING_CHARACTER_LOCATIONS` 全量迁入起点内容**
+- [x] **Step 3: 将 `OPENING_CHARACTER_LOCATIONS` 全量迁入起点内容**
 
 每个记录采用：
 
@@ -554,7 +554,7 @@ Expected: FAIL，起点读取接口不存在。
 
 编译器必须校验：人物 ID 存在、位置属于游戏地点、活动值属于既有四值联合、同一人物不重复；`aliveOverride` 和 `wounds` 仅在确有导入资料纠正时出现。
 
-- [ ] **Step 4: 接入角色投影并删除日期/位置硬编码**
+- [x] **Step 4: 接入角色投影并删除日期/位置硬编码**
 
 删除 `OPENING_SNAPSHOT_DATE`、`OPENING_CHARACTER_LOCATIONS`、`openingLocation()`；`projectResolvedCharacterWorldFacts()` 增加 `startCharacters` 参数，并按固定优先级合并。角色面板、世界上下文和新局工厂共用同一编译产物，不再自行判断 `298-05-10`。
 
@@ -570,7 +570,7 @@ npm run test:location-authority
 
 Expected: PASS，原有公开人物地点不发生无依据变化。
 
-- [ ] **Step 5: 提交人物起点迁移**
+- [x] **Step 5: 提交人物起点迁移**
 
 ```bash
 git add content/world/start-state/characters.json public/data/world src/features/world src/features/characters/useCharacterDossier.ts scripts
@@ -604,7 +604,7 @@ git commit -m "refactor: centralize living world character start facts"
 - Produces: `createLivingWorldBaseline(startState, artifacts): WorldBaselineSnapshotInput`。
 - Authority: 唯一神器定义和归属仍来自神器管线；`start-state/assets.json` 只声明普通实例和明确覆盖，不复制生成神器定义。
 
-- [ ] **Step 1: 写失败测试，锁定视角无关的资产世界与玩家装备投影**
+- [x] **Step 1: 写失败测试，锁定视角无关的资产世界与玩家装备投影**
 
 ```js
 test('不同控制者读取同一资产基线', async () => {
@@ -621,7 +621,7 @@ test('编译器拒绝唯一资产重复和悬空保管引用', async () => {
 });
 ```
 
-- [ ] **Step 2: 运行测试，确认资产仍按预设工厂创建**
+- [x] **Step 2: 运行测试，确认资产仍按预设工厂创建**
 
 Run:
 
@@ -631,7 +631,7 @@ node scripts/test-world-start-assets.mjs
 
 Expected: FAIL，`createInitialLivingWorldItems` 尚不存在。
 
-- [ ] **Step 3: 迁移现有三名人物与自定义统治者之外的正式起点资产**
+- [x] **Step 3: 迁移现有三名人物与自定义统治者之外的正式起点资产**
 
 `assets.json` 使用统一记录：
 
@@ -654,7 +654,7 @@ Expected: FAIL，`createInitialLivingWorldItems` 尚不存在。
 
 保留现有实例 ID、站点 ID、载具 ID、装备位置、charges、renown 和自定义名称。自定义统治者的即时默认包继续由代码工厂创建，因为它是用户创建规则，不属于 298 AC 固定人物事实；将该工厂移到 `src/features/characters/customRulerStart.ts`。
 
-- [ ] **Step 4: 用统一起点组装玩家物品和世界基线**
+- [x] **Step 4: 用统一起点组装玩家物品和世界基线**
 
 实现必须先合并神器世界状态，再应用经校验的普通资产记录；同一资产只能有一个权威所有者、控制者、保管者和位置。玩家 `LordProfile.items` 只是统一世界资产的装备/携带投影，不成为第二份权威。
 
@@ -671,7 +671,7 @@ npm run test:location-authority
 
 Expected: PASS，奈德、琼恩、丹妮莉丝现有开局装备结果保持一致。
 
-- [ ] **Step 5: 删除旧预设物品工厂并提交**
+- [x] **Step 5: 删除旧预设物品工厂并提交**
 
 ```bash
 git add content/world/start-state public/data/world src/features/world src/features/items src/features/characters/customRulerStart.ts scripts
@@ -707,7 +707,7 @@ git commit -m "refactor: unify living world start assets"
 - Produces: `projectCharacterDossier(base, content, start, runtime, knowledge): CharacterDossier`；无内容文件时 `content` 为 `undefined`。
 - Preserves: 当前补充人物数、人物 ID、叙事文本、经历、关系和来源 URL 一字不丢；不新增其余人物文件。
 
-- [ ] **Step 1: 写失败测试，锁定一人一文件和禁止动态事实字段**
+- [x] **Step 1: 写失败测试，锁定一人一文件和禁止动态事实字段**
 
 ```python
 class CharacterContentMigrationTests(unittest.TestCase):
@@ -733,7 +733,7 @@ test('无人工内容仍可从 AGOT 基础记录生成卷宗', () => {
 });
 ```
 
-- [ ] **Step 2: 运行测试，确认 JSON 人物目录尚不存在**
+- [x] **Step 2: 运行测试，确认 JSON 人物目录尚不存在**
 
 Run:
 
@@ -744,7 +744,7 @@ node scripts/test-character-dossier.mjs
 
 Expected: 新迁移合同 FAIL，现有旧生成路径仍通过旧断言。
 
-- [ ] **Step 3: 实现一次性无损迁移器并生成 113 个独立文件**
+- [x] **Step 3: 实现一次性无损迁移器并生成 113 个独立文件**
 
 迁移器从五个旧模块导入 `RAW_SUPPLEMENTS`，对每条记录移除仅用于旧编译检查的 `subjectNameKey`、`participantNameKeys`、`targetNameKey`，将 `sourceUrls` 规范为 `sources`，稳定排序后写入独立 JSON。执行：
 
@@ -755,7 +755,7 @@ npm run build:world-content
 
 迁移器必须比较迁移前后允许字段的深等值；发现重复 ID、空来源、非法参与者或覆盖已有不同文件时立即失败。
 
-- [ ] **Step 4: 改为异步内容投影并删除旧生成源**
+- [x] **Step 4: 改为异步内容投影并删除旧生成源**
 
 `createNpcDossier()` 接收可选 `CharacterContentRecord`，`useCharacterDossier()` 与基础人物、亲属、装备、地图一起加载该人物内容；没有文件不报错。编译器把约 113 条内容按 `sha256(characterId)[0]` 分为最多 16 个分片，并输出 `index.json`，避免每人一个浏览器请求。
 
@@ -771,7 +771,7 @@ npm run build:code
 
 Expected: PASS，运行时代码不再导入 `characterDossierSupplements.ts`。
 
-- [ ] **Step 5: 删除旧来源并提交**
+- [x] **Step 5: 删除旧来源并提交**
 
 ```bash
 git add content/world/characters public/data/world scripts/world-content src/features/world-content src/features/characters scripts/test_character_supplements.py scripts/test-character-dossier.mjs
@@ -802,7 +802,7 @@ git commit -m "refactor: move character narratives to world content"
 - Produces: `formatWorldCulture(id, terminology)`、`formatWorldFaith(id, terminology)`、`formatWorldRelationship(kind, terminology)`。
 - Preserves: 页签、按钮和区块标题继续由 React 组件拥有；术语表只解析数据值。
 
-- [ ] **Step 1: 写失败测试，锁定词典键、回退和 UI 文案边界**
+- [x] **Step 1: 写失败测试，锁定词典键、回退和 UI 文案边界**
 
 ```js
 test('共享术语解析已知值并安全回退未知值', () => {
@@ -818,7 +818,7 @@ test('人物内容和术语源不包含固定界面标签', async () => {
 });
 ```
 
-- [ ] **Step 2: 运行测试，确认术语仍硬编码在投影模块**
+- [x] **Step 2: 运行测试，确认术语仍硬编码在投影模块**
 
 Run:
 
@@ -828,7 +828,7 @@ node scripts/test-world-terminology.mjs
 
 Expected: FAIL，格式化接口不存在。
 
-- [ ] **Step 3: 迁移现有词典并实现纯格式化器**
+- [x] **Step 3: 迁移现有词典并实现纯格式化器**
 
 JSON 形状统一为稳定映射：
 
@@ -843,7 +843,7 @@ JSON 形状统一为稳定映射：
 
 编译器拒绝 trim 后重复键、空标签和 `__proto__` 等危险键；格式化器对未知 snake_case 值执行空格化回退，对空值分别返回“文化未记录”“信仰未记录”“关系未记录”。
 
-- [ ] **Step 4: 将角色面板和现成人物开局接到同一术语投影**
+- [x] **Step 4: 将角色面板和现成人物开局接到同一术语投影**
 
 从 `characterDossier.ts` 删除 `CULTURE_LABELS`、`FAITH_LABELS`；`relationshipCards.ts` 不再维护数据关系称谓表。投影顺序必须保持：基础记录 → 人物内容 → 固定起点 → 当前存档 → 知识过滤 → ViewModel。
 
@@ -859,7 +859,7 @@ npm run check:ck3-character-window
 
 Expected: PASS，人物窗口布局和稳定文案无变化。
 
-- [ ] **Step 5: 提交术语迁移**
+- [x] **Step 5: 提交术语迁移**
 
 ```bash
 git add content/world/terminology public/data/world src/features/world-content src/features/characters src/components/character-window scripts
@@ -887,7 +887,7 @@ git commit -m "refactor: centralize living world terminology"
 - Produces: `build_holder_summaries(records, title_holders, retained_ids) -> list[dict]`，每条含 `id`、`name`、`dynastyId`、`alive`、`titleIds`、`displayLabel`。
 - Retention: 完整保留 `canon`、`semicanon`、所有正式引用种子及这些种子一层已出生亲属；未进入完整集合但仍持有头衔者进入摘要。
 
-- [ ] **Step 1: 扩充失败测试，锁定正式引用闭包而非固定数量**
+- [x] **Step 1: 扩充失败测试，锁定正式引用闭包而非固定数量**
 
 ```python
 def test_reference_closure_keeps_explicit_seeds_and_one_born_kinship_hop(self):
@@ -911,7 +911,7 @@ def test_unretained_title_holder_becomes_summary_not_full_record(self):
 
 再测试：被排除人物的 loadout 不输出；保留人物亲属引用可解析；technical/dummy/placeholder 永不进入完整记录或摘要；算法不包含 `5553`、`799` 等盘点常量。
 
-- [ ] **Step 2: 运行人物裁剪测试，确认旧逻辑把所有在世持有人当完整种子**
+- [x] **Step 2: 运行人物裁剪测试，确认旧逻辑把所有在世持有人当完整种子**
 
 Run:
 
@@ -921,7 +921,7 @@ python3 -m unittest scripts.test_character_roster scripts.test_prune_bundled_cha
 
 Expected: 新摘要和引用集合断言 FAIL。
 
-- [ ] **Step 3: 实现引用集合、完整档案/摘要分区与引用审计**
+- [x] **Step 3: 实现引用集合、完整档案/摘要分区与引用审计**
 
 Python 数据结构固定为：
 
@@ -938,7 +938,7 @@ class RosterReferences:
 
 完整种子不再因“持有任意头衔”自动保留；持有人若没有其他保留理由，则从原始投影生成摘要。裁剪报告增加 `fullRecordCount`、`holderSummaryCount`、`excludedUnreferencedModSupporting`、`excludedUnreferencedGenealogy`、`removedLoadoutCount` 和按保留理由分类的计数。
 
-- [ ] **Step 4: 对现有已生成数据执行离线、原子裁剪并审计结果**
+- [x] **Step 4: 对现有已生成数据执行离线、原子裁剪并审计结果**
 
 只读取仓库内 `public/data` 与 `content/world`：
 
@@ -953,7 +953,7 @@ node -e "const m=require('./public/data/agot-characters/manifest.json'); if(m.sc
 
 Expected: 完整人物数减少；所有正式引用解析；持有人摘要覆盖被降级在位领主；人物 manifest schema 仍为 2。若实际闭包恰好未减少，检查报告必须明确列出每个保留理由，不能通过硬编码阈值伪造结果。
 
-- [ ] **Step 5: 提交人物裁剪与摘要生成**
+- [x] **Step 5: 提交人物裁剪与摘要生成**
 
 ```bash
 git add scripts/agot_character_import scripts/prune_bundled_character_dataset.py scripts/test_character_roster.py scripts/test_prune_bundled_character_dataset.py scripts/world-content scripts/test-world-content-compiler.mjs public/data/agot-characters public/data/world
@@ -985,7 +985,7 @@ git commit -m "refactor: prune characters by living world references"
 - Search default: `StaticCharacterRepository.search()` 默认只返回 `canon`、`semicanon` 与传入的 `materializedIds`；`includeGenealogy` 仍只供族谱调用。
 - Produces: `materializeHolderSummary(summary, archiveRecord, events): ResolvedCharacter` 的兼容边界；本阶段仅允许显式直接互动路径调用，不加入自动世界脉冲。
 
-- [ ] **Step 1: 写失败测试，锁定摘要只在政治上下文出现**
+- [x] **Step 1: 写失败测试，锁定摘要只在政治上下文出现**
 
 ```js
 test('默认人物搜索不返回背景持有人摘要', async () => {
@@ -999,7 +999,7 @@ test('世界上下文不把摘要自动送入 LLM 人物候选', async () => {
 });
 ```
 
-- [ ] **Step 2: 运行测试，确认摘要尚无独立运行时边界**
+- [x] **Step 2: 运行测试，确认摘要尚无独立运行时边界**
 
 Run:
 
@@ -1009,11 +1009,11 @@ node scripts/test-character-holder-summaries.mjs
 
 Expected: FAIL，摘要仓储不存在。
 
-- [ ] **Step 3: 实现摘要仓储和政治投影回退**
+- [x] **Step 3: 实现摘要仓储和政治投影回退**
 
 地图头衔显示解析顺序为：当前 runtime holder → 完整人物搜索记录 → 持有人摘要 → “持有人未记录”。摘要不提供装备、目标、记忆、完整角色面板或默认搜索命中。
 
-- [ ] **Step 4: 限制默认搜索和 LLM 人物候选**
+- [x] **Step 4: 限制默认搜索和 LLM 人物候选**
 
 `CharacterSearchFilters` 增加：
 
@@ -1042,7 +1042,7 @@ npm run test:character-prompt
 
 Expected: PASS，地图不因裁剪丢失背景领主持有人名，LLM 上下文不遍历摘要。
 
-- [ ] **Step 5: 提交运行时人物分级**
+- [x] **Step 5: 提交运行时人物分级**
 
 ```bash
 git add src/features/characters src/features/map src/features/world/worldTurnContext.ts src/components/CharacterCreator.tsx scripts package.json
@@ -1084,7 +1084,7 @@ git commit -m "feat: separate holder summaries from simulated characters"
 - Produces: `MapRepository.loadGameplayLocations()`、`searchGameplayLocations(query, limit)`；`loadSearchIndex()` 保留为内部全量空间/绘制入口。
 - Authority: 人物/资产新位置、正文实体链接、地点详情、玩家搜索和 LLM 地点候选只接受 `GameplayLocationEntry`；路线算法仍可经过隐藏节点。
 
-- [ ] **Step 1: 写失败测试，锁定语义隔离和路线可达性**
+- [x] **Step 1: 写失败测试，锁定语义隔离和路线可达性**
 
 ```js
 test('隐藏中转节点不可搜索但路线仍可经过', async () => {
@@ -1104,7 +1104,7 @@ test('地图视觉清单和 schema 不因语义裁剪变化', async () => {
 });
 ```
 
-- [ ] **Step 2: 运行测试，确认所有 6,094 地点仍进入搜索语义**
+- [x] **Step 2: 运行测试，确认所有 6,094 地点仍进入搜索语义**
 
 Run:
 
@@ -1114,7 +1114,7 @@ node scripts/test-gameplay-locations.mjs
 
 Expected: FAIL，`searchGameplayLocations` 尚不存在。
 
-- [ ] **Step 3: 实现候选规则、显式允许/排除和编译审计**
+- [x] **Step 3: 实现候选规则、显式允许/排除和编译审计**
 
 `gameplay-locations.json` 采用：
 
@@ -1136,7 +1136,7 @@ Expected: FAIL，`searchGameplayLocations` 尚不存在。
 
 编译器为每个地点记录至少一个 `reasons` 值，输出总数和按原因计数；目标应落在数百级。不得删除全量地图 search index、地点分片或路线节点。
 
-- [ ] **Step 4: 将玩家可见/LLM 入口改用游戏地点，保留内部路线数据**
+- [x] **Step 4: 将玩家可见/LLM 入口改用游戏地点，保留内部路线数据**
 
 `MapDrawer` 的空间绘制、命中和伯爵领展开可继续用全量地点；搜索框、旅行起终点选择、人物地点链接、资产位置选择、`storyEntityLinks`、`worldTurnContext` 和详情入口改用 `loadGameplayLocations()`。旧版本 9 存档中的非游戏地点仍可通过 `getLocation(id)` 解析和显示，但新的 MOVE/TRANSFER 候选不得选择它。
 
@@ -1155,7 +1155,7 @@ npm run verify:map
 
 Expected: PASS，地图 schema 4、6,094 地点和 31,724 路线边保持不变。
 
-- [ ] **Step 5: 提交地图语义收敛**
+- [x] **Step 5: 提交地图语义收敛**
 
 ```bash
 git add content/world/locations public/data/world src/features/world-content src/features/map src/features/world scripts package.json
@@ -1184,7 +1184,7 @@ git commit -m "refactor: separate gameplay locations from map geometry"
 - Produces: `loadOrdinaryItemDefinitions(): Promise<readonly ItemDefinition[]>`、`preloadItemCatalog(): Promise<void>`。
 - Preserves: `ITEM_CATALOG` 稳定导出、物品 ID、效果种类、装备位置、图片引用和神器懒加载行为。
 
-- [ ] **Step 1: 写失败测试，锁定物品集合等价和非法声明编译失败**
+- [x] **Step 1: 写失败测试，锁定物品集合等价和非法声明编译失败**
 
 ```js
 test('迁移前后普通物品 ID 和关键定义保持一致', async () => {
@@ -1203,7 +1203,7 @@ test('未知效果、非法装备位置和重复 ID 在编译时失败', async (
 
 `EXPECTED_ORDINARY_ITEM_IDS` 从迁移前清单生成并作为测试 fixture 提交，不以数量替代 ID 等价检查。
 
-- [ ] **Step 2: 运行测试，确认普通物品仍写在 TypeScript 数组中**
+- [x] **Step 2: 运行测试，确认普通物品仍写在 TypeScript 数组中**
 
 Run:
 
@@ -1213,11 +1213,11 @@ node scripts/test-world-ordinary-items.mjs
 
 Expected: FAIL，编译普通物品加载器不存在。
 
-- [ ] **Step 3: 机械迁移所有普通物品定义并加强编译校验**
+- [x] **Step 3: 机械迁移所有普通物品定义并加强编译校验**
 
 将 `ITEM_DEFINITIONS` 中每个普通物品展开为完整 JSON；迁移完成后 JSON 不依赖 `expandedItem()` 或 `dailyClothing()` 默认值。编译器以既有 `ItemDefinition` 枚举等价规则检查 effect kind、position、unique、stack、charges、图片引用和重复 ID，并交叉校验起点资产、模板、覆盖引用。
 
-- [ ] **Step 4: 将目录装配改为编译数据 + 神器数据**
+- [x] **Step 4: 将目录装配改为编译数据 + 神器数据**
 
 `src/data/itemDefinitions.ts` 缩为兼容门面：
 
@@ -1250,7 +1250,7 @@ npm run build:code
 
 Expected: PASS，普通物品 ID 集合与迁移前一致。
 
-- [ ] **Step 5: 提交普通物品迁移**
+- [x] **Step 5: 提交普通物品迁移**
 
 ```bash
 git add content/world/items/ordinary-items.json public/data/world src/features/items/ordinaryItemCatalog.ts src/data/itemDefinitions.ts scripts package.json
@@ -1283,7 +1283,7 @@ git commit -m "refactor: move ordinary items to world content"
 - Produces: Python 编译输入 `public/data/world/loadouts.json`，供离线人物 loadout 分片构建使用。
 - Preserves: 保留人物的模板选择和覆盖结果不变；被裁剪人物不再生成 loadout。
 
-- [ ] **Step 1: 写失败测试，锁定模板/覆盖等价与悬空引用失败**
+- [x] **Step 1: 写失败测试，锁定模板/覆盖等价与悬空引用失败**
 
 ```js
 test('迁移后模板和覆盖保持稳定 ID 与槽位', async () => {
@@ -1301,7 +1301,7 @@ test('编译器拒绝未知模板、未知人物和未知物品', async () => {
 
 Python 测试比较保留 fixture 人物迁移前后的 `templateId`、`overrideId` 和装备槽位，并断言被排除人物不进入 `loadouts/*.json`。
 
-- [ ] **Step 2: 运行测试，确认代码表仍是唯一来源**
+- [x] **Step 2: 运行测试，确认代码表仍是唯一来源**
 
 Run:
 
@@ -1312,11 +1312,11 @@ python3 -m unittest scripts.test_character_supplements -v
 
 Expected: 新内容加载断言 FAIL。
 
-- [ ] **Step 3: 迁移模板和覆盖并生成离线桥接产物**
+- [x] **Step 3: 迁移模板和覆盖并生成离线桥接产物**
 
 模板 JSON 使用完整 `EquipmentPosition`，覆盖 JSON 使用稳定 `CharacterId`；编译器交叉验证人物闭包、物品目录、模板 ID、重复槽位和年龄组。`public/data/world/loadouts.json` 由世界内容编译器生成，Python 不直接解析 TypeScript。
 
-- [ ] **Step 4: 改造人物 loadout 构建并删除代码表**
+- [x] **Step 4: 改造人物 loadout 构建并删除代码表**
 
 `scripts/build_character_supplements.py` 和人物 writer 从 `public/data/world/loadouts.json` 读取模板/覆盖；裁剪器只为完整保留人物生成 loadout。运行时 `characterProjector` 继续消费现有 `StaticCharacterLoadoutProfile`，不改变装备规则。
 
@@ -1334,7 +1334,7 @@ npm run test:character-runtime
 
 Expected: PASS，保留人物装备结果不变，裁剪人物无装备分片。
 
-- [ ] **Step 5: 删除旧代码表并提交**
+- [x] **Step 5: 删除旧代码表并提交**
 
 ```bash
 git add content/world/items public/data/world public/data/agot-characters src/features/items scripts
@@ -1362,7 +1362,7 @@ git commit -m "refactor: move npc loadouts to world content"
 - Enforces: 世界入口、人物位置、人物叙事、术语、普通物品和 NPC loadout 不得重新进入被禁止的 TypeScript 文件。
 - Verifies: 人物、地图、正文、资产和 LLM 上下文从同一世界起点与当前 runtime 投影形成闭环。
 
-- [ ] **Step 1: 写失败的静态边界检查和闭环集成测试**
+- [x] **Step 1: 写失败的静态边界检查和闭环集成测试**
 
 边界检查扫描精确规则：
 
@@ -1387,7 +1387,7 @@ assert.equal(next.worldRuntime.assets['item:ned.seal'].custodian.characterId, 'a
 assert.equal(next.llmContext.characters.some((entry) => entry.id === 'agot:unreferenced_fill'), false);
 ```
 
-- [ ] **Step 2: 运行新门禁，确认尚未加入验证编排**
+- [x] **Step 2: 运行新门禁，确认尚未加入验证编排**
 
 Run:
 
@@ -1399,7 +1399,7 @@ node scripts/test-verification-suites.mjs
 
 Expected: 在 package scripts/验证 suite 接入前至少一项 FAIL。
 
-- [ ] **Step 3: 接入 package scripts 和验证 suite**
+- [x] **Step 3: 接入 package scripts 和验证 suite**
 
 `package.json` 增加：
 
@@ -1414,13 +1414,13 @@ Expected: 在 package scripts/验证 suite 接入前至少一项 FAIL。
 
 把两项加入 `STRUCTURE_GUARDS`；`full` 通过结构门禁自动包含它们，`world` 显式追加 `test:living-world-closure`，`map` 显式追加 `test:gameplay-locations`。
 
-- [ ] **Step 4: 更新架构、管线、索引和实现状态文档**
+- [x] **Step 4: 更新架构、管线、索引和实现状态文档**
 
 `docs/DATA_PIPELINES.md` 记录：编辑源 → world compiler → 原子 `public/data/world` → 运行时仓储；人物裁剪引用来源；人物内容迁移命令；普通物品/loadout 校验；禁止访问真实模组的验证边界。
 
-`docs/CURRENT_ARCHITECTURE.md` 记录四类人物、三类地图实体、唯一世界起点和角色面板投影顺序。`docs/INDEX.md` 链接规格与计划。将规格状态改为“已实现”，并把本计划所有完成步骤从 `- [ ]` 改为 `- [x]`；只有全部验证完成后才能执行这两项状态更新。
+`docs/CURRENT_ARCHITECTURE.md` 记录四类人物、三类地图实体、唯一世界起点和角色面板投影顺序。`docs/INDEX.md` 链接规格与计划。将规格状态改为“已实现”，并把本计划所有完成步骤从 `- [x]` 改为 `- [x]`；只有全部验证完成后才能执行这两项状态更新。
 
-- [ ] **Step 5: 执行全量验证和数据审计**
+- [x] **Step 5: 执行全量验证和数据审计**
 
 Run:
 
@@ -1470,7 +1470,7 @@ git diff --stat -- public/data/agot-map public/assets
 
 Expected: `git diff --check` 无输出；`public/data/agot-map` 与 `public/assets` 无变化；`public/data/agot-characters` 和 `public/data/world` 的变化均可由已提交构建命令复现。
 
-- [ ] **Step 6: 提交文档与最终门禁，不推送**
+- [x] **Step 6: 提交文档与最终门禁，不推送**
 
 ```bash
 git add package.json scripts/verify/suites.mjs scripts/check-living-world-content-boundaries.mjs scripts/test-living-world-closure.mjs docs

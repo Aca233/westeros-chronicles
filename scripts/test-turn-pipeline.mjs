@@ -21,6 +21,8 @@ const bundle = await build({
   platform: 'node',
 });
 const url = `data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString('base64')}`;
+const pipelineModule = await import(url);
+await pipelineModule.ordinaryCatalogReady;
 const {
   createLivingWorldTestLord,
   buildSettledNarrativeMessages,
@@ -33,7 +35,7 @@ const {
   createInitialAgotArtifactWorldState,
   settleTurnDraft,
   streamNarrativeCompletion,
-} = await import(url);
+} = pipelineModule;
 
 assert.equal(typeof settleTurnDraft, 'function');
 assert.equal(parseTurnResolutionOutput, directParseTurnResolutionOutput);
