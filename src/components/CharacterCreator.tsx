@@ -19,7 +19,7 @@ import {
 import { useGameStore } from '../store/useGameStore';
 import { HOUSES } from '../data/houses';
 import { LordAttributes, LordProfile, createDefaultBody } from '../types/game';
-import { createCustomRulerItemState } from '../data/itemPresetState';
+import { createCustomRulerItemState } from '../features/characters/customRulerStart';
 import { GameIcon, getHouseIconId } from './GameIcon';
 import { CharacterSearch } from './CharacterSearch';
 import { CharacterPortrait } from './CharacterPortrait';

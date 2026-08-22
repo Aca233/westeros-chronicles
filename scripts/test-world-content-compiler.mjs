@@ -131,3 +131,56 @@ test('人物起点引用未知人物或未知地点时编译失败', async () =>
   ]);
   await compileWorldContent(fixture);
 });
+
+test('编译器拒绝唯一资产重复、悬空保管引用和错误的神器覆盖控制者', async () => {
+  const fixture = await createWorldFixture();
+  await writeJson(join(fixture.rootDir, 'public', 'data', 'agot-characters', 'search-index.json'), [
+    { id: 'agot:Stark_3', shard: '00' },
+    { id: 'agot:Stark_7', shard: '01' },
+  ]);
+  await writeJson(join(fixture.rootDir, 'public', 'data', 'agot-map', 'location-search-index.json'), [
+    { id: 'b_winterfell' },
+  ]);
+  await writeJson(join(fixture.rootDir, 'public', 'data', 'items', 'agot-artifact-world-state.json'), {
+    schemaVersion: 1,
+    artifactDatasetHash: 'artifacts-hash',
+    characterDatasetHash: 'characters-hash',
+    datasetHash: 'artifact-world-hash',
+    artifacts: {
+      'artifact.ice': {
+        definitionId: 'artifact.ice',
+        instanceId: 'world.artifact.ice',
+        lawfulControllerId: 'agot:Stark_3',
+        placement: { type: 'character', characterId: 'agot:Stark_3' },
+        equipped: false,
+        projectionKind: 'portable-asset',
+        source: { effectId: 'effect', file: 'fixture.txt', line: 1 },
+      },
+    },
+  });
+  const assetsPath = join(fixture.contentDir, 'start-state', 'assets.json');
+  const site = { id: 'winterfell_armory', name: '临冬城军械库', type: 'armory', location: { locationId: 'b_winterfell' }, locationLabel: '临冬城', description: '', capacity: 80 };
+  const instance = (overrides) => ({
+    instanceId: 'ned.ice',
+    definitionId: 'artifact.ice',
+    kind: 'item',
+    lawfulOwner: { type: 'character', characterId: 'agot:Stark_3' },
+    controller: { type: 'character', characterId: 'agot:Stark_3' },
+    custodian: { type: 'character', characterId: 'agot:Stark_3' },
+    placement: { type: 'character', characterId: 'agot:Stark_3' },
+    equippedPosition: null,
+    status: 'normal',
+    ...overrides,
+  });
+  for (const [instances, pattern] of [
+    [[instance(), instance({ instanceId: 'ned.ice_copy' })], /唯一资产重复/],
+    [[instance({ custodian: { type: 'asset', assetId: 'site:missing' }, placement: { type: 'asset', assetId: 'site:missing' } })], /保管站点不存在/],
+    [[instance({ controller: { type: 'character', characterId: 'agot:Stark_7' } })], /神器覆盖控制者不一致/],
+    [[instance({ lawfulOwner: { type: 'character', characterId: 'agot:missing' } })], /引用未知人物/],
+  ]) {
+    await writeJson(assetsPath, { schemaVersion: 1, instances: [...instances], sites: [site], vehicles: [] });
+    await assert.rejects(compileWorldContent(fixture), pattern);
+  }
+  await writeJson(assetsPath, { schemaVersion: 1, instances: [instance()], sites: [site], vehicles: [] });
+  await compileWorldContent(fixture);
+});

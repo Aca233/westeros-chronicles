@@ -5,6 +5,7 @@ import type { WorldArtifactRecord, WorldArtifactState } from '../items/worldArti
 import { isWorldArtifactAsset } from '../items/worldArtifactClassification';
 import type { MapRepository } from '../map/repository';
 import type { MapLocation, WorldLocationRef } from '../map/types';
+import type { LivingWorldStartState } from '../world-content/types';
 import { worldAssetId } from './worldAssetId';
 export { worldAssetId } from './worldAssetId';
 import type {
@@ -171,6 +172,99 @@ export interface BuildWorldAssetBaselineInput {
   playerId: CharacterId;
   itemState: ItemSystemState;
   worldArtifacts: WorldArtifactState;
+}
+
+/**
+ * Builds the single world baseline shared by every viewpoint at 298-05-10:
+ * portable artifact records first, then the validated start-state assets.
+ * A start instance that re-declares an artifact definition supersedes the
+ * pipeline record so each unique asset keeps exactly one authority.
+ */
+export function createLivingWorldBaseline(
+  startState: LivingWorldStartState,
+  artifacts: WorldArtifactState,
+): WorldBaselineSnapshotInput {
+  const assets: WorldAssetBaseline[] = [];
+  const supersededArtifactDefinitions = new Set<string>();
+  for (const record of Object.values(artifacts.artifacts).filter(isWorldArtifactAsset)) {
+    assets.push({
+      id: worldAssetId.worldItem(record.instanceId),
+      kind: 'item',
+      definitionId: record.definitionId,
+      ...worldArtifactRelations(record),
+      status: 'normal',
+    });
+  }
+  for (const site of startState.sites) {
+    assets.push({
+      id: worldAssetId.site(site.id),
+      kind: 'site',
+      lawfulOwner: null,
+      controller: null,
+      custodian: null,
+      placement: { type: 'location', location: { ...site.location } },
+      equippedPosition: null,
+      status: 'normal',
+    });
+  }
+  for (const vehicle of startState.vehicles) {
+    assets.push({
+      id: worldAssetId.vehicle(vehicle.id),
+      kind: 'vehicle',
+      lawfulOwner: null,
+      controller: null,
+      custodian: null,
+      placement: { type: 'location', location: { ...vehicle.location } },
+      equippedPosition: null,
+      status: 'normal',
+    });
+  }
+  const instanceIds = new Set<string>();
+  for (const record of startState.assets) {
+    if (instanceIds.has(record.instanceId)) throw new Error(`唯一资产重复：${record.instanceId}`);
+    instanceIds.add(record.instanceId);
+    if (record.definitionId in artifacts.artifacts) {
+      const artifact = artifacts.artifacts[record.definitionId];
+      const controllerId = record.controller?.type === 'character' ? record.controller.characterId : null;
+      if (controllerId !== artifact.lawfulControllerId) {
+        throw new Error(`神器覆盖控制者不一致：${record.definitionId}`);
+      }
+      supersededArtifactDefinitions.add(record.definitionId);
+    }
+    assets.push({
+      id: worldAssetId.item(record.instanceId),
+      kind: record.kind,
+      definitionId: record.definitionId,
+      lawfulOwner: record.lawfulOwner,
+      controller: record.controller,
+      custodian: record.custodian,
+      placement: record.placement,
+      equippedPosition: record.equippedPosition,
+      status: record.status,
+    });
+  }
+  const mergedAssets = assets.filter((asset) =>
+    !(asset.id.startsWith('world-item:') && asset.definitionId && supersededArtifactDefinitions.has(asset.definitionId)));
+  const knownLocationIds = new Set<string>();
+  for (const asset of mergedAssets) {
+    if (asset.placement?.type === 'location') knownLocationIds.add(asset.placement.location.locationId);
+  }
+  return {
+    characters: startState.characters.map((record) => ({
+      id: record.characterId,
+      alive: record.aliveOverride ?? true,
+      location: { ...record.location },
+      ...(record.currentActivity ? { currentActivity: record.currentActivity } : {}),
+    })),
+    titles: startState.titles.map((record) => ({
+      id: record.titleId,
+      lawfulHolderId: record.lawfulHolderId,
+      controllerId: record.controllerId,
+      contestedByIds: [...record.contestedByIds],
+    })),
+    assets: mergedAssets,
+    knownLocationIds: [...knownLocationIds],
+  };
 }
 
 function playerPrincipal(playerId: CharacterId): WorldPrincipalRef {

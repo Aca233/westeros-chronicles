@@ -1,5 +1,710 @@
 {
-  "assets": [],
+  "assets": [
+    {
+      "controller": {
+        "characterId": "agot:Targaryen_9",
+        "type": "character"
+      },
+      "custodian": {
+        "characterId": "agot:Targaryen_9",
+        "type": "character"
+      },
+      "definitionId": "artifact.petrified_dragon_egg_black_red",
+      "equippedPosition": null,
+      "instanceId": "daenerys.black_red_egg",
+      "kind": "item",
+      "lawfulOwner": {
+        "characterId": "agot:Targaryen_9",
+        "type": "character"
+      },
+      "overrides": {
+        "renown": 40
+      },
+      "placement": {
+        "characterId": "agot:Targaryen_9",
+        "type": "character"
+      },
+      "status": "normal"
+    },
+    {
+      "controller": {
+        "characterId": "agot:Targaryen_9",
+        "type": "character"
+      },
+      "custodian": {
+        "assetId": "site:pentos_guest_room",
+        "type": "asset"
+      },
+      "definitionId": "artifact.petrified_dragon_egg_cream_gold",
+      "equippedPosition": null,
+      "instanceId": "daenerys.cream_gold_egg",
+      "kind": "item",
+      "lawfulOwner": {
+        "characterId": "agot:Targaryen_9",
+        "type": "character"
+      },
+      "overrides": {
+        "renown": 40
+      },
+      "placement": {
+        "assetId": "site:pentos_guest_room",
+        "type": "asset"
+      },
+      "status": "normal"
+    },
+    {
+      "controller": {
+        "characterId": "agot:Targaryen_9",
+        "type": "character"
+      },
+      "custodian": {
+        "assetId": "site:pentos_guest_room",
+        "type": "asset"
+      },
+      "definitionId": "artifact.petrified_dragon_egg_green_bronze",
+      "equippedPosition": null,
+      "instanceId": "daenerys.green_bronze_egg",
+      "kind": "item",
+      "lawfulOwner": {
+        "characterId": "agot:Targaryen_9",
+        "type": "character"
+      },
+      "overrides": {
+        "renown": 40
+      },
+      "placement": {
+        "assetId": "site:pentos_guest_room",
+        "type": "asset"
+      },
+      "status": "normal"
+    },
+    {
+      "controller": {
+        "characterId": "agot:Targaryen_9",
+        "type": "character"
+      },
+      "custodian": {
+        "assetId": "site:pentos_guest_room",
+        "type": "asset"
+      },
+      "definitionId": "keepsake.house_seal",
+      "equippedPosition": null,
+      "instanceId": "daenerys.house_seal",
+      "kind": "item",
+      "lawfulOwner": {
+        "characterId": "agot:Targaryen_9",
+        "type": "character"
+      },
+      "overrides": {
+        "customName": "三首龙旧印"
+      },
+      "placement": {
+        "assetId": "site:pentos_guest_room",
+        "type": "asset"
+      },
+      "status": "normal"
+    },
+    {
+      "controller": {
+        "characterId": "agot:Targaryen_9",
+        "type": "character"
+      },
+      "custodian": {
+        "characterId": "agot:Targaryen_9",
+        "type": "character"
+      },
+      "definitionId": "clothing.pentos_silk_robe",
+      "equippedPosition": {
+        "group": "torso",
+        "layer": "garment"
+      },
+      "instanceId": "daenerys.silk_robe",
+      "kind": "item",
+      "lawfulOwner": {
+        "characterId": "agot:Targaryen_9",
+        "type": "character"
+      },
+      "placement": {
+        "characterId": "agot:Targaryen_9",
+        "type": "character"
+      },
+      "status": "normal"
+    },
+    {
+      "controller": {
+        "characterId": "agot:Targaryen_9",
+        "type": "character"
+      },
+      "custodian": {
+        "characterId": "agot:Targaryen_9",
+        "type": "character"
+      },
+      "definitionId": "legwear.pentos_silk_skirt",
+      "equippedPosition": {
+        "group": "legs",
+        "layer": "legwear"
+      },
+      "instanceId": "daenerys.silk_skirt",
+      "kind": "item",
+      "lawfulOwner": {
+        "characterId": "agot:Targaryen_9",
+        "type": "character"
+      },
+      "placement": {
+        "characterId": "agot:Targaryen_9",
+        "type": "character"
+      },
+      "status": "normal"
+    },
+    {
+      "controller": {
+        "characterId": "agot:Targaryen_9",
+        "type": "character"
+      },
+      "custodian": {
+        "characterId": "agot:Targaryen_9",
+        "type": "character"
+      },
+      "definitionId": "jewelry.simple_silver_ring",
+      "equippedPosition": {
+        "group": "accessories",
+        "index": 0
+      },
+      "instanceId": "daenerys.silver_ring",
+      "kind": "item",
+      "lawfulOwner": {
+        "characterId": "agot:Targaryen_9",
+        "type": "character"
+      },
+      "overrides": {
+        "customName": "坦格利安旧银戒"
+      },
+      "placement": {
+        "characterId": "agot:Targaryen_9",
+        "type": "character"
+      },
+      "status": "normal"
+    },
+    {
+      "controller": {
+        "characterId": "agot:Targaryen_9",
+        "type": "character"
+      },
+      "custodian": {
+        "characterId": "agot:Targaryen_9",
+        "type": "character"
+      },
+      "definitionId": "footwear.pentos_soft_shoes",
+      "equippedPosition": {
+        "group": "legs",
+        "layer": "footwear"
+      },
+      "instanceId": "daenerys.soft_shoes",
+      "kind": "item",
+      "lawfulOwner": {
+        "characterId": "agot:Targaryen_9",
+        "type": "character"
+      },
+      "placement": {
+        "characterId": "agot:Targaryen_9",
+        "type": "character"
+      },
+      "status": "normal"
+    },
+    {
+      "controller": {
+        "characterId": "agot:Stark_7",
+        "type": "character"
+      },
+      "custodian": {
+        "characterId": "agot:Stark_7",
+        "type": "character"
+      },
+      "definitionId": "clothing.black_winter_cloak",
+      "equippedPosition": {
+        "group": "torso",
+        "layer": "outerwear"
+      },
+      "instanceId": "jon.black_cloak",
+      "kind": "item",
+      "lawfulOwner": {
+        "characterId": "agot:Stark_7",
+        "type": "character"
+      },
+      "placement": {
+        "characterId": "agot:Stark_7",
+        "type": "character"
+      },
+      "status": "normal"
+    },
+    {
+      "controller": {
+        "characterId": "agot:Stark_7",
+        "type": "character"
+      },
+      "custodian": {
+        "characterId": "agot:Stark_7",
+        "type": "character"
+      },
+      "definitionId": "weapon.castle_bastard_sword",
+      "equippedPosition": {
+        "group": "mainhand"
+      },
+      "instanceId": "jon.castle_sword",
+      "kind": "item",
+      "lawfulOwner": {
+        "characterId": "agot:Stark_7",
+        "type": "character"
+      },
+      "overrides": {
+        "customName": "守夜人手半剑"
+      },
+      "placement": {
+        "characterId": "agot:Stark_7",
+        "type": "character"
+      },
+      "status": "normal"
+    },
+    {
+      "controller": {
+        "characterId": "agot:Stark_7",
+        "type": "character"
+      },
+      "custodian": {
+        "characterId": "agot:Stark_7",
+        "type": "character"
+      },
+      "definitionId": "armor.nights_watch_leathers",
+      "equippedPosition": {
+        "group": "torso",
+        "layer": "armor"
+      },
+      "instanceId": "jon.leathers",
+      "kind": "item",
+      "lawfulOwner": {
+        "characterId": "agot:Stark_7",
+        "type": "character"
+      },
+      "placement": {
+        "characterId": "agot:Stark_7",
+        "type": "character"
+      },
+      "status": "normal"
+    },
+    {
+      "controller": {
+        "characterId": "agot:Stark_7",
+        "type": "character"
+      },
+      "custodian": {
+        "characterId": "agot:Stark_7",
+        "type": "character"
+      },
+      "definitionId": "footwear.nights_watch_patrol_boots",
+      "equippedPosition": {
+        "group": "legs",
+        "layer": "footwear"
+      },
+      "instanceId": "jon.patrol_boots",
+      "kind": "item",
+      "lawfulOwner": {
+        "characterId": "agot:Stark_7",
+        "type": "character"
+      },
+      "placement": {
+        "characterId": "agot:Stark_7",
+        "type": "character"
+      },
+      "status": "normal"
+    },
+    {
+      "controller": {
+        "characterId": "agot:Stark_7",
+        "type": "character"
+      },
+      "custodian": {
+        "characterId": "agot:Stark_7",
+        "type": "character"
+      },
+      "definitionId": "supply.nights_watch_spirits",
+      "equippedPosition": null,
+      "instanceId": "jon.spirits",
+      "kind": "item",
+      "lawfulOwner": {
+        "characterId": "agot:Stark_7",
+        "type": "character"
+      },
+      "overrides": {
+        "charges": 4
+      },
+      "placement": {
+        "characterId": "agot:Stark_7",
+        "type": "character"
+      },
+      "status": "normal"
+    },
+    {
+      "controller": {
+        "characterId": "agot:Stark_7",
+        "type": "character"
+      },
+      "custodian": {
+        "assetId": "site:castle_black_quarters",
+        "type": "asset"
+      },
+      "definitionId": "medicine.maester_staunching_herbs",
+      "equippedPosition": null,
+      "instanceId": "jon.staunching_herbs",
+      "kind": "item",
+      "lawfulOwner": {
+        "characterId": "agot:Stark_7",
+        "type": "character"
+      },
+      "overrides": {
+        "charges": 2
+      },
+      "placement": {
+        "assetId": "site:castle_black_quarters",
+        "type": "asset"
+      },
+      "status": "normal"
+    },
+    {
+      "controller": {
+        "characterId": "agot:Stark_7",
+        "type": "character"
+      },
+      "custodian": {
+        "characterId": "agot:Stark_7",
+        "type": "character"
+      },
+      "definitionId": "clothing.nights_watch_uniform",
+      "equippedPosition": {
+        "group": "torso",
+        "layer": "garment"
+      },
+      "instanceId": "jon.uniform",
+      "kind": "item",
+      "lawfulOwner": {
+        "characterId": "agot:Stark_7",
+        "type": "character"
+      },
+      "placement": {
+        "characterId": "agot:Stark_7",
+        "type": "character"
+      },
+      "status": "normal"
+    },
+    {
+      "controller": {
+        "characterId": "agot:Stark_7",
+        "type": "character"
+      },
+      "custodian": {
+        "characterId": "agot:Stark_7",
+        "type": "character"
+      },
+      "definitionId": "legwear.nights_watch_wool_trousers",
+      "equippedPosition": {
+        "group": "legs",
+        "layer": "legwear"
+      },
+      "instanceId": "jon.wool_trousers",
+      "kind": "item",
+      "lawfulOwner": {
+        "characterId": "agot:Stark_7",
+        "type": "character"
+      },
+      "placement": {
+        "characterId": "agot:Stark_7",
+        "type": "character"
+      },
+      "status": "normal"
+    },
+    {
+      "controller": {
+        "characterId": "agot:Stark_3",
+        "type": "character"
+      },
+      "custodian": {
+        "assetId": "site:winterfell_armory",
+        "type": "asset"
+      },
+      "definitionId": "weapon.castle_bastard_sword",
+      "equippedPosition": null,
+      "instanceId": "ned.castle_sword",
+      "kind": "item",
+      "lawfulOwner": {
+        "characterId": "agot:Stark_3",
+        "type": "character"
+      },
+      "placement": {
+        "assetId": "site:winterfell_armory",
+        "type": "asset"
+      },
+      "status": "normal"
+    },
+    {
+      "controller": {
+        "characterId": "agot:Stark_3",
+        "type": "character"
+      },
+      "custodian": {
+        "assetId": "site:winterfell_armory",
+        "type": "asset"
+      },
+      "definitionId": "armor.castle_chainmail",
+      "equippedPosition": null,
+      "instanceId": "ned.chainmail",
+      "kind": "item",
+      "lawfulOwner": {
+        "characterId": "agot:Stark_3",
+        "type": "character"
+      },
+      "placement": {
+        "assetId": "site:winterfell_armory",
+        "type": "asset"
+      },
+      "status": "normal"
+    },
+    {
+      "controller": {
+        "characterId": "agot:Stark_3",
+        "type": "character"
+      },
+      "custodian": {
+        "characterId": "agot:Stark_3",
+        "type": "character"
+      },
+      "definitionId": "clothing.grey_wolf_cloak",
+      "equippedPosition": {
+        "group": "torso",
+        "layer": "outerwear"
+      },
+      "instanceId": "ned.grey_cloak",
+      "kind": "item",
+      "lawfulOwner": {
+        "characterId": "agot:Stark_3",
+        "type": "character"
+      },
+      "placement": {
+        "characterId": "agot:Stark_3",
+        "type": "character"
+      },
+      "status": "normal"
+    },
+    {
+      "controller": {
+        "characterId": "agot:Stark_3",
+        "type": "character"
+      },
+      "custodian": {
+        "characterId": "agot:Stark_3",
+        "type": "character"
+      },
+      "definitionId": "keepsake.house_seal",
+      "equippedPosition": {
+        "group": "accessories",
+        "index": 0
+      },
+      "instanceId": "ned.house_seal",
+      "kind": "item",
+      "lawfulOwner": {
+        "characterId": "agot:Stark_3",
+        "type": "character"
+      },
+      "overrides": {
+        "customName": "临冬城公爵印章"
+      },
+      "placement": {
+        "characterId": "agot:Stark_3",
+        "type": "character"
+      },
+      "status": "normal"
+    },
+    {
+      "controller": {
+        "characterId": "agot:Stark_3",
+        "type": "character"
+      },
+      "custodian": {
+        "characterId": "agot:Stark_3",
+        "type": "character"
+      },
+      "definitionId": "artifact.ice",
+      "equippedPosition": {
+        "group": "mainhand"
+      },
+      "instanceId": "ned.ice",
+      "kind": "item",
+      "lawfulOwner": {
+        "characterId": "agot:Stark_3",
+        "type": "character"
+      },
+      "overrides": {
+        "isHeirloom": true,
+        "renown": 100
+      },
+      "placement": {
+        "characterId": "agot:Stark_3",
+        "type": "character"
+      },
+      "status": "normal"
+    },
+    {
+      "controller": {
+        "characterId": "agot:Stark_3",
+        "type": "character"
+      },
+      "custodian": {
+        "assetId": "site:winterfell_room",
+        "type": "asset"
+      },
+      "definitionId": "medicine.milk_of_the_poppy",
+      "equippedPosition": null,
+      "instanceId": "ned.poppy_milk",
+      "kind": "item",
+      "lawfulOwner": {
+        "characterId": "agot:Stark_3",
+        "type": "character"
+      },
+      "overrides": {
+        "charges": 4
+      },
+      "placement": {
+        "assetId": "site:winterfell_room",
+        "type": "asset"
+      },
+      "status": "normal"
+    },
+    {
+      "controller": {
+        "characterId": "agot:Stark_3",
+        "type": "character"
+      },
+      "custodian": {
+        "characterId": "agot:Stark_3",
+        "type": "character"
+      },
+      "definitionId": "footwear.northern_riding_boots",
+      "equippedPosition": {
+        "group": "legs",
+        "layer": "footwear"
+      },
+      "instanceId": "ned.riding_boots",
+      "kind": "item",
+      "lawfulOwner": {
+        "characterId": "agot:Stark_3",
+        "type": "character"
+      },
+      "placement": {
+        "characterId": "agot:Stark_3",
+        "type": "character"
+      },
+      "status": "normal"
+    },
+    {
+      "controller": {
+        "characterId": "agot:Stark_3",
+        "type": "character"
+      },
+      "custodian": {
+        "characterId": "agot:Stark_3",
+        "type": "character"
+      },
+      "definitionId": "medicine.maester_staunching_herbs",
+      "equippedPosition": null,
+      "instanceId": "ned.staunching_herbs",
+      "kind": "item",
+      "lawfulOwner": {
+        "characterId": "agot:Stark_3",
+        "type": "character"
+      },
+      "overrides": {
+        "charges": 3
+      },
+      "placement": {
+        "characterId": "agot:Stark_3",
+        "type": "character"
+      },
+      "status": "normal"
+    },
+    {
+      "controller": {
+        "characterId": "agot:Stark_3",
+        "type": "character"
+      },
+      "custodian": {
+        "assetId": "site:winterfell_armory",
+        "type": "asset"
+      },
+      "definitionId": "armor.stark_wolf_helm",
+      "equippedPosition": null,
+      "instanceId": "ned.wolf_helm",
+      "kind": "item",
+      "lawfulOwner": {
+        "characterId": "agot:Stark_3",
+        "type": "character"
+      },
+      "placement": {
+        "assetId": "site:winterfell_armory",
+        "type": "asset"
+      },
+      "status": "normal"
+    },
+    {
+      "controller": {
+        "characterId": "agot:Stark_3",
+        "type": "character"
+      },
+      "custodian": {
+        "characterId": "agot:Stark_3",
+        "type": "character"
+      },
+      "definitionId": "legwear.northern_wool_breeches",
+      "equippedPosition": {
+        "group": "legs",
+        "layer": "legwear"
+      },
+      "instanceId": "ned.wool_breeches",
+      "kind": "item",
+      "lawfulOwner": {
+        "characterId": "agot:Stark_3",
+        "type": "character"
+      },
+      "placement": {
+        "characterId": "agot:Stark_3",
+        "type": "character"
+      },
+      "status": "normal"
+    },
+    {
+      "controller": {
+        "characterId": "agot:Stark_3",
+        "type": "character"
+      },
+      "custodian": {
+        "characterId": "agot:Stark_3",
+        "type": "character"
+      },
+      "definitionId": "clothing.northern_wool_tunic",
+      "equippedPosition": {
+        "group": "torso",
+        "layer": "garment"
+      },
+      "instanceId": "ned.wool_tunic",
+      "kind": "item",
+      "lawfulOwner": {
+        "characterId": "agot:Stark_3",
+        "type": "character"
+      },
+      "placement": {
+        "characterId": "agot:Stark_3",
+        "type": "character"
+      },
+      "status": "normal"
+    }
+  ],
   "characters": [
     {
       "characterId": "agot:Arryn_3",
@@ -206,7 +911,64 @@
     }
   ],
   "schemaVersion": 1,
-  "sites": [],
+  "sites": [
+    {
+      "capacity": 100,
+      "description": "守夜人公共军械库，取用较大装备需要遵守值守规定。",
+      "id": "castle_black_armory",
+      "location": {
+        "locationId": "b_castle_black"
+      },
+      "locationLabel": "黑城堡",
+      "name": "黑城堡军械库",
+      "type": "armory"
+    },
+    {
+      "capacity": 16,
+      "description": "狭窄住处里的木箱、墙钩和铺位。",
+      "id": "castle_black_quarters",
+      "location": {
+        "locationId": "b_castle_black"
+      },
+      "locationLabel": "黑城堡",
+      "name": "黑城堡住处",
+      "type": "room"
+    },
+    {
+      "capacity": 24,
+      "description": "客房内的衣箱、梳妆柜和有锁木匣。",
+      "id": "pentos_guest_room",
+      "location": {
+        "locationId": "b_unknown_westeros",
+        "sceneLocation": "潘托斯 · 伊利里欧宅邸"
+      },
+      "locationLabel": "所在地未查明 · 潘托斯 · 伊利里欧宅邸",
+      "name": "潘托斯总督宅邸客房",
+      "type": "room"
+    },
+    {
+      "capacity": 80,
+      "description": "由军械师和侍从共同看守的武器、防具储藏处。",
+      "id": "winterfell_armory",
+      "location": {
+        "locationId": "b_winterfell"
+      },
+      "locationLabel": "临冬城",
+      "name": "临冬城军械库",
+      "type": "armory"
+    },
+    {
+      "capacity": 30,
+      "description": "存放日常衣物、文书和少量药品。",
+      "id": "winterfell_room",
+      "location": {
+        "locationId": "b_winterfell"
+      },
+      "locationLabel": "临冬城",
+      "name": "临冬城领主起居室",
+      "type": "room"
+    }
+  ],
   "titles": [],
   "vehicles": []
 }

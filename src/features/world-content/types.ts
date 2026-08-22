@@ -65,7 +65,7 @@ export interface WorldAssetStartRecord {
   placement: AssetPlacement | null;
   equippedPosition: EquipmentPosition | null;
   status: 'normal' | 'stolen' | 'contested' | 'inheritance_pending';
-  overrides?: { customName?: string; charges?: number; renown?: number };
+  overrides?: { customName?: string; charges?: number; renown?: number; isHeirloom?: boolean };
 }
 
 export interface LivingWorldStartState {

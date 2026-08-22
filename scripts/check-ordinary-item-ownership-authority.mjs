@@ -6,7 +6,8 @@ const ordinaryItemFiles = [
   'src/features/items/types.ts',
   'src/features/items/actions.ts',
   'src/features/items/viewModel.ts',
-  'src/data/itemPresetState.ts',
+  'src/features/characters/customRulerStart.ts',
+  'src/features/world/worldStartState.ts',
   'scripts/test-item-actions.mjs',
   'scripts/test-item-view-model.mjs',
 ];

@@ -40,7 +40,8 @@ scan(
     'src/features/items/custody.ts',
     'src/features/items/equipment.ts',
     'src/features/world/worldTransactions.ts',
-    'src/data/itemPresetState.ts',
+    'src/features/characters/customRulerStart.ts',
+    'src/features/world/worldStartState.ts',
     'src/features/characters/existingCharacterStart.ts',
   ],
 );

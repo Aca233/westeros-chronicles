@@ -3,6 +3,7 @@ import { ITEM_CATALOG } from '../../data/itemDefinitions';
 import { resolveCharacterTraits } from '../../data/characterTraits';
 import { filterImportedCharacterTraits } from '../../data/importedCharacterTraitPolicy';
 import { createItemInstance, createEmptyItemSystem, validateItemSystem } from '../items/state';
+import type { ItemSystemState } from '../items/types';
 import type { WorldArtifactState } from '../items/worldArtifacts';
 import type { LordProfile } from '../../types/game';
 import { createDefaultBody } from '../../types/game';
@@ -14,8 +15,21 @@ import {
   fallbackLocationLabel,
 } from '../map/locationResolver';
 
-export function createLordFromExistingCharacter(character: ResolvedCharacter, artifacts: WorldArtifactState, currentYear = 298): LordProfile {
-  const items = createEmptyItemSystem();
+export function createLordFromExistingCharacter(
+  character: ResolvedCharacter,
+  artifacts: WorldArtifactState,
+  currentYear = 298,
+  startItems?: ItemSystemState,
+): LordProfile {
+  const items = startItems
+    ? {
+        schemaVersion: startItems.schemaVersion,
+        instances: { ...startItems.instances },
+        placements: { ...startItems.placements },
+        sites: { ...startItems.sites },
+        vehicles: { ...startItems.vehicles },
+      }
+    : createEmptyItemSystem();
   const slug = dynastySlug(character.dynastyId);
   const house = HOUSES.find((entry) => entry.id.toLowerCase() === slug.toLowerCase());
   const location = createWorldLocationRef(
@@ -30,13 +44,17 @@ export function createLordFromExistingCharacter(character: ResolvedCharacter, ar
     items.instances[instanceId] = createItemInstance(ITEM_CATALOG, definitionId, instanceId);
     items.placements[instanceId] = placement;
   };
-  for (const item of character.items) {
-    if (item.custody.type !== 'character' || item.custody.characterId !== character.id) continue;
-    add(item.instanceId, item.definitionId, item.equippedPosition ? { type: 'equipped', position: { ...item.equippedPosition } } : { type: 'carried' });
+  if (!startItems) {
+    for (const item of character.items) {
+      if (item.custody.type !== 'character' || item.custody.characterId !== character.id) continue;
+      add(item.instanceId, item.definitionId, item.equippedPosition ? { type: 'equipped', position: { ...item.equippedPosition } } : { type: 'carried' });
+    }
   }
+  const startDefinitionIds = new Set(startItems ? Object.values(startItems.instances).map((instance) => instance.definitionId) : []);
   const holdingSiteId = `existing:${character.rawId}:holdings`;
   for (const artifact of Object.values(artifacts.artifacts)) {
     if (artifact.placement.type !== 'character' || artifact.placement.characterId !== character.id) continue;
+    if (startDefinitionIds.has(artifact.definitionId)) continue;
     if (!artifact.equipped && !items.sites[holdingSiteId]) items.sites[holdingSiteId] = {
       id: holdingSiteId, name: '人物保管处', type: 'room', location: { ...location }, locationLabel,
       description: '开局时由该人物保管、但并未实际穿戴的物品。', capacity: 40,

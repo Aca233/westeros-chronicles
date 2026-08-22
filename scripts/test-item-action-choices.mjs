@@ -7,7 +7,7 @@ const bundle = await build({
     contents: [
       "export * from './src/features/items/actionChoices.ts';",
       "export * from './src/features/items/state.ts';",
-      "export * from './src/data/itemPresetState.ts';",
+      "export * from './scripts/fixtures/living-world-items.ts';",
       "export * from './src/data/itemDefinitions.ts';",
     ].join('\n'),
     resolveDir: process.cwd(), sourcefile: 'item-action-choices-entry.ts', loader: 'ts',

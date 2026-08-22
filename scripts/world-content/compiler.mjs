@@ -66,6 +66,7 @@ async function readDatasetManifests(rootDir) {
     artifacts,
     characterIds: new Set(characterIndex.map((entry) => entry.id)),
     mapLocationIds: new Set(mapIndex.map((entry) => entry.id)),
+    artifactDefinitions: new Map(Object.entries(artifacts.artifacts)),
   };
 }
 
@@ -78,6 +79,61 @@ function validateStartCharacterReferences(startCharacters, dependencies) {
       throw new Error(`人物起点位置不在地图数据集中：${record.characterId} -> ${record.location.locationId}`);
     }
   }
+}
+
+const UNKNOWN_LOCATION_SENTINEL = 'b_unknown_westeros';
+
+function assertKnownLocationRef(location, label, dependencies) {
+  if (location.locationId !== UNKNOWN_LOCATION_SENTINEL && !dependencies.mapLocationIds.has(location.locationId)) {
+    throw new Error(`${label}不在地图数据集中：${location.locationId}`);
+  }
+}
+
+function isUniqueDefinitionId(definitionId, dependencies) {
+  return definitionId.startsWith('artifact.') || dependencies.artifactDefinitions.has(definitionId);
+}
+
+function validateStartAssetReferences(startAssets, dependencies) {
+  const siteIds = new Set(startAssets.sites.map((site) => site.id));
+  const vehicleIds = new Set(startAssets.vehicles.map((vehicle) => vehicle.id));
+  const uniqueDefinitionOwners = new Map();
+  for (const instance of startAssets.instances) {
+    for (const [field, ref] of [
+      ['lawfulOwner', instance.lawfulOwner],
+      ['controller', instance.controller],
+      ['custodian', instance.custodian],
+      ['placement', instance.placement],
+    ]) {
+      if (!ref) continue;
+      if (ref.type === 'character' && !dependencies.characterIds.has(ref.characterId)) {
+        throw new Error(`资产实例引用未知人物：${instance.instanceId} ${field} ${ref.characterId}`);
+      }
+      if (ref.type === 'location') assertKnownLocationRef(ref.location, `资产实例 ${instance.instanceId} ${field}`, dependencies);
+      if (ref.type === 'asset') {
+        if (ref.assetId.startsWith('site:') && !siteIds.has(ref.assetId.slice(5))) {
+          throw new Error(`保管站点不存在：${instance.instanceId} -> ${ref.assetId}`);
+        }
+        if (ref.assetId.startsWith('vehicle:') && !vehicleIds.has(ref.assetId.slice(8))) {
+          throw new Error(`保管载具不存在：${instance.instanceId} -> ${ref.assetId}`);
+        }
+        if (!ref.assetId.startsWith('site:') && !ref.assetId.startsWith('vehicle:')) {
+          throw new Error(`资产引用前缀无效：${instance.instanceId} -> ${ref.assetId}`);
+        }
+      }
+    }
+    if (isUniqueDefinitionId(instance.definitionId, dependencies)) {
+      const controllerKey = instance.controller?.type === 'character' ? instance.controller.characterId : String(instance.controller?.type ?? 'null');
+      const previous = uniqueDefinitionOwners.get(instance.definitionId);
+      if (previous !== undefined) throw new Error(`唯一资产重复：${instance.definitionId}`);
+      uniqueDefinitionOwners.set(instance.definitionId, controllerKey);
+      const artifact = dependencies.artifactDefinitions.get(instance.definitionId);
+      if (artifact && controllerKey !== artifact.lawfulControllerId) {
+        throw new Error(`神器覆盖控制者不一致：${instance.definitionId}`);
+      }
+    }
+  }
+  for (const site of startAssets.sites) assertKnownLocationRef(site.location, `保管站点 ${site.id}`, dependencies);
+  for (const vehicle of startAssets.vehicles) assertKnownLocationRef(vehicle.location, `载具 ${vehicle.id}`, dependencies);
 }
 
 function buildOutputs(source, dependencies) {
@@ -231,6 +287,7 @@ export async function compileWorldContent(options = {}) {
   const source = await readAndValidateWorldSource(contentDir);
   const dependencies = await readDatasetManifests(rootDir);
   validateStartCharacterReferences(source.startCharacters, dependencies);
+  validateStartAssetReferences(source.startAssets, dependencies);
   const outputs = buildOutputs(source, dependencies);
   await mkdir(dirname(outputDir), { recursive: true });
   const temporary = await mkdtemp(join(dirname(outputDir), `.${basename(outputDir)}-`));

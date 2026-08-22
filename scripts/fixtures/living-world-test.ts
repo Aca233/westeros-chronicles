@@ -1,5 +1,5 @@
 import { createDefaultBody, type LordProfile } from '../../src/types/game';
-import { createNedItemState } from '../../src/data/itemPresetState';
+import { createNedItemState } from './living-world-items';
 
 export function createLivingWorldTestLord(): LordProfile {
   return {

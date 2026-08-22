@@ -6,7 +6,8 @@ const bundle = await build({
   stdin: {
     contents: [
       "export * from './src/data/itemDefinitions.ts';",
-      "export * from './src/data/itemPresetState.ts';",
+      "export * from './scripts/fixtures/living-world-items.ts';",
+      "export * from './src/features/characters/customRulerStart.ts';",
       "export * from './src/features/items/state.ts';",
     ].join('\n'),
     resolveDir: process.cwd(),

@@ -1,6 +1,7 @@
 import type { CharacterId } from '../../domain/characterId';
 import type { WorldDate } from '../../domain/worldDate';
 import type { LordProfile } from '../../types/game';
+import { ITEM_CATALOG, preloadItemCatalog } from '../../data/itemDefinitions';
 import { createEmptyItemSystem } from '../items/state';
 import { createInitialAgotArtifactWorldState } from '../items/worldArtifacts';
 import type { WorldArtifactState } from '../items/worldArtifactTypes';
@@ -11,7 +12,8 @@ import { StaticCharacterRepository } from '../characters/staticCharacterReposito
 import type { CharacterDatasetManifest, StaticCharacterLoadoutProfile, StaticCharacterRecord } from '../characters/types';
 import { mapRepository } from '../map/repository';
 import type { MapManifest } from '../map/types';
-import { projectStartCharacterFacts } from './worldStartState';
+import { createLivingWorldBaseline, type WorldBaselineSnapshotInput } from './worldBaseline';
+import { createInitialLivingWorldItems, projectStartCharacterFacts } from './worldStartState';
 import { WorldContentRepository, assertWorldDatasetCompatibility } from '../world-content/repository.ts';
 import type { LivingWorldManifest, LivingWorldStartState, PlayableCharacterEntry } from '../world-content/types.ts';
 
@@ -35,6 +37,7 @@ export interface LivingWorldNewGame {
   startDate: WorldDate;
   season: string;
   worldStartState: LivingWorldStartState;
+  worldBaseline: WorldBaselineSnapshotInput;
   worldArtifacts: WorldArtifactState;
   characterDatasetHash: string;
   legacyScenarioId?: string;
@@ -118,12 +121,18 @@ export async function createLivingWorldGame(
   const playable = playableEntries.find((entry) => entry.characterId === characterId);
   if (!playable?.enabled || !record?.born || !record.alive) throw new Error('该人物不能用于当前开局');
   assertWorldDatasetCompatibility(manifest, characterManifest, mapManifest, artifacts);
+  await preloadItemCatalog();
   const resolved = projectStartCharacterFacts(resolveCharacter(record, [], {
     datasetVersion: manifest.characterDatasetHash,
     currentYear: manifest.startDate.year + 8000,
     ...(loadout ? { loadoutProfile: loadout } : {}),
   }), startState, { characters: {} });
-  const lord = createLordFromExistingCharacter(resolved, artifacts, manifest.startDate.year);
+  const lord = createLordFromExistingCharacter(
+    resolved,
+    artifacts,
+    manifest.startDate.year,
+    createInitialLivingWorldItems(characterId, startState, ITEM_CATALOG),
+  );
   return {
     lord,
     opening: openingFor(lord, playable, manifest.startDate),
@@ -131,6 +140,7 @@ export async function createLivingWorldGame(
     startDate: { ...manifest.startDate },
     season: '暮春',
     worldStartState: structuredClone(startState),
+    worldBaseline: createLivingWorldBaseline(startState, artifacts),
     worldArtifacts: structuredClone(artifacts),
     characterDatasetHash: manifest.characterDatasetHash,
   };
@@ -153,6 +163,7 @@ export async function createCustomLivingWorldGame(
     startDate: { ...manifest.startDate },
     season: '暮春',
     worldStartState: structuredClone(startState),
+    worldBaseline: createLivingWorldBaseline(startState, artifacts),
     worldArtifacts: structuredClone(artifacts),
     characterDatasetHash: manifest.characterDatasetHash,
     legacyScenarioId: 'custom',
@@ -173,6 +184,7 @@ export function createUnselectedLivingWorldState(): LivingWorldNewGame {
     opening: { narrate: '请选择人物以开始统一世界。', branches: [] },
     worldId: 'agot-298', startDate, season: '暮春',
     worldStartState: { schemaVersion: 1, characters: [], titles: [], assets: [], sites: [], vehicles: [] },
+    worldBaseline: { characters: [], titles: [], assets: [], knownLocationIds: [] },
     worldArtifacts: createInitialAgotArtifactWorldState(), characterDatasetHash: '',
   };
 }

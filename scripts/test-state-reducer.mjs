@@ -4,7 +4,7 @@ import { build } from 'esbuild';
 
 const bundle = await build({
   stdin: {
-    contents: "export * from './src/services/stateReducer.ts'; export * from './src/data/itemPresetState.ts';",
+    contents: "export * from './src/services/stateReducer.ts'; export * from './scripts/fixtures/living-world-items.ts';",
     resolveDir: process.cwd(), sourcefile: 'state-reducer-entry.ts', loader: 'ts',
   },
   bundle: true,

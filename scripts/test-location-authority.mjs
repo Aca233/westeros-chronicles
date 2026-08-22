@@ -16,7 +16,7 @@ const runtimeBundle = await build({
     contents: [
       "export * from './src/services/turnResolution.ts'",
       "export * from './scripts/fixtures/living-world-test.ts'",
-      "export * from './src/data/itemPresetState.ts'",
+      "export * from './src/features/characters/customRulerStart.ts'",
     ].join('\n'),
     resolveDir: process.cwd(),
     sourcefile: 'location-authority-runtime.ts',
