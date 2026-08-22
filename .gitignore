@@ -44,3 +44,6 @@ desktop.ini
 
 # Playwright MCP QA artifacts
 .playwright-mcp/
+
+# ZCode session artifacts
+.zcode/
