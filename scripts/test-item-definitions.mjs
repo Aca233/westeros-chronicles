@@ -131,9 +131,9 @@ test('药物与酒液预设使用明确次数而不是隐藏百分比', () => {
 });
 
 
-test('离线生成的 AGOT 神器目录具有来源、图片与唯一性约束', () => {
+test('离线生成的 AGOT 唯一物品目录具有来源、图片与唯一性约束', () => {
   const generated = ITEM_DEFINITIONS.filter((definition) => definition.contentSource);
-  assert.ok(generated.length >= 400, `生成神器只有 ${generated.length} 件`);
+  assert.ok(generated.length >= 400, `生成唯一物品只有 ${generated.length} 件`);
   const approvedSources = new Set(['2962333032', '2995674648', '2962713441', '3101422928', '2950245430']);
   for (const definition of generated) {
     assert.ok(approvedSources.has(definition.contentSource.workshopId), `${definition.id} 来源未获准`);

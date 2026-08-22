@@ -360,7 +360,7 @@ export function validateOrdinaryItems(value) {
   for (const entry of items) {
     const item = record(entry, '普通物品条目');
     if (typeof item.id !== 'string' || !item.id.trim()) throw new Error('普通物品 ID 无效');
-    if (item.id.startsWith('artifact.')) throw new Error(`神器不得混入普通物品编辑源：${item.id}`);
+    if (item.id.startsWith('artifact.')) throw new Error(`唯一物品不得混入普通物品编辑源：${item.id}`);
     if (ids.has(item.id)) throw new Error(`物品 ID 重复：${item.id}`);
     ids.add(item.id);
     for (const field of ['name', 'description', 'roleplayText', 'subcategory', 'material']) {

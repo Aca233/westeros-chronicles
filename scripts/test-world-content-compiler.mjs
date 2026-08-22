@@ -142,7 +142,7 @@ test('人物起点引用未知人物或未知地点时编译失败', async () =>
   await compileWorldContent(fixture);
 });
 
-test('编译器拒绝唯一资产重复、悬空保管引用和错误的神器覆盖控制者', async () => {
+test('编译器拒绝唯一资产重复、悬空保管引用和错误的唯一物品覆盖控制者', async () => {
   const fixture = await createWorldFixture();
   await writeJson(join(fixture.rootDir, 'public', 'data', 'agot-characters', 'search-index.json'), [
     { id: 'agot:Stark_3', shard: '00' },
@@ -185,7 +185,7 @@ test('编译器拒绝唯一资产重复、悬空保管引用和错误的神器�
   for (const [instances, pattern] of [
     [[instance(), instance({ instanceId: 'ned.ice_copy' })], /唯一资产重复/],
     [[instance({ custodian: { type: 'asset', assetId: 'site:missing' }, placement: { type: 'asset', assetId: 'site:missing' } })], /保管站点不存在/],
-    [[instance({ controller: { type: 'character', characterId: 'agot:Stark_7' } })], /神器覆盖控制者不一致/],
+    [[instance({ controller: { type: 'character', characterId: 'agot:Stark_7' } })], /唯一物品覆盖控制者不一致/],
     [[instance({ lawfulOwner: { type: 'character', characterId: 'agot:missing' } })], /引用未知人物/],
   ]) {
     await writeJson(assetsPath, { schemaVersion: 1, instances: [...instances], sites: [site], vehicles: [] });

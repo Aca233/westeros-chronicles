@@ -53,7 +53,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "装饰过的爱与美的花环",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "rare",
     "roleplayText": "在[owner.MakeScope.Var('old_tourney_location').Province.GetCounty.GetName]的比武大会上，[old_contest_winner.GetFullName]将无数人梦寐以求的花环献给了[owner.GetFullName]，将她命名为爱与美的王后。花环被保存在一层薄薄的金箔下面，并被精心抛光以供展示，让所有还记得那场的比武大会的人感到高兴或沮丧。",
@@ -117,7 +117,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "装饰过的爱与美的花环",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "rare",
     "roleplayText": "在[owner.MakeScope.Var('old_tourney_location').Province.GetCounty.GetName]的比武大会上，[old_contest_winner.GetFullName]将无数人梦寐以求的花环献给了[owner.GetFullName]，将她命名为爱与美的王后。花环被保存在一层薄薄的金箔下面，并被精心抛光以供展示，让所有还记得那场的比武大会的人感到高兴或沮丧。",
@@ -181,7 +181,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "装饰过的爱与美的花环",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "rare",
     "roleplayText": "在[owner.MakeScope.Var('old_tourney_location').Province.GetCounty.GetName]的比武大会上，[old_contest_winner.GetFullName]将无数人梦寐以求的花环献给了[owner.GetFullName]，将她命名为爱与美的王后。花环被保存在一层薄薄的金箔下面，并被精心抛光以供展示，让所有还记得那场的比武大会的人感到高兴或沮丧。",
@@ -245,7 +245,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "装饰过的爱与美的花环",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "rare",
     "roleplayText": "在[owner.MakeScope.Var('old_tourney_location').Province.GetCounty.GetName]的比武大会上，[old_contest_winner.GetFullName]将无数人梦寐以求的花环献给了[owner.GetFullName]，将她命名为爱与美的王后。花环被保存在一层薄薄的金箔下面，并被精心抛光以供展示，让所有还记得那场的比武大会的人感到高兴或沮丧。",
@@ -309,7 +309,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "装饰过的爱与美的花环",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "rare",
     "roleplayText": "在[owner.MakeScope.Var('old_tourney_location').Province.GetCounty.GetName]的比武大会上，[old_contest_winner.GetFullName]将无数人梦寐以求的花环献给了[owner.GetFullName]，将她命名为爱与美的王后。花环被保存在一层薄薄的金箔下面，并被精心抛光以供展示，让所有还记得那场的比武大会的人感到高兴或沮丧。",
@@ -373,7 +373,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "装饰过的爱与美的花环",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "rare",
     "roleplayText": "在[owner.MakeScope.Var('old_tourney_location').Province.GetCounty.GetName]的比武大会上，[old_contest_winner.GetFullName]将无数人梦寐以求的花环献给了[owner.GetFullName]，将她命名为爱与美的王后。花环被保存在一层薄薄的金箔下面，并被精心抛光以供展示，让所有还记得那场的比武大会的人感到高兴或沮丧。",
@@ -437,7 +437,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "装饰过的爱与美的花环",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "rare",
     "roleplayText": "在[owner.MakeScope.Var('old_tourney_location').Province.GetCounty.GetName]的比武大会上，[old_contest_winner.GetFullName]将无数人梦寐以求的花环献给了[owner.GetFullName]，将她命名为爱与美的王后。花环被保存在一层薄薄的金箔下面，并被精心抛光以供展示，让所有还记得那场的比武大会的人感到高兴或沮丧。",
@@ -501,7 +501,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "装饰过的爱与美的花环",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "illustrious",
     "roleplayText": "在[owner.MakeScope.Var('old_tourney_location').Province.GetCounty.GetName]的比武大会上，[old_contest_winner.GetFullName]将无数人梦寐以求的花环献给了[owner.GetFullName]，将她命名为爱与美的王后。花环被保存在一层薄薄的金箔下面，并被精心抛光以供展示，让所有还记得那场的比武大会的人感到高兴或沮丧。",
@@ -565,7 +565,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "冬雪玫瑰",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "rare",
     "roleplayText": "一簇美丽的淡蓝色花朵，颜色像初冬的寒霜。",
@@ -633,7 +633,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "爱与美的花环",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "rare",
     "roleplayText": "在[owner.MakeScope.Var('tourney_location').Province.GetCounty.GetName]的比武大会上，[contest_winner.GetFullName]将无数人梦寐以求的花环献给了[owner.GetFullName]，将她命名为爱与美的王后。",
@@ -701,7 +701,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "爱与美的花环",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "rare",
     "roleplayText": "在[owner.MakeScope.Var('tourney_location').Province.GetCounty.GetName]的比武大会上，[contest_winner.GetFullName]将无数人梦寐以求的花环献给了[owner.GetFullName]，将她命名为爱与美的王后。",
@@ -769,7 +769,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "爱与美的花环",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "rare",
     "roleplayText": "在[owner.MakeScope.Var('tourney_location').Province.GetCounty.GetName]的比武大会上，[contest_winner.GetFullName]将无数人梦寐以求的花环献给了[owner.GetFullName]，将她命名为爱与美的王后。",
@@ -837,7 +837,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "爱与美的花环",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "rare",
     "roleplayText": "在[owner.MakeScope.Var('tourney_location').Province.GetCounty.GetName]的比武大会上，[contest_winner.GetFullName]将无数人梦寐以求的花环献给了[owner.GetFullName]，将她命名为爱与美的王后。",
@@ -905,7 +905,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "爱与美的花环",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "rare",
     "roleplayText": "在[owner.MakeScope.Var('tourney_location').Province.GetCounty.GetName]的比武大会上，[contest_winner.GetFullName]将无数人梦寐以求的花环献给了[owner.GetFullName]，将她命名为爱与美的王后。",
@@ -973,7 +973,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "爱与美的花环",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "rare",
     "roleplayText": "在[owner.MakeScope.Var('tourney_location').Province.GetCounty.GetName]的比武大会上，[contest_winner.GetFullName]将无数人梦寐以求的花环献给了[owner.GetFullName]，将她命名为爱与美的王后。",
@@ -1041,7 +1041,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "爱与美的花环",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "rare",
     "roleplayText": "在[owner.MakeScope.Var('tourney_location').Province.GetCounty.GetName]的比武大会上，[contest_winner.GetFullName]将无数人梦寐以求的花环献给了[owner.GetFullName]，将她命名为爱与美的王后。",
@@ -1109,7 +1109,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "爱与美的花环",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "rare",
     "roleplayText": "在[owner.MakeScope.Var('tourney_location').Province.GetCounty.GetName]的比武大会上，[contest_winner.GetFullName]将无数人梦寐以求的花环献给了[owner.GetFullName]，将她命名为爱与美的王后。",
@@ -1177,7 +1177,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "爱与美的花环",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "illustrious",
     "roleplayText": "在[owner.MakeScope.Var('tourney_location').Province.GetCounty.GetName]的比武大会上，[contest_winner.GetFullName]将无数人梦寐以求的花环献给了[owner.GetFullName]，将她命名为爱与美的王后。",
@@ -1245,7 +1245,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "爱与美的花环",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "illustrious",
     "roleplayText": "在[owner.MakeScope.Var('tourney_location').Province.GetCounty.GetName]的比武大会上，[contest_winner.GetFullName]将无数人梦寐以求的花环献给了[owner.GetFullName]，将她命名为爱与美的王后。",
@@ -1322,7 +1322,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "大学士项链",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "illustrious",
     "roleplayText": "这条仪式项链由铁王座大学士佩戴。与传统学士项链不同的是，除了常见的金属链条外，项链上还镶嵌有宝石。",
@@ -1386,7 +1386,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "博洛斯之颅",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "rare",
     "roleplayText": "布尔威家族的古老传家宝是一个男人的头骨，上面长着闪亮的黑色公牛角——这是「破坏者」博洛斯饮用公牛血导致的畸形。尽管学城对此说法始终存疑。",
@@ -1450,7 +1450,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "「猎鹰骑士」的残破头盔",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "rare",
     "roleplayText": "这顶破损的头盔属于被罗拔·罗伊斯二世国王杀死的诱饵「猎鹰骑士」。正是由于这位骑士的英勇，真正的猎鹰骑士——阿提斯·艾林爵士才能绕道从后方突袭先民，并在决定性的七星之战中取得胜利。",
@@ -1514,7 +1514,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "黄金树叶",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "rare",
     "roleplayText": "据说这对黄金树叶是从「金树」罗宛用金丝发带缠绕的苹果种出的黄金树上掉落的。这一说法的真实性存疑，因为金匠本就可以轻易打造出这样的金树叶，但罗宛家族对这类说法极为反感。",
@@ -1578,7 +1578,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "海马雕像",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "illustrious",
     "roleplayText": "令人印象深刻的玉海马，可追溯至瓦雷利亚末日浩劫之前，当时的龙王们经常与来自远东的商人进行贸易。",
@@ -1634,7 +1634,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "鱼梁木笛",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "rare",
     "roleplayText": "一根简单的鱼梁木笛，音色令人着迷。这件乐器吹奏起来意外地简单，即便是初学者也能轻松吹出自己想要的音符。",
@@ -1690,7 +1690,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "瓦雷利亚书籍",
     "provenance": {
-      "origin": "来自 Valyrian Steel 的神器资料。"
+      "origin": "来自 Valyrian Steel 的物品资料。"
     },
     "rarity": "uncommon",
     "roleplayText": "一本古老的瓦雷利亚书籍，用皮革装订，是失落文明的遗物。书页细腻而陈旧，上面刻有神秘的符文和深奥的知识。据说这本大书包含了强大的咒语、龙的知识以及瓦雷利亚钢的秘密，使其成为学者和巫师们梦寐以求的宝物。 据说，通过这样的书籍，可以学到龙的知识……",
@@ -1751,7 +1751,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "瓦雷利亚钢斧",
     "provenance": {
-      "origin": "来自 Valyrian Steel 的神器资料。"
+      "origin": "来自 Valyrian Steel 的物品资料。"
     },
     "rarity": "illustrious",
     "roleplayText": "这把斧头是在前往古瓦雷利亚探险的远航中发现的。它是为数不多的瓦雷利亚钢武器之一，引起了人们的尊重和好奇，同时也引起了那些关注它的人的极大嫉妒。",
@@ -1812,7 +1812,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "瓦雷利亚钢斧",
     "provenance": {
-      "origin": "来自 Valyrian Steel 的神器资料。"
+      "origin": "来自 Valyrian Steel 的物品资料。"
     },
     "rarity": "illustrious",
     "roleplayText": "这把斧头是在前往古瓦雷利亚探险的远航中发现的。它是为数不多的瓦雷利亚钢武器之一，引起了人们的尊重和好奇，同时也引起了那些关注它的人的极大嫉妒。",
@@ -1873,7 +1873,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "瓦雷利亚钢匕首",
     "provenance": {
-      "origin": "来自 Valyrian Steel 的神器资料。"
+      "origin": "来自 Valyrian Steel 的物品资料。"
     },
     "rarity": "illustrious",
     "roleplayText": "这把匕首是在前往古瓦雷利亚探险的远航中发现的。它是为数不多的瓦雷利亚钢武器之一，引起了人们的尊重和好奇，同时也引起了那些关注它的人的极大嫉妒。",
@@ -1934,7 +1934,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "瓦雷利亚钢匕首",
     "provenance": {
-      "origin": "来自 Valyrian Steel 的神器资料。"
+      "origin": "来自 Valyrian Steel 的物品资料。"
     },
     "rarity": "illustrious",
     "roleplayText": "这把匕首是在前往古瓦雷利亚探险的远航中发现的。它是为数不多的瓦雷利亚钢武器之一，引起了人们的尊重和好奇，同时也引起了那些关注它的人的极大嫉妒。",
@@ -1990,7 +1990,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "瓦雷利亚钢高脚杯",
     "provenance": {
-      "origin": "来自 Valyrian Steel 的神器资料。"
+      "origin": "来自 Valyrian Steel 的物品资料。"
     },
     "rarity": "uncommon",
     "roleplayText": "一件瓦雷利亚钢杯，在古老的瓦雷利亚火焰中锻造，闪耀着超凡的光泽。杯子表面刻有复杂的图案，类似龙鳞，手感既轻巧又坚不可摧。它的边缘光滑而锋利，证明了创造它的传奇工艺。 杯子含有的瓦雷利亚钢足够多，只要找到合适的铁匠，就可以将其熔化并重新锻造……",
@@ -2046,7 +2046,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "瓦雷利亚钢高脚杯",
     "provenance": {
-      "origin": "来自 Valyrian Steel 的神器资料。"
+      "origin": "来自 Valyrian Steel 的物品资料。"
     },
     "rarity": "uncommon",
     "roleplayText": "一件瓦雷利亚钢杯，在古老的瓦雷利亚火焰中锻造，闪耀着超凡的光泽。杯子表面刻有复杂的图案，类似龙鳞，手感既轻巧又坚不可摧。它的边缘光滑而锋利，证明了创造它的传奇工艺。 杯子含有的瓦雷利亚钢足够多，只要找到合适的铁匠，就可以将其熔化并重新锻造……",
@@ -2107,7 +2107,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "瓦雷利亚钢戟",
     "provenance": {
-      "origin": "来自 Valyrian Steel 的神器资料。"
+      "origin": "来自 Valyrian Steel 的物品资料。"
     },
     "rarity": "illustrious",
     "roleplayText": "这把长戟是在前往古瓦雷利亚探险的远航中发现的。它是为数不多的瓦雷利亚钢武器之一，引起了人们的尊重和好奇，同时也引起了那些关注它的人的极大嫉妒。 戟柄由黑色木头制成，戟头由瓦雷利亚钢制成，尽管被制作于很久以前，戟矛尖仍然无比锋利。",
@@ -2168,7 +2168,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "瓦雷利亚钢戟",
     "provenance": {
-      "origin": "来自 Valyrian Steel 的神器资料。"
+      "origin": "来自 Valyrian Steel 的物品资料。"
     },
     "rarity": "illustrious",
     "roleplayText": "这把长戟是在前往古瓦雷利亚探险的远航中发现的。它是为数不多的瓦雷利亚钢武器之一，引起了人们的尊重和好奇，同时也引起了那些关注它的人的极大嫉妒。 戟柄由黑色木头制成，戟头由瓦雷利亚钢制成，尽管被制作于很久以前，戟矛尖仍然无比锋利。",
@@ -2229,7 +2229,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "瓦雷利亚钢锤",
     "provenance": {
-      "origin": "来自 Valyrian Steel 的神器资料。"
+      "origin": "来自 Valyrian Steel 的物品资料。"
     },
     "rarity": "illustrious",
     "roleplayText": "这把钉锤是在前往古瓦雷利亚探险的远航中发现的。它是为数不多的瓦雷利亚钢武器之一，引起了人们的尊重和好奇，同时也引起了那些关注它的人的极大嫉妒。",
@@ -2290,7 +2290,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "瓦雷利亚钢锤",
     "provenance": {
-      "origin": "来自 Valyrian Steel 的神器资料。"
+      "origin": "来自 Valyrian Steel 的物品资料。"
     },
     "rarity": "illustrious",
     "roleplayText": "这把钉锤是在前往古瓦雷利亚探险的远航中发现的。它是为数不多的瓦雷利亚钢武器之一，引起了人们的尊重和好奇，同时也引起了那些关注它的人的极大嫉妒。",
@@ -2351,7 +2351,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "瓦雷利亚钢锤",
     "provenance": {
-      "origin": "来自 Valyrian Steel 的神器资料。"
+      "origin": "来自 Valyrian Steel 的物品资料。"
     },
     "rarity": "illustrious",
     "roleplayText": "这把钉锤是在前往古瓦雷利亚探险的远航中发现的。它是为数不多的瓦雷利亚钢武器之一，引起了人们的尊重和好奇，同时也引起了那些关注它的人的极大嫉妒。",
@@ -2412,7 +2412,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "瓦雷利亚钢锤",
     "provenance": {
-      "origin": "来自 Valyrian Steel 的神器资料。"
+      "origin": "来自 Valyrian Steel 的物品资料。"
     },
     "rarity": "illustrious",
     "roleplayText": "这把钉锤是在前往古瓦雷利亚探险的远航中发现的。它是为数不多的瓦雷利亚钢武器之一，引起了人们的尊重和好奇，同时也引起了那些关注它的人的极大嫉妒。",
@@ -2473,7 +2473,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "瓦雷利亚钢矛",
     "provenance": {
-      "origin": "来自 Valyrian Steel 的神器资料。"
+      "origin": "来自 Valyrian Steel 的物品资料。"
     },
     "rarity": "illustrious",
     "roleplayText": "这把长矛是在前往古瓦雷利亚探险的远航中发现的。它是为数不多的瓦雷利亚钢武器之一，引起了人们的尊重和好奇，同时也引起了那些关注它的人的极大嫉妒。 矛柄由黑色木头制成，矛头由瓦雷利亚钢制成，尽管被制作于很久以前，它矛尖仍然无比锋利。",
@@ -2534,7 +2534,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "瓦雷利亚钢矛",
     "provenance": {
-      "origin": "来自 Valyrian Steel 的神器资料。"
+      "origin": "来自 Valyrian Steel 的物品资料。"
     },
     "rarity": "illustrious",
     "roleplayText": "这把长矛是在前往古瓦雷利亚探险的远航中发现的。它是为数不多的瓦雷利亚钢武器之一，引起了人们的尊重和好奇，同时也引起了那些关注它的人的极大嫉妒。 矛柄由黑色木头制成，矛头由瓦雷利亚钢制成，尽管被制作于很久以前，它矛尖仍然无比锋利。",
@@ -2595,7 +2595,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "瓦雷利亚钢剑",
     "provenance": {
-      "origin": "来自 Valyrian Steel 的神器资料。"
+      "origin": "来自 Valyrian Steel 的物品资料。"
     },
     "rarity": "illustrious",
     "roleplayText": "这把剑是在一次前往古瓦雷利亚的远航中被发现的，那片古老的土地曾由瓦雷利亚人统治。在古瓦雷利亚发现的这把剑是一件稀世宝物，见证了一个早已消逝时代的技艺与匠心。它是魔法与科技交织时期仅存的少数遗存之一，其铸造知识早已湮没在时间长河中。或许是机缘巧合，抑或是命运使然，让这片古老的瓦雷利亚历史碎片重现于今日。",
@@ -2656,7 +2656,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "瓦雷利亚钢剑",
     "provenance": {
-      "origin": "来自 Valyrian Steel 的神器资料。"
+      "origin": "来自 Valyrian Steel 的物品资料。"
     },
     "rarity": "illustrious",
     "roleplayText": "这把剑是在一次前往古瓦雷利亚的远航中被发现的，那片古老的土地曾由瓦雷利亚人统治。在古瓦雷利亚发现的这把剑是一件稀世宝物，见证了一个早已消逝时代的技艺与匠心。它是魔法与科技交织时期仅存的少数遗存之一，其铸造知识早已湮没在时间长河中。或许是机缘巧合，抑或是命运使然，让这片古老的瓦雷利亚历史碎片重现于今日。",
@@ -2717,7 +2717,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "瓦雷利亚钢剑",
     "provenance": {
-      "origin": "来自 Valyrian Steel 的神器资料。"
+      "origin": "来自 Valyrian Steel 的物品资料。"
     },
     "rarity": "illustrious",
     "roleplayText": "这把剑是在一次前往古瓦雷利亚的远航中被发现的，那片古老的土地曾由瓦雷利亚人统治。在古瓦雷利亚发现的这把剑是一件稀世宝物，见证了一个早已消逝时代的技艺与匠心。它是魔法与科技交织时期仅存的少数遗存之一，其铸造知识早已湮没在时间长河中。或许是机缘巧合，抑或是命运使然，让这片古老的瓦雷利亚历史碎片重现于今日。",
@@ -2778,7 +2778,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "瓦雷利亚钢剑",
     "provenance": {
-      "origin": "来自 Valyrian Steel 的神器资料。"
+      "origin": "来自 Valyrian Steel 的物品资料。"
     },
     "rarity": "illustrious",
     "roleplayText": "这把剑是在一次前往古瓦雷利亚的远航中被发现的，那片古老的土地曾由瓦雷利亚人统治。在古瓦雷利亚发现的这把剑是一件稀世宝物，见证了一个早已消逝时代的技艺与匠心。它是魔法与科技交织时期仅存的少数遗存之一，其铸造知识早已湮没在时间长河中。或许是机缘巧合，抑或是命运使然，让这片古老的瓦雷利亚历史碎片重现于今日。",
@@ -2839,7 +2839,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "瓦雷利亚钢剑",
     "provenance": {
-      "origin": "来自 Valyrian Steel 的神器资料。"
+      "origin": "来自 Valyrian Steel 的物品资料。"
     },
     "rarity": "illustrious",
     "roleplayText": "这把剑是在一次前往古瓦雷利亚的远航中被发现的，那片古老的土地曾由瓦雷利亚人统治。在古瓦雷利亚发现的这把剑是一件稀世宝物，见证了一个早已消逝时代的技艺与匠心。它是魔法与科技交织时期仅存的少数遗存之一，其铸造知识早已湮没在时间长河中。或许是机缘巧合，抑或是命运使然，让这片古老的瓦雷利亚历史碎片重现于今日。",
@@ -2900,7 +2900,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "瓦雷利亚钢剑",
     "provenance": {
-      "origin": "来自 Valyrian Steel 的神器资料。"
+      "origin": "来自 Valyrian Steel 的物品资料。"
     },
     "rarity": "illustrious",
     "roleplayText": "这把剑是在一次前往古瓦雷利亚的远航中被发现的，那片古老的土地曾由瓦雷利亚人统治。在古瓦雷利亚发现的这把剑是一件稀世宝物，见证了一个早已消逝时代的技艺与匠心。它是魔法与科技交织时期仅存的少数遗存之一，其铸造知识早已湮没在时间长河中。或许是机缘巧合，抑或是命运使然，让这片古老的瓦雷利亚历史碎片重现于今日。",
@@ -2961,7 +2961,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "瓦雷利亚钢剑",
     "provenance": {
-      "origin": "来自 Valyrian Steel 的神器资料。"
+      "origin": "来自 Valyrian Steel 的物品资料。"
     },
     "rarity": "illustrious",
     "roleplayText": "这把剑是在一次前往古瓦雷利亚的远航中被发现的，那片古老的土地曾由瓦雷利亚人统治。在古瓦雷利亚发现的这把剑是一件稀世宝物，见证了一个早已消逝时代的技艺与匠心。它是魔法与科技交织时期仅存的少数遗存之一，其铸造知识早已湮没在时间长河中。或许是机缘巧合，抑或是命运使然，让这片古老的瓦雷利亚历史碎片重现于今日。",
@@ -3022,7 +3022,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "瓦雷利亚钢剑",
     "provenance": {
-      "origin": "来自 Valyrian Steel 的神器资料。"
+      "origin": "来自 Valyrian Steel 的物品资料。"
     },
     "rarity": "illustrious",
     "roleplayText": "这把剑是在一次前往古瓦雷利亚的远航中被发现的，那片古老的土地曾由瓦雷利亚人统治。在古瓦雷利亚发现的这把剑是一件稀世宝物，见证了一个早已消逝时代的技艺与匠心。它是魔法与科技交织时期仅存的少数遗存之一，其铸造知识早已湮没在时间长河中。或许是机缘巧合，抑或是命运使然，让这片古老的瓦雷利亚历史碎片重现于今日。",
@@ -3083,7 +3083,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "瓦雷利亚钢剑",
     "provenance": {
-      "origin": "来自 Valyrian Steel 的神器资料。"
+      "origin": "来自 Valyrian Steel 的物品资料。"
     },
     "rarity": "illustrious",
     "roleplayText": "这把剑是在一次前往古瓦雷利亚的远航中被发现的，那片古老的土地曾由瓦雷利亚人统治。在古瓦雷利亚发现的这把剑是一件稀世宝物，见证了一个早已消逝时代的技艺与匠心。它是魔法与科技交织时期仅存的少数遗存之一，其铸造知识早已湮没在时间长河中。或许是机缘巧合，抑或是命运使然，让这片古老的瓦雷利亚历史碎片重现于今日。",
@@ -3144,7 +3144,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "瓦雷利亚钢剑",
     "provenance": {
-      "origin": "来自 Valyrian Steel 的神器资料。"
+      "origin": "来自 Valyrian Steel 的物品资料。"
     },
     "rarity": "illustrious",
     "roleplayText": "这把剑是在一次前往古瓦雷利亚的远航中被发现的，那片古老的土地曾由瓦雷利亚人统治。在古瓦雷利亚发现的这把剑是一件稀世宝物，见证了一个早已消逝时代的技艺与匠心。它是魔法与科技交织时期仅存的少数遗存之一，其铸造知识早已湮没在时间长河中。或许是机缘巧合，抑或是命运使然，让这片古老的瓦雷利亚历史碎片重现于今日。",
@@ -3204,7 +3204,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "征服者之冠",
     "provenance": {
-      "origin": "来自 Legacy Of The Dragon 的神器资料。"
+      "origin": "来自 Legacy Of The Dragon 的物品资料。"
     },
     "rarity": "illustrious",
     "roleplayText": "「征服者」伊耿一世的王冠，他用血与火统一了七大王国。这是一顶瓦雷利亚钢制的圆冠，镶有大块的方形红宝石。",
@@ -3265,7 +3265,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "伊耿之匕",
     "provenance": {
-      "origin": "来自 Legacy Of The Dragon 的神器资料。"
+      "origin": "来自 Legacy Of The Dragon 的物品资料。"
     },
     "rarity": "illustrious",
     "roleplayText": "「伊耿之匕」是坦格利安家族拥有的一把鲜为人知的瓦雷利亚钢刀，其起源可追溯到古瓦雷利亚。刀柄上饰有黄金和龙骨。 伊耿指示最后幸存的瓦雷利亚火术士将预言藏在刀中。 :{1.0,1.0,1.0};FONT:ValyrianGlyphsFont;SIZE:16 AB:CV:FLPG:HRP:TIDX:E:YN:WP:JPE:KQ:ZOU “我的血脉当中将出现一位预言中的王子，他将成为「冰与火之歌」”",
@@ -3326,7 +3326,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "灾祸",
     "provenance": {
-      "origin": "来自 Legacy Of The Dragon 的神器资料。"
+      "origin": "来自 Legacy Of The Dragon 的物品资料。"
     },
     "rarity": "illustrious",
     "roleplayText": "「灾祸」是属于赛提加家族的瓦雷利亚钢斧。",
@@ -3387,7 +3387,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "怒火",
     "provenance": {
-      "origin": "来自 Legacy Of The Dragon 的神器资料。"
+      "origin": "来自 Legacy Of The Dragon 的物品资料。"
     },
     "rarity": "illustrious",
     "roleplayText": "「怒火」是[aegonTarg.GetTitledFirstName]在[orys.GetFirstName]合法化并成为[orys.GetDynasty.GetBaseName]的创始人后赠予的战锤。 战锤代表着[orys.GetDynasty.GetBaseName]家族的力量和荣耀，并赋予新成立的家族以合法性。",
@@ -3448,7 +3448,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "诡计",
     "provenance": {
-      "origin": "来自 Legacy Of The Dragon 的神器资料。"
+      "origin": "来自 Legacy Of The Dragon 的物品资料。"
     },
     "rarity": "illustrious",
     "roleplayText": "「诡计」是一把属于科何里斯家族的瓦雷利亚匕首。据说这把匕首与许多古瓦雷利亚统治者的兴衰有关。",
@@ -3508,7 +3508,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "和解者之冠",
     "provenance": {
-      "origin": "来自 Legacy Of The Dragon 的神器资料。"
+      "origin": "来自 Legacy Of The Dragon 的物品资料。"
     },
     "rarity": "illustrious",
     "roleplayText": "「和解者」杰赫里斯一世的金冠，其上镶嵌着七大王国的标志。",
@@ -3569,7 +3569,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "暗黑姐妹",
     "provenance": {
-      "origin": "来自 Legacy Of The Dragon 的神器资料。"
+      "origin": "来自 Legacy Of The Dragon 的物品资料。"
     },
     "rarity": "illustrious",
     "roleplayText": "「暗黑姐妹」是坦格利安家族在末日浩劫之后从龙石岛带来的两把瓦雷利亚钢剑之一，这是坦格利安家族最珍贵的财产之一。这是一把长剑，纤细优雅，剑身呈烟黑色。",
@@ -3630,7 +3630,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "海沫",
     "provenance": {
-      "origin": "来自 Legacy Of The Dragon 的神器资料。"
+      "origin": "来自 Legacy Of The Dragon 的物品资料。"
     },
     "rarity": "illustrious",
     "roleplayText": "瓦列利安家族在这把瓦雷利亚钢弯刀上装饰着象征他们家族的海马徽章。这把弯刀有着漂亮的银制雕刻手柄，这是用瓦列利安数代人的贸易收入换来的。",
@@ -3712,7 +3712,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "征服者之冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "「征服者」伊耿一世的王冠，他用血与火统一了七大王国。这是一顶瓦雷利亚钢制的圆冠，镶有大块的方形红宝石。",
@@ -3795,7 +3795,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "龙祸之冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "「龙祸」伊耿三世的王冠只是一条简朴的金带，他希望组建一个安静有序的宫廷，这顶王冠就是最好的例证。",
@@ -3881,7 +3881,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "庸王之冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "「庸王」伊耿四世的王冠既大且沉，十足纯金，每个顶点上都是一只嵌有宝石眼眸的龙头，相当招摇。",
@@ -3958,7 +3958,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "和解者的白银蓝宝石王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶模仿征服者王冠风格的黄金头环，周围环绕着蓝宝石。",
@@ -4035,7 +4035,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "征服者的黄金绿宝石王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶模仿征服者王冠风格的黄金头环，周围环绕着绿宝石。",
@@ -4112,7 +4112,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "征服者的黄铜红宝石王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶模仿征服者王冠风格的黄铜头环，周围环绕着红宝石。",
@@ -4189,7 +4189,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "征服者的黄金多种宝石王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶黄金头环，周围环绕着彩色宝石，模仿了征服者王冠和调解者王冠的风格。",
@@ -4277,7 +4277,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "伊耿·黑火的王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶为伊耿·黑火打造的王冠，如果他能征服维斯特洛并成为国王的话。王冠由红金钢制成，两条龙并拢在王冠中央，王冠上镶有一颗黑红宝石。",
@@ -4346,7 +4346,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "杰赫里斯一世之子伊耿的王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶为国王杰赫里斯·坦格利安一世未出生的儿子伊耿·坦格利安打造的简约龙翼形状的金冠，如果他没有夭折，活下来并成为国王的话。",
@@ -4407,7 +4407,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "「无冕者」伊耿的王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶为国王伊尼斯·坦格利安一世之子「无冕者」伊耿打造的王冠，如果他成为国王的话。王冠的特点是金带上饰有镶嵌红宝石的红金钢花。",
@@ -4484,7 +4484,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "伊耿·坦格利安六世的王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶为雷加和伊莉亚·马泰尔之子伊耿·坦格利安六世打造的王冠。王冠由黑铁打造，两条龙交汇在王冠的中心，中心镶嵌着一颗红宝石。",
@@ -4561,7 +4561,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "爱玛·艾林王后的头冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这顶头冠用银打造并饰以金丝，其顶上是展翅的猎鹰，两侧是蜿蜒的飞龙，昭示着艾玛·艾林翱翔于苍穹与龙焰之间的尊贵地位。",
@@ -4638,7 +4638,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "月龙王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶象征坦格利安家族与艾林家族联姻的王冠，这顶以银打造、金丝盘绕的头饰，顶上有一只猎鹰，两侧是卷曲的小龙。",
@@ -4715,7 +4715,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "伊蒙·黑火（戴蒙·黑火一世之子）的王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这顶威严的王冠由暗红与黑色交织的环带构成，环带上环绕着燃烧的黑火龙纹徽记，冠圈上方耸立着一圈直立的长剑，每把都仿照黑火剑的形制打造。它曾属于戴蒙·黑火一世的次子伊蒙·黑火，他与伊耿·黑火是孪生兄弟。",
@@ -4811,7 +4811,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "伊蒙德·坦格利安的王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶为国王韦赛里斯·坦格利安一世和阿莉森·海塔尔之子伊蒙德·坦格利安打造的王冠，如果他成为国王的话。它是一顶冷酷的黑铁冠，上面镶满了许多蓝宝石，还有少量红色和绿色的大宝石，形如龙鳞，被黑铁包裹。",
@@ -4888,7 +4888,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "杰赫里斯一世之子伊蒙的王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶为国王杰赫里斯·坦格利安一世之子伊蒙·坦格利安打造的王冠，如果他成为国王的话。王冠由银和铁制成，镶嵌有维斯特洛各大家族的徽章。",
@@ -4971,7 +4971,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "龙长子之冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "伊尼斯一世的王冠，这顶王冠由黄金锻造而成，镶嵌着玉石、珍珠以及七神的面孔，考虑到他糟糕的统治，这简直是个讽刺。",
@@ -5048,7 +5048,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "伊尼斯·黑火一世的王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶企图篡位的伊尼斯·黑火所戴王冠的复制品，其特点是以火焰点为标志的红金相间的金色饰带，以及龙和金色骷髅的金色标志，以纪念寒铁和他的黄金团。 历史背景：在伊尼斯·黑火被「血鸦」杀害后，人们从他的遗物中发现了这顶王冠，这顶王冠很可能是伊尼斯委托打造的，以便在他赢得大议会后戴上。王冠被发现后，国王伊耿五世将其悄悄交给了黄金团，作为对伊尼斯·黑火被杀的小小歉意。后来，伊尼斯的儿子戴蒙·黑火一直佩戴着这顶王冠，直到戴蒙被他的堂弟马里斯杀害后，才被熔化以铸造马里斯自己的王冠。",
@@ -5117,7 +5117,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "艾瑞亚·坦格利安的王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶为雷妮亚·坦格利安之女艾瑞亚·坦格利安打造的王冠，如果她成为女王的话。头环由瓦雷利亚钢、铁和普通钢制成，上面镶嵌着红色龙蛋造型的宝石，中间一颗巨大的红宝石蛋上镶嵌着两条喷火的巨龙。",
@@ -5178,7 +5178,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "雷妮亚之女雷拉的王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶为雷妮亚·坦格利安之女雷拉·坦格利安打造的王冠，如果她成为女王的话。头环由由金、银、铜和钢制成，上面镶嵌着五彩龙蛋造型的宝石，中间一颗巨大的红宝石蛋上还有两条喷火的巨龙。",
@@ -5243,7 +5243,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "[dragon.GetNamePossessiveNoTooltip]的头骨",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "[dragon.GetNamePossessiveNoTooltip]的头骨",
@@ -5300,7 +5300,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "月亮修士的阴茎",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "月亮修士以其神一般的阳刚之气而闻名。因此，在叛乱失败导致身死后，他忠实的追随者割下了他的阴茎，腌制后保存了下来，以便未来的不育少女能在阴茎的祝福下腹中有喜。",
@@ -5365,7 +5365,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "缚龙者",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这支扭曲的号角从头到脚足有六尺长，不知何时被从一头古瓦雷利亚巨龙的尸骸中煅制出来。号角黑光闪烁，布满红金和瓦雷利亚黑钢的条纹。它的表面闪亮，亮的足以使人从中看到自己扭曲的倒影，包裹号角的条纹上铭刻着奇异的古瓦雷利亚符文。[ROOT.Char.Custom('DragonBinderReadValyrian')]",
@@ -5442,7 +5442,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "亚历姗卓拉·马泰尔之冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶亚历姗卓拉·马泰尔公主佩戴的王冠，其形象是一条金青铜色的沙蛇，红宝石色的眼睛卷曲在头部，手持三根多恩之矛。 历史背景：多恩的亚历姗卓拉·马泰尔公主在「血龙狂舞」后统治多恩，这顶王冠最初由她委托制作并佩戴，后来马伦斯·马泰尔和莫尔斯·马泰尔亲王也佩戴过这顶王冠，他们分别在「多恩征服」和「第四次黑火叛乱」期间统治多恩，因此这顶王冠也有了好战的名声。",
@@ -5511,7 +5511,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "阿莉森王后的后冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶国王韦赛里斯一世的妻子——阿莉森·海塔尔王后拥有的后冠。这是一顶金质圆形后冠，雕刻有花朵，并镶有红宝石和绿宝石。 历史背景：在海伦娜王后自杀和龙穴之战后，这顶后冠掉落在梅葛楼外的干涸护城河上的铁刺之间，“消失”了十多年，直到韦赛里斯二世国王统治时期才最终找回。",
@@ -5594,7 +5594,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "善良王后之冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "「善良王后」亚莉珊·坦格利安的王冠，一顶镶有七枚不同颜色的宝石的简洁轻型金环。",
@@ -5663,7 +5663,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "阿莱莎王后的后冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶国王伊尼斯一世的妻子——阿莱莎·瓦列利安王后拥有的后冠。这是一顶镶嵌着珍珠的美丽金银头环，头环上镶嵌着蓝色和绿色的宝石，周围镶嵌着较小的珍珠和黄金。 历史背景：这顶后冠在伊尼斯一世国王统治时期由王后阿莱莎委托制作并佩戴，后来被昵称为「情妇后冠」，因为在伊耿四世统治时期，这顶后冠被国王赠送给了他的情妇芭芭·布雷肯，但后来又被国王收回并赠送给了蜜利莎·布莱伍德。 在蜜利莎结束伊耿的情妇生涯后，它被赠予蓓珊妮·布雷肯，然而在蓓珊妮被抓到与御林铁卫特伦斯·托因同床后被处死，它再次被赠予蜜利莎·布莱伍德和她的家族。贝丝·布莱伍德与伊耿五世国王联姻后，后冠最终又回到了坦格利安家族手中。",
@@ -5740,7 +5740,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "亚尔洁娜·杜兰登的后冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶末代风暴女王亚尔洁娜·杜兰登所戴的后冠。金色的王冠形似鹿角，正中镶嵌着一颗红宝石和拜拉席恩纹章的图案。 历史背景：一顶风暴王后们常戴的后冠，后来最著名的是亚尔洁娜·杜兰登女王在最后一次反抗（最后的风暴之役后）时戴上了它。这顶后冠和女王本身一同被叛变的手下带到了奥里斯·拜拉席恩面前，而奥里斯善待了她，解开绳索，用自己的斗篷给她裹体，并带来食物和酒。最终奥里斯·拜拉席恩和亚尔洁娜结婚，他沿用了杜兰登家族的族徽和族语，成为了拜拉席恩家族的创始人，而后冠则在风息堡尘封起来。",
@@ -5810,7 +5810,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "艾林盔甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这套笨重的盔甲深受防护至上的骑士青睐，哪怕为此牺牲部分灵动也在所不惜。甲身虽近乎素面无彩，头盔却缀以少许纹饰，于不失传统骑士风范之余，亦能引人注目。",
@@ -5893,7 +5893,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "爱与美的花环",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶美丽的冬雪玫瑰花冠。",
@@ -5958,7 +5958,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "龙之号角",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "龙之号角",
@@ -6015,7 +6015,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "韦赛里斯·坦格利安一世的面具",
     "provenance": {
-      "origin": "来自 Legacy Of The Dragon 的神器资料。"
+      "origin": "来自 Legacy Of The Dragon 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "韦赛里斯一世晚年曾佩戴的黄金面具。面具代表着坦格利安家族的富有，同时也是对「血龙狂舞」之前盛世的追忆。",
@@ -6100,7 +6100,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "杰赫里斯一世之子贝尔隆的王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶为杰赫里斯·坦格利安一世国王之子贝尔隆·坦格利安打造的王冠，如果他成为国王的话。王冠采用银色和黑色尖形设计，并镶有红宝石。",
@@ -6177,7 +6177,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "贝勒·坦格利安的王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶为国王戴伦·坦格利安二世之子贝勒·坦格利安打造的王冠，如果他成为国王的话。这是一顶红金圆形蛇冠，中间是三个龙头和眼镜蛇头。",
@@ -6254,7 +6254,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "沙龙王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶象征坦格利安家族与马泰尔家族联姻而打造的王冠，通体有着红金环状蛇形头冠，中央饰有三只龙首与眼镜蛇头。",
@@ -6329,7 +6329,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "受神祝福者之冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶由鲜花编织成的王冠，「受神祝福的」贝勒放弃了祖先的冠冕而选择了一顶花冠。这是一顶由盛开的鲜花和清脆的绿叶交织成的王冠，讲述着贝勒对七位一体之神和其造物的虔诚。",
@@ -6414,7 +6414,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "巴尔德瑞克·杜伦登的王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这顶黄金锻造、镶嵌血红与黄色珠宝的金色鹿角状头冠，曾经戴在“狡猾的”巴尔德瑞克·杜伦登的头上。据说他的巧妙计谋多如王冠上的分叉。某些编年史家声称，这顶头饰的设计灵感来自于一个特别愚蠢的仆人提出的不可靠建议——此人的点子总是大胆狂热，却几乎个个糟糕透顶。",
@@ -6484,7 +6484,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "拜拉席恩盔甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这件盔甲初看之下显得简单朴素，由全身板甲构成，外着一件罩袍和饰带腰带。巨大而粗糙的肩甲勾勒出威严的轮廓。这件盔甲防护性极强，但缺少其他全身板甲设计所钟爱的复杂造型。",
@@ -6561,7 +6561,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "贝丝王后的头环",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶「不该成王的王」国王伊耿五世的妻子——贝丝·布莱伍德王后拥有的头环。它是一顶深色的铁冠，末端是一个尖尖向下的三角形，中心镶有三颗红宝石，意在表达「征服者」伊耿和两位妻子的真挚感情。 历史背景：这顶后冠是贝丝·布莱伍德王后的丈夫伊耿五世国王在位时为她打造的，差点在盛夏厅的悲剧中丢失。然而，它却奇迹般地在大火中留存下来，并在大火烧毁宫殿后被寻回，后来贝丝的女儿莎亚拉王后也戴上了这顶后冠。",
@@ -6630,7 +6630,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "自由民王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶粗皮革镶黑曜石尖刺的王冠，专为那些敢于宣称并掌控塞外的人打造。",
@@ -6723,7 +6723,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "「寒铁」伊葛的王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶为伊葛·河文又称「寒铁」制作的王冠，假如所有黑火男性都死去的话。这是一顶金铜色头环，上面饰有金色的骷髅头和金铜色的翅膀，灵感自古老的布雷肯小国王的王冠，体现了伊葛的布雷肯血统。",
@@ -6780,7 +6780,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "寒铁之颅",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "寒铁的头骨，他是黄金团首位团长。",
@@ -6849,7 +6849,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "渡鸦王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶漆黑的王冠，雕刻成渡鸦头骨的形状，上面的树枝代表着鸦树城的古老鱼梁木。",
@@ -6919,7 +6919,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "鸦齿",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一张为「血鸦」布林登·河文制作的骨白色长弓，其制作材料源自鸦树城那棵巨大鱼梁木上自然落下的枝桠。",
@@ -6995,7 +6995,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "劳勃的战锤",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这把战锤由风息堡的铁匠大师唐纳·诺伊锻造，它的尺寸和重量相当惊人，使用者需要有巨人般力量才能挥舞它。劳勃·拜拉席恩用这柄锤子在三叉戟河之战中砸碎了雷加·坦格利安的胸膛。",
@@ -7065,7 +7065,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "波顿盔甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "板甲在北方鲜有见闻，即便有也多朴实无华，但这套却是个例外。甲片经精细槽纹与珐琅工艺处理，铸成剥皮血肉之状，筋腱般的纹路与血色交映，整体透出诡异骇人之感。",
@@ -7134,7 +7134,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "剥皮人王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶吓人的王冠，上面画着被剥皮的人。自豪地展示着波顿家族古老的传统，这也是其家族纹章的由来。在被他们剥皮的敌人中，甚至还有几位古代的冬境之王。",
@@ -7203,7 +7203,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "剥皮者之冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一条宽银环，整个外表面覆满粗陋缝缀的人皮碎片。这令人毛骨悚然的装饰，意在展示波顿家族臭名昭著的古老剥皮传统。",
@@ -7273,7 +7273,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "布拉佛斯盔甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这套华丽张扬的盔甲融合了板甲与条板甲元素，但整套装束中最引人注目的部分却并非铠甲本身。缀有开衩与褶皱的亮色织物表明，这套装束在实战之外，更重在展示之效。",
@@ -7343,7 +7343,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "布拉佛斯高等盔甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这套盔甲色彩鲜明对比，造型繁复精巧，将单色织物与板甲同华丽衣饰融为一体。看似浮夸，穿戴者却不乏顶尖剑士。",
@@ -7412,7 +7412,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "红叉河王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "百国争雄时代，布雷肯家族的古代小国王佩戴的红铜铁金王冠，其上饰有红铜战马，并镶嵌着红宝石。",
@@ -7489,7 +7489,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "布兰登·史塔克的王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶古老的史塔克王冠，是为数千年前不知名的古北境之王布兰登·史塔克打造的，并以他的名字命名。虽然王冠是由哪位布兰登·史塔克委托打造的已无从考证，但很明显，这顶王冠的灵感来自于伊耿征服前北境古王所佩戴的冬境王冠。它由青铜制成，上面刻有符文，还有九根剑形黑曜石尖刺，与传统的冬境王冠有所不同，后者是铁剑尖刺。",
@@ -7559,7 +7559,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "明焰的铠甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这件装饰繁复的铠甲是为坦格利安家族的「明焰」伊利昂王子量身定制的。头盔上装饰着一对巨大的龙翼和一张血盆大口，意在震慑王子的对手。",
@@ -7636,7 +7636,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "「明焰」伊利昂的王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶为国王梅卡·坦格利安一世之子「明焰」伊利昂·坦格利安打造的王冠，如果他成为国王的话。冠带由黄金和青铜制成，上面镶嵌着祖母绿宝石，冠带上方饰有金色和祖母绿火焰。",
@@ -7698,7 +7698,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "锋钩",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "锋钩是毕斯柏里家族的族剑。一把优雅的长剑，剑身高度锥形细窄，锋利精准如毒刺。剑柄为螺旋纹琥珀材质，搭配繁复的黑钢护手，与其精致的设计相得益彰。泪滴状剑首镶嵌着光滑的琥珀宝石，赋予这把武器优雅而致命的气质。",
@@ -7775,7 +7775,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "卡利拉·黑火的后冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶卡利拉·黑火佩戴的后冠，按照维桑尼亚王后和雷妮丝王后的后冠样式制作的。它由红铜制成，以黑曜石当作红宝石用以装饰。 历史背景：卡利拉·黑火的丈夫「寒铁」将这顶头环赠予了她，使其成为黑火王后的非正式后冠。九铜板王之战期间，后冠不幸遗失，据说是被黑火家族的一位女性后裔卖给了一位厄斯索斯商人。",
@@ -7844,7 +7844,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "碎脊王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶由人类脊椎骨制成的恐怖王冠，椎骨部分被弯折成一个残忍的圆环，正面放着一块上半截的头骨，光滑的骨弧与空洞的鼻腔构成了一幅阴森画面。",
@@ -7913,7 +7913,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "金蛋王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶装饰着两只相向的天鹅的金冠，中间镶着两颗红宝石和一颗硕大的深红宝石。",
@@ -7982,7 +7982,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "蟹岛王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶为赛提加家族打造的银质王冠，上面刻有几只红蟹，王冠两侧镶嵌着许多小红宝石。",
@@ -8051,7 +8051,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "瑟曦·兰尼斯特王后的红宝石头冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶为瑟曦·兰尼斯特王后制作的黄金头冠变体，上面镶嵌了四颗大红宝石和十二颗小红宝石。",
@@ -8120,7 +8120,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "瑟曦·兰尼斯特王后的头冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶为瑟曦·兰尼斯特王后制作的黄金头冠，上面镶嵌了四颗主要的绿宝石和十二颗较小的翡翠。",
@@ -8189,7 +8189,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "火焰头环",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶火焰般的头环以敬奉光之王。只因长夜漫漫，处处险恶。",
@@ -8274,7 +8274,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "洋星头环",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶灵感来自「庸王」伊耿·坦格利安四世的私生女西蕊·洋星的著名项链的精美银质头环。头环上交替镶嵌着大颗蓝宝石和绿宝石，与她那与众不同的眼睛相得益彰。围绕着西蕊·洋星的谣言数不胜数，其中最主要的是，人们认为她施展巫术是为了帮助她同父异母的兄弟和情人「血鸦」，她浴血是为了保持美貌。",
@@ -8343,7 +8343,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "临冬城王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "尽管古老的临冬城史塔克家族一向佩戴着由青铜和黑铁尖刺组成的王冠，但这顶新冠却更直接地展现了他们的家徽和色彩。这顶灰铁冠上雕刻着几只咆哮的狼头，仿佛一群猎狼正追逐着猎物。巨大的珍珠和洁白的毛皮衬里给这顶王冠增添了一抹雪白——史塔克的代表色。",
@@ -8412,7 +8412,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "七神头环",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶镶嵌着七颗不同颜色水晶的金质头环，代表着七神的七种不同形态，中间显眼处镶有一颗巨大的五彩星。",
@@ -8473,7 +8473,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "熊岛王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶高耸威严的王冠，其设计灵感源自熊岛的树木，上面镶嵌着硕大的祖母绿和黑钻。",
@@ -8558,7 +8558,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "血鸦王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶高耸而尖锐的王冠，由鱼梁木的枝条编织而成，用黑铁固定，上面还有几根形似龙爪的黑色尖刺。它还饰有几个乌鸦头骨的雕像，它们的眼窝里镶嵌着巨大的红宝石。在尖刺和乌鸦头骨之间，还有更多的红宝石，打磨成红眼睛的形状，仿佛在警惕地注视着一切。这顶王冠是为了纪念布林登·河文，也就是人们熟知的「血鸦」，以及著名的谜语—— “血鸦大人有多少只眼睛？一千只，再加上一”。",
@@ -8635,7 +8635,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "卡斯特梅王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶镶有红宝石的银冠，冠上饰有显眼的红狮图案。",
@@ -8720,7 +8720,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "瑟曦的统治王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶瑟曦登上铁王座时打造的复杂银质头环，上面缀有缕缕金丝。王冠上扭曲的金属带抽象地表现了一头狮子，鬃毛则象征着铁王座本身。",
@@ -8789,7 +8789,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "鹫巢堡之冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶红白相间的王冠，饰有克林顿家族的狮鹫图案。",
@@ -8866,7 +8866,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "秧鸡厅王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶装饰精美的青铜王冠，其上刻有精细的图纹并镶嵌有抛光黑钻，复刻了克雷赫家族纹章的颜色。",
@@ -8943,7 +8943,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "暮谷镇王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶由黑铁与白银制成的华丽王冠，上面镶嵌有硕大的宝石，并以七颗精致的珍珠作装饰。",
@@ -9028,7 +9028,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "深穴城王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶由青铜和白银制成的华丽王冠，镶嵌有大颗祖母绿，并以精美的珍珠装点，以向莱顿家族纹章的颜色和象征致敬。",
@@ -9097,7 +9097,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "黑港王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶深色的圆形头环，镶嵌有星形的白钻，模仿风暴地唐德利恩家族的纹章颜色设计。",
@@ -9166,7 +9166,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "伊斯蒙王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶绿色王冠，饰有代表伊斯蒙家族纹章的海龟图案和贝壳状花纹。",
@@ -9243,7 +9243,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "先民王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶朴素的青铜头环，刻有先民的符文。",
@@ -9326,7 +9326,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "和平花冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶以鲜花和藤蔓编织成的冠冕。古代的园丁王会在和平时期佩戴此冠。",
@@ -9403,7 +9403,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "战争青铜荆棘冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶尖刺铁藤铸成的王冠。古代的园丁王会在战争时期佩戴此冠。在安达尔人入侵之前，这种王冠是由青铜打造的。",
@@ -9486,7 +9486,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "战争荆棘冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶尖刺铁藤铸成的王冠。古代的园丁王会在战争时期佩戴此冠。",
@@ -9561,7 +9561,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "金树王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶形状复杂的肥沃树木状金色王冠。这顶王冠宛如罗文家族的盾形纹章及其所在地金树城。",
@@ -9633,7 +9633,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "赫伦堡王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶灵感来自于赫伦堡大要塞的黑石塔楼的王冠。",
@@ -9702,7 +9702,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "心宿城王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶装饰华丽的银冠，镶嵌有三颗硕大的心形宝石，宝石顶端各饰有一只乌鸦，以象征对科布瑞家族纹章的敬意。",
@@ -9771,7 +9771,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "狱门堡王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶形似火焰的红金王冠，象征着统治硫磺河的君主。",
@@ -9840,7 +9840,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "天父圣膏之冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这顶王冠由七颗胡戈之星铸成，再现了传说中天父亲自赐予的第一任安达尔国王的王冠。",
@@ -9915,7 +9915,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "少王后之冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶由青铜锻造而成的开放式头环，镶有银边。与古代史塔克冬境之王佩戴的著名冬境王冠相似，这顶王冠的顶端也有锻造成剑形的尖刺。但与之不同的是，这顶王冠上只有六把银剑，其形状为史塔克家族祖传的瓦雷利亚钢巨剑「寒冰」。为了代表佩戴者的家族，它还在剑刃之间镶嵌了六个银贝壳。",
@@ -10000,7 +10000,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "红宝石玫瑰王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶黑铁打造的开放式头环，内衬白色的毛皮，上面镶嵌着九块龙晶碎片，中央则是一只雕刻着凶猛的狼头的鱼梁木。这顶王冠是为琼恩·雪诺打造的，他曾被认为是艾德·史塔克大人的私生子，但后来被揭露是雷加·坦格利安和莱安娜·史塔克的儿子。为了纪念这一血统，王冠还饰有璀璨的红宝石和冬雪玫瑰形状的饰品。",
@@ -10085,7 +10085,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "冰与火之子的王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶黑铁打造的开放式头环，内衬白色的毛皮，上面镶嵌着九块龙晶碎片，中央则是一只雕刻着凶猛的狼头的鱼梁木。这顶王冠是为琼恩·雪诺打造的，他曾被认为是艾德·史塔克大人的私生子，但后来被揭露是雷加·坦格利安和莱安娜·史塔克的儿子。为了纪念这一血统，王冠还饰有璀璨的红宝石和冬雪玫瑰形状的饰品。",
@@ -10170,7 +10170,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "白狼王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶由黑铁制成的开放式头环，内衬白色毛皮，上面镶嵌着九块龙晶碎片，头环中央有一个雕成冰原狼的鱼梁木。这顶王冠是为艾德·史塔克大人的私生子、罗柏·史塔克的长兄——琼恩·雪诺打造的，他是伊耿征服北境后的第一位国王。根据罗柏的遗嘱，琼恩·雪诺被指定为继承人，并夺回临冬城。他被加冕为国王，白港领主赠予他几颗璀璨的珍珠，为他新铸的王冠锦上添花。北境永不遗忘。",
@@ -10255,7 +10255,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "北境之王琼恩·雪诺的王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶由黑铁制成的开放式头环，内衬白色毛皮，上面镶嵌着九块龙晶碎片，头环中央有一个雕成冰原狼的鱼梁木。这顶王冠是为艾德·史塔克大人的私生子、罗柏·史塔克的长兄——琼恩·雪诺打造的，他是伊耿征服北境后的第一位国王。根据罗柏的遗嘱，琼恩·雪诺被指定为继承人，并夺回临冬城。他被加冕为国王，白港领主赠予他几颗璀璨的珍珠，为他新铸的王冠锦上添花。北境永不遗忘。",
@@ -10332,7 +10332,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "河流与山丘王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶镶满绿宝石的金冠。这顶王冠依照古代穆德家族的纹章铸造。",
@@ -10409,7 +10409,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "荒石王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶镶满宝石的金冠。这顶王冠以古老的风格打造，与昔日三叉戟河之王所佩戴的冠冕样式相似。",
@@ -10478,7 +10478,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "旧镇王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶代表着旧镇华丽的王冠。这顶王冠以彩色玻璃设计的形式以敬奉七神信仰及其著名的繁星圣堂。此外，还有纪念学城的链环，学城是重要的学士驻地。最后，参天塔本身被描绘于中心的显著位置。",
@@ -10547,7 +10547,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "旧镇大王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶代表着旧镇的高大华丽王冠。这顶王冠以彩色玻璃设计的形式以敬奉七神信仰及其著名的繁星圣堂。此外，还有纪念学城的链环，学城是重要的学士驻地。最后，参天塔本身被描绘于中心的显著位置。",
@@ -10624,7 +10624,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "蓝礼的比武大会王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这顶王冠被塑造成向天空伸展的肌腱般金色鹿角，完美体现了鹿的意象。枝状结构交汇于一条细金带，上面雕刻着骨质纹理的鹿角质感。虽不如其他王冠那般抛光或镶嵌宝石，它依然呈现出一种强健而高贵的轮廓。",
@@ -10693,7 +10693,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "烈焰王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶火焰般的王冠以敬奉光之王。只因长夜漫漫，处处险恶。",
@@ -10786,7 +10786,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "劳勃一世的比武大会王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶高大坚固的金色王冠，带有突出的雄鹿图案和琥珀色宝石。这顶王冠是劳勃·拜拉席恩一世登上铁王座后不久为他制作的，主要用于国王经常参加的比武大会和竞赛。",
@@ -10871,7 +10871,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "狼丘头环",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶由抛光灰铁制成的复杂头环，形状是两只嚎叫的狼，相互缠绕并伸向中心。",
@@ -10948,7 +10948,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "尖角之冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶由向上翘起的箭鱼形状组成的精致王冠，每只箭鱼的细节处都有网状花纹。这顶锋利的王冠恰如其分地体现了尖角城的巴尔艾蒙家族的形象。",
@@ -11017,7 +11017,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "石篱城王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶镶嵌着红宝石和抛光琥珀的坚固青铜王冠，并饰有金色细节。王冠中央的骏马是布雷肯家族的象征。",
@@ -11094,7 +11094,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "安达尔王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶由青铜和白银制成的华丽王冠，镶嵌着大颗宝石，并饰有精美的珍珠。这款头饰采用传统的安达尔设计，可以追溯到古代的冒险者。",
@@ -11171,7 +11171,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "安达尔银冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶由白银制成、镶嵌有硕大宝石并饰以精美珍珠的华丽王冠。这款头饰采用传统的安达尔设计，可以追溯到古代的冒险者。",
@@ -11240,7 +11240,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "祸垒王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶形似火焰的金冠，按照班佛特家族古代兜帽王的风格打造。",
@@ -11323,7 +11323,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "灰海王之冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这顶古老的王冠是用灰海王杀死的大海龙娜伽的牙齿制成的。它是铁民权威的终极象征，只有那位伟大的掠夺者曾佩戴过它。",
@@ -11408,7 +11408,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "铁王座之冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶仿照铁王座打造的微型黑铁尖刺王冠。",
@@ -11485,7 +11485,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "明月山脉王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶由山形的浅色石头制成的高贵王冠，并用青铜片连接。王冠上有描绘月亮的符号，中央还镶嵌着一颗硕大的绿宝石。",
@@ -11568,7 +11568,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "夜王之冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶黑暗而古老的王冠，为历史上被称为夜王的人所打造。这顶不祥的冠冕由黑铁和冰冷的尖冰制成，这些尖冰只有在长城的魔法作用下才不会融化。",
@@ -11637,7 +11637,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "盟誓之冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "盟誓之冠是旧神及其崇拜的象征。王冠由先民的金属青铜制成，并饰有红宝石，与鱼梁木相映成趣，是所有信奉旧神的人的指路明灯。",
@@ -11706,7 +11706,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "红堡王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶按照君临城红堡的面貌打造的王冠。",
@@ -11775,7 +11775,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "信仰之冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "信仰之冠象征着七位一体之神。这顶冠冕由黄金制成，镶嵌着珍珠、白银和多彩宝石，其边缘环绕着七颗七芒星的图案，闪耀着神圣的光芒。",
@@ -11844,7 +11844,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "潮汐王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶华丽的王冠，冠身是深海的图样，上面有海马形状的装饰。属于潮汐之主。",
@@ -11924,7 +11924,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "长城王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶由玻璃和粗黑铁钉组成的王冠，酷似绝境长城及其十九座城堡。绝境长城历来是守夜人的所在地，守卫着人类的领地，抵御外来的威胁。任何统治者若想占据这一古老的防御工事，都会发现他们的统治是艰难且备受诋毁的。",
@@ -12001,7 +12001,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "寒冰王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶由抛光铁制成的开放式环形王冠，上面镶嵌着闪闪发光的钻石，王冠顶端有九根冰冷的尖刺。这样的王冠早已失传，只在学城的记录和散落在北境的文献中有所记载。它的形状明显与史塔克家族历史上的冬境王冠相似，但在颜色、设计和材质上都有很大不同。尖刺的材质始终存在争议——有人声称它们是由钻石、玻璃或未知水晶制成，也有人认为它们是由真正的冰制成的，由森林之子的古老魔法维持。王冠的起源无从考证——有人认为是为致敬史塔克家族而造，可能曾被临冬城的某位王后或公主佩戴。也有人声称这是为嘲笑史塔克国王而制。更离奇的说法是，这顶王冠曾属于蓝眼尸后，传说中守夜人「夜王」的情人。不过，学士们坚决驳斥这些说法，认为纯属无稽之谈。",
@@ -12070,7 +12070,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "鱼梁木王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶敬奉旧神的鱼梁木王冠。",
@@ -12147,7 +12147,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "峭岩王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶有沙质纹理的图样的圆箍，装饰有代表维斯特林家族的六个白色贝壳。",
@@ -12224,7 +12224,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "维斯特洛之冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶镶嵌有多彩宝石并饰以金丝的坚固青铜王冠。",
@@ -12301,7 +12301,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "维斯特洛银冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶镶嵌有多彩宝石并饰以金丝的坚固白银王冠。",
@@ -12382,7 +12382,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "冬境王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这顶古老的王冠见证了史塔克家族由冬境之王演变为北境之王。它由九把铁剑组成，并由一个刻有符文的青铜圆环束缚，象征着艰苦的土地和更艰苦的人民。",
@@ -12471,7 +12471,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "冬雪玫瑰之冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶美丽的冬雪玫瑰花冠。",
@@ -12551,7 +12551,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "伊伦伍德王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶锻造成黑色栅栏形状的王冠，上面镶嵌着琥珀宝石，并缠绕着黑色锁链。其形状类似于伊伦伍德家族的堡垒和象征。",
@@ -12608,7 +12608,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "戴蒙·黑火的头颅",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "戴蒙·黑火的头骨，他是黄金团的团长，在决斗中被堂亲马里斯·黑火一世杀死。",
@@ -12685,7 +12685,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "戴蒙·黑火二世的王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶企图篡位的戴蒙·黑火二世所戴王冠的复制品，这是一个三角形的红色金属带，正面是一条凶恶的黑铁龙，侧面则是它展开的双翼。 历史背景：由伊葛·河文在戴蒙·黑火一世死后和第一次黑火叛乱失败后为戴蒙二世打造，王冠在戴蒙二世前往维斯特洛参与第二次黑火叛乱的愚蠢行动时带走。然而，在戴蒙二世挑战「血鸦」失败并随之被捕后，据传王冠落入了领主安布罗斯·巴特威之手，并被其作为纪念品保存了下来。",
@@ -12765,7 +12765,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "浪荡王妃之冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶镶嵌着红宝石的铁银头环，灵感大致来源于「征服者」与「和解者」的王冠。",
@@ -12851,7 +12851,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "浪荡王子之冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶镶嵌着红宝石的铁银王冠，灵感大致来源于「征服者」与「和解者」的王冠，由「浪荡王子」戴蒙·坦格利安在征服石阶列岛后佩戴。",
@@ -12926,7 +12926,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "黑龙之冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "此冠以征服者之冠为原型，但与黑火家族纹章一样反转了颜色。瓦雷利亚钢部分用红铜代替，并镶嵌上龙晶。",
@@ -12995,7 +12995,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "戴安娜王后的后冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶金色头冠上交替镶嵌着红紫色菱形宝石，两侧点缀较小的黑色宝石，边缘饰以精巧的荆棘纹路——这顶后冠曾属于戴安娜·坦格利安王后，即「违命者」戴安娜，贝勒一世国王的妻子。 历史背景：这顶后冠是她的叔叔韦赛里斯，即未来的国王韦赛里斯二世在她作为王后时赠予的，戴安娜王后本人最终很少佩戴这顶后冠，因为她在作为王后的大部分时间里都被关在处女居。 黑火叛乱后，它被戴蒙·黑火的后裔所拥有。马里斯死后，它被夺回并归还给坦格利安家族。",
@@ -13078,7 +13078,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "风暴降生之冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "「风暴降生」丹妮莉丝一世的王冠以三首之龙的形状锻造，金身银翼，龙头分别由翡翠、象牙和玛瑙制成。",
@@ -13155,7 +13155,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "杰赫里斯一世之女丹妮莉丝的王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶为国王杰赫里斯一世之女丹妮莉丝·坦格利安打造的王冠，如果她成为女王的话。银质的圆形王冠上镶有碎金，周围环绕着大颗的红宝石和小颗的蓝宝石。",
@@ -13227,7 +13227,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "「大胆」戴伦的王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一条以橄榄绿珐琅和金字塔铆钉点缀的抛光金带，正面饰有环绕深蓝宝石升腾的火焰状图案，象征龙特赛里恩。这顶王冠曾属于「大胆」戴伦王子，后为杰赫妮拉·坦格利安所有。",
@@ -13296,7 +13296,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "拂晓王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这顶王冠仿照古代星陨之王的头盔风格，冠身由白银制成，中央是一颗巨大的紫水晶星辰。",
@@ -13372,7 +13372,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "装饰过的真龙板甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这套烤蓝盔甲镶银为边，将每片甲板的轮廓勾勒分明。甲身覆于鳞甲与鲜红衬垫夹克之外。遍体槽纹蜿蜒如龙翼，整体设计几无破绽，堪称工艺之巅峰。",
@@ -13434,7 +13434,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "啃食者",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "尽管名称不祥，但「啃食者」在丹尼森特家族手中却赢得了令人胆寒的威名。这把青铜古斧历经数代，早已饱饮鲜血，正应了那个理念——即便是最为卑微的生灵，也能留下不朽的印记。",
@@ -13509,7 +13509,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "红日长枪之冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶金制头环，四周环绕着纳梅洛斯·马泰尔的八个金色纹章、红日和长枪，中间是一颗红宝石。",
@@ -13579,7 +13579,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "多恩高等盔甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这套甲胄以大型青铜板片系于锁子甲之上，形成多恩独有的设计风格。既提供坚实防护，又兼顾透气与灵动。",
@@ -13648,7 +13648,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "多恩王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶金制头环，四周环绕着八轮金色太阳，中间是一颗彩色宝石。",
@@ -13705,7 +13705,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "简易龙布偶",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一个普通的羊毛布偶，被缝制成龙的形状，是适合任何驭龙者家族儿童的玩具。",
@@ -13770,7 +13770,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "银翼布偶",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "亚莉珊·坦格利安王后仿照银翼模样缝制的精美羊毛布偶，作为礼物送给她的女儿们。",
@@ -13835,7 +13835,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "沃米索尔布偶",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "亚莉珊·坦格利安王后仿照沃米索尔模样缝制的精美羊毛布偶，作为礼物送给她的儿子们。",
@@ -13900,7 +13900,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "冰蓝色龙布偶",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "莱安娜·史塔克为她尚未出生的孩子缝制的一个冰蓝色龙形羊毛布偶。尽管布偶做工略显笨拙，针脚也有些参差不齐，但其中饱含了莱安娜深深爱意与努力，毕竟她显然不太擅长针线活。",
@@ -13965,7 +13965,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "灾厄之玩偶",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这个邪恶又可爱的玩偶长得像一只鳞片漆黑、长着紫罗兰色弯角的龙。它壮丽而恶毒的造型能激起任何孩子的想象——无论是好是坏！",
@@ -14035,7 +14035,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "龙骨长弓",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这类弓极为罕见且备受追捧。龙骨如钢铁般坚硬，却更轻巧、柔韧，是制作弓的绝佳材料，据说其射程甚至远超盛夏群岛的金心弓。",
@@ -14104,7 +14104,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "浮木王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "与青绿之地的国王不同，古代至高王的王冠是来自大海的礼物，由一块块被冲上岸的浮木制成，以提醒他们所拥有的一切都是淹神赐予的。",
@@ -14192,7 +14192,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "「龙芙莱王子」的王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶为国王伊耿·坦格利安五世之子「龙芙莱王子」邓肯·坦格利安打造的王冠，如果他成为国王的话。王冠的木质冠带上饰有祖母绿蜻蜓和花朵。",
@@ -14277,7 +14277,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "达克林之乱的王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "丹尼斯·达克林在暮谷镇之乱后期委托制作的红铜银金王冠，这顶王冠基于古代失落的暮谷王冠制作，其上饰有七门七盾，而非暮谷镇敦堡的四门，象征着达克林家族历史上的七名御林铁卫成员。",
@@ -14346,7 +14346,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "荒冢王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "古代荒冢诸王的王冠，据说他们是始祖王的后裔。",
@@ -14415,7 +14415,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "伊耿·黑火（戴蒙·黑火一世之子）的王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这顶王冠以红铜锻造，冠顶饰有双黑龙盘旋于烈焰之上，中央镶嵌一颗黑色宝石，彰显着坦格利安家族炽烈的威严与火之传承。它曾属于戴蒙·黑火一世的孪生子——伊耿·黑火，他与伊蒙·黑火是孪生兄弟。",
@@ -14492,7 +14492,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "依伦娜（伊耿三世之女）的王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这顶王冠以青铜锻造，双金龙盘踞于火焰之上，中央镶嵌着一颗乳白色宝石，彰显着坦格利安家族的威严与火之传承。它曾属于伊耿三世国王之女依伦娜·坦格利安。",
@@ -14561,7 +14561,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "伊勒与伊萝拉之冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这顶王冠以铁铸就，双红龙盘踞火焰宝座之上，中央镶嵌一颗红宝石，彰显着坦格利安家族炽烈的威严与火之传承。它曾为伊勒·坦格利安所有，后传予其孪生妹妹伊萝拉。",
@@ -14670,7 +14670,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "红龙与黑龙之冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这顶王冠由瓦雷利亚钢打造，黑龙与红龙盘踞于火焰之上，中央镶嵌一颗红宝石，彰显着坦格利安家族与黑火家族炽烈的威严与火之传承。它象征着这两个敌对家族可能实现的和平统一。",
@@ -14747,7 +14747,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "余烬玫瑰王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶为象征坦格利安家族与提利尔家族联姻而打造王冠，其特色是盘绕的藤蔓环抱着金色玫瑰，苍白的翼状利刃向上展开，宛如腾空而起的飞龙。",
@@ -14809,7 +14809,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "情人的竖琴",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "君临城钢铁街上锻造出的最好的剑，在雷加·坦格利安受封龙石岛亲王时一并授予给他。剑身纤细且优雅，配得上这位未来的国王。",
@@ -14884,7 +14884,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "山谷猎鹰王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这顶银冠的样式源于山谷的艾林王冠，王冠中央是猎鹰的一对蓝宝石翅膀，下方是一轮银月。",
@@ -14953,7 +14953,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "狐狸王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶金冠，王冠中央是狡猾狐狸的一对红宝石眼睛，青铜花周围镶着蓝宝石。",
@@ -15022,7 +15022,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "河渡口王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这顶银冠的样式源于千年前百国争雄时期佛雷家族的王冠，王冠上是一组袖珍的河渡口塔楼，每个塔楼下面都镶嵌着三颗蓝宝石。",
@@ -15099,7 +15099,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "孟恩·园丁九世的和平王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "河湾地国王孟恩·园丁九世在「怒火燎原」中化为灰烬时佩戴的和平王冠。这顶王冠由金银制成，周围环绕着绿色荆棘和金、铜、银、铁金属花朵，以及金属青手——象征着园丁家族，是河湾地国王在和平时期佩戴的王冠。 历史背景：虽然这顶王冠因其最后一位佩戴的国王而被称为孟恩·园丁和平王冠，但它实际上是数百年前孟恩国王的祖先——国王马林·园丁四世因「金手」加尔斯王冠丢失后而打造的。 这顶王冠伴随着孟恩国王参加了那场以他的死亡而告终的战斗，因为他打算在坦格利安入侵者战败后戴上这顶王冠。但与战争王冠不同，和平王冠成功地避免了被贝勒里恩、米拉西斯和瓦格哈尔三条巨龙的火焰所摧毁。战后，它被国王伊耿一世取走，并成为了他所收集的维斯特洛国王珍宝的一部分。",
@@ -15176,7 +15176,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "孟恩·园丁九世的战争王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶国王孟恩·园丁九世在「怒火燎原」战死时所佩戴的战争王冠的复制品。这顶王冠由青铜和铁制成，周围环绕着深色的荆棘和金红色的金属花朵，并由金属荆棘青铜和铁叶环绕，是河湾国王在战争时期佩戴的王冠。 历史背景：虽然这顶王冠因其最后一位佩戴的国王而被称为孟恩·园丁战争王冠，但它实际上是数百年前孟恩国王的祖先马林·园丁四世在位时打造的。 在以孟恩国王之死而告终的那场战斗中，它被戴在孟恩国王的头上，被贝勒里恩、米拉西斯和瓦格哈尔三条巨龙的火焰所摧毁。",
@@ -15253,7 +15253,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "薇尔菲德·园丁公主的后冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶国王加兰德·园丁二世的妻子——玛丽斯·海塔尔王后拥有的精美黄金月桂花环后冠，加兰德因通过联姻将旧镇并入河湾王国而被历史称为「新郎」加兰德。但在历史上，它因其最后的主人薇尔菲德·园丁公主而闻名，有时也以她的名字命名。 历史背景：这顶后冠是旧镇最后一任国王莱蒙·海塔尔（历史上被称为「海狮」莱蒙）委托打造的，作为他的女儿嫁给加兰德·园丁二世国王时的嫁妆。几个世纪以来，园丁国王的不同妻子都会佩戴这顶后冠。 不过，后冠的最后一位重要佩戴者是薇尔菲德·园丁公主，她是贾尔斯·园丁四世国王的美丽小女儿。根据传说，薇尔菲德的母亲在其年幼时就去世了，贾尔斯将她母亲生前戴过的后冠送给了女儿，薇尔菲德非常喜欢这顶后冠，每天都戴着它。 不过，据说薇尔菲德爱上了一个出身低微的雇佣骑士，并很快有了孩子。但不幸的是，她在生孩子时难产而死，悲痛欲绝的贾尔斯国王因此将这名雇佣骑士吊死在树上，因为他偷走了自己最爱的女儿的处女之身，并将女儿深爱的后冠与她合葬在一起。据说后冠就在公主位于高庭的坟墓中。",
@@ -15322,7 +15322,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "「金手」加尔斯·园丁七世的王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶据说曾属于河湾地王国最伟大的园丁国王——「金手」加尔斯的王冠。它由金、银和旧青铜制成，上面镶嵌着五彩宝石和四只金手。 历史背景：这顶独一无二的园丁王冠为纪念河湾地王国黄金时代的传奇人物——「青手」加尔斯打造，它打破了园丁王冠的传统，没有对应的战争王冠，因为它是在伊耿征服之前河湾地王国最长和最大的和平与繁荣时期铸造的。 河湾地国王约翰·园丁三世的船只在前往谷地海岸的途中遭遇海难，王冠和它的国王不幸葬身大海，约翰的儿子梅林四世国王也因此铸造了自己的王冠，数百年后，河湾地王国的最后一任国王孟恩·园丁九世也戴上了这顶王冠。 另外同样值得注意的是，「金手」加尔斯王冠的设计，尤其是它上面镶嵌的许多彩色祖母绿，据说是国王杰赫里斯·坦格利安一世在打造自己的王冠时的灵感来源。",
@@ -15407,7 +15407,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "「伟大的」杰洛·兰尼斯特的王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶西境国王「伟大的」杰洛·兰尼斯特历史上所戴的王冠，由金色和红金大理石制成。王冠上饰有非常细致和逼真的金色狮子，呈现出兰尼斯特家族的纹章，还有四个金色的狮子头。根据传说，王冠的伪造者在制作微缩黄金复制品时，参考了凯岩城兰尼斯特家族拥有的狮子。 历史背景：这顶广受欢迎的王冠是在凯岩王国的黄金时代——「伟大的」杰洛·兰尼斯特国王统治时期铸造的，此后数百年间，西境的多位国王甚至王后，如提利昂·兰尼斯特三世国王和拉娜·兰尼斯特王后都曾佩戴过这顶王冠。 遗憾的是，王冠最后的主人，国王「软弱的」罗利恩·兰尼斯特三世在与铁民作战时将王冠丢失给了霍尔家族的一名成员，如今王冠仍遗失在某个被铁民领主遗忘的宝库中。",
@@ -15483,7 +15483,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "金狮王座",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这个雄伟的宝座永久位于黄金长廊之上。巨大的狮子由凯岩城的岩石雕刻而成，并镀上矿井里产出的黄金，它守护着长廊里的无数珍宝与荣誉。",
@@ -15552,7 +15552,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "金炎王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶为象征坦格利安家族与兰尼斯特家族联姻而打造的王冠。王冠由黄金和红色大理石制成，上面有黄金挤压雕刻而成的狮头和龙头。",
@@ -15629,7 +15629,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "绿薪王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶为象征坦格利安家族与海塔尔家族联姻而打造的王冠。白绿相间的大理石王冠上镶嵌着黄金，上面有七个参天塔的大理石雕像，还镶嵌着安达斯七神的金色名字和七个七神信仰颜色的五彩坦格利安徽章。",
@@ -15698,7 +15698,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "海怪王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶金丝铁线制成的王冠，形状像海怪，它的触手缠绕着佩戴着的头。",
@@ -15775,7 +15775,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "哈耿·黑火一世的王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶企图篡位的哈耿·黑火所戴王冠的复制品，与和解者王冠的设计相反，红色金属带上缀有黑红宝石和黑色龙蛋形状的金环。 历史背景：在第一次黑火叛乱和第二次黑火叛乱失败后，哈耿·黑火在发动第三次黑火叛乱时戴上了这顶王冠。它以杰赫里斯一世的王冠为原型打造，人们皆希望这是一个好彩头，因为黑火家族希望战胜他们认为是篡夺者的坦格利安家族，就像杰赫里斯最终战胜了他那篡位的叔叔梅葛一样。 然而事与愿违，与前两次黑火叛乱一样，第三次黑火叛乱也以惨败告终。与戴蒙一世的王冠的结局不同，黑火家族夺回了哈耿的王冠，并将其授予哈耿的儿子戴蒙。然而，戴蒙·黑火三世最终在自己失败的叛乱中丧生，坦格利安家族用他的尸体见证了哈耿王冠的毁灭。",
@@ -15832,7 +15832,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "国王之手的手",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "「寡妇爱人」因其残忍而臭名昭著，当奥里斯·拜拉席恩的赎金抵达时，他砍去了所有俘虏的持剑手，包括国王之手奥里斯·拜拉席恩本人的。",
@@ -15901,7 +15901,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "苦律王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶雕刻着死亡的王冠，冠身上满是死者尖叫的头骨，中间陌客的镰刀下是一颗浅紫色的宝石。",
@@ -15974,7 +15974,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "吟游诗人的竖琴",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "据说这把破旧的竖琴属于一个偷走过一朵蓝玫瑰的吟游诗人。",
@@ -16044,7 +16044,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "雇佣骑士盔甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这套穿在棉甲和锁子衣外面的铠甲，由各式不合规格的残片拼凑而成，部分甲片已然生锈或凹陷。它或许算不上精良，却总能提供一些庇护。",
@@ -16109,7 +16109,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "冬境高座",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一座高大而威严的光滑石座，王座左右雕着两只怒吼的冰原狼，其上饰有细腻的鱼梁木浮雕，以向旧神致敬。王座历经世代更迭，见证了无数代史塔克冬境之王的衰替。",
@@ -16178,7 +16178,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "高塔王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶由金银制成的精美王冠，上面饰有九个旧镇参天塔的袖珍模型，塔身用白银制成，塔顶还装饰着闪闪发光的黄金火焰。这些塔楼之间由火焰浮雕优雅地连接着，还优雅地镶嵌着璀璨的祖母绿和红宝石。",
@@ -16248,7 +16248,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "蜜酒河盔甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这套带有深槽纹的全身板甲采用大块甲片保护要害部位。胸甲外罩的束腰外衣与抛光的精钢形成鲜明对比。",
@@ -16313,7 +16313,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "赫洛克之号",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "赫洛克之号是一只弯曲的黑号角，刻有古代的黄金条纹。传说[GetScriptedCharacterByHistoryID('KenningK_4').GetFirstNameNicknamed]用此号角作为信号：赫洛克之号响起，[GetTitleByKey('c_kayce').GetNameNoTier]的妓女们便打开城中边门，于是赫洛克和他的军队从铁种手中为[GetDynastyByID('dynn_Lannister').GetName]家族拿下该镇。",
@@ -16390,7 +16390,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "「丘陵之王」胡戈的王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶据说是「丘陵之王」胡戈戴过的五彩七钻石点金冠。根据神话和《七星圣经》的说法，这七个钻石点曾经是天父在为安达斯的安达尔人的第一任国王——「丘陵之王」胡戈打造王冠和加冕时摘下的七星。",
@@ -16465,7 +16465,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "铁国王之冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "当葛雷艾恩家族终结选王会，宣布自己家族是铁群岛之王时，他们为自己制作了一顶铁王冠，象征着他们的控制权。",
@@ -16534,7 +16534,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "鹿角铁冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这顶王冠为杜兰登家族中最尚武的国王所佩戴，它反映了国王的个性。虽然大多数风暴王都以追求武勇而闻名，但这顶王冠是为那些真正献身于剑之道的人准备的。",
@@ -16605,7 +16605,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "铁王座",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "维斯特洛七大王国的铁王座由伊耿一世国王下令用敌人的剑铸造而成。它是王国及其唯一统治者最伟大的象征。",
@@ -16675,7 +16675,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "铁种高等盔甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这副粗犷的甲胄由大块板甲与甲片拼接而成，仅以尖刺为饰。做工虽糙，却厚重坚实，防护极佳。",
@@ -16744,7 +16744,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "杰卡里斯·瓦列利安的王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶为雷妮拉·坦格利安和“兰尼诺·瓦列利安”之子杰卡里斯·坦格利安打造的王冠，如果他成为国王的话。科利斯·瓦列利安打算将这顶奇妙的头环赠予他的“孙子”，它由瓦雷利亚钢打造，银边和浮雕使其闪闪发光，上面镶嵌着七颗海蓝宝石，每颗都呈现出不同的蓝色或海绿。",
@@ -16816,7 +16816,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "悲惨绿王后之冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这顶镶嵌着抛光绿钻的纤细金冠，最初为海伦娜王后所有，后传予其女杰赫妮拉。它以雷妮丝王后遗失的后冠为原型打造。 历史背景：此冠由奥托·海塔尔为其孙女海伦娜定制，仿照在多恩惨遭不测的雷妮丝王后曾佩戴的遗失后冠而制。它旨在唤起「征服者」伊耿的传承，巩固海塔尔家族对伊耿二世王权的野心。 海伦娜王后香消玉殒后，金冠从其遗骸中寻回，传至少女王后杰赫妮拉。当杰赫妮拉亦步其母后尘离世时，这顶后冠被永久封存，自此民间皆传其蕴含不祥与哀伤。",
@@ -16907,7 +16907,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "和解者之冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "「和解者」杰赫里斯一世的王冠，一顶镶有七枚不同颜色的宝石的简洁金环，象征七大王国和七神。",
@@ -16984,7 +16984,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "和解者的瓦雷利亚王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶瓦雷利亚钢头环，周围环绕着红宝石，融合了征服者王冠和调解者王冠的风格。",
@@ -17061,7 +17061,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "和解者的银冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶采用和解者王冠风格的银冠，周围环绕着多种宝石。",
@@ -17138,7 +17138,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "和解者的黄金红宝石王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶采用和解者王冠风格的黄金头环，周围环绕着红宝石。",
@@ -17208,7 +17208,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "兰尼斯特黄金盔甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这副金色甲胄左肩斜披白帛，分外夺目。通体密布纵向槽纹，甲面更以化学鎏金之法镀饰——工序虽险，成色却举世无双。",
@@ -17285,7 +17285,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "黄金雄鹿之冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶高大坚固的黄金王冠，饰有醒目的雄鹿角图案和精美纹饰，并在顶部镶嵌了两颗琥珀宝石。这顶王冠是乔佛里·拜拉席恩一世登上铁王座后不久后制作的，主要在他与玛格丽·提利尔成婚及随后去世之前被佩戴。",
@@ -17360,7 +17360,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "狮与鹿之冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "乔佛里·拜拉席恩一世的一顶镶嵌着红宝石和黑钻石的黄金王冠，比他父亲的那顶更加奢华。",
@@ -17445,7 +17445,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "琼恩·雪诺的头环",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶为琼恩·雪诺打造的头环，他是艾德·史塔克的私生子。头环由鱼梁木制成，其上雕刻着玫瑰、狼和鱼梁木。",
@@ -17541,7 +17541,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "雷加和莱安娜之子伊蒙的王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶为雷加·坦格利安和莱安娜·史塔克之子伊蒙·坦格利安打造的王冠，如果他成为国王的话。王冠由薄薄的鱼梁木皮制成，雕刻着一条龙和一匹狼，中间镶嵌着两朵玫瑰，这两朵玫瑰是用一种从厄斯索斯购来的稀有蓝色金属制成的。",
@@ -17603,7 +17603,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "[owner.GetFullNamePossessive]的御林铁卫盔甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "[owner.GetFullName]加入御林铁卫时被授予的一套白色搪瓷盔甲。",
@@ -17666,7 +17666,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "海怪之角",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "据说在[GetDynastyByID('dynn_Celtigar').GetName]家族积累的珍宝中有一支华丽的号角，一旦吹响，就能从深海召唤出海怪。 深海生物真的会回应它的召唤吗？真相并不清楚。但无论如何，这的确是支非常精美的号角。",
@@ -17743,7 +17743,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "兰尼诺·瓦列利安的王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶为「无冕女王」雷妮丝和科利斯·瓦列利安之子兰尼诺·瓦列利安打造的王冠，如果他能在伊耿历101年的大议会中获胜并成为国王的话。银色和蓝色的水晶饰带上镶嵌着金色的海马，寓意瓦列利安家族在科利斯的带领下日益繁荣。中间还有三条龙，一条大的金红色龙是为了纪念梅丽亚斯龙（由雷妮丝骑乘），两条灰银龙是为了纪念她的孩子兰尼诺和兰娜尔·瓦列利安。",
@@ -17836,7 +17836,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "「雄狮」蓝赛尔·兰尼斯特的王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶由金色和红金大理石制成的王冠，冠面上饰有28只细致和逼真的金狮，是西境国王「伟大的」蓝赛尔·兰尼斯特一世历史上所戴王冠的复制品。 历史背景：这顶以狮子为主题的王冠是在 「雄狮」国王蓝赛尔·兰尼斯特一世统治时期铸造的，领主雷温·雷耶斯将其赠送给兰赛尔国王，以祝贺这位年轻的国王征服了河湾地。 不幸的是，几百年后，当王冠的最终拥有者国王托曼·兰尼斯特二世探险瓦雷利亚时失踪，王冠和瓦雷利亚钢巨剑「光啸」也随之遗失。",
@@ -17906,7 +17906,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "高地盔甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "虽归类为全身板甲，这套盔甲却省去了其他设计中的部分复杂构件。方形胸甲、无腰甲、圆形肩甲——这些在维斯特洛并不多见，却各有独到之处。双色外衣则便于清晰展示纹章。",
@@ -17991,7 +17991,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "梅葛·明焰的王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶属于梅葛·明焰的王冠，他是被排除在铁王座继承权之外的伊利昂·坦格利安之子。这顶环形王冠以银与金打造的龙翼为造型，中央镶嵌一颗红宝石，点缀着金色的火焰。",
@@ -18061,7 +18061,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "梅卡之锤",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这柄尖刺铁锤由梅卡·坦格利安在年轻时铸造，只有最强的战士能够使好这把武器。",
@@ -18144,7 +18144,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "铁砧王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "梅卡一世的王冠是一顶武冠，几根黑铁尖刺扎在纯金环上，就像梅卡本人一样。",
@@ -18214,7 +18214,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "凶暴者的板甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "马里斯·黑火，臭名昭著的觊觎者，他因自己骇人的两个头而闻名，为此他需要定制一套特殊的盔甲。",
@@ -18284,7 +18284,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "凶暴的黑火盔甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这套蓝钢全身板甲外罩战袍，辨识度极高。右侧饰以细密槽纹与金银丝缀，尽显高贵素雅；左侧则覆满龙齿与巨型甲片，形貌狰狞。虽关节活动自如，整副甲胄却堪称凶悍骇人。",
@@ -18341,7 +18341,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "「凶暴的」马里斯之颅",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "马里斯·黑火一世的头骨，他是黄金团的团长兼最后一位黑火觊觎者。这是一个比正常人大得多的头，侧面还长着一个畸形的小头。",
@@ -18445,7 +18445,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "马里斯·黑火一世的王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶企图篡位的马里斯·黑火所戴王冠的复制品，其特点是红色、黑色和金色的火焰装饰着一条黑金色的带子，带子上有金色的金属火焰和九枚生锈的铜板，铜板上有黑火家族的标志。 历史背景：这顶王冠部分由戴蒙的堂弟马里斯用伊尼斯·黑火的王冠熔铸而成，在马里斯于「九铜板王之战」中死后，这顶王冠也将被熔化，成为黑火家族必将灭亡的象征。",
@@ -18522,7 +18522,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "学士国王伊蒙的王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶为国王梅卡·坦格利安一世之子伊蒙·坦格利安打造的王冠，如果他能在伊耿历233年的大议会中获胜并成为国王的话。王冠由金色和黑色饰带组成，红色大理石上镶嵌着坦格利安家族的金色徽章。",
@@ -18591,7 +18591,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "人鱼王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这是曼德勒家族在几个世纪前被驱逐出河湾地前所戴王冠的切实复刻品。这顶金灿灿的王冠让人联想到起伏的波浪，其上饰有闪亮的珍珠，在中心精心刻画了两只美人鱼紧握三叉戟的图案。环绕王冠的祖母绿宝石被精心镶在错综复杂的雕刻波浪图案中，尽显王室魅力。",
@@ -18668,7 +18668,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "玛格丽·提利尔的后冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶为玛格丽·提利尔与蓝礼·拜拉席恩结婚后打造的后冠，后来她与乔佛里和托曼·拜拉席恩结婚后重新戴上了这顶后冠。这顶小巧的金冠像木头一样雕刻成鹿角的形状，上面有青铜藤蔓和银色玫瑰，暗示玛格丽的提利尔家族血统。",
@@ -18737,7 +18737,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "弥丽亚王后的头环",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "弥丽亚·马泰尔王后，人称「贤王」戴伦二世的妻子她所拥有的一顶头环。这顶头环由青铜和黄金制成，上面有一串镶满红宝石的太阳，强调了在铁王座的统治下，多恩与七大王国其他地区的融合。 历史背景：这顶头环是在弥丽亚·马泰尔王后的丈夫戴伦二世国王在位期间为她铸造的，自上一任多恩王后之后，这顶头环就再也没被戴过，但很多人都期待下一任多恩王后会戴上它。",
@@ -18822,7 +18822,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "马赛岬王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "百国争雄时代，马赛家族的古代小国王佩戴的银王冠，王冠中心饰有马赛家族的红绿蓝三重螺旋纹章。",
@@ -18899,7 +18899,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "马塔瑞斯·坦格利安的王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶为马塔瑞斯·坦格利安打造的金冠，每个尖端都镶嵌着不同颜色的宝石。",
@@ -18984,7 +18984,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "仿声鸟头环",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶简单的头环，上面镶嵌着小块绿宝石，中间是一只仿声鸟。有人会说，这样的王冠对于国王来说，过于寒酸了。但在维斯特洛，只要能戴上王冠，就已经是权力的标志，那些懂得权力真正所在的人都明白这一点。",
@@ -19061,7 +19061,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "莫尔斯·马泰尔二世亲王之冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶莫尔斯·马泰尔二世亲王曾佩戴过的王冠，由金铜制成，上面雕刻有太阳和长矛，并镶嵌有红宝石。 历史：这顶王冠最初由多恩亲王莫尔斯·马泰尔二世在数百年前委托制作并佩戴，但在征服多恩时被戴伦·坦格利安一世国王作为战利品夺走，多年后戴伦·坦格利安二世国王最终将其归还。",
@@ -19157,7 +19157,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "弥赛菈·拜拉席恩的头环",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶为弥赛菈·拜拉席恩公主（瑟曦之女，也许是劳勃之女）制作的黄金头环。细长的金圆环上镶嵌着两只小鹿角和红绿宝石。",
@@ -19227,7 +19227,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "史塔克盔甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这套盔甲是在锁子甲外披挂部分板甲，这种样式在维斯特洛北方十分常见。虽有些许装饰，却不似南方盔甲那般饰以金银镶边，仅以简朴的压花和一条饰板腰带作缀。",
@@ -19297,7 +19297,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "北境通用皮甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这套盔甲由锁子甲上衣和以熟制皮革加固的护腿组成，胸甲外还套有一件罩袍，能清晰展示穿戴者的纹章。",
@@ -19367,7 +19367,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "北境通用板甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这套盔甲由锁子甲上衣和以板甲加固的护腿组成，胸甲外还套有一件罩袍，能清晰展示穿戴者的纹章。",
@@ -19437,7 +19437,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "北境高等盔甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这套甲胄主要由条板甲与布面甲构成，板甲仅用于关键关节。虽能借此展示家族色彩，防护能力却不及更精良的板甲设计。",
@@ -19507,7 +19507,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "诺佛斯盔甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这套盔甲的实心胸甲下垫着色彩鲜亮的衬垫，采用的是诺佛斯战士常用的形制。",
@@ -19577,7 +19577,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "诺佛斯高等盔甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这件装饰过的盔甲，在色彩鲜亮的衬垫之上配有刻花胸甲，以此致敬诺佛斯城及其人民的象征。",
@@ -19650,7 +19650,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "一块油性黑石",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一块油性黑石",
@@ -19727,7 +19727,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "奥里斯·拜拉席恩王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶为「征服者」伊耿的私生子弟弟、拜拉席恩家族的创始人奥里斯·拜拉席恩打造的王冠。这顶金铁王冠上饰有金色鹿角、金色龙头以及三颗金边红宝石。",
@@ -19804,7 +19804,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "火鹿王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶为象征拜拉席恩家族与坦格利安家族联姻而打造的王冠，以黄金与黑铁铸成，饰有金鹿角与金龙首，还有三颗被黄金包围的红宝石。",
@@ -19874,7 +19874,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "方格盔甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这套盔甲在全身板甲之外罩了一件棋盘格纹罩袍，以鲜明的纹章色彩取代了裸露的钢铁本色。此等样式尤适合家徽为棋盘格纹的家族，而那鲜明的色彩对比，纵是配与其他纹章亦毫不逊色。",
@@ -19944,7 +19944,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "四分纹盔甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这套盔甲在全身板甲之外罩了一件四分罩袍，以色彩鲜明的纹章展示取代了裸露的钢铁本色。此等样式尤适合家徽为四分纹章的家族，不过这套设计亦能与诸多纹章相得益彰。",
@@ -20009,7 +20009,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "维斯特洛地图桌",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这是一张巨大的实木桌子，足有五十尺长，由「征服者」伊耿亲自下令雕绘。整桌被雕刻成维斯特洛七大王国的形状，桌子表面涂有清漆，经过特殊处理，以熏黑的焦痕来描绘出海洋、河流与湖泊，同时刻有山脉、城堡与市镇——但没有边界。它是一个整体，一个国家，由一个国王统治。",
@@ -20079,7 +20079,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "科霍尔盔甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这套盔甲是科霍尔人冶金技艺的产物，配有多色胸甲、护胫，以及穿在锁子甲外的层状臂甲，采用科霍尔战士的常用形制打造。",
@@ -20149,7 +20149,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "科霍尔高等盔甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这套盔甲是科霍尔人冶金技艺的产物，配有多色胸甲、护胫，以及穿在锁子甲外的层状臂甲，它能为穿戴者提供已知世界几乎最好的防护。",
@@ -20227,7 +20227,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "渡鸦羽斗篷",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一件华美的斗篷，由栖息在鸦树城那棵死去的古老鱼梁木上的渡鸦的缟玛瑙色羽毛制成。",
@@ -20307,7 +20307,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "金玫瑰王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶饰有错综复杂的金色藤蔓的美丽金色头环，上面点缀着闪闪发光的祖母绿宝石。这顶精致的王冠中央是一朵绚丽的金花，花心镶嵌着一颗硕大的祖母绿宝石，增添了迷人的优雅气息。",
@@ -20377,7 +20377,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "河湾地盔甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这套精良的盔甲经悉心锻造成型，兼顾美观与实用。胸甲与球状肩甲覆以织物，使纹章得以直接展现于甲身之上。",
@@ -20447,7 +20447,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "河湾地高等盔甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这套盔甲通体饰以浮雕花卉藤蔓纹样。内衬的短袖缎面外衣，将鲜活的纹章色彩映衬得更加夺目。",
@@ -20516,7 +20516,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "河湾地王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶饰有错综复杂的金色藤蔓的美丽金色头环，其上点缀闪亮珠宝。这顶精致的王冠中央是一朵绚丽的金花，花心镶嵌着一颗硕大的宝石，增添了迷人的优雅气息。",
@@ -20596,7 +20596,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "青亭王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶镶嵌着闪闪发光的蓝色宝石的金制头环，其上排列成优雅的葡萄藤图案。中间是一片倒置的葡萄叶，两侧是以葡萄为原型制作的紫色宝石。",
@@ -20665,7 +20665,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "泽地王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这是用颈泽的鳄鱼皮制作的头饰，其顶端饰有鳄鱼可怕的牙齿，而头饰的正面则饰有三只鳄鱼的眼睛。",
@@ -20742,7 +20742,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "驯鹿王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶为象征史塔克家族与拜拉席恩家族联姻而打造的王冠，由深色金属与皮革锻造而成，饰有钢钉尖刺，顶部镶嵌着光芒四射的鹿角。",
@@ -20825,7 +20825,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "腾跃雄鹿之冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "蓝礼·拜拉席恩一世的王冠和他的婚冠外形很像，冠前是一个翡翠制成的鹿首，周围环绕着金玫瑰。",
@@ -20890,7 +20890,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "橡树王座",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "为了致敬曾经作为古代园丁王王座的古老橡树，一棵被雕刻成王座形状的活树被安置于此，见证着高庭统治者的高贵与耐心关怀。",
@@ -20960,7 +20960,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "雷耶斯盔甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这套鲜红甲胄沿袭西境风格，肩披布帛。通体珐琅板甲本是豪奢之证，纯色浑然一体，更在战场上格外夺目。",
@@ -21030,7 +21030,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "坦格利安亲王盔甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这套黑曜全身板甲的肩甲铸成龙翼之形，内衬金锁子甲，并以红色镶边点缀。胸甲之上，红宝石嵌成龙形纹章，将整副甲胄融为一体。此甲极尽华美，唯有与之相配的显赫之人方能衬得起这般气象。",
@@ -21115,7 +21115,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "雷加·坦格利安的王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶为雷加·坦格利安成为国王后打造的王冠。王冠由黑铁打造，某些部分被重塑为龙的形状，上面镶嵌着红宝石。",
@@ -21180,7 +21180,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "河中的红宝石",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "当劳勃·拜拉席恩对雷加·坦格利安施以致命一击时，雷加胸甲上的红宝石散落到水中。其中一些不时仍被冲到三叉戟河岸上。",
@@ -21250,7 +21250,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "雷加的盔甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "雷加·坦格利安的盔甲由墨黑色钢板制成，胸甲上镶有红宝石雕刻的坦格利安三头龙，在板甲下面是一件金制链甲，头盔上精心装饰着龙纹图案。",
@@ -21333,7 +21333,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "悲惨王后之冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "雷拉·坦格利安王后的王冠，它是一顶银铁的头环，用红宝石和数十颗钻石作装饰。",
@@ -21418,7 +21418,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "雷妮亚王后的后冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶雷妮亚·坦格利安王后拥有的后冠，她是国王「残酷的」梅葛的黑新娘之一。这顶青铜后冠是她的好“朋友”梅丽儿·派柏在梅葛统治之前为她订制的，后冠上镶嵌着一颗巨大的红宝石，其上悬挂着珍珠，并配有黑色天鹅绒。 历史背景：雷妮亚王后一生都戴着这顶后冠，这顶后冠是她的好“朋友”梅丽儿·派柏赠送给她的，甚至直到她去世时，后冠最终和她的许多旧物一起留在了赫伦堡。",
@@ -21501,7 +21501,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "挚爱王后的头环",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这顶非凡的头环由深色瓦雷利亚钢锻造而成，上面镶嵌着菱形红宝石。它曾属于雷妮丝·坦格利安王后。",
@@ -21578,7 +21578,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "「无冕女王」的王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶为伊蒙·坦格利安亲王之女雷妮丝·坦格利安打造的王冠，如果她成为女王的话。银制的头环上有龙翼、人鱼和雄鹿的形状，旁边镶嵌着科利斯·瓦列利安带来的无数珠宝。",
@@ -21648,7 +21648,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "河间地盔甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这套甲胄以鳞甲覆于长锁子甲之外，手足处以板甲防护。虽不及全身板甲周全，却更为灵活。鳞片闪耀，于光影流转之际，更显流光溢彩",
@@ -21718,7 +21718,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "河间地高等盔甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这套甲胄融合了鳞甲与板甲，鳞甲锁子甲之外，胸、手、腿处以板甲增固。罩袍增添色彩，披风之上更有一面小盾展示家族纹章。",
@@ -21787,7 +21787,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "三叉戟河王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶装饰着三叉戟标志的优雅王冠，代表着与它同名的那条伟大河流。专属于河间地的统治者。",
@@ -21880,7 +21880,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "罗柏·史塔克的王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶五王之战期间为「少狼主」罗柏·史塔克打造的王冠。这顶王冠的设计灵感来自北境旧王在伊耿征服前佩戴的冬境王冠，由青铜、皮革和铁制成，上面饰有九根形如剑刃的铁刺和青铜符文。它与冬境王冠的最大不同之处在于，王冠的青铜底座上覆盖着皮革，中央则饰有三个深色的青铜狼头。",
@@ -21963,7 +21963,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "宝冠雄鹿之冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "劳勃·拜拉席恩一世的王冠，像黄金制成的鹿角。",
@@ -22033,7 +22033,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "劳勃的盔甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "劳勃·拜拉席恩的盔甲虽朴素却令人生畏，穿戴者被巨大的钢板和链甲保护着。盔甲大部分面积都被一件印有拜拉席恩家族黑雄鹿图案的战袍所覆盖，头盔上有可怕的鹿角，这也是拜拉席恩家族纹章的象征。",
@@ -22110,7 +22110,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "罗兰德·艾林一世的王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶谷地的国王罗兰德·艾林一世佩戴的王冠，由银制成，镶有蓝宝石和银色猎鹰图案，中间则是一个巨大的月亮图案。 历史背景：这顶王冠由国王罗兰德·艾林一世铸造并佩戴，在画犬部氏族于路上袭击罗兰德·艾林后被抢走，疑似尘封在氏族的珍宝库中。",
@@ -22180,7 +22180,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "罗宛盔甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这套全身板甲内衬长袍，袍上织就繁复的叶蔓枝条纹样。树木意象贯穿整体设计，辅以精巧纹饰，更有一块醒目的前胸饰板，将其尽情展现。",
@@ -22250,7 +22250,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "罗伊斯盔甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "无人知晓这套青铜盔甲究竟有多古老，亦不知历年间更换过多少部件。作为久远遗物，其肩甲与胸甲形制迥异于当世。虽历经沧桑，战场上却仍堪一用，坚韧依旧。",
@@ -22319,7 +22319,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "符文王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这顶青铜王冠镶嵌着黑色圆形宝石，上面雕刻着先民符文，是按照谷地罗伊斯家族古代王冠的样式制作的。",
@@ -22389,7 +22389,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "符文青铜盔甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "罗伊斯家族拥有的几套古老青铜板甲的其中一套。甲上刻有符文，据说这些符文能让穿戴者免受伤害。",
@@ -22454,7 +22454,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "橡树墩",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "园丁家族曾经的王座，据说是由「青手」加尔斯亲手栽种的。这个传说中的王座很久以前就被付之一炬，如今只剩过去辉煌的残骸。",
@@ -22519,7 +22519,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "海石之位",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "海石之位是铁群岛的神秘王座，它由油亮的黑石雕成，其工艺和历史早已湮没在时间的长河之中。",
@@ -22604,7 +22604,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "海龙王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶象征坦格利安家族与瓦列利安家族联姻的王冠。银色和蓝色的水晶王冠有着金色内衬，镶嵌着珍珠、贝壳和鲨鱼牙齿。",
@@ -22665,7 +22665,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "雷妮亚（伊耿三世之女）的王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶闪耀的金冠，两侧饰有翼状拱弧，中央镶嵌着醒目的七芒星，冠环上点缀着玫瑰色宝石。这顶王冠曾属于国王伊耿三世之女——雷妮亚·坦格利安。",
@@ -22742,7 +22742,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "夏拉·艾林的后冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶谷地的莎拉·艾林王后戴过的后冠，由银制成，镶有蓝宝石以及银色月亮和猎鹰图案。 历史背景：这是一顶艾林王后们常戴的后冠，最著名的是最后一位艾林王后——夏拉·艾林，她没有像她的儿子罗纳·艾林那样向维森妮亚·坦格利安屈服，而是把这顶后冠留在了鹰巢城，任其积满灰尘。",
@@ -22827,7 +22827,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "西蕊·洋星的王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶为「庸王」伊耿·坦格利安四世的私生女西蕊·洋星打造的王冠。这款王冠的设计与她的项链如出一辙，上面镶嵌了大量白色珍珠以及较大的绿色和蓝色珍珠。",
@@ -22888,7 +22888,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "西蕊·洋星的项链",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "「庸王」伊耿·坦格利安四世的私生女西蕊·洋星的项链，它缀有大量的白色珍珠以及较大的绿色和蓝色珍珠。",
@@ -22973,7 +22973,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "瓦雷利亚征服者王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶深色的瓦雷利亚钢制王冠，采用了古瓦雷利亚的风格，由一位来自瓦雷利亚自由堡垒的古代征服者佩戴，这顶王冠最终激发了「征服者」伊耿的灵感。",
@@ -23058,7 +23058,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "瓦雷利亚征服者红宝石王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶镶嵌着红宝石的深色瓦雷利亚钢制王冠，采用了古瓦雷利亚的风格，由一位来自瓦雷利亚自由堡垒的古代征服者佩戴，这顶王冠最终激发了「征服者」伊耿的灵感。",
@@ -23154,7 +23154,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "炼金术士王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶炼金术士公会赠送给「疯王」伊里斯二世的简单金冠，其形状是一波又一波相互追逐的火焰。",
@@ -23239,7 +23239,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "韦赛里斯一世的比武大会王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶镶嵌着维斯特洛大家族（不包括葛雷乔伊家族）独特徽记的金银王冠，据说韦赛里斯一世国王在比武大会期间经常佩戴它。",
@@ -23324,7 +23324,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "王国之光王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶模仿杰赫里斯一世的王冠所打造的金银王冠，上面镶嵌着维斯特洛各大家族（不包括葛雷乔伊家族）的传统徽记和五彩宝石。「王国之光」雷妮拉·坦格利安年轻时曾佩戴过的王冠，它是仿照她父亲的比武大会王冠打造的。",
@@ -23409,7 +23409,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "瓦雷利亚女王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶由瓦雷利亚钢和白银制成的王冠，上面镶嵌着红宝石，并饰有维斯特洛大家族（不包括葛雷乔伊家族）的传统徽记。",
@@ -23486,7 +23486,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "雪花王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶为象征史塔克家族与提利尔家族联姻的王冠，冠身环绕着高耸的钢刺，点缀着以金色与霜蓝色打造的盛放玫瑰。冠带上饰有红色叶片与雕刻的冰原狼，精致的锁链自边缘垂悬而下。",
@@ -23561,7 +23561,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "烈焰雄鹿之冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "史坦尼斯·拜拉席恩一世的王冠由红金打造，形状取自光之王的火焰，这是他的新信仰。",
@@ -23626,7 +23626,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "胡戈之星",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "传说中天父亲自从天上摘下的七颗星辰之一，被放置在「丘陵之王」胡戈的王冠上。",
@@ -23714,7 +23714,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "浮木石阶王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶用浮木制作的临时王冠的仿制品，上面装饰着鲨鱼牙齿、烧焦的铁、铁链和绳索，是对著名的征服者之冠的嘲讽性模仿，显然，这最初是由一个因伊耿征服而恼羞成怒的铁民海盗打造的。",
@@ -23784,7 +23784,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "石人盔甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这套奇特的盔甲在四肢处以板甲覆鳞甲，躯干则外罩厚衬衣。既透气又防护周全，即便徒步作战亦能活动自如。",
@@ -23854,7 +23854,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "风暴地盔甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这套盔甲主要由条板甲元件构成，胸部覆有布面甲，内衬罩袍与锁子甲。链甲护颈保护颈部。虽防护不及全身板甲，却比裸露钢铁更添色彩。",
@@ -23924,7 +23924,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "风暴地高等盔甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这套高度槽纹化的盔甲外罩一件下摆呈方形锯齿状的罩袍。虽缺少部分全身板甲构件，但锁子甲与链甲护颈在提供坚实防护之余，亦保持了灵活机动之性。",
@@ -23993,7 +23993,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "风暴地王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这顶四周嵌满硕大宝石的傲然金冠带着典型的风暴地风格。",
@@ -24068,7 +24068,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "风暴王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "风暴王冠曾是杜兰登家族的祖传冠冕，自杜伦迎娶依妮并建成第七座城堡时就一直佩戴。",
@@ -24145,7 +24145,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "战斗天鹅王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶装饰着两只相向天鹅的黑白相交冠冕，中间镶着许多小宝石。",
@@ -24210,7 +24210,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "赛米恩的左眼",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "传说中的骑士「星眼」赛米恩所使用的蓝宝石之一。",
@@ -24275,7 +24275,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "赛米恩的右眼",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "传说中的骑士「星眼」赛米恩所使用的蓝宝石之一。",
@@ -24344,7 +24344,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "猎人王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶迷人的金银王冠，中央金环镶嵌着闪亮的绿宝石和一组银箭头，每个箭头的核心都缀有一颗璀璨的红宝石。位于王冠中心的是一张银弓，弓身镶嵌着绚丽的红绿宝石。弓弦中央上指的箭矢之间有一个精致的金面，饰以复杂的树叶和弓箭手纹样。",
@@ -24413,7 +24413,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "暮之星王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "优雅的圆柱形金冠上有六个精雕细琢的镂空小孔，宛如太阳，另外还有六个精雕细琢的月亮形小孔。",
@@ -24484,7 +24484,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "《白典》",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "《白典》，其正式名称为《白骑士之书》，这本书记载了每个曾在御林铁卫中服役过的成员的事迹。",
@@ -24554,7 +24554,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "三城同盟会高等盔甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这套甲胄以鳞甲覆于皮背心与厚衬衣之外，纹饰风格承自自由贸易城邦。造型独特的球状胸甲有助于偏转攻击，更好地护住穿戴者周身要害。",
@@ -24634,7 +24634,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "鳟鱼王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶饰有鱼鳍形塔楼的银色铁王冠。王冠底部饰有一个铁质圆环，而鱼塔的上方和下方则镶嵌着精致的蓝色和粉色宝石，银色鱼皮图案则增添了几分奢华。",
@@ -24719,7 +24719,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "兰尼斯特先民王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶在安达尔人入侵前的几千年和几个世纪里，西境的兰尼斯特国王曾佩戴过的王冠。这是一顶金冠，采用了安达尔人入侵前的古老设计，以狮子为中心，镶有四颗红宝石，据说是后来加上去的。 历史背景：这顶王冠是已知现存最古老的兰尼斯特王冠，据传第一任凯岩王——「雄狮」罗利恩·兰尼斯特一世国王甚至也曾佩戴过这顶王冠，但它的年代和第一位佩戴者却无从考据。 不过，可以确定最后的佩戴者是「雷霆」泰伯特·兰尼斯特国王，他曾头戴这顶王冠与安达尔入侵者作战，因此这顶王冠被昵称为雷霆王冠。 由于其古老的先民设计，这顶王冠在安达尔兰尼斯特国王统治时期并不受欢迎，因此在凯岩城的大珍宝室里闲置了数千年。",
@@ -24789,7 +24789,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "提利尔盔甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这套盔甲大面积采用化学鎏金工艺，打磨至镜面般光可鉴人，更饰以繁复浮雕纹样。翎羽与缎面罩衣相配，整套装束正合志在彰显财力与风度的骑士。",
@@ -24859,7 +24859,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "兰尼斯特深红盔甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这套全身板甲以金红二色为主，肩披金布。甲身槽纹沿袭西境风格，鲜红与红铜相间的甲片尽显豪奢与傲然。",
@@ -24924,7 +24924,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "紫晶之眼头骨",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "乌勒家族的城堡里有一件奇怪的东西：一个骷髅头，除了眼窝里的两颗紫水晶外，没有任何装饰，朴实无华。当被问及此事时，乌勒家族只是笑着说这是一件古老的传家宝。",
@@ -24993,7 +24993,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "最后壁炉城之冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶形状复杂的铁冠，男人被锁住的手象征着从束缚中挣脱出来获得解放。",
@@ -25081,7 +25081,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "杰赫里斯一世之子维耿的王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶为国王杰赫里斯一世·坦格利安之子维耿·坦格利安打造的王冠，如果他成为国王而不是学士的话。王冠是一只简单的银金环，上面镶嵌着彩色的铁圈和彩金环，环上有红色、金色和绿色的符号，红色代表坦格利安家族的徽章，绿色代表学城及其庇护者海塔尔家族，以及金色的学士锁链和书籍。",
@@ -25158,7 +25158,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "瓦莱拉·坦格利安的王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶为「醉鬼」戴伦之女瓦莱拉·坦格利安打造的王冠，如果她成为女王的话。银质的头饰设计成龙翼的形象，上面镶嵌着红宝石。",
@@ -25243,7 +25243,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "瓦拉尔·坦格利安的王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶为「破矛者」贝勒·坦格利安之子瓦拉尔·坦格利安打造的王冠，如果他活着并成为国王的话。王冠上有一条金色的无翼龙，双眼赤红如血，尾巴缠绕在自己身上。",
@@ -25313,7 +25313,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "谷地盔甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这套布面甲采用异常宽大的内置甲片，却仍保有灵活之性。手臂与小腿以大块钢板防护，整体设计可谓防护周全。",
@@ -25383,7 +25383,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "谷地高等盔甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这套盔甲因无罩袍或织物覆面而得名“白甲”。肩甲、腿甲等部件皆以大块板甲制成，使其成为现用铠甲中防护最为周全的样式之一。",
@@ -25452,7 +25452,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "谷地王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这顶雕花繁杂并饰以珠宝的银冠带着典型的谷地风情。",
@@ -25522,7 +25522,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "瓦雷利亚盔甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这套槽纹盔甲覆以暗沉包浆，以御风雨侵蚀。甲身棱角分明，与下方装饰外衣形成鲜明对比；前臂无甲，换得战斗中灵动自如。",
@@ -25592,7 +25592,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "瓦雷利亚高等盔甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这套全身板甲覆以暗沉包浆，通体银边槽纹。部分甲片边缘饰有龙齿，肩甲则压花龙翼纹样。内衬长袍与暗色金属相映成趣。",
@@ -25662,7 +25662,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "真龙板甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这套烤蓝全身板甲内衬锁子甲与衬垫夹克，防护几无疏漏。甲身遍布细密槽纹，腿甲、加固关节等处更铸成龙形部件，细节极为考究。",
@@ -25732,7 +25732,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "深红真龙板甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这套红色珐琅板甲在战场上熠熠生辉。甲面铸成龙形造型，护手末端更呈龙爪之状，整副铠甲既是护体之物，亦是克敌之器。",
@@ -25802,7 +25802,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "深红瓦雷利亚高等盔甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这套红色全身板甲饰以众多龙纹，槽纹更铸成龙翼膜之形。",
@@ -25871,7 +25871,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "自由堡垒头环",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶以古瓦雷利亚诸神之名设计的头环。",
@@ -25940,7 +25940,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "自由堡垒之冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶形状像龙的翅膀的银冠，饰有三颗大宝石。",
@@ -26009,7 +26009,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "瓦雷利亚猩红王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶红铁制成的王冠，形状仿佛龙的皮翼，上面饰有三颗大的黑曜石宝石，代表了黑火家族的颜色和象征。",
@@ -26078,7 +26078,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "瓦雷利亚血与火王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶形状像龙的翅膀的金冠，饰有三颗大红宝石，象征着坦格利安家族。",
@@ -26148,7 +26148,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "瓦雷利亚钢甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一套瓦雷利亚钢鳞甲，其价值堪抵一个王国，无疑是世界上最具防护力的盔甲。",
@@ -26231,7 +26231,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "暗黑姐妹之冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "维桑尼亚王后的头环是一顶镶着红宝石的黑色瓦雷利亚钢箍，作为三头真龙中最年长的，她让人民永远记住了龙王伊耿的这位暗黑姐妹。",
@@ -26294,7 +26294,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "瓦雷利亚镜子",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这是一面古老的瓦雷利亚镜子，镜身由精钢以非凡工艺锻造而成，并镶嵌有红宝石为饰。镜框上刻着繁复的龙形纹样，象征着瓦雷利亚自由堡垒的强大实力及其艺术造诣。",
@@ -26379,7 +26379,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "伊尼斯之子韦赛里斯的红宝石王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶为伊尼斯一世国王之子韦赛里斯·坦格利安制作的王冠，如果他活着并成为国王的话。这是一顶由黑金和黑曜石制成并镶有红宝石的头环，与征服者之冠遥相呼应，其中部分金属已被重塑为龙的形象。",
@@ -26464,7 +26464,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "伊尼斯一世之子韦赛里斯的宝石王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶为伊尼斯一世国王之子韦赛里斯·坦格利安制作的王冠，如果他活着并成为国王的话。这是一顶由黑金和黑曜石制成并镶有彩色宝石的头环，与征服者之冠遥相呼应，其中部分金属已被重塑为龙的形象。",
@@ -26541,7 +26541,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "韦赛里斯·坦格利安三世的王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶为国王伊里斯·坦格利安二世之子，韦赛里斯·坦格利安打造的王冠，如果他能夺回与生俱来的权利并成为国王的话。王冠主要用厄斯索斯材料制成，由纯铜和青铜打造，镶嵌着厄斯索斯绿宝石，上面雕刻着沉睡的龙以及黑曜石、银色和锈绿色的铜龙蛋印记。",
@@ -26611,7 +26611,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "蛇牙",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "「蛇牙」是韦尔家族首领所持的祖传佩剑。这柄华丽的长柄剑，剑刃呈独特的波浪状，曾无数次在保卫多恩的战争中杀敌饮血。",
@@ -26687,7 +26687,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "安达尔式金柄长剑",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这把长剑闪耀着金光。细细的花丝在烛光下闪闪发光，如瓦雷利亚钢剑上的水波纹路一般细腻。这把剑配得上战士本人，让人想起过往的英雄。",
@@ -26763,7 +26763,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "安达尔式银柄长剑",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这把长剑呈现华丽的银色，雕刻精美。细腻的花丝在烛光下闪闪发光，如瓦雷利亚钢剑上的水波纹路一般细腻。这把剑配得上战士本人，让人想起过往的英雄。",
@@ -26839,7 +26839,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "安达尔式金柄长柄剑",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这把长柄剑闪耀着金光。细腻的花丝在烛光下闪闪发光，如瓦雷利亚钢剑上的水波纹路一般细腻。这把剑配得上战士本人，让人想起过往的英雄。",
@@ -26915,7 +26915,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "安达尔式银柄长柄剑",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这把长柄剑呈现华丽的银色，雕刻精美。细腻的花丝在烛光下闪闪发光，如瓦雷利亚钢剑上的水波纹路一般细腻。这把剑配得上战士本人，让人想起过往的英雄。",
@@ -26985,7 +26985,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "凌越",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "「凌越」是梅利斯特家族祖传的瓦雷利亚钢戟。戟头饰有繁复的雕纹，戟柄则由上等鱼梁木制成。这把武器数百年来以守护海疆城的人民而闻名，是梅利斯特家族的骄傲——他们时常手持此戟，与族中战士并肩而立，保卫家园。",
@@ -27055,7 +27055,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "黑血",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这是霍尔家族的瓦雷利亚钢双手巨斧。与其他大多数通过铁钱获取珍藏的铁种不同，霍尔家族直接委托锻造了这件武器。这种铺张之举得益于他们在铁群岛日益增长的财富和对贸易的鼓励。诸如此类的非正统行径，为该家族成员赢得了「黑血」的绰号——这一侮辱后来变成了他们的骄傲标志。",
@@ -27125,7 +27125,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "黑殒",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这把巨剑是追求极致战斗效率的作品。它的十字护罩被锉成锋利的尖刺，手柄部分由脆性黑铁制成，柄头则被铸造成一根带刺的铁狼牙棒，用来粉碎任何近身之敌的头骨。",
@@ -27195,7 +27195,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "血月",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "「血月」是一把瓦雷利亚钢武装剑，属于铁林城的温奇家族。末日浩劫之前，这柄剑是在末日浩劫之前，于骨锤角海岸从一名被杀的海盗船长手中夺来的，以铁钱付账。",
@@ -27265,7 +27265,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "獠牙",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这把威风凛凛的长枪，枪尖由瓦雷利亚钢锻造，是克雷赫家族在末日浩劫之前委托铸造的。无数敌手——无论猛兽还是凡人——都曾命丧其上。",
@@ -27351,7 +27351,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "骨爪",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "「骨爪」是万斯家族的瓦雷利亚钢剑，其剑柄上雕刻着一颗豹头。",
@@ -27421,7 +27421,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "光啸",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "「光啸」是兰尼斯特家族祖传的瓦雷利亚钢巨剑，它在瓦雷利亚末日浩劫后被托曼二世遗失。",
@@ -27499,7 +27499,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "破云",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一把优雅的武器，属于一个逝去的文明时代。这把长剑的龙骨剑柄上镶嵌着一大块熠熠生辉的血石，流露出失落的瓦雷利亚之美。自从末日浩劫吞没了「破云」曾经的驭龙主人，这把剑就一直由富有的泰洛西商人阿德里斯家族掌管——这是他们崛起的象征。",
@@ -27569,7 +27569,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "三叶草",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "「三叶草」是高尔家族的瓦雷利亚钢剑。在「姐妹相残」事件中，马丁·高尔领主杀死了原主，将其夺为己有。",
@@ -27639,7 +27639,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "舞者",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这把宽刃长柄剑由马赛家族的最后一位国王所持有，他宣称并守护了从马赛岬东岸至黑水河河口的土地。金制的剑柄上雕刻着古代的图案，其设计可能源自英雄纪元早期的某件武器。",
@@ -27709,7 +27709,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "暗月",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这把巨剑的刃上如月光般皎洁，剑柄上刻着一轮满月，冰冷而沉闷，仿佛这柄剑本就是一束月光。",
@@ -27779,7 +27779,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "暗黑姐妹",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "「暗黑姐妹」是坦格利安家族在末日浩劫之后从龙石岛带来的两把瓦雷利亚钢剑之一，这是坦格利安家族最珍贵的财产之一。这是一把长剑，纤细优雅，剑身呈烟黑色。",
@@ -27849,7 +27849,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "暗黑利爪",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "「暗黑利爪」是龙栖堡的莱维尔家族数代持有的巨剑。镀银的剑柄上雕刻着凶猛的长翼龙。",
@@ -27919,7 +27919,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "违抗",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "「违抗」是一把青铜柄长剑，由铁氏家族持有。几个世纪以来，铁氏家族因为给北境骑兵提供马蹄铁而声名鹊起。最终，这份突出贡献使他们得以被授予「违抗」，大大提高了他们在北境贵族中的地位。",
@@ -27989,7 +27989,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "灵爪",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "「灵爪」是亮水城领主佛罗伦家族的瓦雷利亚钢剑。这是一柄长剑，剑身饰有银质镶嵌，是家族引以为傲的珍宝。",
@@ -28059,7 +28059,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "争论者",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "「争论者」是一把短刃剑，有着暗金色的蝙蝠形剑柄，其剑身漆黑如夜。",
@@ -28129,7 +28129,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "龙祸",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这把剑的剑柄由染成深蓝色的银制成，剑柄的鞍座也用上了同样的金属，上面雕刻有复杂的花纹。长剑的护手是一对龙的形状，龙的翅膀向剑刃两侧伸展。",
@@ -28199,7 +28199,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "黄昏",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "「黄昏」是卡伦家族祖传的瓦雷利亚钢长剑。这是一柄巨剑，剑身宽阔而暗沉，护手与剑首呈扭曲造型，每一处细节都愈发衬托出此兵器慑人的威势。",
@@ -28269,7 +28269,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "优雅",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "「优雅」是青亭岛领主雷德温家族的祖传瓦雷利亚钢剑。这柄精致的武器是一把带有三重血槽的长柄剑，配有弯弧护手和黄铜配件。该家族在「流血世纪」与「瓦雷利亚末日浩劫」前夕不久获得了此剑。",
@@ -28339,7 +28339,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "依妮的宠爱",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这把硕大的瓦雷利亚钢巨剑是杜兰登家族的祖传武器。无数歌谣传颂着它的持有者——他们在战场上挥舞剑刃，如同风暴本身，在优雅的钢铁之舞中斩落无数敌人。",
@@ -28409,7 +28409,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "恒金",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这把剑由著名的罗宛家族在末日浩劫前委托制作，有着最精良的瓦雷利亚工艺。它的柄首用罗宛家族的金树旗装饰。",
@@ -28479,7 +28479,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "盛宴制造者",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "「盛宴制造者」是莫里根家族的瓦雷利亚钢剑。此名源于它在每场战斗之后，都会为乌鸦们摆下一场“盛宴”。",
@@ -28555,7 +28555,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "先民式青铜柄长剑",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这把长剑的青铜工艺被打磨得闪闪发光。用古语书写的符文铭文在烛光下闪闪发光，如瓦雷利亚钢剑上的水波纹路一般细腻。这把剑的造型和尺寸，让人不禁想起许多北境家族古代英雄所佩戴的剑，这些家族都自称是先民的后裔。",
@@ -28631,7 +28631,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "先民式金柄长剑",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这把长剑闪耀着金光。用古语书写的符文在烛光下闪闪发光，如瓦雷利亚钢剑上的水波纹路一般细腻。这把剑的造型和尺寸，让人不禁想起许多北境家族古代英雄所佩戴的剑，这些家族都自称是先民的后裔。",
@@ -28707,7 +28707,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "先民式银柄长剑",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这把长剑呈现华丽的银色，雕刻精美。用古语书写的符文铭文在烛光下闪闪发光，如瓦雷利亚钢剑上的水波纹路一般细腻。这把剑的造型和尺寸，让人不禁想起许多北境家族古代英雄所佩戴的剑，这些家族都自称是先民的后裔。",
@@ -28783,7 +28783,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "先民式青铜柄长柄剑",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这把长柄剑的青铜工艺被打磨得闪闪发光。用古语书写的符文铭文在烛光下闪闪发光，如瓦雷利亚钢剑上的水波纹路一般细腻。这把剑的造型和尺寸，让人不禁想起许多北境家族古代英雄所佩戴的剑，这些家族都自称是先民的后裔。",
@@ -28859,7 +28859,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "先民式金柄长柄剑",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这把长柄剑闪耀着金光。用古语书写的符文铭文在烛光下闪闪发光，如瓦雷利亚钢剑上的水波纹路一般细腻。这把剑的造型和尺寸，让人不禁想起许多北境家族古代英雄所佩戴的剑，这些家族都自称是先民的后裔。",
@@ -28935,7 +28935,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "先民式银柄长柄剑",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这把长柄剑呈现华丽的银色，雕刻精美。用古语书写的符文铭文在烛光下闪闪发光，如瓦雷利亚钢剑上的水波纹路一般细腻。这把剑的造型和尺寸，让人不禁想起许多北境家族古代英雄所佩戴的剑，这些家族都自称是先民的后裔。",
@@ -29005,7 +29005,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "愚行",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "「愚行」是法威尔家族的瓦雷利亚钢长剑，其剑柄上饰有红金相间的纹饰。",
@@ -29075,7 +29075,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "坚毅",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这把瓦雷利亚钢双手剑是斯壮家族的祖传宝剑。其剑柄采鱼梁木制成，青铜护手与柄头上镶嵌着蓝宝石、红宝石和绿宝石，既呼应了家族纹章的颜色，也象征着他们的家园三叉戟河。这把剑世代相传，历经了无数场战斗。",
@@ -29145,7 +29145,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "自由",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "「自由」是托因家族的祖传瓦雷利亚钢剑，也是他们昔日荣耀所剩无几的象征之一。",
@@ -29215,7 +29215,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "荣耀",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这柄短剑的剑柄处镶嵌着一颗心形的深红宝石，宝石周围环绕着火舌状的纯金装饰，宛如拉赫洛的炽热怀抱。",
@@ -29285,7 +29285,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "守护者",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "「守护者」是伊伦伍德家族的瓦雷利亚钢长柄斧。这件多用途武器既精美绝伦，又致命非常。无数来犯者直到太迟时才意识到石路始终有人镇守，而他们已被此斧劈开、粉碎或刺穿。这把独特的武器曾由历代血之贵胄挥舞，是多恩最富盛名的兵器之一。",
@@ -29363,7 +29363,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "碎心者",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这把锋利而凶险的匕首世代属于史戴蒙家族。无人知晓其瓦雷利亚钢刃曾多少次饮下敌人或负心人的鲜血。但那永不卷钝的锋尖，始终是对家族敌人永恒的威慑。",
@@ -29433,7 +29433,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "碎心",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "「碎心」是一把塔利家族祖传的瓦雷利亚钢剑。它是一把双手巨剑，在「伊耿征服」的三世纪前就被骄傲的边疆地领主所持有。",
@@ -29503,7 +29503,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "公正调解者",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "「公正调解者」是凡斯家族的祖传瓦雷利亚钢剑。它世代传承于旅息城一脉，令家族其他分支极为眼红。",
@@ -29573,7 +29573,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "铁钱",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一把巨大而骇人的武器，这把剑以海怪形象作为护手和柄头。",
@@ -29643,7 +29643,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "铁心",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "「铁心」是森林氏族世代相传的瓦雷利亚钢巨剑。它极为宝贵，令无数人垂涎。",
@@ -29721,7 +29721,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "空寂女士",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "「空寂女士」是属于科布瑞家族的瓦雷利亚钢长剑。它的剑柄末端嵌有心形的红宝石。",
@@ -29791,7 +29791,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "悲叹",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "「悲叹」是一柄属于罗伊斯家族的瓦雷利亚钢剑，这是谷地的一个古老又强大的家族。这个家族早在艾林家族统治艾林谷前就已建立了，在先民还占据谷地时，罗伊斯家族作为符石城的「青铜王」统领谷地，直到安达尔人入侵时期，他们被山谷之王，阿提斯·艾林所击败。",
@@ -29896,7 +29896,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "长刺",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "「长刺」是园丁家族祖传的瓦雷利亚钢长剑，河湾地诸王已佩戴了数个世纪。其深绿色剑身搭配饰有祖母绿的华美十字护手，剑柄末端则镶嵌着抛光绿大理石配重球。",
@@ -29961,7 +29961,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "「长刺」的断刃",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "「长刺」是一柄曾由河湾地诸王携带的长剑。在怒火燎原之战中几近被毁后，欧佛花家族一直守护着它的残骸，希望有朝一日能以高庭真正统治者的身份将其修复。",
@@ -30031,7 +30031,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "圣母之哀",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这把长剑的柄头是一个圣母的铜雕像，也许是为了祈求众神在战斗中施加保护。镌刻的剑格和手柄均由相同材质的红铜制成。",
@@ -30101,7 +30101,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "哀悼",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "「哀悼」是一把瓦雷利亚钢剑，由庞洛斯家族持有，其剑柄上镶嵌着白色珐琅。",
@@ -30171,7 +30171,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "夜临",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "「夜临」是一把在伊耿历三世纪末属于哈尔洛家族的瓦雷利亚钢剑。这把黑刃长剑由道尔顿·葛雷乔伊大王从一名死去的海盗手中付铁钱掠夺而来。它有一个月石的剑柄末端。",
@@ -30247,7 +30247,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "守誓剑",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这把瓦雷利亚钢剑的剑刃呈现出独特的深红与灰色波纹，剑首镶有金狮头像，红宝石双眼如同两颗赤星般闪烁。",
@@ -30333,7 +30333,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "古根",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "「古根」是奥克赫特家族的祖传瓦雷利亚钢剑。它历经多次与多恩人的战争，并夺去了数十位重要领主的性命。",
@@ -30403,7 +30403,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "孤儿制造者",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "「孤儿制造者」是一把原属罗克顿家族的瓦雷利亚钢剑。其暗蓝钢的护手被雕刻成凶猛的尖刺，让这把可怕的武器又增添了几分恐怖。",
@@ -30473,7 +30473,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "蟹钳",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "「蟹钳」是属于赛提加家族的瓦雷利亚钢斧。作为其瓦雷利亚传承的一部分，这件早在末日浩劫之前就已存在的黑色遗珍在赛提加家族中一代又一代地流传了下来。",
@@ -30543,7 +30543,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "骄傲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "贾斯特家族的狮首骑士们自凯岩王国时代起就一直持有这把长剑。",
@@ -30613,7 +30613,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "红雨",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "「红雨」是一把暗血色的长柄剑，上面镶嵌着泪滴形状的红宝石。狡猾的希尔玛·卓鼓凭借智慧和一柄木棍从一个全副武装的骑士手中为卓鼓家族赢得这把宝剑。",
@@ -30683,7 +30683,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "赤角",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "「赤角」是宴火城领主普莱斯特家族的瓦雷利亚钢剑。据说这把剑曾由家族中最勇猛的成员挥舞，用以击退铁民。",
@@ -30753,7 +30753,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "飞羽",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "「飞羽」是卡盖尔家族的祖传瓦雷利亚钢剑，曾经由传说中的黄金天鹅持有，他最先把蛋带到了维斯特洛。",
@@ -30823,7 +30823,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "共鸣",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "「共鸣」是贝尔摩家族祖传的瓦雷利亚钢剑；据说它与别的兵刃交锋时，会发出悦耳的声响。",
@@ -30893,7 +30893,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "海沫",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "瓦列利安家族在这把瓦雷利亚钢弯刀上装饰着象征他们家族的海马徽章。这把弯刀有着漂亮的银制雕刻手柄，这是用瓦列利安数代人的贸易收入换来的。",
@@ -30955,7 +30955,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "蜥狮",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "接招吧，你这个懒散的家伙！",
@@ -31025,7 +31025,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "剥皮者",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这柄双手巨剑有着独特的波浪形瓦雷利亚钢刃，暗部呈现粉色调。",
@@ -31095,7 +31095,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "切颅者",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这把巨剑被祸垒之主们世代挥舞，剑名来源于一次与抵抗铁种的战斗，战斗中班佛特家族的领主一击砍断了一名劫掠者的斧头、头盔和头骨。",
@@ -31165,7 +31165,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "坚定",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这把银柄金身的锥形长剑非常引人注目，许多代达克林族人的战斗证明了它是把致命的武器。达克林家族的国王、领主和骑士们挥舞着这把剑对抗过无数敌人，更没有其他任何家族捍卫过如此之多的国王。",
@@ -31235,7 +31235,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "星陨",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "「星陨」是坦帕顿家族的瓦雷利亚钢剑。传闻正是此剑在七星之战中斩杀了罗拔·罗伊斯二世。",
@@ -31305,7 +31305,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "刺针",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一把精美的长剑，剑身由尖锐细长的瓦雷利亚钢锻造而成，锋利精准如毒刺。剑柄为螺旋纹大理石材质，搭配繁复的金色护手，更显其抛光工艺的考究。泪滴状剑首镶嵌着光滑的琥珀宝石，赋予这把武器优雅而致命的气质。",
@@ -31375,7 +31375,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "夜风",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一把外形简洁凌厉的剑，没有大多数瓦雷利亚钢剑的华丽装饰。剑身保持着锻炉中烧出的暗色调，在锻造者的手中被扭曲塑造成实用的形状。缺少装饰的风格使这把武器带有一种粗野威严的气息，与古帝国的大多数作品形成鲜明对比——这是一把战士的武器，而非贵族的饰品。",
@@ -31445,7 +31445,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "陌客之触",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这把利刃阴影之下的亡魂应该感到欣慰，因为其审判者为其终局尽了最高规格的礼遇。",
@@ -31515,7 +31515,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "至上",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "银丘的沙略特家族是一个骄傲的安达尔家族，他们用从自己城堡周围土地开采的银子购买了这把华丽的剑。",
@@ -31585,7 +31585,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "天鹅之歌",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "天鹅之歌是史文家族祖传的瓦雷利亚钢长剑。多年来，它助力石盔城的领主们击退了无数多恩人与海盗的侵略。剑柄末端以白色大理石雕琢成优雅的天鹅造型。",
@@ -31655,7 +31655,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "剑鱼",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "尖角的巴尔艾蒙家族由「可怖者」托格利昂建立，他是一个安达尔军阀，用刀剑为自己和后代开辟了一个小王国。这把金银柄的长柄剑是巴尔艾蒙家族的珍宝，也被后世子孙用来维持对这个王国的统治——他们甚至以这把剑来命名他们舰队的旗舰。",
@@ -31725,7 +31725,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "鹰爪",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这把长剑的十字护板被铸造成两翼的形状，中间嵌有一颗巨大的蓝宝石。剑柄部分由蓝钢制成，上面雕刻着一只猎鹰的头部，两颗小蓝宝石作为眼睛，金色条纹从鹰眼下方流出。",
@@ -31795,7 +31795,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "宁静",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这柄镀银的长剑上镶嵌着紫水晶。布拉克斯家族拥有这把令人印象深刻的瓦雷利亚钢剑已有数百年之久。",
@@ -31865,7 +31865,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "真相",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "「真相」是一柄罗佳尔家族的瓦雷利亚钢剑，这个家族有古老的里斯贵族血脉。金制的剑柄雕刻华丽，暗示着这个家族几个世纪以来在银行业积累的巨额财富。",
@@ -31935,7 +31935,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "无情",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一把锋利而迅捷的剑，剑柄末端装饰着漆黑的渡鸦头骨，剑柄由坚实的鱼梁木制成，并镶嵌有数颗红宝石。",
@@ -32005,7 +32005,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "正直",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "「正直」是谷地贵族韦伍德家族的瓦雷利亚钢剑，其剑柄末端镶嵌着一颗祖母绿。",
@@ -32081,7 +32081,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "瓦雷利亚式金柄长剑",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这把长剑闪耀着金光。金属的纹理在烛光下闪闪发光，如瓦雷利亚钢剑上的水波纹路一般细腻。这把剑让人想起古瓦雷利亚龙王所挥舞的可怕武器。",
@@ -32157,7 +32157,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "瓦雷利亚式银柄长剑",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这把长剑呈现华丽的银色，雕刻精美。金属的纹理在烛光下闪闪发光，如瓦雷利亚钢剑上的水波纹路一般细腻。这把剑让人想起古瓦雷利亚龙王所挥舞的可怕武器。",
@@ -32233,7 +32233,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "瓦雷利亚式金柄长柄剑",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这把长柄剑闪耀着金光。金属的纹理在烛光下闪闪发光，如瓦雷利亚钢剑上的水波纹路一般细腻。这把剑让人想起古瓦雷利亚龙王所挥舞的可怕武器。",
@@ -32309,7 +32309,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "瓦雷利亚式银柄长柄剑",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这把长柄剑呈现华丽的银色，雕刻精美。金属的纹理在烛光下闪闪发光，如瓦雷利亚钢剑上的水波纹路一般细腻。这把剑让人想起古瓦雷利亚龙王所挥舞的可怕武器。",
@@ -32379,7 +32379,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "毒液",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "「毒液」是寂静沼泽的瓦尔平家族所持有的瓦雷利亚钢剑。据说此剑造成的伤口发黑溃烂，即便只是划伤，也等同宣判死刑。",
@@ -32457,7 +32457,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "警觉",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "「警觉」是一把海塔尔家族的祖传瓦雷利亚钢剑。这是一把纤细的锥形武装剑，剑上饰有代表者旧镇中心参天塔的金色火焰和城垛图样。",
@@ -32527,7 +32527,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "宽纹",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "「宽纹」是莱顿家族祖传的瓦雷利亚钢巨剑，最初由第一位安达尔人凯岩王乔佛里·莱顿携带到维斯特洛。这把又宽又黑的剑被带着獾冠的骑士和领主带进了许多战场。",
@@ -32603,7 +32603,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "寡妇之嚎",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这把瓦雷利亚钢剑颜色独特，整个剑刃上都有深红色和灰色的涟漪。它的金色剑鞘上则由樱桃木、红色皮革和带有红宝石眼睛的金色狮子头组成。",
@@ -32673,7 +32673,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "龙牙",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "荒冢屯的达斯丁家族是一个有着光荣和无数传奇的古老家族。这把剑是仿照英雄纪元的达斯丁国王所持青铜剑所锻造。",
@@ -32743,7 +32743,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "鱼梁木长弓",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这张长弓由鱼梁木制成，拥有旧神圣树独有的骨白色。它工艺精湛，且永不腐朽。",
@@ -32808,7 +32808,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "鱼梁木王座",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "鹰巢城的高座由古老的鱼梁木雕琢而成，饰以淡蓝色的簇绒坐垫，放置在鹰巢城大厅的尽头。自「猎鹰骑士」阿提斯时代起，历代山谷之王便在此座上统御谷地。",
@@ -32878,7 +32878,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "西境盔甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这套槽纹全身板甲外罩一件展示纹章色彩的小型罩袍，为原本素面的钢铁平添唯一一抹亮色。",
@@ -32948,7 +32948,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "西境高等盔甲",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这套全身板甲密布槽纹，表面形成别致纹样。肩头垂挂的长布展示着纹章色彩。",
@@ -33017,7 +33017,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "西境王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "这顶饰有抛光宝石的华丽金冠设计复杂，是典型的西境风格。",
@@ -33092,7 +33092,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "凯岩头环",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "凯岩头环曾是兰尼斯特家族王后的传统王冠，是一个用黄金、宝石和狮子装饰的美丽环饰。",
@@ -33167,7 +33167,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "凯岩王冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "凯岩王冠曾由兰尼斯特家族的凯岩王佩戴，该家族的血脉可以追溯到「机灵的」兰恩和「雄狮」罗利恩。",
@@ -33244,7 +33244,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "红龙之冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶形状像龙的翅膀的金冠，饰有三颗大红宝石。",
@@ -33321,7 +33321,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "血与火之冠",
     "provenance": {
-      "origin": "来自 A Game of Thrones 的神器资料。"
+      "origin": "来自 A Game of Thrones 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶形状像龙的翅膀的金冠，饰有三颗大红宝石，象征着坦格利安家族。",
@@ -33398,7 +33398,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "深红西陆瓦雷利亚王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶红铁制成的王冠，形状仿佛龙的皮翼，上面饰有三颗大的黑曜石宝石，代表了黑火家族的颜色和象征。",
@@ -33475,7 +33475,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "冬翼王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "一顶为象征史塔克家族与坦格利安家族联姻的王冠，王冠镶有蓝色宝石与高耸的刀刃，中央是一只雕刻金属冰原狼，长有龙翼。",
@@ -33560,7 +33560,7 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "maxStack": 1,
     "name": "狼林王冠",
     "provenance": {
-      "origin": "来自 AGOT - Crowns of Westeros 的神器资料。"
+      "origin": "来自 AGOT - Crowns of Westeros 的物品资料。"
     },
     "rarity": "unique",
     "roleplayText": "百国争雄时代统治狼林的古代小国王所戴的铁树王冠，上面雕刻着树木、嚎叫的狼和先民符文。",

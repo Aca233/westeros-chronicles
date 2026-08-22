@@ -227,7 +227,7 @@ export function createLivingWorldBaseline(
       const artifact = artifacts.artifacts[record.definitionId];
       const controllerId = record.controller?.type === 'character' ? record.controller.characterId : null;
       if (controllerId !== artifact.lawfulControllerId) {
-        throw new Error(`神器覆盖控制者不一致：${record.definitionId}`);
+        throw new Error(`唯一物品覆盖控制者不一致：${record.definitionId}`);
       }
       supersededArtifactDefinitions.add(record.definitionId);
     }

@@ -1,15 +1,15 @@
 {
   "counts": {
     "issuesByKind": {
-      "missing_definition": 18,
+      "missing_definition": 17,
       "non_unique_effect": 4,
       "unsupported_condition": 7,
       "unsupported_helper_effect": 1
     },
-    "resolvedArtifacts": 70,
-    "unresolvedIssues": 30
+    "resolvedArtifacts": 57,
+    "unresolvedIssues": 29
   },
-  "datasetHash": "09a5d6b7d4be63aa3e7adc89b5f8d424e8d16227066e5283710a3b5940fdb58e",
+  "datasetHash": "0d96105c3362a350c57a89436662dbdcbde7d75b279e6fb48756ba6bc97eb2e6",
   "issues": [
     {
       "detail": "agot_create_artifact_dondarrion_message_effect",
@@ -40,12 +40,6 @@
       "file": "00_agot_scenario_artifacts_effects.txt",
       "kind": "missing_definition",
       "line": 209
-    },
-    {
-      "detail": "agot_create_artifact_florys_cloak_03_effect",
-      "file": "00_agot_scenario_artifacts_effects.txt",
-      "kind": "missing_definition",
-      "line": 217
     },
     {
       "detail": "agot_create_artifact_foss_bow_effect",

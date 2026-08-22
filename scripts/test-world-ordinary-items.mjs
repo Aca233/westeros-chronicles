@@ -43,9 +43,9 @@ test('编译产物中的普通物品与运行时加载结果一致', async () =>
   );
 });
 
-test('迁移后的 JSON 不含手工神器且不含隐藏默认值', () => {
+test('迁移后的 JSON 不含手工唯一物品且不含隐藏默认值', () => {
   for (const item of compiled) {
-    assert.equal(item.id.startsWith('artifact.'), false, `${item.id} 神器不得混入普通物品编辑源`);
+    assert.equal(item.id.startsWith('artifact.'), false, `${item.id} 唯一物品不得混入普通物品编辑源`);
     assert.equal(item.image === undefined, false, `${item.id} 必须显式声明图片引用`);
     assert.equal(item.baseQuality === undefined, false, `${item.id} 必须显式声明品质`);
     assert.equal(item.maxStack === undefined, false, `${item.id} 必须显式声明堆叠上限`);

@@ -84,7 +84,7 @@ if (windowSource.includes("id: 'inventory', label: '随身物品'")) failures.pu
 if (!windowSource.includes('data-npc-status')) failures.push('NPC 人物栏缺少三项状态栏标记。');
 if (windowSource.includes('value={dossier.titles.length} label="头衔"')) failures.push('NPC 状态栏不应重复显示头衔数量。');
 if (!windowSource.includes('<HealthAndEquipmentPanel dossier={dossier} embedded')) failures.push('玩家与 NPC 没有统一使用健康与装备面板。');
-if (windowSource.includes('state.gameState.worldArtifacts')) failures.push('人物窗口不应直接订阅原始世界神器状态。');
+if (windowSource.includes('state.gameState.worldArtifacts')) failures.push('人物窗口不应直接订阅原始世界唯一物品状态。');
 if (windowSource.includes("dossier.kind === 'player' ? <CharacterSheet embedded")) failures.push('健康与装备页仍保留玩家旧面板分支。');
 for (const tab of ['关系与家族', '健康与装备', '记忆与经历', '物品与资产']) {
   if (!windowSource.includes(tab)) failures.push(`缺少页签：${tab}`);

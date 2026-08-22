@@ -28,7 +28,7 @@ function scan(rule, pattern, allowed) {
 }
 
 scan(
-  'UI 或业务代码不得直接读取世界神器原始表',
+  'UI 或业务代码不得直接读取世界唯一物品原始表',
   /worldArtifacts(?:\?\.|\.)artifacts|\.worldArtifacts(?:\?\.|\.)artifacts/,
   ['src/features/world/worldBaseline.ts', 'src/features/world/worldDisplayResolver.ts', 'src/data/generated', 'src/features/items/worldArtifacts.ts'],
 );

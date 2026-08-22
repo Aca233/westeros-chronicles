@@ -41,4 +41,4 @@ const document = {
 const outputDir = join(root, 'content', 'world', 'items');
 await mkdir(outputDir, { recursive: true });
 await writeFile(join(outputDir, 'ordinary-items.json'), stableJson(document), 'utf8');
-console.log(`已迁移 ${ordinary.length} 个普通物品；保留手工神器 ${artifactIds.length} 件（${artifactIds.join(', ')}）。`);
+console.log(`已迁移 ${ordinary.length} 个普通物品；保留手工唯一物品 ${artifactIds.length} 件（${artifactIds.join(', ')}）。`);

@@ -44,8 +44,8 @@ export function assertWorldDatasetCompatibility(
 ): void {
   if (world.characterDatasetHash !== characters.datasetHash) throw new Error('人物数据哈希不匹配');
   if (world.mapDatasetHash !== map.datasetHash) throw new Error('地图数据哈希不匹配');
-  if (world.artifactDatasetHash !== artifacts.artifactDatasetHash) throw new Error('神器数据哈希不匹配');
-  if (world.artifactWorldStateHash !== artifacts.datasetHash) throw new Error('神器世界状态哈希不匹配');
+  if (world.artifactDatasetHash !== artifacts.artifactDatasetHash) throw new Error('唯一物品数据哈希不匹配');
+  if (world.artifactWorldStateHash !== artifacts.datasetHash) throw new Error('唯一物品世界状态哈希不匹配');
 }
 
 export class WorldContentRepository {

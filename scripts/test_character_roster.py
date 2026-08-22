@@ -79,7 +79,7 @@ class RuntimeCharacterRosterTests(unittest.TestCase):
         # mod_supporting 亲属不再因亲属跳板保留完整档案。
         self.assertNotIn("agot:dead_parent", retained)
         self.assertNotIn("agot:living_spouse", retained)
-        self.assertNotIn("agot:artifact", retained, "神器持有人不再自动保留完整档案")
+        self.assertNotIn("agot:artifact", retained, "唯一物品持有人不再自动保留完整档案")
         self.assertNotIn("agot:isolated_fill", retained)
         self.assertIn("agot:dead_grandparent", retained, "族谱角色保留完整档案")
         self.assertNotIn("agot:future_child", retained)

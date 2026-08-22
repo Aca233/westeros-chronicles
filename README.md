@@ -12,7 +12,7 @@
 
 - CK3 风格统治者设计器、通用人物窗口、六项属性、特质、亲属关系、伤势与记忆
 - 2,241 名 AGOT 人物的离线分片资料、稳定人物 ID 和按存档事件叠加的动态档案；另有 1,144 条轻量持有人摘要服务头衔与地图显示
-- 日常穿戴、战斗装备、随身物品、据点储藏、运输工具与唯一神器
+- 日常穿戴、战斗装备、随身物品、据点储藏、运输工具与唯一物品
 - 可选 D20 检定、确定性特质效果和前端规则结算
 - 两阶段 LLM 回合：先解析并验证状态变化，再根据已结算事实生成正文
 - IndexedDB 回合快照、启动恢复、存档导入/导出、撤回和原子提交
@@ -77,7 +77,7 @@ npm run verify:map
 - 游戏存档格式：`saveFormatVersion: 9`
 - 地图清单：`public/data/agot-map/manifest.json`，`schemaVersion: 4`
 - 人物数据清单：`public/data/agot-characters/manifest.json`，`schemaVersion: 2`
-- 世界运行时、世界历史与神器初始状态各自使用内部 `schemaVersion: 1`
+- 世界运行时、世界历史与唯一物品初始状态各自使用内部 `schemaVersion: 1`
 
 测试版不会迁移旧格式存档。启动时若最近快照不兼容或损坏，应用保留原数据并显示明确的重置入口，不会静默删除。导入存档通过完整校验后直接替换当前 Store，无需刷新页面。
 
@@ -135,7 +135,7 @@ npm run check:map-data
 
 - `public/data/agot-characters`：预处理人物分片、关系、头衔与检索索引
 - `public/data/agot-map`、`public/assets/agot-map`：地图清单、离线瓦片、地形和正式地标模型
-- `src/data/generated`、`public/data/items`：生成的时间线、神器目录与世界初始状态
+- `src/data/generated`、`public/data/items`：生成的时间线、唯一物品目录与世界初始状态
 
 静态 AGOT 数据是开局基线，存档中的 `worldRuntime` 只保存发生变化的稀疏覆盖；玩家看到的人物、头衔和资产由“静态基线 + 当前覆盖 + 可见事件”投影得到。政治制度与象征会标记为 `political-symbol`，不会冒充可操作的普通资产。
 

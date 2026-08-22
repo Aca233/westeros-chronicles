@@ -51,12 +51,12 @@ export async function readAndValidateWorldSource(contentDir) {
 async function readDatasetManifests(rootDir) {
   const characters = await readJson(join(rootDir, 'public', 'data', 'agot-characters', 'manifest.json'), '人物数据清单');
   const map = await readJson(join(rootDir, 'public', 'data', 'agot-map', 'manifest.json'), '地图数据清单');
-  const artifacts = await readJson(join(rootDir, 'public', 'data', 'items', 'agot-artifact-world-state.json'), '神器世界状态');
+  const artifacts = await readJson(join(rootDir, 'public', 'data', 'items', 'agot-artifact-world-state.json'), '唯一物品世界状态');
   if (characters.schemaVersion !== 2 || typeof characters.datasetHash !== 'string') throw new Error('人物数据清单无效');
   if (map.schemaVersion !== 4 || typeof map.datasetHash !== 'string') throw new Error('地图数据清单无效');
-  if (typeof artifacts.artifactDatasetHash !== 'string' || typeof artifacts.datasetHash !== 'string') throw new Error('神器世界状态无效');
+  if (typeof artifacts.artifactDatasetHash !== 'string' || typeof artifacts.datasetHash !== 'string') throw new Error('唯一物品世界状态无效');
   if (artifacts.characterDatasetHash && artifacts.characterDatasetHash !== characters.datasetHash) {
-    throw new Error('神器世界状态与人物数据哈希不匹配');
+    throw new Error('唯一物品世界状态与人物数据哈希不匹配');
   }
   const characterIndex = await readJson(join(rootDir, 'public', 'data', 'agot-characters', 'search-index.json'), '人物搜索索引');
   const mapIndex = await readJson(join(rootDir, 'public', 'data', 'agot-map', 'location-search-index.json'), '地图地点索引');
@@ -366,7 +366,7 @@ function validateStartAssetReferences(startAssets, dependencies) {
       uniqueDefinitionOwners.set(instance.definitionId, controllerKey);
       const artifact = dependencies.artifactDefinitions.get(instance.definitionId);
       if (artifact && controllerKey !== artifact.lawfulControllerId) {
-        throw new Error(`神器覆盖控制者不一致：${instance.definitionId}`);
+        throw new Error(`唯一物品覆盖控制者不一致：${instance.definitionId}`);
       }
     }
   }

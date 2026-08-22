@@ -27,7 +27,7 @@ const worldArtifactSource = await readFile('src/features/items/worldArtifacts.ts
 assert.equal(
   worldArtifactSource.includes(legacyField),
   true,
-  '世界神器导入记录的原始归属字段必须保留',
+  '世界唯一物品导入记录的原始归属字段必须保留',
 );
 
 console.log('普通物品归属权威边界检查通过');

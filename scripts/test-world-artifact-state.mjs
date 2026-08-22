@@ -37,7 +37,7 @@ validateWorldArtifactState(first);
 assert.equal(first.schemaVersion, 1);
 assert.equal(first.startDate, '8298.1.1');
 assert.match(first.datasetHash, /^[a-f0-9]{64}$/);
-assert.equal(Object.keys(first.artifacts).length, 70);
+assert.equal(Object.keys(first.artifacts).length, 57);
 
 const longclaw = first.artifacts['artifact.longclaw'];
 assert.ok(longclaw, '298 AC world state should contain Longclaw');
