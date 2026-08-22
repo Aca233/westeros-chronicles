@@ -54,6 +54,7 @@ async function createWorldFixture(manifest = WORLD_MANIFEST) {
     source: { sourceId: '2962333032' },
     shards: [],
   });
+  await writeJson(join(rootDir, 'public', 'data', 'agot-characters', 'search-index.json'), []);
   await writeJson(join(rootDir, 'public', 'data', 'agot-map', 'manifest.json'), {
     schemaVersion: 4,
     datasetHash: 'map-hash',
@@ -105,4 +106,28 @@ test('拒绝其他产品世界、日期、未知字段和绝对数据路径', as
     const fixture = await createWorldFixture(manifest);
     await assert.rejects(compileWorldContent(fixture));
   }
+});
+
+test('人物起点引用未知人物或未知地点时编译失败', async () => {
+  const fixture = await createWorldFixture();
+  await writeJson(join(fixture.rootDir, 'public', 'data', 'agot-characters', 'search-index.json'), [
+    { id: 'agot:Stark_3', shard: '00' },
+  ]);
+  await writeJson(join(fixture.rootDir, 'public', 'data', 'agot-map', 'location-search-index.json'), [
+    { id: 'b_winterfell' },
+  ]);
+  const startCharactersPath = join(fixture.contentDir, 'start-state', 'characters.json');
+  for (const [characters, pattern] of [
+    [[{ characterId: 'agot:missing', location: { locationId: 'b_winterfell' }, currentActivity: 'idle' }], /未知人物/],
+    [[{ characterId: 'agot:Stark_3', location: { locationId: 'b_missing' }, currentActivity: 'idle' }], /不在地图数据集中/],
+    [[{ characterId: 'agot:Stark_3', location: { locationId: 'b_winterfell' }, currentActivity: 'dancing' }], /活动值无效/],
+    [[{ characterId: 'agot:Stark_3', location: { locationId: 'b_winterfell' }, currentActivity: 'idle', extra: true }], /未知字段/],
+  ]) {
+    await writeJson(startCharactersPath, characters);
+    await assert.rejects(compileWorldContent(fixture), pattern);
+  }
+  await writeJson(startCharactersPath, [
+    { characterId: 'agot:Stark_3', location: { locationId: 'b_winterfell' }, currentActivity: 'idle' },
+  ]);
+  await compileWorldContent(fixture);
 });

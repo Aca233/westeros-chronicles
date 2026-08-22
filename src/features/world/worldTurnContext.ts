@@ -21,6 +21,8 @@ import { UNKNOWN_WESTEROS_LOCATION_ID } from '../map/locationResolver';
 import { formatNarrativeLocationContext, resolveNarrativeLocationContext, type NarrativeLocationContext } from '../map/narrativeLocationContext';
 import type { MapLocationSearchEntry, SemanticMembership, SemanticTitle } from '../map/types';
 import type { PendingWorldTransaction, WorldEvent } from './worldRuntimeTypes';
+import type { WorldCharacterStartRecord } from '../world-content/types';
+import { worldContentRepository } from '../world-content/repository';
 import { projectResolvedCharacterWorldFacts } from './characterWorldFacts';
 import { playerWorldEventViewer, selectVisibleWorldEvents } from './worldEventVisibility';
 
@@ -53,6 +55,7 @@ export interface BuildWorldTurnContextInput {
     loadSemanticTitles(): Promise<SemanticTitle[]>;
     loadSemanticMembership(): Promise<SemanticMembership[]>;
   };
+  startCharacters?: readonly WorldCharacterStartRecord[];
   timeline?: readonly CanonicalTimelineEvent[];
 }
 
@@ -175,7 +178,7 @@ export async function buildWorldTurnContext(input: BuildWorldTurnContextInput): 
     gameState.worldRuntime.events,
     playerWorldEventViewer(gameState),
   );
-  const [manifest, playerRecord, mentioned, mapResult] = await Promise.all([
+  const [manifest, playerRecord, mentioned, mapResult, startCharacters] = await Promise.all([
     repository.loadManifest(),
     playerId ? repository.get(playerId) : Promise.resolve(undefined),
     repository.findMentioned(input.actionText, { alive: true, canonTiers: ['canon', 'semicanon'], limit: 24 }),
@@ -191,6 +194,11 @@ export async function buildWorldTurnContext(input: BuildWorldTurnContextInput): 
         memberships: [] as SemanticMembership[],
         reason: error instanceof Error ? error.message : String(error),
       })),
+    input.startCharacters !== undefined
+      ? Promise.resolve(input.startCharacters)
+      : worldContentRepository.loadStartState()
+        .then((startState) => startState.characters)
+        .catch(() => [] as WorldCharacterStartRecord[]),
   ]);
   const mapLocations = mapResult.locations;
   const semanticTitles = mapResult.titles;
@@ -223,6 +231,7 @@ export async function buildWorldTurnContext(input: BuildWorldTurnContextInput): 
     runtime: gameState.worldRuntime,
     timeline,
     mapLocations,
+    startCharacters,
   }));
   const directSet = new Set(directlyNamedIds);
   const strongSet = new Set(strongRelationshipIds);

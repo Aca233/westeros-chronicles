@@ -11,6 +11,7 @@ import { StaticCharacterRepository } from '../characters/staticCharacterReposito
 import type { CharacterDatasetManifest, StaticCharacterLoadoutProfile, StaticCharacterRecord } from '../characters/types';
 import { mapRepository } from '../map/repository';
 import type { MapManifest } from '../map/types';
+import { projectStartCharacterFacts } from './worldStartState';
 import { WorldContentRepository, assertWorldDatasetCompatibility } from '../world-content/repository.ts';
 import type { LivingWorldManifest, LivingWorldStartState, PlayableCharacterEntry } from '../world-content/types.ts';
 
@@ -117,11 +118,11 @@ export async function createLivingWorldGame(
   const playable = playableEntries.find((entry) => entry.characterId === characterId);
   if (!playable?.enabled || !record?.born || !record.alive) throw new Error('该人物不能用于当前开局');
   assertWorldDatasetCompatibility(manifest, characterManifest, mapManifest, artifacts);
-  const resolved = resolveCharacter(record, [], {
+  const resolved = projectStartCharacterFacts(resolveCharacter(record, [], {
     datasetVersion: manifest.characterDatasetHash,
     currentYear: manifest.startDate.year + 8000,
     ...(loadout ? { loadoutProfile: loadout } : {}),
-  });
+  }), startState, { characters: {} });
   const lord = createLordFromExistingCharacter(resolved, artifacts, manifest.startDate.year);
   return {
     lord,

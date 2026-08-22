@@ -193,6 +193,7 @@ export interface ResolvedCharacter extends StaticCharacterRecord {
   attributes: LordAttributes;
   locationId?: string;
   sceneLocation?: string;
+  currentActivity?: 'idle' | 'travelling' | 'imprisoned' | 'missing';
   titleIds: string[];
   titles: string[];
   wounds: string[];

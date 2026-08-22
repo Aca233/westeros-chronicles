@@ -56,7 +56,28 @@ async function readDatasetManifests(rootDir) {
   if (artifacts.characterDatasetHash && artifacts.characterDatasetHash !== characters.datasetHash) {
     throw new Error('神器世界状态与人物数据哈希不匹配');
   }
-  return { characters, map, artifacts };
+  const characterIndex = await readJson(join(rootDir, 'public', 'data', 'agot-characters', 'search-index.json'), '人物搜索索引');
+  const mapIndex = await readJson(join(rootDir, 'public', 'data', 'agot-map', 'location-search-index.json'), '地图地点索引');
+  if (!Array.isArray(characterIndex) || characterIndex.some((entry) => typeof entry?.id !== 'string')) throw new Error('人物搜索索引无效');
+  if (!Array.isArray(mapIndex) || mapIndex.some((entry) => typeof entry?.id !== 'string')) throw new Error('地图地点索引无效');
+  return {
+    characters,
+    map,
+    artifacts,
+    characterIds: new Set(characterIndex.map((entry) => entry.id)),
+    mapLocationIds: new Set(mapIndex.map((entry) => entry.id)),
+  };
+}
+
+function validateStartCharacterReferences(startCharacters, dependencies) {
+  for (const record of startCharacters) {
+    if (!dependencies.characterIds.has(record.characterId)) {
+      throw new Error(`人物起点引用未知人物：${record.characterId}`);
+    }
+    if (!dependencies.mapLocationIds.has(record.location.locationId)) {
+      throw new Error(`人物起点位置不在地图数据集中：${record.characterId} -> ${record.location.locationId}`);
+    }
+  }
 }
 
 function buildOutputs(source, dependencies) {
@@ -209,6 +230,7 @@ export async function compileWorldContent(options = {}) {
   }
   const source = await readAndValidateWorldSource(contentDir);
   const dependencies = await readDatasetManifests(rootDir);
+  validateStartCharacterReferences(source.startCharacters, dependencies);
   const outputs = buildOutputs(source, dependencies);
   await mkdir(dirname(outputDir), { recursive: true });
   const temporary = await mkdtemp(join(dirname(outputDir), `.${basename(outputDir)}-`));

@@ -2,6 +2,9 @@ const MANIFEST_KEYS = new Set([
   'schemaVersion', 'worldId', 'startDate', 'characterDataset', 'mapDataset', 'artifactDataset',
 ]);
 const LOCATION_TYPES = new Set(['region', 'castle', 'city', 'town', 'village', 'port', 'ruin', 'landmark']);
+const CHARACTER_ACTIVITIES = new Set(['idle', 'travelling', 'imprisoned', 'missing']);
+const START_CHARACTER_KEYS = new Set(['characterId', 'location', 'currentActivity', 'aliveOverride', 'wounds']);
+const START_CHARACTER_LOCATION_KEYS = new Set(['locationId', 'sceneLocation']);
 
 function record(value, label) {
   if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error(`${label}必须是对象`);
@@ -39,10 +42,38 @@ export function validateWorldManifest(value) {
   return manifest;
 }
 
+export function validateStartCharacters(value) {
+  const characters = array(value, '人物起点');
+  for (const entry of characters) {
+    const character = record(entry, '人物起点记录');
+    for (const key of Object.keys(character)) {
+      if (!START_CHARACTER_KEYS.has(key)) throw new Error(`人物起点记录含未知字段：${key}`);
+    }
+    for (const key of ['characterId', 'location', 'currentActivity']) {
+      if (!(key in character)) throw new Error(`人物起点记录缺少字段：${key}`);
+    }
+    const location = record(character.location, '人物起点位置');
+    for (const key of Object.keys(location)) {
+      if (!START_CHARACTER_LOCATION_KEYS.has(key)) throw new Error(`人物起点位置含未知字段：${key}`);
+    }
+    if (typeof location.locationId !== 'string' || !location.locationId.trim()) throw new Error('人物起点位置 locationId 无效');
+    if ('sceneLocation' in location && (typeof location.sceneLocation !== 'string' || !location.sceneLocation.trim())) {
+      throw new Error('人物起点位置 sceneLocation 无效');
+    }
+    if (!CHARACTER_ACTIVITIES.has(character.currentActivity)) throw new Error(`人物起点活动值无效：${character.currentActivity}`);
+    if ('aliveOverride' in character && typeof character.aliveOverride !== 'boolean') throw new Error('人物起点 aliveOverride 必须是布尔值');
+    if ('wounds' in character) {
+      const wounds = array(character.wounds, '人物起点伤势');
+      if (wounds.some((wound) => typeof wound !== 'string' || !wound.trim())) throw new Error('人物起点伤势必须是非空字符串');
+    }
+  }
+  return characters;
+}
+
 export function validateWorldSource(source) {
   validateWorldManifest(source.manifest);
   const playable = array(source.playableCharacters, '可玩人物');
-  const characters = array(source.startCharacters, '人物起点');
+  const characters = validateStartCharacters(source.startCharacters);
   const titles = array(source.startTitles, '头衔起点');
   assertNoDuplicateIds(playable, 'characterId', '可玩人物');
   assertNoDuplicateIds(characters, 'characterId', '人物起点');

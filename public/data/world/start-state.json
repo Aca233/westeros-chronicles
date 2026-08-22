@@ -1,6 +1,210 @@
 {
   "assets": [],
-  "characters": [],
+  "characters": [
+    {
+      "characterId": "agot:Arryn_3",
+      "currentActivity": "idle",
+      "location": {
+        "locationId": "b_the_red_keep"
+      }
+    },
+    {
+      "characterId": "agot:Arryn_8",
+      "currentActivity": "idle",
+      "location": {
+        "locationId": "b_the_eyrie"
+      }
+    },
+    {
+      "characterId": "agot:Baelish_2",
+      "currentActivity": "idle",
+      "location": {
+        "locationId": "b_the_red_keep"
+      }
+    },
+    {
+      "characterId": "agot:Baratheon_2",
+      "currentActivity": "idle",
+      "location": {
+        "locationId": "b_winterfell"
+      }
+    },
+    {
+      "characterId": "agot:Baratheon_5",
+      "currentActivity": "idle",
+      "location": {
+        "locationId": "b_winterfell"
+      }
+    },
+    {
+      "characterId": "agot:Baratheon_6",
+      "currentActivity": "idle",
+      "location": {
+        "locationId": "b_winterfell"
+      }
+    },
+    {
+      "characterId": "agot:Baratheon_7",
+      "currentActivity": "idle",
+      "location": {
+        "locationId": "b_winterfell"
+      }
+    },
+    {
+      "characterId": "agot:Cassel_3",
+      "currentActivity": "idle",
+      "location": {
+        "locationId": "b_winterfell"
+      }
+    },
+    {
+      "characterId": "agot:Cassel_4",
+      "currentActivity": "idle",
+      "location": {
+        "locationId": "b_winterfell"
+      }
+    },
+    {
+      "characterId": "agot:Clegane_4",
+      "currentActivity": "idle",
+      "location": {
+        "locationId": "b_winterfell"
+      }
+    },
+    {
+      "characterId": "agot:Eunuch_1",
+      "currentActivity": "idle",
+      "location": {
+        "locationId": "b_the_red_keep"
+      }
+    },
+    {
+      "characterId": "agot:Greyjoy_14",
+      "currentActivity": "idle",
+      "location": {
+        "locationId": "b_winterfell"
+      }
+    },
+    {
+      "characterId": "agot:Lannister_1",
+      "currentActivity": "idle",
+      "location": {
+        "locationId": "b_casterly_rock"
+      }
+    },
+    {
+      "characterId": "agot:Lannister_6",
+      "currentActivity": "idle",
+      "location": {
+        "locationId": "b_winterfell"
+      }
+    },
+    {
+      "characterId": "agot:Lannister_7",
+      "currentActivity": "idle",
+      "location": {
+        "locationId": "b_winterfell"
+      }
+    },
+    {
+      "characterId": "agot:Lannister_8",
+      "currentActivity": "idle",
+      "location": {
+        "locationId": "b_winterfell"
+      }
+    },
+    {
+      "characterId": "agot:Payne_6",
+      "currentActivity": "idle",
+      "location": {
+        "locationId": "b_winterfell"
+      }
+    },
+    {
+      "characterId": "agot:Pycelle_1",
+      "currentActivity": "idle",
+      "location": {
+        "locationId": "b_the_red_keep"
+      }
+    },
+    {
+      "characterId": "agot:Stark_10",
+      "currentActivity": "idle",
+      "location": {
+        "locationId": "b_winterfell"
+      }
+    },
+    {
+      "characterId": "agot:Stark_11",
+      "currentActivity": "idle",
+      "location": {
+        "locationId": "b_winterfell"
+      }
+    },
+    {
+      "characterId": "agot:Stark_3",
+      "currentActivity": "idle",
+      "location": {
+        "locationId": "b_winterfell"
+      }
+    },
+    {
+      "characterId": "agot:Stark_6",
+      "currentActivity": "idle",
+      "location": {
+        "locationId": "b_winterfell"
+      }
+    },
+    {
+      "characterId": "agot:Stark_7",
+      "currentActivity": "idle",
+      "location": {
+        "locationId": "b_winterfell"
+      }
+    },
+    {
+      "characterId": "agot:Stark_8",
+      "currentActivity": "idle",
+      "location": {
+        "locationId": "b_winterfell"
+      }
+    },
+    {
+      "characterId": "agot:Stark_9",
+      "currentActivity": "idle",
+      "location": {
+        "locationId": "b_winterfell"
+      }
+    },
+    {
+      "characterId": "agot:Stark_hh_1",
+      "currentActivity": "idle",
+      "location": {
+        "locationId": "b_winterfell"
+      }
+    },
+    {
+      "characterId": "agot:Tully_4",
+      "currentActivity": "idle",
+      "location": {
+        "locationId": "b_winterfell"
+      }
+    },
+    {
+      "characterId": "agot:Tully_6",
+      "currentActivity": "idle",
+      "location": {
+        "locationId": "b_the_eyrie"
+      }
+    },
+    {
+      "characterId": "agot:Tully_hh_4",
+      "currentActivity": "idle",
+      "location": {
+        "locationId": "b_winterfell"
+      }
+    }
+  ],
   "schemaVersion": 1,
   "sites": [],
   "titles": [],

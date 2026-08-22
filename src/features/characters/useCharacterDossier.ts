@@ -25,6 +25,7 @@ import type { WorldRuntimeState } from '../world/worldRuntimeTypes';
 import type { WorldArtifactState } from '../items/worldArtifacts';
 import type { LordProfile } from '../../types/game';
 import { mapRepository } from '../map/repository';
+import { worldContentRepository } from '../world-content/repository';
 import { characterWorldLocationLabel, projectResolvedCharacterWorldFacts } from '../world/characterWorldFacts';
 
 const dossierRepository = new StaticCharacterRepository();
@@ -184,13 +185,16 @@ export function useCharacterDossier(selectedCharacterId: CharacterId | null): Ch
     const load = async () => {
       const record = await dossierRepository.get(selectedCharacterId);
       if (!record) throw new Error('没有找到这个人物的稳定 AGOT 档案');
-      const [events, kinship, loadoutProfile, mapLocations] = await Promise.all([
+      const [events, kinship, loadoutProfile, mapLocations, startCharacters] = await Promise.all([
         worldCharacters
           ? dossierEventStore.eventsForCharacter(worldCharacters.runId, selectedCharacterId)
           : Promise.resolve([]),
         dossierRepository.getKinship(selectedCharacterId),
         dossierRepository.getLoadoutProfile(selectedCharacterId),
         mapRepository.loadSearchIndex().catch(() => []),
+        worldContentRepository.loadStartState()
+          .then((startState) => startState.characters)
+          .catch(() => []),
       ]);
       const resolved = projectResolvedCharacterWorldFacts(resolveCharacter(record, events, {
         datasetVersion: worldCharacters?.datasetHash ?? 'agot-local-dataset',
@@ -201,6 +205,7 @@ export function useCharacterDossier(selectedCharacterId: CharacterId | null): Ch
         runtime: worldRuntime,
         timeline: CANONICAL_TIMELINE,
         mapLocations,
+        startCharacters,
       });
       const nextDossier = {
         ...createNpcDossier(resolved, currentYear, kinship),
@@ -216,6 +221,7 @@ export function useCharacterDossier(selectedCharacterId: CharacterId | null): Ch
           history: worldHistory,
           runtime: worldRuntime,
           timeline: CANONICAL_TIMELINE,
+          startCharacters,
         },
       );
       if (cancelled) return;

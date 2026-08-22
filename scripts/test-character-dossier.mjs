@@ -18,6 +18,12 @@ const { projectLordFamilyRecords, projectRelationshipCharacter } = await bundleM
 
 const attributes = { diplomacy: 11, martial: 12, stewardship: 13, intrigue: 14, learning: 15, prowess: 16 };
 
+const startCharacters = [
+  { characterId: 'agot:Arryn_3', location: { locationId: 'b_the_red_keep' }, currentActivity: 'idle' },
+  { characterId: 'agot:Tully_4', location: { locationId: 'b_winterfell' }, currentActivity: 'idle' },
+  { characterId: 'agot:Lannister_8', location: { locationId: 'b_winterfell' }, currentActivity: 'idle' },
+];
+
 function resolved(overrides = {}) {
   return {
     id: 'agot:test_person', rawId: 'test_person', canonTier: 'canon', name: '艾莉亚', nameKey: 'Arya',
@@ -63,6 +69,7 @@ test('时间线历史死亡覆盖错误的 AGOT 在世标记', () => {
     mapLocations: [
       { id: 'b_the_eyrie', name: '鹰巢城', importance: 95, mapX: 1, mapY: 1, regionId: 'vale', type: 'castle' },
     ],
+    startCharacters,
     memberships: [
       { locationId: 'b_the_eyrie', baronyId: 'b_the_eyrie', countyId: 'c_the_eyrie', realmId: 'e_the_vale' },
     ],
@@ -132,6 +139,7 @@ test('当前所在地只使用场景基线与运行时移动，不以领地或�
     history: { startDate: { year: 298, month: 5, day: 10 }, canonical: {}, turns: [] },
     timeline: [],
     mapLocations,
+    startCharacters,
     memberships: [],
   };
   const catelyn = projectResolvedCharacterWorldFacts(resolved({ id: 'agot:Tully_4', locationId: undefined, titleIds: [], dynastyId: 'dynn_Tully' }), {
