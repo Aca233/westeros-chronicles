@@ -1,6 +1,7 @@
 import { GameState, D20Check } from '../types/game';
 import type { PendingWorldTransaction } from '../features/world/worldRuntimeTypes';
 import { stripEmoji } from './textSanitizer';
+import { formatWorldTurnContext, type WorldTurnContext as WorldTurnContextObject } from '../features/world/worldTurnContext';
 import { aggregateSelectedTraitEffects, formatTraitDescription, formatTraitRuleEffects, getTraitCheckContributions } from '../data/characterTraits';
 import { inferCheckFromAction, inferItemSceneTags } from './diceEngine';
 import { describeNarrativeAdvantage } from './traitEffectEngine';
@@ -440,8 +441,15 @@ export function buildChatMessages(
   diceCheck?: D20Check,
   diceContext?: DicePromptContext,
   pendingTransactions: PendingWorldTransaction[] = [],
-  characterContext?: string,
+  worldContext?: string | WorldTurnContextObject,
 ): Array<{ role: 'system' | 'user' | 'assistant'; content: string }> {
+  // 世界上下文的唯一拼装点：自动路径传入 WorldTurnContext 对象在此格式化，
+  // 字符串保留给人物窗口的 promptContext 等既有调用方。
+  const characterContext = typeof worldContext === 'string'
+    ? worldContext
+    : worldContext
+      ? formatWorldTurnContext(worldContext)
+      : undefined;
   const messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }> = [];
 
   // 1. 系统大宪章

@@ -17,7 +17,7 @@ import { buildWorldAssetBaseline, createWorldBaselineSnapshot, worldAssetId, typ
 import { commitWorldTransaction } from '../../features/world/worldTransactions';
 import { planJourneyTransaction, planExplicitArrivalTransaction } from '../../features/world/worldTravelRules';
 import { projectWorldAsset, projectWorldCharacter, resolveAssetMapLocation } from '../../features/world/worldProjection';
-import { resolveWorldIntents, type RejectedWorldIntent, type ResolvedLocationWorldIntent, type ResolvedWorldIntent } from '../../features/world/worldIntentResolver';
+import { resolveWorldIntents, type RejectedWorldIntent, type ResolvedDirectWorldIntent, type ResolvedLocationWorldIntent, type ResolvedWorldIntent } from '../../features/world/worldIntentResolver';
 import { planAssetIntent, planCreateSiteIntent } from '../../features/world/worldAssetRules';
 import { planTitleIntent } from '../../features/world/worldTitleRules';
 import type { RoutePlan, RouteRequest } from '../../features/map/routing/types';
@@ -178,6 +178,287 @@ export function prepareTemporalCommand(
   return {};
 }
 
+// ---------------------------------------------------------------------------
+// 意图处理器注册表：每种世界意图的规划逻辑收拢为独立处理器，
+// worldPreparation 只负责装配环境与分发。新增意图时注册一个处理器即可，
+// 不再向回合主流程里堆分支。
+// ---------------------------------------------------------------------------
+
+type TurnRoutePlanner = (request: RouteRequest) => Promise<RoutePlan>;
+type LocationRef = import('../../features/map/types').WorldLocationRef;
+
+interface TurnIntentEnv {
+  gameState: GameState;
+  transaction: WorldTransaction;
+  baseline: WorldBaselineSnapshot;
+  transactionId: string;
+  playerId: CharacterId;
+  nextTurnNumber: number;
+  currentDate: WorldDate;
+  locations: readonly MapLocationSearchEntry[];
+  knownLocationIds: ReadonlySet<string>;
+  fallbackContext: CharacterCommandBatchBaseContext;
+  planner: TurnRoutePlanner;
+  workingJourney: { current: ActiveJourney | undefined };
+  rejected: RejectedWorldIntent[];
+}
+
+type TurnIntentHandler = (
+  intent: ResolvedWorldIntent,
+  target: LocationRef | undefined,
+  env: TurnIntentEnv,
+) => Promise<void> | void;
+
+function envWorldSnapshot(env: TurnIntentEnv) {
+  return {
+    journey: env.gameState.activeJourney,
+    playerLocation: env.gameState.lord.location,
+    vehicles: env.gameState.lord.items.vehicles,
+    itemPlacements: env.gameState.lord.items.placements,
+    knownLocationIds: env.knownLocationIds,
+    characters: env.fallbackContext.characters.map((character) => ({
+      id: character.id,
+      alive: character.alive,
+      locationId: character.locationId,
+    })),
+  };
+}
+
+async function handleArrive(intent: ResolvedWorldIntent, target: LocationRef | undefined, env: TurnIntentEnv): Promise<void> {
+  if (!target) throw new Error('抵达意图缺少目标地点');
+  const routePlan = await env.planner({
+    from: env.gameState.lord.location.locationId,
+    to: target.locationId,
+    preference: 'fastest',
+    travelMode: 'horse',
+    season: env.gameState.currentSeason,
+  });
+  const planned = planExplicitArrivalTransaction({
+    world: envWorldSnapshot(env),
+    routePlan,
+    declaredElapsedDays: elapsedDays(intent as ResolvedLocationWorldIntent),
+    assertedDeparture: false,
+    assertedArrival: true,
+    locationLabels: Object.fromEntries(env.locations.map((entry) => [entry.id, entry.name])),
+  }, {
+    playerId: env.playerId,
+    turn: env.nextTurnNumber,
+    transactionId: env.transactionId,
+    source: 'player_input',
+    reason: intent.evidenceText,
+    currentDate: env.currentDate,
+  });
+  if (target.sceneLocation) {
+    planned.mutations.push({ type: 'character.move', characterId: env.playerId, location: { ...target }, activity: 'idle' });
+    planned.eventDrafts = planned.eventDrafts.map((event) => ({ ...event, location: { ...target } }));
+  }
+  mergeWorldTransaction(env.transaction, planned);
+  env.workingJourney.current = planned.nextJourney ? structuredClone(planned.nextJourney) : undefined;
+}
+
+async function handleTravelCommand(
+  intent: ResolvedWorldIntent,
+  target: LocationRef | undefined,
+  env: TurnIntentEnv,
+): Promise<void> {
+  if (!target) throw new Error(`${intent.kind} 意图缺少目标地点`);
+  const routePlan = await env.planner({
+    from: env.gameState.lord.location.locationId,
+    to: target.locationId,
+    preference: 'fastest',
+    travelMode: 'horse',
+    season: env.gameState.currentSeason,
+  });
+  const type = intent.kind === 'plan_travel' ? 'PLAN_TRAVEL'
+    : intent.kind === 'start_travel' ? 'START_TRAVEL'
+      : intent.kind === 'reroute_travel' ? 'REROUTE_TRAVEL'
+        : 'RETURN_TRAVEL';
+  const command: TravelStateCommand = {
+    type,
+    routePlan,
+    locationLabels: Object.fromEntries(env.locations.map((entry) => [entry.id, entry.name])),
+  } as TravelStateCommand;
+  const applied = applyTravelCommands(env.workingJourney.current, [command], {
+    currentLocation: env.gameState.lord.location,
+    currentDate: env.currentDate,
+    knownLocationIds: env.knownLocationIds,
+  });
+  if (applied.rejected.length) throw new Error(applied.rejected[0].reason);
+  env.workingJourney.current = applied.journey;
+  env.transaction.intents.push(intent);
+  env.transaction.nextJourney = env.workingJourney.current ? structuredClone(env.workingJourney.current) : null;
+  env.transaction.eventDrafts.push({
+    type: `travel.${intent.kind}`,
+    actorIds: [intent.actorId],
+    subjectRefs: [{ type: 'location', location: { ...target } }],
+    location: { ...env.gameState.lord.location },
+    reason: intent.evidenceText,
+    visibility: 'public',
+  });
+}
+
+function handleTravelPause(
+  intent: ResolvedWorldIntent,
+  _target: LocationRef | undefined,
+  env: TurnIntentEnv,
+): void {
+  const command: TravelStateCommand = intent.kind === 'pause_travel'
+    ? { type: 'PAUSE_TRAVEL', reason: intent.evidenceText }
+    : intent.kind === 'resume_travel'
+      ? { type: 'RESUME_TRAVEL' }
+      : { type: 'CANCEL_PLANNED_TRAVEL' };
+  const applied = applyTravelCommands(env.workingJourney.current, [command], {
+    currentLocation: env.gameState.lord.location,
+    currentDate: env.currentDate,
+    knownLocationIds: env.knownLocationIds,
+  });
+  if (applied.rejected.length) throw new Error(applied.rejected[0].reason);
+  env.workingJourney.current = applied.journey;
+  env.transaction.intents.push(intent);
+  env.transaction.nextJourney = env.workingJourney.current ? structuredClone(env.workingJourney.current) : null;
+  env.transaction.eventDrafts.push({
+    type: `travel.${intent.kind}`,
+    actorIds: [intent.actorId],
+    subjectRefs: [],
+    location: { ...env.gameState.lord.location },
+    reason: intent.evidenceText,
+    visibility: 'public',
+  });
+}
+
+function handleAdvanceTravel(
+  intent: ResolvedWorldIntent,
+  _target: LocationRef | undefined,
+  env: TurnIntentEnv,
+): void {
+  const days = elapsedDays(intent as ResolvedLocationWorldIntent);
+  if (days <= 0) throw new Error('旅行推进缺少明确的正数时长');
+  const patch = advanceJourney(envWorldSnapshot(env), days);
+  const planned = planJourneyTransaction({ ...patch, elapsedDays: days }, {
+    playerId: env.playerId,
+    turn: env.nextTurnNumber,
+    transactionId: env.transactionId,
+    source: 'player_input',
+    reason: intent.evidenceText,
+    currentDate: env.currentDate,
+  });
+  mergeWorldTransaction(env.transaction, planned);
+  env.workingJourney.current = planned.nextJourney ? structuredClone(planned.nextJourney) : undefined;
+}
+
+function handleMoveInside(
+  intent: ResolvedWorldIntent,
+  target: LocationRef | undefined,
+  env: TurnIntentEnv,
+): void {
+  env.transaction.intents.push(intent);
+  if (target) {
+    env.transaction.mutations.push({ type: 'character.move', characterId: intent.actorId, location: { ...target }, activity: 'idle' });
+  }
+  env.transaction.eventDrafts.push({
+    type: `intent.${intent.kind}`,
+    actorIds: [intent.actorId],
+    subjectRefs: target ? [{ type: 'location', location: { ...target } }] : [],
+    ...(target ? { location: { ...target } } : {}),
+    reason: intent.evidenceText,
+    visibility: 'public',
+  });
+}
+
+// 模型直接发出的资产与据点意图：语义校验失败只拒绝该条，不拖垮整个回合。
+async function handleDirectAssetIntent(
+  intent: ResolvedWorldIntent,
+  _target: LocationRef | undefined,
+  env: TurnIntentEnv,
+): Promise<void> {
+  const { transaction } = env;
+  const runtime = env.gameState.worldRuntime;
+  try {
+    transaction.intents.push(intent);
+    if (intent.kind === 'create_site') {
+      const locationLabel = env.locations.find((entry) => entry.id === env.gameState.lord.location.locationId)?.name
+        ?? env.gameState.lord.location.locationId;
+      const site = planCreateSiteIntent(intent, {
+        baseline: env.baseline,
+        runtime,
+        itemSites: env.gameState.lord.items.sites,
+        idSeed: `${env.transactionId}:site:${transaction.siteCreations?.length ?? 0}`,
+        locationLabel,
+      });
+      transaction.siteCreations = [...(transaction.siteCreations ?? []), site];
+      transaction.eventDrafts.push({
+        type: 'intent.create_site',
+        actorIds: [intent.actorId],
+        subjectRefs: [
+          { type: 'asset', assetId: worldAssetId.site(site.id) },
+          { type: 'location', location: { ...site.location } },
+        ],
+        location: { ...site.location },
+        reason: intent.evidenceText,
+        visibility: 'public',
+      });
+    } else if (intent.kind === 'steal_asset') {
+      const theft = intent as Extract<ResolvedDirectWorldIntent, { kind: 'steal_asset' }>;
+      transaction.mutations.push(...planAssetIntent(theft, { baseline: env.baseline, runtime }));
+      // 行窃是秘密：只有窃贼、原主与在场者知道；世界账本留下可追溯的痕。
+      const asset = projectWorldAsset(env.baseline, runtime, theft.assetId);
+      const assetLocation = asset ? resolveAssetMapLocation(env.baseline, runtime, asset.id) : null;
+      const witnessIds = [intent.actorId];
+      for (const ref of [asset?.controller, asset?.lawfulOwner]) {
+        if (ref?.type === 'character') witnessIds.push(ref.characterId);
+      }
+      if (assetLocation && assetLocation.locationId === env.gameState.lord.location.locationId) {
+        witnessIds.push(env.playerId);
+      }
+      transaction.eventDrafts.push({
+        type: 'intent.steal_asset',
+        actorIds: [intent.actorId],
+        subjectRefs: [{ type: 'asset', assetId: intent.assetId }],
+        ...(assetLocation ? { location: { ...assetLocation } } : {}),
+        reason: intent.evidenceText,
+        visibility: 'secret',
+        knownBy: [...new Set(witnessIds)],
+      });
+    } else {
+      const gift = intent as Extract<ResolvedDirectWorldIntent, { kind: 'gift_asset' }>;
+      transaction.mutations.push(...planAssetIntent(gift, { baseline: env.baseline, runtime }));
+      transaction.eventDrafts.push({
+        type: 'intent.gift_asset',
+        actorIds: [gift.actorId],
+        subjectRefs: [
+          { type: 'asset', assetId: gift.assetId },
+          { type: 'character', characterId: gift.recipientId },
+        ],
+        location: { ...env.gameState.lord.location },
+        reason: intent.evidenceText,
+        visibility: 'public',
+      });
+    }
+  } catch (error) {
+    env.rejected.push({
+      intent: { ...intent },
+      reason: stripEmoji(error instanceof Error ? error.message : '资产或据点意图无法结算'),
+    });
+    transaction.intents = transaction.intents.filter((kept) => kept !== intent);
+  }
+}
+
+const INTENT_HANDLERS: Partial<Record<ResolvedWorldIntent['kind'], TurnIntentHandler>> = {
+  arrive: handleArrive,
+  plan_travel: handleTravelCommand,
+  start_travel: handleTravelCommand,
+  reroute_travel: handleTravelCommand,
+  return_travel: handleTravelCommand,
+  pause_travel: handleTravelPause,
+  resume_travel: handleTravelPause,
+  cancel_travel: handleTravelPause,
+  advance_travel: handleAdvanceTravel,
+  move_inside_location: handleMoveInside,
+  gift_asset: handleDirectAssetIntent,
+  steal_asset: handleDirectAssetIntent,
+  create_site: handleDirectAssetIntent,
+};
+
 export async function prepareWorldTurn(input: PrepareWorldTurnInput): Promise<PreparedWorldTurn> {
   const locationRepository = input.mapLocationRepository ?? mapRepository;
   const pending = input.pendingTransactions.filter((entry) => entry.status === 'pending');
@@ -254,220 +535,33 @@ export async function prepareWorldTurn(input: PrepareWorldTurnInput): Promise<Pr
 
   try {
     const planner = input.routePlanner ?? defaultRoutePlanner;
+    const env: TurnIntentEnv = {
+      gameState: input.gameState,
+      transaction,
+      baseline,
+      transactionId,
+      playerId,
+      nextTurnNumber: input.nextTurnNumber,
+      currentDate,
+      locations,
+      knownLocationIds,
+      fallbackContext,
+      planner,
+      workingJourney: { current: workingJourney },
+      rejected: resolution.rejected,
+    };
     for (const intent of resolution.resolved) {
-      // 模型直接发出的资产与据点意图：语义校验失败只拒绝该条，不拖垮整个回合。
-      if (intent.kind === 'gift_asset' || intent.kind === 'steal_asset' || intent.kind === 'create_site') {
-        try {
-          transaction.intents.push(intent);
-          if (intent.kind === 'create_site') {
-            const locationLabel = locations.find((entry) => entry.id === input.gameState.lord.location.locationId)?.name
-              ?? input.gameState.lord.location.locationId;
-            const site = planCreateSiteIntent(intent, {
-              baseline,
-              runtime: input.gameState.worldRuntime,
-              itemSites: input.gameState.lord.items.sites,
-              idSeed: `${transactionId}:site:${transaction.siteCreations?.length ?? 0}`,
-              locationLabel,
-            });
-            transaction.siteCreations = [...(transaction.siteCreations ?? []), site];
-            transaction.eventDrafts.push({
-              type: 'intent.create_site',
-              actorIds: [intent.actorId],
-              subjectRefs: [
-                { type: 'asset', assetId: worldAssetId.site(site.id) },
-                { type: 'location', location: { ...site.location } },
-              ],
-              location: { ...site.location },
-              reason: intent.evidenceText,
-              visibility: 'public',
-            });
-          } else if (intent.kind === 'steal_asset') {
-            transaction.mutations.push(...planAssetIntent(intent, { baseline, runtime: input.gameState.worldRuntime }));
-            // 行窃是秘密：只有窃贼、原主与在场者知道；世界账本留下可追溯的痕。
-            const asset = projectWorldAsset(baseline, input.gameState.worldRuntime, intent.assetId);
-            const assetLocation = asset ? resolveAssetMapLocation(baseline, input.gameState.worldRuntime, asset.id) : null;
-            const witnessIds = [intent.actorId];
-            for (const ref of [asset?.controller, asset?.lawfulOwner]) {
-              if (ref?.type === 'character') witnessIds.push(ref.characterId);
-            }
-            if (assetLocation && assetLocation.locationId === input.gameState.lord.location.locationId) {
-              witnessIds.push(playerId);
-            }
-            transaction.eventDrafts.push({
-              type: 'intent.steal_asset',
-              actorIds: [intent.actorId],
-              subjectRefs: [{ type: 'asset', assetId: intent.assetId }],
-              ...(assetLocation ? { location: { ...assetLocation } } : {}),
-              reason: intent.evidenceText,
-              visibility: 'secret',
-              knownBy: [...new Set(witnessIds)],
-            });
-          } else {
-            transaction.mutations.push(...planAssetIntent(intent, { baseline, runtime: input.gameState.worldRuntime }));
-            transaction.eventDrafts.push({
-              type: 'intent.gift_asset',
-              actorIds: [intent.actorId],
-              subjectRefs: [
-                { type: 'asset', assetId: intent.assetId },
-                { type: 'character', characterId: intent.recipientId },
-              ],
-              location: { ...input.gameState.lord.location },
-              reason: intent.evidenceText,
-              visibility: 'public',
-            });
-          }
-        } catch (error) {
-          resolution.rejected.push({
-            intent: { ...intent },
-            reason: stripEmoji(error instanceof Error ? error.message : '资产或据点意图无法结算'),
-          });
-          transaction.intents = transaction.intents.filter((kept) => kept !== intent);
-        }
+      const target = 'targetRef' in intent && intent.targetRef?.type === 'location'
+        ? intent.targetRef.location
+        : undefined;
+      const handler = INTENT_HANDLERS[intent.kind];
+      if (handler) {
+        await handler(intent, target, env);
         continue;
       }
-      const target = intent.targetRef?.type === 'location' ? intent.targetRef.location : undefined;
-      if (intent.kind === 'arrive') {
-        if (!target) throw new Error('抵达意图缺少目标地点');
-        const routePlan = await planner({
-          from: input.gameState.lord.location.locationId,
-          to: target.locationId,
-          preference: 'fastest',
-          travelMode: 'horse',
-          season: input.gameState.currentSeason,
-        });
-        const planned = planExplicitArrivalTransaction({
-          world: {
-            journey: input.gameState.activeJourney,
-            playerLocation: input.gameState.lord.location,
-            vehicles: input.gameState.lord.items.vehicles,
-            itemPlacements: input.gameState.lord.items.placements,
-            knownLocationIds,
-            characters: fallbackContext.characters.map((character) => ({
-              id: character.id,
-              alive: character.alive,
-              locationId: character.locationId,
-            })),
-          },
-          routePlan,
-          declaredElapsedDays: elapsedDays(intent),
-          assertedDeparture: false,
-          assertedArrival: true,
-          locationLabels: Object.fromEntries(locations.map((entry) => [entry.id, entry.name])),
-        }, {
-          playerId,
-          turn: input.nextTurnNumber,
-          transactionId,
-          source: 'player_input',
-          reason: intent.evidenceText,
-          currentDate: {
-            year: input.gameState.currentYear,
-            month: input.gameState.currentMonth,
-            day: input.gameState.currentDay,
-          },
-        });
-        if (target.sceneLocation) {
-          planned.mutations.push({ type: 'character.move', characterId: playerId, location: { ...target }, activity: 'idle' });
-          planned.eventDrafts = planned.eventDrafts.map((event) => ({ ...event, location: { ...target } }));
-        }
-        mergeWorldTransaction(transaction, planned);
-        workingJourney = planned.nextJourney ? structuredClone(planned.nextJourney) : undefined;
-        continue;
-      }
-      if (intent.kind === 'plan_travel' || intent.kind === 'start_travel'
-        || intent.kind === 'reroute_travel' || intent.kind === 'return_travel') {
-        if (!target) throw new Error(`${intent.kind} 意图缺少目标地点`);
-        const routePlan = await planner({
-          from: input.gameState.lord.location.locationId,
-          to: target.locationId,
-          preference: 'fastest',
-          travelMode: 'horse',
-          season: input.gameState.currentSeason,
-        });
-        const type = intent.kind === 'plan_travel' ? 'PLAN_TRAVEL'
-          : intent.kind === 'start_travel' ? 'START_TRAVEL'
-            : intent.kind === 'reroute_travel' ? 'REROUTE_TRAVEL'
-              : 'RETURN_TRAVEL';
-        const command: TravelStateCommand = {
-          type,
-          routePlan,
-          locationLabels: Object.fromEntries(locations.map((entry) => [entry.id, entry.name])),
-        } as TravelStateCommand;
-        const applied = applyTravelCommands(workingJourney, [command], {
-          currentLocation: input.gameState.lord.location,
-          currentDate,
-          knownLocationIds,
-        });
-        if (applied.rejected.length) throw new Error(applied.rejected[0].reason);
-        workingJourney = applied.journey;
-        transaction.intents.push(intent);
-        transaction.nextJourney = workingJourney ? structuredClone(workingJourney) : null;
-        transaction.eventDrafts.push({
-          type: `travel.${intent.kind}`,
-          actorIds: [intent.actorId],
-          subjectRefs: [{ type: 'location', location: { ...target } }],
-          location: { ...input.gameState.lord.location },
-          reason: intent.evidenceText,
-          visibility: 'public',
-        });
-        continue;
-      }
-      if (intent.kind === 'pause_travel' || intent.kind === 'resume_travel' || intent.kind === 'cancel_travel') {
-        const command: TravelStateCommand = intent.kind === 'pause_travel'
-          ? { type: 'PAUSE_TRAVEL', reason: intent.evidenceText }
-          : intent.kind === 'resume_travel'
-            ? { type: 'RESUME_TRAVEL' }
-            : { type: 'CANCEL_PLANNED_TRAVEL' };
-        const applied = applyTravelCommands(workingJourney, [command], {
-          currentLocation: input.gameState.lord.location,
-          currentDate,
-          knownLocationIds,
-        });
-        if (applied.rejected.length) throw new Error(applied.rejected[0].reason);
-        workingJourney = applied.journey;
-        transaction.intents.push(intent);
-        transaction.nextJourney = workingJourney ? structuredClone(workingJourney) : null;
-        transaction.eventDrafts.push({
-          type: `travel.${intent.kind}`,
-          actorIds: [intent.actorId],
-          subjectRefs: [],
-          location: { ...input.gameState.lord.location },
-          reason: intent.evidenceText,
-          visibility: 'public',
-        });
-        continue;
-      }
-      if (intent.kind === 'advance_travel') {
-        const days = elapsedDays(intent);
-        if (days <= 0) throw new Error('旅行推进缺少明确的正数时长');
-        const patch = advanceJourney({
-          journey: workingJourney,
-          playerLocation: input.gameState.lord.location,
-          vehicles: input.gameState.lord.items.vehicles,
-          itemPlacements: input.gameState.lord.items.placements,
-          knownLocationIds,
-          characters: fallbackContext.characters.map((character) => ({
-            id: character.id,
-            alive: character.alive,
-            locationId: character.locationId,
-          })),
-        }, days);
-        const planned = planJourneyTransaction({ ...patch, elapsedDays: days }, {
-          playerId,
-          turn: input.nextTurnNumber,
-          transactionId,
-          source: 'player_input',
-          reason: intent.evidenceText,
-          currentDate,
-        });
-        mergeWorldTransaction(transaction, planned);
-        workingJourney = planned.nextJourney ? structuredClone(planned.nextJourney) : undefined;
-        continue;
-      }
-      transaction.intents.push(intent);
-      if (intent.kind === 'move_inside_location' && target) {
-        transaction.mutations.push({ type: 'character.move', characterId: intent.actorId, location: { ...target }, activity: 'idle' });
-      }
-      transaction.eventDrafts.push({
+      // 未注册的地点意图（mention 等）：只记录意图与通用事件。
+      env.transaction.intents.push(intent);
+      env.transaction.eventDrafts.push({
         type: `intent.${intent.kind}`,
         actorIds: [intent.actorId],
         subjectRefs: target ? [{ type: 'location', location: { ...target } }] : [],
@@ -476,6 +570,7 @@ export async function prepareWorldTurn(input: PrepareWorldTurnInput): Promise<Pr
         visibility: 'public',
       });
     }
+    workingJourney = env.workingJourney.current;
 
     for (const entry of pending) {
       for (const intent of entry.intents) {

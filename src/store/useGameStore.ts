@@ -497,7 +497,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
       const effectiveCharacterContext: CharacterCommandBatchBaseContext | undefined = characterTurnContext
         ?? automaticWorldContext?.characterCommandContext;
       const automaticPromptContext = automaticWorldContext ? formatWorldTurnContext(automaticWorldContext) : '';
-      const combinedPromptContext = [automaticPromptContext, characterTurnContext?.promptContext].filter(Boolean).join('\n\n');
+      // 世界上下文以对象直传，由 buildChatMessages 统一格式化（拼装单一出入口）。
+      const resolutionWorldContext = characterTurnContext?.promptContext ?? automaticWorldContext ?? '';
       const nextTurnNumber = gameState.turnCount + 1;
 
       // 第一阶段：判骰 + 规则解析合一。模型先输出 <dice_request>，再输出双轨 state_cmd。
@@ -508,7 +509,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
         undefined,
         undefined,
         submittedWorldTransactions,
-        combinedPromptContext,
+        resolutionWorldContext,
       );
       captureTrace(buildModelRequestTrace({
         turnNumber: nextTurnNumber,
@@ -520,7 +521,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
         contextError,
         worldContext: {
           automatic: automaticPromptContext,
-          resolutionPrompt: combinedPromptContext,
+          resolutionPrompt: typeof resolutionWorldContext === 'string' ? resolutionWorldContext : automaticPromptContext,
         },
         resolutionMessages,
       }));
@@ -630,7 +631,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
         worldContext: {
           automatic: automaticPromptContext,
           committed: committedWorldContext,
-          resolutionPrompt: combinedPromptContext,
+          resolutionPrompt: typeof resolutionWorldContext === 'string' ? resolutionWorldContext : automaticPromptContext,
           narrationPrompt,
         },
         resolutionMessages,

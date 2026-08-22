@@ -33,7 +33,7 @@ export function buildTurnResolutionMessages(
   diceCheck?: D20Check,
   diceContext?: DicePromptContext,
   pendingTransactions: PendingWorldTransaction[] = [],
-  worldContext = '',
+  worldContext: string | import('../../features/world/worldTurnContext').WorldTurnContext = '',
 ): Array<{ role: 'system' | 'user' | 'assistant'; content: string }> {
   const messages = buildChatMessages(gameState, actionText, diceCheck, diceContext, pendingTransactions, worldContext);
   // 将判骰说明拼到 system 消息末尾

@@ -4,6 +4,7 @@ import { useGameStore } from '../store/useGameStore';
 import { stripEmoji } from '../services/textSanitizer';
 import type { DiceMode } from '../services/dicePolicy';
 import { normalizeBranchOptions } from '../services/branchOptions';
+import { PendingConcerns } from './PendingConcerns';
 
 const DICE_MODES: ReadonlyArray<{ id: DiceMode; label: string; title: string }> = [
   { id: 'auto', label: '自动判断', title: '由模型判断当前行动是否需要检定、用哪项属性、难度几许，再由程序掷骰结算' },
@@ -91,6 +92,7 @@ export const ActionDock: React.FC = () => {
   return (
     <footer className="dock-enter relative z-20 shrink-0 px-5 pb-5 pt-2 md:px-6">
       <div className="mx-auto flex w-full max-w-[42rem] flex-col gap-4">
+        <PendingConcerns />
         {/* 决断:无框列表,朱红序数,墨痕扫过 */}
         {branches.length > 0 && !isStreaming && (
           <nav aria-label="决断分支" className="select-none">
