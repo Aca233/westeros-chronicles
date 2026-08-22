@@ -12,7 +12,7 @@ from typing import Iterable, Mapping, Any
 
 from .localization import resolve_name
 from .model import CanonTier, CharacterHistory
-from .roster import sanitize_runtime_records, select_runtime_character_ids
+from .roster import RosterReferences, sanitize_runtime_records, select_runtime_character_ids
 from .timeline import AgotDate, project_character
 from .titles import ProjectedTitle
 
@@ -163,15 +163,23 @@ def write_dataset(
         if raw_id in emitted_raw_ids
     }
     full_kinship_index = _build_kinship_index(projected_records)
-    retained_ids = select_runtime_character_ids(projected_records, full_title_map, full_kinship_index)
+    references = RosterReferences(
+        playable_ids=frozenset(),
+        content_ids=frozenset(),
+        start_state_ids=frozenset(),
+        artifact_holder_ids=frozenset(),
+        title_holders=full_title_map,
+        kinship=full_kinship_index,
+    )
+    retained_ids = select_runtime_character_ids(projected_records, references)
     runtime_records = sanitize_runtime_records(projected_records, retained_ids)
     search_index = sorted(
         (entry for entry in projected_search if entry["id"] in retained_ids),
         key=lambda record: (record["name"], record["id"]),
     )
-    title_map = {
-        character_id: titles for character_id, titles in full_title_map.items() if character_id in retained_ids
-    }
+    # The import pass keeps every projected holder so the offline pruner can
+    # derive lightweight summaries for holders outside the runtime closure.
+    title_map = dict(full_title_map)
     shard_records: dict[str, list[dict[str, Any]]] = {}
     search_by_id = {entry["id"]: entry for entry in search_index}
     for record in runtime_records:

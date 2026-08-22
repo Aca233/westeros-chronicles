@@ -55,6 +55,12 @@ async function createWorldFixture(manifest = WORLD_MANIFEST) {
     shards: [],
   });
   await writeJson(join(rootDir, 'public', 'data', 'agot-characters', 'search-index.json'), []);
+  await writeJson(join(rootDir, 'public', 'data', 'agot-characters', 'holder-summaries.json'), {
+    schemaVersion: 1,
+    holders: [
+      { id: 'agot:minor_holder', name: '小领主', dynastyId: 'dynn_Minor', alive: true, titleIds: ['c_minor'], displayLabel: '小伯爵领' },
+    ],
+  });
   await writeJson(join(rootDir, 'public', 'data', 'agot-map', 'manifest.json'), {
     schemaVersion: 4,
     datasetHash: 'map-hash',
@@ -85,6 +91,8 @@ test('相同输入生成相同内容哈希且固定唯一世界日期', async ()
   assert.equal(emitted.characterDatasetHash, 'characters-hash');
   assert.equal(emitted.mapDatasetHash, 'map-hash');
   assert.equal(emitted.artifactDatasetHash, 'artifacts-hash');
+  const holderSummaries = JSON.parse(await readFile(join(fixture.outputDir, 'holder-summaries.json'), 'utf8'));
+  assert.deepEqual(holderSummaries.holders.map((holder) => holder.id), ['agot:minor_holder']);
 });
 
 test('校验失败保留上一份完整产物', async () => {

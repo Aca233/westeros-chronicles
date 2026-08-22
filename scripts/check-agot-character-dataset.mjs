@@ -52,7 +52,9 @@ if (JSON.stringify(manifest.source).includes('Crusader Kings III/game')) failure
 if ((manifest.counts?.totalSourceRecords ?? 0) < 100000) failures.push('Dataset source record count is unexpectedly small.');
 if ((manifest.counts?.projectedRecords ?? 0) < 120000) failures.push('Dataset projected source count is unexpectedly small.');
 if ((manifest.counts?.prunedRecords ?? 0) < 100000) failures.push('Dataset was not pruned to the approved runtime roster.');
-if ((manifest.counts?.emittedRecords ?? 0) < 10000 || (manifest.counts?.emittedRecords ?? 0) > 13000) failures.push('Runtime roster size is outside the approved range.');
+// The roster is sized by the living-world reference closure, not a fixed
+// headcount band; the closure itself is audited below against world content.
+if ((manifest.counts?.emittedRecords ?? 0) !== (manifest.counts?.fullRecordCount ?? -1)) failures.push('Full record count does not match emitted records.');
 if ((manifest.counts?.canon ?? 0) < 1200) failures.push('Runtime canon count is unexpectedly small.');
 if ((manifest.counts?.semicanon ?? 0) < 400) failures.push('Runtime semicanon count is unexpectedly small.');
 if ((manifest.counts?.excludedTechnical ?? 0) < 2000) failures.push('Dataset did not exclude expected technical characters.');
@@ -162,8 +164,33 @@ for (const characterId of ['agot:Targaryen_9', 'agot:Baratheon_5']) {
 }
 
 const recordsById = new Map(records.map((record) => [record.id, record]));
+const holderSummaries = await readJson(join(datasetRoot, 'holder-summaries.json')).catch(() => ({ holders: [] }));
+const summaryIds = new Set(holderSummaries.holders.map((summary) => summary.id));
+for (const summary of holderSummaries.holders) {
+  if (summaryIds.has(summary.id) && recordsById.has(summary.id)) {
+    failures.push(`Holder summary ${summary.id} must not duplicate a full runtime record.`);
+  }
+}
 for (const characterId of Object.keys(titleHolders)) {
-  if (!recordsById.has(characterId)) failures.push(`Title holder ${characterId} is absent from the runtime roster.`);
+  if (!recordsById.has(characterId) && !summaryIds.has(characterId)) {
+    failures.push(`Title holder ${characterId} is absent from the runtime roster and holder summaries.`);
+  }
+}
+
+// Formal references from the compiled world content must resolve in the roster.
+const [playableEntries, worldStartState, contentIndex] = await Promise.all([
+  readJson(join(root, 'public/data/world/playable-characters.json')).catch(() => []),
+  readJson(join(root, 'public/data/world/start-state.json')).catch(() => ({})),
+  readJson(join(root, 'public/data/world/character-content/index.json')).catch(() => ({ characters: {} })),
+]);
+const searchIds = new Set(searchIndex.map((entry) => entry.id));
+const worldReferenceIds = new Set([
+  ...playableEntries.map((entry) => entry.characterId),
+  ...Object.keys(contentIndex.characters ?? {}),
+  ...(worldStartState.characters ?? []).map((record) => record.characterId),
+]);
+for (const referenceId of worldReferenceIds) {
+  if (!searchIds.has(referenceId)) failures.push(`World content reference ${referenceId} is missing from the runtime roster.`);
 }
 for (const record of records) {
   for (const parentId of [record.fatherId, record.motherId].filter(Boolean)) {

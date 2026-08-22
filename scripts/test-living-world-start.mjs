@@ -27,7 +27,8 @@ const records = Object.fromEntries(characterIds.map((id, index) => [id, {
 const artifacts = { schemaVersion: 1, startDate: '8298.5.10', datasetHash: hashes.artifactWorld, artifactDatasetHash: hashes.artifact, characterDatasetHash: hashes.characters, artifacts: {} };
 const fixtureDependencies = {
   loadManifest: async () => structuredClone(worldManifest), loadPlayableCharacters: async () => structuredClone(playable),
-  loadStartState: async () => structuredClone(worldStartState), loadCharacterManifest: async () => ({ datasetHash: hashes.characters }),
+  loadStartState: async () => structuredClone(worldStartState), loadTerminology: async () => ({ schemaVersion: 1, cultures: {}, faiths: {}, relationships: {} }),
+  loadCharacterManifest: async () => ({ datasetHash: hashes.characters }),
   loadMapManifest: async () => ({ datasetHash: hashes.map }), loadCharacter: async (id) => structuredClone(records[id]),
   loadLoadout: async () => undefined, loadArtifacts: async () => structuredClone(artifacts),
 };

@@ -9,7 +9,12 @@ import tempfile
 from pathlib import Path
 from typing import Any
 
-from scripts.agot_character_import.roster import sanitize_runtime_records, select_runtime_character_ids
+from scripts.agot_character_import.roster import (
+    RosterReferences,
+    partition_runtime_characters,
+    retention_reason_counts,
+    sanitize_runtime_records,
+)
 from scripts.agot_character_import.writer import _build_kinship_index
 
 
@@ -43,8 +48,115 @@ def _load_mapping_shards(root: Path, directory: str) -> dict[str, Any]:
     return merged
 
 
+def _character_ids_from_principals(value: Any) -> set[str]:
+    ids: set[str] = set()
+    if not isinstance(value, dict):
+        return ids
+    for principal in (value.get("lawfulOwner"), value.get("controller"), value.get("custodian"), value.get("placement")):
+        if isinstance(principal, dict) and principal.get("type") == "character" and principal.get("characterId"):
+            ids.add(str(principal["characterId"]))
+    return ids
+
+
+def load_roster_references(characters_root: Path) -> RosterReferences:
+    """Collect the formal reference closure from compiled world content."""
+    data_root = characters_root.resolve().parent
+    world_dir = data_root / "world"
+
+    playable_ids: set[str] = set()
+    content_ids: set[str] = set()
+    start_state_ids: set[str] = set()
+    artifact_holder_ids: set[str] = set()
+
+    playable_path = world_dir / "playable-characters.json"
+    if playable_path.exists():
+        playable_ids = {str(entry["characterId"]) for entry in _read_json(playable_path)}
+
+    content_dir = world_dir / "character-content"
+    if content_dir.is_dir():
+        for path in sorted(content_dir.glob("*.json")):
+            if path.name == "index.json":
+                continue
+            shard = _read_json(path)
+            if isinstance(shard, dict):
+                content_ids.update(str(character_id) for character_id in shard)
+
+    start_state_path = world_dir / "start-state.json"
+    if start_state_path.exists():
+        start_state = _read_json(start_state_path)
+        for record in start_state.get("characters", []):
+            start_state_ids.add(str(record["characterId"]))
+        for record in start_state.get("assets", []):
+            start_state_ids |= _character_ids_from_principals(record)
+        for record in start_state.get("titles", []):
+            for field in ("lawfulHolderId", "controllerId"):
+                if record.get(field):
+                    start_state_ids.add(str(record[field]))
+            start_state_ids.update(str(cid) for cid in record.get("contestedByIds", []))
+
+    artifact_state_path = data_root / "items" / "agot-artifact-world-state.json"
+    if artifact_state_path.exists():
+        artifact_state = _read_json(artifact_state_path)
+        for artifact in artifact_state.get("artifacts", {}).values():
+            if artifact.get("lawfulControllerId"):
+                artifact_holder_ids.add(str(artifact["lawfulControllerId"]))
+            placement = artifact.get("placement")
+            if isinstance(placement, dict) and placement.get("type") == "character" and placement.get("characterId"):
+                artifact_holder_ids.add(str(placement["characterId"]))
+
+    title_holders = _read_json(characters_root / "title-holders.json")
+    kinship = _load_mapping_shards(characters_root, "kinship")
+    return RosterReferences(
+        playable_ids=frozenset(playable_ids),
+        content_ids=frozenset(content_ids),
+        start_state_ids=frozenset(start_state_ids),
+        artifact_holder_ids=frozenset(artifact_holder_ids),
+        title_holders=title_holders,
+        kinship=kinship,
+    )
+
+
 def _character_shard(character_id: str) -> str:
     return hashlib.sha256(character_id.encode("utf-8")).hexdigest()[:2]
+
+
+def rebind_artifact_world_state(repo_root: Path, character_dataset_hash: str) -> bool:
+    """Re-link the artifact world state to the freshly pruned character dataset.
+
+    Pruning legitimately changes the character dataset hash; the artifact
+    import pipeline owns the artifact records, so only the binding hashes are
+    refreshed (the world datasetHash is recomputed with the writer's
+    canonical JSON form).
+    """
+    state_path = repo_root / "public" / "data" / "items" / "agot-artifact-world-state.json"
+    if not state_path.exists():
+        return False
+    state = _read_json(state_path)
+    if state.get("characterDatasetHash") == character_dataset_hash:
+        return False
+    fingerprint = {
+        "schemaVersion": state["schemaVersion"],
+        "startDate": state["startDate"],
+        "artifactDatasetHash": state["artifactDatasetHash"],
+        "characterDatasetHash": character_dataset_hash,
+        "artifacts": state["artifacts"],
+    }
+    bound = {**fingerprint, "datasetHash": hashlib.sha256(_json_bytes(fingerprint)).hexdigest()}
+    state_path.write_bytes(_json_bytes(bound, pretty=True))
+
+    typescript_path = repo_root / "src" / "data" / "generated" / "agotArtifactWorldState.ts"
+    if typescript_path.exists():
+        text = typescript_path.read_text(encoding="utf-8")
+        text = text.replace(
+            f'"characterDatasetHash": "{state["characterDatasetHash"]}"',
+            f'"characterDatasetHash": "{bound["characterDatasetHash"]}"',
+        )
+        text = text.replace(
+            f'"datasetHash": "{state["datasetHash"]}"',
+            f'"datasetHash": "{bound["datasetHash"]}"',
+        )
+        typescript_path.write_text(text, encoding="utf-8")
+    return True
 
 
 def _write_mapping_shards(root: Path, directory: str, mapping: dict[str, Any]) -> None:
@@ -57,7 +169,7 @@ def _write_mapping_shards(root: Path, directory: str, mapping: dict[str, Any]) -
         (target / f"{shard}.json").write_bytes(_json_bytes(values))
 
 
-def prune_bundled_dataset(root: Path) -> dict[str, int]:
+def prune_bundled_dataset(root: Path, references: RosterReferences | None = None) -> dict[str, int]:
     root = root.resolve()
     manifest = _read_json(root / "manifest.json")
     records = _load_record_shards(root)
@@ -65,24 +177,40 @@ def prune_bundled_dataset(root: Path) -> dict[str, int]:
     title_holders = _read_json(root / "title-holders.json")
     kinship = _load_mapping_shards(root, "kinship")
     loadouts = _load_mapping_shards(root, "loadouts")
+    if references is None:
+        references = load_roster_references(root)
+    else:
+        references = RosterReferences(
+            playable_ids=references.playable_ids,
+            content_ids=references.content_ids,
+            start_state_ids=references.start_state_ids,
+            artifact_holder_ids=references.artifact_holder_ids,
+            title_holders=title_holders,
+            kinship=kinship,
+        )
 
-    retained_ids = select_runtime_character_ids(records, title_holders, kinship)
+    previous_summaries: dict[str, dict[str, Any]] = {}
+    previous_summaries_path = root / "holder-summaries.json"
+    if previous_summaries_path.exists():
+        previous_summaries = {
+            str(summary["id"]): summary
+            for summary in _read_json(previous_summaries_path).get("holders", [])
+        }
+    retained_ids, holder_summaries = partition_runtime_characters(records, references, previous_summaries)
     runtime_records = sanitize_runtime_records(records, retained_ids)
     final_kinship = _build_kinship_index(runtime_records)
     final_search = sorted(
         (entry for entry in search_index if entry["id"] in retained_ids),
         key=lambda entry: (entry["name"], entry["id"]),
     )
-    final_titles = {
-        character_id: titles
-        for character_id, titles in sorted(title_holders.items())
-        if character_id in retained_ids
-    }
+    final_titles = dict(sorted(title_holders.items()))
     final_loadouts = {
         character_id: profile
         for character_id, profile in sorted(loadouts.items())
         if character_id in retained_ids
     }
+    removed_loadout_count = len(loadouts) - len(final_loadouts)
+    reason_counts = retention_reason_counts(records, references, retained_ids)
     projected_count = int(manifest.get("counts", {}).get("projectedRecords", len(records)))
     counts = dict(manifest.get("counts", {}))
     counts.update({
@@ -96,6 +224,23 @@ def prune_bundled_dataset(root: Path) -> dict[str, int]:
         "titleHolderCount": len(final_titles),
         "heldTitleCount": sum(len(titles) for titles in final_titles.values()),
         "parentChildLinkCount": sum(len(entry["childIds"]) for entry in final_kinship.values()),
+        "fullRecordCount": len(runtime_records),
+        "holderSummaryCount": len(holder_summaries),
+        "excludedUnreferencedModSupporting": sum(
+            record.get("canonTier") == "mod_supporting" and record["id"] not in retained_ids
+            for record in records
+        ),
+        "excludedUnreferencedGenealogy": sum(
+            record.get("canonTier") == "genealogy" and record["id"] not in retained_ids
+            for record in records
+        ),
+        "removedLoadoutCount": removed_loadout_count,
+        "retainedByCoreTier": reason_counts["coreTier"],
+        "retainedByPlayableEntry": reason_counts["playableEntry"],
+        "retainedByNarrativeContent": reason_counts["narrativeContent"],
+        "retainedByStartState": reason_counts["startState"],
+        "retainedByArtifactHolder": reason_counts["artifactHolder"],
+        "retainedByKinshipHop": reason_counts["kinshipHop"],
     })
 
     search_by_id = {entry["id"]: entry for entry in final_search}
@@ -113,6 +258,7 @@ def prune_bundled_dataset(root: Path) -> dict[str, int]:
         "records": [record for shard in sorted(record_shards) for record in record_shards[shard]],
         "titleHolders": final_titles,
         "kinship": final_kinship,
+        "holderSummaries": [holder_summaries[character_id] for character_id in sorted(holder_summaries)],
     }
     dataset_hash = hashlib.sha256(_json_bytes(fingerprint)).hexdigest()
     final_manifest = {
@@ -132,6 +278,10 @@ def prune_bundled_dataset(root: Path) -> dict[str, int]:
         (temporary / "manifest.json").write_bytes(_json_bytes(final_manifest, pretty=True))
         (temporary / "search-index.json").write_bytes(_json_bytes(final_search))
         (temporary / "title-holders.json").write_bytes(_json_bytes(final_titles))
+        (temporary / "holder-summaries.json").write_bytes(_json_bytes({
+            "schemaVersion": 1,
+            "holders": [holder_summaries[character_id] for character_id in sorted(holder_summaries)],
+        }, pretty=True))
 
         if (root / "reports").exists():
             shutil.copytree(root / "reports", temporary / "reports")
@@ -159,6 +309,7 @@ def prune_bundled_dataset(root: Path) -> dict[str, int]:
         shutil.rmtree(temporary, ignore_errors=True)
         raise
 
+    rebind_artifact_world_state(root.parents[2], dataset_hash)
     return counts
 
 

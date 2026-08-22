@@ -1,7 +1,14 @@
 import copy
+import inspect
 import unittest
 
-from scripts.agot_character_import.roster import sanitize_runtime_records, select_runtime_character_ids
+from scripts.agot_character_import.roster import (
+    RosterReferences,
+    build_holder_summaries,
+    partition_runtime_characters,
+    sanitize_runtime_records,
+    select_runtime_character_ids,
+)
 
 
 class RuntimeCharacterRosterTests(unittest.TestCase):
@@ -10,6 +17,16 @@ class RuntimeCharacterRosterTests(unittest.TestCase):
             {"id": "agot:canon", "canonTier": "canon", "born": True, "alive": True,
              "fatherId": "agot:dead_parent", "motherId": None, "spouseIds": ["agot:living_spouse"],
              "killerId": None, "relations": []},
+            {"id": "agot:semicanon", "canonTier": "semicanon", "born": True, "alive": True,
+             "fatherId": None, "motherId": None, "spouseIds": [], "killerId": None, "relations": []},
+            {"id": "agot:playable", "canonTier": "mod_supporting", "born": True, "alive": True,
+             "fatherId": None, "motherId": None, "spouseIds": [], "killerId": None, "relations": []},
+            {"id": "agot:curated", "canonTier": "mod_supporting", "born": True, "alive": True,
+             "fatherId": None, "motherId": None, "spouseIds": [], "killerId": None, "relations": []},
+            {"id": "agot:start", "canonTier": "mod_supporting", "born": True, "alive": True,
+             "fatherId": None, "motherId": None, "spouseIds": [], "killerId": None, "relations": []},
+            {"id": "agot:artifact", "canonTier": "mod_supporting", "born": True, "alive": True,
+             "fatherId": None, "motherId": None, "spouseIds": [], "killerId": None, "relations": []},
             {"id": "agot:dead_parent", "canonTier": "mod_supporting", "born": True, "alive": False,
              "fatherId": "agot:dead_grandparent", "motherId": None, "spouseIds": [],
              "killerId": None, "relations": []},
@@ -18,44 +35,66 @@ class RuntimeCharacterRosterTests(unittest.TestCase):
             {"id": "agot:living_spouse", "canonTier": "mod_supporting", "born": True, "alive": True,
              "fatherId": None, "motherId": None, "spouseIds": ["agot:canon"],
              "killerId": None, "relations": []},
-            {"id": "agot:dead_sibling", "canonTier": "mod_supporting", "born": True, "alive": False,
-             "fatherId": "agot:dead_parent", "motherId": None, "spouseIds": [],
-             "killerId": None, "relations": []},
             {"id": "agot:future_child", "canonTier": "canon", "born": False, "alive": False,
              "fatherId": "agot:canon", "motherId": "agot:living_spouse", "spouseIds": [],
              "killerId": None, "relations": []},
-            {"id": "agot:title_holder", "canonTier": "mod_supporting", "born": True, "alive": True,
+            {"id": "agot:minor_holder", "canonTier": "mod_supporting", "name": "小领主", "dynastyId": "dynn_Minor",
+             "born": True, "alive": True, "fatherId": None, "motherId": None, "spouseIds": [],
+             "killerId": None, "relations": []},
+            {"id": "agot:isolated_fill", "canonTier": "mod_supporting", "born": True, "alive": True,
              "fatherId": None, "motherId": None, "spouseIds": [], "killerId": None, "relations": []},
-            {"id": "agot:isolated", "canonTier": "mod_supporting", "born": True, "alive": True,
-             "fatherId": None, "motherId": None, "spouseIds": [], "killerId": None, "relations": []},
+            {"id": "agot:dead_holder", "canonTier": "mod_supporting", "name": "亡故领主", "dynastyId": None,
+             "born": True, "alive": False, "fatherId": None, "motherId": None, "spouseIds": [],
+             "killerId": None, "relations": []},
         ]
         self.kinship = {
             "agot:canon": {"fatherId": "agot:dead_parent", "motherId": None,
                            "spouseIds": ["agot:living_spouse"], "childIds": ["agot:future_child"],
-                           "siblingIds": ["agot:dead_sibling"]},
+                           "siblingIds": []},
             "agot:dead_parent": {"fatherId": "agot:dead_grandparent", "motherId": None,
-                                 "spouseIds": [], "childIds": ["agot:canon", "agot:dead_sibling"],
-                                 "siblingIds": []},
+                                 "spouseIds": [], "childIds": ["agot:canon"], "siblingIds": []},
             "agot:dead_grandparent": {"spouseIds": [], "childIds": ["agot:dead_parent"], "siblingIds": []},
-            "agot:living_spouse": {"spouseIds": ["agot:canon"], "childIds": ["agot:future_child"], "siblingIds": []},
-            "agot:dead_sibling": {"fatherId": "agot:dead_parent", "spouseIds": [], "childIds": [], "siblingIds": ["agot:canon"]},
+            "agot:living_spouse": {"spouseIds": ["agot:canon"], "childIds": [], "siblingIds": []},
             "agot:future_child": {"fatherId": "agot:canon", "motherId": "agot:living_spouse", "spouseIds": [], "childIds": [], "siblingIds": []},
-            "agot:title_holder": {"spouseIds": [], "childIds": [], "siblingIds": []},
-            "agot:isolated": {"spouseIds": [], "childIds": [], "siblingIds": []},
         }
-
-    def test_keeps_seeds_and_exactly_one_born_relationship_hop(self) -> None:
-        retained = select_runtime_character_ids(
-            self.records,
-            {"agot:title_holder": [{"id": "c_keep"}]},
-            self.kinship,
+        self.references = RosterReferences(
+            playable_ids=frozenset({"agot:playable"}),
+            content_ids=frozenset({"agot:curated"}),
+            start_state_ids=frozenset({"agot:start"}),
+            artifact_holder_ids=frozenset({"agot:artifact"}),
+            title_holders={
+                "agot:minor_holder": [{"id": "c_minor", "name": "小伯爵领", "tier": "county"}],
+                "agot:dead_holder": [{"id": "c_dead", "name": "旧伯爵领", "tier": "county"}],
+            },
+            kinship=self.kinship,
         )
-        self.assertEqual(retained, {
-            "agot:canon", "agot:dead_parent", "agot:living_spouse", "agot:dead_sibling", "agot:title_holder",
-        })
+
+    def test_reference_closure_keeps_explicit_seeds_and_one_born_kinship_hop(self) -> None:
+        retained = select_runtime_character_ids(self.records, self.references)
+        self.assertTrue({
+            "agot:canon", "agot:semicanon", "agot:playable", "agot:curated",
+            "agot:start", "agot:artifact",
+        }.issubset(retained))
+        self.assertIn("agot:dead_parent", retained)
+        self.assertIn("agot:living_spouse", retained)
+        self.assertNotIn("agot:isolated_fill", retained)
         self.assertNotIn("agot:dead_grandparent", retained)
         self.assertNotIn("agot:future_child", retained)
-        self.assertNotIn("agot:isolated", retained)
+        self.assertNotIn("agot:minor_holder", retained, "持有头衔不再自动保留完整档案")
+
+    def test_unretained_title_holder_becomes_summary_not_full_record(self) -> None:
+        full_ids, summaries = partition_runtime_characters(self.records, self.references)
+        self.assertNotIn("agot:minor_holder", full_ids)
+        self.assertEqual(summaries["agot:minor_holder"]["titleIds"], ["c_minor"])
+        self.assertEqual(summaries["agot:minor_holder"]["name"], "小领主")
+        self.assertEqual(summaries["agot:minor_holder"]["alive"], True)
+        self.assertEqual(summaries["agot:minor_holder"]["displayLabel"], "小伯爵领")
+        self.assertIn("agot:dead_holder", summaries)
+
+    def test_holder_summaries_keep_only_unretained_holders(self) -> None:
+        retained = select_runtime_character_ids(self.records, self.references)
+        summaries = build_holder_summaries(self.records, self.references.title_holders, retained)
+        self.assertEqual({summary["id"] for summary in summaries}, {"agot:minor_holder", "agot:dead_holder"})
 
     def test_sanitizes_removed_references_without_mutating_input(self) -> None:
         records = copy.deepcopy(self.records)
@@ -79,6 +118,11 @@ class RuntimeCharacterRosterTests(unittest.TestCase):
         self.assertEqual(result["spouseIds"], ["agot:living_spouse"])
         self.assertEqual(result["relations"], [{"kind": "friend", "target_id": "character:living_spouse"}])
         self.assertEqual(records, original)
+
+    def test_roster_selection_has_no_headcount_constants(self) -> None:
+        source = inspect.getsource(select_runtime_character_ids) + inspect.getsource(build_holder_summaries)
+        for constant in ("5553", "799"):
+            self.assertNotIn(constant, source)
 
 
 if __name__ == "__main__":

@@ -42,6 +42,7 @@ const fixtureDependencies = {
   loadManifest: async () => structuredClone(worldManifest),
   loadPlayableCharacters: async () => structuredClone(playable),
   loadStartState: async () => structuredClone(startState),
+  loadTerminology: async () => ({ schemaVersion: 1, cultures: {}, faiths: {}, relationships: {} }),
   loadCharacterManifest: async () => ({ datasetHash: hashes.characters }),
   loadMapManifest: async () => ({ datasetHash: hashes.map }),
   loadCharacter: async (id) => structuredClone(records[id]),

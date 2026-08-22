@@ -3,6 +3,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from scripts.agot_character_import.roster import RosterReferences
 from scripts.prune_bundled_character_dataset import prune_bundled_dataset
 
 
@@ -61,10 +62,18 @@ class BundledCharacterDatasetPruningTests(unittest.TestCase):
             })
             write_json(root / "reports" / "import-report.json", {"datasetHash": "old", "counts": {}})
             write_json(root / "reports" / "loadout-report.json", {"assigned": 5})
+            references = RosterReferences(
+                playable_ids=frozenset(),
+                content_ids=frozenset(),
+                start_state_ids=frozenset(),
+                artifact_holder_ids=frozenset(),
+                title_holders={},
+                kinship={},
+            )
 
-            first = prune_bundled_dataset(root)
+            first = prune_bundled_dataset(root, references)
             first_hash = json.loads((root / "manifest.json").read_text(encoding="utf-8"))["datasetHash"]
-            second = prune_bundled_dataset(root)
+            second = prune_bundled_dataset(root, references)
             second_hash = json.loads((root / "manifest.json").read_text(encoding="utf-8"))["datasetHash"]
             output_records = [
                 record
@@ -76,13 +85,23 @@ class BundledCharacterDatasetPruningTests(unittest.TestCase):
                 for path in (root / "loadouts").glob("*.json")
                 for character_id, profile in json.loads(path.read_text(encoding="utf-8")).items()
             }
+            holder_summaries = json.loads((root / "holder-summaries.json").read_text(encoding="utf-8"))
 
-            self.assertEqual({record["id"] for record in output_records}, {"agot:core", "agot:parent", "agot:holder"})
+            self.assertEqual({record["id"] for record in output_records}, {"agot:core", "agot:parent"})
             self.assertIsNone(next(record for record in output_records if record["id"] == "agot:parent")["fatherId"])
-            self.assertEqual(set(output_loadouts), {"agot:core", "agot:parent", "agot:holder"})
-            self.assertEqual(first["emittedRecords"], 3)
-            self.assertEqual(first["prunedRecords"], 2)
-            self.assertEqual(second["emittedRecords"], 3)
+            self.assertEqual(set(output_loadouts), {"agot:core", "agot:parent"})
+            self.assertEqual(first["emittedRecords"], 2)
+            self.assertEqual(first["prunedRecords"], 3)
+            self.assertEqual(first["fullRecordCount"], 2)
+            self.assertEqual(first["holderSummaryCount"], 1)
+            self.assertEqual(first["removedLoadoutCount"], 3)
+            self.assertEqual(
+                [summary["id"] for summary in holder_summaries["holders"]],
+                ["agot:holder"],
+            )
+            self.assertEqual(holder_summaries["holders"][0]["titleIds"], ["c_holder"])
+            self.assertEqual(json.loads((root / "title-holders.json").read_text(encoding="utf-8"))["agot:holder"][0]["id"], "c_holder")
+            self.assertEqual(second["emittedRecords"], 2)
             self.assertEqual(first_hash, second_hash)
             self.assertFalse((root / "shards" / "stale.json").exists())
 

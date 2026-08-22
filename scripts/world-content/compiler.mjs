@@ -61,6 +61,34 @@ async function readDatasetManifests(rootDir) {
   const mapIndex = await readJson(join(rootDir, 'public', 'data', 'agot-map', 'location-search-index.json'), '地图地点索引');
   if (!Array.isArray(characterIndex) || characterIndex.some((entry) => typeof entry?.id !== 'string')) throw new Error('人物搜索索引无效');
   if (!Array.isArray(mapIndex) || mapIndex.some((entry) => typeof entry?.id !== 'string')) throw new Error('地图地点索引无效');
+  const holderSummariesPath = join(rootDir, 'public', 'data', 'agot-characters', 'holder-summaries.json');
+  const holderSummaryDocument = await (async () => {
+    try {
+      return await readJson(holderSummariesPath, '持有人摘要');
+    } catch (error) {
+      if (/ENOENT/.test(error instanceof Error ? error.message : String(error))) return { schemaVersion: 1, holders: [] };
+      throw error;
+    }
+  })();
+  const holderSummaries = holderSummaryDocument?.holders;
+  if (holderSummaryDocument.schemaVersion !== 1 || !Array.isArray(holderSummaries)) throw new Error('持有人摘要无效');
+  const holderSummaryIds = new Set();
+  for (const summary of holderSummaries) {
+    const record = summary && typeof summary === 'object' ? summary : null;
+    if (!record || typeof record.id !== 'string' || !record.id.startsWith('agot:')) throw new Error('持有人摘要条目无效');
+    if (holderSummaryIds.has(record.id)) throw new Error(`持有人摘要 ID 重复：${record.id}`);
+    holderSummaryIds.add(record.id);
+    for (const field of ['name', 'displayLabel']) {
+      if (typeof record[field] !== 'string' || !record[field].trim()) throw new Error(`持有人摘要 ${field} 无效：${record.id}`);
+    }
+    if (typeof record.alive !== 'boolean') throw new Error(`持有人摘要 alive 无效：${record.id}`);
+    if (!Array.isArray(record.titleIds) || record.titleIds.some((titleId) => typeof titleId !== 'string' || !titleId)) {
+      throw new Error(`持有人摘要 titleIds 无效：${record.id}`);
+    }
+    if ('dynastyId' in record && record.dynastyId !== null && typeof record.dynastyId !== 'string') {
+      throw new Error(`持有人摘要 dynastyId 无效：${record.id}`);
+    }
+  }
   return {
     characters,
     map,
@@ -69,6 +97,7 @@ async function readDatasetManifests(rootDir) {
     characterIndexById: new Map(characterIndex.map((entry) => [entry.id, entry])),
     mapLocationIds: new Set(mapIndex.map((entry) => entry.id)),
     artifactDefinitions: new Map(Object.entries(artifacts.artifacts)),
+    holderSummaries,
   };
 }
 
@@ -190,7 +219,7 @@ function buildOutputs(source, dependencies) {
     relationships: source.terminology.relationships.labels,
   };
   const gameplayLocations = { schemaVersion: 1, entries: [], config: source.gameplayLocations };
-  const holderSummaries = { schemaVersion: 1, holders: [] };
+  const holderSummaries = { schemaVersion: 1, holders: dependencies.holderSummaries };
   const { index: characterContentIndex, shardRecords: characterContentShards } = buildCharacterContentShards(source.characterContents);
   const payload = {
     startState,
