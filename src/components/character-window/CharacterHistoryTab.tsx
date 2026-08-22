@@ -129,7 +129,7 @@ function PlayerHistoryTab({ turns, dossier }: { turns: StoryTurn[]; dossier: Pla
   );
 }
 
-function NpcHistoryTab({ dossier, worldEvents, worldEventDisplays }: { dossier: NpcCharacterDossier; worldEvents: readonly WorldEvent[]; worldEventDisplays: ReadonlyMap<string, WorldEventDisplay> }) {
+function NpcHistoryTab({ dossier, worldEvents, worldEventDisplays, hiddenWorldEventIds }: { dossier: NpcCharacterDossier; worldEvents: readonly WorldEvent[]; worldEventDisplays: ReadonlyMap<string, WorldEventDisplay>; hiddenWorldEventIds: ReadonlySet<string> }) {
   const memories = [...dossier.memories].sort((a, b) => b.turn - a.turn || b.importance - a.importance);
   const worldFacts = factsForCharacter(worldEvents, dossier.id).slice().reverse();
   const hasNarrative = Boolean(
@@ -154,7 +154,12 @@ function NpcHistoryTab({ dossier, worldEvents, worldEventDisplays }: { dossier: 
             {worldFacts.map((fact) => (
               <li key={fact.id} className="border-b border-hairline/60 py-3 last:border-b-0">
                 <strong className="font-mono text-[10px] tracking-wider text-gold">{fact.date.year} AC · {fact.date.month}月{fact.date.day}日</strong>
-                <p className="mt-1 font-serif text-[11px] font-semibold text-parchment">{worldEventDisplays.get(fact.id)?.title ?? fact.reason}</p>
+                <p className="mt-1 font-serif text-[11px] font-semibold text-parchment">
+                  {worldEventDisplays.get(fact.id)?.title ?? fact.reason}
+                  {hiddenWorldEventIds.has(fact.id) && (
+                    <span className="ml-2 border border-gold-deep/50 px-1 py-px font-mono text-[9px] font-normal text-gold" data-debug-event-badge={fact.id}>debug</span>
+                  )}
+                </p>
                 {worldEventDisplays.get(fact.id)?.entities.length ? (
                   <p className="mt-1 font-serif text-[10.5px] leading-relaxed text-gold-dim">{worldEventDisplays.get(fact.id)!.entities.map((entity) => entity.label).join(' · ')}</p>
                 ) : null}
@@ -195,13 +200,14 @@ function NpcHistoryTab({ dossier, worldEvents, worldEventDisplays }: { dossier: 
 }
 
 
-export function CharacterHistoryTab({ dossier, turns, worldEvents, worldEventDisplays }: {
+export function CharacterHistoryTab({ dossier, turns, worldEvents, worldEventDisplays, hiddenWorldEventIds = new Set() }: {
   dossier: CharacterDossier;
   turns: StoryTurn[];
   worldEvents: readonly WorldEvent[];
   worldEventDisplays: ReadonlyMap<string, WorldEventDisplay>;
+  hiddenWorldEventIds?: ReadonlySet<string>;
 }) {
   return dossier.kind === 'player'
     ? <PlayerHistoryTab turns={turns} dossier={dossier} />
-    : <NpcHistoryTab dossier={dossier} worldEvents={worldEvents} worldEventDisplays={worldEventDisplays} />;
+    : <NpcHistoryTab dossier={dossier} worldEvents={worldEvents} worldEventDisplays={worldEventDisplays} hiddenWorldEventIds={hiddenWorldEventIds} />;
 }

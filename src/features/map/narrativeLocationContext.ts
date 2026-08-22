@@ -66,7 +66,7 @@ export function resolveNarrativeLocationContext(
 }
 
 export function formatNarrativeLocationContext(context: NarrativeLocationContext): string {
-  return stripEmoji([
+  const layers = [
     context.placeName,
     context.sceneName,
     context.countyName,
@@ -74,5 +74,11 @@ export function formatNarrativeLocationContext(context: NarrativeLocationContext
     context.kingdomName,
     context.empireName,
     context.hegemonName,
-  ].map(visibleName).filter((name): name is string => Boolean(name)).join(' · '))
+  ].map(visibleName).filter((name): name is string => Boolean(name))
+  // 同名层级（如男爵领、伯爵领、公国都叫"临冬城"）折叠为一次出现，省 token 且更通顺。
+  const deduped: string[] = []
+  for (const name of layers) {
+    if (deduped[deduped.length - 1] !== name) deduped.push(name)
+  }
+  return stripEmoji(deduped.join(' · '))
 }

@@ -11,7 +11,8 @@ import type { CharacterId } from '../features/characters/types';
 import type { WorldEvent } from '../features/world/worldRuntimeTypes';
 import type { WorldLocationRef } from '../features/map/types';
 import { findNextStoryEntity } from '../features/world/storyEntityMatch';
-import { playerWorldEventViewer, selectVisibleWorldEvents } from '../features/world/worldEventVisibility';
+import { playerWorldEventViewer } from '../features/world/worldEventVisibility';
+import { hiddenWorldEventIdsForPlayer, selectWorldEventsForView } from '../features/debug/worldEventDebug';
 import { useWorldEventDisplays } from '../features/world/useWorldEventDisplays';
 import type { WorldEventDisplay } from '../features/world/worldDisplayResolver';
 
@@ -98,7 +99,7 @@ export const StoryFeed: React.FC<StoryFeedProps> = ({
   onOpenLocation = () => undefined,
   onOpenAsset = () => undefined,
 }) => {
-  const { gameState, isStreaming, streamingText } = useGameStore();
+  const { gameState, isStreaming, streamingText, debugEnabled } = useGameStore();
   const bottomRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showJump, setShowJump] = useState(false);
@@ -199,9 +200,14 @@ export const StoryFeed: React.FC<StoryFeedProps> = ({
   };
 
   const isEmptyStage = gameState.turns.length === 0 && !isStreaming;
+  const eventViewer = useMemo(() => playerWorldEventViewer(gameState), [gameState.lord.canonicalCharacterId, gameState.worldCharacters?.runId]);
   const visibleWorldEvents = useMemo(
-    () => selectVisibleWorldEvents(gameState.worldRuntime.events, playerWorldEventViewer(gameState)),
-    [gameState.lord.canonicalCharacterId, gameState.worldCharacters?.runId, gameState.worldRuntime.events],
+    () => selectWorldEventsForView(gameState.worldRuntime.events, eventViewer, debugEnabled),
+    [debugEnabled, eventViewer, gameState.worldRuntime.events],
+  );
+  const hiddenWorldEventIds = useMemo(
+    () => debugEnabled ? hiddenWorldEventIdsForPlayer(gameState.worldRuntime.events, eventViewer) : new Set<string>(),
+    [debugEnabled, eventViewer, gameState.worldRuntime.events],
   );
   const worldEventsById = useMemo(
     () => new Map(visibleWorldEvents.map((event) => [event.id, event])),
@@ -230,6 +236,7 @@ export const StoryFeed: React.FC<StoryFeedProps> = ({
               isFirst={index === 0}
               entities={storyEntities}
               worldEventDisplays={worldEventDisplays}
+              hiddenWorldEventIds={hiddenWorldEventIds}
               facts={(gameState.worldHistory.turns.find((entry) => entry.turn === turn.turnNumber)?.eventIds ?? [])
                 .flatMap((eventId) => worldEventsById.get(eventId) ?? [])}
               onSelectCharacter={onSelectCharacter}
@@ -286,6 +293,7 @@ function SceneBlock({
   isFirst,
   facts,
   worldEventDisplays,
+  hiddenWorldEventIds,
   entities,
   onSelectCharacter,
   onOpenLocation,
@@ -295,6 +303,7 @@ function SceneBlock({
   isFirst: boolean;
   facts: readonly WorldEvent[];
   worldEventDisplays: ReadonlyMap<string, WorldEventDisplay>;
+  hiddenWorldEventIds: ReadonlySet<string>;
   entities: readonly EntityInfo[];
   onSelectCharacter: (characterId: CharacterId) => void;
   onOpenLocation: (location: WorldLocationRef) => void;
@@ -424,6 +433,9 @@ function SceneBlock({
               return (
                 <div key={fact.id} className="mb-1 text-[10.5px] leading-relaxed text-parchment-faint last:mb-0">
                   <span className="text-parchment-dim">{display?.title ?? fact.reason}</span>
+                  {hiddenWorldEventIds.has(fact.id) && (
+                    <span className="ml-2 border border-gold-deep/50 px-1 py-px font-mono text-[9px] text-gold" data-debug-event-badge={fact.id}>debug</span>
+                  )}
                   {display?.entities.map((entity, index) => entity.kind === 'character' ? (
                     <button key={`${entity.kind}:${entity.id}:${index}`} type="button" onClick={() => onSelectCharacter(entity.id)} className="ml-2 text-gold-dim underline decoration-gold-deep/50 underline-offset-2 hover:text-gold" data-story-fact-character={entity.id}>{entity.label}</button>
                   ) : entity.kind === 'location' ? (

@@ -198,42 +198,46 @@ function contextWords(tags: readonly string[]): string {
   return tags.length > 0 ? `（适用于${tags.join('、')}场景）` : '';
 }
 
-export function formatItemNarrativeDirectives(effects: AggregatedItemEffects): string[] {
-  const directives = new Set<string>();
-  for (const entry of effects.active) {
-    const effect = entry.effect;
-    switch (effect.kind) {
-      case 'check_modifier':
-        directives.add(`${entry.itemName}的“${effect.label}”只在匹配的${effect.domain}行动中影响成败。`);
-        break;
-      case 'action_unlock':
-        directives.add(`${entry.itemName}允许采取“${effect.label}”行动。`);
-        break;
-      case 'protection':
-        directives.add(`${entry.itemName}的“${effect.label}”覆盖${effect.zones.join('、')}，可抵御${effect.damageTags.join('、')}伤害。`);
-        break;
-      case 'social':
-        directives.add(`${entry.itemName}的“${effect.label}”会改变${effect.contextTags.join('、')}场合中的身份判断。`);
-        break;
-      case 'burden':
-        directives.add(`${entry.itemName}带来“${effect.label}”，会影响需要轻装与灵活性的行动。`);
-        break;
-      case 'fatigue':
-        directives.add(`${entry.itemName}带来“${effect.label}”，会加快体力消耗${contextWords(effect.contextTags)}。`);
-        break;
-      case 'heat':
-        directives.add(`${entry.itemName}带来“${effect.label}”，会加重闷热${contextWords(effect.contextTags)}。`);
-        break;
-      case 'resource':
-        directives.add(`${entry.itemName}的“${effect.label}”只在相关资源变化实际发生时应用。`);
-        break;
-      case 'capacity':
-        directives.add(`${entry.itemName}的“${effect.label}”只收纳${effect.categories.join('、')}类物品。`);
-        break;
-      case 'narrative':
-        directives.add(effect.directive);
-        break;
-    }
+function effectClause(effect: ItemEffect): string {
+  switch (effect.kind) {
+    case 'check_modifier':
+      return `“${effect.label}”只在匹配的${effect.domain}行动中影响成败`;
+    case 'action_unlock':
+      return `允许采取“${effect.label}”行动`;
+    case 'protection':
+      return `“${effect.label}”覆盖${effect.zones.join('、')}，可抵御${effect.damageTags.join('、')}伤害`;
+    case 'social':
+      return `“${effect.label}”会改变${effect.contextTags.join('、')}场合中的身份判断`;
+    case 'burden':
+      return `“${effect.label}”会影响需要轻装与灵活性的行动`;
+    case 'fatigue':
+      return `“${effect.label}”会加快体力消耗${contextWords(effect.contextTags)}`;
+    case 'heat':
+      return `“${effect.label}”会加重闷热${contextWords(effect.contextTags)}`;
+    case 'resource':
+      return `“${effect.label}”只在相关资源变化实际发生时应用`;
+    case 'capacity':
+      return `“${effect.label}”只收纳${effect.categories.join('、')}类物品`;
+    case 'narrative':
+      return effect.directive;
   }
-  return [...directives];
+}
+
+export function formatItemNarrativeDirectives(effects: AggregatedItemEffects): string[] {
+  const seen = new Set<string>();
+  const byItem = new Map<string, { name: string; clauses: string[] }>();
+  for (const entry of effects.active) {
+    const clause = effectClause(entry.effect);
+    if (!clause) continue;
+    const key = `${entry.itemName}::${clause}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    let bucket = byItem.get(entry.itemName);
+    if (!bucket) {
+      bucket = { name: entry.itemName, clauses: [] };
+      byItem.set(entry.itemName, bucket);
+    }
+    bucket.clauses.push(clause);
+  }
+  return [...byItem.values()].map((bucket) => `${bucket.name}：${bucket.clauses.join('；')}。`);
 }

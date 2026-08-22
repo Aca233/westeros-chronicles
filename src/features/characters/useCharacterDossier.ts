@@ -178,15 +178,16 @@ export function useCharacterDossier(selectedCharacterId: CharacterId | null): Ch
     () => createPlayerDossier(lord, currentYear, playerId, playerContent, terminology),
     [lord, currentYear, playerId, playerContent, terminology],
   );
-  const [dossier, setDossier] = useState<CharacterDossier | null>(selectedCharacterId ? null : playerDossier);
+  const isPlayer = !selectedCharacterId || selectedCharacterId === playerId;
+  const [dossier, setDossier] = useState<CharacterDossier | null>(isPlayer ? playerDossier : null);
   const [relatedRecords, setRelatedRecords] = useState<ReadonlyMap<CharacterId, StaticCharacterRecord>>(new Map());
-  const [status, setStatus] = useState<CharacterDossierLoadStatus>(selectedCharacterId ? 'loading' : 'ready');
+  const [status, setStatus] = useState<CharacterDossierLoadStatus>(isPlayer ? 'ready' : 'loading');
   const [error, setError] = useState<string | null>(null);
   const [reloadToken, setReloadToken] = useState(0);
   const reload = useCallback(() => setReloadToken((value) => value + 1), []);
 
   useEffect(() => {
-    if (!selectedCharacterId) {
+    if (!selectedCharacterId || selectedCharacterId === playerId) {
       setDossier(playerDossier);
       setRelatedRecords(new Map());
       setStatus('ready');

@@ -213,6 +213,8 @@ export const STRUCTURE_GUARDS = Object.freeze([
   'test:world-content-runtime',
   'check:living-world-content-boundaries',
   'test:living-world-closure',
+  'test:debug-settings',
+  'test:debug-model-trace',
 ]);
 
 export const VERIFICATION_SUITES = Object.freeze({

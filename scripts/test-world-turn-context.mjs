@@ -31,6 +31,7 @@ const records = new Map([
   ['agot:recent_1', { ...base, id: 'agot:recent_1', name: '近来人物' }],
   ['agot:due_1', { ...base, id: 'agot:due_1', name: '时间线人物' }],
   ['agot:genealogy_1', { ...base, id: 'agot:genealogy_1', name: '劳勃', canonTier: 'genealogy' }],
+  ['agot:robert_other', { ...base, id: 'agot:robert_other', name: '劳勃', canonTier: 'canon', locationId: 'b_red_keep' }],
 ]);
 const repository = {
   loadManifest: async () => ({ datasetHash: 'fixture' }),
@@ -178,5 +179,19 @@ const minorHolderState = {
 const minorHolderContext = await buildWorldTurnContext({ gameState: minorHolderState, actionText: '与劳勃交谈', repository, eventStore, mapLocationRepository, timeline });
 const minorHolderIds = [...minorHolderContext.selection.full, ...minorHolderContext.selection.compact].map((entry) => entry.id);
 assert.equal(minorHolderIds.includes('agot:minor_holder'), false, '持有人摘要不得自动进入 LLM 人物候选');
+
+// 同名角色消歧：当 findMentioned 返回多个同名的活着的 canon 角色（两个"劳勃"）时，
+// 只有第一个（按 findMentioned 排序）保留为 directlyNamed，另一个不进入直接点名集合。
+const ambiguousRepository = {
+  ...repository,
+  findMentioned: async () => [records.get('agot:named_1'), records.get('agot:robert_other')],
+};
+const ambiguousContext = await buildWorldTurnContext({
+  gameState, actionText: '与劳勃交谈', repository: ambiguousRepository, eventStore, mapLocationRepository, timeline,
+});
+assert.equal(ambiguousContext.directlyNamedIds.includes('agot:named_1'), true, '排在前面的劳勃应作为直接点名保留');
+assert.equal(ambiguousContext.directlyNamedIds.includes('agot:robert_other'), false, '同名靠后的劳勃不应同时作为直接点名');
+const ambiguousIds = [...ambiguousContext.selection.full, ...ambiguousContext.selection.compact].map((entry) => entry.id);
+assert.equal(ambiguousIds.includes('agot:robert_other'), false, '消歧后靠后的同名角色不应进入候选列表');
 
 console.log('World turn context tests passed.');

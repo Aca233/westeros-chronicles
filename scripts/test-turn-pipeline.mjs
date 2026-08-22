@@ -118,6 +118,12 @@ const prompt = messages.map((message) => message.content).join('\n');
 assert.match(prompt, /MODIFY_PRESTIGE/);
 assert.doesNotMatch(prompt, /MARRY_CHARACTERS|INJURE_CHARACTER|两人已经结婚|珊莎也受了伤/);
 assert.match(prompt, /只能叙述程序已确认的事实/);
+// 叙事请求带文学规范，但篇幅服从已确认事实，且仍锁死不得发明婚姻/死亡/受伤。
+assert.match(prompt, /对白与正文完全融合/);
+assert.match(prompt, /篇幅服从已确认事实/);
+assert.doesNotMatch(prompt, /600 ~ 1200/);
+// 叙事请求不向模型提供 state_cmd 命令数组示例。
+assert.doesNotMatch(prompt, /<state_cmd>\s*\n\s*\[/);
 
 const offlineRaw = await streamNarrativeCompletion(messages, {
   provider: 'deepseek', baseUrl: '', apiKey: '', model: '', temperature: 0.7,

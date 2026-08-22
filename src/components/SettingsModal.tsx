@@ -5,7 +5,7 @@ import { stripEmoji } from '../services/textSanitizer';
 import { fetchAvailableModels } from '../services/api';
 
 export const SettingsModal: React.FC = () => {
-  const { isSettingsOpen, closeSettings, apiConfig, setApiConfig } = useGameStore();
+  const { isSettingsOpen, closeSettings, apiConfig, setApiConfig, debugEnabled, setDebugEnabled } = useGameStore();
 
   const [provider, setProvider] = useState(apiConfig.provider);
   const [baseUrl, setBaseUrl] = useState(apiConfig.baseUrl);
@@ -293,6 +293,23 @@ export const SettingsModal: React.FC = () => {
             onChange={(e) => setTemperature(parseFloat(e.target.value))}
             className="cursor-pointer accent-gold"
           />
+        </div>
+
+        <div className="flex flex-col gap-2 border-t border-hairline pt-3">
+          <span className="text-[11px] tracking-wide text-parchment-dim">开发调试</span>
+          <label className="flex items-start gap-2.5 font-serif text-[11px] leading-relaxed text-parchment">
+            <input
+              type="checkbox"
+              className="mt-0.5 accent-gold"
+              checked={debugEnabled}
+              onChange={(event) => setDebugEnabled(event.target.checked)}
+              aria-label="开发调试"
+            />
+            <span>
+              开启后显示运行时检查器、情报透视和本回合发给模型的请求。
+              只影响本机界面，不写入存档，也不改变模型看到的世界知识。
+            </span>
+          </label>
         </div>
 
         {/* 存档管理入口提示:功能已移至主菜单 · 读取存档 */}

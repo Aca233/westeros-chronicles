@@ -33,6 +33,9 @@ import {
   cancelWorldTransaction as cancelQueuedWorldTransaction,
   enqueueWorldTransaction,
 } from '../features/world/worldTransactionQueue';
+import { readDebugEnabled, writeDebugEnabled } from '../features/debug/debugSettings';
+import type { ModelRequestTrace } from '../features/debug/modelRequestTrace';
+import { buildModelRequestTrace } from '../features/debug/modelRequestTrace';
 
 export interface CharacterTurnContext extends CharacterCommandBatchBaseContext { promptContext?: string; }
 
@@ -48,6 +51,8 @@ interface GameStore {
   activeDiceCheck: D20Check | null;
   changesLog: string[];
   characterTurnContext: CharacterTurnContext | null;
+  debugEnabled: boolean;
+  lastModelRequestTrace: ModelRequestTrace | null;
   bootStatus: 'loading' | 'ready' | 'error';
   bootError: string | null;
 
@@ -67,6 +72,7 @@ interface GameStore {
 
   // 动作
   setApiConfig: (config: Partial<ApiConfig>) => void;
+  setDebugEnabled: (enabled: boolean) => void;
   cancelCurrentTurn: () => void;
   openSettings: () => void;
   closeSettings: () => void;
@@ -179,6 +185,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
   activeDiceCheck: null,
   changesLog: [],
   characterTurnContext: null,
+  debugEnabled: readDebugEnabled(),
+  lastModelRequestTrace: null,
   bootStatus: 'loading',
   bootError: null,
   activeScreen: 'menu',
@@ -200,6 +208,10 @@ export const useGameStore = create<GameStore>((set, get) => ({
     } catch {
       // 忽略
     }
+  },
+  setDebugEnabled: (enabled) => {
+    writeDebugEnabled(enabled);
+    set({ debugEnabled: enabled, ...(enabled ? {} : { lastModelRequestTrace: null }) });
   },
 
   cancelCurrentTurn: () => {
@@ -419,11 +431,33 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
   // 提交领主行动
   submitAction: async (actionText: string, diceMode: DiceMode = 'auto') => {
-    const { gameState: visibleGameState, apiConfig, isStreaming, characterTurnContext, activeSlotId } = get();
+    const { gameState: visibleGameState, apiConfig, isStreaming, characterTurnContext, activeSlotId, debugEnabled } = get();
     let gameState = repairKnownTurnRevisionDrift(visibleGameState);
     if (gameState !== visibleGameState) set({ gameState });
     const safeActionText = stripEmoji(actionText);
-    if (isStreaming || gameState.isGameOver || !safeActionText || !activeSlotId) return;
+    const captureTrace = (trace: ModelRequestTrace) => {
+      if (get().debugEnabled) set({ lastModelRequestTrace: trace });
+    };
+    if (isStreaming || gameState.isGameOver || !safeActionText || !activeSlotId) {
+      if (debugEnabled) {
+        captureTrace(buildModelRequestTrace({
+          turnNumber: gameState.turnCount,
+          status: 'blocked',
+          offline: !apiConfig.apiKey.trim(),
+          provider: apiConfig.provider,
+          model: apiConfig.model,
+          actionText: safeActionText || actionText,
+          blockedReason: isStreaming
+            ? '上一回合仍在进行，新的行动被忽略。'
+            : gameState.isGameOver
+              ? '传奇已终结，不能再提交行动。'
+              : !safeActionText
+                ? '行动文本为空。'
+                : '当前没有已载入的存档位。',
+        }));
+      }
+      return;
+    }
 
     const submittedWorldTransactions = structuredClone(
       gameState.worldRuntime.pendingTransactions.filter((transaction) => transaction.status === 'pending'),
@@ -436,7 +470,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     try {
       const [
         { performD20Check },
-        { evaluateDiceRequirement },
+        { inferActionCheck },
         { buildTurnResolutionMessages, prepareWorldTurn, requestTurnResolution, settleTurnDraft },
         { buildSettledNarrativeMessages, streamSettledNarrative },
         { buildWorldTurnContext, formatWorldTurnContext },
@@ -452,29 +486,12 @@ export const useGameStore = create<GameStore>((set, get) => ({
       // 先丢弃不兼容的测试快照并建立当前回合基线，避免生成完叙事才发现无法提交。
       await ensureTurnSnapshotBaseline(activeSlotId, gameState);
 
-      // 1. 只有存在真实风险的行动才进行 D20 检定；叙事模式永不隐藏掷骰。
-      const diceDecision = evaluateDiceRequirement(safeActionText, { overallStatus: gameState.lord.overallStatus });
-      const shouldRoll = !diceDecision.isImpossible && (diceMode === 'force' || (diceMode === 'auto' && diceDecision.shouldRoll));
-      if (shouldRoll) {
-        diceCheck = performD20Check(
-          safeActionText,
-          gameState.lord.attributes,
-          gameState.lord.items,
-          ITEM_CATALOG,
-          gameState.lord.traitIds ?? [],
-          diceDecision.attribute,
-          diceDecision.dc,
-          diceDecision.domain,
-        );
-        set({
-          activeDiceCheck: diceCheck,
-          isDiceModalOpen: true,
-        });
-      }
+      let contextError: string | undefined;
       const automaticWorldContext = characterTurnContext
         ? null
         : await buildWorldTurnContext({ gameState, actionText: safeActionText }).catch((error: unknown) => {
-          console.warn(`自动人物上下文暂不可用：${error instanceof Error ? error.message : String(error)}`);
+          contextError = error instanceof Error ? error.message : String(error);
+          console.warn(`自动人物上下文暂不可用：${contextError}`);
           return null;
         });
       const effectiveCharacterContext: CharacterCommandBatchBaseContext | undefined = characterTurnContext
@@ -483,15 +500,30 @@ export const useGameStore = create<GameStore>((set, get) => ({
       const combinedPromptContext = [automaticPromptContext, characterTurnContext?.promptContext].filter(Boolean).join('\n\n');
       const nextTurnNumber = gameState.turnCount + 1;
 
-      // 第一阶段只解析规则与命令，不生成最终正文。
+      // 第一阶段：判骰 + 规则解析合一。模型先输出 <dice_request>，再输出双轨 state_cmd。
+      // 此时不传 diceCheck（还没骰），diceContext 也不传（判骰说明已拼进 system）。
       const resolutionMessages = buildTurnResolutionMessages(
         gameState,
         safeActionText,
-        diceCheck,
-        { mode: diceMode, decision: diceDecision },
+        undefined,
+        undefined,
         submittedWorldTransactions,
         combinedPromptContext,
       );
+      captureTrace(buildModelRequestTrace({
+        turnNumber: nextTurnNumber,
+        status: 'resolving',
+        offline: !apiConfig.apiKey.trim(),
+        provider: apiConfig.provider,
+        model: apiConfig.model,
+        actionText: safeActionText,
+        contextError,
+        worldContext: {
+          automatic: automaticPromptContext,
+          resolutionPrompt: combinedPromptContext,
+        },
+        resolutionMessages,
+      }));
       const draft = await requestTurnResolution(
         resolutionMessages,
         apiConfig,
@@ -501,9 +533,50 @@ export const useGameStore = create<GameStore>((set, get) => ({
       );
       if (turnController.signal.aborted) throw turnController.signal.reason;
       set({ turnStage: 'settling' });
+
+      // 第二阶段：程序根据模型判骰结果掷骰。
+      // narrative 模式永不骰；force 模式跳过模型判骰，程序直接按 inferActionCheck 掷骰。
+      let diceRequest = draft.diceRequest;
+      if (diceMode === 'narrative') {
+        diceRequest = { ...diceRequest, roll: false };
+      } else if (diceMode === 'force') {
+        const inferred = inferActionCheck(safeActionText);
+        diceRequest = {
+          roll: true,
+          attribute: inferred.attribute,
+          dc: inferred.dc,
+          domain: inferred.domain,
+          reason: '玩家强制检定',
+        };
+      }
+      if (diceRequest.roll) {
+        diceCheck = performD20Check(
+          safeActionText,
+          gameState.lord.attributes,
+          gameState.lord.items,
+          ITEM_CATALOG,
+          gameState.lord.traitIds ?? [],
+          diceRequest.attribute,
+          diceRequest.dc,
+          diceRequest.domain,
+        );
+        set({
+          activeDiceCheck: diceCheck,
+          isDiceModalOpen: true,
+        });
+      }
+
+      // 第三阶段：按骰子结果选用对应版本的 state_cmd。
+      const selectedDraft: import('../services/turn/resolutionTypes').TurnResolutionDraft = {
+        outcomeSummary: draft.outcomeSummary,
+        stateCommands: diceCheck
+          ? (diceCheck.success ? draft.stateCommands : draft.failureCommands.length > 0 ? draft.failureCommands : draft.stateCommands)
+          : draft.stateCommands,
+        worldIntents: draft.worldIntents,
+      };
       const preparedWorld = await prepareWorldTurn({
         gameState,
-        draft,
+        draft: selectedDraft,
         actionText: safeActionText,
         nextTurnNumber,
         pendingTransactions: submittedWorldTransactions,
@@ -513,7 +586,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
         gameState,
         actionText: safeActionText,
         nextTurnNumber,
-        draft,
+        draft: selectedDraft,
         pendingTransactions: submittedWorldTransactions,
         characterContext: effectiveCharacterContext,
         diceCheck,
@@ -535,13 +608,34 @@ export const useGameStore = create<GameStore>((set, get) => ({
       const committedWorldContext = await buildWorldTurnContext({
         gameState: committedContextState,
         actionText: safeActionText,
-      }).then(formatWorldTurnContext).catch(() => '');
+      }).then(formatWorldTurnContext).catch((error: unknown) => {
+        if (!contextError) contextError = error instanceof Error ? error.message : String(error);
+        return '';
+      });
+      const narrationPrompt = [settled.narrationContext, committedWorldContext].filter(Boolean).join('\n\n');
       const narrativeMessages = buildSettledNarrativeMessages({
         gameState: committedContextState,
         actionText: safeActionText,
         facts: settled.resolvedFacts,
-        worldContext: [settled.narrationContext, committedWorldContext].filter(Boolean).join('\n\n'),
+        worldContext: narrationPrompt,
       });
+      captureTrace(buildModelRequestTrace({
+        turnNumber: nextTurnNumber,
+        status: 'narrating',
+        offline: !apiConfig.apiKey.trim(),
+        provider: apiConfig.provider,
+        model: apiConfig.model,
+        actionText: safeActionText,
+        contextError,
+        worldContext: {
+          automatic: automaticPromptContext,
+          committed: committedWorldContext,
+          resolutionPrompt: combinedPromptContext,
+          narrationPrompt,
+        },
+        resolutionMessages,
+        narrationMessages: narrativeMessages,
+      }));
       if (turnController.signal.aborted) throw turnController.signal.reason;
       set({ turnStage: 'narrating' });
       const parsedTurn = await streamSettledNarrative(
@@ -604,9 +698,22 @@ export const useGameStore = create<GameStore>((set, get) => ({
           ...settled.changesLog,
           diceCheck ? `检定结果: ${diceCheck.attributeName} ${diceCheck.success ? '成功' : '失败'} (总点数 ${diceCheck.total} vs DC ${diceCheck.dc})` : '',
         ].filter(Boolean),
+        ...(get().lastModelRequestTrace ? {
+          lastModelRequestTrace: { ...get().lastModelRequestTrace!, status: 'complete' as const },
+        } : {}),
       });
     } catch (err) {
       const cancelled = turnController.signal.aborted || (err instanceof DOMException && err.name === 'AbortError');
+      const previous = get().lastModelRequestTrace;
+      if (previous && get().debugEnabled) {
+        set({
+          lastModelRequestTrace: {
+            ...previous,
+            status: cancelled ? previous.status : 'failed',
+            ...(cancelled ? {} : { error: err instanceof Error ? err.message : String(err) }),
+          },
+        });
+      }
       if (!cancelled) {
         console.error('提交行动出错:', err);
         alert(`叙事生成遇到错误: ${err instanceof Error ? err.message : String(err)}`);

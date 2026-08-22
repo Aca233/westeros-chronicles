@@ -414,4 +414,33 @@ test('模型消息只接收中文地点层级且隐藏内部移动命令', () =>
   assert.doesNotMatch(combined, /\bb_[a-z0-9_]+\b|baronyId|男爵领/);
   assert.doesNotMatch(combined, /CHANGE_LOCATION|MOVE_CHARACTER/);
   assert.match(combined, /MODIFY_GOLD/);
+  // 规则解析请求不再回放上一章小说，也不要求写 600~1200 字正文。
+  assert.doesNotMatch(combined, /600 ~ 1200/);
+  assert.doesNotMatch(combined, /队伍开始赶路/);
+});
+
+test('规则解析 system 只判规则不写小说，且历史只回放已接受命令', () => {
+  const state = gameState();
+  state.turns = [{
+    playerInput: '与学士密谈',
+    think: '推演局势',
+    narrate: '学士翻开厚重的羊皮卷，低声陈述北境的隐忧。',
+    branches: ['继续追问', '转移话题', '结束密谈'],
+    stateCommands: [{ type: 'MODIFY_GOLD', goldDragons: -1, reason: '赏赐学士' }],
+  }];
+  const messages = buildChatMessages(state, '继续追问学士');
+  const system = messages[0].content;
+
+  // system 是规则宪章，不含文学规范与小说篇幅要求。
+  assert.doesNotMatch(system, /600 ~ 1200/);
+  assert.doesNotMatch(system, /对白与正文完全融合/);
+  assert.match(system, /只判定玩家当前行动能确认的直接结果/);
+  assert.match(system, /不输出 <narrate> 或 <branch>/);
+
+  // 历史只回放命令摘要，不回放上一章正文、思考或分支。
+  const history = messages.slice(1, -1).map((message) => message.content).join('\n');
+  assert.doesNotMatch(history, /学士翻开厚重的羊皮卷/);
+  assert.doesNotMatch(history, /推演局势/);
+  assert.doesNotMatch(history, /继续追问|转移话题|结束密谈/);
+  assert.match(history, /MODIFY_GOLD/);
 });

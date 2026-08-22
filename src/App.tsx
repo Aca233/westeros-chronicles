@@ -20,9 +20,10 @@ const WorldAssetDrawer = lazy(() => import('./components/items/WorldAssetDrawer'
 const SettingsModal = lazy(() => import('./components/SettingsModal').then((module) => ({ default: module.SettingsModal })));
 const CharacterCreator = lazy(() => import('./components/CharacterCreator').then((module) => ({ default: module.CharacterCreator })));
 const TvTimelineModal = lazy(() => import('./components/TvTimelineModal').then((module) => ({ default: module.TvTimelineModal })));
+const DebugOverlay = lazy(() => import('./features/debug/DebugOverlay').then((module) => ({ default: module.DebugOverlay })));
 
 export const App: React.FC = () => {
-  const { changesLog, isSettingsOpen, isCreatorOpen, isTvTimelineOpen, closeTvTimeline, bootStatus, bootError, hydrateSaveSlots, resetStoredGame, activeScreen } = useGameStore();
+  const { changesLog, isSettingsOpen, isCreatorOpen, isTvTimelineOpen, closeTvTimeline, bootStatus, bootError, hydrateSaveSlots, resetStoredGame, activeScreen, debugEnabled } = useGameStore();
   const [booted, setBooted] = useState(false);
   const characterNavigation = useCharacterNavigation();
   const activeDrawer = useMapUiStore((state) => state.activeDrawer);
@@ -143,6 +144,7 @@ export const App: React.FC = () => {
         <Suspense fallback={null}>
           {isSettingsOpen && <SettingsModal />}
           {isCreatorOpen && <CharacterCreator />}
+          {debugEnabled && <DebugOverlay />}
         </Suspense>
       </div>
     );
@@ -257,6 +259,7 @@ export const App: React.FC = () => {
       <Suspense fallback={null}>
         {isSettingsOpen && <SettingsModal />}
         {isCreatorOpen && <CharacterCreator />}
+        {debugEnabled && <DebugOverlay />}
         {isTvTimelineOpen && (
           <TvTimelineModal
             isOpen

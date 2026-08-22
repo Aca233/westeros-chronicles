@@ -15,7 +15,21 @@ const bundle = await build({
   platform: 'node',
 });
 const url = `data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString('base64')}`;
+const debugBundle = await build({
+  stdin: {
+    contents: "export * from './src/features/debug/worldEventDebug.ts';",
+    resolveDir: process.cwd(),
+    sourcefile: 'world-event-debug-test-entry.ts',
+    loader: 'ts',
+  },
+  bundle: true,
+  write: false,
+  format: 'esm',
+  platform: 'node',
+});
+const debugUrl = `data:text/javascript;base64,${Buffer.from(debugBundle.outputFiles[0].text).toString('base64')}`;
 const { selectVisibleWorldEvents, playerWorldEventViewer } = await import(url);
+const { selectWorldEventsForView, hiddenWorldEventIdsForPlayer } = await import(debugUrl);
 
 const playerId = 'agot:player';
 const events = [
@@ -56,18 +70,36 @@ assert.deepEqual(
   { kind: 'player', characterId: 'save:run-7:player' },
 );
 
-const integrationFiles = [
+assert.deepEqual(
+  selectWorldEventsForView(events, { kind: 'player', characterId: playerId }, false).map((event) => event.id),
+  ['public', 'known-secret'],
+);
+assert.deepEqual(
+  selectWorldEventsForView(events, { kind: 'player', characterId: playerId }, true).map((event) => event.id),
+  events.map((event) => event.id),
+);
+assert.deepEqual(
+  [...hiddenWorldEventIdsForPlayer(events, { kind: 'player', characterId: playerId })].sort(),
+  ['hidden-secret', 'invalid-visibility', 'legacy-secret'],
+);
+
+const playerUiFiles = [
   'src/components/StoryFeed.tsx',
   'src/components/Ck3CharacterWindow.tsx',
   'src/components/TvTimelineModal.tsx',
-  'src/features/map/politicalProjection.ts',
-  'src/features/world/worldTurnContext.ts',
 ];
-for (const file of integrationFiles) {
+for (const file of playerUiFiles) {
   const source = await readFile(file, 'utf8');
-  assert.match(source, /selectVisibleWorldEvents/, `${file} must use the shared visibility selector`);
+  assert.match(source, /selectWorldEventsForView/, `${file} must use the shared visibility selector`);
 }
+const politicalSource = await readFile('src/features/map/politicalProjection.ts', 'utf8');
+assert.match(politicalSource, /selectVisibleWorldEvents/, 'politicalProjection must use the shared visibility selector');
+const worldTurnContextSource = await readFile('src/features/world/worldTurnContext.ts', 'utf8');
+assert.match(worldTurnContextSource, /selectVisibleWorldEvents/, 'worldTurnContext must use the shared visibility selector');
+assert.match(worldTurnContextSource, /playerWorldEventViewer\(gameState\)/, 'LLM context must stay on the player viewer');
+assert.doesNotMatch(worldTurnContextSource, /selectWorldEventsForView|kind: 'system'|debugEnabled/, 'LLM context must not receive debug x-ray');
 const mapDrawerSource = await readFile('src/features/map/MapDrawer.tsx', 'utf8');
 assert.match(mapDrawerSource, /playerWorldEventViewer/, 'MapDrawer must supply the current player viewer to political projection');
+assert.match(mapDrawerSource, /debugEnabled \? \{ kind: 'system' \} : playerWorldEventViewer/, 'MapDrawer may x-ray only when debug is enabled');
 
 console.log('World event visibility tests passed.');

@@ -4,7 +4,8 @@ import { useGameStore } from '../store/useGameStore';
 import { resolveCharacterTraits } from '../data/characterTraits';
 import { useCharacterDossier } from '../features/characters/useCharacterDossier';
 import type { CharacterId } from '../features/characters/types';
-import { playerWorldEventViewer, selectVisibleWorldEvents } from '../features/world/worldEventVisibility';
+import { playerWorldEventViewer } from '../features/world/worldEventVisibility';
+import { hiddenWorldEventIdsForPlayer, selectWorldEventsForView } from '../features/debug/worldEventDebug';
 import { useWorldEventDisplays } from '../features/world/useWorldEventDisplays';
 import { GameIcon, getHouseIconId } from './GameIcon';
 import { HealthAndEquipmentPanel } from './items/HealthAndEquipmentPanel';
@@ -49,9 +50,15 @@ export const Ck3CharacterWindow: React.FC<Ck3CharacterWindowProps> = ({
   const worldEvents = useGameStore((state) => state.gameState.worldRuntime.events);
   const lord = useGameStore((state) => state.gameState.lord);
   const worldCharacters = useGameStore((state) => state.gameState.worldCharacters);
+  const debugEnabled = useGameStore((state) => state.debugEnabled);
+  const eventViewer = useMemo(() => playerWorldEventViewer({ lord, worldCharacters }), [lord.canonicalCharacterId, worldCharacters?.runId]);
   const visibleWorldEvents = useMemo(
-    () => selectVisibleWorldEvents(worldEvents, playerWorldEventViewer({ lord, worldCharacters })),
-    [lord.canonicalCharacterId, worldCharacters?.runId, worldEvents],
+    () => selectWorldEventsForView(worldEvents, eventViewer, debugEnabled),
+    [debugEnabled, eventViewer, worldEvents],
+  );
+  const hiddenWorldEventIds = useMemo(
+    () => debugEnabled ? hiddenWorldEventIdsForPlayer(worldEvents, eventViewer) : new Set<string>(),
+    [debugEnabled, eventViewer, worldEvents],
   );
   const worldEventDisplays = useWorldEventDisplays(visibleWorldEvents, gameState);
   const { dossier, relatedRecords, status, error, reload } = useCharacterDossier(selectedCharacterId);
@@ -140,7 +147,7 @@ export const Ck3CharacterWindow: React.FC<Ck3CharacterWindowProps> = ({
                 />
               )}
               {activeTab === 'health' && <HealthAndEquipmentPanel dossier={dossier} embedded />}
-              {activeTab === 'history' && <CharacterHistoryTab dossier={dossier} turns={turns} worldEvents={visibleWorldEvents} worldEventDisplays={worldEventDisplays} />}
+              {activeTab === 'history' && <CharacterHistoryTab dossier={dossier} turns={turns} worldEvents={visibleWorldEvents} worldEventDisplays={worldEventDisplays} hiddenWorldEventIds={hiddenWorldEventIds} />}
               {activeTab === 'inventory' && (
                 <CharacterAssetsTab
                   dossier={dossier}

@@ -111,6 +111,8 @@ function resetStores(): void {
     activeSlotId: null,
     saveSlots: [],
     slotActionError: null,
+    debugEnabled: false,
+    lastModelRequestTrace: null,
   });
   useMapUiStore.setState({
     ...originalMapUiState,
@@ -241,7 +243,9 @@ describe('critical rendered runtime flows', () => {
     turnMocks.requestTurnResolution.mockResolvedValue({
       outcomeSummary: '守卫完成了换岗。',
       stateCommands: [],
+      failureCommands: [],
       worldIntents: [],
+      diceRequest: { roll: false, attribute: 'diplomacy', dc: 12, domain: 'diplomacy', reason: '普通对话，无需检定' },
     });
     turnMocks.streamSettledNarrative.mockImplementation(async (_messages, _config, turnNumber, playerInput, onChunk) => {
       onChunk('<narrate>守卫完成了换岗。</narrate>');

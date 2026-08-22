@@ -23,7 +23,8 @@ import { clsx } from 'clsx';
 import { useGameStore } from '../store/useGameStore';
 import { CANONICAL_TIMELINE } from '../data/generated/canonicalTimeline';
 import { projectActualTimeline, projectCanonicalTimeline, type TimelineProjectionEvent } from '../features/world/worldHistoryProjection';
-import { playerWorldEventViewer, selectVisibleWorldEvents } from '../features/world/worldEventVisibility';
+import { playerWorldEventViewer } from '../features/world/worldEventVisibility';
+import { hiddenWorldEventIdsForPlayer, selectWorldEventsForView } from '../features/debug/worldEventDebug';
 import { useWorldEventDisplays } from '../features/world/useWorldEventDisplays';
 import type { CharacterId } from '../features/characters/types';
 import type { WorldLocationRef } from '../features/map/types';
@@ -161,9 +162,15 @@ export const TvTimelineModal: React.FC<TvTimelineModalProps> = ({
   const worldEvents = useGameStore((state) => state.gameState.worldRuntime.events);
   const lord = useGameStore((state) => state.gameState.lord);
   const worldCharacters = useGameStore((state) => state.gameState.worldCharacters);
+  const debugEnabled = useGameStore((state) => state.debugEnabled);
+  const eventViewer = useMemo(() => playerWorldEventViewer({ lord, worldCharacters }), [lord.canonicalCharacterId, worldCharacters?.runId]);
   const visibleWorldEvents = useMemo(
-    () => selectVisibleWorldEvents(worldEvents, playerWorldEventViewer({ lord, worldCharacters })),
-    [lord.canonicalCharacterId, worldCharacters?.runId, worldEvents],
+    () => selectWorldEventsForView(worldEvents, eventViewer, debugEnabled),
+    [debugEnabled, eventViewer, worldEvents],
+  );
+  const hiddenWorldEventIds = useMemo(
+    () => debugEnabled ? hiddenWorldEventIdsForPlayer(worldEvents, eventViewer) : new Set<string>(),
+    [debugEnabled, eventViewer, worldEvents],
   );
   const worldEventById = useMemo(() => new Map(visibleWorldEvents.map((event) => [event.id, event])), [visibleWorldEvents]);
   const worldEventDisplays = useWorldEventDisplays(visibleWorldEvents, gameState);
@@ -476,6 +483,7 @@ export const TvTimelineModal: React.FC<TvTimelineModalProps> = ({
                     const regionInfo = REGION_MAP[evt.region_tag] || { label: evt.region, color: 'border-hairline bg-ink text-parchment' };
                     const linkedWorldEvent = timelineMode === 'actual' ? worldEventById.get(evt.id) : undefined;
                     const linkedDisplay = linkedWorldEvent ? worldEventDisplays.get(linkedWorldEvent.id) : undefined;
+                    const isDebugHidden = linkedWorldEvent ? hiddenWorldEventIds.has(linkedWorldEvent.id) : false;
 
                     return (
                       <article
@@ -525,6 +533,9 @@ export const TvTimelineModal: React.FC<TvTimelineModalProps> = ({
                                 <MapPin className="h-2.5 w-2.5 inline mr-0.5" />
                                 {evt.region}
                               </span>
+                              {isDebugHidden && (
+                                <span className="rounded border border-gold-deep/50 px-1.5 py-0.5 font-mono text-[10px] text-gold" data-debug-event-badge={linkedWorldEvent?.id}>debug</span>
+                              )}
                             </div>
 
                             {/* Event Title & Summary */}

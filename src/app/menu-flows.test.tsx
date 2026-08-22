@@ -78,6 +78,9 @@ function resetStores(): void {
     activeSlotId: null,
     saveSlots: [],
     slotActionError: null,
+    debugEnabled: false,
+    lastModelRequestTrace: null,
+    isSettingsOpen: false,
   });
 }
 
@@ -107,6 +110,25 @@ beforeEach(() => {
 });
 
 describe('main menu flows', () => {
+  test('settings can enable the debug overlay and model-request tab', async () => {
+    dbMocks.listSaveSlots.mockResolvedValue([]);
+    window.localStorage.removeItem('westeros-debug');
+    const user = userEvent.setup();
+
+    render(<App />);
+    await user.click(await screen.findByRole('button', { name: /设置/ }));
+    const toggle = await screen.findByRole('checkbox', { name: '开发调试' });
+    expect(toggle).not.toBeChecked();
+    expect(screen.queryByLabelText('开发调试面板')).not.toBeInTheDocument();
+
+    await user.click(toggle);
+    expect(useGameStore.getState().debugEnabled).toBe(true);
+    expect(window.localStorage.getItem('westeros-debug')).toBe('1');
+    expect(await screen.findByLabelText('开发调试面板')).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: '模型请求' }));
+    expect(screen.getByText(/还没有捕获到模型请求/)).toBeInTheDocument();
+  });
+
   test('title screen renders and continue stays disabled without saves', async () => {
     dbMocks.listSaveSlots.mockResolvedValue([]);
 

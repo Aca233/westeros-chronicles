@@ -127,6 +127,34 @@ function recentParticipantIds(gameState: GameState, visibleWorldEvents: readonly
     }));
 }
 
+type MentionCandidate = CharacterSearchHit | StaticCharacterRecord;
+
+function mentionName(hit: MentionCandidate): string {
+  return hit.name.trim();
+}
+
+function mentionId(hit: MentionCandidate): CharacterId {
+  return hit.id;
+}
+
+/**
+ * Deduplicates mention hits by display name. When several characters share
+ * the same name (e.g. nine unrelated "劳勃" from different houses), only the
+ * first-ranked one is kept as a direct mention. `findMentioned` already sorts
+ * by canon tier, liveness, and stable id, so the survivor is the most
+ * prominent living canon character with that name. Characters with unique
+ * names are always retained.
+ */
+function disambiguateByName(hits: readonly MentionCandidate[]): MentionCandidate[] {
+  const seenNames = new Map<string, MentionCandidate>();
+  for (const hit of hits) {
+    const key = mentionName(hit);
+    if (!key) continue;
+    if (!seenNames.has(key)) seenNames.set(key, hit);
+  }
+  return hits.filter((hit) => seenNames.get(mentionName(hit)) === hit);
+}
+
 function relationToPlayer(character: ResolvedCharacter, playerId: CharacterId | undefined, playerRecord: StaticCharacterRecord | undefined): string | undefined {
   if (!playerId) return undefined;
   if (playerRecord?.fatherId === character.id) return '父亲';
@@ -210,7 +238,8 @@ export async function buildWorldTurnContext(input: BuildWorldTurnContextInput): 
   const mapLocations = mapResult.locations;
   const semanticTitles = mapResult.titles;
   const semanticMemberships = mapResult.memberships;
-  const directlyNamedIds = uniqueIds(mentioned.filter((hit) => hit.canonTier !== 'genealogy').map((hit) => hit.id));
+  const mentionedNonGenealogy = mentioned.filter((hit) => hit.canonTier !== 'genealogy');
+  const directlyNamedIds = uniqueIds(disambiguateByName(mentionedNonGenealogy).map(mentionId));
   const strongRelationshipIds = relationIds(playerRecord);
   const recentInteractionIds = recentParticipantIds(gameState, visibleWorldEvents);
   const timelinePressures = upcomingPressures(gameState.worldHistory, timeline, currentDate);
@@ -345,6 +374,22 @@ export async function buildWorldTurnContext(input: BuildWorldTurnContextInput): 
   };
 }
 
+function groupVisibleItemsByCharacter(
+  items: readonly VisibleWorldItem[],
+  formatItem: (item: VisibleWorldItem) => string,
+): string[] {
+  const groups = new Map<CharacterId, { id: CharacterId; name: string; entries: string[] }>();
+  for (const item of items) {
+    let group = groups.get(item.characterId);
+    if (!group) {
+      group = { id: item.characterId, name: item.characterName, entries: [] };
+      groups.set(item.characterId, group);
+    }
+    group.entries.push(formatItem(item));
+  }
+  return [...groups.values()].map((group) => `- ${group.name} [${group.id}]：${group.entries.join('、')}`);
+}
+
 export function formatWorldTurnContext(context: WorldTurnContext): string {
   const characterSlice = buildCharacterPromptSlice(
     context.selection,
@@ -355,10 +400,10 @@ export function formatWorldTurnContext(context: WorldTurnContext): string {
     ? context.timelinePressures.map((event) => `- ${event.dateDisplay ?? `${event.date.year}.${event.date.month}.${event.date.day}`} · ${event.title}: ${event.summary}`)
     : ['- 当前三十日内没有原作预定节点。'];
   const equipmentLines = context.visibleWorldEquipment.length
-    ? context.visibleWorldEquipment.map((item) => `- ${item.characterName} [${item.characterId}]：${item.name} (${item.definitionId}) · 当前穿戴。`)
+    ? groupVisibleItemsByCharacter(context.visibleWorldEquipment, (item) => `${item.name} (${item.definitionId})`)
     : ['- 当前场景人物没有记录中的实际穿戴。'];
   const assetLines = context.visibleWorldAssets.length
-    ? context.visibleWorldAssets.map((item) => `- ${item.characterName} [${item.characterId}]：${item.name} (${item.definitionId}) · ${item.relation}；不代表当前随身携带。`)
+    ? groupVisibleItemsByCharacter(context.visibleWorldAssets, (item) => `${item.name} (${item.definitionId}) · ${item.relation}`)
     : ['- 当前场景人物没有可确认的未穿戴资产或保管物。'];
   const narrativeLocation = formatNarrativeLocationContext(context.narrativeLocation) || '未确认地点';
   const neighborLines = context.neighboringLocations.length

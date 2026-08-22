@@ -3,6 +3,7 @@ import { ArrowLeft, Castle, Landmark, MapPin, Navigation, Ship, UserRound, Waves
 
 import { buildLocationView, type LocationViewModel } from './locationViewModel'
 import { mapRepository } from './repository'
+import { useGameStore } from '../../store/useGameStore'
 import type { MapLocation, MapLocationType, SemanticMembership, SemanticTitle } from './types'
 import type { MapAssetPoint, MapCharacterPoint } from './dynamicMapSubjects.ts'
 import type { PoliticalFeatureState } from './politicalProjection.ts'
@@ -48,6 +49,7 @@ export const LocationDetails: React.FC<LocationDetailsProps> = ({
   onPlanTravel,
   onClose,
 }) => {
+  const debugEnabled = useGameStore((state) => state.debugEnabled)
   const [location, setLocation] = useState<MapLocation | null>(null)
   const [failed, setFailed] = useState(false)
 
@@ -76,8 +78,9 @@ export const LocationDetails: React.FC<LocationDetailsProps> = ({
     })),
   }, {
     now: '未记录',
+    debugIntelligence: debugEnabled,
     ...(semanticMembership ? { semantic: { membership: semanticMembership, titles: semanticTitles } } : {}),
-  }) : null, [knownAssets, knownCharacters, location, politicalState, semanticMembership, semanticTitles])
+  }) : null, [debugEnabled, knownAssets, knownCharacters, location, politicalState, semanticMembership, semanticTitles])
 
   return (
     <aside className="map-location-details" aria-label="地点详情">
@@ -136,6 +139,19 @@ export const LocationDetails: React.FC<LocationDetailsProps> = ({
               {knownAssets.length === 0 && <p>没有已确认的据点或运输工具。</p>}
             </div>
           </section>
+          {debugEnabled && view.intelligence.length > 0 && (
+            <section className="map-details-section map-local-intelligence" data-debug-intelligence>
+              <h3>调试情报</h3>
+              <div className="map-intel-list">
+                {view.intelligence.map((subject) => (
+                  <p key={subject.id}>
+                    <small>{subject.type}{subject.debug ? ' · debug' : ''}</small>
+                    <strong>{String(subject.name ?? subject.id)}</strong>
+                  </p>
+                ))}
+              </div>
+            </section>
+          )}
         </div>
       )}
     </aside>

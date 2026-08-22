@@ -146,6 +146,13 @@ test('未知动态情报不影响公开海岸、道路、五级头衔区域和�
   assert.equal(view.regionLabel, '北境')
   assert.equal(view.access.coastal, true)
   assert.deepEqual(view.intelligence, [])
+  const debugView = buildLocationView(winterfell, {
+    intelligence: dynamicSubjects.map((subject) => ({ subject, knowledge: { level: 'unknown' } })),
+  }, { now: NOW, debugIntelligence: true })
+  assert.ok(debugView.intelligence.some((subject) => subject.debug === true))
+  const locationDetails = readFileSync('src/features/map/LocationDetails.tsx', 'utf8')
+  assert.match(locationDetails, /debugIntelligence: debugEnabled/)
+  assert.doesNotMatch(locationDetails, /URLSearchParams|location\.search|window\.location/)
 
   const styleSource = readFileSync('src/features/map/mapStyle.ts', 'utf8')
   assert.match(styleSource, /FAR_MAP_SOURCE/)

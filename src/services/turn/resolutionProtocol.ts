@@ -2,17 +2,28 @@ import type { PendingWorldTransaction } from '../../features/world/worldRuntimeT
 import { parseUnresolvedWorldIntents } from '../../features/world/worldIntentResolver';
 import type { ApiConfig, D20Check, GameState, StateCommand } from '../../types/game';
 import { extractJsonArrayFromXml, requestTurnResolutionCompletion } from '../api';
-import { buildChatMessages, type DicePromptContext, WORLD_INTENT_RESOLUTION_PROMPT } from '../promptBuilder';
+import { buildChatMessages, type DicePromptContext } from '../promptBuilder';
 import { stripEmoji } from '../textSanitizer';
 import type { TurnResolutionDraft } from './resolutionTypes';
+import { GOT_DICE_REQUEST_PROMPT, parseDiceResolutionOutput, type DiceRequest, type ParsedDiceResolution } from './diceRequest';
 
-export function parseTurnResolutionOutput(rawText: string): TurnResolutionDraft {
-  const safe = stripEmoji(rawText);
-  const resolution = safe.match(/<resolution>([\s\S]*?)(?:<\/resolution>|$)/i)?.[1]?.trim() ?? '';
+export interface DiceResolutionDraft {
+  diceRequest: DiceRequest;
+  stateCommands: StateCommand[];
+  /** roll: true 时为失败版本，roll: false 时为空数组 */
+  failureCommands: StateCommand[];
+  outcomeSummary: string;
+  worldIntents: ReturnType<typeof parseUnresolvedWorldIntents>;
+}
+
+export function parseTurnResolutionOutput(rawText: string): DiceResolutionDraft {
+  const parsed: ParsedDiceResolution = parseDiceResolutionOutput(rawText);
   return {
-    outcomeSummary: resolution,
-    stateCommands: extractJsonArrayFromXml(safe, 'state_cmd') as StateCommand[],
-    worldIntents: parseUnresolvedWorldIntents(extractJsonArrayFromXml(safe, 'world_intent')),
+    diceRequest: parsed.diceRequest,
+    stateCommands: parsed.successCommands,
+    failureCommands: parsed.failureCommands,
+    outcomeSummary: parsed.outcomeSummary,
+    worldIntents: parseUnresolvedWorldIntents(parsed.worldIntents as Parameters<typeof parseUnresolvedWorldIntents>[0]),
   };
 }
 
@@ -25,22 +36,17 @@ export function buildTurnResolutionMessages(
   worldContext = '',
 ): Array<{ role: 'system' | 'user' | 'assistant'; content: string }> {
   const messages = buildChatMessages(gameState, actionText, diceCheck, diceContext, pendingTransactions, worldContext);
-  const system = messages[0];
-  const rules = system.content.split('### 【第三章：严格输出格式规范')[0];
+  // 将判骰说明拼到 system 消息末尾
   messages[0] = {
-    role: 'system',
-    content: `${rules}
-### 【规则解析阶段】
-本阶段禁止写小说正文。只分析玩家当前行动可确认的直接结果，并输出 <resolution>简短结果摘要</resolution>、<state_cmd>JSON 数组</state_cmd> 与 <world_intent>JSON 数组</world_intent>。不得输出 <narrate>、<branch> 或替玩家追加行动。
-
-${WORLD_INTENT_RESOLUTION_PROMPT}`,
+    ...messages[0],
+    content: `${messages[0].content}${GOT_DICE_REQUEST_PROMPT}`,
   };
   const current = messages[messages.length - 1];
   messages[messages.length - 1] = {
     ...current,
     content: `${current.content}
 
-再次强调：这里只做结构化规则解析，不写最终正文。`,
+再次强调：先输出 <dice_request> 判断是否需要检定，再输出对应的双轨 <state_cmd_success>/<state_cmd_failure>（或 roll:false 时单组 <state_cmd>）与 <world_intent>。不写 <narrate>、<branch> 或最终正文。`,
   };
   return messages;
 }
@@ -51,7 +57,7 @@ export async function requestTurnResolution(
   gameState?: GameState,
   pendingTransactions: PendingWorldTransaction[] = [],
   signal?: AbortSignal,
-): Promise<TurnResolutionDraft> {
+): Promise<DiceResolutionDraft> {
   const raw = await requestTurnResolutionCompletion(messages, config, gameState, pendingTransactions, signal);
   return parseTurnResolutionOutput(raw);
 }

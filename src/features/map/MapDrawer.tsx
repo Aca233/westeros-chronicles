@@ -91,6 +91,7 @@ export const MapDrawer: React.FC<MapDrawerProps> = ({ onSelectCharacter }) => {
   const currentYear = useGameStore((state) => state.gameState.currentYear)
   const currentMonth = useGameStore((state) => state.gameState.currentMonth)
   const currentDay = useGameStore((state) => state.gameState.currentDay)
+  const debugEnabled = useGameStore((state) => state.debugEnabled)
 
   const needsCharacters = needsCharacterNameData({
     selectedCountyId: selection.countyId,
@@ -114,8 +115,8 @@ export const MapDrawer: React.FC<MapDrawerProps> = ({ onSelectCharacter }) => {
       { year: currentYear, month: currentMonth, day: currentDay },
       worldRuntime.events,
       worldRuntime.titles,
-      playerWorldEventViewer({ lord, worldCharacters }),
-    ) : [], [currentDay, currentMonth, currentYear, lord.canonicalCharacterId, needsPolitics, politicalSource, worldCharacters?.runId, worldHistory, worldRuntime.events, worldRuntime.titles])
+      debugEnabled ? { kind: 'system' } : playerWorldEventViewer({ lord, worldCharacters }),
+    ) : [], [currentDay, currentMonth, currentYear, debugEnabled, lord.canonicalCharacterId, needsPolitics, politicalSource, worldCharacters?.runId, worldHistory, worldRuntime.events, worldRuntime.titles])
 
   const discoveredCharacterIds = useMemo(
     () => needsCharacters ? knownCharacterIds(characterTurnContext?.characters, worldHistory) : [],

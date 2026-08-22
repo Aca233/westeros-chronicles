@@ -6,8 +6,8 @@ import type { DiceMode } from '../services/dicePolicy';
 import { normalizeBranchOptions } from '../services/branchOptions';
 
 const DICE_MODES: ReadonlyArray<{ id: DiceMode; label: string; title: string }> = [
-  { id: 'auto', label: '自动判断', title: '程序先判断行动是否可行、是否存在真实阻力与失败后果,再根据伤势、环境、准备和协助调整 DC' },
-  { id: 'force', label: '强制检定', title: '为当前可行行动强制进行 D20 检定' },
+  { id: 'auto', label: '自动判断', title: '由模型判断当前行动是否需要检定、用哪项属性、难度几许，再由程序掷骰结算' },
+  { id: 'force', label: '强制检定', title: '跳过模型判断，为当前行动强制进行 D20 检定' },
   { id: 'narrative', label: '叙事行动', title: '不进行任何隐藏 D20,只按人物与局势叙事' },
 ];
 
