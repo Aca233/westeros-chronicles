@@ -16,7 +16,7 @@ export const IMPORTED_CHARACTER_TRAIT_RULES: Readonly<Record<string, TraitRuleSe
   }),
   charming: r({
     checkModifiers: { diplomacy: 1 },
-    multipliers: { prestigeGain: 0.05 },
+    
     roleplayDirectives: ['容易用笑容和举止赢得长辈与同伴的好感，但不代表所有人都会迁就其要求。'],
   }),
   pensive: r({
@@ -30,7 +30,7 @@ export const IMPORTED_CHARACTER_TRAIT_RULES: Readonly<Record<string, TraitRuleSe
   // 身份与社会地位特质
   knight: r({
     checkModifiers: { duel: 2, resistFear: 1 },
-    multipliers: { prestigeGain: 0.1 },
+    
     roleplayDirectives: ['接受过骑士训练并受骑士荣誉约束，但身份本身不能保证决斗获胜或获得他人尊敬。'],
   }),
   maester_historical: r({
@@ -39,12 +39,12 @@ export const IMPORTED_CHARACTER_TRAIT_RULES: Readonly<Record<string, TraitRuleSe
   }),
   septon: r({
     checkModifiers: { learning: 2, diplomacy: 1, resistFear: 1 },
-    multipliers: { prestigeGain: 0.05 },
+    
     roleplayDirectives: ['熟悉七神教义与仪式，在信徒面前具有宗教威信，但无法施展超自然奇迹。'],
   }),
   tourney_participant: r({
     checkModifiers: { duel: 1 },
-    multipliers: { prestigeGain: 0.1 },
+    
     roleplayDirectives: ['熟悉比武场规则、长枪交锋与观者情绪，但比武技巧不等同于混乱战场的生存能力。'],
   }),
   widowed: r({
@@ -56,12 +56,12 @@ export const IMPORTED_CHARACTER_TRAIT_RULES: Readonly<Record<string, TraitRuleSe
   }),
   archmaester: r({
     checkModifiers: { learning: 4, medicine: 2 },
-    multipliers: { prestigeGain: 0.15 },
+    
     roleplayDirectives: ['在专业学问领域拥有极高造诣与学术权威，但观点仍可能受传统认知和学城政治局限。'],
   }),
   disputed_heritage: r({
     checkModifiers: { diplomacy: -1 },
-    multipliers: { prestigeGain: -0.1 },
+    
     roleplayDirectives: ['血统流言使其继承权与合法性受到质疑，容易成为政敌攻讦和勒索的借口。'],
   }),
   wild_oat: r({
@@ -70,17 +70,17 @@ export const IMPORTED_CHARACTER_TRAIT_RULES: Readonly<Record<string, TraitRuleSe
   }),
   viking: r({
     checkModifiers: { battle: 2, survival: 1, diplomacy: -1 },
-    multipliers: { prestigeGain: 0.05 },
+    
     roleplayDirectives: ['熟悉沿海突袭、长船登岸与抢夺战利品，但在正统封建礼仪场合容易招致戒备。'],
   }),
   disinherited: r({
     checkModifiers: { diplomacy: -1 },
-    multipliers: { prestigeGain: -0.15 },
+    
     roleplayDirectives: ['已被剥夺家族继承顺位，在领地继承纠纷中处于法理劣势，可能怀抱怨恨或另谋出路。'],
   }),
   reaver: r({
     checkModifiers: { battle: 2, intimidation: 2, diplomacy: -2 },
-    multipliers: { dreadGain: 0.15 },
+    
     roleplayDirectives: ['信奉以武力夺取战利品而非交易，善于震慑弱者，但容易引起受害者的深仇大恨。'],
   }),
   adventurer_follower: r({
@@ -89,7 +89,7 @@ export const IMPORTED_CHARACTER_TRAIT_RULES: Readonly<Record<string, TraitRuleSe
   }),
   faith_warrior: r({
     checkModifiers: { duel: 2, resistFear: 3, diplomacy: -1 },
-    multipliers: { dreadGain: 0.1 },
+    
     roleplayDirectives: ['以宗教狂热驱使剑刃，在捍卫信仰时视死如归，但对待异端和外教者缺乏妥协余地。'],
   }),
   legitimized_bastard: r({
@@ -98,7 +98,7 @@ export const IMPORTED_CHARACTER_TRAIT_RULES: Readonly<Record<string, TraitRuleSe
   }),
   red_priest: r({
     checkModifiers: { learning: 2, intimidation: 2, resistFear: 2 },
-    multipliers: { dreadGain: 0.15 },
+    
     roleplayDirectives: ['侍奉光之王并宣讲烈火与阴影，在信徒中拥有神秘威信，但无法随意召唤确定性的神迹。'],
   }),
   child_of_concubine_male: r({
@@ -115,7 +115,7 @@ export const IMPORTED_CHARACTER_TRAIT_RULES: Readonly<Record<string, TraitRuleSe
   }),
   deserter: r({
     checkModifiers: { survival: 2, diplomacy: -3, intimidation: -1 },
-    multipliers: { prestigeGain: -0.2 },
+    
     roleplayDirectives: ['背负逃兵恶名，面临法律追捕与道德谴责，行事倾向隐匿踪迹以求自保。'],
   }),
   order_member: r({
@@ -124,7 +124,7 @@ export const IMPORTED_CHARACTER_TRAIT_RULES: Readonly<Record<string, TraitRuleSe
   }),
   heresiarch: r({
     checkModifiers: { diplomacy: 2, intimidation: 2, learning: 2 },
-    multipliers: { dreadGain: 0.2, prestigeGain: -0.1 },
+    
     roleplayDirectives: ['在追随者中享有狂热号召力与思想领导权，但在正统教会与封建领主眼中是被严惩的异端。'],
   }),
   beardless_eunuch: r({
@@ -145,12 +145,12 @@ export const IMPORTED_CHARACTER_TRAIT_RULES: Readonly<Record<string, TraitRuleSe
   }),
   shieldmaiden: r({
     checkModifiers: { duel: 3, battle: 1, resistFear: 2 },
-    multipliers: { prestigeGain: 0.1 },
+    
     roleplayDirectives: ['以卓越武艺和坚韧意志在战场上确立威名，但可能遭遇保守封建传统对女性参战的偏见。'],
   }),
   holy_warrior: r({
     checkModifiers: { battle: 2, duel: 1, resistFear: 2 },
-    multipliers: { prestigeGain: 0.1 },
+    
     roleplayDirectives: ['受宗教热忱激励的战士，在圣战或捍卫信仰时士气高昂，但不代表能在兵力悬殊时创造奇迹。'],
   }),
   // 先天、健康与性格特质
@@ -238,7 +238,7 @@ export const IMPORTED_CHARACTER_TRAIT_RULES: Readonly<Record<string, TraitRuleSe
   }),
   contrite: r({
     checkModifiers: { diplomacy: 1, intrigue: -1, intimidation: -1 },
-    multipliers: { dreadGain: -0.1 },
+    
     roleplayDirectives: ['常因过去的过错而深感自责，行事倾向寻求和解与忏悔，难以狠下心采取残酷手段。'],
   }),
   depressed_genetic: r({
@@ -251,7 +251,7 @@ export const IMPORTED_CHARACTER_TRAIT_RULES: Readonly<Record<string, TraitRuleSe
   }),
   gallowsbait: r({
     checkModifiers: { intrigue: 2, diplomacy: -2, survival: 1 },
-    multipliers: { dreadGain: 0.1, prestigeGain: -0.15 },
+    
     roleplayDirectives: ['常年混迹于灰色地带与违法勾当，熟悉下层社会的脱身之道，但在体面贵族眼中声名狼藉。'],
   }),
   flagellant: r({
@@ -277,7 +277,7 @@ export const IMPORTED_CHARACTER_TRAIT_RULES: Readonly<Record<string, TraitRuleSe
   }),
   deviant: r({
     checkModifiers: { intrigue: 2, diplomacy: -1, seduction: 1 },
-    multipliers: { dreadGain: 0.1 },
+    
     roleplayDirectives: ['私密嗜好与行为严重违背主流正统戒律，必须极力隐蔽以防成为政治勒索与身败名裂的把柄。'],
   }),
   wheezing: r({
@@ -293,12 +293,12 @@ export const IMPORTED_CHARACTER_TRAIT_RULES: Readonly<Record<string, TraitRuleSe
   lifestyle_blademaster: r({
     checkModifiers: { duel: 4, battle: 1, intimidation: 1 },
     resistances: { injury: 0.1 },
-    multipliers: { prestigeGain: 0.1 },
+    
     roleplayDirectives: ['经历无数次实战淬炼的剑术宗师，能敏锐捕捉对手破绽，但面对群体围攻或弓弩暗算仍须谨慎。'],
   }),
   lifestyle_poet: r({
     checkModifiers: { diplomacy: 2, seduction: 1, learning: 1 },
-    multipliers: { prestigeGain: 0.1 },
+    
     roleplayDirectives: ['善于运用音律与诗句传情达意、歌颂功绩或讽刺政敌，在宫廷宴会与社交场合颇受欢迎。'],
   }),
   lifestyle_hunter: r({
@@ -312,17 +312,17 @@ export const IMPORTED_CHARACTER_TRAIT_RULES: Readonly<Record<string, TraitRuleSe
   }),
   disloyal: r({
     checkModifiers: { intrigue: 2, diplomacy: -1 },
-    multipliers: { dreadGain: 0.1 },
+    
     roleplayDirectives: ['视誓言为权宜之计，在利益与风险面前容易倒戈或背弃盟约，难以维持长久的真诚信任。'],
   }),
   lifestyle_reveler: r({
     checkModifiers: { diplomacy: 2, seduction: 1 },
-    multipliers: { prestigeGain: 0.1, goldGain: -0.05 },
+    multipliers: { goldGain: -0.05 },
     roleplayDirectives: ['热爱宴饮派对并精通饮宴社交，能迅速活跃气氛拉近关系，但难免耗费资财与精力。'],
   }),
   loyal: r({
     checkModifiers: { diplomacy: 2, resistFear: 2 },
-    multipliers: { prestigeGain: 0.1 },
+    
     roleplayDirectives: ['恪守效忠誓言与信义承诺，在危难关头不易动摇，深得看重忠贞之人的敬重。'],
   }),
   reckless: r({
@@ -360,7 +360,7 @@ export const IMPORTED_CHARACTER_TRAIT_RULES: Readonly<Record<string, TraitRuleSe
   }),
   profligate: r({
     checkModifiers: { diplomacy: 1, stewardship: -2 },
-    multipliers: { goldGain: -0.2, prestigeGain: 0.05 },
+    multipliers: { goldGain: -0.2 },
     roleplayDirectives: ['出手大方挥金如土，以此维持奢华排场与虚荣，但极易造成财政亏空与债务泥潭。'],
   }),
   flexible_leader: r({
@@ -404,12 +404,12 @@ export const IMPORTED_CHARACTER_TRAIT_RULES: Readonly<Record<string, TraitRuleSe
   // 第 5 级传奇教育特质
   education_diplomacy_5: r({
     checkModifiers: { diplomacy: 5 },
-    multipliers: { prestigeGain: 0.15 },
+    
     roleplayDirectives: ['拥有冠绝大陆的外交说服力与谈判艺术，善于化解血仇纷争，但仍须遵从基本的地缘政治现实。'],
   }),
   education_martial_5: r({
     checkModifiers: { battle: 5 },
-    multipliers: { prestigeGain: 0.15 },
+    
     roleplayDirectives: ['拥有卓越的宏观战略洞察与战场指挥艺术，能以精妙谋划扭转战局，但无法单凭智谋弥补绝对的兵力物资悬殊。'],
   }),
   education_stewardship_5: r({
@@ -419,12 +419,12 @@ export const IMPORTED_CHARACTER_TRAIT_RULES: Readonly<Record<string, TraitRuleSe
   }),
   education_intrigue_5: r({
     checkModifiers: { intrigue: 5 },
-    multipliers: { dreadGain: 0.15 },
+    
     roleplayDirectives: ['在情报搜集、阴谋策划与人心操弄上出神入化，但暗中行动仍受执行人能力与意外变量制约。'],
   }),
   education_learning_5: r({
     checkModifiers: { learning: 5 },
-    multipliers: { prestigeGain: 0.15 },
+    
     roleplayDirectives: ['学识渊博贯通古今诸科，在学术辩论与历史文献考据中极具权威，但书本知识不能直接等同于实战经验。'],
   }),
 };

@@ -197,7 +197,7 @@ export function generateOfflineDemoResponse(
         })[0] ?? '厚实的日常外衣'
       : '厚实的日常外衣';
     dynamicNarrate = `风雪在古老城垛间发出低沉尖啸，冷气掠过石墙和窗缝。你理了理身上的【${currentClothing}】，走入烛火摇曳的大厅。封臣们停下低语，等待你给出下一道命令；任何武器、衣物或药品的变化都必须来自当前真实物品状态。`;
-    stateCommands.push({ type: 'MODIFY_PRESTIGE', delta: 5 });
+    stateCommands.push({ type: 'MODIFY_GOLD', silverStags: 1 });
   }
 
 

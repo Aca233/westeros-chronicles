@@ -359,7 +359,7 @@ export function getTraitCheckContributions(
 
 export function formatTraitRuleEffects(rules: TraitRuleSet): string[] {
   const multiplierLabels = {
-    goldGain: '金币获得', prestigeGain: '威仪获得', dreadGain: '恶名获得',
+    goldGain: '金币获得',
   } as const;
   const resistanceLabels = { injury: '受伤抗性', disease: '疾病抗性', poison: '中毒抗性', bleeding: '失血抗性' } as const;
   const checkLabels: Record<TraitCheckDomain, string> = {

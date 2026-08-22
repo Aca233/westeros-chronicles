@@ -84,7 +84,7 @@ test('D20-off guidance is qualitative and does not resolve success', () => {
 
 // 新增特质规则可以被 aggregateSelectedTraitEffects 聚合
 test('trait rules contain only mechanics that are consumed by the current game', () => {
-  const allowedMultiplierTargets = new Set(['goldGain', 'prestigeGain', 'dreadGain']);
+  const allowedMultiplierTargets = new Set(['goldGain']);
   for (const [traitId, rule] of Object.entries(CHARACTER_TRAIT_RULES)) {
     assert.equal(rule.eventWeights, undefined, `${traitId} still defines unused eventWeights`);
     for (const target of Object.keys(rule.multipliers ?? {})) {
@@ -99,7 +99,6 @@ test('imported trait rules can be aggregated by aggregateSelectedTraitEffects', 
   assert.equal(aggregated.checkModifiers.learning, 5);
   assert.equal(aggregated.checkModifiers.medicine, 5);
   assert.equal(aggregated.resistances.disease, undefined);
-  assert.equal(aggregated.multipliers.prestigeGain, 0.1);
   assert.ok(aggregated.roleplayDirectives.length >= 3);
 });
 

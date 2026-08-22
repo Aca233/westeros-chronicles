@@ -59,12 +59,10 @@ export interface LordProfile {
   // 新物品系统的唯一运行时状态。
   items: ItemSystemState;
 
-  // 财富与声望
+  // 财富
   goldDragons: number;
   silverStags: number;
-  prestige: number; // 威仪
-  dread: number;    // 恶名
-  
+
   // CK3 六项能力与特质
   attributes: LordAttributes;
   baseAttributes?: LordAttributes; // 未计入人物特质修正的基础值，用于防止重复叠加

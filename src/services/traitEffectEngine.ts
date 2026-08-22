@@ -11,7 +11,7 @@ export type TraitCheckDomain =
   | 'seduction'
   | 'resistFear';
 
-export type TraitMultiplierTarget = 'goldGain' | 'prestigeGain' | 'dreadGain';
+export type TraitMultiplierTarget = 'goldGain';
 
 export type TraitResistanceTarget = 'injury' | 'disease' | 'poison' | 'bleeding';
 

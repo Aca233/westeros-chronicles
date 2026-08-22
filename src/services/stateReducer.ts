@@ -263,19 +263,6 @@ export function applyStateCommands(
         break;
       }
 
-      case 'MODIFY_PRESTIGE': {
-        const prestigeDelta = applyPositiveMultiplier(cmd.delta, traitEffects.multipliers.prestigeGain);
-        next.prestige = Math.max(0, next.prestige + prestigeDelta);
-        changesLog.push(` 领主威仪: ${prestigeDelta >= 0 ? '+' : ''}${prestigeDelta} (当前 ${next.prestige})`);
-        break;
-      }
-
-      case 'MODIFY_DREAD': {
-        const dreadDelta = applyPositiveMultiplier(cmd.delta, traitEffects.multipliers.dreadGain);
-        next.dread = Math.max(0, next.dread + dreadDelta);
-        changesLog.push(` 战场恶名: ${dreadDelta >= 0 ? '+' : ''}${dreadDelta} (当前 ${next.dread})`);
-        break;
-      }
 
       case 'ADD_TRAIT': {
         if (!next.traits.includes(cmd.trait)) {

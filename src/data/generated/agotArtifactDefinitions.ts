@@ -30,14 +30,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "在[owner.MakeScope.Var('old_tourney_location').Province.GetCounty.GetName]的比武大会上，[old_contest_winner.GetFullName]将无数人梦寐以求的花环献给了[owner.GetFullName]，将她命名为爱与美的王后。花环被保存在一层薄薄的金箔下面，并被精心抛光以供展示，让所有还记得那场的比武大会的人感到高兴或沮丧。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是装饰过的爱与美的花环，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -93,14 +85,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "在[owner.MakeScope.Var('old_tourney_location').Province.GetCounty.GetName]的比武大会上，[old_contest_winner.GetFullName]将无数人梦寐以求的花环献给了[owner.GetFullName]，将她命名为爱与美的王后。花环被保存在一层薄薄的金箔下面，并被精心抛光以供展示，让所有还记得那场的比武大会的人感到高兴或沮丧。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是装饰过的爱与美的花环，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -158,14 +142,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "在[owner.MakeScope.Var('old_tourney_location').Province.GetCounty.GetName]的比武大会上，[old_contest_winner.GetFullName]将无数人梦寐以求的花环献给了[owner.GetFullName]，将她命名为爱与美的王后。花环被保存在一层薄薄的金箔下面，并被精心抛光以供展示，让所有还记得那场的比武大会的人感到高兴或沮丧。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是装饰过的爱与美的花环，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -221,14 +197,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "在[owner.MakeScope.Var('old_tourney_location').Province.GetCounty.GetName]的比武大会上，[old_contest_winner.GetFullName]将无数人梦寐以求的花环献给了[owner.GetFullName]，将她命名为爱与美的王后。花环被保存在一层薄薄的金箔下面，并被精心抛光以供展示，让所有还记得那场的比武大会的人感到高兴或沮丧。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是装饰过的爱与美的花环，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -286,14 +254,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "在[owner.MakeScope.Var('old_tourney_location').Province.GetCounty.GetName]的比武大会上，[old_contest_winner.GetFullName]将无数人梦寐以求的花环献给了[owner.GetFullName]，将她命名为爱与美的王后。花环被保存在一层薄薄的金箔下面，并被精心抛光以供展示，让所有还记得那场的比武大会的人感到高兴或沮丧。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是装饰过的爱与美的花环，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -349,14 +309,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "在[owner.MakeScope.Var('old_tourney_location').Province.GetCounty.GetName]的比武大会上，[old_contest_winner.GetFullName]将无数人梦寐以求的花环献给了[owner.GetFullName]，将她命名为爱与美的王后。花环被保存在一层薄薄的金箔下面，并被精心抛光以供展示，让所有还记得那场的比武大会的人感到高兴或沮丧。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是装饰过的爱与美的花环，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -414,14 +366,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "在[owner.MakeScope.Var('old_tourney_location').Province.GetCounty.GetName]的比武大会上，[old_contest_winner.GetFullName]将无数人梦寐以求的花环献给了[owner.GetFullName]，将她命名为爱与美的王后。花环被保存在一层薄薄的金箔下面，并被精心抛光以供展示，让所有还记得那场的比武大会的人感到高兴或沮丧。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是装饰过的爱与美的花环，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -478,14 +422,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "在[owner.MakeScope.Var('old_tourney_location').Province.GetCounty.GetName]的比武大会上，[old_contest_winner.GetFullName]将无数人梦寐以求的花环献给了[owner.GetFullName]，将她命名为爱与美的王后。花环被保存在一层薄薄的金箔下面，并被精心抛光以供展示，让所有还记得那场的比武大会的人感到高兴或沮丧。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是装饰过的爱与美的花环，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -541,14 +477,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "一簇美丽的淡蓝色花朵，颜色像初冬的寒霜。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是冬雪玫瑰，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -610,14 +538,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "在[owner.MakeScope.Var('tourney_location').Province.GetCounty.GetName]的比武大会上，[contest_winner.GetFullName]将无数人梦寐以求的花环献给了[owner.GetFullName]，将她命名为爱与美的王后。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是爱与美的花环，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -677,14 +597,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "在[owner.MakeScope.Var('tourney_location').Province.GetCounty.GetName]的比武大会上，[contest_winner.GetFullName]将无数人梦寐以求的花环献给了[owner.GetFullName]，将她命名为爱与美的王后。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是爱与美的花环，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -746,14 +658,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "在[owner.MakeScope.Var('tourney_location').Province.GetCounty.GetName]的比武大会上，[contest_winner.GetFullName]将无数人梦寐以求的花环献给了[owner.GetFullName]，将她命名为爱与美的王后。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是爱与美的花环，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -813,14 +717,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "在[owner.MakeScope.Var('tourney_location').Province.GetCounty.GetName]的比武大会上，[contest_winner.GetFullName]将无数人梦寐以求的花环献给了[owner.GetFullName]，将她命名为爱与美的王后。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是爱与美的花环，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -882,14 +778,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "在[owner.MakeScope.Var('tourney_location').Province.GetCounty.GetName]的比武大会上，[contest_winner.GetFullName]将无数人梦寐以求的花环献给了[owner.GetFullName]，将她命名为爱与美的王后。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是爱与美的花环，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -949,14 +837,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "在[owner.MakeScope.Var('tourney_location').Province.GetCounty.GetName]的比武大会上，[contest_winner.GetFullName]将无数人梦寐以求的花环献给了[owner.GetFullName]，将她命名为爱与美的王后。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是爱与美的花环，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -1018,14 +898,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "在[owner.MakeScope.Var('tourney_location').Province.GetCounty.GetName]的比武大会上，[contest_winner.GetFullName]将无数人梦寐以求的花环献给了[owner.GetFullName]，将她命名为爱与美的王后。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是爱与美的花环，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -1085,14 +957,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "在[owner.MakeScope.Var('tourney_location').Province.GetCounty.GetName]的比武大会上，[contest_winner.GetFullName]将无数人梦寐以求的花环献给了[owner.GetFullName]，将她命名为爱与美的王后。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是爱与美的花环，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -1154,14 +1018,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "在[owner.MakeScope.Var('tourney_location').Province.GetCounty.GetName]的比武大会上，[contest_winner.GetFullName]将无数人梦寐以求的花环献给了[owner.GetFullName]，将她命名为爱与美的王后。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是爱与美的花环，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -1221,14 +1077,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "在[owner.MakeScope.Var('tourney_location').Province.GetCounty.GetName]的比武大会上，[contest_winner.GetFullName]将无数人梦寐以求的花环献给了[owner.GetFullName]，将她命名为爱与美的王后。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是爱与美的花环，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -1299,14 +1147,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这条仪式项链由铁王座大学士佩戴。与传统学士项链不同的是，除了常见的金属链条外，项链上还镶嵌有宝石。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是大学士项链，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -1362,14 +1202,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "布尔威家族的古老传家宝是一个男人的头骨，上面长着闪亮的黑色公牛角——这是「破坏者」博洛斯饮用公牛血导致的畸形。尽管学城对此说法始终存疑。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是博洛斯之颅，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -1427,14 +1259,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这顶破损的头盔属于被罗拔·罗伊斯二世国王杀死的诱饵「猎鹰骑士」。正是由于这位骑士的英勇，真正的猎鹰骑士——阿提斯·艾林爵士才能绕道从后方突袭先民，并在决定性的七星之战中取得胜利。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是「猎鹰骑士」的残破头盔，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -1491,14 +1315,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "据说这对黄金树叶是从「金树」罗宛用金丝发带缠绕的苹果种出的黄金树上掉落的。这一说法的真实性存疑，因为金匠本就可以轻易打造出这样的金树叶，但罗宛家族对这类说法极为反感。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是黄金树叶，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -1554,14 +1370,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "令人印象深刻的玉海马，可追溯至瓦雷利亚末日浩劫之前，当时的龙王们经常与来自远东的商人进行贸易。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是海马雕像，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -3689,14 +3497,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 3
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是征服者之冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -3772,14 +3572,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 2
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是龙祸之冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -3846,14 +3638,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "「庸王」伊耿四世的王冠既大且沉，十足纯金，每个顶点上都是一只嵌有宝石眼眸的龙头，相当招摇。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "cap": 3,
         "contextTags": [
@@ -3935,14 +3719,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 2
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是和解者的白银蓝宝石王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -4010,14 +3786,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "label": "战阵助益",
         "stackGroup": "artifact.martial",
         "value": 2
-      },
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
       },
       {
         "directive": "此物是征服者的黄金绿宝石王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
@@ -4089,14 +3857,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 2
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是征服者的黄铜红宝石王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -4166,14 +3926,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 2
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是征服者的黄金多种宝石王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -4241,14 +3993,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "label": "战阵助益",
         "stackGroup": "artifact.martial",
         "value": 2
-      },
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
       },
       {
         "cap": 3,
@@ -4322,14 +4066,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "一顶为国王杰赫里斯·坦格利安一世未出生的儿子伊耿·坦格利安打造的简约龙翼形状的金冠，如果他没有夭折，活下来并成为国王的话。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是杰赫里斯一世之子伊耿的王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -4461,14 +4197,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 1
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是伊耿·坦格利安六世的王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -4538,14 +4266,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 3
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是爱玛·艾林王后的头冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -4613,14 +4333,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "label": "外交威仪",
         "stackGroup": "artifact.diplomacy",
         "value": 3
-      },
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
       },
       {
         "directive": "此物是月龙王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
@@ -4778,14 +4490,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
       },
       {
         "cap": 3,
-        "kind": "resource",
-        "label": "威慑象征",
-        "stackGroup": "artifact.dread",
-        "target": "dreadGain",
-        "value": 1
-      },
-      {
-        "cap": 3,
         "contextTags": [
           "court",
           "vassal"
@@ -4865,14 +4569,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 1
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是杰赫里斯一世之子伊蒙的王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -4948,14 +4644,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 1
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是龙长子之冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -5025,14 +4713,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 2
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是伊尼斯·黑火一世的王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -5093,14 +4773,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "一顶为雷妮亚·坦格利安之女艾瑞亚·坦格利安打造的王冠，如果她成为女王的话。头环由瓦雷利亚钢、铁和普通钢制成，上面镶嵌着红色龙蛋造型的宝石，中间一颗巨大的红宝石蛋上镶嵌着两条喷火的巨龙。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是艾瑞亚·坦格利安的王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -5220,14 +4892,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "[dragon.GetNamePossessiveNoTooltip]的头骨",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是[dragon.GetNamePossessiveNoTooltip]的头骨，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -5342,14 +5006,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这支扭曲的号角从头到脚足有六尺长，不知何时被从一头古瓦雷利亚巨龙的尸骸中煅制出来。号角黑光闪烁，布满红金和瓦雷利亚黑钢的条纹。它的表面闪亮，亮的足以使人从中看到自己扭曲的倒影，包裹号角的条纹上铭刻着奇异的古瓦雷利亚符文。[ROOT.Char.Custom('DragonBinderReadValyrian')]",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是缚龙者，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -5419,14 +5075,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 1
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是亚历姗卓拉·马泰尔之冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -5487,14 +5135,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "一顶国王韦赛里斯一世的妻子——阿莉森·海塔尔王后拥有的后冠。这是一顶金质圆形后冠，雕刻有花朵，并镶有红宝石和绿宝石。 历史背景：在海伦娜王后自杀和龙穴之战后，这顶后冠掉落在梅葛楼外的干涸护城河上的铁刺之间，“消失”了十多年，直到韦赛里斯二世国王统治时期才最终找回。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是阿莉森王后的后冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -5571,14 +5211,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 2
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是善良王后之冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -5639,14 +5271,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "一顶国王伊尼斯一世的妻子——阿莱莎·瓦列利安王后拥有的后冠。这是一顶镶嵌着珍珠的美丽金银头环，头环上镶嵌着蓝色和绿色的宝石，周围镶嵌着较小的珍珠和黄金。 历史背景：这顶后冠在伊尼斯一世国王统治时期由王后阿莱莎委托制作并佩戴，后来被昵称为「情妇后冠」，因为在伊耿四世统治时期，这顶后冠被国王赠送给了他的情妇芭芭·布雷肯，但后来又被国王收回并赠送给了蜜利莎·布莱伍德。 在蜜利莎结束伊耿的情妇生涯后，它被赠予蓓珊妮·布雷肯，然而在蓓珊妮被抓到与御林铁卫特伦斯·托因同床后被处死，它再次被赠予蜜利莎·布莱伍德和她的家族。贝丝·布莱伍德与伊耿五世国王联姻后，后冠最终又回到了坦格利安家族手中。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是阿莱莎王后的后冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -5717,14 +5341,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 2
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是亚尔洁娜·杜兰登的后冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -5786,14 +5402,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "这套笨重的盔甲深受防护至上的骑士青睐，哪怕为此牺牲部分灵动也在所不惜。甲身虽近乎素面无彩，头盔却缀以少许纹饰，于不失传统骑士风范之余，亦能引人注目。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是艾林盔甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -5870,14 +5478,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 2
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是爱与美的花环，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -5934,14 +5534,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "龙之号角",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是龙之号角，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -6077,14 +5669,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 3
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是杰赫里斯一世之子贝尔隆的王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -6154,14 +5738,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 3
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是贝勒·坦格利安的王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -6229,14 +5805,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "label": "决斗助益",
         "stackGroup": "artifact.prowess",
         "value": 3
-      },
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
       },
       {
         "directive": "此物是沙龙王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
@@ -6391,14 +5959,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": -3
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是巴尔德瑞克·杜伦登的王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -6460,14 +6020,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "这件盔甲初看之下显得简单朴素，由全身板甲构成，外着一件罩袍和饰带腰带。巨大而粗糙的肩甲勾勒出威严的轮廓。这件盔甲防护性极强，但缺少其他全身板甲设计所钟爱的复杂造型。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是拜拉席恩盔甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -6538,14 +6090,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 1
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是贝丝王后的头环，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -6606,14 +6150,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "一顶粗皮革镶黑曜石尖刺的王冠，专为那些敢于宣称并掌控塞外的人打造。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是自由民王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -6698,14 +6234,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "label": "决斗助益",
         "stackGroup": "artifact.prowess",
         "value": 3
-      },
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
       },
       {
         "directive": "此物是「寒铁」伊葛的王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
@@ -6826,14 +6354,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "一顶漆黑的王冠，雕刻成渡鸦头骨的形状，上面的树枝代表着鸦树城的古老鱼梁木。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是渡鸦王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -6894,14 +6414,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "一张为「血鸦」布林登·河文制作的骨白色长弓，其制作材料源自鸦树城那棵巨大鱼梁木上自然落下的枝桠。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是鸦齿，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -6971,14 +6483,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这把战锤由风息堡的铁匠大师唐纳·诺伊锻造，它的尺寸和重量相当惊人，使用者需要有巨人般力量才能挥舞它。劳勃·拜拉席恩用这柄锤子在三叉戟河之战中砸碎了雷加·坦格利安的胸膛。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是劳勃的战锤，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -7042,14 +6546,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "板甲在北方鲜有见闻，即便有也多朴实无华，但这套却是个例外。甲片经精细槽纹与珐琅工艺处理，铸成剥皮血肉之状，筋腱般的纹路与血色交映，整体透出诡异骇人之感。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是波顿盔甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -7111,14 +6607,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "一顶吓人的王冠，上面画着被剥皮的人。自豪地展示着波顿家族古老的传统，这也是其家族纹章的由来。在被他们剥皮的敌人中，甚至还有几位古代的冬境之王。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是剥皮人王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -7179,14 +6667,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "一条宽银环，整个外表面覆满粗陋缝缀的人皮碎片。这令人毛骨悚然的装饰，意在展示波顿家族臭名昭著的古老剥皮传统。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是剥皮者之冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -7250,14 +6730,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这套华丽张扬的盔甲融合了板甲与条板甲元素，但整套装束中最引人注目的部分却并非铠甲本身。缀有开衩与褶皱的亮色织物表明，这套装束在实战之外，更重在展示之效。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是布拉佛斯盔甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -7320,14 +6792,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这套盔甲色彩鲜明对比，造型繁复精巧，将单色织物与板甲同华丽衣饰融为一体。看似浮夸，穿戴者却不乏顶尖剑士。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是布拉佛斯高等盔甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -7388,14 +6852,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "百国争雄时代，布雷肯家族的古代小国王佩戴的红铜铁金王冠，其上饰有红铜战马，并镶嵌着红宝石。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是红叉河王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -7536,14 +6992,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这件装饰繁复的铠甲是为坦格利安家族的「明焰」伊利昂王子量身定制的。头盔上装饰着一对巨大的龙翼和一张血盆大口，意在震慑王子的对手。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是明焰的铠甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -7611,14 +7059,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "label": "战阵助益",
         "stackGroup": "artifact.martial",
         "value": 2
-      },
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威慑象征",
-        "stackGroup": "artifact.dread",
-        "target": "dreadGain",
-        "value": 1
       },
       {
         "directive": "此物是「明焰」伊利昂的王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
@@ -7752,14 +7192,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 2
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是卡利拉·黑火的后冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -7820,14 +7252,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "一顶由人类脊椎骨制成的恐怖王冠，椎骨部分被弯折成一个残忍的圆环，正面放着一块上半截的头骨，光滑的骨弧与空洞的鼻腔构成了一幅阴森画面。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是碎脊王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -7890,14 +7314,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "一顶装饰着两只相向的天鹅的金冠，中间镶着两颗红宝石和一颗硕大的深红宝石。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是金蛋王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -7958,14 +7374,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "一顶为赛提加家族打造的银质王冠，上面刻有几只红蟹，王冠两侧镶嵌着许多小红宝石。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是蟹岛王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -8166,14 +7574,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "一顶火焰般的头环以敬奉光之王。只因长夜漫漫，处处险恶。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是火焰头环，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -8251,14 +7651,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 1
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是洋星头环，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -8320,14 +7712,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "尽管古老的临冬城史塔克家族一向佩戴着由青铜和黑铁尖刺组成的王冠，但这顶新冠却更直接地展现了他们的家徽和色彩。这顶灰铁冠上雕刻着几只咆哮的狼头，仿佛一群猎狼正追逐着猎物。巨大的珍珠和洁白的毛皮衬里给这顶王冠增添了一抹雪白——史塔克的代表色。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是临冬城王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -8388,14 +7772,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "一顶镶嵌着七颗不同颜色水晶的金质头环，代表着七神的七种不同形态，中间显眼处镶有一颗巨大的五彩星。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是七神头环，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -8535,14 +7911,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 1
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是血鸦王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -8609,14 +7977,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "kind": "check_modifier",
         "label": "治理助益",
         "stackGroup": "artifact.stewardship",
-        "value": 1
-      },
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
         "value": 1
       },
       {
@@ -8694,14 +8054,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "kind": "check_modifier",
         "label": "权谋助益",
         "stackGroup": "artifact.intrigue",
-        "value": 1
-      },
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
         "value": 1
       },
       {
@@ -8843,14 +8195,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 2
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是秧鸡厅王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -8917,14 +8261,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "kind": "check_modifier",
         "label": "治理助益",
         "stackGroup": "artifact.stewardship",
-        "value": 1
-      },
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
         "value": 1
       },
       {
@@ -9005,14 +8341,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 1
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是深穴城王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -9073,14 +8401,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "一顶深色的圆形头环，镶嵌有星形的白钻，模仿风暴地唐德利恩家族的纹章颜色设计。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是黑港王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -9220,14 +8540,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 1
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是先民王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -9303,14 +8615,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 2
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是和平花冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -9378,14 +8682,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "label": "战阵助益",
         "stackGroup": "artifact.martial",
         "value": 2
-      },
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
       },
       {
         "directive": "此物是战争青铜荆棘冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
@@ -9461,14 +8757,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "label": "战阵助益",
         "stackGroup": "artifact.martial",
         "value": 2
-      },
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
       },
       {
         "directive": "此物是战争荆棘冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
@@ -9679,14 +8967,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "一顶装饰华丽的银冠，镶嵌有三颗硕大的心形宝石，宝石顶端各饰有一只乌鸦，以象征对科布瑞家族纹章的敬意。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是心宿城王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -9748,14 +9028,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "一顶形似火焰的红金王冠，象征着统治硫磺河的君主。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是狱门堡王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -9816,14 +9088,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "这顶王冠由七颗胡戈之星铸成，再现了传说中天父亲自赐予的第一任安达尔国王的王冠。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是天父圣膏之冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -9891,14 +9155,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "一顶由青铜锻造而成的开放式头环，镶有银边。与古代史塔克冬境之王佩戴的著名冬境王冠相似，这顶王冠的顶端也有锻造成剑形的尖刺。但与之不同的是，这顶王冠上只有六把银剑，其形状为史塔克家族祖传的瓦雷利亚钢巨剑「寒冰」。为了代表佩戴者的家族，它还在剑刃之间镶嵌了六个银贝壳。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是少王后之冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -9974,14 +9230,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "kind": "check_modifier",
         "label": "战阵助益",
         "stackGroup": "artifact.martial",
-        "value": 1
-      },
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
         "value": 1
       },
       {
@@ -10062,14 +9310,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 1
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是冰与火之子的王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -10144,14 +9384,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "kind": "check_modifier",
         "label": "战阵助益",
         "stackGroup": "artifact.martial",
-        "value": 1
-      },
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
         "value": 1
       },
       {
@@ -10232,14 +9464,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 1
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是北境之王琼恩·雪诺的王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -10309,14 +9533,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 2
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是河流与山丘王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -10383,14 +9599,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "kind": "check_modifier",
         "label": "战阵助益",
         "stackGroup": "artifact.martial",
-        "value": 1
-      },
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
         "value": 1
       },
       {
@@ -10601,14 +9809,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 1
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是蓝礼的比武大会王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -10669,14 +9869,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "一顶火焰般的王冠以敬奉光之王。只因长夜漫漫，处处险恶。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是烈焰王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -10763,14 +9955,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 3
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是劳勃一世的比武大会王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -10848,14 +10032,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 1
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是狼丘头环，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -10925,14 +10101,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 1
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是尖角之冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -10993,14 +10161,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "一顶镶嵌着红宝石和抛光琥珀的坚固青铜王冠，并饰有金色细节。王冠中央的骏马是布雷肯家族的象征。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是石篱城王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -11068,14 +10228,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "kind": "check_modifier",
         "label": "治理助益",
         "stackGroup": "artifact.stewardship",
-        "value": 1
-      },
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
         "value": 1
       },
       {
@@ -11148,14 +10300,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 1
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是安达尔银冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -11216,14 +10360,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "一顶形似火焰的金冠，按照班佛特家族古代兜帽王的风格打造。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是祸垒王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -11298,14 +10434,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "label": "战阵助益",
         "stackGroup": "artifact.martial",
         "value": 2
-      },
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
       },
       {
         "directive": "此物是灰海王之冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
@@ -11385,14 +10513,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 1
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是铁王座之冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -11459,14 +10579,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "kind": "check_modifier",
         "label": "外交威仪",
         "stackGroup": "artifact.diplomacy",
-        "value": 1
-      },
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
         "value": 1
       },
       {
@@ -11537,22 +10649,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "一顶黑暗而古老的王冠，为历史上被称为夜王的人所打造。这顶不祥的冠冕由黑铁和冰冷的尖冰制成，这些尖冰只有在长城的魔法作用下才不会融化。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威慑象征",
-        "stackGroup": "artifact.dread",
-        "target": "dreadGain",
-        "value": 1
-      },
-      {
         "directive": "此物是夜王之冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -11613,14 +10709,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "盟誓之冠是旧神及其崇拜的象征。王冠由先民的金属青铜制成，并饰有红宝石，与鱼梁木相映成趣，是所有信奉旧神的人的指路明灯。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是盟誓之冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -11752,14 +10840,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "信仰之冠象征着七位一体之神。这顶冠冕由黄金制成，镶嵌着珍珠、白银和多彩宝石，其边缘环绕着七颗七芒星的图案，闪耀着神圣的光芒。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是信仰之冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -11821,14 +10901,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "一顶华丽的王冠，冠身是深海的图样，上面有海马形状的装饰。属于潮汐之主。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是潮汐王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -11889,14 +10961,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "一顶由玻璃和粗黑铁钉组成的王冠，酷似绝境长城及其十九座城堡。绝境长城历来是守夜人的所在地，守卫着人类的领地，抵御外来的威胁。任何统治者若想占据这一古老的防御工事，都会发现他们的统治是艰难且备受诋毁的。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "cap": 3,
         "contextTags": [
@@ -11978,14 +11042,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 2
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是寒冰王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -12046,14 +11102,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "一顶敬奉旧神的鱼梁木王冠。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是鱼梁木王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -12121,14 +11169,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "kind": "check_modifier",
         "label": "权谋助益",
         "stackGroup": "artifact.intrigue",
-        "value": 1
-      },
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
         "value": 1
       },
       {
@@ -12201,14 +11241,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 1
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是维斯特洛之冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -12275,14 +11307,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "kind": "check_modifier",
         "label": "战阵助益",
         "stackGroup": "artifact.martial",
-        "value": 1
-      },
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
         "value": 1
       },
       {
@@ -12358,14 +11382,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "这顶古老的王冠见证了史塔克家族由冬境之王演变为北境之王。它由九把铁剑组成，并由一个刻有符文的青铜圆环束缚，象征着艰苦的土地和更艰苦的人民。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是冬境王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -12448,14 +11464,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 2
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是冬雪玫瑰之冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -12516,14 +11524,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "一顶锻造成黑色栅栏形状的王冠，上面镶嵌着琥珀宝石，并缠绕着黑色锁链。其形状类似于伊伦伍德家族的堡垒和象征。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "cap": 3,
         "contextTags": [
@@ -12660,14 +11660,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "label": "决斗助益",
         "stackGroup": "artifact.prowess",
         "value": -2
-      },
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
       },
       {
         "directive": "此物是戴蒙·黑火二世的王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
@@ -12903,14 +11895,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "此冠以征服者之冠为原型，但与黑火家族纹章一样反转了颜色。瓦雷利亚钢部分用红铜代替，并镶嵌上龙晶。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是黑龙之冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -13055,14 +12039,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 2
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是风暴降生之冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -13130,14 +12106,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "label": "外交威仪",
         "stackGroup": "artifact.diplomacy",
         "value": 2
-      },
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
       },
       {
         "directive": "此物是杰赫里斯一世之女丹妮莉丝的王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
@@ -13273,14 +12241,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这顶王冠仿照古代星陨之王的头盔风格，冠身由白银制成，中央是一颗巨大的紫水晶星辰。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是拂晓王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -13348,14 +12308,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "这套烤蓝盔甲镶银为边，将每片甲板的轮廓勾勒分明。甲身覆于鳞甲与鲜红衬垫夹克之外。遍体槽纹蜿蜒如龙翼，整体设计几无破绽，堪称工艺之巅峰。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是装饰过的真龙板甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -13486,14 +12438,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "一顶金制头环，四周环绕着纳梅洛斯·马泰尔的八个金色纹章、红日和长枪，中间是一颗红宝石。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是红日长枪之冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -13556,14 +12500,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这套甲胄以大型青铜板片系于锁子甲之上，形成多恩独有的设计风格。既提供坚实防护，又兼顾透气与灵动。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是多恩高等盔甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -13624,14 +12560,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "一顶金制头环，四周环绕着八轮金色太阳，中间是一颗彩色宝石。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是多恩王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -13747,14 +12675,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "亚莉珊·坦格利安王后仿照银翼模样缝制的精美羊毛布偶，作为礼物送给她的女儿们。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 2
-      },
-      {
         "directive": "此物是银翼布偶，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -13811,14 +12731,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "亚莉珊·坦格利安王后仿照沃米索尔模样缝制的精美羊毛布偶，作为礼物送给她的儿子们。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 2
-      },
       {
         "directive": "此物是沃米索尔布偶，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -13877,14 +12789,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "莱安娜·史塔克为她尚未出生的孩子缝制的一个冰蓝色龙形羊毛布偶。尽管布偶做工略显笨拙，针脚也有些参差不齐，但其中饱含了莱安娜深深爱意与努力，毕竟她显然不太擅长针线活。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 2
-      },
-      {
         "directive": "此物是冰蓝色龙布偶，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -13941,14 +12845,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "这个邪恶又可爱的玩偶长得像一只鳞片漆黑、长着紫罗兰色弯角的龙。它壮丽而恶毒的造型能激起任何孩子的想象——无论是好是坏！",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 2
-      },
       {
         "directive": "此物是灾厄之玩偶，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -14011,14 +12907,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这类弓极为罕见且备受追捧。龙骨如钢铁般坚硬，却更轻巧、柔韧，是制作弓的绝佳材料，据说其射程甚至远超盛夏群岛的金心弓。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是龙骨长弓，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -14080,14 +12968,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "与青绿之地的国王不同，古代至高王的王冠是来自大海的礼物，由一块块被冲上岸的浮木制成，以提醒他们所拥有的一切都是淹神赐予的。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是浮木王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -14156,14 +13036,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "label": "外交威仪",
         "stackGroup": "artifact.diplomacy",
         "value": 2
-      },
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
       },
       {
         "cap": 3,
@@ -14254,14 +13126,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 3
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是达克林之乱的王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -14322,14 +13186,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "古代荒冢诸王的王冠，据说他们是始祖王的后裔。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是荒冢王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -14724,14 +13580,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 2
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是余烬玫瑰王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -14861,14 +13709,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这顶银冠的样式源于山谷的艾林王冠，王冠中央是猎鹰的一对蓝宝石翅膀，下方是一轮银月。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是山谷猎鹰王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -14930,14 +13770,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "一顶金冠，王冠中央是狡猾狐狸的一对红宝石眼睛，青铜花周围镶着蓝宝石。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是狐狸王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -14998,14 +13830,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "这顶银冠的样式源于千年前百国争雄时期佛雷家族的王冠，王冠上是一组袖珍的河渡口塔楼，每个塔楼下面都镶嵌着三颗蓝宝石。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是河渡口王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -15073,14 +13897,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "kind": "check_modifier",
         "label": "权谋助益",
         "stackGroup": "artifact.intrigue",
-        "value": 1
-      },
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
         "value": 1
       },
       {
@@ -15153,14 +13969,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 1
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是孟恩·园丁九世的战争王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -15227,14 +14035,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "kind": "check_modifier",
         "label": "外交威仪",
         "stackGroup": "artifact.diplomacy",
-        "value": 1
-      },
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
         "value": 1
       },
       {
@@ -15384,14 +14184,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 2
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是「伟大的」杰洛·兰尼斯特的王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -15448,14 +14240,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "这个雄伟的宝座永久位于黄金长廊之上。巨大的狮子由凯岩城的岩石雕刻而成，并镀上矿井里产出的黄金，它守护着长廊里的无数珍宝与荣誉。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "cap": 3,
         "contextTags": [
@@ -15529,14 +14313,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "一顶为象征坦格利安家族与兰尼斯特家族联姻而打造的王冠。王冠由黄金和红色大理石制成，上面有黄金挤压雕刻而成的狮头和龙头。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是金炎王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -15606,14 +14382,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 1
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是绿薪王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -15674,14 +14442,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "一顶金丝铁线制成的王冠，形状像海怪，它的触手缠绕着佩戴着的头。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是海怪王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -15750,14 +14510,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "label": "决斗助益",
         "stackGroup": "artifact.prowess",
         "value": 3
-      },
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
       },
       {
         "directive": "此物是哈耿·黑火一世的王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
@@ -15878,14 +14630,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "一顶雕刻着死亡的王冠，冠身上满是死者尖叫的头骨，中间陌客的镰刀下是一颗浅紫色的宝石。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是苦律王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -15951,14 +14695,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 2
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是吟游诗人的竖琴，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -16021,14 +14757,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这套穿在棉甲和锁子衣外面的铠甲，由各式不合规格的残片拼凑而成，部分甲片已然生锈或凹陷。它或许算不上精良，却总能提供一些庇护。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是雇佣骑士盔甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -16085,14 +14813,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "一座高大而威严的光滑石座，王座左右雕着两只怒吼的冰原狼，其上饰有细腻的鱼梁木浮雕，以向旧神致敬。王座历经世代更迭，见证了无数代史塔克冬境之王的衰替。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是冬境高座，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -16155,14 +14875,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "一顶由金银制成的精美王冠，上面饰有九个旧镇参天塔的袖珍模型，塔身用白银制成，塔顶还装饰着闪闪发光的黄金火焰。这些塔楼之间由火焰浮雕优雅地连接着，还优雅地镶嵌着璀璨的祖母绿和红宝石。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是高塔王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -16224,14 +14936,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "这套带有深槽纹的全身板甲采用大块甲片保护要害部位。胸甲外罩的束腰外衣与抛光的精钢形成鲜明对比。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是蜜酒河盔甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -16442,14 +15146,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "当葛雷艾恩家族终结选王会，宣布自己家族是铁群岛之王时，他们为自己制作了一顶铁王冠，象征着他们的控制权。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是铁国王之冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -16510,14 +15206,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "这顶王冠为杜兰登家族中最尚武的国王所佩戴，它反映了国王的个性。虽然大多数风暴王都以追求武勇而闻名，但这顶王冠是为那些真正献身于剑之道的人准备的。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是鹿角铁冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -16582,14 +15270,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "维斯特洛七大王国的铁王座由伊耿一世国王下令用敌人的剑铸造而成。它是王国及其唯一统治者最伟大的象征。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是铁王座，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -16651,14 +15331,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "这副粗犷的甲胄由大块板甲与甲片拼接而成，仅以尖刺为饰。做工虽糙，却厚重坚实，防护极佳。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是铁种高等盔甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -16884,14 +15556,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 1
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是和解者之冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -16959,14 +15623,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "label": "治理助益",
         "stackGroup": "artifact.stewardship",
         "value": 2
-      },
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
       },
       {
         "directive": "此物是和解者的瓦雷利亚王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
@@ -17038,14 +15694,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 2
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是和解者的银冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -17115,14 +15763,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 2
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是和解者的黄金红宝石王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -17184,14 +15824,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "这副金色甲胄左肩斜披白帛，分外夺目。通体密布纵向槽纹，甲面更以化学鎏金之法镀饰——工序虽险，成色却举世无双。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是兰尼斯特黄金盔甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -17262,14 +15894,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": -2
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是黄金雄鹿之冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -17336,14 +15960,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "乔佛里·拜拉席恩一世的一顶镶嵌着红宝石和黑钻石的黄金王冠，比他父亲的那顶更加奢华。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是狮与鹿之冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -17422,14 +16038,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 5
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是琼恩·雪诺的头环，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -17505,14 +16113,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "label": "战阵助益",
         "stackGroup": "artifact.martial",
         "value": 2
-      },
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
       },
       {
         "cap": 3,
@@ -17813,14 +16413,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 5
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是「雄狮」蓝赛尔·兰尼斯特的王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -17882,14 +16474,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "虽归类为全身板甲，这套盔甲却省去了其他设计中的部分复杂构件。方形胸甲、无腰甲、圆形肩甲——这些在维斯特洛并不多见，却各有独到之处。双色外衣则便于清晰展示纹章。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是高地盔甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -17968,14 +16552,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 2
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是梅葛·明焰的王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -18036,14 +16612,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "这柄尖刺铁锤由梅卡·坦格利安在年轻时铸造，只有最强的战士能够使好这把武器。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是梅卡之锤，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -18121,14 +16689,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 2
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是铁砧王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -18191,14 +16751,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "马里斯·黑火，臭名昭著的觊觎者，他因自己骇人的两个头而闻名，为此他需要定制一套特殊的盔甲。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是凶暴者的板甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -18260,14 +16812,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "这套蓝钢全身板甲外罩战袍，辨识度极高。右侧饰以细密槽纹与金银丝缀，尽显高贵素雅；左侧则覆满龙齿与巨型甲片，形貌狰狞。虽关节活动自如，整副甲胄却堪称凶悍骇人。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是凶暴的黑火盔甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -18404,22 +16948,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
       },
       {
         "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": -1
-      },
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威慑象征",
-        "stackGroup": "artifact.dread",
-        "target": "dreadGain",
-        "value": 1
-      },
-      {
-        "cap": 3,
         "contextTags": [
           "court",
           "vassal"
@@ -18499,14 +17027,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 2
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是学士国王伊蒙的王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -18567,14 +17087,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "这是曼德勒家族在几个世纪前被驱逐出河湾地前所戴王冠的切实复刻品。这顶金灿灿的王冠让人联想到起伏的波浪，其上饰有闪亮的珍珠，在中心精心刻画了两只美人鱼紧握三叉戟的图案。环绕王冠的祖母绿宝石被精心镶在错综复杂的雕刻波浪图案中，尽显王室魅力。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是人鱼王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -18714,14 +17226,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "弥丽亚·马泰尔王后，人称「贤王」戴伦二世的妻子她所拥有的一顶头环。这顶头环由青铜和黄金制成，上面有一串镶满红宝石的太阳，强调了在铁王座的统治下，多恩与七大王国其他地区的融合。 历史背景：这顶头环是在弥丽亚·马泰尔王后的丈夫戴伦二世国王在位期间为她铸造的，自上一任多恩王后之后，这顶头环就再也没被戴过，但很多人都期待下一任多恩王后会戴上它。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是弥丽亚王后的头环，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -18799,14 +17303,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 1
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是马赛岬王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -18874,14 +17370,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "label": "治理助益",
         "stackGroup": "artifact.stewardship",
         "value": 2
-      },
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
       },
       {
         "directive": "此物是马塔瑞斯·坦格利安的王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
@@ -18961,14 +17449,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 1
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是仿声鸟头环，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -19035,14 +17515,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "kind": "check_modifier",
         "label": "战阵助益",
         "stackGroup": "artifact.martial",
-        "value": 1
-      },
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
         "value": 1
       },
       {
@@ -19124,14 +17596,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
       },
       {
         "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
-        "cap": 3,
         "contextTags": [
           "court",
           "vassal"
@@ -19204,14 +17668,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这套盔甲是在锁子甲外披挂部分板甲，这种样式在维斯特洛北方十分常见。虽有些许装饰，却不似南方盔甲那般饰以金银镶边，仅以简朴的压花和一条饰板腰带作缀。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是史塔克盔甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -19273,14 +17729,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "这套盔甲由锁子甲上衣和以熟制皮革加固的护腿组成，胸甲外还套有一件罩袍，能清晰展示穿戴者的纹章。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是北境通用皮甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -19344,14 +17792,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这套盔甲由锁子甲上衣和以板甲加固的护腿组成，胸甲外还套有一件罩袍，能清晰展示穿戴者的纹章。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是北境通用板甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -19413,14 +17853,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "这套甲胄主要由条板甲与布面甲构成，板甲仅用于关键关节。虽能借此展示家族色彩，防护能力却不及更精良的板甲设计。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是北境高等盔甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -19484,14 +17916,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这套盔甲的实心胸甲下垫着色彩鲜亮的衬垫，采用的是诺佛斯战士常用的形制。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是诺佛斯盔甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -19553,14 +17977,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "这件装饰过的盔甲，在色彩鲜亮的衬垫之上配有刻花胸甲，以此致敬诺佛斯城及其人民的象征。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是诺佛斯高等盔甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -19704,14 +18120,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 3
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是奥里斯·拜拉席恩王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -19781,14 +18189,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 3
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是火鹿王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -19850,14 +18250,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "这套盔甲在全身板甲之外罩了一件棋盘格纹罩袍，以鲜明的纹章色彩取代了裸露的钢铁本色。此等样式尤适合家徽为棋盘格纹的家族，而那鲜明的色彩对比，纵是配与其他纹章亦毫不逊色。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是方格盔甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -19921,14 +18313,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这套盔甲在全身板甲之外罩了一件四分罩袍，以色彩鲜明的纹章展示取代了裸露的钢铁本色。此等样式尤适合家徽为四分纹章的家族，不过这套设计亦能与诸多纹章相得益彰。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是四分纹盔甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -19985,14 +18369,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "这是一张巨大的实木桌子，足有五十尺长，由「征服者」伊耿亲自下令雕绘。整桌被雕刻成维斯特洛七大王国的形状，桌子表面涂有清漆，经过特殊处理，以熏黑的焦痕来描绘出海洋、河流与湖泊，同时刻有山脉、城堡与市镇——但没有边界。它是一个整体，一个国家，由一个国王统治。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是维斯特洛地图桌，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -20056,14 +18432,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这套盔甲是科霍尔人冶金技艺的产物，配有多色胸甲、护胫，以及穿在锁子甲外的层状臂甲，采用科霍尔战士的常用形制打造。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是科霍尔盔甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -20125,14 +18493,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "这套盔甲是科霍尔人冶金技艺的产物，配有多色胸甲、护胫，以及穿在锁子甲外的层状臂甲，它能为穿戴者提供已知世界几乎最好的防护。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是科霍尔高等盔甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -20204,14 +18564,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "一件华美的斗篷，由栖息在鸦树城那棵死去的古老鱼梁木上的渡鸦的缟玛瑙色羽毛制成。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是渡鸦羽斗篷，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -20272,14 +18624,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "一顶饰有错综复杂的金色藤蔓的美丽金色头环，上面点缀着闪闪发光的祖母绿宝石。这顶精致的王冠中央是一朵绚丽的金花，花心镶嵌着一颗硕大的祖母绿宝石，增添了迷人的优雅气息。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "cap": 3,
         "contextTags": [
@@ -20354,14 +18698,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这套精良的盔甲经悉心锻造成型，兼顾美观与实用。胸甲与球状肩甲覆以织物，使纹章得以直接展现于甲身之上。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是河湾地盔甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -20424,14 +18760,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这套盔甲通体饰以浮雕花卉藤蔓纹样。内衬的短袖缎面外衣，将鲜活的纹章色彩映衬得更加夺目。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是河湾地高等盔甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -20493,14 +18821,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "一顶饰有错综复杂的金色藤蔓的美丽金色头环，其上点缀闪亮珠宝。这顶精致的王冠中央是一朵绚丽的金花，花心镶嵌着一颗硕大的宝石，增添了迷人的优雅气息。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是河湾地王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -20561,14 +18881,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "一顶镶嵌着闪闪发光的蓝色宝石的金制头环，其上排列成优雅的葡萄藤图案。中间是一片倒置的葡萄叶，两侧是以葡萄为原型制作的紫色宝石。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "cap": 3,
         "contextTags": [
@@ -20642,14 +18954,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这是用颈泽的鳄鱼皮制作的头饰，其顶端饰有鳄鱼可怕的牙齿，而头饰的正面则饰有三只鳄鱼的眼睛。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是泽地王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -20717,14 +19021,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "label": "战阵助益",
         "stackGroup": "artifact.martial",
         "value": 2
-      },
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
       },
       {
         "directive": "此物是驯鹿王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
@@ -20802,14 +19098,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 1
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是腾跃雄鹿之冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -20866,14 +19154,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "为了致敬曾经作为古代园丁王王座的古老橡树，一棵被雕刻成王座形状的活树被安置于此，见证着高庭统治者的高贵与耐心关怀。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是橡树王座，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -20937,14 +19217,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这套鲜红甲胄沿袭西境风格，肩披布帛。通体珐琅板甲本是豪奢之证，纯色浑然一体，更在战场上格外夺目。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是雷耶斯盔甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -21006,14 +19278,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "这套黑曜全身板甲的肩甲铸成龙翼之形，内衬金锁子甲，并以红色镶边点缀。胸甲之上，红宝石嵌成龙形纹章，将整副甲胄融为一体。此甲极尽华美，唯有与之相配的显赫之人方能衬得起这般气象。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是坦格利安亲王盔甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -21092,14 +19356,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 1
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是雷加·坦格利安的王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -21156,14 +19412,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "当劳勃·拜拉席恩对雷加·坦格利安施以致命一击时，雷加胸甲上的红宝石散落到水中。其中一些不时仍被冲到三叉戟河岸上。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是河中的红宝石，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -21226,14 +19474,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "雷加·坦格利安的盔甲由墨黑色钢板制成，胸甲上镶有红宝石雕刻的坦格利安三头龙，在板甲下面是一件金制链甲，头盔上精心装饰着龙纹图案。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是雷加的盔甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -21308,14 +19548,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "label": "外交威仪",
         "stackGroup": "artifact.diplomacy",
         "value": 2
-      },
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
       },
       {
         "directive": "此物是悲惨王后之冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
@@ -21395,14 +19627,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 1
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是雷妮亚王后的后冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -21478,14 +19702,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 2
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是挚爱王后的头环，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -21555,14 +19771,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 2
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是「无冕女王」的王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -21624,14 +19832,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "这套甲胄以鳞甲覆于长锁子甲之外，手足处以板甲防护。虽不及全身板甲周全，却更为灵活。鳞片闪耀，于光影流转之际，更显流光溢彩",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是河间地盔甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -21695,14 +19895,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这套甲胄融合了鳞甲与板甲，鳞甲锁子甲之外，胸、手、腿处以板甲增固。罩袍增添色彩，披风之上更有一面小盾展示家族纹章。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是河间地高等盔甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -21763,14 +19955,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "一顶装饰着三叉戟标志的优雅王冠，代表着与它同名的那条伟大河流。专属于河间地的统治者。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是三叉戟河王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -21940,14 +20124,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 3
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是宝冠雄鹿之冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -22009,14 +20185,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "劳勃·拜拉席恩的盔甲虽朴素却令人生畏，穿戴者被巨大的钢板和链甲保护着。盔甲大部分面积都被一件印有拜拉席恩家族黑雄鹿图案的战袍所覆盖，头盔上有可怕的鹿角，这也是拜拉席恩家族纹章的象征。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是劳勃的盔甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -22087,14 +20255,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 1
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是罗兰德·艾林一世的王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -22156,14 +20316,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "这套全身板甲内衬长袍，袍上织就繁复的叶蔓枝条纹样。树木意象贯穿整体设计，辅以精巧纹饰，更有一块醒目的前胸饰板，将其尽情展现。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是罗宛盔甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -22227,14 +20379,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "无人知晓这套青铜盔甲究竟有多古老，亦不知历年间更换过多少部件。作为久远遗物，其肩甲与胸甲形制迥异于当世。虽历经沧桑，战场上却仍堪一用，坚韧依旧。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是罗伊斯盔甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -22295,14 +20439,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "这顶青铜王冠镶嵌着黑色圆形宝石，上面雕刻着先民符文，是按照谷地罗伊斯家族古代王冠的样式制作的。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是符文王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -22366,14 +20502,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "罗伊斯家族拥有的几套古老青铜板甲的其中一套。甲上刻有符文，据说这些符文能让穿戴者免受伤害。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是符文青铜盔甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -22431,14 +20559,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "园丁家族曾经的王座，据说是由「青手」加尔斯亲手栽种的。这个传说中的王座很久以前就被付之一炬，如今只剩过去辉煌的残骸。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是橡树墩，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -22495,14 +20615,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "海石之位是铁群岛的神秘王座，它由油亮的黑石雕成，其工艺和历史早已湮没在时间的长河之中。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是海石之位，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -22579,14 +20691,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "label": "决斗助益",
         "stackGroup": "artifact.prowess",
         "value": 2
-      },
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
       },
       {
         "directive": "此物是海龙王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
@@ -22719,14 +20823,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 2
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是夏拉·艾林的后冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -22801,14 +20897,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "kind": "check_modifier",
         "label": "学识助益",
         "stackGroup": "artifact.learning",
-        "value": 1
-      },
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
         "value": 1
       },
       {
@@ -22950,14 +21038,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 2
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是瓦雷利亚征服者王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -23035,14 +21115,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 2
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是瓦雷利亚征服者红宝石王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -23110,22 +21182,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "label": "学识助益",
         "stackGroup": "artifact.learning",
         "value": -2
-      },
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威慑象征",
-        "stackGroup": "artifact.dread",
-        "target": "dreadGain",
-        "value": 1
       },
       {
         "cap": 3,
@@ -23216,14 +21272,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": -1
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是韦赛里斯一世的比武大会王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -23299,14 +21347,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "label": "学识助益",
         "stackGroup": "artifact.learning",
         "value": -1
-      },
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
       },
       {
         "directive": "此物是王国之光王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
@@ -23386,14 +21426,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": -1
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是瓦雷利亚女王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -23461,14 +21493,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "label": "权谋助益",
         "stackGroup": "artifact.intrigue",
         "value": 2
-      },
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
       },
       {
         "directive": "此物是雪花王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
@@ -23603,14 +21627,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "传说中天父亲自从天上摘下的七颗星辰之一，被放置在「丘陵之王」胡戈的王冠上。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是胡戈之星，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -23678,14 +21694,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "label": "战阵助益",
         "stackGroup": "artifact.martial",
         "value": 3
-      },
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": -1
       },
       {
         "cap": 3,
@@ -23761,14 +21769,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这套奇特的盔甲在四肢处以板甲覆鳞甲，躯干则外罩厚衬衣。既透气又防护周全，即便徒步作战亦能活动自如。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是石人盔甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -23830,14 +21830,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "这套盔甲主要由条板甲元件构成，胸部覆有布面甲，内衬罩袍与锁子甲。链甲护颈保护颈部。虽防护不及全身板甲，却比裸露钢铁更添色彩。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是风暴地盔甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -23901,14 +21893,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这套高度槽纹化的盔甲外罩一件下摆呈方形锯齿状的罩袍。虽缺少部分全身板甲构件，但锁子甲与链甲护颈在提供坚实防护之余，亦保持了灵活机动之性。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是风暴地高等盔甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -23969,14 +21953,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "这顶四周嵌满硕大宝石的傲然金冠带着典型的风暴地风格。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是风暴地王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -24044,14 +22020,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "风暴王冠曾是杜兰登家族的祖传冠冕，自杜伦迎娶依妮并建成第七座城堡时就一直佩戴。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是风暴王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -24122,14 +22090,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 1
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是战斗天鹅王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -24187,14 +22147,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "传说中的骑士「星眼」赛米恩所使用的蓝宝石之一。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是赛米恩的左眼，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -24251,14 +22203,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "传说中的骑士「星眼」赛米恩所使用的蓝宝石之一。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是赛米恩的右眼，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -24321,14 +22265,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "一顶迷人的金银王冠，中央金环镶嵌着闪亮的绿宝石和一组银箭头，每个箭头的核心都缀有一颗璀璨的红宝石。位于王冠中心的是一张银弓，弓身镶嵌着绚丽的红绿宝石。弓弦中央上指的箭矢之间有一个精致的金面，饰以复杂的树叶和弓箭手纹样。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是猎人王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -24389,14 +22325,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "优雅的圆柱形金冠上有六个精雕细琢的镂空小孔，宛如太阳，另外还有六个精雕细琢的月亮形小孔。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是暮之星王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -24461,14 +22389,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "《白典》，其正式名称为《白骑士之书》，这本书记载了每个曾在御林铁卫中服役过的成员的事迹。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是《白典》，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -24531,14 +22451,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这套甲胄以鳞甲覆于皮背心与厚衬衣之外，纹饰风格承自自由贸易城邦。造型独特的球状胸甲有助于偏转攻击，更好地护住穿戴者周身要害。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是三城同盟会高等盔甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -24599,14 +22511,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "一顶饰有鱼鳍形塔楼的银色铁王冠。王冠底部饰有一个铁质圆环，而鱼塔的上方和下方则镶嵌着精致的蓝色和粉色宝石，银色鱼皮图案则增添了几分奢华。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "cap": 3,
         "contextTags": [
@@ -24696,14 +22600,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 1
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是兰尼斯特先民王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -24765,14 +22661,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "这套盔甲大面积采用化学鎏金工艺，打磨至镜面般光可鉴人，更饰以繁复浮雕纹样。翎羽与缎面罩衣相配，整套装束正合志在彰显财力与风度的骑士。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是提利尔盔甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -24836,14 +22724,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这套全身板甲以金红二色为主，肩披金布。甲身槽纹沿袭西境风格，鲜红与红铜相间的甲片尽显豪奢与傲然。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是兰尼斯特深红盔甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -24900,14 +22780,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "乌勒家族的城堡里有一件奇怪的东西：一个骷髅头，除了眼窝里的两颗紫水晶外，没有任何装饰，朴实无华。当被问及此事时，乌勒家族只是笑着说这是一件古老的传家宝。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是紫晶之眼头骨，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -24969,14 +22841,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "一顶形状复杂的铁冠，男人被锁住的手象征着从束缚中挣脱出来获得解放。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是最后壁炉城之冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -25135,14 +22999,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 1
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是瓦莱拉·坦格利安的王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -25220,14 +23076,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 2
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是瓦拉尔·坦格利安的王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -25289,14 +23137,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "这套布面甲采用异常宽大的内置甲片，却仍保有灵活之性。手臂与小腿以大块钢板防护，整体设计可谓防护周全。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是谷地盔甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -25360,14 +23200,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这套盔甲因无罩袍或织物覆面而得名“白甲”。肩甲、腿甲等部件皆以大块板甲制成，使其成为现用铠甲中防护最为周全的样式之一。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是谷地高等盔甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -25428,14 +23260,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "这顶雕花繁杂并饰以珠宝的银冠带着典型的谷地风情。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是谷地王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -25499,14 +23323,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这套槽纹盔甲覆以暗沉包浆，以御风雨侵蚀。甲身棱角分明，与下方装饰外衣形成鲜明对比；前臂无甲，换得战斗中灵动自如。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是瓦雷利亚盔甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -25568,14 +23384,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "这套全身板甲覆以暗沉包浆，通体银边槽纹。部分甲片边缘饰有龙齿，肩甲则压花龙翼纹样。内衬长袍与暗色金属相映成趣。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是瓦雷利亚高等盔甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -25639,14 +23447,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这套烤蓝全身板甲内衬锁子甲与衬垫夹克，防护几无疏漏。甲身遍布细密槽纹，腿甲、加固关节等处更铸成龙形部件，细节极为考究。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是真龙板甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -25708,14 +23508,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "这套红色珐琅板甲在战场上熠熠生辉。甲面铸成龙形造型，护手末端更呈龙爪之状，整副铠甲既是护体之物，亦是克敌之器。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是深红真龙板甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -25779,14 +23571,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这套红色全身板甲饰以众多龙纹，槽纹更铸成龙翼膜之形。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是深红瓦雷利亚高等盔甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -25847,14 +23631,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "一顶以古瓦雷利亚诸神之名设计的头环。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是自由堡垒头环，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -25917,14 +23693,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "一顶形状像龙的翅膀的银冠，饰有三颗大宝石。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是自由堡垒之冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -25985,14 +23753,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "一顶红铁制成的王冠，形状仿佛龙的皮翼，上面饰有三颗大的黑曜石宝石，代表了黑火家族的颜色和象征。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是瓦雷利亚猩红王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -26055,14 +23815,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "一顶形状像龙的翅膀的金冠，饰有三颗大红宝石，象征着坦格利安家族。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是瓦雷利亚血与火王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -26124,14 +23876,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "一套瓦雷利亚钢鳞甲，其价值堪抵一个王国，无疑是世界上最具防护力的盔甲。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是瓦雷利亚钢甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -26206,14 +23950,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "label": "战阵助益",
         "stackGroup": "artifact.martial",
         "value": 2
-      },
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
       },
       {
         "directive": "此物是暗黑姐妹之冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
@@ -26356,14 +24092,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 2
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是伊尼斯之子韦赛里斯的红宝石王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -26441,14 +24169,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 1
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是伊尼斯一世之子韦赛里斯的宝石王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -26518,14 +24238,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 2
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是韦赛里斯·坦格利安三世的王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -26586,14 +24298,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "「蛇牙」是韦尔家族首领所持的祖传佩剑。这柄华丽的长柄剑，剑刃呈独特的波浪状，曾无数次在保卫多恩的战争中杀敌饮血。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是蛇牙，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -26663,14 +24367,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这把长剑闪耀着金光。细细的花丝在烛光下闪闪发光，如瓦雷利亚钢剑上的水波纹路一般细腻。这把剑配得上战士本人，让人想起过往的英雄。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是安达尔式金柄长剑，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -26738,14 +24434,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "这把长剑呈现华丽的银色，雕刻精美。细腻的花丝在烛光下闪闪发光，如瓦雷利亚钢剑上的水波纹路一般细腻。这把剑配得上战士本人，让人想起过往的英雄。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是安达尔式银柄长剑，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -26815,14 +24503,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这把长柄剑闪耀着金光。细腻的花丝在烛光下闪闪发光，如瓦雷利亚钢剑上的水波纹路一般细腻。这把剑配得上战士本人，让人想起过往的英雄。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是安达尔式金柄长柄剑，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -26891,14 +24571,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这把长柄剑呈现华丽的银色，雕刻精美。细腻的花丝在烛光下闪闪发光，如瓦雷利亚钢剑上的水波纹路一般细腻。这把剑配得上战士本人，让人想起过往的英雄。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是安达尔式银柄长柄剑，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -26960,14 +24632,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "「凌越」是梅利斯特家族祖传的瓦雷利亚钢戟。戟头饰有繁复的雕纹，戟柄则由上等鱼梁木制成。这把武器数百年来以守护海疆城的人民而闻名，是梅利斯特家族的骄傲——他们时常手持此戟，与族中战士并肩而立，保卫家园。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是凌越，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -27031,14 +24695,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这是霍尔家族的瓦雷利亚钢双手巨斧。与其他大多数通过铁钱获取珍藏的铁种不同，霍尔家族直接委托锻造了这件武器。这种铺张之举得益于他们在铁群岛日益增长的财富和对贸易的鼓励。诸如此类的非正统行径，为该家族成员赢得了「黑血」的绰号——这一侮辱后来变成了他们的骄傲标志。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是黑血，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -27100,14 +24756,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "这把巨剑是追求极致战斗效率的作品。它的十字护罩被锉成锋利的尖刺，手柄部分由脆性黑铁制成，柄头则被铸造成一根带刺的铁狼牙棒，用来粉碎任何近身之敌的头骨。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是黑殒，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -27171,14 +24819,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "「血月」是一把瓦雷利亚钢武装剑，属于铁林城的温奇家族。末日浩劫之前，这柄剑是在末日浩劫之前，于骨锤角海岸从一名被杀的海盗船长手中夺来的，以铁钱付账。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是血月，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -27240,14 +24880,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "这把威风凛凛的长枪，枪尖由瓦雷利亚钢锻造，是克雷赫家族在末日浩劫之前委托铸造的。无数敌手——无论猛兽还是凡人——都曾命丧其上。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是獠牙，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -27327,14 +24959,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 1
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是骨爪，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -27396,14 +25020,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "「光啸」是兰尼斯特家族祖传的瓦雷利亚钢巨剑，它在瓦雷利亚末日浩劫后被托曼二世遗失。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是光啸，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -27475,14 +25091,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 2
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是破云，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -27545,14 +25153,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "「三叶草」是高尔家族的瓦雷利亚钢剑。在「姐妹相残」事件中，马丁·高尔领主杀死了原主，将其夺为己有。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是三叶草，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -27614,14 +25214,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "这把宽刃长柄剑由马赛家族的最后一位国王所持有，他宣称并守护了从马赛岬东岸至黑水河河口的土地。金制的剑柄上雕刻着古代的图案，其设计可能源自英雄纪元早期的某件武器。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是舞者，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -27755,14 +25347,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "「暗黑姐妹」是坦格利安家族在末日浩劫之后从龙石岛带来的两把瓦雷利亚钢剑之一，这是坦格利安家族最珍贵的财产之一。这是一把长剑，纤细优雅，剑身呈烟黑色。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是暗黑姐妹，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -27824,14 +25408,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "「暗黑利爪」是龙栖堡的莱维尔家族数代持有的巨剑。镀银的剑柄上雕刻着凶猛的长翼龙。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是暗黑利爪，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -27895,14 +25471,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "「违抗」是一把青铜柄长剑，由铁氏家族持有。几个世纪以来，铁氏家族因为给北境骑兵提供马蹄铁而声名鹊起。最终，这份突出贡献使他们得以被授予「违抗」，大大提高了他们在北境贵族中的地位。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是违抗，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -27964,14 +25532,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "「灵爪」是亮水城领主佛罗伦家族的瓦雷利亚钢剑。这是一柄长剑，剑身饰有银质镶嵌，是家族引以为傲的珍宝。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是灵爪，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -28035,14 +25595,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "「争论者」是一把短刃剑，有着暗金色的蝙蝠形剑柄，其剑身漆黑如夜。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是争论者，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -28104,14 +25656,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "这把剑的剑柄由染成深蓝色的银制成，剑柄的鞍座也用上了同样的金属，上面雕刻有复杂的花纹。长剑的护手是一对龙的形状，龙的翅膀向剑刃两侧伸展。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是龙祸，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -28175,14 +25719,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "「黄昏」是卡伦家族祖传的瓦雷利亚钢长剑。这是一柄巨剑，剑身宽阔而暗沉，护手与剑首呈扭曲造型，每一处细节都愈发衬托出此兵器慑人的威势。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是黄昏，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -28244,14 +25780,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "「优雅」是青亭岛领主雷德温家族的祖传瓦雷利亚钢剑。这柄精致的武器是一把带有三重血槽的长柄剑，配有弯弧护手和黄铜配件。该家族在「流血世纪」与「瓦雷利亚末日浩劫」前夕不久获得了此剑。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是优雅，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -28315,14 +25843,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这把硕大的瓦雷利亚钢巨剑是杜兰登家族的祖传武器。无数歌谣传颂着它的持有者——他们在战场上挥舞剑刃，如同风暴本身，在优雅的钢铁之舞中斩落无数敌人。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是依妮的宠爱，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -28385,14 +25905,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这把剑由著名的罗宛家族在末日浩劫前委托制作，有着最精良的瓦雷利亚工艺。它的柄首用罗宛家族的金树旗装饰。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是恒金，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -28454,14 +25966,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "「盛宴制造者」是莫里根家族的瓦雷利亚钢剑。此名源于它在每场战斗之后，都会为乌鸦们摆下一场“盛宴”。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是盛宴制造者，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -28531,14 +26035,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这把长剑的青铜工艺被打磨得闪闪发光。用古语书写的符文铭文在烛光下闪闪发光，如瓦雷利亚钢剑上的水波纹路一般细腻。这把剑的造型和尺寸，让人不禁想起许多北境家族古代英雄所佩戴的剑，这些家族都自称是先民的后裔。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是先民式青铜柄长剑，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -28606,14 +26102,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "这把长剑闪耀着金光。用古语书写的符文在烛光下闪闪发光，如瓦雷利亚钢剑上的水波纹路一般细腻。这把剑的造型和尺寸，让人不禁想起许多北境家族古代英雄所佩戴的剑，这些家族都自称是先民的后裔。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是先民式金柄长剑，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -28683,14 +26171,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这把长剑呈现华丽的银色，雕刻精美。用古语书写的符文铭文在烛光下闪闪发光，如瓦雷利亚钢剑上的水波纹路一般细腻。这把剑的造型和尺寸，让人不禁想起许多北境家族古代英雄所佩戴的剑，这些家族都自称是先民的后裔。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是先民式银柄长剑，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -28758,14 +26238,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "这把长柄剑的青铜工艺被打磨得闪闪发光。用古语书写的符文铭文在烛光下闪闪发光，如瓦雷利亚钢剑上的水波纹路一般细腻。这把剑的造型和尺寸，让人不禁想起许多北境家族古代英雄所佩戴的剑，这些家族都自称是先民的后裔。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是先民式青铜柄长柄剑，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -28835,14 +26307,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这把长柄剑闪耀着金光。用古语书写的符文铭文在烛光下闪闪发光，如瓦雷利亚钢剑上的水波纹路一般细腻。这把剑的造型和尺寸，让人不禁想起许多北境家族古代英雄所佩戴的剑，这些家族都自称是先民的后裔。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是先民式金柄长柄剑，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -28911,14 +26375,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这把长柄剑呈现华丽的银色，雕刻精美。用古语书写的符文铭文在烛光下闪闪发光，如瓦雷利亚钢剑上的水波纹路一般细腻。这把剑的造型和尺寸，让人不禁想起许多北境家族古代英雄所佩戴的剑，这些家族都自称是先民的后裔。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是先民式银柄长柄剑，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -28980,14 +26436,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "「愚行」是法威尔家族的瓦雷利亚钢长剑，其剑柄上饰有红金相间的纹饰。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是愚行，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -29051,14 +26499,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这把瓦雷利亚钢双手剑是斯壮家族的祖传宝剑。其剑柄采鱼梁木制成，青铜护手与柄头上镶嵌着蓝宝石、红宝石和绿宝石，既呼应了家族纹章的颜色，也象征着他们的家园三叉戟河。这把剑世代相传，历经了无数场战斗。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是坚毅，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -29120,14 +26560,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "「自由」是托因家族的祖传瓦雷利亚钢剑，也是他们昔日荣耀所剩无几的象征之一。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是自由，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -29191,14 +26623,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这柄短剑的剑柄处镶嵌着一颗心形的深红宝石，宝石周围环绕着火舌状的纯金装饰，宛如拉赫洛的炽热怀抱。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是荣耀，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -29260,14 +26684,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "「守护者」是伊伦伍德家族的瓦雷利亚钢长柄斧。这件多用途武器既精美绝伦，又致命非常。无数来犯者直到太迟时才意识到石路始终有人镇守，而他们已被此斧劈开、粉碎或刺穿。这把独特的武器曾由历代血之贵胄挥舞，是多恩最富盛名的兵器之一。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是守护者，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -29339,14 +26755,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 2
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是碎心者，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -29408,14 +26816,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "「碎心」是一把塔利家族祖传的瓦雷利亚钢剑。它是一把双手巨剑，在「伊耿征服」的三世纪前就被骄傲的边疆地领主所持有。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是碎心，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -29479,14 +26879,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "「公正调解者」是凡斯家族的祖传瓦雷利亚钢剑。它世代传承于旅息城一脉，令家族其他分支极为眼红。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是公正调解者，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -29549,14 +26941,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "一把巨大而骇人的武器，这把剑以海怪形象作为护手和柄头。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是铁钱，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -29618,14 +27002,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "「铁心」是森林氏族世代相传的瓦雷利亚钢巨剑。它极为宝贵，令无数人垂涎。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是铁心，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -29697,14 +27073,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 2
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是空寂女士，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -29766,14 +27134,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "「悲叹」是一柄属于罗伊斯家族的瓦雷利亚钢剑，这是谷地的一个古老又强大的家族。这个家族早在艾林家族统治艾林谷前就已建立了，在先民还占据谷地时，罗伊斯家族作为符石城的「青铜王」统领谷地，直到安达尔人入侵时期，他们被山谷之王，阿提斯·艾林所击败。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是悲叹，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -29862,14 +27222,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "effects": [
       {
         "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
-        "cap": 3,
         "contextTags": [
           "court",
           "vassal"
@@ -29938,14 +27290,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "「长刺」是一柄曾由河湾地诸王携带的长剑。在怒火燎原之战中几近被毁后，欧佛花家族一直守护着它的残骸，希望有朝一日能以高庭真正统治者的身份将其修复。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是「长刺」的断刃，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -30006,14 +27350,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "这把长剑的柄头是一个圣母的铜雕像，也许是为了祈求众神在战斗中施加保护。镌刻的剑格和手柄均由相同材质的红铜制成。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是圣母之哀，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -30077,14 +27413,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "「哀悼」是一把瓦雷利亚钢剑，由庞洛斯家族持有，其剑柄上镶嵌着白色珐琅。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是哀悼，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -30146,14 +27474,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "「夜临」是一把在伊耿历三世纪末属于哈尔洛家族的瓦雷利亚钢剑。这把黑刃长剑由道尔顿·葛雷乔伊大王从一名死去的海盗手中付铁钱掠夺而来。它有一个月石的剑柄末端。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是夜临，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -30222,14 +27542,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "这把瓦雷利亚钢剑的剑刃呈现出独特的深红与灰色波纹，剑首镶有金狮头像，红宝石双眼如同两颗赤星般闪烁。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是守誓剑，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -30309,14 +27621,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 1
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是古根，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -30378,14 +27682,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "「孤儿制造者」是一把原属罗克顿家族的瓦雷利亚钢剑。其暗蓝钢的护手被雕刻成凶猛的尖刺，让这把可怕的武器又增添了几分恐怖。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是孤儿制造者，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -30449,14 +27745,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "「蟹钳」是属于赛提加家族的瓦雷利亚钢斧。作为其瓦雷利亚传承的一部分，这件早在末日浩劫之前就已存在的黑色遗珍在赛提加家族中一代又一代地流传了下来。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是蟹钳，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -30518,14 +27806,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "贾斯特家族的狮首骑士们自凯岩王国时代起就一直持有这把长剑。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是骄傲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -30589,14 +27869,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "「红雨」是一把暗血色的长柄剑，上面镶嵌着泪滴形状的红宝石。狡猾的希尔玛·卓鼓凭借智慧和一柄木棍从一个全副武装的骑士手中为卓鼓家族赢得这把宝剑。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是红雨，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -30658,14 +27930,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "「赤角」是宴火城领主普莱斯特家族的瓦雷利亚钢剑。据说这把剑曾由家族中最勇猛的成员挥舞，用以击退铁民。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是赤角，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -30729,14 +27993,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "「飞羽」是卡盖尔家族的祖传瓦雷利亚钢剑，曾经由传说中的黄金天鹅持有，他最先把蛋带到了维斯特洛。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是飞羽，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -30799,14 +28055,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "「共鸣」是贝尔摩家族祖传的瓦雷利亚钢剑；据说它与别的兵刃交锋时，会发出悦耳的声响。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是共鸣，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -30868,14 +28116,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "瓦列利安家族在这把瓦雷利亚钢弯刀上装饰着象征他们家族的海马徽章。这把弯刀有着漂亮的银制雕刻手柄，这是用瓦列利安数代人的贸易收入换来的。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是海沫，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -31001,14 +28241,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这柄双手巨剑有着独特的波浪形瓦雷利亚钢刃，暗部呈现粉色调。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是剥皮者，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -31070,14 +28302,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "这把巨剑被祸垒之主们世代挥舞，剑名来源于一次与抵抗铁种的战斗，战斗中班佛特家族的领主一击砍断了一名劫掠者的斧头、头盔和头骨。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是切颅者，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -31141,14 +28365,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这把银柄金身的锥形长剑非常引人注目，许多代达克林族人的战斗证明了它是把致命的武器。达克林家族的国王、领主和骑士们挥舞着这把剑对抗过无数敌人，更没有其他任何家族捍卫过如此之多的国王。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是坚定，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -31210,14 +28426,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "「星陨」是坦帕顿家族的瓦雷利亚钢剑。传闻正是此剑在七星之战中斩杀了罗拔·罗伊斯二世。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是星陨，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -31281,14 +28489,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "一把精美的长剑，剑身由尖锐细长的瓦雷利亚钢锻造而成，锋利精准如毒刺。剑柄为螺旋纹大理石材质，搭配繁复的金色护手，更显其抛光工艺的考究。泪滴状剑首镶嵌着光滑的琥珀宝石，赋予这把武器优雅而致命的气质。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是刺针，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -31350,14 +28550,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "一把外形简洁凌厉的剑，没有大多数瓦雷利亚钢剑的华丽装饰。剑身保持着锻炉中烧出的暗色调，在锻造者的手中被扭曲塑造成实用的形状。缺少装饰的风格使这把武器带有一种粗野威严的气息，与古帝国的大多数作品形成鲜明对比——这是一把战士的武器，而非贵族的饰品。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是夜风，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -31421,14 +28613,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这把利刃阴影之下的亡魂应该感到欣慰，因为其审判者为其终局尽了最高规格的礼遇。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是陌客之触，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -31490,14 +28674,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "银丘的沙略特家族是一个骄傲的安达尔家族，他们用从自己城堡周围土地开采的银子购买了这把华丽的剑。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是至上，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -31561,14 +28737,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "天鹅之歌是史文家族祖传的瓦雷利亚钢长剑。多年来，它助力石盔城的领主们击退了无数多恩人与海盗的侵略。剑柄末端以白色大理石雕琢成优雅的天鹅造型。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是天鹅之歌，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -31630,14 +28798,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "尖角的巴尔艾蒙家族由「可怖者」托格利昂建立，他是一个安达尔军阀，用刀剑为自己和后代开辟了一个小王国。这把金银柄的长柄剑是巴尔艾蒙家族的珍宝，也被后世子孙用来维持对这个王国的统治——他们甚至以这把剑来命名他们舰队的旗舰。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是剑鱼，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -31701,14 +28861,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这把长剑的十字护板被铸造成两翼的形状，中间嵌有一颗巨大的蓝宝石。剑柄部分由蓝钢制成，上面雕刻着一只猎鹰的头部，两颗小蓝宝石作为眼睛，金色条纹从鹰眼下方流出。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是鹰爪，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -31770,14 +28922,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "这柄镀银的长剑上镶嵌着紫水晶。布拉克斯家族拥有这把令人印象深刻的瓦雷利亚钢剑已有数百年之久。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是宁静，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -31841,14 +28985,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "「真相」是一柄罗佳尔家族的瓦雷利亚钢剑，这个家族有古老的里斯贵族血脉。金制的剑柄雕刻华丽，暗示着这个家族几个世纪以来在银行业积累的巨额财富。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是真相，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -31911,14 +29047,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "一把锋利而迅捷的剑，剑柄末端装饰着漆黑的渡鸦头骨，剑柄由坚实的鱼梁木制成，并镶嵌有数颗红宝石。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是无情，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -31980,14 +29108,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "「正直」是谷地贵族韦伍德家族的瓦雷利亚钢剑，其剑柄末端镶嵌着一颗祖母绿。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是正直，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -32057,14 +29177,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这把长剑闪耀着金光。金属的纹理在烛光下闪闪发光，如瓦雷利亚钢剑上的水波纹路一般细腻。这把剑让人想起古瓦雷利亚龙王所挥舞的可怕武器。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是瓦雷利亚式金柄长剑，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -32132,14 +29244,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "这把长剑呈现华丽的银色，雕刻精美。金属的纹理在烛光下闪闪发光，如瓦雷利亚钢剑上的水波纹路一般细腻。这把剑让人想起古瓦雷利亚龙王所挥舞的可怕武器。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是瓦雷利亚式银柄长剑，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -32209,14 +29313,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这把长柄剑闪耀着金光。金属的纹理在烛光下闪闪发光，如瓦雷利亚钢剑上的水波纹路一般细腻。这把剑让人想起古瓦雷利亚龙王所挥舞的可怕武器。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是瓦雷利亚式金柄长柄剑，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -32285,14 +29381,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这把长柄剑呈现华丽的银色，雕刻精美。金属的纹理在烛光下闪闪发光，如瓦雷利亚钢剑上的水波纹路一般细腻。这把剑让人想起古瓦雷利亚龙王所挥舞的可怕武器。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是瓦雷利亚式银柄长柄剑，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -32354,14 +29442,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "「毒液」是寂静沼泽的瓦尔平家族所持有的瓦雷利亚钢剑。据说此剑造成的伤口发黑溃烂，即便只是划伤，也等同宣判死刑。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是毒液，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -32433,14 +29513,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 2
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是警觉，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -32502,14 +29574,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "「宽纹」是莱顿家族祖传的瓦雷利亚钢巨剑，最初由第一位安达尔人凯岩王乔佛里·莱顿携带到维斯特洛。这把又宽又黑的剑被带着獾冠的骑士和领主带进了许多战场。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是宽纹，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -32579,14 +29643,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这把瓦雷利亚钢剑颜色独特，整个剑刃上都有深红色和灰色的涟漪。它的金色剑鞘上则由樱桃木、红色皮革和带有红宝石眼睛的金色狮子头组成。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是寡妇之嚎，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -32648,14 +29704,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "荒冢屯的达斯丁家族是一个有着光荣和无数传奇的古老家族。这把剑是仿照英雄纪元的达斯丁国王所持青铜剑所锻造。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是龙牙，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -32719,14 +29767,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这张长弓由鱼梁木制成，拥有旧神圣树独有的骨白色。它工艺精湛，且永不腐朽。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是鱼梁木长弓，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -32784,14 +29824,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "鹰巢城的高座由古老的鱼梁木雕琢而成，饰以淡蓝色的簇绒坐垫，放置在鹰巢城大厅的尽头。自「猎鹰骑士」阿提斯时代起，历代山谷之王便在此座上统御谷地。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是鱼梁木王座，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -32855,14 +29887,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这套槽纹全身板甲外罩一件展示纹章色彩的小型罩袍，为原本素面的钢铁平添唯一一抹亮色。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是西境盔甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -32925,14 +29949,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "这套全身板甲密布槽纹，表面形成别致纹样。肩头垂挂的长布展示着纹章色彩。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是西境高等盔甲，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -32993,14 +30009,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     },
     "description": "这顶饰有抛光宝石的华丽金冠设计复杂，是典型的西境风格。",
     "effects": [
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
       {
         "directive": "此物是西境王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
@@ -33069,14 +30077,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "凯岩头环曾是兰尼斯特家族王后的传统王冠，是一个用黄金、宝石和狮子装饰的美丽环饰。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是凯岩头环，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -33144,14 +30144,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
     "description": "凯岩王冠曾由兰尼斯特家族的凯岩王佩戴，该家族的血脉可以追溯到「机灵的」兰恩和「雄狮」罗利恩。",
     "effects": [
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是凯岩王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -33218,14 +30210,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "kind": "check_modifier",
         "label": "外交威仪",
         "stackGroup": "artifact.diplomacy",
-        "value": 1
-      },
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
         "value": 1
       },
       {
@@ -33298,14 +30282,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "value": 1
       },
       {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
-      },
-      {
         "directive": "此物是血与火之冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
         "kind": "narrative"
       }
@@ -33372,14 +30348,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "kind": "check_modifier",
         "label": "战阵助益",
         "stackGroup": "artifact.martial",
-        "value": 1
-      },
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
         "value": 1
       },
       {
@@ -33450,14 +30418,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "label": "决斗助益",
         "stackGroup": "artifact.prowess",
         "value": 2
-      },
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
-        "value": 1
       },
       {
         "directive": "此物是冬翼王冠，其来历和象征意义应当影响持有者的身份与他人的反应。",
@@ -33534,14 +30494,6 @@ export const AGOT_ARTIFACT_DEFINITIONS = [
         "kind": "check_modifier",
         "label": "决斗助益",
         "stackGroup": "artifact.prowess",
-        "value": 1
-      },
-      {
-        "cap": 3,
-        "kind": "resource",
-        "label": "威仪象征",
-        "stackGroup": "artifact.prestige",
-        "target": "prestigeGain",
         "value": 1
       },
       {

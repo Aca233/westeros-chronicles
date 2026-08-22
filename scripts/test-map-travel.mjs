@@ -133,7 +133,7 @@ function gameState(journey = activeJourney()) {
       canonicalCharacterId: PLAYER,
       name: '旅行者', house: '测试家族', houseWords: '', houseSigil: '', title: '', age: 30, gender: '男',
       location: { locationId: 'b_start' }, locationLabel: '起点', body: body(), overallStatus: '强健',
-      items: itemState(), goldDragons: 100, silverStags: 0, prestige: 0, dread: 0,
+      items: itemState(), goldDragons: 100, silverStags: 0,
       attributes: { diplomacy: 5, martial: 5, stewardship: 5, intrigue: 5, learning: 5, prowess: 5 }, traits: [],
     },
     turns: [{ id: 'turn_1', turnNumber: 1, playerInput: '开始', narrate: '开始', branches: [], timestamp: 1 }],

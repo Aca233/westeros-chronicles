@@ -185,7 +185,7 @@ const itemEffectSchema = z.union([
   z.object({ kind: z.literal('burden'), value: z.number(), stackGroup: z.string().min(1), cap: z.number().optional(), label: z.string().min(1) }).strict(),
   z.object({ kind: z.literal('fatigue'), contextTags: z.array(z.string()), value: z.number(), stackGroup: z.string().min(1), cap: z.number().optional(), label: z.string().min(1) }).strict(),
   z.object({ kind: z.literal('heat'), contextTags: z.array(z.string()), value: z.number(), stackGroup: z.string().min(1), cap: z.number().optional(), label: z.string().min(1) }).strict(),
-  z.object({ kind: z.literal('resource'), target: z.enum(['goldGain', 'prestigeGain', 'dreadGain', 'recoverySpeed']), value: z.number(), stackGroup: z.string().min(1), cap: z.number().optional(), label: z.string().min(1) }).strict(),
+  z.object({ kind: z.literal('resource'), target: z.enum(['goldGain', 'recoverySpeed']), value: z.number(), stackGroup: z.string().min(1), cap: z.number().optional(), label: z.string().min(1) }).strict(),
   z.object({ kind: z.literal('capacity'), categories: z.array(z.string()), units: z.number(), stackGroup: z.string().min(1), cap: z.number().optional(), label: z.string().min(1) }).strict(),
   z.object({ kind: z.literal('narrative'), directive: z.string().min(1), condition: z.record(z.string(), z.unknown()).optional() }).strict(),
 ]);

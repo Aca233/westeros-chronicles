@@ -87,8 +87,6 @@ export function createLordFromExistingCharacter(
     items,
     goldDragons: 100,
     silverStags: 100,
-    prestige: character.titles.length ? 80 : 20,
-    dread: 0,
     attributes: { ...character.attributes },
     baseAttributes: { ...character.baseAttributes } as LordProfile['baseAttributes'],
     traits: traits.map((trait) => trait.name),

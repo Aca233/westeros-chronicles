@@ -1,5 +1,5 @@
 import React from 'react';
-import { Coins, Crown, HeartPulse, Skull } from 'lucide-react';
+import { Coins, HeartPulse } from 'lucide-react';
 import { CK3_SKILLS, getCk3SkillRank } from '../../data/ck3Skills';
 import { formatTraitDescription, resolveCharacterTraits } from '../../data/characterTraits';
 import type { CharacterDossier } from '../../features/characters/characterDossier';
@@ -85,10 +85,8 @@ export function CharacterOverview({
       </section>
 
       {dossier.kind === 'player' && (
-        <section className="grid grid-cols-4" aria-label="资源与状态">
+        <section className="grid grid-cols-3" aria-label="资源与状态">
           <ResourceCell icon={<Coins className="h-3.5 w-3.5 text-gold-deep" />} value={dossier.player.goldDragons} label="金龙" />
-          <ResourceCell icon={<Crown className="h-3.5 w-3.5 text-gold" />} value={dossier.player.prestige} label="威仪" />
-          <ResourceCell icon={<Skull className="h-3.5 w-3.5 text-rubric" />} value={dossier.player.dread} label="恶名" />
           <ResourceCell icon={<HeartPulse className="h-3.5 w-3.5 text-emerald-700" />} value={dossier.player.overallStatus} label="健康" textValue />
         </section>
       )}

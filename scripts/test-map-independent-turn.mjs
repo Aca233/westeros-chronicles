@@ -92,7 +92,7 @@ test('explicit travel intent is rejected locally when map data is unavailable', 
   mapLoads = 0;
   const state = gameState();
   const intent = { kind: 'start_travel', targetText: '红堡', evidenceText: '立刻启程前往红堡' };
-  const draft = { outcomeSummary: '试图启程。', stateCommands: [{ type: 'MODIFY_PRESTIGE', delta: 1 }], worldIntents: [intent] };
+  const draft = { outcomeSummary: '试图启程。', stateCommands: [{ type: 'MODIFY_STAT', stat: 'martial', delta: 1 }], worldIntents: [intent] };
   const prepared = await prepareWorldTurn({
     gameState: state,
     draft,
@@ -117,7 +117,7 @@ test('explicit travel intent is rejected locally when map data is unavailable', 
     timeline: [],
     preparedWorld: prepared,
   });
-  assert.equal(settled.updatedLord.prestige, state.lord.prestige + 1);
+  assert.equal(settled.updatedLord.attributes.martial, state.lord.attributes.martial + 1);
   assert.equal(settled.worldHistory.turns.length, 1);
   assert.equal(settled.activeJourney, undefined);
   assert.match(settled.rejectedCommands.map((entry) => entry.reason).join('\n'), /地图资料不可用/);

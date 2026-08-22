@@ -23,8 +23,6 @@ export function createLivingWorldTestLord(): LordProfile {
     items: createNedItemState(),
     goldDragons: 450,
     silverStags: 80,
-    prestige: 88,
-    dread: 12,
     baseAttributes: { diplomacy: 12, martial: 17, stewardship: 13, intrigue: 7, learning: 11, prowess: 18 },
     attributes: { diplomacy: 15, martial: 26, stewardship: 15, intrigue: 4, learning: 12, prowess: 21 },
     traits: ['诚实', '公正', '勇敢', '优秀战术家', '威严'],

@@ -48,16 +48,6 @@ def _effects(group: ArtifactGroup) -> list[dict[str, Any]]:
                 "kind": "check_modifier", "domain": domain, "value": _signed_value(value),
                 "stackGroup": f"artifact.{key}", "cap": 5, "label": labels[key],
             })
-    if candidate.modifiers.get("monthly_prestige"):
-        effects.append({
-            "kind": "resource", "target": "prestigeGain", "value": _signed_value(candidate.modifiers["monthly_prestige"]),
-            "stackGroup": "artifact.prestige", "cap": 3, "label": "威仪象征",
-        })
-    if candidate.modifiers.get("monthly_dread"):
-        effects.append({
-            "kind": "resource", "target": "dreadGain", "value": _signed_value(candidate.modifiers["monthly_dread"]),
-            "stackGroup": "artifact.dread", "cap": 3, "label": "威慑象征",
-        })
     opinion = sum(candidate.modifiers.get(key, 0) for key in ("vassal_opinion", "courtier_opinion", "general_opinion"))
     if opinion:
         effects.append({

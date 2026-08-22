@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
   Biohazard,
   Coins,
-  Crown,
   Droplets,
   HeartPulse,
   ScrollText,
@@ -109,14 +108,10 @@ export const CharacterSheet: React.FC<{ embedded?: boolean }> = ({ embedded = fa
             <span className="max-w-[140px] truncate font-serif text-gold">{lord.title}</span>
           </div>
 
-          <div className="mt-2 grid grid-cols-2 gap-2 border-t border-hairline pt-2 font-mono text-xs">
+          <div className="mt-2 grid grid-cols-1 gap-2 border-t border-hairline pt-2 font-mono text-xs">
             <div className="flex items-center justify-between border border-hairline bg-ink-2/70 px-2.5 py-1.5">
               <span className="flex items-center gap-1.5 font-bold text-gold-bright"><Coins className="h-4 w-4 text-gold" />{lord.goldDragons} <span className="text-[11px] font-normal text-parchment-dim">金龙</span></span>
               <span className="text-[11px] text-parchment-faint">{lord.silverStags} 银鹿</span>
-            </div>
-            <div className="flex items-center justify-between border border-hairline bg-ink-2/70 px-2.5 py-1.5">
-              <span className="flex items-center gap-1.5 font-bold text-gold-bright"><Crown className="h-4 w-4 text-gold" />{lord.prestige} <span className="text-[11px] font-normal text-parchment-dim">威仪</span></span>
-              <span className="text-[11px] text-rubric-bright">{lord.dread} 恶名</span>
             </div>
           </div>
 

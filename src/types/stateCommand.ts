@@ -12,8 +12,6 @@ export type StateCommand =
   | { type: 'SET_INFECTED'; value: boolean }
   | { type: 'MODIFY_GOLD'; goldDragons?: number; silverStags?: number; reason?: string }
   | { type: 'MODIFY_STAT'; stat: keyof LordAttributes; delta: number; reason?: string }
-  | { type: 'MODIFY_PRESTIGE'; delta: number }
-  | { type: 'MODIFY_DREAD'; delta: number }
   | { type: 'ADD_TRAIT'; trait: string }
   | { type: 'CHANGE_LOCATION'; locationId: string; sceneLocation?: string }
   | { type: 'CHANGE_TITLE'; title: string }

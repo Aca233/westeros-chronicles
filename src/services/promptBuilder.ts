@@ -365,7 +365,7 @@ export function buildStateSlice(gameState: GameState): string {
 - 装备负担: ${burden > 0 ? burden : '无明显负担'}
 - 装备确定性事实与场景代价: ${itemDirectives}
 - 远方储藏: 不向当前场景提供原始清单，不能直接取用
-- 随身财富: ${lord.goldDragons} 金龙, ${lord.silverStags} 银鹿 | 威仪: ${lord.prestige}, 恶名: ${lord.dread}
+- 随身财富: ${lord.goldDragons} 金龙, ${lord.silverStags} 银鹿
 - CK3 六项能力: 外交 ${lord.attributes.diplomacy}, 军事 ${lord.attributes.martial}, 管理 ${lord.attributes.stewardship}, 谋略 ${lord.attributes.intrigue}, 学识 ${lord.attributes.learning}, 勇武 ${lord.attributes.prowess}
 - 特质标签: ${lord.traits.join(', ')}
 - 已结算特质规则: ${ruleSummary}

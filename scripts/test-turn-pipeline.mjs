@@ -71,7 +71,7 @@ const settled = settleTurnDraft({
   draft: {
     outcomeSummary: '两人已经结婚，珊莎也受了伤。',
     stateCommands: [
-      { type: 'MODIFY_PRESTIGE', delta: 1 },
+      { type: 'MODIFY_STAT', stat: 'martial', delta: 1 },
       { type: 'MARRY_CHARACTERS', characterId: ARYA, spouseId: SANSA },
       { type: 'INJURE_CHARACTER', characterId: SANSA, zone: 'arms', level: 'minor', woundText: '手臂擦伤' },
     ],
@@ -80,12 +80,12 @@ const settled = settleTurnDraft({
   characterContext: context,
   timeline: [],
 });
-assert.deepEqual(settled.acceptedCommands.map((command) => command.type), ['MODIFY_PRESTIGE']);
+assert.deepEqual(settled.acceptedCommands.map((command) => command.type), ['MODIFY_STAT']);
 assert.deepEqual(settled.rejectedCommands.map((entry) => entry.type), ['MARRY_CHARACTERS', 'INJURE_CHARACTER']);
 assert.equal(settled.characterEvents.length, 0);
-assert.equal(settled.updatedLord.prestige, lord.prestige + 1);
+assert.equal(settled.updatedLord.attributes.martial, lord.attributes.martial + 1);
 assert.equal(settled.worldHistory.turns.length, 1);
-assert.deepEqual(settled.worldHistory.turns[0].acceptedCommands.map((command) => command.type), ['MODIFY_PRESTIGE']);
+assert.deepEqual(settled.worldHistory.turns[0].acceptedCommands.map((command) => command.type), ['MODIFY_STAT']);
 assert.equal(settled.worldRuntime.revision, settled.worldHistory.turns.length);
 assert.equal(settled.transactionId.startsWith('turn:'), true);
 
@@ -115,7 +115,7 @@ const messages = buildSettledNarrativeMessages({
   recentTurns: [],
 });
 const prompt = messages.map((message) => message.content).join('\n');
-assert.match(prompt, /MODIFY_PRESTIGE/);
+assert.match(prompt, /MODIFY_STAT/);
 assert.doesNotMatch(prompt, /MARRY_CHARACTERS|INJURE_CHARACTER|两人已经结婚|珊莎也受了伤/);
 assert.match(prompt, /只能叙述程序已确认的事实/);
 // 叙事请求带文学规范，但篇幅服从已确认事实，且仍锁死不得发明婚姻/死亡/受伤。
@@ -130,6 +130,6 @@ const offlineRaw = await streamNarrativeCompletion(messages, {
 }, () => {});
 assert.match(offlineRaw, /<narrate>[\s\S]*<\/narrate>/);
 assert.doesNotMatch(offlineRaw, /<state_cmd>|MARRY_CHARACTERS|INJURE_CHARACTER/);
-assert.match(offlineRaw, /MODIFY_PRESTIGE|威仪/);
+assert.match(offlineRaw, /MODIFY_STAT/);
 
 console.log('Turn pipeline tests passed.');

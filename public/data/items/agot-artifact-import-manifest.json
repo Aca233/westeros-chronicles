@@ -5,7 +5,7 @@
     "emittedItems": 463,
     "rejectedCandidates": 390
   },
-  "datasetHash": "18575e7140984cfa00938eef56fa435e6f74710a69b567fe3e9c2de3b8e30b90",
+  "datasetHash": "887de9672f96d6fc41e4751365485e3c7afed84572e6d58ea4967796d157bef4",
   "items": [
     {
       "itemId": "artifact.generated.2962333032-agot-artifact-trinket-of-qolab-agot-create-artifact-trinket-of-qolab-03-effect",
@@ -5103,7 +5103,7 @@
   ],
   "schemaVersion": 1,
   "worldState": {
-    "datasetHash": "0d96105c3362a350c57a89436662dbdcbde7d75b279e6fb48756ba6bc97eb2e6",
+    "datasetHash": "57c252e081557b2951b40eca8ee825cc0851f0557f270a06e4447e9423bcd47a",
     "resolvedArtifacts": 57,
     "unresolvedIssues": 29
   }

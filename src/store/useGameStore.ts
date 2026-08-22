@@ -151,7 +151,7 @@ function createInitialGameState(): GameState {
       gender: '未指定', location: { locationId: 'b_unknown_westeros' }, locationLabel: '所在地未查明',
       body: { head: { key: 'head', name: '头部与咽喉', level: 'intact', wounds: [], isFatalZone: true }, torso: { key: 'torso', name: '胸膛与躯干', level: 'intact', wounds: [], isFatalZone: true }, arms: { key: 'arms', name: '双臂与双手', level: 'intact', wounds: [], isFatalZone: false }, legs: { key: 'legs', name: '双腿与下肢', level: 'intact', wounds: [], isFatalZone: false }, isBleeding: false, isPoisoned: false, isInfected: false },
       overallStatus: '强健', items: { schemaVersion: 1, instances: {}, placements: {}, sites: {}, vehicles: {} },
-      goldDragons: 0, silverStags: 0, prestige: 0, dread: 0,
+      goldDragons: 0, silverStags: 0,
       attributes: { diplomacy: 0, martial: 0, stewardship: 0, intrigue: 0, learning: 0, prowess: 0 }, traits: [], traitIds: [],
     },
     turns: [],

@@ -30,7 +30,7 @@ const createLord = (traitIds = []) => ({
     isBleeding: false, isPoisoned: false, isInfected: false,
   },
   items: createNedItemState(),
-  goldDragons: 1000, silverStags: 100, prestige: 0, dread: 0,
+  goldDragons: 1000, silverStags: 100,
   attributes: { diplomacy: 10, martial: 10, stewardship: 10, intrigue: 10, learning: 10, prowess: 10 },
   traits: [], traitIds,
 });

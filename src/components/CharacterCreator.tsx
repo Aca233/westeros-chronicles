@@ -293,8 +293,6 @@ export const CharacterCreator: React.FC = () => {
       overallStatus: '强健',
       goldDragons: 300,
       silverStags: 100,
-      prestige: 60,
-      dread: 5,
       attributes: finalAttributes,
       baseAttributes: { ...customAttributes },
       traits: [...chosenTraitNames, `${effectiveDynastyName}血脉`],

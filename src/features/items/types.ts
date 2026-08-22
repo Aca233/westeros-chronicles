@@ -58,7 +58,7 @@ export type ItemEffect =
   | { kind: 'burden'; value: number; stackGroup: string; cap?: number; label: string }
   | { kind: 'fatigue'; contextTags: string[]; value: number; stackGroup: string; cap?: number; label: string }
   | { kind: 'heat'; contextTags: string[]; value: number; stackGroup: string; cap?: number; label: string }
-  | { kind: 'resource'; target: 'goldGain' | 'prestigeGain' | 'dreadGain' | 'recoverySpeed'; value: number; stackGroup: string; cap?: number; label: string }
+  | { kind: 'resource'; target: 'goldGain' | 'recoverySpeed'; value: number; stackGroup: string; cap?: number; label: string }
   | { kind: 'capacity'; categories: ItemCategory[]; units: number; stackGroup: string; cap?: number; label: string }
   | { kind: 'narrative'; directive: string; condition?: ItemEffectCondition };
 

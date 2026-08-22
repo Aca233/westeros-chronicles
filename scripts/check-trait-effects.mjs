@@ -77,8 +77,6 @@ const ALLOWED_CHECK_DOMAINS = new Set([
 
 const ALLOWED_MULTIPLIER_TARGETS = new Set([
   'goldGain',
-  'prestigeGain',
-  'dreadGain',
 ]);
 
 const ALLOWED_RESISTANCE_TARGETS = new Set([
