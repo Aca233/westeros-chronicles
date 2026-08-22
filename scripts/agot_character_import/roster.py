@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from typing import Any, Iterable, Mapping
 
 
-CORE_TIERS = frozenset({"canon", "semicanon"})
+CORE_TIERS = frozenset({"canon", "semicanon", "genealogy"})
 ARRAY_RELATION_FIELDS = ("spouseIds", "childIds", "siblingIds")
 TITLE_TIERS_BY_PRIORITY = ("empire", "kingdom", "duchy", "county", "barony")
 
@@ -48,7 +48,6 @@ def select_runtime_character_ids(
         references.playable_ids,
         references.content_ids,
         references.start_state_ids,
-        references.artifact_holder_ids,
     ):
         seeds |= _born_reference_ids(explicit_ids, records_by_id)
     retained = set(seeds)
@@ -60,7 +59,9 @@ def select_runtime_character_ids(
         retained.update(
             related_id
             for related_id in related_ids
-            if related_id in records_by_id and bool(records_by_id[related_id].get("born"))
+            if related_id in records_by_id
+            and bool(records_by_id[related_id].get("born"))
+            and records_by_id[related_id].get("canonTier") in CORE_TIERS
         )
     return retained
 

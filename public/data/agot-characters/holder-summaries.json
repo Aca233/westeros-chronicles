@@ -24,6 +24,16 @@
     },
     {
       "alive": true,
+      "displayLabel": "匿踪谷",
+      "dynastyId": "dynn_Addey",
+      "id": "agot:Addey_1",
+      "name": "马柯",
+      "titleIds": [
+        "c_stalkvale"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "托哈叉口",
       "dynastyId": "dynn_Aeteno",
       "id": "agot:Aeteno_67",
@@ -793,6 +803,16 @@
     },
     {
       "alive": true,
+      "displayLabel": "死水堡",
+      "dynastyId": "dynn_Bettley",
+      "id": "agot:Bettley_1",
+      "name": "贝尔蒙德",
+      "titleIds": [
+        "c_deadwater"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "甜水镇",
       "dynastyId": "dynn_Beveridge",
       "id": "agot:Beveridge_46",
@@ -823,6 +843,16 @@
     },
     {
       "alive": true,
+      "displayLabel": "黑潮岛",
+      "dynastyId": "dynn_Blackberry",
+      "id": "agot:Blackberry_16",
+      "name": "贾里昂",
+      "titleIds": [
+        "c_blackmark"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "灰鹤堡",
       "dynastyId": "dynn_Blackmyre",
       "id": "agot:Blackmyre_1",
@@ -839,6 +869,16 @@
       "name": "斯迪",
       "titleIds": [
         "c_pack_land"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "石堂镇",
+      "dynastyId": "dynn_Blanetree",
+      "id": "agot:Blanetree_1",
+      "name": "奥瑟",
+      "titleIds": [
+        "c_stoney_sept"
       ]
     },
     {
@@ -1170,6 +1210,17 @@
     },
     {
       "alive": true,
+      "displayLabel": "金丘",
+      "dynastyId": "dynn_Broome",
+      "id": "agot:Broome_2",
+      "name": "威廉",
+      "titleIds": [
+        "c_provence",
+        "d_goldmarch"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "古冢地",
       "dynastyId": "dynn_Brownbarrow",
       "id": "agot:Brownbarrow_1",
@@ -1196,6 +1247,17 @@
       "name": "罗柏",
       "titleIds": [
         "c_wynmend"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "鹿角领",
+      "dynastyId": "dynn_Buckwell",
+      "id": "agot:Buckwell_1",
+      "name": "莫甘",
+      "titleIds": [
+        "c_antlers",
+        "d_deerfield"
       ]
     },
     {
@@ -1266,6 +1328,16 @@
       "name": "温达米尔",
       "titleIds": [
         "c_hazewood"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "青绿垣",
+      "dynastyId": "dynn_Bushy",
+      "id": "agot:Bushy_1",
+      "name": "席奥",
+      "titleIds": [
+        "c_greenwall"
       ]
     },
     {
@@ -1422,6 +1494,16 @@
     },
     {
       "alive": true,
+      "displayLabel": "蜜酒堡",
+      "dynastyId": "dynn_Cargyll",
+      "id": "agot:Cargyll_27",
+      "name": "马索斯",
+      "titleIds": [
+        "c_strongmead"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "泻河堡",
       "dynastyId": "dynn_Carian",
       "id": "agot:Carian_1",
@@ -1482,6 +1564,16 @@
     },
     {
       "alive": true,
+      "displayLabel": "先空堡",
+      "dynastyId": "dynn_Caulfield",
+      "id": "agot:Caulfield_19",
+      "name": "贝拉",
+      "titleIds": [
+        "c_first_hollow"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "坚匣堡",
       "dynastyId": "dynn_Cave",
       "id": "agot:Cave_1",
@@ -1499,6 +1591,16 @@
       "titleIds": [
         "c_branstone",
         "c_gaines"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "雾林堡",
+      "dynastyId": "dynn_Charlton",
+      "id": "agot:Charlton_1",
+      "name": "曼佛利",
+      "titleIds": [
+        "c_mistlewood"
       ]
     },
     {
@@ -1529,6 +1631,26 @@
       "name": "阿莉森",
       "titleIds": [
         "c_seasorrow"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "布拉姆斯堡",
+      "dynastyId": "dynn_Chelsted",
+      "id": "agot:Chelsted_6",
+      "name": "梅利亚德",
+      "titleIds": [
+        "c_bramsfort"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "绿水城",
+      "dynastyId": "dynn_Chyttering",
+      "id": "agot:Chyttering_1",
+      "name": "杰瑞米",
+      "titleIds": [
+        "c_glasswater"
       ]
     },
     {
@@ -1593,6 +1715,16 @@
     },
     {
       "alive": true,
+      "displayLabel": "途卫城",
+      "dynastyId": "dynn_Claviger",
+      "id": "agot:Claviger_88",
+      "name": "达冯",
+      "titleIds": [
+        "c_wayguard"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "伤痕堡",
       "dynastyId": "dynn_Clay",
       "id": "agot:Clay_61",
@@ -1623,12 +1755,33 @@
     },
     {
       "alive": true,
+      "displayLabel": "鹅卵岩",
+      "dynastyId": "dynn_Cobb",
+      "id": "agot:Cobb_3",
+      "name": "克雷顿",
+      "titleIds": [
+        "c_cobblestone"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "雄鸡堡",
       "dynastyId": "dynn_Cockshaw",
       "id": "agot:Cockshaw_2",
       "name": "安德鲁",
       "titleIds": [
         "c_cockscombe"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "灰墓城",
+      "dynastyId": "dynn_Codd",
+      "id": "agot:Codd_2",
+      "name": "魁伦",
+      "titleIds": [
+        "b_codd_hall",
+        "c_greygrave"
       ]
     },
     {
@@ -1683,6 +1836,16 @@
     },
     {
       "alive": true,
+      "displayLabel": "雄鹰路口",
+      "dynastyId": "dynn_Condon",
+      "id": "agot:Condon_22",
+      "name": "威里斯",
+      "titleIds": [
+        "c_eagle_cross"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "平和渡",
       "dynastyId": null,
       "id": "agot:Coneflowers_64",
@@ -1729,6 +1892,16 @@
       "name": "赛瑞萨",
       "titleIds": [
         "c_sulphur_flats"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "象牙滩",
+      "dynastyId": "dynn_Cooper",
+      "id": "agot:Cooper_46",
+      "name": "肯内特",
+      "titleIds": [
+        "c_tuskford"
       ]
     },
     {
@@ -1819,6 +1992,16 @@
       "name": "蕾拉妮",
       "titleIds": [
         "c_harvestbury"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "红湖城",
+      "dynastyId": "dynn_Crane",
+      "id": "agot:Crane_1",
+      "name": "柯林",
+      "titleIds": [
+        "d_red_front"
       ]
     },
     {
@@ -1933,6 +2116,16 @@
     },
     {
       "alive": true,
+      "displayLabel": "海星港",
+      "dynastyId": "dynn_Cupps",
+      "id": "agot:Cupps_2",
+      "name": "柯林",
+      "titleIds": [
+        "c_starfish_harbor"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "$dynn_Curaze$家族",
       "dynastyId": "dynn_Curaze",
       "id": "agot:Curaze_60",
@@ -2005,6 +2198,16 @@
     },
     {
       "alive": true,
+      "displayLabel": "埃斯塔灵堡",
+      "dynastyId": "dynn_Dalbridge",
+      "id": "agot:Dalbridge_2",
+      "name": "马图斯",
+      "titleIds": [
+        "c_estaring"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "$dynn_Dalthor$家族",
       "dynastyId": "dynn_Dalthor",
       "id": "agot:Dalthor_85",
@@ -2031,6 +2234,16 @@
       "name": "达蒙",
       "titleIds": [
         "b_highley"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "影盾堡",
+      "dynastyId": null,
+      "id": "agot:Darke_2",
+      "name": "维里",
+      "titleIds": [
+        "c_shadowshield"
       ]
     },
     {
@@ -2295,6 +2508,19 @@
     },
     {
       "alive": true,
+      "displayLabel": "甜水谷",
+      "dynastyId": "dynn_Dimittis",
+      "id": "agot:Dimittis_52",
+      "name": "托马罗",
+      "titleIds": [
+        "c_ezylla_steps",
+        "c_gezelvos",
+        "d_nf_dimittis",
+        "d_sweetwater"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "厄尔赛克斯",
       "dynastyId": "dynn_Dimmos",
       "id": "agot:Dimmos_75",
@@ -2347,12 +2573,32 @@
     },
     {
       "alive": true,
+      "displayLabel": "唐纳斯堡",
+      "dynastyId": "dynn_Donnerly",
+      "id": "agot:Donnerly_1",
+      "name": "达蒙",
+      "titleIds": [
+        "c_donnersdown"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "日出湾",
       "dynastyId": "dynn_Donniger",
       "id": "agot:Donniger_1",
       "name": "赛文",
       "titleIds": [
         "c_sunrise_bite"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "$dynn_Dothare$家族",
+      "dynastyId": "dynn_Dothare",
+      "id": "agot:Dothare_55",
+      "name": "伊妲娜",
+      "titleIds": [
+        "d_nf_dothare"
       ]
     },
     {
@@ -2407,6 +2653,16 @@
       "name": "瓦德",
       "titleIds": [
         "b_tristonkeep"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "祸江",
+      "dynastyId": "dynn_Drinkwater",
+      "id": "agot:Drinkwater_1",
+      "name": "德林",
+      "titleIds": [
+        "c_the_scourge"
       ]
     },
     {
@@ -2471,12 +2727,32 @@
     },
     {
       "alive": true,
+      "displayLabel": "人鱼之墟",
+      "dynastyId": "dynn_Dunford",
+      "id": "agot:Dunford_75",
+      "name": "欧麦",
+      "titleIds": [
+        "b_mermans_ruin"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "冠后林地",
       "dynastyId": "dynn_Dunkel",
       "id": "agot:Dunkel_3",
       "name": "戴尔",
       "titleIds": [
         "c_crownback"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "杜恩桥",
+      "dynastyId": "dynn_Dunn",
+      "id": "agot:Dunn_1",
+      "name": "里奥",
+      "titleIds": [
+        "c_dunnsbridge"
       ]
     },
     {
@@ -2507,6 +2783,16 @@
       "name": "雨果",
       "titleIds": [
         "c_godsroost"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "卵石滩",
+      "dynastyId": "dynn_Durwell",
+      "id": "agot:Durwell_1",
+      "name": "丹尼斯",
+      "titleIds": [
+        "c_cobble_cove"
       ]
     },
     {
@@ -2568,6 +2854,17 @@
       "name": "塞德里克",
       "titleIds": [
         "c_edgerton"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "王冠谷",
+      "dynastyId": "dynn_Egen",
+      "id": "agot:Egen_2",
+      "name": "洛拉斯",
+      "titleIds": [
+        "c_crown_crescent",
+        "d_crowncrests"
       ]
     },
     {
@@ -2644,6 +2941,16 @@
     },
     {
       "alive": true,
+      "displayLabel": "榆木桥",
+      "dynastyId": "dynn_Elridge",
+      "id": "agot:Elridge_58",
+      "name": "唐纳尔",
+      "titleIds": [
+        "c_elmbridge"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "红石高地",
       "dynastyId": "dynn_Endar",
       "id": "agot:Endar_52",
@@ -2714,6 +3021,16 @@
     },
     {
       "alive": true,
+      "displayLabel": "苍鹭滩",
+      "dynastyId": "dynn_Erenford",
+      "id": "agot:Erenford_1",
+      "name": "雷蒙德",
+      "titleIds": [
+        "c_erenford"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "$dynn_Ererhan$家族",
       "dynastyId": "dynn_Ererhan",
       "id": "agot:Ererhan_151",
@@ -2772,6 +3089,17 @@
     },
     {
       "alive": true,
+      "displayLabel": "伊斯蒙群岛",
+      "dynastyId": "dynn_Estermont",
+      "id": "agot:Estermont_1",
+      "name": "艾德温",
+      "titleIds": [
+        "c_estermont",
+        "d_estermont_isles"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "杜斯顿伯里",
       "dynastyId": "dynn_Everran",
       "id": "agot:Everran_47",
@@ -2792,6 +3120,18 @@
     },
     {
       "alive": true,
+      "displayLabel": "尼斯运河",
+      "dynastyId": "dynn_Fa_Zane",
+      "id": "agot:Fa_Zane_76",
+      "name": "格修",
+      "titleIds": [
+        "c_nf_fa_zane",
+        "c_qeobeoziy",
+        "d_neath_canals"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "切利斯堡",
       "dynastyId": "dynn_Fairley",
       "id": "agot:Fairley_98",
@@ -2802,12 +3142,43 @@
     },
     {
       "alive": true,
+      "displayLabel": "彩衣山",
+      "dynastyId": "dynn_Falwell",
+      "id": "agot:Falwell_1",
+      "name": "乔佛里",
+      "titleIds": [
+        "c_motley_hills"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "残骸岩",
       "dynastyId": "dynn_Farinar",
       "id": "agot:Farinar_2",
       "name": "卢罗",
       "titleIds": [
         "c_wreckstone"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "文德河森林",
+      "dynastyId": "dynn_Farring",
+      "id": "agot:Farring_1",
+      "name": "琼恩",
+      "titleIds": [
+        "c_farring_cross",
+        "d_wendwater_forest"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "铁篱林",
+      "dynastyId": "dynn_Farrow",
+      "id": "agot:Farrow_4",
+      "name": "劳勃",
+      "titleIds": [
+        "c_iron_hedge"
       ]
     },
     {
@@ -3044,6 +3415,16 @@
     },
     {
       "alive": true,
+      "displayLabel": "智林镇",
+      "dynastyId": "dynn_Follard",
+      "id": "agot:Follard_3",
+      "name": "克拉顿",
+      "titleIds": [
+        "c_wisewood"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "努恩堡",
       "dynastyId": "dynn_Foote",
       "id": "agot:Foote_1",
@@ -3096,6 +3477,27 @@
     },
     {
       "alive": true,
+      "displayLabel": "果园大道",
+      "dynastyId": "dynn_Fossoway",
+      "id": "agot:Fossoway_1",
+      "name": "本尼斯",
+      "titleIds": [
+        "c_cider_crossing",
+        "d_orchard_way"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "新桶城",
+      "dynastyId": null,
+      "id": "agot:Fossoway_New_Barrel_10",
+      "name": "艾德蒙",
+      "titleIds": [
+        "c_new_barrel"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "鲜花窟",
       "dynastyId": "dynn_Foxglove",
       "id": "agot:Foxglove_8",
@@ -3112,6 +3514,16 @@
       "name": "福兰克林",
       "titleIds": [
         "c_apple_hills"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "碎链岛",
+      "dynastyId": "dynn_Freeborn",
+      "id": "agot:Freeborn_2",
+      "name": "弗拉莱格",
+      "titleIds": [
+        "c_scatterchain"
       ]
     },
     {
@@ -3301,6 +3713,16 @@
     },
     {
       "alive": true,
+      "displayLabel": "铁拳堡",
+      "dynastyId": "dynn_Gaunt",
+      "id": "agot:Gaunt_2",
+      "name": "马索斯",
+      "titleIds": [
+        "c_the_gauntlet"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "鹫河堡",
       "dynastyId": "dynn_Gayle",
       "id": "agot:Gayle_64",
@@ -3474,12 +3896,32 @@
     },
     {
       "alive": true,
+      "displayLabel": "尸骸湖",
+      "dynastyId": "dynn_Goodbrother",
+      "id": "agot:Goodbrother_25",
+      "name": "伊伦",
+      "titleIds": [
+        "c_corpse_lake"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "鸦刺堡",
       "dynastyId": null,
       "id": "agot:Goodbrother_30",
       "name": "阿德利克",
       "titleIds": [
         "c_crow_spike"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "深钻厅",
+      "dynastyId": "dynn_Goodbrother",
+      "id": "agot:Goodbrother_33",
+      "name": "沙汶",
+      "titleIds": [
+        "c_downdelving"
       ]
     },
     {
@@ -3534,6 +3976,16 @@
     },
     {
       "alive": true,
+      "displayLabel": "三叶山",
+      "dynastyId": "dynn_Gower",
+      "id": "agot:Gower_1",
+      "name": "史蒂芬",
+      "titleIds": [
+        "c_cloveridge"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "砖峡",
       "dynastyId": "dynn_Grammaton",
       "id": "agot:Grammaton_44",
@@ -3580,6 +4032,26 @@
       "name": "莱安",
       "titleIds": [
         "c_the_seastrands"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "荆棘鸟堡",
+      "dynastyId": "dynn_Greenhill",
+      "id": "agot:Greenhill_20",
+      "name": "奥斯蒙",
+      "titleIds": [
+        "c_briarcrest"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "森林庇护所",
+      "dynastyId": "dynn_Greenleaf",
+      "id": "agot:Greenleaf_17",
+      "name": "芬恩",
+      "titleIds": [
+        "c_woodhaven"
       ]
     },
     {
@@ -3800,6 +4272,16 @@
     },
     {
       "alive": true,
+      "displayLabel": "亚伦谷",
+      "dynastyId": "dynn_Harclay",
+      "id": "agot:Harclay_1",
+      "name": "埃里克",
+      "titleIds": [
+        "c_arrendell"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "谷河",
       "dynastyId": "dynn_Hardhunter",
       "id": "agot:Hardhunter_3",
@@ -3816,6 +4298,16 @@
       "name": "哈里士",
       "titleIds": [
         "c_pointside"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "艰难谷",
+      "dynastyId": "dynn_Hardyng",
+      "id": "agot:Hardyng_1",
+      "name": "罗纳",
+      "titleIds": [
+        "c_hardvale"
       ]
     },
     {
@@ -3940,6 +4432,16 @@
     },
     {
       "alive": true,
+      "displayLabel": "盐场山坡",
+      "dynastyId": "dynn_Hawick",
+      "id": "agot:Hawick_3",
+      "name": "霍利斯",
+      "titleIds": [
+        "c_saltpans_rise"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "至诚堡",
       "dynastyId": "dynn_Hawley",
       "id": "agot:Hawley_57",
@@ -4040,6 +4542,17 @@
     },
     {
       "alive": true,
+      "displayLabel": "北部旷野",
+      "dynastyId": "dynn_Hersy",
+      "id": "agot:Hersy_1",
+      "name": "威廉",
+      "titleIds": [
+        "c_hersy",
+        "d_northbreach"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "哈沃斯",
       "dynastyId": "dynn_Hianne",
       "id": "agot:Hianne_50",
@@ -4120,12 +4633,42 @@
     },
     {
       "alive": true,
+      "displayLabel": "侧枝城",
+      "dynastyId": "dynn_Holt",
+      "id": "agot:Holt_4",
+      "name": "沃顿",
+      "titleIds": [
+        "c_branchside"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "山风堡",
+      "dynastyId": "dynn_Hood",
+      "id": "agot:Hood_4",
+      "name": "凯拉",
+      "titleIds": [
+        "c_hoodridge"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "赫拉维",
       "dynastyId": "dynn_Horksyett",
       "id": "agot:Horksyett_70",
       "name": "霍德",
       "titleIds": [
         "b_hiravr"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "尸颅堡",
+      "dynastyId": "dynn_Horpe",
+      "id": "agot:Horpe_1",
+      "name": "哈瑞斯",
+      "titleIds": [
+        "c_deaths_head"
       ]
     },
     {
@@ -4148,6 +4691,16 @@
         "c_percath",
         "d_nf_hov",
         "d_the_grasp"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "豪尔堡",
+      "dynastyId": "dynn_Howle",
+      "id": "agot:Howle_74",
+      "name": "奈德",
+      "titleIds": [
+        "c_howell"
       ]
     },
     {
@@ -4183,6 +4736,16 @@
     },
     {
       "alive": true,
+      "displayLabel": "鱼溪城",
+      "dynastyId": "dynn_Humble",
+      "id": "agot:Humble_26",
+      "name": "达衮",
+      "titleIds": [
+        "c_fishbourne"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "大峭壁",
       "dynastyId": "dynn_Hume",
       "id": "agot:Hume_72",
@@ -4199,6 +4762,16 @@
       "name": "哈兰",
       "titleIds": [
         "c_hungerford"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "赤城堡",
+      "dynastyId": "dynn_Hunt",
+      "id": "agot:Hunt_2",
+      "name": "哈瑞斯",
+      "titleIds": [
+        "c_russeting"
       ]
     },
     {
@@ -4295,6 +4868,16 @@
     },
     {
       "alive": true,
+      "displayLabel": "英奇菲堡",
+      "dynastyId": "dynn_Inchfield",
+      "id": "agot:Inchfield_1",
+      "name": "雷顿",
+      "titleIds": [
+        "c_inchfield"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "$dynn_Ir_Keraz$家族",
       "dynastyId": "dynn_Ir_Keraz",
       "id": "agot:Ir_Keraz_72",
@@ -4321,6 +4904,16 @@
       "name": "埃加",
       "titleIds": [
         "d_laamp_merc_iron_shields"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "灰锻丘",
+      "dynastyId": "dynn_Ironsmith",
+      "id": "agot:Ironsmith_19",
+      "name": "尤伦",
+      "titleIds": [
+        "c_greyforge_hills"
       ]
     },
     {
@@ -4605,6 +5198,16 @@
     },
     {
       "alive": true,
+      "displayLabel": "剥皮角",
+      "dynastyId": "dynn_Kenning",
+      "id": "agot:Kenning_3",
+      "name": "葛蒙德",
+      "titleIds": [
+        "c_the_flenches"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "纳尼",
       "dynastyId": "dynn_Kern",
       "id": "agot:Kern_3",
@@ -4737,6 +5340,16 @@
     },
     {
       "alive": true,
+      "displayLabel": "炬木林",
+      "dynastyId": "dynn_Ladybright",
+      "id": "agot:Ladybright_1",
+      "name": "弥丽亚",
+      "titleIds": [
+        "c_torchwood"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "绿脊厅",
       "dynastyId": "dynn_Lahey",
       "id": "agot:Lahey_86",
@@ -4777,6 +5390,16 @@
     },
     {
       "alive": true,
+      "displayLabel": "长房厅",
+      "dynastyId": "dynn_Langward",
+      "id": "agot:Langward_1",
+      "name": "佛罗理安",
+      "titleIds": [
+        "c_stellarstake"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "黄金之门",
       "dynastyId": null,
       "id": "agot:Lannett_33",
@@ -4787,12 +5410,32 @@
     },
     {
       "alive": true,
+      "displayLabel": "兰尼斯港",
+      "dynastyId": null,
+      "id": "agot:LannisterLP_2",
+      "name": "泰兰",
+      "titleIds": [
+        "c_lannisport"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "狮首堡",
       "dynastyId": null,
       "id": "agot:Lanny_2",
       "name": "达蒙",
       "titleIds": [
         "b_pridemane"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "兰斯戴尔堡",
+      "dynastyId": "dynn_Lansdale",
+      "id": "agot:Lansdale_1",
+      "name": "兰威尔",
+      "titleIds": [
+        "c_lansdale"
       ]
     },
     {
@@ -4879,6 +5522,16 @@
       "name": "内沃",
       "titleIds": [
         "c_rishedhar"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "$dynn_Lavelos$家族",
+      "dynastyId": "dynn_Lavelos",
+      "id": "agot:Lavelos_1",
+      "name": "罗加洛",
+      "titleIds": [
+        "d_nf_lavelos"
       ]
     },
     {
@@ -5297,6 +5950,16 @@
     },
     {
       "alive": true,
+      "displayLabel": "沉木林",
+      "dynastyId": null,
+      "id": "agot:LynderlySC_4",
+      "name": "科威克",
+      "titleIds": [
+        "c_sunkenwood"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "索克尔巴急流",
       "dynastyId": "dynn_Lyorrye",
       "id": "agot:Lyorrye_78",
@@ -5431,6 +6094,16 @@
     },
     {
       "alive": true,
+      "displayLabel": "七星山",
+      "dynastyId": "dynn_Malloway",
+      "id": "agot:Malloway_5",
+      "name": "贝里昂",
+      "titleIds": [
+        "c_seven_points"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "沙角堡",
       "dynastyId": "dynn_Maltrevar",
       "id": "agot:Maltrevar_67",
@@ -5451,12 +6124,32 @@
     },
     {
       "alive": true,
+      "displayLabel": "马尔布兰骑士",
+      "dynastyId": "dynn_Marbrand",
+      "id": "agot:Marbrand_66",
+      "name": "安迪森",
+      "titleIds": [
+        "d_laamp_Marbrand_66"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "山巅栖所",
       "dynastyId": "dynn_Marchment",
       "id": "agot:Marchment_53",
       "name": "鲍里斯",
       "titleIds": [
         "c_cresthaven"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "红粉角",
+      "dynastyId": "dynn_Marks",
+      "id": "agot:Marks_53",
+      "name": "艾德蒙",
+      "titleIds": [
+        "c_pinkstrath"
       ]
     },
     {
@@ -5491,12 +6184,33 @@
     },
     {
       "alive": true,
+      "displayLabel": "磨石沼泽",
+      "dynastyId": "dynn_Marsh",
+      "id": "agot:Marsh_3",
+      "name": "格拉维亚斯",
+      "titleIds": [
+        "c_whetmarsh"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "希望滩",
       "dynastyId": "dynn_Mason",
       "id": "agot:Mason_90",
       "name": "梅里曼",
       "titleIds": [
         "c_wishere"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "马赛岬",
+      "dynastyId": "dynn_Massey",
+      "id": "agot:Massey_1",
+      "name": "马利克",
+      "titleIds": [
+        "c_stonedance",
+        "d_masseys_hook"
       ]
     },
     {
@@ -5618,6 +6332,17 @@
     },
     {
       "alive": true,
+      "displayLabel": "风怒角",
+      "dynastyId": "dynn_Mertyns",
+      "id": "agot:Mertyns_2",
+      "name": "米克",
+      "titleIds": [
+        "c_mistfall",
+        "d_cape_wrath"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "铁水堡",
       "dynastyId": "dynn_Messer",
       "id": "agot:Messer_58",
@@ -5708,6 +6433,16 @@
     },
     {
       "alive": true,
+      "displayLabel": "黎明森林",
+      "dynastyId": "dynn_Mollen",
+      "id": "agot:Mollen_1",
+      "name": "布兰登",
+      "titleIds": [
+        "c_dawnforest"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "燕尾堡",
       "dynastyId": null,
       "id": "agot:Mollendore_42",
@@ -5724,6 +6459,17 @@
       "name": "奥莱瓦",
       "titleIds": [
         "b_moonvale_pass"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "斯坦迪什堡",
+      "dynastyId": "dynn_Moore",
+      "id": "agot:Moore_1",
+      "name": "琼恩",
+      "titleIds": [
+        "c_bronzespear",
+        "c_standish"
       ]
     },
     {
@@ -5825,6 +6571,16 @@
       "name": "吉纳拉",
       "titleIds": [
         "c_gyrakos"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "云林",
+      "dynastyId": "dynn_Moss",
+      "id": "agot:Moss_1",
+      "name": "卡尔",
+      "titleIds": [
+        "c_cloudforest"
       ]
     },
     {
@@ -5949,6 +6705,16 @@
     },
     {
       "alive": true,
+      "displayLabel": "杜勒林",
+      "dynastyId": "dynn_Myre",
+      "id": "agot:Myre_1",
+      "name": "特里斯蒂芬",
+      "titleIds": [
+        "c_dulewood"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "天池",
       "dynastyId": "dynn_Myshkin",
       "id": "agot:Myshkin_135",
@@ -6034,6 +6800,16 @@
     },
     {
       "alive": true,
+      "displayLabel": "水蛭塘",
+      "dynastyId": "dynn_Nayland",
+      "id": "agot:Nayland_1",
+      "name": "艾蒙",
+      "titleIds": [
+        "c_leechpool"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "暗淡沙漠",
       "dynastyId": "dynn_Nessarry",
       "id": "agot:Nessarry_74",
@@ -6110,6 +6886,27 @@
       "name": "里查德",
       "titleIds": [
         "c_sundown"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "黄金平原",
+      "dynastyId": "dynn_Norcross",
+      "id": "agot:Norcross_1",
+      "name": "卢卡斯",
+      "titleIds": [
+        "c_norcross",
+        "d_goldenfields"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "河谷地",
+      "dynastyId": "dynn_Norridge",
+      "id": "agot:Norridge_4",
+      "name": "拜伦",
+      "titleIds": [
+        "c_ridgeland"
       ]
     },
     {
@@ -6232,6 +7029,16 @@
       "name": "凯勒",
       "titleIds": [
         "b_weirweald"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "奥尔登镇",
+      "dynastyId": null,
+      "id": "agot:Oldflowers_25",
+      "name": "加尔斯",
+      "titleIds": [
+        "c_aldenley"
       ]
     },
     {
@@ -6460,6 +7267,17 @@
     },
     {
       "alive": true,
+      "displayLabel": "黄金大道",
+      "dynastyId": "dynn_Payne",
+      "id": "agot:Payne_5",
+      "name": "泰伯特",
+      "titleIds": [
+        "c_worthmark",
+        "d_the_gold_road"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "泥炭堡",
       "dynastyId": "dynn_Peat",
       "id": "agot:Peat_6",
@@ -6526,6 +7344,17 @@
       "name": "米亚",
       "titleIds": [
         "c_bechester"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "羊皮纸海岸",
+      "dynastyId": "dynn_Penrose",
+      "id": "agot:Penrose_1",
+      "name": "史蒂芬",
+      "titleIds": [
+        "c_parchments",
+        "d_vellum_coast"
       ]
     },
     {
@@ -6712,6 +7541,16 @@
     },
     {
       "alive": true,
+      "displayLabel": "冷溪堡",
+      "dynastyId": "dynn_Poole",
+      "id": "agot:Poole_1",
+      "name": "艾斯蒙德",
+      "titleIds": [
+        "c_coldstream"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "烧原堡",
       "dynastyId": "dynn_Porter",
       "id": "agot:Porter_68",
@@ -6758,6 +7597,16 @@
       "name": "费尼奥",
       "titleIds": [
         "c_izulepsa"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "$dynn_Prestayn$家族",
+      "dynastyId": "dynn_Prestayn",
+      "id": "agot:Prestayn_54",
+      "name": "阿利亚",
+      "titleIds": [
+        "d_nf_prestayn"
       ]
     },
     {
@@ -6962,6 +7811,16 @@
       "name": "埃德加",
       "titleIds": [
         "c_meadowsmeet"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "$dynn_Quaynis$家族",
+      "dynastyId": "dynn_Quaynis",
+      "id": "agot:Quaynis_3",
+      "name": "柯连恩",
+      "titleIds": [
+        "d_nf_quaynis"
       ]
     },
     {
@@ -7431,6 +8290,16 @@
     },
     {
       "alive": true,
+      "displayLabel": "琥珀堡",
+      "dynastyId": "dynn_Rogers",
+      "id": "agot:Rogers_2",
+      "name": "布兰登",
+      "titleIds": [
+        "c_amberly"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "莱瑞斯",
       "dynastyId": "dynn_Rohar",
       "id": "agot:Rohar_56",
@@ -7500,6 +8369,17 @@
       "name": "唐纳尔",
       "titleIds": [
         "c_redwind"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "骁首城",
+      "dynastyId": "dynn_Roote",
+      "id": "agot:Roote_1",
+      "name": "瓦里昂",
+      "titleIds": [
+        "c_harroway",
+        "c_horsehead"
       ]
     },
     {
@@ -7745,6 +8625,16 @@
     },
     {
       "alive": true,
+      "displayLabel": "柳木城",
+      "dynastyId": "dynn_Ryger",
+      "id": "agot:Ryger_1",
+      "name": "罗杰",
+      "titleIds": [
+        "d_willow_wood"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "硬角陵",
       "dynastyId": "dynn_Rykker",
       "id": "agot:Rykker_51",
@@ -7877,6 +8767,26 @@
     },
     {
       "alive": true,
+      "displayLabel": "闪獾镇",
+      "dynastyId": "dynn_Sawyer",
+      "id": "agot:Sawyer_3",
+      "name": "格兰斯",
+      "titleIds": [
+        "c_brightbrock"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "天平岛",
+      "dynastyId": null,
+      "id": "agot:Scales_1",
+      "name": "埃利加",
+      "titleIds": [
+        "c_the_scales"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "咬人滩",
       "dynastyId": "dynn_Scrimshaw",
       "id": "agot:Scrimshaw_112",
@@ -7980,6 +8890,17 @@
     },
     {
       "alive": true,
+      "displayLabel": "银厅",
+      "dynastyId": "dynn_Serrett",
+      "id": "agot:Serrett_1",
+      "name": "杰洛",
+      "titleIds": [
+        "c_silverhill",
+        "d_sterling"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "柳木地",
       "dynastyId": "dynn_Severyn",
       "id": "agot:Severyn_60",
@@ -8026,6 +8947,16 @@
       "name": "阿德里亚",
       "titleIds": [
         "c_jackalrun"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "斧头湾",
+      "dynastyId": "dynn_Sharp",
+      "id": "agot:Sharp_7",
+      "name": "西格弗里德",
+      "titleIds": [
+        "c_axfirth"
       ]
     },
     {
@@ -8090,6 +9021,26 @@
     },
     {
       "alive": true,
+      "displayLabel": "水钻群岛",
+      "dynastyId": null,
+      "id": "agot:Shells_4",
+      "name": "戴伦",
+      "titleIds": [
+        "c_drillwater_islands"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "舵手堡",
+      "dynastyId": "dynn_Shepherd",
+      "id": "agot:Shepherd_6",
+      "name": "萨贡",
+      "titleIds": [
+        "c_tiller"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "骟羊河岸",
       "dynastyId": "dynn_Shermer",
       "id": "agot:Shermer_1",
@@ -8097,6 +9048,16 @@
       "titleIds": [
         "c_smithyton",
         "c_wethermere"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "奥斯古德镇",
+      "dynastyId": null,
+      "id": "agot:ShettGT_2",
+      "name": "狄肯",
+      "titleIds": [
+        "c_osgoodswell"
       ]
     },
     {
@@ -8234,6 +9195,17 @@
     },
     {
       "alive": true,
+      "displayLabel": "拂晓峰",
+      "dynastyId": "dynn_Sloane",
+      "id": "agot:Sloane_1",
+      "name": "崔斯特姆",
+      "titleIds": [
+        "b_morning",
+        "c_evenmorn"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "释怒谷",
       "dynastyId": "dynn_Slowburn",
       "id": "agot:Slowburn_89",
@@ -8332,6 +9304,16 @@
       "name": "Sol",
       "titleIds": [
         "c_bleno_hobhris"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "根源望",
+      "dynastyId": "dynn_Sparr",
+      "id": "agot:Sparr_1",
+      "name": "科洛姆",
+      "titleIds": [
+        "c_cradlewatch"
       ]
     },
     {
@@ -8457,6 +9439,16 @@
     },
     {
       "alive": true,
+      "displayLabel": "鸦栖堡",
+      "dynastyId": "dynn_Staunton",
+      "id": "agot:Staunton_2",
+      "name": "赛夫顿",
+      "titleIds": [
+        "d_rooks_rest"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "岑树堡",
       "dynastyId": "dynn_Steady",
       "id": "agot:Steady_77",
@@ -8507,6 +9499,16 @@
     },
     {
       "alive": true,
+      "displayLabel": "斯提伍德",
+      "dynastyId": "dynn_Stilwood",
+      "id": "agot:Stillwood_83",
+      "name": "芬利",
+      "titleIds": [
+        "c_stilwood"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "牛藓地",
       "dynastyId": "dynn_Stilt",
       "id": "agot:Stilt_53",
@@ -8523,6 +9525,26 @@
       "name": "克利福德",
       "titleIds": [
         "c_stonecrab_cape"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "石屋城",
+      "dynastyId": "dynn_Stonehouse",
+      "id": "agot:Stonehouse_3",
+      "name": "席恩",
+      "titleIds": [
+        "c_stonehouse"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "薄钢城",
+      "dynastyId": "dynn_Stonetree",
+      "id": "agot:Stonetree_3",
+      "name": "昆顿",
+      "titleIds": [
+        "c_ternehandle"
       ]
     },
     {
@@ -8965,6 +9987,16 @@
     },
     {
       "alive": true,
+      "displayLabel": "闪桥",
+      "dynastyId": "dynn_Thorne",
+      "id": "agot:Thorne_2",
+      "name": "邓力",
+      "titleIds": [
+        "c_shinebridge"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "玫瑰林",
       "dynastyId": "dynn_Thornton",
       "id": "agot:Thornton_42",
@@ -9003,6 +10035,16 @@
         "c_aks_kiy",
         "c_nf_tialo",
         "d_vardyghagyu"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "海石群岛",
+      "dynastyId": "dynn_Tidewood",
+      "id": "agot:Tidewood_2",
+      "name": "席恩",
+      "titleIds": [
+        "c_seastone_isles"
       ]
     },
     {
@@ -9152,6 +10194,17 @@
     },
     {
       "alive": true,
+      "displayLabel": "黑松林",
+      "dynastyId": "dynn_Trant",
+      "id": "agot:Trant_1",
+      "name": "史蒂芬",
+      "titleIds": [
+        "c_gallowsgrey",
+        "d_dark_harrow"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "大山口",
       "dynastyId": "dynn_Trapp",
       "id": "agot:Trapp_78",
@@ -9232,6 +10285,16 @@
     },
     {
       "alive": true,
+      "displayLabel": "红莓城",
+      "dynastyId": "dynn_Turnberry",
+      "id": "agot:Turnberry_1",
+      "name": "伊伦",
+      "titleIds": [
+        "c_redbramble"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "$dynn_Turranion$家族",
       "dynastyId": "dynn_Turranion",
       "id": "agot:Turranion_77",
@@ -9303,6 +10366,16 @@
       "name": "阿勒肯",
       "titleIds": [
         "c_sagecrown"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "骨锤岛",
+      "dynastyId": "dynn_Uhoris",
+      "id": "agot:Uhoris_1",
+      "name": "罗戈",
+      "titleIds": [
+        "c_skullhammer"
       ]
     },
     {
@@ -9543,6 +10616,17 @@
     },
     {
       "alive": true,
+      "displayLabel": "旅息城",
+      "dynastyId": "dynn_Vance",
+      "id": "agot:Vance_Wayfarers_Rest_1",
+      "name": "卢卡斯",
+      "titleIds": [
+        "c_coldstone",
+        "d_wayfarers_rest"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "贝米亚斯费兹",
       "dynastyId": "dynn_Vaolon",
       "id": "agot:Vaolon_50",
@@ -9728,6 +10812,16 @@
     },
     {
       "alive": true,
+      "displayLabel": "$dynn_Volentin$家族",
+      "dynastyId": "dynn_Volentin",
+      "id": "agot:Volentin_48",
+      "name": "尼雅莉亚",
+      "titleIds": [
+        "d_nf_volentin"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "$dynn_Vongass$家族",
       "dynastyId": "dynn_Vongass",
       "id": "agot:Vongass_46",
@@ -9790,6 +10884,16 @@
     },
     {
       "alive": true,
+      "displayLabel": "幽谷城",
+      "dynastyId": "dynn_Vyrwel",
+      "id": "agot:Vyrwel_7",
+      "name": "克利福德",
+      "titleIds": [
+        "d_darkdell"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "臭水堡",
       "dynastyId": "dynn_Wade",
       "id": "agot:Wade_7",
@@ -9806,6 +10910,16 @@
       "name": "哈兰",
       "titleIds": [
         "c_scale_valley"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "群荫丘",
+      "dynastyId": "dynn_Wallain",
+      "id": "agot:Wallain_27",
+      "name": "多蕾丝",
+      "titleIds": [
+        "c_flockshade"
       ]
     },
     {
@@ -9920,6 +11034,16 @@
     },
     {
       "alive": true,
+      "displayLabel": "针鳍山",
+      "dynastyId": "dynn_Weaver",
+      "id": "agot:Weaver_2",
+      "name": "朱斯丁",
+      "titleIds": [
+        "c_needlefin"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "白兰底",
       "dynastyId": null,
       "id": "agot:WebberHW_49",
@@ -9971,6 +11095,16 @@
     },
     {
       "alive": true,
+      "displayLabel": "绿百合堡",
+      "dynastyId": "dynn_Weller",
+      "id": "agot:Weller_5",
+      "name": "维里斯",
+      "titleIds": [
+        "c_greenlily"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "水石堡",
       "dynastyId": "dynn_WellsN",
       "id": "agot:WellsN_1",
@@ -9981,12 +11115,32 @@
     },
     {
       "alive": true,
+      "displayLabel": "首井镇",
+      "dynastyId": "dynn_Wells",
+      "id": "agot:Wells_1",
+      "name": "雅思梅娜",
+      "titleIds": [
+        "c_first_well"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "文德河岔口",
       "dynastyId": "dynn_Wendwater",
       "id": "agot:Wendwater_1",
       "name": "皮尔斯",
       "titleIds": [
         "c_wendwater_fork"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "号角湾",
+      "dynastyId": null,
+      "id": "agot:Wensington_1",
+      "name": "里奥",
+      "titleIds": [
+        "c_horncross_sound"
       ]
     },
     {
@@ -10101,6 +11255,16 @@
     },
     {
       "alive": true,
+      "displayLabel": "哭泣镇",
+      "dynastyId": "dynn_Whitehead",
+      "id": "agot:Whitehead_1",
+      "name": "丹尼斯",
+      "titleIds": [
+        "c_weeping_town"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "泔水岩",
       "dynastyId": "dynn_Whitehunt",
       "id": "agot:Whitehunt_2",
@@ -10117,6 +11281,16 @@
       "name": "马利克",
       "titleIds": [
         "b_whittarkeep"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "清水望",
+      "dynastyId": "dynn_Whitewater",
+      "id": "agot:Whitewater_4",
+      "name": "马巴德",
+      "titleIds": [
+        "c_whitewater_watch"
       ]
     },
     {
@@ -10212,6 +11386,17 @@
     },
     {
       "alive": true,
+      "displayLabel": "暗石林",
+      "dynastyId": "dynn_Willum",
+      "id": "agot:Willum_1",
+      "name": "约翰",
+      "titleIds": [
+        "c_hayholt",
+        "d_darstone"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "河口港",
       "dynastyId": "dynn_Wiltwood",
       "id": "agot:Wiltwood_59",
@@ -10252,6 +11437,16 @@
     },
     {
       "alive": true,
+      "displayLabel": "卫戍湖岸",
+      "dynastyId": "dynn_Wode",
+      "id": "agot:Wode_3",
+      "name": "文德尔",
+      "titleIds": [
+        "c_shorehedge"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "棕指角",
       "dynastyId": "dynn_Woodhull",
       "id": "agot:Woodhull_41",
@@ -10268,6 +11463,26 @@
       "name": "曼登",
       "titleIds": [
         "b_stonewash"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "警惕滩",
+      "dynastyId": "dynn_Woodwright",
+      "id": "agot:Woodwright_1",
+      "name": "威曼",
+      "titleIds": [
+        "c_warnstand"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "公羊门",
+      "dynastyId": "dynn_Woolfield",
+      "id": "agot:Woolfield_1",
+      "name": "琴雷德",
+      "titleIds": [
+        "c_ramsgate"
       ]
     },
     {
@@ -10323,6 +11538,27 @@
     },
     {
       "alive": true,
+      "displayLabel": "峭崖镇",
+      "dynastyId": "dynn_Wydman",
+      "id": "agot:Wydman_1",
+      "name": "乔拉",
+      "titleIds": [
+        "c_wycliffe"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "石路",
+      "dynastyId": "dynn_Wyl",
+      "id": "agot:Wyl_1",
+      "name": "艾德蒙",
+      "titleIds": [
+        "c_wyl",
+        "d_the_stoneway"
+      ]
+    },
+    {
+      "alive": true,
       "displayLabel": "蕙兰镇",
       "dynastyId": "dynn_Wyse",
       "id": "agot:Wyse_17",
@@ -10339,6 +11575,16 @@
       "name": "奥利法",
       "titleIds": [
         "c_pippengrow"
+      ]
+    },
+    {
+      "alive": true,
+      "displayLabel": "牛津镇",
+      "dynastyId": "dynn_Yarwyck",
+      "id": "agot:Yarwyck_1",
+      "name": "多林",
+      "titleIds": [
+        "c_oxcross"
       ]
     },
     {

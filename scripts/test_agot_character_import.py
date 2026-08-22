@@ -200,7 +200,7 @@ class DatasetWriterTests(unittest.TestCase):
             self.assertNotIn("agot:Dummy_1", {record["id"] for record in all_records})
             self.assertIn("agot:Stark_3", {record["id"] for record in all_records})
 
-    def test_writer_prunes_isolated_genealogy_but_keeps_core_spouse(self) -> None:
+    def test_writer_keeps_genealogy_records_but_prunes_mod_supporting_spouse(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             output = Path(temp_dir) / "dataset"
             manifest = write_dataset(
@@ -212,9 +212,10 @@ class DatasetWriterTests(unittest.TestCase):
                 for record in json.loads(path.read_text(encoding="utf-8"))
             }
 
-            self.assertEqual(emitted_ids, {"agot:Stark_3", "agot:Tully_4", "agot:Semi_1"})
-            self.assertEqual(manifest.counts["projectedRecords"], 4)
-            self.assertEqual(manifest.counts["emittedRecords"], 3)
+            # 族谱层级保留完整档案；mod_supporting 配偶不再因婚姻跳板保留。
+            self.assertEqual(emitted_ids, {"agot:Stark_3", "agot:Semi_1", "agot:Ancestor_1", "agot:Ancestor_2"})
+            self.assertEqual(manifest.counts["projectedRecords"], 5)
+            self.assertEqual(manifest.counts["emittedRecords"], 4)
             self.assertEqual(manifest.counts["prunedRecords"], 1)
 
     def test_writer_emits_title_holder_map_counts_and_hashes_title_changes(self) -> None:
@@ -256,8 +257,10 @@ class DatasetWriterTests(unittest.TestCase):
                 all_records.extend(json.loads(shard.read_text(encoding="utf-8")))
             by_id = {record["id"]: record for record in all_records}
 
-            self.assertIn("agot:Tully_4", by_id["agot:Stark_3"]["spouseIds"])
-            self.assertIn("agot:Stark_3", by_id["agot:Tully_4"]["spouseIds"])
+            # Stark_3 的 mod_supporting 配偶被裁，链接同步移除；族谱夫妇双向可见。
+            self.assertEqual(by_id["agot:Stark_3"]["spouseIds"], [])
+            self.assertIn("agot:Ancestor_2", by_id["agot:Ancestor_1"]["spouseIds"])
+            self.assertIn("agot:Ancestor_1", by_id["agot:Ancestor_2"]["spouseIds"])
 
     def test_writer_derives_siblings_from_shared_parents(self) -> None:
         kinship = _build_kinship_index([
@@ -278,8 +281,9 @@ class DatasetWriterTests(unittest.TestCase):
             for path in output.joinpath("kinship").glob("*.json"):
                 kinship.update(json.loads(path.read_text(encoding="utf-8")))
 
-            self.assertEqual(kinship["agot:Stark_3"]["spouseIds"], ["agot:Tully_4"])
-            self.assertEqual(kinship["agot:Tully_4"]["spouseIds"], ["agot:Stark_3"])
+            self.assertEqual(kinship["agot:Stark_3"]["spouseIds"], [])
+            self.assertEqual(kinship["agot:Ancestor_1"]["spouseIds"], ["agot:Ancestor_2"])
+            self.assertEqual(kinship["agot:Ancestor_2"]["spouseIds"], ["agot:Ancestor_1"])
             for entry in kinship.values():
                 self.assertEqual(entry["childIds"], sorted(set(entry["childIds"])))
 
@@ -292,7 +296,7 @@ class DatasetWriterTests(unittest.TestCase):
                 )
 
             self.assertTrue((output / "manifest.json").exists())
-            self.assertEqual(manifest.counts["emittedRecords"], 3)
+            self.assertEqual(manifest.counts["emittedRecords"], 4)
 
     def test_search_index_stays_lightweight_and_points_to_existing_shards(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:

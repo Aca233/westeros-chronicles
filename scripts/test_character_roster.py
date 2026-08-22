@@ -73,12 +73,15 @@ class RuntimeCharacterRosterTests(unittest.TestCase):
         retained = select_runtime_character_ids(self.records, self.references)
         self.assertTrue({
             "agot:canon", "agot:semicanon", "agot:playable", "agot:curated",
-            "agot:start", "agot:artifact",
+            "agot:start",
         }.issubset(retained))
-        self.assertIn("agot:dead_parent", retained)
-        self.assertIn("agot:living_spouse", retained)
+        # 原著角色的一层亲属中，只有 canon/semicanon/genealogy 层级的才保留；
+        # mod_supporting 亲属不再因亲属跳板保留完整档案。
+        self.assertNotIn("agot:dead_parent", retained)
+        self.assertNotIn("agot:living_spouse", retained)
+        self.assertNotIn("agot:artifact", retained, "神器持有人不再自动保留完整档案")
         self.assertNotIn("agot:isolated_fill", retained)
-        self.assertNotIn("agot:dead_grandparent", retained)
+        self.assertIn("agot:dead_grandparent", retained, "族谱角色保留完整档案")
         self.assertNotIn("agot:future_child", retained)
         self.assertNotIn("agot:minor_holder", retained, "持有头衔不再自动保留完整档案")
 

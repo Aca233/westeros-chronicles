@@ -2,3 +2,10 @@ Ancestor_1 = {
     name = Brandon
     8200.1.1 = { birth = yes }
 }
+Ancestor_2 = {
+    name = Lyarra
+    8202.1.1 = {
+        birth = yes
+        add_spouse = Ancestor_1
+    }
+}
