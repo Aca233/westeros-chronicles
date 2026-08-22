@@ -24,6 +24,7 @@ import {
   scopeMapSubjects,
 } from './dynamicMapSubjects.ts'
 import { attachPoliticalRealms, projectPoliticalState, type StaticPoliticalTitle } from './politicalProjection.ts'
+import { worldContentRepository } from '../world-content/repository'
 import { buildWorldAssetBaseline, createWorldBaselineSnapshot } from '../world/worldBaseline'
 import { selectCountyWorldView } from '../world/worldSelectors'
 import { buildCountyInteractionIndex } from './countyInteraction.ts'
@@ -235,8 +236,18 @@ export const MapDrawer: React.FC<MapDrawerProps> = ({ onSelectCharacter }) => {
       mapRepository.loadPoliticalTitles(),
       mapRepository.loadSemanticMembership(),
       politicalCharacterRepository.loadTitleHolderSummaries(),
-    ]).then(([titles, memberships, characters]) => {
-      if (!cancelled) setPoliticalSource({ titles: attachPoliticalRealms(titles, memberships), characters })
+      worldContentRepository.loadHolderSummaries().catch(() => []),
+    ]).then(([titles, memberships, characters, holderSummaries]) => {
+      // Full records win; background holders fall back to lightweight summaries
+      // so pruned counties keep a readable ruler name.
+      const summaryCharacters = holderSummaries.map((summary) => ({
+        id: summary.id,
+        name: summary.name,
+        dynastyId: summary.dynastyId ?? undefined,
+        alive: summary.alive,
+        titleIds: [...summary.titleIds],
+      })).filter((summary) => !characters.some((character) => character.id === summary.id));
+      if (!cancelled) setPoliticalSource({ titles: attachPoliticalRealms(titles, memberships), characters: [...characters, ...summaryCharacters] })
     }).catch(() => {
       if (!cancelled) { setPoliticalSource(null); setWarning('政治归属资料未能载入，其他地图内容仍可使用') }
     })

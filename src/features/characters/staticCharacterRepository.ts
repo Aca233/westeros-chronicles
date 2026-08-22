@@ -24,6 +24,8 @@ export type FetchJson = (path: string) => Promise<unknown>;
 
 export interface CharacterSearchFilters {
   includeGenealogy?: boolean;
+  includeSupporting?: boolean;
+  materializedIds?: readonly CharacterId[];
   alive?: boolean;
   canonTiers?: CharacterCanonTier[];
   limit?: number;
@@ -233,13 +235,18 @@ export class StaticCharacterRepository {
 
   async search(query: string, filters: CharacterSearchFilters = {}): Promise<CharacterSearchHit[]> {
     const normalized = query.trim().toLocaleLowerCase('zh-CN');
-    const tiers = filters.canonTiers ? new Set(filters.canonTiers) : undefined;
+    // Default search exposes canon/semicanon plus characters already
+    // materialized in the save; supporting characters need an explicit opt-in.
+    const tiers = new Set<CharacterCanonTier>(filters.canonTiers ?? ['canon', 'semicanon']);
+    if (filters.includeSupporting && !filters.canonTiers) tiers.add('mod_supporting');
+    if (filters.includeGenealogy && !filters.canonTiers) tiers.add('genealogy');
+    const materialized = new Set(filters.materializedIds ?? []);
     const limit = Math.max(1, Math.min(filters.limit ?? 100, 500));
     const results: CharacterSearchHit[] = [];
     for (const hit of await this.loadIndex()) {
       if (!filters.includeGenealogy && hit.canonTier === 'genealogy') continue;
       if (filters.alive !== undefined && hit.alive !== filters.alive) continue;
-      if (tiers && !tiers.has(hit.canonTier)) continue;
+      if (!tiers.has(hit.canonTier) && !materialized.has(hit.id)) continue;
       const haystack = [hit.name, hit.nameKey, hit.id, hit.dynastyId].filter(Boolean).join(' ').toLocaleLowerCase('zh-CN');
       if (normalized && !haystack.includes(normalized)) continue;
       results.push(hit);

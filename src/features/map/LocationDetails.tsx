@@ -64,7 +64,7 @@ export const LocationDetails: React.FC<LocationDetailsProps> = ({
   const view = useMemo<LocationViewModel | null>(() => location ? buildLocationView(location, {
     ruler: politicalState?.holderId ? {
       id: politicalState.holderId,
-      label: politicalState.holderName ?? politicalState.holderId,
+      label: politicalState.holderName ?? '持有人未记录',
       characterId: politicalState.holderId,
       knowledge: 'confirmed',
     } : undefined,

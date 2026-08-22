@@ -164,4 +164,17 @@ const updatedContext = await buildWorldTurnContext({ gameState, actionText: '与
 assert.ok(updatedContext.visibleWorldEquipment.some((item) => item.instanceId === 'story:named:cloak'));
 assert.equal(updatedContext.visibleWorldAssets.some((item) => item.instanceId === 'story:named:cloak'), false, '已经穿戴的物品不得在正文资产段重复');
 
+
+// 背景持有人摘要不进入 LLM 人物候选：未点名、无强关系、无近期互动。
+const minorHolderState = {
+  ...gameState,
+  worldRuntime: {
+    ...gameState.worldRuntime,
+    titles: { c_minor: { lawfulHolderId: 'agot:minor_holder', controllerId: 'agot:minor_holder', contestedByIds: [] } },
+  },
+};
+const minorHolderContext = await buildWorldTurnContext({ gameState: minorHolderState, actionText: '与劳勃交谈', repository, eventStore, mapLocationRepository, timeline });
+const minorHolderIds = [...minorHolderContext.selection.full, ...minorHolderContext.selection.compact].map((entry) => entry.id);
+assert.equal(minorHolderIds.includes('agot:minor_holder'), false, '持有人摘要不得自动进入 LLM 人物候选');
+
 console.log('World turn context tests passed.');

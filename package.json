@@ -34,6 +34,7 @@
     "test:agot-character-import": "python3 -m unittest scripts.test_agot_character_import -v",
     "check:character-dataset": "node scripts/check-agot-character-dataset.mjs",
     "test:character-runtime": "node scripts/test-character-runtime.mjs",
+    "test:character-holder-summaries": "node scripts/test-character-holder-summaries.mjs",
     "test:character-scene": "node scripts/test-character-scene-selector.mjs",
     "test:character-prompt": "node scripts/test-character-prompt.mjs",
     "test:character-commands": "node --experimental-strip-types scripts/test-character-commands.mjs",
