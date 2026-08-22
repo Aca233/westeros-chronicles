@@ -16,9 +16,14 @@ async function bundleModule(entryPoint) {
 
 const { ITEM_CATALOG, ITEM_DEFINITIONS, preloadItemCatalog } = await bundleModule('src/data/itemDefinitions.ts');
 await preloadItemCatalog();
-const { NPC_LOADOUT_TEMPLATES } = await bundleModule('src/data/npcLoadoutTemplates.ts');
-const { NPC_LOADOUT_OVERRIDES } = await bundleModule('src/data/npcLoadoutOverrides.ts');
-const { expandBaselineLoadout } = await bundleModule('src/features/characters/characterItems.ts');
+const { preloadNpcLoadoutContent, getNpcLoadoutContent } = await bundleModule('src/features/items/npcLoadoutContent.ts');
+await preloadNpcLoadoutContent();
+const loaded = getNpcLoadoutContent();
+const NPC_LOADOUT_TEMPLATES = Object.fromEntries(loaded.templates);
+const NPC_LOADOUT_OVERRIDES = Object.fromEntries(loaded.overrides);
+const itemsModule = await bundleModule('src/features/characters/characterItems.ts');
+await itemsModule.preloadNpcLoadoutContent();
+const { expandBaselineLoadout } = itemsModule;
 const { resolveCharacterTraits } = await bundleModule('src/data/characterTraits.ts');
 
 test('1. 物品目录完备性与中文命名（无 Emoji）', () => {

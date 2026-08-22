@@ -31,7 +31,7 @@ try {
 
 const templateBundle = await build({
   stdin: {
-    contents: "export { NPC_LOADOUT_TEMPLATES } from './src/data/npcLoadoutTemplates.ts'; export { ITEM_CATALOG, preloadItemCatalog } from './src/data/itemDefinitions.ts';",
+    contents: "export { preloadNpcLoadoutContent, getNpcLoadoutContent } from './src/features/items/npcLoadoutContent.ts'; export { ITEM_CATALOG, preloadItemCatalog } from './src/data/itemDefinitions.ts';",
     resolveDir: root,
     sourcefile: 'character-dataset-audit-entry.ts',
     loader: 'ts',
@@ -42,8 +42,9 @@ const templateBundle = await build({
   platform: 'node',
 });
 const templateUrl = `data:text/javascript;base64,${Buffer.from(templateBundle.outputFiles[0].text).toString('base64')}`;
-const { NPC_LOADOUT_TEMPLATES, ITEM_CATALOG, preloadItemCatalog } = await import(templateUrl);
-await preloadItemCatalog();
+const { preloadNpcLoadoutContent, getNpcLoadoutContent, ITEM_CATALOG, preloadItemCatalog } = await import(templateUrl);
+await Promise.all([preloadItemCatalog(), preloadNpcLoadoutContent()]);
+const NPC_LOADOUT_TEMPLATES = Object.fromEntries(getNpcLoadoutContent().templates);
 const knownTemplateIds = new Set(Object.keys(NPC_LOADOUT_TEMPLATES));
 
 if (manifest.schemaVersion !== 2) failures.push('Dataset schema version must be 2.');

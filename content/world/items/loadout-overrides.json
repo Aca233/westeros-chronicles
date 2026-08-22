@@ -1,4 +1,1684 @@
 {
-  "schemaVersion": 1,
-  "overrides": []
+  "overrides": [
+    {
+      "characterId": "agot:Arryn_3",
+      "id": "jon_arryn_daily",
+      "slots": [
+        {
+          "definitionId": "clothing.vale_embroidered_falcon_tunic",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.vale_tight_wool_trousers",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.vale_falcon_buckle_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.vale_light_blue_wool_cloak",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        },
+        {
+          "definitionId": "jewelry.hand_of_the_king_badge",
+          "id": "accessory_0",
+          "position": {
+            "group": "accessories",
+            "index": 0
+          }
+        }
+      ],
+      "templateId": "vale_noble"
+    },
+    {
+      "characterId": "agot:Baelish_2",
+      "id": "petyr_baelish_daily",
+      "slots": [
+        {
+          "definitionId": "clothing.crownlands_velvet_doublet",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.crownlands_fine_wool_trousers",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.crownlands_court_soft_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.crownlands_satin_trimmed_cloak",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        },
+        {
+          "definitionId": "jewelry.baelish_silver_mockingbird",
+          "id": "accessory_0",
+          "position": {
+            "group": "accessories",
+            "index": 0
+          }
+        }
+      ],
+      "templateId": "crownlands_courtier"
+    },
+    {
+      "characterId": "agot:Baratheon_2",
+      "id": "robert_baratheon_daily",
+      "slots": [
+        {
+          "definitionId": "clothing.stormlands_leather_vest_tunic",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.stormlands_heavy_wool_breeches",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.stormlands_all_weather_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.stormlands_rainproof_wool_cloak",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        }
+      ],
+      "templateId": "stormlands_noble"
+    },
+    {
+      "characterId": "agot:Baratheon_3",
+      "id": "stannis_baratheon_daily",
+      "slots": [
+        {
+          "definitionId": "clothing.stormlands_leather_vest_tunic",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.stormlands_heavy_wool_breeches",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.stormlands_all_weather_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.plain_wool_cloak",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        }
+      ],
+      "templateId": "stormlands_noble"
+    },
+    {
+      "characterId": "agot:Baratheon_4",
+      "id": "renly_baratheon_daily",
+      "slots": [
+        {
+          "definitionId": "clothing.reach_silk_doublet",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.reach_fine_wool_breeches",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.reach_embroidered_soft_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.reach_emerald_satin_cloak",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        }
+      ],
+      "templateId": "stormlands_noble"
+    },
+    {
+      "characterId": "agot:Baratheon_5",
+      "id": "joffrey_baratheon_daily",
+      "templateId": "child_noble"
+    },
+    {
+      "characterId": "agot:Baratheon_6",
+      "id": "myrcella_baratheon_daily",
+      "templateId": "child_noble"
+    },
+    {
+      "characterId": "agot:Baratheon_7",
+      "id": "tommen_baratheon_daily",
+      "templateId": "child_noble"
+    },
+    {
+      "characterId": "agot:Blackwater_1",
+      "id": "bronn_daily",
+      "slots": [
+        {
+          "definitionId": "clothing.common_linen_tunic",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.plain_wool_breeches",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.leather_turnshoes",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        }
+      ],
+      "templateId": "generic"
+    },
+    {
+      "characterId": "agot:Cassel_3",
+      "id": "rodrik_cassel_daily",
+      "slots": [
+        {
+          "definitionId": "clothing.northern_leather_hunting_jerkin",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.tight_coarse_trousers",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.woodland_durable_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.plain_wool_cloak",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        }
+      ],
+      "templateId": "northern_hunter"
+    },
+    {
+      "characterId": "agot:Cassel_4",
+      "id": "jory_cassel_daily",
+      "slots": [
+        {
+          "definitionId": "clothing.northern_wool_tunic",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.northern_wool_breeches",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.northern_riding_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.plain_wool_cloak",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        }
+      ],
+      "templateId": "northern_noble"
+    },
+    {
+      "characterId": "agot:Clegane_3",
+      "id": "gregor_clegane_daily",
+      "slots": [
+        {
+          "definitionId": "clothing.stormlands_leather_vest_tunic",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.sturdy_travel_trousers",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.sturdy_travel_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        }
+      ],
+      "templateId": "westerlands_noble"
+    },
+    {
+      "characterId": "agot:Clegane_4",
+      "id": "sandor_clegane_daily",
+      "slots": [
+        {
+          "definitionId": "clothing.stormlands_leather_vest_tunic",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.sturdy_travel_trousers",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.sturdy_travel_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        }
+      ],
+      "templateId": "westerlands_noble"
+    },
+    {
+      "characterId": "agot:Dondarrion_2",
+      "id": "beric_dondarrion_daily",
+      "slots": [
+        {
+          "definitionId": "clothing.stormlands_leather_vest_tunic",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.stormlands_heavy_wool_breeches",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.stormlands_all_weather_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.stormlands_rainproof_wool_cloak",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        }
+      ],
+      "templateId": "stormlands_noble"
+    },
+    {
+      "characterId": "agot:Eunuch_1",
+      "id": "varys_daily",
+      "slots": [
+        {
+          "definitionId": "clothing.crownlands_velvet_doublet",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.crownlands_fine_wool_trousers",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.crownlands_court_soft_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.crownlands_satin_trimmed_cloak",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        }
+      ],
+      "templateId": "crownlands_courtier"
+    },
+    {
+      "characterId": "agot:Greyjoy_13",
+      "id": "asha_greyjoy_daily",
+      "slots": [
+        {
+          "definitionId": "clothing.ironborn_oiled_cloth_tunic",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.ironborn_loose_sailor_pants",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.ironborn_sea_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        }
+      ],
+      "templateId": "ironborn_raider"
+    },
+    {
+      "characterId": "agot:Greyjoy_14",
+      "id": "theon_greyjoy_daily",
+      "slots": [
+        {
+          "definitionId": "clothing.northern_wool_tunic",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.northern_wool_breeches",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.northern_riding_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.plain_wool_cloak",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        }
+      ],
+      "templateId": "northern_noble"
+    },
+    {
+      "characterId": "agot:Greyjoy_5",
+      "id": "balon_greyjoy_daily",
+      "slots": [
+        {
+          "definitionId": "clothing.ironborn_seal_skin_coat",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.ironborn_sturdy_wool_pants",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.ironborn_sea_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.ironborn_thick_wool_cloak",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        }
+      ],
+      "templateId": "ironborn_noble"
+    },
+    {
+      "characterId": "agot:Lannister_1",
+      "id": "tywin_lannister_daily",
+      "slots": [
+        {
+          "definitionId": "clothing.westerlands_crimson_doublet",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.westerlands_tailored_trousers",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.westerlands_gilded_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.westerlands_crimson_gold_cloak",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        }
+      ],
+      "templateId": "westerlands_noble"
+    },
+    {
+      "characterId": "agot:Lannister_6",
+      "id": "cersei_lannister_daily",
+      "slots": [
+        {
+          "definitionId": "clothing.westerlands_crimson_doublet",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.westerlands_tailored_trousers",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.westerlands_gilded_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.westerlands_crimson_gold_cloak",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        }
+      ],
+      "templateId": "westerlands_noble"
+    },
+    {
+      "characterId": "agot:Lannister_7",
+      "id": "jaime_lannister_daily",
+      "slots": [
+        {
+          "definitionId": "clothing.kingsguard_white_tunic",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.kingsguard_white_breeches",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.kingsguard_polished_white_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.kingsguard_white_cloak",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        }
+      ],
+      "templateId": "kingsguard_daily"
+    },
+    {
+      "characterId": "agot:Lannister_8",
+      "id": "tyrion_lannister_daily",
+      "slots": [
+        {
+          "definitionId": "clothing.westerlands_crimson_doublet",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.westerlands_tailored_trousers",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.westerlands_gilded_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "jewelry.tyrion_golden_ring",
+          "id": "accessory_0",
+          "position": {
+            "group": "accessories",
+            "index": 0
+          }
+        }
+      ],
+      "templateId": "westerlands_noble"
+    },
+    {
+      "characterId": "agot:Lowborn_Wildling_1",
+      "id": "ygritte_daily",
+      "slots": [
+        {
+          "definitionId": "clothing.beyond_the_wall_fur_garment",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.beyond_the_wall_fur_leggings",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.beyond_the_wall_snow_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        }
+      ],
+      "templateId": "beyond_the_wall_freefolk"
+    },
+    {
+      "characterId": "agot:Martell_4",
+      "id": "doran_martell_daily",
+      "slots": [
+        {
+          "definitionId": "clothing.dornish_flowing_silk_robe",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.light_linen_trousers",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.dornish_sandals",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.dornish_sun_veil_sash",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        }
+      ],
+      "templateId": "dornish_noble"
+    },
+    {
+      "characterId": "agot:Martell_8",
+      "id": "oberyn_martell_daily",
+      "slots": [
+        {
+          "definitionId": "clothing.dornish_flowing_silk_robe",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.light_linen_trousers",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.dornish_sandals",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        }
+      ],
+      "templateId": "dornish_noble"
+    },
+    {
+      "characterId": "agot:Melisandre_1",
+      "id": "melisandre_daily",
+      "slots": [
+        {
+          "definitionId": "clothing.dornish_flowing_silk_robe",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.light_linen_trousers",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.leather_turnshoes",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        }
+      ],
+      "templateId": "generic"
+    },
+    {
+      "characterId": "agot:Mopatis_1",
+      "id": "illyrio_mopatis_daily",
+      "slots": [
+        {
+          "definitionId": "clothing.merchant_velvet_damask_robe",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.merchant_jacquard_trousers",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.merchant_gemmed_slippers",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.merchant_luxurious_fur_cloak",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        },
+        {
+          "definitionId": "jewelry.illyrio_gemmed_rings",
+          "id": "accessory_0",
+          "position": {
+            "group": "accessories",
+            "index": 0
+          }
+        }
+      ],
+      "templateId": "merchant_wealthy"
+    },
+    {
+      "characterId": "agot:Mormont_2",
+      "id": "jeor_mormont_daily",
+      "slots": [
+        {
+          "definitionId": "clothing.nights_watch_thick_uniform",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.nights_watch_wool_trousers",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.nights_watch_patrol_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.black_winter_cloak",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        }
+      ],
+      "templateId": "nights_watch_ranger"
+    },
+    {
+      "characterId": "agot:Pycelle_1",
+      "id": "pycelle_daily",
+      "slots": [
+        {
+          "definitionId": "clothing.maester_robe",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.plain_wool_breeches",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.leather_turnshoes",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "jewelry.maester_metal_collar",
+          "id": "accessory_0",
+          "position": {
+            "group": "accessories",
+            "index": 0
+          }
+        }
+      ],
+      "templateId": "maester"
+    },
+    {
+      "characterId": "agot:Rayder_1",
+      "id": "mance_rayder_daily",
+      "slots": [
+        {
+          "definitionId": "clothing.beyond_the_wall_fur_garment",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.beyond_the_wall_fur_leggings",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.beyond_the_wall_snow_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.black_winter_cloak",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        }
+      ],
+      "templateId": "beyond_the_wall_freefolk"
+    },
+    {
+      "characterId": "agot:Redwyne_2",
+      "id": "olenna_redwyne_daily",
+      "slots": [
+        {
+          "definitionId": "clothing.reach_floral_embroidered_gown",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.reach_silk_underskirt",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.reach_velvet_slippers",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.reach_gauze_shawl",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        }
+      ],
+      "templateId": "reach_lady"
+    },
+    {
+      "characterId": "agot:Seaworth_1",
+      "id": "davos_seaworth_daily",
+      "slots": [
+        {
+          "definitionId": "clothing.stormlands_sturdy_wool_tunic",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.stormlands_rough_wool_trousers",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.stormlands_thick_short_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        }
+      ],
+      "templateId": "stormlands_common"
+    },
+    {
+      "characterId": "agot:Selmy_3",
+      "id": "barristan_selmy_daily",
+      "slots": [
+        {
+          "definitionId": "clothing.kingsguard_white_tunic",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.kingsguard_white_breeches",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.kingsguard_polished_white_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.kingsguard_white_cloak",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        }
+      ],
+      "templateId": "kingsguard_daily"
+    },
+    {
+      "characterId": "agot:Shadow_Tower_1",
+      "id": "qhorin_halfhand_daily",
+      "slots": [
+        {
+          "definitionId": "clothing.nights_watch_thick_uniform",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.nights_watch_wool_trousers",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.nights_watch_patrol_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.black_winter_cloak",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        }
+      ],
+      "templateId": "nights_watch_ranger"
+    },
+    {
+      "characterId": "agot:Stark_10",
+      "id": "bran_stark_daily",
+      "templateId": "child_noble"
+    },
+    {
+      "characterId": "agot:Stark_11",
+      "id": "rickon_stark_daily",
+      "templateId": "child_noble"
+    },
+    {
+      "characterId": "agot:Stark_3",
+      "id": "eddard_stark_daily",
+      "slots": [
+        {
+          "definitionId": "clothing.northern_wool_tunic",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.northern_wool_breeches",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.northern_riding_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.northern_fur_cloak",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        }
+      ],
+      "templateId": "northern_noble"
+    },
+    {
+      "characterId": "agot:Stark_4",
+      "id": "benjen_stark_daily",
+      "slots": [
+        {
+          "definitionId": "clothing.nights_watch_thick_uniform",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.nights_watch_wool_trousers",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.nights_watch_patrol_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.black_winter_cloak",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        }
+      ],
+      "templateId": "nights_watch_ranger"
+    },
+    {
+      "characterId": "agot:Stark_6",
+      "id": "robb_stark_daily",
+      "slots": [
+        {
+          "definitionId": "clothing.northern_wool_tunic",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.northern_wool_breeches",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.northern_riding_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.northern_fur_cloak",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        }
+      ],
+      "templateId": "young_northern_noble"
+    },
+    {
+      "characterId": "agot:Stark_7",
+      "id": "jon_snow_daily",
+      "slots": [
+        {
+          "definitionId": "clothing.northern_wool_tunic",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.northern_wool_breeches",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.northern_riding_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.plain_wool_cloak",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        }
+      ],
+      "templateId": "young_northern_noble"
+    },
+    {
+      "characterId": "agot:Stark_8",
+      "id": "sansa_stark_daily",
+      "templateId": "child_noble"
+    },
+    {
+      "characterId": "agot:Stark_9",
+      "id": "arya_stark_daily",
+      "templateId": "child_noble"
+    },
+    {
+      "characterId": "agot:Stark_hh_1",
+      "id": "maester_luwin_daily",
+      "slots": [
+        {
+          "definitionId": "clothing.maester_robe",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.plain_wool_breeches",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.leather_turnshoes",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "jewelry.maester_metal_collar",
+          "id": "accessory_0",
+          "position": {
+            "group": "accessories",
+            "index": 0
+          }
+        }
+      ],
+      "templateId": "maester"
+    },
+    {
+      "characterId": "agot:Targaryen_120",
+      "id": "maester_aemon_daily",
+      "slots": [
+        {
+          "definitionId": "clothing.maester_robe",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.plain_wool_breeches",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.leather_turnshoes",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "jewelry.maester_metal_collar",
+          "id": "accessory_0",
+          "position": {
+            "group": "accessories",
+            "index": 0
+          }
+        }
+      ],
+      "templateId": "maester"
+    },
+    {
+      "characterId": "agot:Targaryen_8",
+      "id": "viserys_targaryen_daily",
+      "slots": [
+        {
+          "definitionId": "clothing.crownlands_velvet_doublet",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.crownlands_fine_wool_trousers",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.crownlands_court_soft_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        }
+      ],
+      "templateId": "generic"
+    },
+    {
+      "characterId": "agot:Targaryen_9",
+      "id": "daenerys_targaryen_daily",
+      "slots": [
+        {
+          "definitionId": "clothing.pentos_silk_robe",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.light_linen_trousers",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.pentos_soft_shoes",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        }
+      ],
+      "templateId": "young_pentos_noble"
+    },
+    {
+      "characterId": "agot:Tarly_2",
+      "id": "samwell_tarly_daily",
+      "slots": [
+        {
+          "definitionId": "clothing.nights_watch_steward_robe",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.nights_watch_steward_pants",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.nights_watch_thick_steward_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        }
+      ],
+      "templateId": "young_nights_watch"
+    },
+    {
+      "characterId": "agot:Tarth_6",
+      "id": "brienne_tarth_daily",
+      "slots": [
+        {
+          "definitionId": "clothing.stormlands_leather_vest_tunic",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.stormlands_heavy_wool_breeches",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.stormlands_all_weather_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        }
+      ],
+      "templateId": "stormlands_noble"
+    },
+    {
+      "characterId": "agot:Tully_4",
+      "id": "catelyn_stark_daily",
+      "slots": [
+        {
+          "definitionId": "clothing.northern_thick_dress",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.northern_wool_breeches",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.northern_wool_lined_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.northern_wolf_collar_cloak",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        }
+      ],
+      "templateId": "northern_lady"
+    },
+    {
+      "characterId": "agot:Tyrell_13",
+      "id": "loras_tyrell_daily",
+      "slots": [
+        {
+          "definitionId": "clothing.reach_silk_doublet",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.reach_fine_wool_breeches",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.reach_embroidered_soft_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.reach_emerald_satin_cloak",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        }
+      ],
+      "templateId": "reach_noble"
+    },
+    {
+      "characterId": "agot:Tyrell_14",
+      "id": "margaery_tyrell_daily",
+      "slots": [
+        {
+          "definitionId": "clothing.reach_floral_embroidered_gown",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.reach_silk_underskirt",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.reach_velvet_slippers",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.reach_gauze_shawl",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        }
+      ],
+      "templateId": "young_reach_noble"
+    }
+  ],
+  "schemaVersion": 1
 }

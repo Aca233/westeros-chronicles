@@ -97,6 +97,9 @@ class CharacterSupplementTests(unittest.TestCase):
         self.assertEqual(classify_loadout({"id": "agot:maester", "born": True, "alive": True, "birthDate": "8270.1.1", "traits": ["maester"]}, {}, 8298)["templateId"], "maester")
         self.assertEqual(classify_loadout({"id": "agot:dornish", "born": True, "alive": True, "birthDate": "8270.1.1", "cultureId": "salt_dornish", "traits": []}, {}, 8298)["templateId"], "dornish")
         self.assertEqual(classify_loadout({"id": "agot:north", "born": True, "alive": True, "birthDate": "8270.1.1", "cultureId": "northman", "traits": []}, {"agot:north": [{"id": "c_x"}]}, 8298)["templateId"], "northern_noble")
+        ned = classify_loadout({"id": "agot:Stark_3", "born": True, "alive": True, "birthDate": "8263.1.1", "traits": []}, {}, 8298)
+        self.assertEqual(ned["templateId"], "northern_noble")
+        self.assertEqual(ned["overrideId"], "eddard_stark_daily")
 
     def test_builder_writes_bundled_shape_without_mod_sources(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

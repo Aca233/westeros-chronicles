@@ -21,6 +21,7 @@ import { normalizeCk3Attributes } from '../data/ck3Skills';
 import { migrateLordIdentityData, migrateLordTraitData } from '../data/characterTraits';
 import { ITEM_SAVE_FORMAT_VERSION, repairKnownTurnRevisionDrift } from '../features/items/saveVersion';
 import { ITEM_CATALOG, preloadItemCatalog } from '../data/itemDefinitions';
+import { preloadNpcLoadoutContent } from '../features/items/npcLoadoutContent';
 import { AGOT_CHARACTER_DATASET_HASH, createInitialAgotArtifactWorldState } from '../features/items/worldArtifacts';
 import { createWorldHistoryState, type WorldDate } from '../features/world/worldHistory';
 import { createWorldRuntimeState } from '../features/world/worldRuntimeState';
@@ -248,7 +249,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     if (get().bootStatus === 'ready') return;
     set({ bootStatus: 'loading', bootError: null });
     try {
-      const [slots] = await Promise.all([listSaveSlots(), preloadItemCatalog()]);
+      const [slots] = await Promise.all([listSaveSlots(), preloadItemCatalog(), preloadNpcLoadoutContent()]);
       set({ saveSlots: slots, bootStatus: 'ready', bootError: null });
     } catch (error) {
       set({
@@ -349,7 +350,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
   // 开启新剧本:铸新的存档位,不再清空其他周目的进度
   startNewGame: async (game) => {
-    await preloadItemCatalog();
+    await Promise.all([preloadItemCatalog(), preloadNpcLoadoutContent()]);
     const slotId = createSlotId();
     const scenarioId = game.legacyScenarioId ?? 'living-world';
     const startDate = { ...game.startDate };
@@ -446,6 +447,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
         import('../services/turnNarration'),
         import('../features/world/worldTurnContext'),
         preloadItemCatalog(),
+        preloadNpcLoadoutContent(),
       ]);
       // 先丢弃不兼容的测试快照并建立当前回合基线，避免生成完叙事才发现无法提交。
       await ensureTurnSnapshotBaseline(activeSlotId, gameState);

@@ -131,7 +131,27 @@ const holderDatasetSchema = z.object({ schemaVersion: z.literal(1), holders: z.a
 
 const contentIndexSchema = z.object({ schemaVersion: z.literal(1), shards: z.record(z.string(), localPath), characters: z.record(z.string(), z.string()) }).strict();
 const characterContentSchema = z.object({ schemaVersion: z.literal(1), characterId, summary: z.string().optional(), publicRoles: z.array(z.string()).optional(), aliases: z.array(z.string()).optional(), appearance: z.string().optional(), personality: z.string().optional(), reputation: z.string().optional(), experiences: z.array(z.unknown()).optional(), notableRelations: z.array(z.unknown()).optional(), sources: z.array(z.string()) }).strict();
-const loadoutsSchema = z.object({ schemaVersion: z.literal(1), templates: z.array(z.unknown()), overrides: z.array(z.unknown()) }).strict();
+const loadoutSlotSchema = z.object({
+  id: z.string().min(1),
+  definitionId: z.string().min(1),
+  position: equipmentPosition,
+}).strict();
+const loadoutsSchema = z.object({
+  schemaVersion: z.literal(1),
+  templates: z.array(z.object({
+    id: z.string().min(1),
+    name: z.string().min(1),
+    ageGroup: z.enum(['infant', 'child', 'adult']),
+    slots: z.array(loadoutSlotSchema),
+  }).strict()),
+  overrides: z.array(z.object({
+    characterId,
+    id: z.string().min(1),
+    templateId: z.string().min(1).optional(),
+    slots: z.array(loadoutSlotSchema).optional(),
+    clearedPositions: z.array(equipmentPosition).optional(),
+  }).strict()),
+}).strict();
 
 function parse<T>(schema: z.ZodType<T>, value: unknown, label: string): T {
   const result = schema.safeParse(value);

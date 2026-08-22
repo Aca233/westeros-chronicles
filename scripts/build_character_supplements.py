@@ -9,68 +9,29 @@ from typing import Any, Iterable
 
 
 
-CURATED_LOADOUTS = {
-    # 史塔克家族与北境核心
-    "agot:Stark_3": ("northern_noble", "eddard_stark_daily"),
-    "agot:Tully_4": ("northern_lady", "catelyn_stark_daily"),
-    "agot:Stark_6": ("young_northern_noble", "robb_stark_daily"),
-    "agot:Stark_7": ("young_northern_noble", "jon_snow_daily"),
-    "agot:Stark_8": ("child_noble", "sansa_stark_daily"),
-    "agot:Stark_9": ("child_noble", "arya_stark_daily"),
-    "agot:Stark_10": ("child_noble", "bran_stark_daily"),
-    "agot:Stark_11": ("child_noble", "rickon_stark_daily"),
-    "agot:Stark_4": ("nights_watch_ranger", "benjen_stark_daily"),
-    "agot:Stark_hh_1": ("maester", "maester_luwin_daily"),
-    "agot:Cassel_3": ("northern_hunter", "rodrik_cassel_daily"),
-    "agot:Cassel_4": ("northern_noble", "jory_cassel_daily"),
-    # 拜拉席恩王室与风暴地
-    "agot:Baratheon_2": ("stormlands_noble", "robert_baratheon_daily"),
-    "agot:Baratheon_3": ("stormlands_noble", "stannis_baratheon_daily"),
-    "agot:Baratheon_4": ("stormlands_noble", "renly_baratheon_daily"),
-    "agot:Baratheon_5": ("child_noble", "joffrey_baratheon_daily"),
-    "agot:Baratheon_6": ("child_noble", "myrcella_baratheon_daily"),
-    "agot:Baratheon_7": ("child_noble", "tommen_baratheon_daily"),
-    "agot:Seaworth_1": ("stormlands_common", "davos_seaworth_daily"),
-    "agot:Melisandre_1": ("generic", "melisandre_daily"),
-    "agot:Dondarrion_2": ("stormlands_noble", "beric_dondarrion_daily"),
-    "agot:Tarth_6": ("stormlands_noble", "brienne_tarth_daily"),
-    # 兰尼斯特家族与西境
-    "agot:Lannister_1": ("westerlands_noble", "tywin_lannister_daily"),
-    "agot:Lannister_6": ("westerlands_noble", "cersei_lannister_daily"),
-    "agot:Lannister_7": ("kingsguard_daily", "jaime_lannister_daily"),
-    "agot:Lannister_8": ("westerlands_noble", "tyrion_lannister_daily"),
-    "agot:Clegane_3": ("westerlands_noble", "gregor_clegane_daily"),
-    "agot:Clegane_4": ("westerlands_noble", "sandor_clegane_daily"),
-    # 谷地与御前
-    "agot:Arryn_3": ("vale_noble", "jon_arryn_daily"),
-    "agot:Baelish_2": ("crownlands_courtier", "petyr_baelish_daily"),
-    "agot:Eunuch_1": ("crownlands_courtier", "varys_daily"),
-    "agot:Pycelle_1": ("maester", "pycelle_daily"),
-    "agot:Selmy_3": ("kingsguard_daily", "barristan_selmy_daily"),
-    # 坦格利安
-    "agot:Targaryen_9": ("young_pentos_noble", "daenerys_targaryen_daily"),
-    "agot:Targaryen_8": ("generic", "viserys_targaryen_daily"),
-    # 多恩
-    "agot:Martell_4": ("dornish_noble", "doran_martell_daily"),
-    "agot:Martell_8": ("dornish_noble", "oberyn_martell_daily"),
-    # 铁群岛
-    "agot:Greyjoy_5": ("ironborn_noble", "balon_greyjoy_daily"),
-    "agot:Greyjoy_14": ("northern_noble", "theon_greyjoy_daily"),
-    "agot:Greyjoy_13": ("ironborn_raider", "asha_greyjoy_daily"),
-    # 守夜人与塞外
-    "agot:Mormont_2": ("nights_watch_ranger", "jeor_mormont_daily"),
-    "agot:Targaryen_120": ("maester", "maester_aemon_daily"),
-    "agot:Tarly_2": ("young_nights_watch", "samwell_tarly_daily"),
-    "agot:Shadow_Tower_1": ("nights_watch_ranger", "qhorin_halfhand_daily"),
-    "agot:Rayder_1": ("beyond_the_wall_freefolk", "mance_rayder_daily"),
-    "agot:Lowborn_Wildling_1": ("beyond_the_wall_freefolk", "ygritte_daily"),
-    # 厄索斯与河湾
-    "agot:Mopatis_1": ("merchant_wealthy", "illyrio_mopatis_daily"),
-    "agot:Redwyne_2": ("reach_lady", "olenna_redwyne_daily"),
-    "agot:Tyrell_14": ("young_reach_noble", "margaery_tyrell_daily"),
-    "agot:Tyrell_13": ("reach_noble", "loras_tyrell_daily"),
-    "agot:Blackwater_1": ("generic", "bronn_daily"),
-}
+WORLD_LOADOUTS_PATH = Path("public/data/world/loadouts.json")
+_CURATED_LOADOUTS_CACHE: dict[str, tuple[str, str]] | None = None
+
+
+def load_curated_loadouts(path: Path | None = None) -> dict[str, tuple[str, str]]:
+    global _CURATED_LOADOUTS_CACHE
+    if path is None and _CURATED_LOADOUTS_CACHE is not None:
+        return _CURATED_LOADOUTS_CACHE
+    source = path or WORLD_LOADOUTS_PATH
+    if not source.exists():
+        return {}
+    document = json.loads(source.read_text(encoding="utf-8"))
+    curated: dict[str, tuple[str, str]] = {}
+    for override in document.get("overrides", []):
+        character_id = override.get("characterId")
+        template_id = override.get("templateId")
+        override_id = override.get("id")
+        if not isinstance(character_id, str) or not isinstance(template_id, str) or not isinstance(override_id, str):
+            raise ValueError(f"世界装备覆盖无效：{override}")
+        curated[character_id] = (template_id, override_id)
+    if path is None:
+        _CURATED_LOADOUTS_CACHE = curated
+    return curated
 
 
 def _birth_year(record: dict[str, Any]) -> int | None:
@@ -91,7 +52,7 @@ def classify_loadout(
     if not record.get("born") or not record.get("alive"):
         return None
     character_id = record["id"]
-    curated = CURATED_LOADOUTS.get(character_id)
+    curated = load_curated_loadouts().get(character_id)
     if curated:
         return {"characterId": character_id, "templateId": curated[0], "overrideId": curated[1]}
 

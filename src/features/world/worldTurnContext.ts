@@ -4,6 +4,7 @@ import { resolveCharacterTraits } from '../../data/characterTraits';
 import { filterImportedCharacterTraits } from '../../data/importedCharacterTraitPolicy';
 import type { GameState } from '../../types/game';
 import { getItemDefinition } from '../items/catalog';
+import { preloadNpcLoadoutContent } from '../items/npcLoadoutContent';
 import { buildCharacterPromptSlice, type CharacterPromptCandidate, type CharacterPromptSelection } from '../characters/characterPromptSlice';
 import { characterAgeAtYear, characterDatasetYear } from '../characters/characterDossier';
 import type { CharacterEventEnvelope, CharacterEventStore } from '../characters/characterEventTypes';
@@ -179,7 +180,8 @@ export async function buildWorldTurnContext(input: BuildWorldTurnContextInput): 
     gameState.worldRuntime.events,
     playerWorldEventViewer(gameState),
   );
-  const [manifest, playerRecord, mentioned, mapResult, startCharacters, gameplayLocations] = await Promise.all([
+  const [, manifest, playerRecord, mentioned, mapResult, startCharacters, gameplayLocations] = await Promise.all([
+    preloadNpcLoadoutContent(),
     repository.loadManifest(),
     playerId ? repository.get(playerId) : Promise.resolve(undefined),
     repository.findMentioned(input.actionText, { alive: true, canonTiers: ['canon', 'semicanon'], limit: 24 }),

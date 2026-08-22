@@ -2,6 +2,7 @@ import type { CharacterId } from '../../domain/characterId';
 import type { WorldDate } from '../../domain/worldDate';
 import type { LordProfile } from '../../types/game';
 import { ITEM_CATALOG, preloadItemCatalog } from '../../data/itemDefinitions';
+import { preloadNpcLoadoutContent } from '../items/npcLoadoutContent';
 import { createEmptyItemSystem } from '../items/state';
 import { createInitialAgotArtifactWorldState } from '../items/worldArtifacts';
 import type { WorldArtifactState } from '../items/worldArtifactTypes';
@@ -124,7 +125,7 @@ export async function createLivingWorldGame(
   const playable = playableEntries.find((entry) => entry.characterId === characterId);
   if (!playable?.enabled || !record?.born || !record.alive) throw new Error('该人物不能用于当前开局');
   assertWorldDatasetCompatibility(manifest, characterManifest, mapManifest, artifacts);
-  await preloadItemCatalog();
+  await Promise.all([preloadItemCatalog(), preloadNpcLoadoutContent()]);
   const resolved = projectStartCharacterFacts(resolveCharacter(record, [], {
     datasetVersion: manifest.characterDatasetHash,
     currentYear: manifest.startDate.year + 8000,

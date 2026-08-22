@@ -303,6 +303,31 @@ function isUniqueDefinitionId(definitionId, dependencies) {
   return definitionId.startsWith('artifact.') || dependencies.artifactDefinitions.has(definitionId);
 }
 
+function validateLoadoutReferences(templates, overrides, dependencies) {
+  const templateIds = new Set();
+  for (const template of templates) {
+    templateIds.add(template.id);
+    for (const slot of template.slots) {
+      if (!dependencies.itemDefinitionIds.has(slot.definitionId)) {
+        throw new Error(`物品不存在：装备模板 ${template.id} -> ${slot.definitionId}`);
+      }
+    }
+  }
+  for (const override of overrides) {
+    if (!dependencies.characterIds.has(override.characterId)) {
+      throw new Error(`人物不存在：${override.characterId}`);
+    }
+    if (override.templateId && !templateIds.has(override.templateId)) {
+      throw new Error(`模板不存在：${override.characterId} -> ${override.templateId}`);
+    }
+    for (const slot of override.slots ?? []) {
+      if (!dependencies.itemDefinitionIds.has(slot.definitionId)) {
+        throw new Error(`物品不存在：装备覆盖 ${override.characterId} -> ${slot.definitionId}`);
+      }
+    }
+  }
+}
+
 function validateStartAssetReferences(startAssets, dependencies) {
   const siteIds = new Set(startAssets.sites.map((site) => site.id));
   const vehicleIds = new Set(startAssets.vehicles.map((vehicle) => vehicle.id));
@@ -524,6 +549,7 @@ export async function compileWorldContent(options = {}) {
   ]);
   validateStartCharacterReferences(source.startCharacters, dependencies);
   validateStartAssetReferences(source.startAssets, dependencies);
+  validateLoadoutReferences(source.loadoutTemplates.templates, source.loadoutOverrides.overrides, dependencies);
   validateCharacterContentReferences(source.characterContents, dependencies);
   const outputs = buildOutputs(source, dependencies);
   await mkdir(dirname(outputDir), { recursive: true });

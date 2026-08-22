@@ -215,7 +215,8 @@ test('relationship dimensions clamp and produce a compact summary', () => {
   assert.match(relationshipSummary(relation), /尊敬 70/);
 });
 
-const { expandBaselineLoadout, projectCharacterItems } = await bundleModule('src/features/characters/characterItems.ts');
+const { expandBaselineLoadout, projectCharacterItems, preloadNpcLoadoutContent } = await bundleModule('src/features/characters/characterItems.ts');
+await preloadNpcLoadoutContent();
 
 test('baseline loadout expands to stable owned and equipped ordinary items', () => {
   const profile = { characterId: 'agot:Stark_3', templateId: 'northern_noble', overrideId: 'eddard_stark_daily' };

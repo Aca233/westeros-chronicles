@@ -271,6 +271,87 @@ function validateItemImage(image, label) {
   throw new Error(`${label}图片引用字段不完整`);
 }
 
+const LOADOUT_AGE_GROUPS = new Set(['infant', 'child', 'adult']);
+const LOADOUT_SLOT_KEYS = new Set(['id', 'definitionId', 'position']);
+const LOADOUT_TEMPLATE_KEYS = new Set(['id', 'name', 'ageGroup', 'slots']);
+const LOADOUT_OVERRIDE_KEYS = new Set(['characterId', 'id', 'templateId', 'slots', 'clearedPositions']);
+
+function validateLoadoutSlot(slot, label) {
+  const recordValue = record(slot, label);
+  validateExactKeys(recordValue, LOADOUT_SLOT_KEYS, label);
+  if (typeof recordValue.id !== 'string' || !recordValue.id.trim()) throw new Error(`${label}槽位 ID 无效`);
+  if (typeof recordValue.definitionId !== 'string' || !recordValue.definitionId.trim()) throw new Error(`${label}物品定义无效`);
+  if (!isValidEquipmentPosition(recordValue.position)) throw new Error(`${label}装备位置无效`);
+  return recordValue;
+}
+
+export function validateLoadoutTemplates(value) {
+  const document = record(value, '装备模板');
+  if (document.schemaVersion !== 1) throw new Error('装备模板版本必须为 1');
+  const templates = array(document.templates, '装备模板.templates');
+  const ids = new Set();
+  for (const entry of templates) {
+    const template = record(entry, '装备模板条目');
+    validateExactKeys(template, LOADOUT_TEMPLATE_KEYS, `装备模板 ${template.id ?? '?'}`);
+    if (typeof template.id !== 'string' || !template.id.trim()) throw new Error('装备模板 ID 无效');
+    if (ids.has(template.id)) throw new Error(`装备模板 ID 重复：${template.id}`);
+    ids.add(template.id);
+    if (typeof template.name !== 'string' || !template.name.trim()) throw new Error(`装备模板名称无效：${template.id}`);
+    if (!LOADOUT_AGE_GROUPS.has(template.ageGroup)) throw new Error(`装备模板年龄组无效：${template.id}`);
+    const slots = array(template.slots, `装备模板 ${template.id} slots`);
+    const slotIds = new Set();
+    const positions = new Set();
+    for (const slot of slots) {
+      const validated = validateLoadoutSlot(slot, `装备模板 ${template.id}`);
+      if (slotIds.has(validated.id)) throw new Error(`装备模板槽位重复：${template.id}/${validated.id}`);
+      slotIds.add(validated.id);
+      const positionKey = JSON.stringify(validated.position);
+      if (positions.has(positionKey)) throw new Error(`装备模板槽位位置重复：${template.id}`);
+      positions.add(positionKey);
+    }
+  }
+  return document;
+}
+
+export function validateLoadoutOverrides(value) {
+  const document = record(value, '装备覆盖');
+  if (document.schemaVersion !== 1) throw new Error('装备覆盖版本必须为 1');
+  const overrides = array(document.overrides, '装备覆盖.overrides');
+  const characterIds = new Set();
+  const overrideIds = new Set();
+  for (const entry of overrides) {
+    const override = record(entry, '装备覆盖条目');
+    validateExactKeys(override, LOADOUT_OVERRIDE_KEYS, `装备覆盖 ${override.characterId ?? '?'}`);
+    if (typeof override.characterId !== 'string' || !override.characterId.startsWith('agot:')) {
+      throw new Error(`人物不存在或覆盖人物 ID 无效：${override.characterId}`);
+    }
+    if (characterIds.has(override.characterId)) throw new Error(`装备覆盖人物重复：${override.characterId}`);
+    characterIds.add(override.characterId);
+    if (typeof override.id !== 'string' || !override.id.trim()) throw new Error(`装备覆盖 ID 无效：${override.characterId}`);
+    if (overrideIds.has(override.id)) throw new Error(`装备覆盖 ID 重复：${override.id}`);
+    overrideIds.add(override.id);
+    if (override.templateId !== undefined && (typeof override.templateId !== 'string' || !override.templateId.trim())) {
+      throw new Error(`装备覆盖模板无效：${override.characterId}`);
+    }
+    if (override.slots !== undefined) {
+      const slots = array(override.slots, `装备覆盖 ${override.characterId} slots`);
+      const positions = new Set();
+      for (const slot of slots) {
+        const validated = validateLoadoutSlot(slot, `装备覆盖 ${override.characterId}`);
+        const positionKey = JSON.stringify(validated.position);
+        if (positions.has(positionKey)) throw new Error(`装备覆盖槽位位置重复：${override.characterId}`);
+        positions.add(positionKey);
+      }
+    }
+    if (override.clearedPositions !== undefined) {
+      for (const position of array(override.clearedPositions, `装备覆盖 ${override.characterId} clearedPositions`)) {
+        if (!isValidEquipmentPosition(position)) throw new Error(`装备覆盖清除位置无效：${override.characterId}`);
+      }
+    }
+  }
+  return document;
+}
+
 export function validateOrdinaryItems(value) {
   const document = record(value, '普通物品');
   if (document.schemaVersion !== 1) throw new Error('普通物品版本必须为 1');
@@ -361,6 +442,8 @@ export function validateWorldSource(source) {
     array(document[collectionKey], `${name}.${collectionKey}`);
   }
   validateOrdinaryItems(source.ordinaryItems);
+  validateLoadoutTemplates(source.loadoutTemplates);
+  validateLoadoutOverrides(source.loadoutOverrides);
   validateCharacterContents(source.characterContents);
   return source;
 }

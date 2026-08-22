@@ -1,4 +1,1722 @@
 {
   "schemaVersion": 1,
-  "templates": []
+  "templates": [
+    {
+      "ageGroup": "adult",
+      "id": "beyond_the_wall_freefolk",
+      "name": "塞外自由民毛皮装束",
+      "slots": [
+        {
+          "definitionId": "clothing.beyond_the_wall_fur_garment",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.beyond_the_wall_fur_leggings",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.beyond_the_wall_snow_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        }
+      ]
+    },
+    {
+      "ageGroup": "child",
+      "id": "child",
+      "name": "儿童常规装束",
+      "slots": [
+        {
+          "definitionId": "clothing.child_wool_tunic",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.child_wool_leggings",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.child_soft_shoes",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        }
+      ]
+    },
+    {
+      "ageGroup": "child",
+      "id": "child_common",
+      "name": "平民儿童日常装束",
+      "slots": [
+        {
+          "definitionId": "clothing.child_common_linen_shirt",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.child_common_rough_pants",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.child_straw_shoes",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        }
+      ]
+    },
+    {
+      "ageGroup": "child",
+      "id": "child_noble",
+      "name": "贵族儿童日常装束",
+      "slots": [
+        {
+          "definitionId": "clothing.child_noble_wool_robe",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.child_wool_leggings",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.child_soft_shoes",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        }
+      ]
+    },
+    {
+      "ageGroup": "adult",
+      "id": "city_watch_duty",
+      "name": "都城守卫金袍与轻甲",
+      "slots": [
+        {
+          "definitionId": "clothing.city_watch_mail_shirt",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "armor.city_watch_breastplate",
+          "id": "armor",
+          "position": {
+            "group": "torso",
+            "layer": "armor"
+          }
+        },
+        {
+          "definitionId": "legwear.city_watch_thick_pants",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.city_watch_steel_capped_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.city_watch_gold_cloak",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        },
+        {
+          "definitionId": "weapon.castle_steel_longsword",
+          "id": "mainhand",
+          "position": {
+            "group": "mainhand"
+          }
+        }
+      ]
+    },
+    {
+      "ageGroup": "adult",
+      "id": "common_woman",
+      "name": "寻常女性日常装束",
+      "slots": [
+        {
+          "definitionId": "clothing.common_wool_dress",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.common_linen_petticoat",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.leather_turnshoes",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        }
+      ]
+    },
+    {
+      "ageGroup": "adult",
+      "id": "crownlands_common",
+      "name": "王领寻常平民装束",
+      "slots": [
+        {
+          "definitionId": "clothing.crownlands_common_tunic",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.crownlands_common_pants",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.leather_turnshoes",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        }
+      ]
+    },
+    {
+      "ageGroup": "adult",
+      "id": "crownlands_courtier",
+      "name": "君临廷臣天鹅绒华服",
+      "slots": [
+        {
+          "definitionId": "clothing.crownlands_velvet_doublet",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.crownlands_fine_wool_trousers",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.crownlands_court_soft_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.crownlands_satin_trimmed_cloak",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        }
+      ]
+    },
+    {
+      "ageGroup": "adult",
+      "id": "dornish",
+      "name": "多恩沙地旅行装束",
+      "slots": [
+        {
+          "definitionId": "clothing.dornish_desert_wraps",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.light_linen_trousers",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.dornish_sandals",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        }
+      ]
+    },
+    {
+      "ageGroup": "adult",
+      "id": "dornish_common",
+      "name": "多恩平民透气装束",
+      "slots": [
+        {
+          "definitionId": "clothing.dornish_breathable_linen_shirt",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.dornish_sand_trousers",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.dornish_woven_straw_sandals",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        }
+      ]
+    },
+    {
+      "ageGroup": "adult",
+      "id": "dornish_noble",
+      "name": "多恩贵族流金丝袍",
+      "slots": [
+        {
+          "definitionId": "clothing.dornish_flowing_silk_robe",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.light_linen_trousers",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.dornish_sandals",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.dornish_sun_veil_sash",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        }
+      ]
+    },
+    {
+      "ageGroup": "adult",
+      "id": "generic",
+      "name": "通用日常装束",
+      "slots": [
+        {
+          "definitionId": "clothing.common_linen_tunic",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.plain_wool_breeches",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.leather_turnshoes",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        }
+      ]
+    },
+    {
+      "ageGroup": "infant",
+      "id": "infant",
+      "name": "婴儿襁褓装束",
+      "slots": [
+        {
+          "definitionId": "clothing.infant_swaddling_wrap",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        }
+      ]
+    },
+    {
+      "ageGroup": "adult",
+      "id": "ironborn",
+      "name": "铁民厚羊毛装束",
+      "slots": [
+        {
+          "definitionId": "clothing.ironborn_wool_coat",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.sturdy_travel_trousers",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.ironborn_sea_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.plain_wool_cloak",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        }
+      ]
+    },
+    {
+      "ageGroup": "adult",
+      "id": "ironborn_noble",
+      "name": "铁群岛领主海豹皮装",
+      "slots": [
+        {
+          "definitionId": "clothing.ironborn_seal_skin_coat",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.ironborn_sturdy_wool_pants",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.ironborn_sea_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.ironborn_thick_wool_cloak",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        }
+      ]
+    },
+    {
+      "ageGroup": "adult",
+      "id": "ironborn_raider",
+      "name": "铁民水手装束",
+      "slots": [
+        {
+          "definitionId": "clothing.ironborn_oiled_cloth_tunic",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.ironborn_loose_sailor_pants",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.ironborn_sea_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        }
+      ]
+    },
+    {
+      "ageGroup": "adult",
+      "id": "kingsguard_daily",
+      "name": "御林铁卫白袍日常装束",
+      "slots": [
+        {
+          "definitionId": "clothing.kingsguard_white_tunic",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.kingsguard_white_breeches",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.kingsguard_polished_white_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.kingsguard_white_cloak",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        }
+      ]
+    },
+    {
+      "ageGroup": "adult",
+      "id": "kingsguard_duty",
+      "name": "御林铁卫值勤装束",
+      "slots": [
+        {
+          "definitionId": "clothing.kingsguard_white_tunic",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "armor.kingsguard_white_scale",
+          "id": "armor",
+          "position": {
+            "group": "torso",
+            "layer": "armor"
+          }
+        },
+        {
+          "definitionId": "legwear.kingsguard_white_breeches",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.kingsguard_polished_white_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.kingsguard_white_cloak",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        },
+        {
+          "definitionId": "weapon.castle_steel_longsword",
+          "id": "mainhand",
+          "position": {
+            "group": "mainhand"
+          }
+        }
+      ]
+    },
+    {
+      "ageGroup": "adult",
+      "id": "knight_daily",
+      "name": "骑士日常骑乘便装",
+      "slots": [
+        {
+          "definitionId": "clothing.knight_riding_shirt",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.knight_riding_breeches",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.knight_riding_leather_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        }
+      ]
+    },
+    {
+      "ageGroup": "adult",
+      "id": "maester",
+      "name": "学士灰袍与项圈",
+      "slots": [
+        {
+          "definitionId": "clothing.maester_robe",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.plain_wool_breeches",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.leather_turnshoes",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "jewelry.maester_metal_collar",
+          "id": "accessory_0",
+          "position": {
+            "group": "accessories",
+            "index": 0
+          }
+        }
+      ]
+    },
+    {
+      "ageGroup": "adult",
+      "id": "merchant_wealthy",
+      "name": "富商与总督华美锦袍",
+      "slots": [
+        {
+          "definitionId": "clothing.merchant_velvet_damask_robe",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.merchant_jacquard_trousers",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.merchant_gemmed_slippers",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.merchant_luxurious_fur_cloak",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        }
+      ]
+    },
+    {
+      "ageGroup": "adult",
+      "id": "nights_watch",
+      "name": "守夜人常规值勤装束",
+      "slots": [
+        {
+          "definitionId": "clothing.nights_watch_uniform",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.nights_watch_wool_trousers",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.nights_watch_patrol_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.black_winter_cloak",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        }
+      ]
+    },
+    {
+      "ageGroup": "adult",
+      "id": "nights_watch_ranger",
+      "name": "守夜人游骑兵加厚黑衣",
+      "slots": [
+        {
+          "definitionId": "clothing.nights_watch_thick_uniform",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.nights_watch_wool_trousers",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.nights_watch_patrol_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.black_winter_cloak",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        }
+      ]
+    },
+    {
+      "ageGroup": "adult",
+      "id": "nights_watch_steward",
+      "name": "守夜人事务官黑长衫",
+      "slots": [
+        {
+          "definitionId": "clothing.nights_watch_steward_robe",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.nights_watch_steward_pants",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.nights_watch_thick_steward_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        }
+      ]
+    },
+    {
+      "ageGroup": "adult",
+      "id": "northern_common",
+      "name": "北境平民日常装束",
+      "slots": [
+        {
+          "definitionId": "clothing.northern_coarse_tunic",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.northern_coarse_trousers",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.northern_thick_leather_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.plain_wool_cloak",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        }
+      ]
+    },
+    {
+      "ageGroup": "adult",
+      "id": "northern_hunter",
+      "name": "北境猎手与斥候装束",
+      "slots": [
+        {
+          "definitionId": "clothing.northern_leather_hunting_jerkin",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.tight_coarse_trousers",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.woodland_durable_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.windproof_oilcloth_cloak",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        }
+      ]
+    },
+    {
+      "ageGroup": "adult",
+      "id": "northern_lady",
+      "name": "北境贵妇日常裙装",
+      "slots": [
+        {
+          "definitionId": "clothing.northern_thick_dress",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.northern_wool_breeches",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.northern_wool_lined_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.northern_wolf_collar_cloak",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        }
+      ]
+    },
+    {
+      "ageGroup": "adult",
+      "id": "northern_noble",
+      "name": "北境贵族日常装束",
+      "slots": [
+        {
+          "definitionId": "clothing.northern_wool_tunic",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.northern_wool_breeches",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.northern_riding_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.northern_fur_cloak",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        }
+      ]
+    },
+    {
+      "ageGroup": "adult",
+      "id": "reach_common",
+      "name": "河湾地平民轻便装束",
+      "slots": [
+        {
+          "definitionId": "clothing.reach_light_linen_tunic",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.reach_pale_linen_trousers",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.leather_turnshoes",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        }
+      ]
+    },
+    {
+      "ageGroup": "adult",
+      "id": "reach_lady",
+      "name": "河湾地贵妇繁花长裙",
+      "slots": [
+        {
+          "definitionId": "clothing.reach_floral_embroidered_gown",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.reach_silk_underskirt",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.reach_velvet_slippers",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.reach_gauze_shawl",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        }
+      ]
+    },
+    {
+      "ageGroup": "adult",
+      "id": "reach_noble",
+      "name": "河湾地贵族丝绸锦服",
+      "slots": [
+        {
+          "definitionId": "clothing.reach_silk_doublet",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.reach_fine_wool_breeches",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.reach_embroidered_soft_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.reach_emerald_satin_cloak",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        }
+      ]
+    },
+    {
+      "ageGroup": "adult",
+      "id": "riverlands_common",
+      "name": "河间地平民日常装束",
+      "slots": [
+        {
+          "definitionId": "clothing.riverlands_coarse_linen_shirt",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.plain_linen_trousers",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.leather_turnshoes",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        }
+      ]
+    },
+    {
+      "ageGroup": "adult",
+      "id": "riverlands_noble",
+      "name": "河间地贵族日常装束",
+      "slots": [
+        {
+          "definitionId": "clothing.riverlands_two_tone_doublet",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.sturdy_travel_trousers",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.riverlands_riding_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.riverlands_trimmed_wool_cloak",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        }
+      ]
+    },
+    {
+      "ageGroup": "adult",
+      "id": "septon",
+      "name": "七神教士素袍与圣牌",
+      "slots": [
+        {
+          "definitionId": "clothing.septon_robe",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.plain_wool_breeches",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.leather_turnshoes",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "keepsake.septon_wooden_seven_star",
+          "id": "accessory_0",
+          "position": {
+            "group": "accessories",
+            "index": 0
+          }
+        }
+      ]
+    },
+    {
+      "ageGroup": "adult",
+      "id": "silent_sister",
+      "name": "静默姐妹灰袍与蒙面巾",
+      "slots": [
+        {
+          "definitionId": "clothing.silent_sister_robe",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.silent_sister_grey_breeches",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.silent_sister_simple_shoes",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "headwear.silent_sister_hood",
+          "id": "head",
+          "position": {
+            "group": "head"
+          }
+        }
+      ]
+    },
+    {
+      "ageGroup": "adult",
+      "id": "southern_common",
+      "name": "南方通用平民装束",
+      "slots": [
+        {
+          "definitionId": "clothing.common_linen_tunic",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.plain_wool_breeches",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.leather_turnshoes",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        }
+      ]
+    },
+    {
+      "ageGroup": "adult",
+      "id": "southern_lady",
+      "name": "南方贵族女性日常装束",
+      "slots": [
+        {
+          "definitionId": "clothing.southern_noble_gown",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.common_linen_petticoat",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.crownlands_court_soft_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.plain_wool_cloak",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        }
+      ]
+    },
+    {
+      "ageGroup": "adult",
+      "id": "southern_noble",
+      "name": "南方通用贵族装束",
+      "slots": [
+        {
+          "definitionId": "clothing.southern_noble_doublet",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.sturdy_travel_trousers",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.sturdy_travel_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.plain_wool_cloak",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        }
+      ]
+    },
+    {
+      "ageGroup": "adult",
+      "id": "stormlands_common",
+      "name": "风暴地平民防雨装束",
+      "slots": [
+        {
+          "definitionId": "clothing.stormlands_sturdy_wool_tunic",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.stormlands_rough_wool_trousers",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.stormlands_thick_short_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        }
+      ]
+    },
+    {
+      "ageGroup": "adult",
+      "id": "stormlands_noble",
+      "name": "风暴地贵族皮革长衫",
+      "slots": [
+        {
+          "definitionId": "clothing.stormlands_leather_vest_tunic",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.stormlands_heavy_wool_breeches",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.stormlands_all_weather_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.stormlands_rainproof_wool_cloak",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        }
+      ]
+    },
+    {
+      "ageGroup": "adult",
+      "id": "vale_common",
+      "name": "谷地平民与山民装束",
+      "slots": [
+        {
+          "definitionId": "clothing.vale_mountain_clan_tunic",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.vale_thick_wrapped_trousers",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.vale_mountain_climbing_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        }
+      ]
+    },
+    {
+      "ageGroup": "adult",
+      "id": "vale_noble",
+      "name": "谷地贵族日常装束",
+      "slots": [
+        {
+          "definitionId": "clothing.vale_embroidered_falcon_tunic",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.vale_tight_wool_trousers",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.vale_falcon_buckle_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.vale_light_blue_wool_cloak",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        }
+      ]
+    },
+    {
+      "ageGroup": "adult",
+      "id": "westerlands_common",
+      "name": "西境平民与工匠装束",
+      "slots": [
+        {
+          "definitionId": "clothing.westerlands_miner_tunic",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.westerlands_thick_work_pants",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.westerlands_miner_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        }
+      ]
+    },
+    {
+      "ageGroup": "adult",
+      "id": "westerlands_noble",
+      "name": "西境贵族华美织锦服",
+      "slots": [
+        {
+          "definitionId": "clothing.westerlands_crimson_doublet",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.westerlands_tailored_trousers",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.westerlands_gilded_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.westerlands_crimson_gold_cloak",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        }
+      ]
+    },
+    {
+      "ageGroup": "child",
+      "id": "young_nights_watch",
+      "name": "守夜人少年事务官装束",
+      "slots": [
+        {
+          "definitionId": "clothing.nights_watch_steward_robe",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.nights_watch_steward_pants",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.nights_watch_thick_steward_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        }
+      ]
+    },
+    {
+      "ageGroup": "child",
+      "id": "young_northern_noble",
+      "name": "北境少年贵族日常装束",
+      "slots": [
+        {
+          "definitionId": "clothing.northern_wool_tunic",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.northern_wool_breeches",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.northern_riding_boots",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.northern_fur_cloak",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        }
+      ]
+    },
+    {
+      "ageGroup": "child",
+      "id": "young_pentos_noble",
+      "name": "潘托斯少年贵族日常装束",
+      "slots": [
+        {
+          "definitionId": "clothing.pentos_silk_robe",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.light_linen_trousers",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.pentos_soft_shoes",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        }
+      ]
+    },
+    {
+      "ageGroup": "child",
+      "id": "young_reach_noble",
+      "name": "河湾少女贵族日常装束",
+      "slots": [
+        {
+          "definitionId": "clothing.reach_floral_embroidered_gown",
+          "id": "garment",
+          "position": {
+            "group": "torso",
+            "layer": "garment"
+          }
+        },
+        {
+          "definitionId": "legwear.reach_silk_underskirt",
+          "id": "legwear",
+          "position": {
+            "group": "legs",
+            "layer": "legwear"
+          }
+        },
+        {
+          "definitionId": "footwear.reach_velvet_slippers",
+          "id": "footwear",
+          "position": {
+            "group": "legs",
+            "layer": "footwear"
+          }
+        },
+        {
+          "definitionId": "clothing.reach_gauze_shawl",
+          "id": "outerwear",
+          "position": {
+            "group": "torso",
+            "layer": "outerwear"
+          }
+        }
+      ]
+    }
+  ]
 }

@@ -30,6 +30,7 @@ import { formatWorldCulture, formatWorldFaith } from '../features/world-content/
 import type { WorldTerminology } from '../features/world-content/types';
 import { worldContentRepository } from '../features/world-content/repository';
 import type { CharacterId, ResolvedCharacter } from '../features/characters/types';
+import { preloadNpcLoadoutContent } from '../features/items/npcLoadoutContent';
 import { createLivingWorldGame, createCustomLivingWorldGame } from '../features/world/createLivingWorldGame';
 import { CoatOfArms } from './CoatOfArms';
 import { stripEmoji } from '../services/textSanitizer';
@@ -225,7 +226,7 @@ export const CharacterCreator: React.FC = () => {
   useEffect(() => {
     if (!isCreatorOpen || tab !== 'existing') return;
     let cancelled = false;
-    Promise.all(RECOMMENDED_CHARACTER_IDS.map(async (id) => {
+    preloadNpcLoadoutContent().then(() => Promise.all(RECOMMENDED_CHARACTER_IDS.map(async (id) => {
       const record = await dossierRepository.get(id);
       if (!record || !record.born || !record.alive || record.canonTier === 'genealogy') return undefined;
       const profile = await dossierRepository.getLoadoutProfile(id);
@@ -234,7 +235,7 @@ export const CharacterCreator: React.FC = () => {
         currentYear: characterDatasetYear(298, record.birthDate),
         loadoutProfile: profile,
       });
-    })).then((characters) => {
+    }))).then((characters) => {
       if (!cancelled) setRecommendedCharacters(characters.filter((entry): entry is ResolvedCharacter => Boolean(entry)));
     }).catch((error: unknown) => {
       if (!cancelled) setExistingError(error instanceof Error ? error.message : '人物数据读取失败');

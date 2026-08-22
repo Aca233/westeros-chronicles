@@ -8,11 +8,16 @@ async function bundleModule(entryPoint) {
   return import(`data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString('base64')}`);
 }
 
-const { NPC_LOADOUT_TEMPLATES } = await bundleModule('src/data/npcLoadoutTemplates.ts');
-const { NPC_LOADOUT_OVERRIDES } = await bundleModule('src/data/npcLoadoutOverrides.ts');
+const { preloadNpcLoadoutContent, getNpcLoadoutContent } = await bundleModule('src/features/items/npcLoadoutContent.ts');
+await preloadNpcLoadoutContent();
+const loaded = getNpcLoadoutContent();
+const NPC_LOADOUT_TEMPLATES = Object.fromEntries(loaded.templates);
+const NPC_LOADOUT_OVERRIDES = Object.fromEntries(loaded.overrides);
 const { ITEM_CATALOG, preloadItemCatalog } = await bundleModule('src/data/itemDefinitions.ts');
 await preloadItemCatalog();
-const { expandBaselineLoadout } = await bundleModule('src/features/characters/characterItems.ts');
+const itemsModule = await bundleModule('src/features/characters/characterItems.ts');
+await itemsModule.preloadNpcLoadoutContent();
+const { expandBaselineLoadout } = itemsModule;
 
 test('所有日常模板引用有效且位置兼容的非唯一物品', () => {
   for (const template of Object.values(NPC_LOADOUT_TEMPLATES)) {
@@ -111,7 +116,7 @@ test('全量开局装束只包含日常穿戴，未成年人不使用成人模�
     }
     checked += 1;
   }
-  assert.equal(checked, 7676);
+  assert.equal(checked, Object.keys(profiles).length);
 });
 
 test('重点人物不得复用他人的专属饰品', () => {

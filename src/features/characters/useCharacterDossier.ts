@@ -24,6 +24,7 @@ import { selectCharacterWorldView } from '../world/worldSelectors';
 import type { WorldRuntimeState } from '../world/worldRuntimeTypes';
 import type { WorldArtifactState } from '../items/worldArtifacts';
 import type { LordProfile } from '../../types/game';
+import { preloadNpcLoadoutContent } from '../items/npcLoadoutContent';
 import { mapRepository } from '../map/repository';
 import { worldContentRepository } from '../world-content/repository';
 import type { CharacterContentRecord, WorldTerminology } from '../world-content/types';
@@ -214,6 +215,7 @@ export function useCharacterDossier(selectedCharacterId: CharacterId | null): Ch
           .catch(() => []),
         worldContentRepository.loadCharacterContent(selectedCharacterId).catch(() => undefined),
         worldContentRepository.loadTerminology().catch(() => undefined),
+        preloadNpcLoadoutContent(),
       ]);
       const resolved = projectResolvedCharacterWorldFacts(resolveCharacter(record, events, {
         datasetVersion: worldCharacters?.datasetHash ?? 'agot-local-dataset',

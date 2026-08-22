@@ -1,6 +1,7 @@
-import { NPC_LOADOUT_TEMPLATES } from '../../data/npcLoadoutTemplates';
-import { NPC_LOADOUT_OVERRIDES } from '../../data/npcLoadoutOverrides';
+import { getNpcLoadoutContent } from '../items/npcLoadoutContent';
 import type { EquipmentPosition } from '../items/types';
+
+export { preloadNpcLoadoutContent } from '../items/npcLoadoutContent';
 import type { CharacterEventEnvelope } from './characterEventTypes';
 import type {
   CharacterItemRecord,
@@ -21,7 +22,8 @@ export function expandBaselineLoadout(
   profile: StaticCharacterLoadoutProfile | undefined,
 ): CharacterItemRecord[] {
   if (!profile) return [];
-  const registeredOverride = NPC_LOADOUT_OVERRIDES[character.id];
+  const { templates, overrides } = getNpcLoadoutContent();
+  const registeredOverride = overrides.get(character.id);
   const override = profile.overrideId
     ? registeredOverride?.id === profile.overrideId ? registeredOverride : undefined
     : undefined;
@@ -29,7 +31,7 @@ export function expandBaselineLoadout(
     throw new Error(`人物装束覆盖不存在或不匹配：${character.id}/${profile.overrideId}`);
   }
   const templateId = override?.templateId ?? profile.templateId;
-  const template = NPC_LOADOUT_TEMPLATES[templateId];
+  const template = templates.get(templateId);
   if (!template) throw new Error(`人物装束模板不存在：${templateId}`);
 
   let resolvedSlots = [...template.slots];
