@@ -924,8 +924,8 @@ export const AGOT_ARTIFACT_WORLD_STATE = {
       }
     }
   },
-  "characterDatasetHash": "848415841eb4b6085d2975f127130d09afe5df12baf6a30511941eb673525c7d",
-  "datasetHash": "4f1b8f3f35bcc63eb923a189815a8ef1f015598477fff7691643eef46a9fbf0d",
+  "characterDatasetHash": "b97d504f493f7731c3467faf86710ec7f8553706b5baf2def41326c533454c5b",
+  "datasetHash": "57c252e081557b2951b40eca8ee825cc0851f0557f270a06e4447e9423bcd47a",
   "schemaVersion": 1,
   "startDate": "8298.1.1"
 } as const satisfies WorldArtifactState;
