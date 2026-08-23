@@ -25,7 +25,14 @@ function files(root, suffix) {
     if (statSync(path).isDirectory()) output.push(...files(path, suffix))
     else if (!suffix || path.endsWith(suffix)) output.push(path)
   }
-  return output.sort()
+  // Sort by forward-slash-normalized path to match Python's Path component ordering
+  // (Path.__lt__ compares path components, not the string representation, so
+  // "4/1/6.pbf" < "4/10/10.pbf" which differs from native string sort on Windows).
+  return output.sort((a, b) => {
+    const na = a.split(sep).join('/')
+    const nb = b.split(sep).join('/')
+    return na < nb ? -1 : na > nb ? 1 : 0
+  })
 }
 
 function runtimeRelative(path) {

@@ -354,7 +354,7 @@ def build_map(args: argparse.Namespace) -> dict[str, object]:
                 source, args.ck3_source, include_material_textures=not args.skip_tiles,
             ),
             map_size=source.map_size,
-            westeros_bounds=westeros_bounds,
+            westeros_bounds=westeros_bounds if args.skip_tiles else bounds,
             audit_bounds=None if args.skip_tiles else bounds,
             tile_counts=tile_counts,
             semantic=semantic,
