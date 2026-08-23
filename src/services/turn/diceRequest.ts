@@ -116,9 +116,11 @@ export interface ParsedDiceResolution {
 export function parseDiceResolutionOutput(rawText: string): ParsedDiceResolution {
   const safe = stripEmoji(rawText);
   const diceRequest = parseDiceRequest(safe);
-  const successCommands = extractJsonArrayFromXmlSafe(safe, 'state_cmd_success') as StateCommand[];
-  const failureCommands = extractJsonArrayFromXmlSafe(safe, 'state_cmd_failure') as StateCommand[];
-  const fallbackCommands = extractJsonArrayFromXmlSafe(safe, 'state_cmd') as StateCommand[];
+  // 丢弃缺少字符串 type 的畸形元素：下游 settlement/worldPreparation 多处用
+  // command.type.startsWith(...) 判分支，type 为 undefined 会直接崩溃。
+  const successCommands = extractJsonArrayFromXmlSafe(safe, 'state_cmd_success').filter(hasStringType) as StateCommand[];
+  const failureCommands = extractJsonArrayFromXmlSafe(safe, 'state_cmd_failure').filter(hasStringType) as StateCommand[];
+  const fallbackCommands = extractJsonArrayFromXmlSafe(safe, 'state_cmd').filter(hasStringType) as StateCommand[];
   const resolution = safe.match(/<resolution>([\s\S]*?)(?:<\/resolution>|$)/i)?.[1]?.trim() ?? '';
   const worldIntents = extractJsonArrayFromXmlSafe(safe, 'world_intent');
   if (!diceRequest.roll) {
@@ -195,4 +197,8 @@ function extractJsonArrayFromXmlSafe(rawText: string, tagName: string): any[] {
     }
   }
   return [];
+}
+
+function hasStringType(entry: unknown): boolean {
+  return typeof (entry as { type?: unknown })?.type === 'string';
 }

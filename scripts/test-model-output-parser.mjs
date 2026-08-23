@@ -86,3 +86,10 @@ test('流式与已保存正文不会显示协议标签或后续分支', () => {
   assert.equal(extractStreamingNarrativeContent('<narrate>正文。</narrate><branch>1. 选择</branch>'), '正文。');
   assert.equal(extractNarrativeContent('&lt;narrate&gt;旧正文。&lt;/narrate&gt;'), '旧正文。');
 });
+
+test('parseModelOutput 丢弃缺少 type 的畸形 state_cmd 元素', () => {
+  const raw = '<narrate>正文。</narrate><state_cmd>[{"type":"ADVANCE_TIME","days":1},{"no_type":true},{}]</state_cmd>';
+  const parsed = parseModelOutput(raw, 1, '继续');
+  assert.equal(parsed.stateCommands.length, 1);
+  assert.equal(parsed.stateCommands[0].type, 'ADVANCE_TIME');
+});

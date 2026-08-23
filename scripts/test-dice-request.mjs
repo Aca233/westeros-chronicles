@@ -113,3 +113,32 @@ test('roll:true 但双轨都为空时回退到普通 state_cmd', () => {
   // 回退时两边都用同一个 state_cmd
   assert.deepEqual(parsed.successCommands, parsed.failureCommands);
 });
+
+test('缺少 type 字段的畸形命令被丢弃，不致下游 startsWith 崩溃', () => {
+  const raw = `<resolution>行动。</resolution>
+<state_cmd>
+[{ "type": "ADVANCE_TIME", "days": 1 }, { "zone": "torso" }, {}]
+</state_cmd>
+<world_intent>[]</world_intent>`;
+  const parsed = parseDiceResolutionOutput(raw);
+  assert.equal(parsed.successCommands.length, 1);
+  assert.equal(parsed.successCommands[0].type, 'ADVANCE_TIME');
+});
+
+test('双轨 state_cmd 中畸形元素同样被过滤', () => {
+  const raw = `<dice_request>
+{ "roll": true, "dc": 14, "domain": "duel" }
+</dice_request>
+<state_cmd_success>
+[{ "type": "INJURE_ZONE", "zone": "torso", "level": "minor", "woundText": "划伤" }, { "no_type": true }]
+</state_cmd_success>
+<state_cmd_failure>
+[{}, { "type": "INJURE_ZONE", "zone": "arms", "level": "minor", "woundText": "中剑" }]
+</state_cmd_failure>
+<world_intent>[]</world_intent>`;
+  const parsed = parseDiceResolutionOutput(raw);
+  assert.equal(parsed.successCommands.length, 1);
+  assert.equal(parsed.successCommands[0].zone, 'torso');
+  assert.equal(parsed.failureCommands.length, 1);
+  assert.equal(parsed.failureCommands[0].zone, 'arms');
+});

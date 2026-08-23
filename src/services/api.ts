@@ -58,8 +58,8 @@ export function parseModelOutput(
     );
   }
 
-  // 强健解析 state_cmd
-  const stateCommands: StateCommand[] = extractJsonArrayFromXml(safeRawText, 'state_cmd');
+  // 强健解析 state_cmd（丢弃缺少字符串 type 的畸形元素，防止下游 .startsWith 崩溃）
+  const stateCommands: StateCommand[] = extractJsonArrayFromXml(safeRawText, 'state_cmd').filter(hasStateCommandType);
 
   return {
     turnNumber,
@@ -103,6 +103,12 @@ export function extractJsonArrayFromXml(rawText: string, tagName: string): any[]
     }
   }
   return [];
+}
+
+// 模型偶尔会把缺少 type 字段的畸形对象混进 state_cmd 数组；下游多处用
+// command.type.startsWith(...) 判分支，undefined 会导致崩溃。这里在解析出口统一过滤。
+function hasStateCommandType(command: unknown): command is StateCommand {
+  return typeof (command as { type?: unknown })?.type === 'string';
 }
 
 // 离线智能模拟器（未配置 API Key 时提供动态语义解析与 800+ 字小说）
