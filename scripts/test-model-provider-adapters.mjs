@@ -47,6 +47,29 @@ test('OpenAI-compatible adapter uses chat completions, bearer auth and parses SS
   assert.equal(partials.at(-1), output);
 });
 
+test('OpenAI-compatible adapter coerces object or array reasoning fields to text', async () => {
+  globalThis.fetch = async () => streamResponse([
+    'data: {"choices":[{"delta":{"reasoning":[{"text":"第一步"}]}}]}\n\n',
+    'data: {"choices":[{"delta":{"thinking":{"text":"第二步"}}}]}\n\n',
+    'data: {"choices":[{"delta":{"content":[{"type":"text","text":"结论"}]}}]}\n\n',
+    'data: [DONE]\n\n',
+  ]);
+  const config = { provider: 'custom', baseUrl: 'https://example.test/v1', apiKey: 'secret', model: 'demo', temperature: 0.7 };
+  const output = await requestModelCompletion({ config, messages, stream: true, maxTokens: 300 });
+  assert.equal(output, '<think>\n第一步第二步\n</think>\n\n结论');
+  assert.ok(!output.includes('[object Object]'), `推理字段被拼成对象字面量：${output}`);
+});
+
+test('OpenAI-compatible non-streaming path coerces structured reasoning', async () => {
+  globalThis.fetch = async () => new Response(JSON.stringify({
+    choices: [{ message: { reasoning: { summary: '非流式推理' }, content: '非流式正文' } }],
+  }), { status: 200 });
+  const config = { provider: 'custom', baseUrl: 'https://example.test/v1', apiKey: 'secret', model: 'demo', temperature: 0.7 };
+  const output = await requestModelCompletion({ config, messages, stream: false, maxTokens: 300 });
+  assert.equal(output, '<think>\n非流式推理\n</think>\n\n非流式正文');
+  assert.ok(!output.includes('[object Object]'));
+});
+
 test('Anthropic adapter uses messages protocol and parses content block streaming', async () => {
   const calls = [];
   globalThis.fetch = async (url, init) => {

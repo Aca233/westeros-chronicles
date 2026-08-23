@@ -5,11 +5,32 @@ function endpoint(baseUrl: string, path: string): string {
   return `${baseUrl.replace(/\/+$/, '')}${path}`;
 }
 
+// 推理/正文字段的形状容错：不同 OpenAI 兼容端点把思考放在字符串、
+// 分片数组或 {text|content|summary} 对象里；直接 += 会把对象拼成 [object Object]。
+function coerceText(value: unknown): string {
+  if (typeof value === 'string') return value;
+  if (Array.isArray(value)) return value.map(coerceText).join('');
+  if (value && typeof value === 'object') {
+    const record = value as Record<string, unknown>;
+    for (const key of ['text', 'content', 'reasoning', 'thinking', 'thought', 'summary']) {
+      if (key in record) {
+        const inner = coerceText(record[key]);
+        if (inner) return inner;
+      }
+    }
+  }
+  return '';
+}
+
+function reasoningOf(delta: Record<string, unknown>): string {
+  return coerceText(delta.reasoning_content ?? delta.reasoning ?? delta.thought ?? delta.thinking);
+}
+
 function appendDelta(payload: any, state: { reasoning: string; content: string }): void {
   const delta = payload?.choices?.[0]?.delta;
   if (!delta) return;
-  state.reasoning += delta.reasoning_content || delta.reasoning || delta.thought || delta.thinking || '';
-  state.content += delta.content || '';
+  state.reasoning += reasoningOf(delta);
+  state.content += coerceText(delta.content);
 }
 
 async function readSse(response: Response, onChunk?: (partialText: string) => void): Promise<string> {
@@ -66,8 +87,8 @@ export const openAiCompatibleAdapter: ModelProviderAdapter = {
     const payload = await response.json();
     const message = payload?.choices?.[0]?.message;
     return normalizeModelOutput(
-      message?.reasoning_content || message?.reasoning || '',
-      message?.content || '',
+      reasoningOf((message ?? {}) as Record<string, unknown>),
+      coerceText(message?.content),
     );
   },
   async listModels(config, signal) {
