@@ -105,7 +105,7 @@ export interface ItemDefinition {
 
 export interface ItemHistoryEntry {
   id: string;
-  type: 'created' | 'acquired' | 'gifted' | 'inherited' | 'stolen' | 'lost' | 'recovered' | 'repaired' | 'heirloom';
+  type: 'created' | 'acquired' | 'gifted' | 'inherited' | 'stolen' | 'lost' | 'recovered' | 'repaired' | 'damaged' | 'heirloom';
   date: string;
   summary: string;
   actorId?: string;

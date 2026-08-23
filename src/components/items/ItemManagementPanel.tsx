@@ -162,7 +162,7 @@ function ItemAssetContext({
       ) : custodianAssetId && onOpenAsset ? (
         <button type="button" onClick={() => onOpenAsset(custodianAssetId)} className="hover:text-gold-bright">{custodianLabel}保管</button>
       ) : <span>{custodianLabel}保管</span>}
-      {asset.status !== 'normal' && <span className="border border-gold-deep/60 px-1 text-gold-dim">{asset.status === 'stolen' ? '失窃争议' : asset.status === 'contested' ? '归属争议' : '继承待定'}</span>}
+      {asset.status !== 'normal' && <span className="border border-gold-deep/60 px-1 text-gold-dim">{asset.status === 'stolen' ? '失窃争议' : '继承待定'}</span>}
       <span className="ml-auto flex items-center gap-1.5">
         {locationId && locationName && onOpenLocation && <button type="button" onClick={() => onOpenLocation(locationId)} className="text-gold-dim hover:text-gold-bright">{locationName}</button>}
         {onOpenAsset && <button type="button" onClick={() => onOpenAsset(asset.id)} className="text-gold-dim hover:text-gold-bright">{assetName}</button>}

@@ -17,7 +17,7 @@ import { buildWorldAssetBaseline, createWorldBaselineSnapshot, worldAssetId, typ
 import { commitWorldTransaction } from '../../features/world/worldTransactions';
 import { planJourneyTransaction, planExplicitArrivalTransaction } from '../../features/world/worldTravelRules';
 import { projectWorldAsset, projectWorldCharacter, resolveAssetMapLocation } from '../../features/world/worldProjection';
-import { resolveWorldIntents, type RejectedWorldIntent, type ResolvedDirectWorldIntent, type ResolvedLocationWorldIntent, type ResolvedWorldIntent } from '../../features/world/worldIntentResolver';
+import { resolveWorldIntents, type RejectedWorldIntent, type ResolvedDirectWorldIntent, type ResolvedLocationWorldIntent, type ResolvedTitleWorldIntent, type ResolvedWorldIntent } from '../../features/world/worldIntentResolver';
 import { planAssetIntent, planCreateSiteIntent } from '../../features/world/worldAssetRules';
 import { planTitleIntent } from '../../features/world/worldTitleRules';
 import type { RoutePlan, RouteRequest } from '../../features/map/routing/types';
@@ -108,7 +108,7 @@ export function isTravelCommandType(type: string): boolean {
 }
 
 const ASSET_INTENT_KINDS = new Set<WorldIntent['kind']>([
-  'gift_asset', 'steal_asset', 'transfer_asset', 'equip_asset', 'unequip_asset',
+  'gift_asset', 'steal_asset', 'inherit_asset', 'transfer_asset', 'equip_asset', 'unequip_asset',
 ]);
 const TITLE_INTENT_KINDS = new Set<WorldIntent['kind']>([
   'grant_title', 'inherit_title', 'settle_title_war', 'revoke_title', 'occupy_title',
@@ -419,6 +419,20 @@ async function handleDirectAssetIntent(
         visibility: 'secret',
         knownBy: [...new Set(witnessIds)],
       });
+    } else if (intent.kind === 'inherit_asset') {
+      const claim = intent as Extract<ResolvedDirectWorldIntent, { kind: 'inherit_asset' }>;
+      transaction.mutations.push(...planAssetIntent(claim, { baseline: env.baseline, runtime }));
+      transaction.eventDrafts.push({
+        type: 'intent.inherit_asset',
+        actorIds: [claim.actorId],
+        subjectRefs: [
+          { type: 'asset', assetId: claim.assetId },
+          { type: 'character', characterId: claim.recipientId },
+        ],
+        location: { ...env.gameState.lord.location },
+        reason: intent.evidenceText,
+        visibility: 'public',
+      });
     } else {
       const gift = intent as Extract<ResolvedDirectWorldIntent, { kind: 'gift_asset' }>;
       transaction.mutations.push(...planAssetIntent(gift, { baseline: env.baseline, runtime }));
@@ -443,6 +457,42 @@ async function handleDirectAssetIntent(
   }
 }
 
+async function handleTitleIntent(
+  intent: ResolvedWorldIntent,
+  _target: LocationRef | undefined,
+  env: TurnIntentEnv,
+): Promise<void> {
+  const { transaction } = env;
+  const runtime = env.gameState.worldRuntime;
+  try {
+    transaction.intents.push(intent);
+    const titleIntent = intent as ResolvedTitleWorldIntent;
+    transaction.mutations.push(...planTitleIntent(titleIntent, {
+      baseline: env.baseline,
+      runtime,
+    }));
+    const subjectRefs: WorldTransaction['eventDrafts'][number]['subjectRefs'] = [
+      { type: 'title', titleId: titleIntent.titleId },
+    ];
+    if ('recipientId' in titleIntent) {
+      subjectRefs.push({ type: 'character', characterId: titleIntent.recipientId });
+    }
+    transaction.eventDrafts.push({
+      type: `intent.${titleIntent.kind}`,
+      actorIds: [titleIntent.actorId],
+      subjectRefs,
+      reason: titleIntent.evidenceText,
+      visibility: 'public',
+    });
+  } catch (error) {
+    env.rejected.push({
+      intent: { ...intent },
+      reason: stripEmoji(error instanceof Error ? error.message : '头衔意图无法结算'),
+    });
+    transaction.intents = transaction.intents.filter((kept) => kept !== intent);
+  }
+}
+
 const INTENT_HANDLERS: Partial<Record<ResolvedWorldIntent['kind'], TurnIntentHandler>> = {
   arrive: handleArrive,
   plan_travel: handleTravelCommand,
@@ -456,7 +506,13 @@ const INTENT_HANDLERS: Partial<Record<ResolvedWorldIntent['kind'], TurnIntentHan
   move_inside_location: handleMoveInside,
   gift_asset: handleDirectAssetIntent,
   steal_asset: handleDirectAssetIntent,
+  inherit_asset: handleDirectAssetIntent,
   create_site: handleDirectAssetIntent,
+  grant_title: handleTitleIntent,
+  inherit_title: handleTitleIntent,
+  settle_title_war: handleTitleIntent,
+  revoke_title: handleTitleIntent,
+  occupy_title: handleTitleIntent,
 };
 
 export async function prepareWorldTurn(input: PrepareWorldTurnInput): Promise<PreparedWorldTurn> {

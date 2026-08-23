@@ -153,6 +153,21 @@ export const TravelPlanner: React.FC<TravelPlannerProps> = ({ destinationId, ori
           : false)
     .map((vehicle) => vehicle.id), [playerLocation, travelMode, vehicles])
 
+  const availableModes = useMemo(() => {
+    const coLocated = Object.values(vehicles).filter((vehicle) => sameWorldLocation(vehicle.location, playerLocation))
+    return new Set<TravelMode>([
+      'walk',
+      ...(coLocated.some((v) => v.type === 'packhorse') ? ['horse' as TravelMode] : []),
+      ...(coLocated.some((v) => v.type === 'wagon') ? ['carriage' as TravelMode] : []),
+      ...(coLocated.some((v) => v.type === 'ship') ? ['ship' as TravelMode] : []),
+    ])
+  }, [playerLocation, vehicles])
+
+  // 当前模式因载具不再同地而不可用时，回退到步行
+  useEffect(() => {
+    if (!availableModes.has(travelMode)) setTravelMode('walk')
+  }, [availableModes, travelMode])
+
   const activeForDestination = activeJourney?.routePlan.to === destinationId && activeJourney.status !== 'arrived'
   const pendingRoute = commandRoute(pendingTravelCommand)
   const pendingForDestination = pendingRoute?.to === destinationId
@@ -273,7 +288,11 @@ export const TravelPlanner: React.FC<TravelPlannerProps> = ({ destinationId, ori
             <label>
               <span>方式</span>
               <select value={travelMode} onChange={(event) => setTravelMode(event.target.value as TravelMode)}>
-                {TRAVEL_MODES.map((option) => <option key={option.id} value={option.id}>{option.label}</option>)}
+                {TRAVEL_MODES.map((option) => (
+                  <option key={option.id} value={option.id} disabled={!availableModes.has(option.id)}>
+                    {option.label}{availableModes.has(option.id) ? '' : '（无载具）'}
+                  </option>
+                ))}
               </select>
             </label>
           </div>

@@ -89,7 +89,7 @@ const startStateSchema = z.object({
     instanceId: z.string().min(1), definitionId: z.string().min(1), kind: z.enum(['item', 'site', 'vehicle']),
     lawfulOwner: principal.nullable(), controller: principal.nullable(), custodian: custodian.nullable(),
     placement: assetPlacement.nullable(), equippedPosition: equipmentPosition.nullable(),
-    status: z.enum(['normal', 'stolen', 'contested', 'inheritance_pending']),
+    status: z.enum(['normal', 'stolen', 'inheritance_pending']),
     overrides: z.object({ customName: z.string().optional(), charges: z.number().int().nonnegative().optional(), renown: z.number().nonnegative().optional(), isHeirloom: z.boolean().optional() }).strict().optional(),
   }).strict()),
   sites: z.array(z.object({

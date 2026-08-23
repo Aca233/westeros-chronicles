@@ -4,7 +4,7 @@ import type { WorldLocationRef } from '../../domain/worldLocation';
 export type { WorldDate, WorldDateAdvance } from '../../domain/worldDate';
 import type { StateCommand } from '../../types/stateCommand';
 
-export type CanonicalEventStatus = 'historical' | 'scheduled' | 'occurred' | 'diverged' | 'suppressed';
+export type CanonicalEventStatus = 'historical' | 'scheduled' | 'occurred' | 'diverged';
 
 export interface CanonicalEventState {
   eventId: string;

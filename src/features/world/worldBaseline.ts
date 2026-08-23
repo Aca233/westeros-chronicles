@@ -37,7 +37,7 @@ export interface WorldAssetBaseline {
   custodian: WorldCustodianRef | null;
   placement: AssetPlacement | null;
   equippedPosition: EquipmentPosition | null;
-  status: 'normal' | 'stolen' | 'contested' | 'inheritance_pending';
+  status: 'normal' | 'stolen' | 'inheritance_pending';
 }
 
 export interface WorldBaselineSnapshot {

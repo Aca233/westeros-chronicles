@@ -98,6 +98,20 @@ export function planAssetIntent(
         { type: 'asset.set-status', assetId: intent.assetId, status: 'stolen' },
       ];
     }
+    case 'inherit_asset': {
+      if (asset.status !== 'inheritance_pending') {
+        throw new Error(`资产 ${asset.id} 当前状态为 ${asset.status ?? 'normal'}，不在待继承状态`);
+      }
+      requireCharacter(context, intent.recipientId);
+      const heir = directCharacterRef(intent.recipientId);
+      return [
+        { type: 'asset.set-lawful-owner', assetId: intent.assetId, owner: heir },
+        { type: 'asset.set-controller', assetId: intent.assetId, controller: heir },
+        { type: 'asset.set-custodian', assetId: intent.assetId, custodian: heir },
+        { type: 'asset.place', assetId: intent.assetId, placement: heir },
+        { type: 'asset.set-status', assetId: intent.assetId, status: 'normal' },
+      ];
+    }
     case 'transfer_asset': {
       requireDirectCustody(asset, intent.actorId);
       requireContainerTarget(context, intent.placement);

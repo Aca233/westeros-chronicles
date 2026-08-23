@@ -60,7 +60,6 @@ const EVENT_TITLES: Readonly<Record<string, string>> = {
   'travel.progress': '旅程继续推进',
   'timeline.occurred': '原作节点发生',
   'timeline.diverged': '原作节点偏离',
-  'timeline.replaced': '世界事件取代原作节点',
 };
 
 export function worldEventDisplayTitle(event: WorldEvent): string {

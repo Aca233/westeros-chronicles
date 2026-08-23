@@ -144,9 +144,19 @@ export function applyStateCommands(
             && entry.effect.zones.includes(cmd.zone)
             && entry.effect.damageTags.some((tag) => damageTags.includes(tag)));
           const armorNames = [...new Set(matchingArmor.map((entry) => entry.itemName))];
+          const itemContext = createItemActionContext(next);
           for (const instanceId of new Set(matchingArmor.map((entry) => entry.instanceId))) {
             const instance = next.items.instances[instanceId];
-            if (instance) instance.durability = Math.max(0, instance.durability - 5);
+            if (instance) {
+              instance.durability = Math.max(0, instance.durability - 5);
+              instance.history.push({
+                id: `${instanceId}:damaged:${Date.now()}:${Math.random().toString(36).slice(2, 6)}`,
+                type: 'damaged',
+                date: itemContext.gameDate,
+                summary: `因格挡【${cmd.level}】伤势而受损`,
+                actorId: itemContext.actorId,
+              });
+            }
           }
           changesLog.push(` 护甲减伤: ${armorNames.join('、') || '当前防护'}将伤势由【${cmd.level}】减轻为【${effectiveLevel}】，耐久受损`);
         }
@@ -230,21 +240,30 @@ export function applyStateCommands(
         break;
       }
 
-      //  金币收支
+      //  金币收支（余额不足时拒绝支出，不透支）
       case 'MODIFY_GOLD': {
+        const reason = cmd.reason ? `（${cmd.reason}）` : '';
         if (cmd.goldDragons !== undefined) {
           const goldDelta = applyPositiveMultiplier(cmd.goldDragons, traitEffects.multipliers.goldGain);
-          next.goldDragons = Math.max(0, next.goldDragons + goldDelta);
-          changesLog.push(
-            goldDelta >= 0 ? ` 获得金龙: +${goldDelta}` : ` 支出金龙: ${goldDelta}`
-          );
+          if (goldDelta < 0 && next.goldDragons + goldDelta < 0) {
+            changesLog.push(` 金龙不足，支出未执行: 需 ${Math.abs(goldDelta)}，仅有 ${next.goldDragons}${reason}`);
+          } else {
+            next.goldDragons = Math.max(0, next.goldDragons + goldDelta);
+            changesLog.push(
+              goldDelta >= 0 ? ` 获得金龙: +${goldDelta}${reason}` : ` 支出金龙: ${goldDelta}${reason}`
+            );
+          }
         }
         if (cmd.silverStags !== undefined) {
           const silverDelta = applyPositiveMultiplier(cmd.silverStags, traitEffects.multipliers.goldGain);
-          next.silverStags = Math.max(0, next.silverStags + silverDelta);
-          changesLog.push(
-            silverDelta >= 0 ? ` 获得银鹿: +${silverDelta}` : ` 支出银鹿: ${silverDelta}`
-          );
+          if (silverDelta < 0 && next.silverStags + silverDelta < 0) {
+            changesLog.push(` 银鹿不足，支出未执行: 需 ${Math.abs(silverDelta)}，仅有 ${next.silverStags}${reason}`);
+          } else {
+            next.silverStags = Math.max(0, next.silverStags + silverDelta);
+            changesLog.push(
+              silverDelta >= 0 ? ` 获得银鹿: +${silverDelta}${reason}` : ` 支出银鹿: ${silverDelta}${reason}`
+            );
+          }
         }
         break;
       }

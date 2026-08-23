@@ -18,7 +18,7 @@ const TRANSACTION_STATUSES = new Set(['pending', 'committed', 'rejected', 'cance
 const TRANSACTION_SOURCES = new Set(['ui_action', 'player_input']);
 const ACTIVITIES = new Set(['idle', 'travelling', 'imprisoned', 'missing']);
 const ASSET_KINDS = new Set(['item', 'site', 'vehicle']);
-const ASSET_STATUSES = new Set(['normal', 'stolen', 'contested', 'inheritance_pending']);
+const ASSET_STATUSES = new Set(['normal', 'stolen', 'inheritance_pending']);
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);

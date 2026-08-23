@@ -54,6 +54,34 @@ test('roll:true 的输出解析为双轨命令', () => {
   assert.equal(parsed.failureCommands[0].zone, 'arms');
 });
 
+test('头衔意图被 resolver 接受而非拒绝', () => {
+  const raw = `<resolution>册封封臣。</resolution>
+<state_cmd>[]</state_cmd>
+<world_intent>
+[
+  { "kind": "grant_title", "actorId": "agot:Stark_3", "titleId": "b_the_north", "recipientId": "agot:Stark_5", "evidenceText": "艾德将北境封臣之权授予罗柏" },
+  { "kind": "occupy_title", "actorId": "agot:Lannister_2", "titleId": "b_harrenhal", "evidenceText": "兰尼斯特军占领赫伦堡" }
+]
+</world_intent>`;
+  const parsed = parseDiceResolutionOutput(raw);
+  assert.equal(parsed.worldIntents.length, 2);
+  assert.equal(parsed.worldIntents[0].kind, 'grant_title');
+  assert.equal(parsed.worldIntents[1].kind, 'occupy_title');
+});
+
+test('revoke_title 意图要求 holderId 字段', () => {
+  const raw = `<resolution>剥夺头衔。</resolution>
+<state_cmd>[]</state_cmd>
+<world_intent>
+[
+  { "kind": "revoke_title", "actorId": "agot:Stark_3", "titleId": "b_winterfell", "holderId": "agot:Stark_5", "evidenceText": "收回罗柏的临冬城封地" }
+]
+</world_intent>`;
+  const parsed = parseDiceResolutionOutput(raw);
+  assert.equal(parsed.worldIntents.length, 1);
+  assert.equal(parsed.worldIntents[0].kind, 'revoke_title');
+});
+
 test('无 dice_request 标签时默认不检定', () => {
   const raw = `<resolution>继续行动。</resolution>
 <state_cmd>
@@ -141,4 +169,32 @@ test('双轨 state_cmd 中畸形元素同样被过滤', () => {
   assert.equal(parsed.successCommands[0].zone, 'torso');
   assert.equal(parsed.failureCommands.length, 1);
   assert.equal(parsed.failureCommands[0].zone, 'arms');
+});
+
+test('头衔意图被 resolver 接受而非拒绝', () => {
+  const raw = `<resolution>册封封臣。</resolution>
+<state_cmd>[]</state_cmd>
+<world_intent>
+[
+  { "kind": "grant_title", "actorId": "agot:Stark_3", "titleId": "b_the_north", "recipientId": "agot:Stark_5", "evidenceText": "艾德将北境封臣之权授予罗柏" },
+  { "kind": "occupy_title", "actorId": "agot:Lannister_2", "titleId": "b_harrenhal", "evidenceText": "兰尼斯特军占领赫伦堡" }
+]
+</world_intent>`;
+  const parsed = parseDiceResolutionOutput(raw);
+  assert.equal(parsed.worldIntents.length, 2);
+  assert.equal(parsed.worldIntents[0].kind, 'grant_title');
+  assert.equal(parsed.worldIntents[1].kind, 'occupy_title');
+});
+
+test('revoke_title 意图要求 holderId 字段', () => {
+  const raw = `<resolution>剥夺头衔。</resolution>
+<state_cmd>[]</state_cmd>
+<world_intent>
+[
+  { "kind": "revoke_title", "actorId": "agot:Stark_3", "titleId": "b_winterfell", "holderId": "agot:Stark_5", "evidenceText": "收回罗柏的临冬城封地" }
+]
+</world_intent>`;
+  const parsed = parseDiceResolutionOutput(raw);
+  assert.equal(parsed.worldIntents.length, 1);
+  assert.equal(parsed.worldIntents[0].kind, 'revoke_title');
 });

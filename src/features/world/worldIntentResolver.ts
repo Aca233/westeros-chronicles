@@ -28,14 +28,27 @@ export const LOCATION_WORLD_INTENT_KINDS = [
 export const DIRECT_WORLD_INTENT_KINDS = [
   'gift_asset',
   'steal_asset',
+  'inherit_asset',
   'create_site',
+] as const satisfies readonly WorldIntent['kind'][];
+
+// 头衔与法理意图：同样不需要地点检索，只做结构校验；
+// 法理持有人匹配、授权资格等语义校验在 planTitleIntent 里完成。
+export const TITLE_WORLD_INTENT_KINDS = [
+  'grant_title',
+  'inherit_title',
+  'settle_title_war',
+  'revoke_title',
+  'occupy_title',
 ] as const satisfies readonly WorldIntent['kind'][];
 
 export type LocationWorldIntentKind = (typeof LOCATION_WORLD_INTENT_KINDS)[number];
 export type DirectWorldIntentKind = (typeof DIRECT_WORLD_INTENT_KINDS)[number];
+export type TitleWorldIntentKind = (typeof TITLE_WORLD_INTENT_KINDS)[number];
 export type ResolvedLocationWorldIntent = Extract<WorldIntent, { kind: LocationWorldIntentKind }>;
 export type ResolvedDirectWorldIntent = Extract<WorldIntent, { kind: DirectWorldIntentKind }>;
-export type ResolvedWorldIntent = ResolvedLocationWorldIntent | ResolvedDirectWorldIntent;
+export type ResolvedTitleWorldIntent = Extract<WorldIntent, { kind: TitleWorldIntentKind }>;
+export type ResolvedWorldIntent = ResolvedLocationWorldIntent | ResolvedDirectWorldIntent | ResolvedTitleWorldIntent;
 
 export interface UnresolvedWorldIntent {
   kind: WorldIntent['kind'];
@@ -48,6 +61,8 @@ export interface UnresolvedWorldIntent {
   recipientId?: CharacterId;
   siteType?: string;
   name?: string;
+  titleId?: string;
+  holderId?: CharacterId;
   evidenceText: string;
 }
 
@@ -68,6 +83,7 @@ export interface ResolveWorldIntentsResult {
 
 const LOCATION_KIND_SET = new Set<string>(LOCATION_WORLD_INTENT_KINDS);
 const DIRECT_KIND_SET = new Set<string>(DIRECT_WORLD_INTENT_KINDS);
+const TITLE_KIND_SET = new Set<string>(TITLE_WORLD_INTENT_KINDS);
 const INTENT_FIELDS = new Set([
   'kind',
   'actorId',
@@ -79,6 +95,8 @@ const INTENT_FIELDS = new Set([
   'recipientId',
   'siteType',
   'name',
+  'titleId',
+  'holderId',
   'evidenceText',
 ]);
 const SITE_TYPE_SET = new Set<string>(Object.keys(SITE_TYPE_LABELS));
@@ -136,7 +154,7 @@ function parseUnresolvedWorldIntent(value: unknown, index: number): UnresolvedWo
   const record = value as Record<string, unknown>;
   const unknownFields = Object.keys(record).filter((field) => !INTENT_FIELDS.has(field));
   if (unknownFields.length) throw new Error(`世界意图包含未知字段：${unknownFields.join('、')}`);
-  if (typeof record.kind !== 'string' || !(LOCATION_KIND_SET.has(record.kind) || DIRECT_KIND_SET.has(record.kind))) {
+  if (typeof record.kind !== 'string' || !(LOCATION_KIND_SET.has(record.kind) || DIRECT_KIND_SET.has(record.kind) || TITLE_KIND_SET.has(record.kind))) {
     throw new Error(`未知的世界意图类型：${String(record.kind ?? '')}`);
   }
   if (typeof record.evidenceText !== 'string' || !record.evidenceText.trim()) {
@@ -157,6 +175,8 @@ function parseUnresolvedWorldIntent(value: unknown, index: number): UnresolvedWo
     ...(record.recipientId !== undefined ? { recipientId: parseOptionalCharacterId(record.recipientId) } : {}),
     ...(record.siteType !== undefined ? { siteType: String(record.siteType) } : {}),
     ...(record.name !== undefined ? { name: trimmedOptionalString(record.name, 'name') } : {}),
+    ...(record.titleId !== undefined ? { titleId: trimmedOptionalString(record.titleId, 'titleId') } : {}),
+    ...(record.holderId !== undefined ? { holderId: parseOptionalCharacterId(record.holderId) } : {}),
     evidenceText: record.evidenceText.trim(),
   };
 }
@@ -197,6 +217,11 @@ export function resolveWorldIntent(
       if (!unresolved.assetId) throw new Error('steal_asset 意图缺少 assetId');
       return { kind, actorId, assetId: unresolved.assetId, evidenceText };
     }
+    if (kind === 'inherit_asset') {
+      if (!unresolved.assetId) throw new Error('inherit_asset 意图缺少 assetId');
+      if (!unresolved.recipientId) throw new Error('inherit_asset 意图缺少 recipientId');
+      return { kind, actorId, assetId: unresolved.assetId, recipientId: unresolved.recipientId, evidenceText };
+    }
     if (!unresolved.siteType) throw new Error('create_site 意图缺少 siteType');
     if (!context.currentLocation) throw new Error('缺少人物当前位置，不能创建据点');
     return {
@@ -206,6 +231,23 @@ export function resolveWorldIntent(
       ...(unresolved.name ? { name: unresolved.name } : {}),
       evidenceText,
     };
+  }
+  if (TITLE_KIND_SET.has(unresolved.kind)) {
+    const kind = unresolved.kind as TitleWorldIntentKind;
+    const actorId = unresolved.actorId || context.defaultActorId;
+    if (!actorId.trim()) throw new Error('世界意图缺少行动人物');
+    const evidenceText = unresolved.evidenceText?.trim();
+    if (!evidenceText) throw new Error('世界意图证据文本不能为空');
+    if (!unresolved.titleId) throw new Error(`${kind} 意图缺少 titleId`);
+    if (kind === 'revoke_title') {
+      if (!unresolved.holderId) throw new Error('revoke_title 意图缺少 holderId');
+      return { kind, actorId, titleId: unresolved.titleId, holderId: unresolved.holderId, evidenceText };
+    }
+    if (kind === 'occupy_title') {
+      return { kind, actorId, titleId: unresolved.titleId, evidenceText };
+    }
+    if (!unresolved.recipientId) throw new Error(`${kind} 意图缺少 recipientId`);
+    return { kind, actorId, titleId: unresolved.titleId, recipientId: unresolved.recipientId, evidenceText };
   }
   if (!LOCATION_KIND_SET.has(unresolved.kind)) {
     throw new Error(`未知的世界意图类型：${unresolved.kind}`);

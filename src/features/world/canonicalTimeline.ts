@@ -99,12 +99,6 @@ function conditionChangeBefore(event: CanonicalTimelineEvent, worldEvents: reado
   });
 }
 
-function replacementEventBefore(event: CanonicalTimelineEvent, worldEvents: readonly WorldEvent[]): WorldEvent | undefined {
-  return worldEvents.find((worldEvent) => worldEvent.type === 'timeline.replaced'
-    && worldEvent.canonicalEventId === event.id
-    && compareWorldDates(worldEvent.date, event.date) <= 0);
-}
-
 export function resolveDueCanonicalEvents(
   history: WorldHistoryState,
   schedule: readonly CanonicalTimelineEvent[],
@@ -122,32 +116,24 @@ export function resolveDueCanonicalEvents(
     if (!current || current.status !== 'scheduled') continue;
     if (compareWorldDates(event.date, from) <= 0 || compareWorldDates(event.date, to) > 0) continue;
     dueEvents.push(event);
-    const replacement = replacementEventBefore(event, worldEvents);
     const blockingDeath = deathEventBefore(event, worldEvents);
     const conditionChange = conditionChangeBefore(event, worldEvents);
     const changedType = conditionChange ? eventCommandType(conditionChange) : undefined;
-    const transition: CanonicalEventState = replacement
+    const transition: CanonicalEventState = blockingDeath
       ? {
         eventId: event.id,
-        status: 'suppressed',
+        status: 'diverged',
         resolvedOn: { ...to },
-        reason: `本世界事件“${eventLabel(replacement)}”已经取代这一原作节点。`,
+        reason: `关键人物已在“${eventLabel(blockingDeath)}”中改变命运，原作节点无法按既定方式发生。`,
       }
-      : blockingDeath
+      : conditionChange
         ? {
           eventId: event.id,
           status: 'diverged',
           resolvedOn: { ...to },
-          reason: `关键人物已在“${eventLabel(blockingDeath)}”中改变命运，原作节点无法按既定方式发生。`,
+          reason: `关键人物的${changedType ? CONDITION_CHANGING_COMMANDS[changedType] : '前置条件'}已在“${eventLabel(conditionChange)}”中改变，原作节点不能按原条件发生。`,
         }
-        : conditionChange
-          ? {
-            eventId: event.id,
-            status: 'diverged',
-            resolvedOn: { ...to },
-            reason: `关键人物的${changedType ? CONDITION_CHANGING_COMMANDS[changedType] : '前置条件'}已在“${eventLabel(conditionChange)}”中改变，原作节点不能按原条件发生。`,
-          }
-          : { eventId: event.id, status: 'occurred', resolvedOn: { ...event.date } };
+        : { eventId: event.id, status: 'occurred', resolvedOn: { ...event.date } };
     canonical[event.id] = transition;
     transitions.push(transition);
   }

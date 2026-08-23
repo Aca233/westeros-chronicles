@@ -272,7 +272,6 @@ function StoredItemInformation({
 const STATUS_LABELS: Record<WorldAssetBaseline['status'], string> = {
   normal: '关系正常',
   stolen: '失窃',
-  contested: '存在争议',
   inheritance_pending: '等待继承',
 };
 

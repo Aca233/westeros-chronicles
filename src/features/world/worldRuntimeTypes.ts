@@ -41,7 +41,7 @@ export interface AssetWorldPatch {
   custodian?: WorldCustodianRef | null;
   placement?: AssetPlacement | null;
   equippedPosition?: EquipmentPosition | null;
-  status?: 'normal' | 'stolen' | 'contested' | 'inheritance_pending';
+  status?: 'normal' | 'stolen' | 'inheritance_pending';
 }
 
 export type WorldIntent =
@@ -49,6 +49,7 @@ export type WorldIntent =
   | { kind: 'plan_travel' | 'start_travel' | 'pause_travel' | 'resume_travel' | 'reroute_travel' | 'return_travel' | 'advance_travel' | 'arrive' | 'cancel_travel' | 'move_inside_location'; actorId: CharacterId; targetRef?: WorldSubjectRef; elapsedTime?: WorldDateAdvance; evidenceText: string }
   | { kind: 'gift_asset'; actorId: CharacterId; assetId: string; recipientId: CharacterId; evidenceText: string }
   | { kind: 'steal_asset'; actorId: CharacterId; assetId: string; evidenceText: string }
+  | { kind: 'inherit_asset'; actorId: CharacterId; assetId: string; recipientId: CharacterId; evidenceText: string }
   | { kind: 'transfer_asset'; actorId: CharacterId; assetId: string; placement: AssetPlacement; evidenceText: string }
   | { kind: 'equip_asset'; actorId: CharacterId; assetId: string; position: EquipmentPosition; evidenceText: string }
   | { kind: 'unequip_asset'; actorId: CharacterId; assetId: string; placement: AssetPlacement; evidenceText: string }
@@ -99,7 +100,7 @@ export interface WorldRuntimeState {
 
 
 export type AssetWorldIntent = Extract<WorldIntent, {
-  kind: 'gift_asset' | 'steal_asset' | 'transfer_asset' | 'equip_asset' | 'unequip_asset';
+  kind: 'gift_asset' | 'steal_asset' | 'inherit_asset' | 'transfer_asset' | 'equip_asset' | 'unequip_asset';
 }>;
 
 export type WorldMutation =

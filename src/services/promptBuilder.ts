@@ -50,6 +50,7 @@ export const WORLD_INTENT_RESOLUTION_PROMPT = `
 | --- | --- | --- |
 | 在场 NPC 把自己直接保管的物品赠予他人 | gift_asset | assetId、recipientId |
 | 有人趁保管者不备窃取物品；必须同时在 <dice_request> 提出密谋检定，且只在成功轨输出本意图 | steal_asset | assetId |
+| 死者待继承的资产由合法继承人正式认领收回 | inherit_asset | assetId、recipientId |
 | 行动确立了新的储藏处（清点出一间库房、扎营建起辎重帐） | create_site | siteType（armory/wardrobe/room/warehouse/stable/camp/other）、可选 name |
 
 要求：
@@ -57,7 +58,26 @@ export const WORLD_INTENT_RESOLUTION_PROMPT = `
 2. gift 要求赠予者本人在场且物品在其直接保管中；steal 要求行动者与物品同地，且 evidenceText 引用原文。
 3. steal 未遂、被察觉或检定失败时，不得输出 steal_asset 意图；失败的后果走 state_cmd 的失败轨。
 4. create_site 建在行动者当前地点；程序按类型补默认容量，name 只在原文明确命名时填写。
-5. 从不由玩家控制的据点取用物品是可被世界记住的越权行为；确有必要时正常输出物品命令，不要隐瞒。`;
+5. 从不由玩家控制的据点取用物品是可被世界记住的越权行为；确有必要时正常输出物品命令，不要隐瞒。
+6. inherit_asset 只能针对状态为"待继承"的资产（原主已死亡）；recipientId 必须是合法继承人且在场。
+
+### 【头衔与法理意图】
+本回合出现头衔授予、继承、剥夺或占领时，同样写入 <world_intent>：
+
+| 场景 | kind | 关键字段 |
+| --- | --- | --- |
+| 君主或上级将某头衔正式授予他人 | grant_title | titleId、recipientId |
+| 头衔因前任死亡等原因依法由继承人继承 | inherit_title | titleId、recipientId |
+| 以武力或法理名义剥夺某人头衔 | revoke_title | titleId、holderId |
+| 军事占领某头衔领地（法理持有人不变，实际控制权转移） | occupy_title | titleId |
+| 战争或协商结束头衔争议，正式了结 | settle_title_war | titleId、recipientId |
+
+要求：
+1. titleId 只能使用世界切片中明确出现的稳定头衔 ID，不得编造。
+2. grant_title 与 inherit_title 的区别：grant 是在世者主动授予，inherit 是因死亡或退位依法传承。
+3. occupy_title 只转移实际控制权（controller），不动法理持有人（lawfulHolder）；原有持有人进入 contested 状态。
+4. revoke_title 必须提供 holderId 且与当前法理持有人一致，否则程序拒绝。
+5. settle_title_war 同时转移法理与控制权，用于战争结果或和平协议的正式了结。`;
 
 // 规则解析阶段使用的法则宪章：只负责判定当前行动能否改变世界，不写小说。
 // 叙事阶段使用的文学宪章见 GOT_LITERARY_PROMPT；两者职责互不重叠，禁止再合并。
@@ -166,11 +186,17 @@ export const GOT_CONSTITUTION_PROMPT = `
   // 获得物品时只能使用目录中已存在的 definitionId，并提供全局唯一 instanceId；不得凭空定义未知名剑、战甲或奇物。
   // 前端已排队的 ITEM_* 动作由程序在成功回复后结算，模型不得重复输出。
   //
-  //  肢体创伤、铠甲磨损、伤口治愈与金币收支：
+  //  肢体创伤、铠甲磨损、伤口治愈、状态与金币收支：
   // { "type": "INJURE_ZONE", "zone": "arms", "level": "minor", "woundText": "右臂格挡划伤" },
   // { "type": "HEAL_ZONE", "zone": "arms", "clearWound": "右臂格挡划伤" },
   // { "type": "SET_BLEEDING", "value": false },
+  // { "type": "SET_POISONED", "value": true },
+  // { "type": "SET_INFECTED", "value": false },
+  // { "type": "MODIFY_STAT", "stat": "martial", "delta": 1, "reason": "战火淬炼后的成长" },
+  // { "type": "ADD_TRAIT", "trait": "wrathful" },
+  // { "type": "CHANGE_TITLE", "title": "北境守护" },
   // { "type": "MODIFY_GOLD", "goldDragons": 100, "reason": "国王劳勃的丰厚赏赐" },
+  // 金币支出必须余额充足；不足时程序拒绝执行该笔扣减，不影响同一回合的其他命令。
   // 地图位置、人物移动和旅程进度只由地图旅行系统与统一回合结算。
   // 模型不得输出任何改变地点、移动人物或推进旅程的状态命令，也不得使用内部地点键。
 ]
