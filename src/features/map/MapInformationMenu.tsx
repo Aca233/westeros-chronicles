@@ -40,7 +40,7 @@ export const MapInformationMenu: React.FC<{
           <Icon /><span>{item.label}</span><span className="map-overlay-state">{preferences[item.key] ? '显示' : '隐藏'}</span>
         </button>
       })}
-      <small>人物与资产只显示当前伯爵领内的已知内容</small>
+      <small>显示所有已知人物与据点的位置</small>
     </div>}
   </div>
 }

@@ -2,7 +2,7 @@ export function needsCharacterNameData(input: {
   selectedCountyId: string | null
   charactersVisible: boolean
 }): boolean {
-  return input.selectedCountyId !== null && input.charactersVisible
+  return input.charactersVisible
 }
 
 export function needsPoliticalData(input: {

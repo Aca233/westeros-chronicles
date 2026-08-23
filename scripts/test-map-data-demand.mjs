@@ -3,8 +3,8 @@ import test from 'node:test'
 import { readFileSync } from 'node:fs'
 import { needsCharacterNameData, needsPoliticalData } from '../src/features/map/mapDataDemand.ts'
 
-test('人物姓名只在选中伯爵领且人物图层开启时请求', () => {
-  assert.equal(needsCharacterNameData({ selectedCountyId: null, charactersVisible: true }), false)
+test('人物姓名在人物图层开启时即请求，不受伯爵领选择限制', () => {
+  assert.equal(needsCharacterNameData({ selectedCountyId: null, charactersVisible: true }), true)
   assert.equal(needsCharacterNameData({ selectedCountyId: 'c_winterfell', charactersVisible: true }), true)
   assert.equal(needsCharacterNameData({ selectedCountyId: 'c_winterfell', charactersVisible: false }), false)
 })

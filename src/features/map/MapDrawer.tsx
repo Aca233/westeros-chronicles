@@ -135,9 +135,7 @@ export const MapDrawer: React.FC<MapDrawerProps> = ({ onSelectCharacter }) => {
     history: worldHistory,
     names: characterNames,
   }, mapLocations) : [], [characterNames, characterTurnContext?.characters, lord.location.locationId, lord.name, mapLocations, needsCharacters, playerCharacterId, worldHistory])
-  const allAssetPoints = useMemo(() => selection.countyId
-    ? projectKnownAssetMapPoints(lord.items, mapLocations)
-    : [], [lord.items, mapLocations, selection.countyId])
+  const allAssetPoints = useMemo(() => projectKnownAssetMapPoints(lord.items, mapLocations), [lord.items, mapLocations])
   const countyIdByLocationId = useMemo(() => new Map(
     semanticIndex?.memberships.flatMap((entry) => entry.countyId ? [[entry.locationId, entry.countyId] as const] : []) ?? [],
   ), [semanticIndex])
@@ -147,6 +145,14 @@ export const MapDrawer: React.FC<MapDrawerProps> = ({ onSelectCharacter }) => {
     characters: allCharacterPoints,
     assets: allAssetPoints,
   }), [allAssetPoints, allCharacterPoints, countyIdByLocationId, selection.countyId])
+
+  // 地图标记始终显示全量已知人物/据点，不受伯爵领选择限制
+  const mapSubjectPoints = useMemo(() => ({
+    characters: allCharacterPoints,
+    assets: allAssetPoints,
+    characterPoints: allCharacterPoints.slice(0, 8),
+    assetPoints: allAssetPoints.slice(0, 6),
+  }), [allCharacterPoints, allAssetPoints])
 
   const countyInteraction = useMemo(() => semanticIndex
     ? buildCountyInteractionIndex(mapLocations, semanticIndex)
@@ -309,10 +315,10 @@ export const MapDrawer: React.FC<MapDrawerProps> = ({ onSelectCharacter }) => {
             routePlan={displayedRoute}
             journey={activeJourney?.routePlan.id === displayedRoute?.id ? activeJourney : undefined}
             politicalStates={politicalStates}
-            characterPoints={scopedSubjects.characters}
-            assetPoints={scopedSubjects.assets}
-            characterMarkers={scopedSubjects.characterPoints}
-            assetMarkers={scopedSubjects.assetPoints}
+            characterPoints={mapSubjectPoints.characters}
+            assetPoints={mapSubjectPoints.assets}
+            characterMarkers={mapSubjectPoints.characterPoints}
+            assetMarkers={mapSubjectPoints.assetPoints}
           />
         </MapErrorBoundary> : loadError ? <div className="map-load-state" role="alert"><MapIcon className="h-8 w-8 text-gold" aria-hidden="true" /><strong>地图资料未能载入</strong><span>正文与人物卷宗仍可正常使用。</span><button type="button" className="btn-ghost map-retry-button" onClick={retryMap}><RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />重新载入地图</button></div>
           : <div className="map-load-state" aria-live="polite"><span className="map-loading-mark" aria-hidden="true" /><strong>正在展开地图</strong><span>读取本地地形与伯爵领索引</span></div>}
