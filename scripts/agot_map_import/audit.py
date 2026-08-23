@@ -11,14 +11,17 @@ def audit_map_records(
     locations: Sequence[MapLocationRecord],
     route_graph: RouteGraphRecord,
     map_size: tuple[int, int],
-    westeros_bounds: tuple[float, float, float, float],
+    bounds: tuple[float, float, float, float] | None = None,
 ) -> dict[str, object]:
     width, height = map_size
-    min_x, min_y, max_x, max_y = westeros_bounds
-    if width <= 0 or height <= 0 or min_x >= max_x or min_y >= max_y:
-        raise MapImportError("地图尺寸或维斯特洛裁剪范围无效")
-    if min_x < 0 or min_y < 0 or max_x > width or max_y > height:
-        raise MapImportError("维斯特洛裁剪范围超出原始地图")
+    if width <= 0 or height <= 0:
+        raise MapImportError("地图尺寸无效")
+    if bounds is not None:
+        min_x, min_y, max_x, max_y = bounds
+        if min_x >= max_x or min_y >= max_y:
+            raise MapImportError("地图裁剪范围无效")
+        if min_x < 0 or min_y < 0 or max_x > width or max_y > height:
+            raise MapImportError("地图裁剪范围超出原始地图")
 
     ids = [location.id for location in locations]
     duplicates = sorted(identifier for identifier, count in Counter(ids).items() if count > 1)
@@ -28,8 +31,9 @@ def audit_map_records(
     for location in locations:
         if not (0 <= location.map_x < width and 0 <= location.map_y < height):
             raise MapImportError(f"地点坐标超出地图：{location.id}")
-        if not (min_x <= location.map_x <= max_x and min_y <= location.map_y <= max_y):
-            raise MapImportError(f"地点坐标超出维斯特洛范围：{location.id}")
+        if bounds is not None:
+            if not (min_x <= location.map_x <= max_x and min_y <= location.map_y <= max_y):
+                raise MapImportError(f"地点坐标超出导入范围：{location.id}")
         if not location.region_id:
             raise MapImportError(f"地点缺少区域：{location.id}")
         if location.is_port and not location.is_coastal:
@@ -67,7 +71,7 @@ def audit_map_records(
 def audit_semantic_records(
     dataset,
     locations: Sequence[MapLocationRecord],
-    westeros_bounds: tuple[float, float, float, float],
+    bounds: tuple[float, float, float, float] | None = None,
 ) -> dict[str, object]:
     ranks = ("hegemon", "empire", "kingdom", "duchy", "county")
     rank_counts = Counter(boundary.rank for boundary in dataset.boundaries)
@@ -86,15 +90,16 @@ def audit_semantic_records(
     if duplicate_keys:
         raise MapImportError(f"语义领地重复：{duplicate_keys[:10]}")
 
-    min_x, min_y, max_x, max_y = westeros_bounds
     by_key = {(boundary.rank, boundary.title_id): boundary for boundary in dataset.boundaries}
     boundary_by_feature = {boundary.feature_id: boundary for boundary in dataset.boundaries}
     for boundary in dataset.boundaries:
         if not re.fullmatch(r"#[0-9a-f]{6}", boundary.title_color):
             raise MapImportError(f"语义领地颜色非法：{boundary.title_id}")
-        geom_min_x, geom_min_y, geom_max_x, geom_max_y = boundary.geometry.bounds
-        if geom_min_x < min_x or geom_min_y < min_y or geom_max_x > max_x or geom_max_y > max_y:
-            raise MapImportError(f"语义领地越出维斯特洛范围：{boundary.title_id}")
+        if bounds is not None:
+            min_x, min_y, max_x, max_y = bounds
+            geom_min_x, geom_min_y, geom_max_x, geom_max_y = boundary.geometry.bounds
+            if geom_min_x < min_x or geom_min_y < min_y or geom_max_x > max_x or geom_max_y > max_y:
+                raise MapImportError(f"语义领地越出导入范围：{boundary.title_id}")
     for title in dataset.titles:
         boundary = boundary_by_feature.get(title.feature_id)
         if boundary is None or (boundary.rank, boundary.title_id) != (title.rank, title.title_id):

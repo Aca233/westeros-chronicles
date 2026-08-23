@@ -16,4 +16,15 @@ h_test = {
             }
         }
     }
+    e_essos_test = {
+        color = { 100 150 200 }
+        k_braavos = {
+            color = { 55 20 120 }
+            d_braavos = {
+                c_braavos = {
+                    b_braavos = { province = 4 }
+                }
+            }
+        }
+    }
 }

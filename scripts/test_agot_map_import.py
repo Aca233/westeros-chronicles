@@ -1193,18 +1193,21 @@ class MapCliTests(unittest.TestCase):
             source = root / "2962333032"
             shutil.copytree(FIXTURE_ROOT, source)
             map_data = source / "map_data"
-            provinces = Image.new("RGB", (8, 6), (10, 20, 30))
+            provinces = Image.new("RGB", (12, 6), (10, 20, 30))
             for x in range(4, 8):
                 for y in range(6):
                     provinces.putpixel((x, y), (40, 50, 60))
+            for x in range(8, 12):
+                for y in range(6):
+                    provinces.putpixel((x, y), (100, 110, 120))
             provinces.save(map_data / "provinces.png")
-            Image.new("I;16", (8, 6), 32000).save(map_data / "heightmap.png")
-            Image.new("P", (8, 6), 254).save(map_data / "rivers.png")
-            Image.new("RGBA", (8, 6), (255, 255, 255, 255)).save(map_data / "mask-baronyroad.png")
+            Image.new("I;16", (12, 6), 32000).save(map_data / "heightmap.png")
+            Image.new("P", (12, 6), 254).save(map_data / "rivers.png")
+            Image.new("RGBA", (12, 6), (255, 255, 255, 255)).save(map_data / "mask-baronyroad.png")
             terrain = source / "gfx" / "map" / "terrain"
             terrain.mkdir(parents=True, exist_ok=True)
-            Image.new("RGBA", (8, 6), (0, 0, 0, 0)).save(terrain / "detail_index.tga")
-            Image.new("RGBA", (8, 6), (255, 0, 0, 0)).save(terrain / "detail_intensity.tga")
+            Image.new("RGBA", (12, 6), (0, 0, 0, 0)).save(terrain / "detail_index.tga")
+            Image.new("RGBA", (12, 6), (255, 0, 0, 0)).save(terrain / "detail_intensity.tga")
             (terrain / "materials.settings").write_text(
                 '{ { id = "plains" diffuse = "plains.dds" } }', encoding="utf-8",
             )
@@ -1218,13 +1221,13 @@ class MapCliTests(unittest.TestCase):
                     "--source", str(source),
                     "--data-output", str(data_output),
                     "--asset-output", str(asset_output),
-                    "--expected-size", "8", "6",
+                    "--expected-size", "12", "6",
                     "--max-vector-zoom", "0",
                     "--skip-tiles",
                 ])
             self.assertEqual(result, 0)
             manifest = json.loads((data_output / "manifest.json").read_text())
-            self.assertEqual(manifest["counts"]["locations"], 2)
+            self.assertEqual(manifest["counts"]["locations"], 3)
             self.assertEqual(manifest["schemaVersion"], 4)
             self.assertEqual(manifest["counts"]["terrainTiles"], 0)
             self.assertEqual(manifest["counts"]["terrainLightTiles"], 0)
@@ -1234,6 +1237,22 @@ class MapCliTests(unittest.TestCase):
             self.assertTrue((data_output / "semantic/titles.json").is_file())
             self.assertTrue((data_output / "reports/semantic.json").is_file())
             self.assertTrue((data_output / "reports/audit.json").is_file())
+            # Essos location shard should exist alongside Westeros shards
+            location_files = list((data_output / "locations").iterdir())
+            location_shard_ids = {f.stem for f in location_files}
+            self.assertIn("the_north", location_shard_ids)
+            self.assertIn("world_essos_free_cities", location_shard_ids)
+            # Essos barony should have hegemonId absent (no iron throne)
+            membership = json.loads((data_output / "semantic/membership.json").read_text())
+            essos_membership = [m for m in membership if m.get("regionId") == "world_essos_free_cities"]
+            self.assertTrue(len(essos_membership) >= 1)
+            for m in essos_membership:
+                self.assertNotIn("hegemonId", m)
+                self.assertEqual(m["empireId"], "e_essos_test")
+            # westerosBounds should always be present (describes tile extent)
+            bounds = manifest["westerosBounds"]
+            self.assertGreater(bounds["maxX"], bounds["minX"])
+            self.assertGreater(bounds["maxY"], bounds["minY"])
 
 
 class TerrainLightingTests(unittest.TestCase):

@@ -66,5 +66,5 @@ test('游戏地点全部来自全量地图空间且数量为数百级', () => {
 
 test('地图视觉清单和 schema 不因语义裁剪变化', () => {
   assert.equal(mapManifest.schemaVersion, 4);
-  assert.equal(searchIndex.length, 6094);
+  assert.equal(searchIndex.length, 7001);
 });

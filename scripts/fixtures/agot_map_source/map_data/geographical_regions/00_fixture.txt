@@ -16,3 +16,15 @@ world_westeros = {
         the_crownlands
     }
 }
+
+world_essos_free_cities = {
+    provinces = {
+        b_braavos
+    }
+}
+
+world_essos = {
+    regions = {
+        world_essos_free_cities
+    }
+}

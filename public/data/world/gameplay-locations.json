@@ -25,16 +25,64 @@
   },
   "counts": {
     "byReason": {
-      "event-reference": 19,
+      "event-reference": 20,
       "explicit": 3,
       "important-place": 13,
-      "major-route-port": 364,
-      "political-center": 205,
+      "major-route-port": 408,
+      "political-center": 262,
       "start-reference": 5
     },
-    "total": 562
+    "total": 657
   },
   "entries": [
+    {
+      "id": "b_aantayn",
+      "importance": 20,
+      "mapX": 2591,
+      "mapY": 2409,
+      "name": "安塔恩",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "village"
+    },
+    {
+      "id": "b_aantor",
+      "importance": 20,
+      "mapX": 2649,
+      "mapY": 2524,
+      "name": "安托尔",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "village"
+    },
+    {
+      "id": "b_aaraan",
+      "importance": 20,
+      "mapX": 2956,
+      "mapY": 3746,
+      "name": "阿拉兰",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "village"
+    },
+    {
+      "id": "b_abberyn",
+      "importance": 20,
+      "mapX": 2602,
+      "mapY": 2326,
+      "name": "阿伯里恩",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "city"
+    },
     {
       "id": "b_abercorn",
       "importance": 20,
@@ -63,7 +111,7 @@
       "id": "b_absher",
       "importance": 20,
       "mapX": 1945,
-      "mapY": 3987,
+      "mapY": 3986,
       "name": "厄运岛",
       "reasons": [
         "political-center"
@@ -75,7 +123,7 @@
       "id": "b_acidwash",
       "importance": 20,
       "mapX": 1955,
-      "mapY": 4231,
+      "mapY": 4230,
       "name": "酸洗滩",
       "reasons": [
         "political-center"
@@ -109,10 +157,46 @@
       "type": "castle"
     },
     {
+      "id": "b_adahurys",
+      "importance": 20,
+      "mapX": 2608,
+      "mapY": 3843,
+      "name": "阿达胡利斯",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "castle"
+    },
+    {
+      "id": "b_adaresso",
+      "importance": 20,
+      "mapX": 2920,
+      "mapY": 3348,
+      "name": "阿达莱索",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "village"
+    },
+    {
+      "id": "b_adaron_gates",
+      "importance": 20,
+      "mapX": 2630,
+      "mapY": 3706,
+      "name": "亚伦之门",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "city"
+    },
+    {
       "id": "b_adderdell",
       "importance": 20,
       "mapX": 1662,
-      "mapY": 3588,
+      "mapY": 3586,
       "name": "蝮蛇谷",
       "reasons": [
         "political-center"
@@ -145,6 +229,54 @@
       "type": "castle"
     },
     {
+      "id": "b_adorys",
+      "importance": 20,
+      "mapX": 2772,
+      "mapY": 3930,
+      "name": "阿多利斯",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "village"
+    },
+    {
+      "id": "b_aemtig",
+      "importance": 20,
+      "mapX": 2572,
+      "mapY": 2770,
+      "name": "艾姆提格",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "village"
+    },
+    {
+      "id": "b_aenah",
+      "importance": 20,
+      "mapX": 2962,
+      "mapY": 3480,
+      "name": "伊纳赫",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "city"
+    },
+    {
+      "id": "b_aercadar",
+      "importance": 20,
+      "mapX": 2643,
+      "mapY": 3970,
+      "name": "伊尔卡达",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "city"
+    },
+    {
       "id": "b_afskayl_cov",
       "importance": 20,
       "mapX": 1108,
@@ -155,6 +287,30 @@
       ],
       "regionId": "world_westeros_beyond_the_wall",
       "type": "village"
+    },
+    {
+      "id": "b_ahrios",
+      "importance": 20,
+      "mapX": 2800,
+      "mapY": 3624,
+      "name": "阿赫里欧斯",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "castle"
+    },
+    {
+      "id": "b_ahrosha",
+      "importance": 20,
+      "mapX": 2983,
+      "mapY": 3517,
+      "name": "阿尔洛沙",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "city"
     },
     {
       "id": "b_ain_dornk",
@@ -257,7 +413,7 @@
       "id": "b_alderedge",
       "importance": 20,
       "mapX": 1102,
-      "mapY": 2983,
+      "mapY": 2982,
       "name": "桤树滩",
       "reasons": [
         "political-center"
@@ -329,12 +485,25 @@
       "id": "b_allriver",
       "importance": 20,
       "mapX": 1369,
-      "mapY": 3271,
+      "mapY": 3270,
       "name": "全河滩",
       "reasons": [
         "political-center"
       ],
       "regionId": "world_westeros_the_reach",
+      "type": "village"
+    },
+    {
+      "id": "b_almodwyn",
+      "importance": 20,
+      "mapX": 2407,
+      "mapY": 3876,
+      "name": "阿尔莫德温",
+      "reasons": [
+        "political-center",
+        "major-route-port"
+      ],
+      "regionId": "world_stepstones",
       "type": "village"
     },
     {
@@ -377,7 +546,7 @@
       "id": "b_altons_rock",
       "importance": 20,
       "mapX": 743,
-      "mapY": 1238,
+      "mapY": 1237,
       "name": "阿尔顿岩",
       "reasons": [
         "major-route-port"
@@ -401,7 +570,7 @@
       "id": "b_amarack",
       "importance": 20,
       "mapX": 1239,
-      "mapY": 2110,
+      "mapY": 2111,
       "name": "紫色沼泽",
       "reasons": [
         "political-center"
@@ -413,7 +582,7 @@
       "id": "b_amarwell",
       "importance": 20,
       "mapX": 1626,
-      "mapY": 4109,
+      "mapY": 4108,
       "name": "阿玛尔井",
       "reasons": [
         "political-center"
@@ -458,10 +627,34 @@
       "type": "village"
     },
     {
+      "id": "b_ameanjel",
+      "importance": 20,
+      "mapX": 2649,
+      "mapY": 3241,
+      "name": "阿米扬杰尔",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "city"
+    },
+    {
+      "id": "b_amenogues",
+      "importance": 20,
+      "mapX": 2680,
+      "mapY": 3261,
+      "name": "伊蒙诺吉斯",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "village"
+    },
+    {
       "id": "b_anchor_point",
       "importance": 20,
       "mapX": 630,
-      "mapY": 2223,
+      "mapY": 2222,
       "name": "船锚角",
       "reasons": [
         "political-center"
@@ -497,7 +690,7 @@
       "id": "b_anchorlight",
       "importance": 20,
       "mapX": 1888,
-      "mapY": 2235,
+      "mapY": 2234,
       "name": "光锚镇",
       "reasons": [
         "political-center"
@@ -530,6 +723,18 @@
       "type": "city"
     },
     {
+      "id": "b_aneriros",
+      "importance": 20,
+      "mapX": 2948,
+      "mapY": 3538,
+      "name": "阿尼里洛斯",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "village"
+    },
+    {
       "id": "b_anglerage",
       "importance": 20,
       "mapX": 702,
@@ -557,7 +762,7 @@
       "id": "b_ant_hill",
       "importance": 20,
       "mapX": 1209,
-      "mapY": 3700,
+      "mapY": 3699,
       "name": "蚁丘堡",
       "reasons": [
         "political-center"
@@ -602,6 +807,18 @@
       "type": "castle"
     },
     {
+      "id": "b_antyne",
+      "importance": 20,
+      "mapX": 2769,
+      "mapY": 3699,
+      "name": "安提恩",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "city"
+    },
+    {
       "id": "b_anvil",
       "importance": 20,
       "mapX": 1986,
@@ -617,7 +834,7 @@
       "id": "b_apperly",
       "importance": 20,
       "mapX": 1484,
-      "mapY": 3456,
+      "mapY": 3455,
       "name": "阿珀利镇",
       "reasons": [
         "political-center"
@@ -641,7 +858,7 @@
       "id": "b_applebee",
       "importance": 20,
       "mapX": 844,
-      "mapY": 3827,
+      "mapY": 3828,
       "name": "果蜂堡",
       "reasons": [
         "political-center"
@@ -725,7 +942,7 @@
       "id": "b_arganbrook",
       "importance": 20,
       "mapX": 1308,
-      "mapY": 2452,
+      "mapY": 2451,
       "name": "坚果堡",
       "reasons": [
         "political-center"
@@ -746,10 +963,22 @@
       "type": "city"
     },
     {
+      "id": "b_argion",
+      "importance": 20,
+      "mapX": 2888,
+      "mapY": 3210,
+      "name": "阿尔吉昂",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "village"
+    },
+    {
       "id": "b_armigan",
       "importance": 20,
       "mapX": 2024,
-      "mapY": 3741,
+      "mapY": 3742,
       "name": "阿米根堡",
       "reasons": [
         "political-center"
@@ -785,7 +1014,7 @@
       "id": "b_arrowcrest",
       "importance": 20,
       "mapX": 2132,
-      "mapY": 2450,
+      "mapY": 2449,
       "name": "箭矢平原",
       "reasons": [
         "political-center"
@@ -843,6 +1072,18 @@
       "type": "castle"
     },
     {
+      "id": "b_ary_tyo",
+      "importance": 20,
+      "mapX": 2868,
+      "mapY": 2431,
+      "name": "阿利·提奥",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "city"
+    },
+    {
       "id": "b_ashburn",
       "importance": 20,
       "mapX": 1694,
@@ -894,7 +1135,7 @@
       "id": "b_ashlar",
       "importance": 20,
       "mapX": 786,
-      "mapY": 1532,
+      "mapY": 1531,
       "name": "方石堡",
       "reasons": [
         "political-center"
@@ -930,7 +1171,7 @@
       "id": "b_ashplain",
       "importance": 20,
       "mapX": 1307,
-      "mapY": 3990,
+      "mapY": 3989,
       "name": "烬原",
       "reasons": [
         "political-center"
@@ -954,12 +1195,24 @@
       "id": "b_ashwater",
       "importance": 20,
       "mapX": 738,
-      "mapY": 2876,
+      "mapY": 2875,
       "name": "灰水山",
       "reasons": [
         "political-center"
       ],
       "regionId": "world_westeros_the_westerlands",
+      "type": "village"
+    },
+    {
+      "id": "b_assago",
+      "importance": 20,
+      "mapX": 2611,
+      "mapY": 2673,
+      "name": "阿萨戈",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
       "type": "village"
     },
     {
@@ -978,12 +1231,24 @@
       "id": "b_auld_forest",
       "importance": 20,
       "mapX": 1578,
-      "mapY": 624,
+      "mapY": 623,
       "name": "凋零森林",
       "reasons": [
         "political-center"
       ],
       "regionId": "world_westeros_beyond_the_wall",
+      "type": "village"
+    },
+    {
+      "id": "b_ausfold",
+      "importance": 20,
+      "mapX": 2756,
+      "mapY": 2919,
+      "name": "奥斯福德",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
       "type": "village"
     },
     {
@@ -1026,7 +1291,7 @@
       "id": "b_axe_lick",
       "importance": 20,
       "mapX": 1876,
-      "mapY": 1630,
+      "mapY": 1629,
       "name": "斧犁原",
       "reasons": [
         "political-center"
@@ -1062,7 +1327,7 @@
       "id": "b_axfirth",
       "importance": 20,
       "mapX": 657,
-      "mapY": 2535,
+      "mapY": 2537,
       "name": "斧头湾",
       "reasons": [
         "political-center",
@@ -1099,7 +1364,7 @@
       "id": "b_bad_path",
       "importance": 20,
       "mapX": 782,
-      "mapY": 464,
+      "mapY": 463,
       "name": "凄惨小径",
       "reasons": [
         "political-center"
@@ -1136,13 +1401,25 @@
       "id": "b_baden",
       "importance": 20,
       "mapX": 616,
-      "mapY": 2541,
+      "mapY": 2540,
       "name": "巴登村",
       "reasons": [
         "political-center"
       ],
       "regionId": "world_westeros_the_iron_islands",
       "type": "city"
+    },
+    {
+      "id": "b_baegerys",
+      "importance": 20,
+      "mapX": 2864,
+      "mapY": 4024,
+      "name": "贝格利斯",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "village"
     },
     {
       "id": "b_baileywood",
@@ -1172,7 +1449,7 @@
       "id": "b_bald_creek",
       "importance": 20,
       "mapX": 1785,
-      "mapY": 1991,
+      "mapY": 1992,
       "name": "光秃溪流",
       "reasons": [
         "political-center"
@@ -1205,6 +1482,18 @@
       "type": "village"
     },
     {
+      "id": "b_ballaean",
+      "importance": 20,
+      "mapX": 2882,
+      "mapY": 3935,
+      "name": "巴拉安",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "castle"
+    },
+    {
       "id": "b_bandallon",
       "importance": 20,
       "mapX": 682,
@@ -1215,6 +1504,19 @@
       ],
       "regionId": "world_westeros_the_reach",
       "type": "castle"
+    },
+    {
+      "id": "b_banefalter",
+      "importance": 20,
+      "mapX": 2285,
+      "mapY": 3834,
+      "name": "灾祸山",
+      "reasons": [
+        "political-center",
+        "major-route-port"
+      ],
+      "regionId": "world_stepstones",
+      "type": "village"
     },
     {
       "id": "b_banefort",
@@ -1257,12 +1559,24 @@
       "id": "b_bannerstead",
       "importance": 20,
       "mapX": 953,
-      "mapY": 3367,
+      "mapY": 3366,
       "name": "纹章镇",
       "reasons": [
         "political-center"
       ],
       "regionId": "world_westeros_the_reach",
+      "type": "city"
+    },
+    {
+      "id": "b_baqas",
+      "importance": 20,
+      "mapX": 2831,
+      "mapY": 3804,
+      "name": "巴卡斯",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
       "type": "city"
     },
     {
@@ -1329,7 +1643,7 @@
       "id": "b_barleycross",
       "importance": 20,
       "mapX": 947,
-      "mapY": 4014,
+      "mapY": 4013,
       "name": "麦粒路口",
       "reasons": [
         "political-center"
@@ -1377,13 +1691,25 @@
       "id": "b_barretton",
       "importance": 20,
       "mapX": 1228,
-      "mapY": 3006,
+      "mapY": 3007,
       "name": "贝雷屯",
       "reasons": [
         "political-center"
       ],
       "regionId": "world_westeros_the_riverlands",
       "type": "city"
+    },
+    {
+      "id": "b_bartock",
+      "importance": 20,
+      "mapX": 2701,
+      "mapY": 2706,
+      "name": "巴托克",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "village"
     },
     {
       "id": "b_basemont",
@@ -1413,7 +1739,7 @@
       "id": "b_bastards_cradle",
       "importance": 20,
       "mapX": 635,
-      "mapY": 4113,
+      "mapY": 4111,
       "name": "野种湾",
       "reasons": [
         "major-route-port"
@@ -1462,7 +1788,7 @@
       "id": "b_battle_stream",
       "importance": 20,
       "mapX": 1542,
-      "mapY": 1292,
+      "mapY": 1291,
       "name": "战流山",
       "reasons": [
         "political-center"
@@ -1507,6 +1833,18 @@
       "type": "castle"
     },
     {
+      "id": "b_bays_chair",
+      "importance": 20,
+      "mapX": 2860,
+      "mapY": 2522,
+      "name": "长官海湾",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "city"
+    },
+    {
       "id": "b_beach_hook",
       "importance": 20,
       "mapX": 769,
@@ -1547,7 +1885,7 @@
       "id": "b_beaconbridge",
       "importance": 20,
       "mapX": 774,
-      "mapY": 3926,
+      "mapY": 3925,
       "name": "灯塔桥",
       "reasons": [
         "major-route-port"
@@ -1568,10 +1906,22 @@
       "type": "castle"
     },
     {
+      "id": "b_beadu",
+      "importance": 20,
+      "mapX": 2534,
+      "mapY": 2967,
+      "name": "比阿都",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "village"
+    },
+    {
       "id": "b_beaks_break",
       "importance": 20,
       "mapX": 1853,
-      "mapY": 3497,
+      "mapY": 3496,
       "name": "碎喙林",
       "reasons": [
         "political-center"
@@ -1583,7 +1933,7 @@
       "id": "b_bear_ledge",
       "importance": 20,
       "mapX": 1111,
-      "mapY": 727,
+      "mapY": 729,
       "name": "熊架",
       "reasons": [
         "political-center"
@@ -1677,10 +2027,22 @@
       "type": "village"
     },
     {
+      "id": "b_bedrigues",
+      "importance": 20,
+      "mapX": 2557,
+      "mapY": 3067,
+      "name": "贝德里格",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "village"
+    },
+    {
       "id": "b_bellmare",
       "importance": 20,
       "mapX": 815,
-      "mapY": 4017,
+      "mapY": 4016,
       "name": "麋鹿镇",
       "reasons": [
         "political-center"
@@ -1785,6 +2147,18 @@
       "type": "castle"
     },
     {
+      "id": "b_benzynne",
+      "importance": 20,
+      "mapX": 2649,
+      "mapY": 3793,
+      "name": "班兹尼",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "city"
+    },
+    {
       "id": "b_ber_skurt",
       "importance": 20,
       "mapX": 2205,
@@ -1860,7 +2234,7 @@
       "id": "b_birchmoor",
       "importance": 20,
       "mapX": 1673,
-      "mapY": 2154,
+      "mapY": 2153,
       "name": "白泽镇",
       "reasons": [
         "political-center",
@@ -1873,7 +2247,7 @@
       "id": "b_black_chain",
       "importance": 20,
       "mapX": 567,
-      "mapY": 2496,
+      "mapY": 2495,
       "name": "黑链岛",
       "reasons": [
         "major-route-port"
@@ -1945,7 +2319,7 @@
       "id": "b_blackenrose",
       "importance": 20,
       "mapX": 749,
-      "mapY": 3988,
+      "mapY": 3987,
       "name": "黑玫村",
       "reasons": [
         "major-route-port"
@@ -1957,7 +2331,7 @@
       "id": "b_blackglass_port",
       "importance": 20,
       "mapX": 2059,
-      "mapY": 2973,
+      "mapY": 2972,
       "name": "黑璃港",
       "reasons": [
         "major-route-port"
@@ -2050,10 +2424,23 @@
       "type": "castle"
     },
     {
+      "id": "b_bleak_point",
+      "importance": 20,
+      "mapX": 2464,
+      "mapY": 3702,
+      "name": "荒凉角",
+      "reasons": [
+        "political-center",
+        "major-route-port"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "castle"
+    },
+    {
       "id": "b_blemish",
       "importance": 20,
       "mapX": 1367,
-      "mapY": 3706,
+      "mapY": 3705,
       "name": "污点村",
       "reasons": [
         "political-center"
@@ -2077,13 +2464,25 @@
       "id": "b_blight_shore",
       "importance": 20,
       "mapX": 1872,
-      "mapY": 4222,
+      "mapY": 4221,
       "name": "闪耀海岸",
       "reasons": [
         "political-center",
         "major-route-port"
       ],
       "regionId": "world_westeros_dorne",
+      "type": "town"
+    },
+    {
+      "id": "b_blightskull",
+      "importance": 20,
+      "mapX": 2436,
+      "mapY": 3848,
+      "name": "裂骨岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_stepstones",
       "type": "town"
     },
     {
@@ -2136,6 +2535,18 @@
       "type": "castle"
     },
     {
+      "id": "b_bloodstain",
+      "importance": 20,
+      "mapX": 2276,
+      "mapY": 3877,
+      "name": "血污角",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_stepstones",
+      "type": "village"
+    },
+    {
       "id": "b_bloody_meadow",
       "importance": 20,
       "mapX": 1619,
@@ -2163,7 +2574,7 @@
       "id": "b_blubber",
       "importance": 20,
       "mapX": 1922,
-      "mapY": 1053,
+      "mapY": 1052,
       "name": "鲸脂",
       "reasons": [
         "major-route-port"
@@ -2235,7 +2646,7 @@
       "id": "b_boldingfield",
       "importance": 20,
       "mapX": 1448,
-      "mapY": 3617,
+      "mapY": 3616,
       "name": "勇敢原",
       "reasons": [
         "political-center"
@@ -2247,7 +2658,7 @@
       "id": "b_bonehead",
       "importance": 20,
       "mapX": 1948,
-      "mapY": 4027,
+      "mapY": 4026,
       "name": "呆头丘",
       "reasons": [
         "political-center"
@@ -2289,6 +2700,18 @@
         "political-center"
       ],
       "regionId": "world_westeros_the_vale",
+      "type": "village"
+    },
+    {
+      "id": "b_bosaguesin",
+      "importance": 20,
+      "mapX": 2616,
+      "mapY": 3461,
+      "name": "波斯格辛",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
       "type": "village"
     },
     {
@@ -2343,7 +2766,7 @@
       "id": "b_brackyore",
       "importance": 20,
       "mapX": 2166,
-      "mapY": 2829,
+      "mapY": 2830,
       "name": "布拉克镇",
       "reasons": [
         "political-center",
@@ -2380,7 +2803,7 @@
       "id": "b_brandford",
       "importance": 20,
       "mapX": 1425,
-      "mapY": 1470,
+      "mapY": 1469,
       "name": "火燎原",
       "reasons": [
         "event-reference"
@@ -2401,10 +2824,22 @@
       "type": "village"
     },
     {
+      "id": "b_brandy_row",
+      "importance": 20,
+      "mapX": 2409,
+      "mapY": 3712,
+      "name": "美酒街",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "city"
+    },
+    {
       "id": "b_brandybottom",
       "importance": 20,
       "mapX": 891,
-      "mapY": 3390,
+      "mapY": 3391,
       "name": "白兰底",
       "reasons": [
         "political-center"
@@ -2449,6 +2884,18 @@
       "type": "castle"
     },
     {
+      "id": "b_brenyl",
+      "importance": 20,
+      "mapX": 2846,
+      "mapY": 3718,
+      "name": "布雷尼尔",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "village"
+    },
+    {
       "id": "b_briarwhite",
       "importance": 20,
       "mapX": 1563,
@@ -2464,7 +2911,7 @@
       "id": "b_brickrun",
       "importance": 20,
       "mapX": 823,
-      "mapY": 1988,
+      "mapY": 1987,
       "name": "好汉原",
       "reasons": [
         "major-route-port"
@@ -2476,7 +2923,7 @@
       "id": "b_bridgepebble",
       "importance": 20,
       "mapX": 1923,
-      "mapY": 2180,
+      "mapY": 2179,
       "name": "卵石桥",
       "reasons": [
         "major-route-port"
@@ -2488,7 +2935,7 @@
       "id": "b_bright_tree",
       "importance": 20,
       "mapX": 2228,
-      "mapY": 3474,
+      "mapY": 3473,
       "name": "闪光树",
       "reasons": [
         "political-center"
@@ -2536,7 +2983,7 @@
       "id": "b_brindlegard",
       "importance": 20,
       "mapX": 675,
-      "mapY": 3240,
+      "mapY": 3239,
       "name": "野猪堡",
       "reasons": [
         "major-route-port"
@@ -2560,7 +3007,7 @@
       "id": "b_broadpond",
       "importance": 20,
       "mapX": 1521,
-      "mapY": 1843,
+      "mapY": 1842,
       "name": "大池塘",
       "reasons": [
         "major-route-port"
@@ -2572,7 +3019,7 @@
       "id": "b_brockway",
       "importance": 20,
       "mapX": 1570,
-      "mapY": 3567,
+      "mapY": 3565,
       "name": "獾行径",
       "reasons": [
         "political-center"
@@ -2617,6 +3064,18 @@
       "type": "village"
     },
     {
+      "id": "b_bron",
+      "importance": 20,
+      "mapX": 2961,
+      "mapY": 3990,
+      "name": "布隆",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "village"
+    },
+    {
       "id": "b_bronzeguard",
       "importance": 20,
       "mapX": 2226,
@@ -2645,7 +3104,7 @@
       "id": "b_burned_hearth",
       "importance": 20,
       "mapX": 1391,
-      "mapY": 278,
+      "mapY": 279,
       "name": "烟灰炉",
       "reasons": [
         "political-center"
@@ -2669,13 +3128,38 @@
       "id": "b_butcher_island",
       "importance": 20,
       "mapX": 745,
-      "mapY": 3688,
+      "mapY": 3687,
       "name": "屠夫岛",
       "reasons": [
         "major-route-port"
       ],
       "regionId": "world_westeros_the_reach",
       "type": "village"
+    },
+    {
+      "id": "b_bynne",
+      "importance": 20,
+      "mapX": 2601,
+      "mapY": 4145,
+      "name": "拜恩",
+      "reasons": [
+        "political-center",
+        "major-route-port"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "city"
+    },
+    {
+      "id": "b_byraabelmos",
+      "importance": 20,
+      "mapX": 2708,
+      "mapY": 2359,
+      "name": "拜拉贝尔莫斯",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "city"
     },
     {
       "id": "b_candleflow",
@@ -2693,7 +3177,7 @@
       "id": "b_casken",
       "importance": 20,
       "mapX": 2052,
-      "mapY": 3335,
+      "mapY": 3334,
       "name": "木桶镇",
       "reasons": [
         "political-center"
@@ -2759,7 +3243,7 @@
       "id": "b_castle_farring",
       "importance": 20,
       "mapX": 1927,
-      "mapY": 3262,
+      "mapY": 3263,
       "name": "法林堡",
       "reasons": [
         "political-center"
@@ -2792,10 +3276,22 @@
       "type": "city"
     },
     {
+      "id": "b_cheesemongers_manse",
+      "importance": 20,
+      "mapX": 2563,
+      "mapY": 3136,
+      "name": "奶酪贩子的庄园",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "castle"
+    },
+    {
       "id": "b_chesterfield",
       "importance": 20,
       "mapX": 769,
-      "mapY": 3517,
+      "mapY": 3518,
       "name": "切斯塔堡",
       "reasons": [
         "major-route-port"
@@ -2807,13 +3303,26 @@
       "id": "b_chimney",
       "importance": 20,
       "mapX": 2001,
-      "mapY": 2206,
+      "mapY": 2207,
       "name": "烟囱镇",
       "reasons": [
         "major-route-port"
       ],
       "regionId": "world_westeros_the_vale",
       "type": "city"
+    },
+    {
+      "id": "b_circle_of_skulls",
+      "importance": 20,
+      "mapX": 2433,
+      "mapY": 3949,
+      "name": "骸骨圈",
+      "reasons": [
+        "political-center",
+        "major-route-port"
+      ],
+      "regionId": "world_stepstones",
+      "type": "village"
     },
     {
       "id": "b_claychest",
@@ -2890,6 +3399,30 @@
       "type": "village"
     },
     {
+      "id": "b_corohold",
+      "importance": 20,
+      "mapX": 2675,
+      "mapY": 2873,
+      "name": "科罗霍德",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "castle"
+    },
+    {
+      "id": "b_costoba",
+      "importance": 20,
+      "mapX": 2744,
+      "mapY": 3525,
+      "name": "科斯托巴",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "city"
+    },
+    {
       "id": "b_crabs_return",
       "importance": 20,
       "mapX": 2158,
@@ -2954,12 +3487,24 @@
       "id": "b_crappclaw_isle",
       "importance": 20,
       "mapX": 2237,
-      "mapY": 2358,
+      "mapY": 2357,
       "name": "蟹爪岛",
       "reasons": [
         "major-route-port"
       ],
       "regionId": "world_westeros_the_vale",
+      "type": "castle"
+    },
+    {
+      "id": "b_crasaemba",
+      "importance": 20,
+      "mapX": 3007,
+      "mapY": 3700,
+      "name": "克拉森巴",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
       "type": "castle"
     },
     {
@@ -2973,6 +3518,31 @@
       ],
       "regionId": "world_westeros_the_vale",
       "type": "castle"
+    },
+    {
+      "id": "b_crescentwood",
+      "importance": 20,
+      "mapX": 2798,
+      "mapY": 2525,
+      "name": "新月林",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "city"
+    },
+    {
+      "id": "b_crimson_scar",
+      "importance": 20,
+      "mapX": 2359,
+      "mapY": 4030,
+      "name": "绯红角",
+      "reasons": [
+        "political-center",
+        "major-route-port"
+      ],
+      "regionId": "world_stepstones",
+      "type": "village"
     },
     {
       "id": "b_crow_spike_keep",
@@ -2997,6 +3567,18 @@
       ],
       "regionId": "world_westeros_the_vale",
       "type": "village"
+    },
+    {
+      "id": "b_daarilaro_aajon",
+      "importance": 20,
+      "mapX": 2541,
+      "mapY": 3212,
+      "name": "达里拉罗·艾琼",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "city"
     },
     {
       "id": "b_dalchester",
@@ -3071,10 +3653,22 @@
       "type": "village"
     },
     {
+      "id": "b_dartholm",
+      "importance": 20,
+      "mapX": 2780,
+      "mapY": 2691,
+      "name": "达尔索姆",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "village"
+    },
+    {
       "id": "b_deadlock",
       "importance": 20,
       "mapX": 582,
-      "mapY": 2485,
+      "mapY": 2484,
       "name": "死锁堡",
       "reasons": [
         "major-route-port"
@@ -3086,7 +3680,7 @@
       "id": "b_deep_lure",
       "importance": 20,
       "mapX": 600,
-      "mapY": 1676,
+      "mapY": 1677,
       "name": "深饵堡",
       "reasons": [
         "major-route-port"
@@ -3143,15 +3737,63 @@
       "type": "castle"
     },
     {
+      "id": "b_doralbar",
+      "importance": 20,
+      "mapX": 2445,
+      "mapY": 2987,
+      "name": "多拉巴尔",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "village"
+    },
+    {
+      "id": "b_dorios",
+      "importance": 20,
+      "mapX": 2509,
+      "mapY": 3455,
+      "name": "多里欧斯",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "village"
+    },
+    {
+      "id": "b_doronjistos",
+      "importance": 20,
+      "mapX": 2808,
+      "mapY": 4042,
+      "name": "多隆吉斯托斯",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "city"
+    },
+    {
       "id": "b_dorridge_island",
       "importance": 20,
       "mapX": 2070,
-      "mapY": 1127,
+      "mapY": 1126,
       "name": "多里奇岛",
       "reasons": [
         "major-route-port"
       ],
       "regionId": "world_westeros_the_north",
+      "type": "village"
+    },
+    {
+      "id": "b_downgrave",
+      "importance": 20,
+      "mapX": 2342,
+      "mapY": 3841,
+      "name": "矮墓森林",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_stepstones",
       "type": "village"
     },
     {
@@ -3168,10 +3810,22 @@
       "type": "village"
     },
     {
+      "id": "b_downseed",
+      "importance": 20,
+      "mapX": 2332,
+      "mapY": 3860,
+      "name": "碎籽角",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_stepstones",
+      "type": "town"
+    },
+    {
       "id": "b_dragonstone",
       "importance": 95,
       "mapX": 2074,
-      "mapY": 2966,
+      "mapY": 2965,
       "name": "龙石岛",
       "reasons": [
         "important-place",
@@ -3180,6 +3834,30 @@
       ],
       "regionId": "world_westeros_the_crownlands",
       "type": "castle"
+    },
+    {
+      "id": "b_drakes_rest",
+      "importance": 20,
+      "mapX": 2609,
+      "mapY": 4250,
+      "name": "公鸭栖所",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "city"
+    },
+    {
+      "id": "b_driftskull",
+      "importance": 20,
+      "mapX": 2441,
+      "mapY": 3822,
+      "name": "散骨岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_stepstones",
+      "type": "village"
     },
     {
       "id": "b_drumm_tower",
@@ -3197,12 +3875,60 @@
       "id": "b_dryshore",
       "importance": 20,
       "mapX": 1781,
-      "mapY": 4202,
+      "mapY": 4201,
       "name": "干炙海岸",
       "reasons": [
         "major-route-port"
       ],
       "regionId": "world_westeros_dorne",
+      "type": "village"
+    },
+    {
+      "id": "b_duchirche",
+      "importance": 20,
+      "mapX": 2932,
+      "mapY": 2837,
+      "name": "都奇尔科",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "village"
+    },
+    {
+      "id": "b_dunbarra",
+      "importance": 20,
+      "mapX": 2707,
+      "mapY": 3076,
+      "name": "邓巴拉",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "city"
+    },
+    {
+      "id": "b_dunig",
+      "importance": 20,
+      "mapX": 2408,
+      "mapY": 2931,
+      "name": "邓尼格",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "village"
+    },
+    {
+      "id": "b_duntorr",
+      "importance": 20,
+      "mapX": 2434,
+      "mapY": 2950,
+      "name": "邓托尔",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_essos_free_cities",
       "type": "village"
     },
     {
@@ -3221,13 +3947,25 @@
       "id": "b_dying_gull",
       "importance": 20,
       "mapX": 633,
-      "mapY": 2404,
+      "mapY": 2403,
       "name": "死鸽山",
       "reasons": [
         "major-route-port"
       ],
       "regionId": "world_westeros_the_iron_islands",
       "type": "village"
+    },
+    {
+      "id": "b_dynelos",
+      "importance": 20,
+      "mapX": 2334,
+      "mapY": 3710,
+      "name": "迪尼洛斯",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "city"
     },
     {
       "id": "b_eagles_nest",
@@ -3271,7 +4009,7 @@
       "id": "b_eckerdean",
       "importance": 20,
       "mapX": 725,
-      "mapY": 2937,
+      "mapY": 2936,
       "name": "埃克岛",
       "reasons": [
         "major-route-port"
@@ -3292,6 +4030,18 @@
       "type": "castle"
     },
     {
+      "id": "b_endigues",
+      "importance": 20,
+      "mapX": 2803,
+      "mapY": 3295,
+      "name": "恩迪吉斯",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "village"
+    },
+    {
       "id": "b_erchester",
       "importance": 20,
       "mapX": 905,
@@ -3307,7 +4057,7 @@
       "id": "b_faircastle",
       "importance": 20,
       "mapX": 768,
-      "mapY": 2875,
+      "mapY": 2874,
       "name": "仙女城",
       "reasons": [
         "major-route-port"
@@ -3436,6 +4186,18 @@
       "type": "village"
     },
     {
+      "id": "b_firche",
+      "importance": 20,
+      "mapX": 2821,
+      "mapY": 2876,
+      "name": "菲尔克",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "village"
+    },
+    {
       "id": "b_firthfoot",
       "importance": 20,
       "mapX": 1100,
@@ -3475,7 +4237,7 @@
       "id": "b_fist_of_the_first_men",
       "importance": 20,
       "mapX": 1413,
-      "mapY": 666,
+      "mapY": 665,
       "name": "先民拳峰",
       "reasons": [
         "event-reference"
@@ -3568,6 +4330,18 @@
       "type": "city"
     },
     {
+      "id": "b_geralonkion",
+      "importance": 20,
+      "mapX": 2654,
+      "mapY": 3128,
+      "name": "杰拉隆基昂",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "city"
+    },
+    {
       "id": "b_ghaston_grey",
       "importance": 20,
       "mapX": 1665,
@@ -3616,10 +4390,22 @@
       "type": "village"
     },
     {
+      "id": "b_goodmerchant",
+      "importance": 20,
+      "mapX": 2393,
+      "mapY": 3965,
+      "name": "好商人滩",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_stepstones",
+      "type": "village"
+    },
+    {
       "id": "b_graftons_holdfast",
       "importance": 20,
       "mapX": 2118,
-      "mapY": 2682,
+      "mapY": 2681,
       "name": "格拉夫森坚堡",
       "reasons": [
         "major-route-port"
@@ -3643,7 +4429,7 @@
       "id": "b_green_watch",
       "importance": 20,
       "mapX": 772,
-      "mapY": 2125,
+      "mapY": 2124,
       "name": "青绿望",
       "reasons": [
         "major-route-port"
@@ -3715,7 +4501,7 @@
       "id": "b_gull_tower",
       "importance": 20,
       "mapX": 2166,
-      "mapY": 2671,
+      "mapY": 2670,
       "name": "海鸥塔",
       "reasons": [
         "major-route-port"
@@ -3757,6 +4543,18 @@
         "major-route-port"
       ],
       "regionId": "world_westeros_the_westerlands",
+      "type": "village"
+    },
+    {
+      "id": "b_hammerchild",
+      "importance": 20,
+      "mapX": 2369,
+      "mapY": 3787,
+      "name": "战锤之子",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_stepstones",
       "type": "village"
     },
     {
@@ -3968,13 +4766,25 @@
       "id": "b_hrunvark",
       "importance": 20,
       "mapX": 2206,
-      "mapY": 793,
+      "mapY": 792,
       "name": "赫伦瓦克",
       "reasons": [
         "major-route-port"
       ],
       "regionId": "world_westeros_the_north",
       "type": "village"
+    },
+    {
+      "id": "b_iemny",
+      "importance": 20,
+      "mapX": 2558,
+      "mapY": 3244,
+      "name": "伊姆尼",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "city"
     },
     {
       "id": "b_inner_lester",
@@ -4016,7 +4826,7 @@
       "id": "b_iron_keep",
       "importance": 20,
       "mapX": 793,
-      "mapY": 2488,
+      "mapY": 2489,
       "name": "钢铁堡",
       "reasons": [
         "major-route-port"
@@ -4028,7 +4838,7 @@
       "id": "b_iron_tooth",
       "importance": 20,
       "mapX": 956,
-      "mapY": 1133,
+      "mapY": 1132,
       "name": "铁牙岛",
       "reasons": [
         "major-route-port"
@@ -4052,7 +4862,7 @@
       "id": "b_island_estrock",
       "importance": 20,
       "mapX": 2174,
-      "mapY": 2406,
+      "mapY": 2405,
       "name": "埃斯特洛克岛",
       "reasons": [
         "major-route-port"
@@ -4082,6 +4892,30 @@
         "major-route-port"
       ],
       "regionId": "world_westeros_the_reach",
+      "type": "village"
+    },
+    {
+      "id": "b_jade_run",
+      "importance": 20,
+      "mapX": 2351,
+      "mapY": 4015,
+      "name": "碧玉岛",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_stepstones",
+      "type": "village"
+    },
+    {
+      "id": "b_jaerios",
+      "importance": 20,
+      "mapX": 2511,
+      "mapY": 3196,
+      "name": "杰里欧斯",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_essos_free_cities",
       "type": "village"
     },
     {
@@ -4193,10 +5027,34 @@
       "type": "landmark"
     },
     {
+      "id": "b_leisure",
+      "importance": 20,
+      "mapX": 2582,
+      "mapY": 4151,
+      "name": "休假区",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "city"
+    },
+    {
+      "id": "b_lilac_markets",
+      "importance": 20,
+      "mapX": 2594,
+      "mapY": 4197,
+      "name": "丁香市场",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "city"
+    },
+    {
       "id": "b_link_rock",
       "importance": 20,
       "mapX": 557,
-      "mapY": 2487,
+      "mapY": 2488,
       "name": "铁链岩",
       "reasons": [
         "major-route-port"
@@ -4232,7 +5090,7 @@
       "id": "b_longroll",
       "importance": 20,
       "mapX": 2073,
-      "mapY": 3346,
+      "mapY": 3345,
       "name": "长滚路",
       "reasons": [
         "major-route-port"
@@ -4256,7 +5114,7 @@
       "id": "b_lords_mill",
       "importance": 20,
       "mapX": 1349,
-      "mapY": 2679,
+      "mapY": 2678,
       "name": "领主坊",
       "reasons": [
         "major-route-port"
@@ -4268,7 +5126,7 @@
       "id": "b_lost_witch",
       "importance": 20,
       "mapX": 2313,
-      "mapY": 2584,
+      "mapY": 2583,
       "name": "失落女巫岛",
       "reasons": [
         "major-route-port"
@@ -4280,12 +5138,24 @@
       "id": "b_lowell",
       "importance": 20,
       "mapX": 840,
-      "mapY": 2872,
+      "mapY": 2871,
       "name": "洛厄尔镇",
       "reasons": [
         "major-route-port"
       ],
       "regionId": "world_westeros_the_westerlands",
+      "type": "city"
+    },
+    {
+      "id": "b_lrar",
+      "importance": 20,
+      "mapX": 2596,
+      "mapY": 4256,
+      "name": "拉尔",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_essos_free_cities",
       "type": "city"
     },
     {
@@ -4313,6 +5183,19 @@
       "type": "castle"
     },
     {
+      "id": "b_lys",
+      "importance": 20,
+      "mapX": 2638,
+      "mapY": 4164,
+      "name": "里斯",
+      "reasons": [
+        "event-reference",
+        "major-route-port"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "city"
+    },
+    {
       "id": "b_madding",
       "importance": 20,
       "mapX": 1913,
@@ -4323,6 +5206,18 @@
       ],
       "regionId": "world_westeros_dorne",
       "type": "city"
+    },
+    {
+      "id": "b_maidens_bed",
+      "importance": 20,
+      "mapX": 2451,
+      "mapY": 3955,
+      "name": "少女之床",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_stepstones",
+      "type": "town"
     },
     {
       "id": "b_maidens_curse",
@@ -4445,6 +5340,18 @@
       "type": "castle"
     },
     {
+      "id": "b_minstrel_way",
+      "importance": 20,
+      "mapX": 2623,
+      "mapY": 4157,
+      "name": "吟游诗人之路",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "city"
+    },
+    {
       "id": "b_misty_isle",
       "importance": 20,
       "mapX": 1835,
@@ -4460,7 +5367,7 @@
       "id": "b_moat_cailin",
       "importance": 20,
       "mapX": 1416,
-      "mapY": 1969,
+      "mapY": 1971,
       "name": "卡林湾",
       "reasons": [
         "event-reference"
@@ -4505,6 +5412,18 @@
       "type": "village"
     },
     {
+      "id": "b_morghemunja",
+      "importance": 20,
+      "mapX": 2562,
+      "mapY": 4157,
+      "name": "莫尔格蒙加",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "castle"
+    },
+    {
       "id": "b_morgons_rise",
       "importance": 20,
       "mapX": 834,
@@ -4544,7 +5463,7 @@
       "id": "b_morton",
       "importance": 20,
       "mapX": 676,
-      "mapY": 2451,
+      "mapY": 2450,
       "name": "莫顿",
       "reasons": [
         "major-route-port"
@@ -4589,10 +5508,22 @@
       "type": "castle"
     },
     {
+      "id": "b_myon",
+      "importance": 20,
+      "mapX": 2618,
+      "mapY": 4233,
+      "name": "密昂",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "city"
+    },
+    {
       "id": "b_naggas_hill",
       "importance": 20,
       "mapX": 673,
-      "mapY": 2492,
+      "mapY": 2491,
       "name": "娜伽山丘",
       "reasons": [
         "major-route-port"
@@ -4622,6 +5553,18 @@
         "major-route-port"
       ],
       "regionId": "world_westeros_the_reach",
+      "type": "village"
+    },
+    {
+      "id": "b_nonajon",
+      "importance": 20,
+      "mapX": 2489,
+      "mapY": 3415,
+      "name": "诺那琼",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_essos_free_cities",
       "type": "village"
     },
     {
@@ -4664,7 +5607,7 @@
       "id": "b_oak_range",
       "importance": 20,
       "mapX": 2142,
-      "mapY": 2823,
+      "mapY": 2822,
       "name": "橡木堡",
       "reasons": [
         "major-route-port"
@@ -4688,7 +5631,7 @@
       "id": "b_oakenshield_castle",
       "importance": 20,
       "mapX": 841,
-      "mapY": 3556,
+      "mapY": 3557,
       "name": "橡盾堡",
       "reasons": [
         "major-route-port"
@@ -4712,7 +5655,7 @@
       "id": "b_old_etch",
       "importance": 20,
       "mapX": 2217,
-      "mapY": 2556,
+      "mapY": 2555,
       "name": "风化岛",
       "reasons": [
         "major-route-port"
@@ -4724,7 +5667,7 @@
       "id": "b_old_lure",
       "importance": 20,
       "mapX": 594,
-      "mapY": 1734,
+      "mapY": 1733,
       "name": "旧吕尔村",
       "reasons": [
         "major-route-port"
@@ -4748,7 +5691,7 @@
       "id": "b_old_rune",
       "importance": 20,
       "mapX": 2245,
-      "mapY": 2655,
+      "mapY": 2654,
       "name": "老卢恩岛",
       "reasons": [
         "major-route-port"
@@ -4760,7 +5703,7 @@
       "id": "b_oldtown",
       "importance": 20,
       "mapX": 804,
-      "mapY": 3918,
+      "mapY": 3917,
       "name": "旧镇",
       "reasons": [
         "major-route-port"
@@ -4829,6 +5772,18 @@
       "type": "village"
     },
     {
+      "id": "b_ozendyos",
+      "importance": 20,
+      "mapX": 2520,
+      "mapY": 3140,
+      "name": "奥泽迪欧斯",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "city"
+    },
+    {
       "id": "b_padcove",
       "importance": 20,
       "mapX": 1865,
@@ -4868,7 +5823,7 @@
       "id": "b_pelicans_watch",
       "importance": 20,
       "mapX": 954,
-      "mapY": 4121,
+      "mapY": 4120,
       "name": "鹈鹕望",
       "reasons": [
         "major-route-port"
@@ -4880,7 +5835,7 @@
       "id": "b_pelltruth_hold",
       "importance": 20,
       "mapX": 2086,
-      "mapY": 3371,
+      "mapY": 3370,
       "name": "佩尔特鲁斯堡",
       "reasons": [
         "major-route-port"
@@ -4892,7 +5847,7 @@
       "id": "b_pens_point",
       "importance": 20,
       "mapX": 2037,
-      "mapY": 3396,
+      "mapY": 3395,
       "name": "角笔堡",
       "reasons": [
         "major-route-port"
@@ -4911,6 +5866,18 @@
       ],
       "regionId": "world_westeros_the_westerlands",
       "type": "castle"
+    },
+    {
+      "id": "b_perfumed_garden",
+      "importance": 20,
+      "mapX": 2567,
+      "mapY": 4184,
+      "name": "香水花园",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "city"
     },
     {
       "id": "b_petrified_post",
@@ -4940,7 +5907,7 @@
       "id": "b_pikerock",
       "importance": 20,
       "mapX": 2148,
-      "mapY": 3706,
+      "mapY": 3705,
       "name": "梭鱼岩",
       "reasons": [
         "major-route-port"
@@ -5024,7 +5991,7 @@
       "id": "b_pot_and_bowl",
       "importance": 20,
       "mapX": 774,
-      "mapY": 2095,
+      "mapY": 2096,
       "name": "锅碗岛",
       "reasons": [
         "major-route-port"
@@ -5045,10 +6012,22 @@
       "type": "city"
     },
     {
+      "id": "b_prowlers_finger",
+      "importance": 20,
+      "mapX": 2239,
+      "mapY": 3841,
+      "name": "盗贼之指",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_stepstones",
+      "type": "village"
+    },
+    {
       "id": "b_pulp_beach",
       "importance": 20,
       "mapX": 1927,
-      "mapY": 4235,
+      "mapY": 4233,
       "name": "果肉海岸",
       "reasons": [
         "major-route-port"
@@ -5071,10 +6050,34 @@
       "type": "castle"
     },
     {
+      "id": "b_quirron",
+      "importance": 20,
+      "mapX": 2526,
+      "mapY": 3852,
+      "name": "奎隆",
+      "reasons": [
+        "political-center"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "village"
+    },
+    {
+      "id": "b_radiant_harbor",
+      "importance": 20,
+      "mapX": 2573,
+      "mapY": 4224,
+      "name": "灿烂港",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "castle"
+    },
+    {
       "id": "b_rangers_refuge",
       "importance": 20,
       "mapX": 2046,
-      "mapY": 1445,
+      "mapY": 1444,
       "name": "护林员避难所",
       "reasons": [
         "major-route-port"
@@ -5093,6 +6096,18 @@
       ],
       "regionId": "world_westeros_the_north",
       "type": "castle"
+    },
+    {
+      "id": "b_reckoners_regard",
+      "importance": 20,
+      "mapX": 2443,
+      "mapY": 3975,
+      "name": "清算者之眼",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_stepstones",
+      "type": "town"
     },
     {
       "id": "b_red_barrow",
@@ -5194,6 +6209,18 @@
       "type": "castle"
     },
     {
+      "id": "b_rock_of_narin",
+      "importance": 20,
+      "mapX": 2331,
+      "mapY": 3847,
+      "name": "纳林岩",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_stepstones",
+      "type": "village"
+    },
+    {
       "id": "b_roosters_point",
       "importance": 20,
       "mapX": 1814,
@@ -5233,7 +6260,7 @@
       "id": "b_roundtop",
       "importance": 20,
       "mapX": 620,
-      "mapY": 1662,
+      "mapY": 1663,
       "name": "圆顶坡",
       "reasons": [
         "major-route-port"
@@ -5329,7 +6356,7 @@
       "id": "b_sapflower",
       "importance": 20,
       "mapX": 2165,
-      "mapY": 2342,
+      "mapY": 2341,
       "name": "兰花山",
       "reasons": [
         "major-route-port"
@@ -5518,10 +6545,22 @@
       "type": "castle"
     },
     {
+      "id": "b_sharp_shore",
+      "importance": 20,
+      "mapX": 2407,
+      "mapY": 3832,
+      "name": "尖刀海岸",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_stepstones",
+      "type": "town"
+    },
+    {
       "id": "b_shattered_finger",
       "importance": 20,
       "mapX": 1871,
-      "mapY": 2201,
+      "mapY": 2200,
       "name": "破碎之指",
       "reasons": [
         "major-route-port"
@@ -5581,7 +6620,7 @@
       "id": "b_shinys_hat",
       "importance": 20,
       "mapX": 2177,
-      "mapY": 3691,
+      "mapY": 3690,
       "name": "闪帽镇",
       "reasons": [
         "major-route-port"
@@ -5626,6 +6665,18 @@
       "type": "village"
     },
     {
+      "id": "b_silver_mint",
+      "importance": 20,
+      "mapX": 2612,
+      "mapY": 4197,
+      "name": "银铸币厂",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "town"
+    },
+    {
       "id": "b_silverbrace",
       "importance": 20,
       "mapX": 891,
@@ -5641,7 +6692,7 @@
       "id": "b_silvergrail",
       "importance": 20,
       "mapX": 724,
-      "mapY": 3985,
+      "mapY": 3986,
       "name": "银杯镇",
       "reasons": [
         "major-route-port"
@@ -5653,7 +6704,7 @@
       "id": "b_silverplate",
       "importance": 20,
       "mapX": 703,
-      "mapY": 3546,
+      "mapY": 3545,
       "name": "银耀堡",
       "reasons": [
         "major-route-port"
@@ -5665,7 +6716,7 @@
       "id": "b_sistercairn",
       "importance": 20,
       "mapX": 1797,
-      "mapY": 2133,
+      "mapY": 2134,
       "name": "姐妹冢屯",
       "reasons": [
         "major-route-port"
@@ -5698,10 +6749,22 @@
       "type": "village"
     },
     {
+      "id": "b_skullhammer",
+      "importance": 20,
+      "mapX": 2385,
+      "mapY": 3802,
+      "name": "骨锤角",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_stepstones",
+      "type": "town"
+    },
+    {
       "id": "b_skullsgate",
       "importance": 20,
       "mapX": 1530,
-      "mapY": 3879,
+      "mapY": 3878,
       "name": "颅骨门",
       "reasons": [
         "major-route-port"
@@ -5737,7 +6800,7 @@
       "id": "b_smallbait",
       "importance": 20,
       "mapX": 558,
-      "mapY": 1718,
+      "mapY": 1717,
       "name": "小饵堡",
       "reasons": [
         "major-route-port"
@@ -5749,12 +6812,36 @@
       "id": "b_smithsmark",
       "importance": 20,
       "mapX": 1948,
-      "mapY": 3792,
+      "mapY": 3791,
       "name": "铁匠岛",
       "reasons": [
         "major-route-port"
       ],
       "regionId": "world_westeros_the_stormlands",
+      "type": "village"
+    },
+    {
+      "id": "b_somberys",
+      "importance": 20,
+      "mapX": 2255,
+      "mapY": 3895,
+      "name": "索姆贝利斯",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_stepstones",
+      "type": "castle"
+    },
+    {
+      "id": "b_sorrows_harbor",
+      "importance": 20,
+      "mapX": 2307,
+      "mapY": 3851,
+      "name": "悲伤港",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_stepstones",
       "type": "village"
     },
     {
@@ -5857,7 +6944,7 @@
       "id": "b_starfall",
       "importance": 20,
       "mapX": 1052,
-      "mapY": 4059,
+      "mapY": 4058,
       "name": "星坠城",
       "reasons": [
         "major-route-port"
@@ -5929,7 +7016,7 @@
       "id": "b_stoneclaw",
       "importance": 20,
       "mapX": 629,
-      "mapY": 4236,
+      "mapY": 4237,
       "name": "石螯堡",
       "reasons": [
         "major-route-port"
@@ -5941,7 +7028,7 @@
       "id": "b_stonecrab_cay",
       "importance": 20,
       "mapX": 644,
-      "mapY": 4261,
+      "mapY": 4260,
       "name": "石蟹礁",
       "reasons": [
         "major-route-port"
@@ -6062,7 +7149,7 @@
       "id": "b_sunken_isles",
       "importance": 20,
       "mapX": 1987,
-      "mapY": 2196,
+      "mapY": 2195,
       "name": "沉没岛",
       "reasons": [
         "major-route-port"
@@ -6097,10 +7184,22 @@
       "type": "castle"
     },
     {
+      "id": "b_sunstone_cover",
+      "importance": 20,
+      "mapX": 2231,
+      "mapY": 3876,
+      "name": "阳石窟",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_stepstones",
+      "type": "town"
+    },
+    {
       "id": "b_sutton_islands",
       "importance": 20,
       "mapX": 2098,
-      "mapY": 2329,
+      "mapY": 2328,
       "name": "萨顿群岛",
       "reasons": [
         "major-route-port"
@@ -6145,6 +7244,18 @@
       "type": "village"
     },
     {
+      "id": "b_the_bleeding_tower",
+      "importance": 20,
+      "mapX": 2429,
+      "mapY": 3720,
+      "name": "泣血塔",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_essos_free_cities",
+      "type": "castle"
+    },
+    {
       "id": "b_the_burning_tower",
       "importance": 20,
       "mapX": 2133,
@@ -6160,7 +7271,7 @@
       "id": "b_the_citadel",
       "importance": 20,
       "mapX": 803,
-      "mapY": 3884,
+      "mapY": 3885,
       "name": "学城",
       "reasons": [
         "event-reference"
@@ -6211,7 +7322,7 @@
       "id": "b_the_red_keep",
       "importance": 100,
       "mapX": 1707,
-      "mapY": 3169,
+      "mapY": 3170,
       "name": "君临·红堡",
       "reasons": [
         "explicit",
@@ -6238,7 +7349,7 @@
       "id": "b_the_shard",
       "importance": 20,
       "mapX": 2175,
-      "mapY": 2258,
+      "mapY": 2257,
       "name": "无根岛",
       "reasons": [
         "major-route-port"
@@ -6268,6 +7379,18 @@
         "major-route-port"
       ],
       "regionId": "world_westeros_the_reach",
+      "type": "town"
+    },
+    {
+      "id": "b_the_stash",
+      "importance": 20,
+      "mapX": 2345,
+      "mapY": 3819,
+      "name": "藏宝处",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_stepstones",
       "type": "town"
     },
     {
@@ -6322,7 +7445,7 @@
       "id": "b_tidewell",
       "importance": 20,
       "mapX": 781,
-      "mapY": 2871,
+      "mapY": 2869,
       "name": "潮汐林",
       "reasons": [
         "major-route-port"
@@ -6346,7 +7469,7 @@
       "id": "b_tireless_island",
       "importance": 20,
       "mapX": 618,
-      "mapY": 3070,
+      "mapY": 3069,
       "name": "不倦岛",
       "reasons": [
         "major-route-port"
@@ -6358,13 +7481,25 @@
       "id": "b_torch_tower",
       "importance": 20,
       "mapX": 836,
-      "mapY": 3531,
+      "mapY": 3530,
       "name": "火炬塔",
       "reasons": [
         "major-route-port"
       ],
       "regionId": "world_westeros_the_reach",
       "type": "castle"
+    },
+    {
+      "id": "b_torment_point",
+      "importance": 20,
+      "mapX": 2317,
+      "mapY": 3808,
+      "name": "托蒙德角",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_stepstones",
+      "type": "village"
     },
     {
       "id": "b_tormore_island",
@@ -6430,7 +7565,7 @@
       "id": "b_upcliffs_haven",
       "importance": 20,
       "mapX": 2290,
-      "mapY": 2581,
+      "mapY": 2580,
       "name": "厄利夫港",
       "reasons": [
         "major-route-port"
@@ -6526,7 +7661,7 @@
       "id": "b_wharfton",
       "importance": 20,
       "mapX": 893,
-      "mapY": 3498,
+      "mapY": 3497,
       "name": "码头镇",
       "reasons": [
         "major-route-port"
@@ -6574,7 +7709,7 @@
       "id": "b_whistle_ridge",
       "importance": 20,
       "mapX": 2255,
-      "mapY": 2587,
+      "mapY": 2586,
       "name": "口哨丘",
       "reasons": [
         "major-route-port"
@@ -6674,7 +7809,7 @@
       "id": "b_winters_paw",
       "importance": 20,
       "mapX": 1040,
-      "mapY": 1215,
+      "mapY": 1214,
       "name": "冬之爪",
       "reasons": [
         "major-route-port"
@@ -6686,7 +7821,7 @@
       "id": "b_witchs_mound",
       "importance": 20,
       "mapX": 700,
-      "mapY": 4232,
+      "mapY": 4231,
       "name": "女巫堤",
       "reasons": [
         "major-route-port"
@@ -6743,6 +7878,18 @@
       "type": "castle"
     },
     {
+      "id": "b_wreckstone_point",
+      "importance": 20,
+      "mapX": 2353,
+      "mapY": 3811,
+      "name": "沉石角",
+      "reasons": [
+        "major-route-port"
+      ],
+      "regionId": "world_stepstones",
+      "type": "village"
+    },
+    {
       "id": "b_wyldecove",
       "importance": 20,
       "mapX": 2127,
@@ -6758,7 +7905,7 @@
       "id": "b_wynden",
       "importance": 20,
       "mapX": 623,
-      "mapY": 2451,
+      "mapY": 2450,
       "name": "韦恩村",
       "reasons": [
         "major-route-port"
@@ -6794,7 +7941,7 @@
       "id": "b_yellow_rock",
       "importance": 20,
       "mapX": 2116,
-      "mapY": 2701,
+      "mapY": 2700,
       "name": "黄石滩",
       "reasons": [
         "major-route-port"

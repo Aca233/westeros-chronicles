@@ -269,7 +269,7 @@ test('运行时从本地资料加载基础持有人并把投影接入地图画�
   assert.match(characters, /loadTitleHolderSummaries/)
 })
 
-test('生成的 6094 个本地政治图块能从 298 年人物资料解析真实持有人', () => {
+test('生成的本地政治图块能从 298 年人物资料解析真实持有人', () => {
   const generatedTitles = JSON.parse(readFileSync('public/data/agot-map/political/titles.json', 'utf8'))
   const memberships = JSON.parse(readFileSync('public/data/agot-map/semantic/membership.json', 'utf8'))
   const searchIndex = JSON.parse(readFileSync('public/data/agot-characters/search-index.json', 'utf8'))

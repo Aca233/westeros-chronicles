@@ -108,10 +108,26 @@ def _remove_path(path: Path) -> None:
         path.unlink()
 
 
-def publish_map_pair(data_stage: Path, data_output: Path, asset_stage: Path, asset_output: Path) -> None:
+def publish_map_pair(data_stage: Path, data_output: Path, asset_stage: Path, asset_output: Path | None) -> None:
     data_backup = data_output.with_name(f".{data_output.name}.backup-{uuid.uuid4().hex}")
-    asset_backup = asset_output.with_name(f".{asset_output.name}.backup-{uuid.uuid4().hex}")
     data_had_previous = data_output.exists()
+    if asset_output is None:
+        try:
+            if data_had_previous:
+                os.replace(data_output, data_backup)
+            os.replace(data_stage, data_output)
+        except Exception:
+            if data_output.exists():
+                _remove_path(data_output)
+            if data_had_previous and data_backup.exists():
+                os.replace(data_backup, data_output)
+            raise
+        finally:
+            if data_backup.exists():
+                _remove_path(data_backup)
+        _remove_path(asset_stage)
+        return
+    asset_backup = asset_output.with_name(f".{asset_output.name}.backup-{uuid.uuid4().hex}")
     asset_had_previous = asset_output.exists()
     try:
         if data_had_previous:
@@ -143,9 +159,10 @@ def stage_map_dataset(
     source_hashes: Mapping[str, str], map_size: tuple[int, int],
     westeros_bounds: tuple[float, float, float, float], tile_counts: Mapping[str, int],
     semantic: SemanticDataset, semantic_tile_root: Path, min_zoom: int, max_zoom: int,
+    audit_bounds: tuple[float, float, float, float] | None = None,
 ) -> dict[str, object]:
-    audit_counts = audit_map_records(locations, route_graph, map_size, westeros_bounds)
-    semantic_counts = audit_semantic_records(semantic, locations, westeros_bounds)
+    audit_counts = audit_map_records(locations, route_graph, map_size, audit_bounds)
+    semantic_counts = audit_semantic_records(semantic, locations, audit_bounds)
     if min_zoom < 0 or max_zoom < min_zoom:
         raise MapImportError("清单缩放级别无效")
     for path, digest in source_hashes.items():

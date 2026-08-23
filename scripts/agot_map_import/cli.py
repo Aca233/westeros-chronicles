@@ -79,35 +79,45 @@ def _member_provinces(member: str, title_members: dict[str, set[int]]) -> set[in
     return title_members.get(member, set())
 
 
-def _westeros_provinces_and_regions(
+WORLD_REGIONS = ["world_westeros", "world_essos"]
+
+
+def _collect_provinces_and_regions(
     region_definitions,
     titles: TitleIndex,
-) -> tuple[set[int], dict[int, str], list[dict[str, object]]]:
-    if "world_westeros" not in region_definitions:
-        raise MapImportError("地理区域缺少 world_westeros")
+) -> tuple[set[int], dict[int, str], list[dict[str, object]], dict[str, set[int]]]:
     title_members = _title_member_index(titles)
     province_regions: dict[int, str] = {}
     records: list[dict[str, object]] = []
-    top_level = region_definitions["world_westeros"].regions
-    for region_id in top_level:
-        members = expand_region(region_id, region_definitions)
-        province_ids: set[int] = set()
-        for member in members:
-            province_ids.update(_member_provinces(member, title_members))
-        for province_id in province_ids:
-            existing = province_regions.get(province_id)
-            if existing and existing != region_id:
-                raise MapImportError(f"省份 {province_id} 同时属于 {existing} 与 {region_id}")
-            province_regions[province_id] = region_id
-        records.append({"id": region_id, "name": region_id, "provinceCount": len(province_ids)})
-    direct_members = expand_region("world_westeros", region_definitions)
-    all_provinces = set(province_regions)
-    for member in direct_members:
-        all_provinces.update(_member_provinces(member, title_members))
-    for province_id in all_provinces:
-        province_regions.setdefault(province_id, "world_westeros")
-    records.insert(0, {"id": "world_westeros", "name": "维斯特洛", "provinceCount": len(all_provinces)})
-    return all_provinces, province_regions, records
+    all_provinces: set[int] = set()
+    world_provinces_by_region: dict[str, set[int]] = {}
+    for world_id in WORLD_REGIONS:
+        world = region_definitions.get(world_id)
+        if world is None:
+            continue
+        for region_id in world.regions:
+            members = expand_region(region_id, region_definitions)
+            province_ids: set[int] = set()
+            for member in members:
+                province_ids.update(_member_provinces(member, title_members))
+            for province_id in province_ids:
+                existing = province_regions.get(province_id)
+                if existing and existing != region_id:
+                    raise MapImportError(f"省份 {province_id} 同时属于 {existing} 与 {region_id}")
+                province_regions[province_id] = region_id
+            records.append({"id": region_id, "name": region_id, "provinceCount": len(province_ids)})
+        direct_members = expand_region(world_id, region_definitions)
+        world_provinces: set[int] = set()
+        for member in direct_members:
+            world_provinces.update(_member_provinces(member, title_members))
+        for province_id in world_provinces:
+            province_regions.setdefault(province_id, world_id)
+        all_provinces |= world_provinces
+        world_provinces_by_region[world_id] = world_provinces
+        records.insert(0, {"id": world_id, "name": world_id, "provinceCount": len(world_provinces)})
+    if "world_westeros" not in {r["id"] for r in records}:
+        raise MapImportError("地理区域缺少 world_westeros")
+    return all_provinces, province_regions, records, world_provinces_by_region
 
 
 def _bounds(geometries: dict[int, ProvinceGeometry], map_size: tuple[int, int]) -> tuple[int, int, int, int]:
@@ -197,7 +207,7 @@ def build_map(args: argparse.Namespace) -> dict[str, object]:
     definitions = parse_definition(source.default_files["definitions"])
     titles = parse_title_hierarchy(source.landed_titles)
     region_definitions = parse_regions(source.geographical_regions)
-    province_ids, province_regions, region_records = _westeros_provinces_and_regions(region_definitions, titles)
+    province_ids, province_regions, region_records, world_provinces_by_region = _collect_provinces_and_regions(region_definitions, titles)
     province_ids &= set(definitions)
     geometries = extract_province_geometry(source.default_files["provinces"], definitions, province_ids)
     adjacency_rows = parse_adjacencies(source.default_files["adjacencies"])
@@ -216,6 +226,12 @@ def build_map(args: argparse.Namespace) -> dict[str, object]:
         for province_id, geometry in geometries.items()
     }
     bounds = _bounds(geometries, source.map_size)
+    westeros_province_ids = world_provinces_by_region.get("world_westeros", set())
+    westeros_geometries = {
+        province_id: geometry for province_id, geometry in geometries.items()
+        if province_id in westeros_province_ids
+    }
+    westeros_bounds = _bounds(westeros_geometries, source.map_size)
     localization_paths = list((source.root / "localization/simp_chinese").rglob("*.yml"))
     localization_paths.extend((source.root / "localization/replace/simp_chinese").rglob("*.yml"))
     localization = load_localization(sorted(localization_paths))
@@ -257,7 +273,15 @@ def build_map(args: argparse.Namespace) -> dict[str, object]:
     data_stage = _staging_directory(args.data_output)
     try:
         if args.skip_tiles:
-            tile_counts = {"terrain": 0, "terrainLight": 0, "materialTerrain": 0, "vector": 0, "dem": 0, "semantic": 0}
+            existing_manifest_path = args.data_output / "manifest.json"
+            if existing_manifest_path.exists():
+                existing_manifest = json.loads(existing_manifest_path.read_text(encoding="utf-8"))
+                tile_counts = {
+                    key: existing_manifest["counts"].get(f"{key}Tiles", 0)
+                    for key in ("terrain", "terrainLight", "materialTerrain", "vector", "dem", "semantic")
+                }
+            else:
+                tile_counts = {"terrain": 0, "terrainLight": 0, "materialTerrain": 0, "vector": 0, "dem": 0, "semantic": 0}
         else:
             if args.ck3_source is None or not (args.ck3_source / "gfx/map/terrain").is_dir():
                 raise MapImportError("生成地形材质瓦片需要有效的 --ck3-source")
@@ -330,14 +354,18 @@ def build_map(args: argparse.Namespace) -> dict[str, object]:
                 source, args.ck3_source, include_material_textures=not args.skip_tiles,
             ),
             map_size=source.map_size,
-            westeros_bounds=bounds,
+            westeros_bounds=westeros_bounds,
+            audit_bounds=None if args.skip_tiles else bounds,
             tile_counts=tile_counts,
             semantic=semantic,
-            semantic_tile_root=asset_stage / "semantic",
+            semantic_tile_root=(args.asset_output / "semantic") if args.skip_tiles else (asset_stage / "semantic"),
             min_zoom=0,
             max_zoom=args.max_vector_zoom,
         )
-        publish_map_pair(data_stage, args.data_output, asset_stage, args.asset_output)
+        if args.skip_tiles:
+            publish_map_pair(data_stage, args.data_output, asset_stage, None)
+        else:
+            publish_map_pair(data_stage, args.data_output, asset_stage, args.asset_output)
         return manifest
     except Exception:
         if data_stage.exists():

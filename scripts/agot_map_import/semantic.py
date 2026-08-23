@@ -24,6 +24,9 @@ from .models import (
 from .regions import expand_region
 from .titles import TitleIndex
 
+# 参与导入的顶级世界区域：维斯特洛必须存在，东大陆可选。
+WORLD_REGIONS = ["world_westeros", "world_essos"]
+
 RANK_ORDER: dict[SemanticRank, int] = {"hegemon": 0, "empire": 1, "kingdom": 2, "duchy": 3, "county": 4}
 RANK_IMPORTANCE: dict[SemanticRank, int] = {"hegemon": 100, "empire": 90, "kingdom": 80, "duchy": 70, "county": 60}
 _CJK_PATTERN = re.compile(r"[\u3400-\u9fff]")
@@ -57,22 +60,23 @@ def _province_realms(
     titles: TitleIndex,
     regions: Mapping[str, RegionDefinition],
 ) -> dict[int, str]:
-    world = regions.get("world_westeros")
-    if world is None:
-        raise MapImportError("地理区域缺少 world_westeros")
     title_members = _title_member_index(titles)
     result: dict[int, str] = {}
     participating = set(geometries)
-    for realm_id in sorted(world.regions):
-        members = expand_region(realm_id, regions)
-        province_ids: set[int] = set()
-        for member in members:
-            province_ids.update(_member_provinces(member, title_members))
-        for province_id in sorted(province_ids & participating):
-            existing = result.get(province_id)
-            if existing and existing != realm_id:
-                raise MapImportError(f"省份 {province_id} 同时属于战略区域 {existing} 与 {realm_id}")
-            result[province_id] = realm_id
+    for world_id in WORLD_REGIONS:
+        world = regions.get(world_id)
+        if world is None:
+            continue
+        for realm_id in sorted(world.regions):
+            members = expand_region(realm_id, regions)
+            province_ids: set[int] = set()
+            for member in members:
+                province_ids.update(_member_provinces(member, title_members))
+            for province_id in sorted(province_ids & participating):
+                existing = result.get(province_id)
+                if existing and existing != realm_id:
+                    raise MapImportError(f"省份 {province_id} 同时属于战略区域 {existing} 与 {realm_id}")
+                result[province_id] = realm_id
     missing = sorted(participating - set(result))
     if missing:
         raise MapImportError(f"参与地图的省份缺少战略区域：{missing[:10]}")

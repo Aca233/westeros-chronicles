@@ -22,9 +22,9 @@ const manifestV3 = {
     semanticMembership: '/data/agot-map/semantic/membership.json',
   },
   counts: {
-    regions: 12, provinces: 6094, locations: 6094, routeEdges: 31724,
+    regions: 15, provinces: 7001, locations: 7001, routeEdges: 36270,
     terrainLightTiles: 341, terrainTiles: 341, materialTerrainTiles: 1365, vectorTiles: 3474, demTiles: 341, semanticTiles: 3474,
-    semanticHegemons: 1, semanticEmpires: 9, semanticKingdoms: 9, semanticDuchies: 30, semanticCounties: 120,
+    semanticHegemons: 1, semanticEmpires: 13, semanticKingdoms: 59, semanticDuchies: 262, semanticCounties: 1277,
     semanticLabels: 159, missingSemanticLocalizations: 0,
   },
   datasetHash: 'b'.repeat(64),
