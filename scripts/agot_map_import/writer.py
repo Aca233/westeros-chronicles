@@ -109,6 +109,14 @@ def _remove_path(path: Path) -> None:
 
 
 def publish_map_pair(data_stage: Path, data_output: Path, asset_stage: Path, asset_output: Path | None) -> None:
+    # Preserve content owned by other import steps (3D landmark models) by copying
+    # it into the staged data directory before the atomic swap.
+    for preserved in ("models",):
+        src = data_output / preserved
+        if src.is_dir():
+            dst = data_stage / preserved
+            if not dst.exists():
+                shutil.copytree(src, dst)
     data_backup = data_output.with_name(f".{data_output.name}.backup-{uuid.uuid4().hex}")
     data_had_previous = data_output.exists()
     if asset_output is None:
