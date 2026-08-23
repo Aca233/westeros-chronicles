@@ -309,12 +309,13 @@ export function syncDynamicMapSubjects(
   if (!map.isStyleLoaded()) return
   addDynamicMapSubjectLayers(map)
   const zoom = semanticContext?.zoomState.zoom
-  const sendsAggregates = zoom !== undefined && zoom >= 2.5 && zoom <= 4.4
+  const sendsAggregates = zoom !== undefined && zoom <= 4.4
   const sendsPoints = zoom === undefined || zoom >= 4.1
+  const aggregateRank = semanticContext?.zoomState.primaryRank
   {
     const visibleCharacters = sendsPoints ? filterMapPointsByPixelBounds(markerPoints?.characters ?? characters, pixelBounds) : []
     const characterAggregates = sendsAggregates && semanticContext
-      ? aggregateCharacterPoints({ points: characters, pixelBounds, ...semanticContext })
+      ? aggregateCharacterPoints({ points: characters, pixelBounds, ...semanticContext, aggregateRank })
       : []
     const charactersCollection = dynamicPointCollection(visibleCharacters, [], manifest).characters
     setDynamicSourceData(map, CHARACTER_POINT_SOURCE, charactersCollection)
@@ -323,7 +324,7 @@ export function syncDynamicMapSubjects(
   {
     const visibleAssets = sendsPoints ? filterMapPointsByPixelBounds(markerPoints?.assets ?? assets, pixelBounds) : []
     const assetAggregates = sendsAggregates && semanticContext
-      ? aggregateAssetPoints({ points: assets, pixelBounds, ...semanticContext })
+      ? aggregateAssetPoints({ points: assets, pixelBounds, ...semanticContext, aggregateRank })
       : []
     const assetsCollection = dynamicPointCollection([], visibleAssets, manifest).assets
     setDynamicSourceData(map, ASSET_POINT_SOURCE, assetsCollection)

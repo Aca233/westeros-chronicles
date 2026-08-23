@@ -117,6 +117,31 @@ test('反向输入、重复输入和视野外输入不会改变聚合结果', ()
   assert.deepEqual(aggregateCharacterPoints(base), aggregateCharacterPoints(reversedDuplicatedAndOffscreen))
 })
 
+test('aggregateRank=kingdom 时按王国头衔点聚合，缺该等级归属的角色被跳过', () => {
+  const kingdomTitles = [
+    { ...countyTitle, featureId: 9, titleId: 'k_north', rank: 'kingdom', name: '北境王国', mapX: 150, mapY: 100 },
+  ]
+  const kingdomMemberships = [
+    { locationId: 'b_winterfell', baronyId: 'b_winterfell', countyId: 'c_winterfell', duchyId: 'd_winterfell', kingdomId: 'k_north', regionId: 'the_north' },
+    { locationId: 'b_godswood', baronyId: 'b_godswood', countyId: 'c_winterfell', duchyId: 'd_winterfell', kingdomId: 'k_north', regionId: 'the_north' },
+    { locationId: 'b_greywater', baronyId: 'b_greywater', duchyId: 'd_the_neck', regionId: 'the_north' },
+  ]
+  const groups = aggregateCharacterPoints({
+    points: characterPoints,
+    memberships: kingdomMemberships,
+    titles: kingdomTitles,
+    pixelBounds: aggregationBounds,
+    aggregateRank: 'kingdom',
+  })
+  assert.deepEqual(groups, [
+    {
+      id: 'characters:kingdom:k_north', kind: 'characters', rank: 'kingdom',
+      scopeId: 'k_north', mapX: 150, mapY: 100, count: 2,
+      memberIds: ['agot:Arya_1', 'agot:Ned_1'],
+    },
+  ])
+})
+
 test('人物与资产先按伯爵领限域，完整列表与独立标记预算分离', async () => {
   const { scopeMapSubjects } = await import('../src/features/map/dynamicMapSubjects.ts')
   const countyIdByLocationId = new Map([
