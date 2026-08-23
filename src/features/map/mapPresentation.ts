@@ -30,8 +30,8 @@ export function mapPresentationFor(input: {
     politicalSurface: band !== 'local' && input.overlays.political,
     countyLabels: band !== 'strategic',
     internalLocations: band === 'local' && hasCounty,
-    roads: band !== 'strategic' && input.overlays.roads,
-    characters: band !== 'strategic' && hasCounty && input.overlays.characters,
-    assets: band !== 'strategic' && hasCounty && input.overlays.assets,
+    roads: input.overlays.roads,
+    characters: band !== 'strategic' && input.overlays.characters,
+    assets: band !== 'strategic' && input.overlays.assets,
   }
 }
