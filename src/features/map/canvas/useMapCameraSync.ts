@@ -14,6 +14,8 @@ import type { WheelCameraController } from '../wheelCameraController';
 export function useMapCameraSync(input: {
   manifest: MapManifest;
   focusRequest?: MapFocusRequest | null;
+  // 地图实例就绪信号：画布挂载晚于 focusRequest 时，依赖它补跑一次飞行。
+  mapReadyNonce?: number;
   topDownLocked: boolean;
   northResetRequestId: number;
   mapRef: React.MutableRefObject<MapLibreMap | null>;
@@ -82,7 +84,7 @@ export function useMapCameraSync(input: {
       if (!cancelled) input.onWarning('未能定位所选地图目标');
     });
     return () => { cancelled = true; };
-  }, [input.focusRequest, input.manifest]);
+  }, [input.focusRequest, input.manifest, input.mapReadyNonce]);
 
   return { terrainInput, targetTerrainPitch, wheelCameraInput };
 }

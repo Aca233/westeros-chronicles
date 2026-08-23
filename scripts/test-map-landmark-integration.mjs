@@ -22,7 +22,7 @@ const records = [
   record('dragonstone', 80, 50, 3),
 ]
 const modelManifest = { landmarks: records }
-const mapManifest = { westerosBounds: { minX: 0, minY: 0, maxX: 100, maxY: 100 } }
+const mapManifest = { westerosBounds: { minX: 0, minY: 0, maxX: 100, maxY: 100 }, mapSize: { width: 100, height: 100 } }
 
 function fixture() {
   const events = []

@@ -91,7 +91,7 @@ class ActiveLandmarkRuntime implements LandmarkRuntime {
   private readonly reasons: LandmarkSyncReason[] = []
   private readonly failures = new Set<string>()
   private readonly map: MapLibreMap
-  private readonly mapManifest: Pick<MapManifest, 'westerosBounds'>
+  private readonly mapManifest: Pick<MapManifest, 'westerosBounds' | 'mapSize'>
   private readonly modelManifest: LandmarkModelManifest
   private readonly layer: LandmarkCustomLayer
   private readonly cache: RuntimeCache
@@ -105,7 +105,7 @@ class ActiveLandmarkRuntime implements LandmarkRuntime {
 
   constructor(
     map: MapLibreMap,
-    mapManifest: Pick<MapManifest, 'westerosBounds'>,
+    mapManifest: Pick<MapManifest, 'westerosBounds' | 'mapSize'>,
     modelManifest: LandmarkModelManifest,
     layer: LandmarkCustomLayer,
     cache: RuntimeCache,
@@ -202,7 +202,7 @@ class ActiveLandmarkRuntime implements LandmarkRuntime {
 
 export async function createLandmarkRuntime(
   map: MapLibreMap,
-  mapManifest: Pick<MapManifest, 'westerosBounds'>,
+  mapManifest: Pick<MapManifest, 'westerosBounds' | 'mapSize'>,
   options: LandmarkRuntimeOptions = {},
 ): Promise<LandmarkRuntime> {
   const abort = new AbortController()

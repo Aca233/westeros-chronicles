@@ -103,6 +103,9 @@ export function useMapLifecycle(input: UseMapLifecycleInput): MapLifecycleResult
   const styleReadyRef = useRef(false);
   const [initializationError, setInitializationError] = useState(false);
   const [semanticInitializationError, setSemanticInitializationError] = useState(false);
+  // 地图实例就绪信号：openMap 可能在画布挂载前就写入 focusRequest，
+  // 相机同步 effect 首跑时 mapRef 还是 null 会直接早退，需要就绪后补跑一次。
+  const [mapReadyNonce, setMapReadyNonce] = useState(0);
   const callbacksRef = useRef({
     onSelectLocation,
     onSelectCharacter,
@@ -130,6 +133,7 @@ export function useMapLifecycle(input: UseMapLifecycleInput): MapLifecycleResult
   const { terrainInput, targetTerrainPitch, wheelCameraInput } = useMapCameraSync({
     manifest,
     focusRequest,
+    mapReadyNonce,
     topDownLocked,
     northResetRequestId,
     mapRef,
@@ -230,6 +234,7 @@ export function useMapLifecycle(input: UseMapLifecycleInput): MapLifecycleResult
     }
     setInitializationError(false);
     mapRef.current = map;
+    setMapReadyNonce((value) => value + 1);
     cameraCleanup = configureCk3Camera(map, reducedMotionRef.current, targetTerrainPitch);
     const wheelCameraController = createWheelCameraController(map, wheelCameraInput());
     wheelCameraControllerRef.current = wheelCameraController;
