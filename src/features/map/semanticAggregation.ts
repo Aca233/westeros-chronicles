@@ -11,8 +11,7 @@ export interface SemanticSubjectAggregate extends MapPixelPoint {
 }
 
 // 把一个地点的归属映射到指定等级的 scopeId（与该等级头衔标签同点）。
-// 缺失可选等级（kingdomId 等为空）时返回 undefined，该成员不参与本等级聚合——
-// 与头衔「该等级有就显示、没有就不显示」一致，不回退到更细等级。
+// 缺失可选等级（kingdomId 等为空）时返回 undefined，调用方按需回退到更细等级。
 function scopeIdForRank(membership: SemanticMembership, rank: SemanticRank): string | undefined {
   switch (rank) {
     case 'hegemon': return membership.hegemonId
@@ -21,6 +20,25 @@ function scopeIdForRank(membership: SemanticMembership, rank: SemanticRank): str
     case 'duchy': return membership.duchyId
     case 'county': return membership.countyId
   }
+}
+
+// 从粗到细的等级顺序，用于在目标等级缺归属时回退到更细等级。
+const RANK_FINE_DOWN: readonly SemanticRank[] = ['hegemon', 'empire', 'kingdom', 'duchy', 'county']
+
+// 按从 aggregateRank 开始逐级回退到更细等级的方式，找该地点第一个有归属的等级与 scopeId。
+// 这样缺霸主归属的人物在霸主带会按其帝国/王国/…聚��，而不是消失。
+function rankAndScopeWithFallback(
+  membership: SemanticMembership,
+  aggregateRank: SemanticRank,
+): { rank: SemanticRank; scopeId: string } | undefined {
+  const start = RANK_FINE_DOWN.indexOf(aggregateRank)
+  if (start < 0) return undefined
+  for (let i = start; i < RANK_FINE_DOWN.length; i += 1) {
+    const rank = RANK_FINE_DOWN[i]
+    const scopeId = scopeIdForRank(membership, rank)
+    if (scopeId) return { rank, scopeId }
+  }
+  return undefined
 }
 
 interface SemanticAggregationInput<TPoint> {
@@ -82,11 +100,12 @@ export function aggregateCharacterPoints(input: CharacterAggregationInput): Sema
     const membership = membershipByLocation.get(point.locationId)
     let rank: SemanticRank | undefined
     let scopeId: string | undefined
-    if (aggregateRank) {
-      rank = aggregateRank
-      scopeId = membership ? scopeIdForRank(membership, aggregateRank) : undefined
-    } else {
-      // 默认：有伯爵领按伯爵领，缺则回退公国（保留既有行为与测试契约）
+    if (aggregateRank && membership) {
+      const found = rankAndScopeWithFallback(membership, aggregateRank)
+      rank = found?.rank
+      scopeId = found?.scopeId
+    } else if (!aggregateRank) {
+      // 未指定聚合等级：保留既有「有伯爵领按伯爵领，缺回退公国」行为与测试契约
       rank = membership?.countyId ? 'county' : membership?.duchyId ? 'duchy' : undefined
       scopeId = rank === 'county' ? membership?.countyId : membership?.duchyId
     }
@@ -113,19 +132,22 @@ export function aggregateAssetPoints(input: AssetAggregationInput): SemanticSubj
   const aggregateRank = input.aggregateRank
 
   // 指定聚合等级且比 county 更粗时，按该等级头衔点聚合，不走地点→伯爵领折叠。
+  // 缺该等级归属的地点逐级回退到更细等级，保证据点不会在低缩放凭空消失。
   if (aggregateRank && aggregateRank !== 'county') {
-    const groups = new Map<string, { scopeId: string; memberIds: string[] }>()
+    const groups = new Map<string, { rank: SemanticRank; scopeId: string; memberIds: string[] }>()
     for (const point of points) {
       const membership = membershipByLocation.get(point.locationId)
-      const scopeId = membership ? scopeIdForRank(membership, aggregateRank) : undefined
-      if (!scopeId) continue
-      const group = groups.get(scopeId) ?? { scopeId, memberIds: [] }
+      if (!membership) continue
+      const found = rankAndScopeWithFallback(membership, aggregateRank)
+      if (!found) continue
+      const key = `${found.rank}:${found.scopeId}`
+      const group = groups.get(key) ?? { rank: found.rank, scopeId: found.scopeId, memberIds: [] }
       group.memberIds.push(point.assetId)
-      groups.set(scopeId, group)
+      groups.set(key, group)
     }
     return [...groups.values()].flatMap((group) => {
-      const anchor = titleByRankAndId.get(`${aggregateRank}:${group.scopeId}`)
-      return anchor ? [aggregate('assets', aggregateRank, group.scopeId, anchor, group.memberIds)] : []
+      const anchor = titleByRankAndId.get(`${group.rank}:${group.scopeId}`)
+      return anchor ? [aggregate('assets', group.rank, group.scopeId, anchor, group.memberIds)] : []
     }).sort((left, right) => left.id.localeCompare(right.id))
   }
 

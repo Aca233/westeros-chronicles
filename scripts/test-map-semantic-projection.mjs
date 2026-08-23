@@ -117,9 +117,10 @@ test('反向输入、重复输入和视野外输入不会改变聚合结果', ()
   assert.deepEqual(aggregateCharacterPoints(base), aggregateCharacterPoints(reversedDuplicatedAndOffscreen))
 })
 
-test('aggregateRank=kingdom 时按王国头衔点聚合，缺该等级归属的角色被跳过', () => {
+test('aggregateRank=kingdom 时按王国头衔点聚合，缺王国归属回退到更细等级', () => {
   const kingdomTitles = [
     { ...countyTitle, featureId: 9, titleId: 'k_north', rank: 'kingdom', name: '北境王国', mapX: 150, mapY: 100 },
+    { ...countyTitle, featureId: 10, titleId: 'd_the_neck', rank: 'duchy', name: '颈泽公国', mapX: 180, mapY: 140 },
   ]
   const kingdomMemberships = [
     { locationId: 'b_winterfell', baronyId: 'b_winterfell', countyId: 'c_winterfell', duchyId: 'd_winterfell', kingdomId: 'k_north', regionId: 'the_north' },
@@ -133,7 +134,14 @@ test('aggregateRank=kingdom 时按王国头衔点聚合，缺该等级归属的�
     pixelBounds: aggregationBounds,
     aggregateRank: 'kingdom',
   })
+  // b_winterfell/b_godswood 聚到王国 k_north；b_greywater 缺王国归属，回退到其公国 d_the_neck。
+  // 输出按 id 字典序：characters:duchy:* 排在 characters:kingdom:* 之前。
   assert.deepEqual(groups, [
+    {
+      id: 'characters:duchy:d_the_neck', kind: 'characters', rank: 'duchy',
+      scopeId: 'd_the_neck', mapX: 180, mapY: 140, count: 1,
+      memberIds: ['agot:Howland_1'],
+    },
     {
       id: 'characters:kingdom:k_north', kind: 'characters', rank: 'kingdom',
       scopeId: 'k_north', mapX: 150, mapY: 100, count: 2,
