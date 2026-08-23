@@ -114,9 +114,8 @@ export const MapLocationPicker: React.FC<MapLocationPickerProps> = ({ initialLoc
       mapX: (bounds.minX + bounds.maxX) / 2,
       mapY: (bounds.minY + bounds.maxY) / 2,
     }, manifest)
-    // 缩放 0 让整张地图（维斯特洛+厄斯索斯）尽收眼底；bounds 中心现在落在两大陆之间的海面，
-    // 仅以其中一块大陆为默认取景反而遮蔽另一块。
-    return { longitude, latitude, zoom: 0 }
+    // bounds 中心在两大陆之间的海面；zoom 3 能看到伯爵领边界与道路，且便于点击放大选点。
+    return { longitude, latitude, zoom: 3 }
   }, [manifest])
 
   return (

@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Map as MapIcon, RotateCcw, X } from 'lucide-react'
 
 import { MapCanvas, prewarmMapRuntime } from './MapCanvas'
+import { mapPixelToLngLat } from './coordinates'
 import { MapErrorBoundary } from './MapErrorBoundary'
 import { CountyDetails } from './CountyDetails'
 import { LocationDetails } from './LocationDetails'
@@ -154,6 +155,19 @@ export const MapDrawer: React.FC<MapDrawerProps> = ({ onSelectCharacter }) => {
     assetPoints: allAssetPoints.slice(0, 6),
   }), [allCharacterPoints, allAssetPoints])
 
+  // 首次开图（lastViewport 为空）落在两大陆之间的海面：bounds 扩展后中心经度为 0。
+  // 用一个能看到大陆、且人物/据点聚合与道路都已显形的缩放，避免"啥都不显示"。
+  const fallbackViewport = useMemo(() => {
+    if (!manifest) return null
+    const bounds = manifest.westerosBounds
+    const [longitude, latitude] = mapPixelToLngLat({
+      mapX: (bounds.minX + bounds.maxX) / 2,
+      mapY: (bounds.minY + bounds.maxY) / 2,
+    }, manifest)
+    return { longitude, latitude, zoom: 3 }
+  }, [manifest])
+
+
   const countyInteraction = useMemo(() => semanticIndex
     ? buildCountyInteractionIndex(mapLocations, semanticIndex)
     : null, [mapLocations, semanticIndex])
@@ -299,7 +313,7 @@ export const MapDrawer: React.FC<MapDrawerProps> = ({ onSelectCharacter }) => {
             manifest={manifest}
             selectedCountyId={selection.countyId}
             selectedLocationId={selection.locationId}
-            initialViewport={lastViewport}
+            initialViewport={lastViewport ?? fallbackViewport}
             focusRequest={focusRequest}
             onSelectCounty={selectCounty}
             onSelectLocation={selectLocation}
