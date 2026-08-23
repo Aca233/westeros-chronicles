@@ -29,12 +29,12 @@ export function landmarkAnchor(
 
 export function landmarkModelMatrix(
   record: LandmarkModelRecord,
-  manifest: Pick<MapManifest, 'westerosBounds' | 'mapSize'>,
+  manifest: Pick<MapManifest, 'westerosBounds'>,
   terrainScale = TERRAIN_VISUAL_SCALE,
 ): Matrix4 {
   const anchor = landmarkAnchor(record, manifest, terrainScale)
-  const mapWidth = manifest.mapSize.width
-  const mapHeight = manifest.mapSize.height
+  const mapWidth = manifest.westerosBounds.maxX - manifest.westerosBounds.minX
+  const mapHeight = manifest.westerosBounds.maxY - manifest.westerosBounds.minY
   const quaternion = new Quaternion(...record.transform.rotation)
   const modelScale = new Vector3(...record.transform.scale)
   // Landmark mesh units come from CK3 map-object space, not real-world metres.

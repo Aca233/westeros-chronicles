@@ -4,8 +4,8 @@ import { Vector3 } from 'three'
 
 import { landmarkAnchor, landmarkModelMatrix } from '../src/features/map/landmarks/landmarkTransform.ts'
 
-const manifest = { westerosBounds: { minX: 0, minY: 0, maxX: 100, maxY: 100 }, mapSize: { width: 100, height: 100 } }
-const rectangularManifest = { westerosBounds: { minX: 0, minY: 0, maxX: 100, maxY: 200 }, mapSize: { width: 100, height: 200 } }
+const manifest = { westerosBounds: { minX: 0, minY: 0, maxX: 100, maxY: 100 } }
+const rectangularManifest = { westerosBounds: { minX: 0, minY: 0, maxX: 100, maxY: 200 } }
 const record = {
   id: 'test', locationId: 'b_test', provinceId: 1, name: 'test',
   transform: { mapX: 50, mapY: 50, elevationMeters: 100, rotation: [0, 0, 0, 1], scale: [2, 3, 4] },
