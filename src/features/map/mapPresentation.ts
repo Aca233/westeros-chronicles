@@ -31,7 +31,7 @@ export function mapPresentationFor(input: {
     countyLabels: band !== 'strategic',
     internalLocations: band === 'local' && hasCounty,
     roads: input.overlays.roads,
-    characters: band !== 'strategic' && input.overlays.characters,
-    assets: band !== 'strategic' && input.overlays.assets,
+    characters: input.overlays.characters,
+    assets: input.overlays.assets,
   }
 }
