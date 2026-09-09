@@ -27,6 +27,7 @@
     "check:imported-character-traits": "node scripts/check-imported-character-traits.mjs",
     "test:dice-policy": "node --experimental-strip-types scripts/test-dice-policy.mjs",
     "test:dice-request": "node --experimental-strip-types scripts/test-dice-request.mjs",
+    "test:dice-methods": "npm run test:dice-policy && npm run test:dice-request && node scripts/test-dice-method-composition.mjs",
     "test:state-reducer": "node scripts/test-state-reducer.mjs",
     "test:equipment-queue": "npm run test:item-action-queue",
     "test:equipment-queue-store": "node scripts/test-equipment-queue-store.mjs",
