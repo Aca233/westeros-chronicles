@@ -4,6 +4,7 @@ import { resolveCharacterTraits } from '../../data/characterTraits';
 import { filterImportedCharacterTraits } from '../../data/importedCharacterTraitPolicy';
 import type { GameState } from '../../types/game';
 import { getItemDefinition } from '../items/catalog';
+import { getUsedStorageUnits } from '../items/custody';
 import { preloadNpcLoadoutContent } from '../items/npcLoadoutContent';
 import { buildCharacterPromptSlice, type CharacterPromptCandidate, type CharacterPromptSelection } from '../characters/characterPromptSlice';
 import { characterAgeAtYear, characterDatasetYear } from '../characters/characterDossier';
@@ -15,7 +16,7 @@ import { StaticCharacterRepository } from '../characters/staticCharacterReposito
 import type { CharacterId, CharacterSearchHit, ResolvedCharacter, StaticCharacterLoadoutProfile, StaticCharacterRecord } from '../characters/types';
 import type { CharacterCommandBatchBaseContext } from '../../services/stateReducer';
 import type { CanonicalTimelineEvent } from './canonicalTimeline';
-import { advanceWorldDate, compareWorldDates, type WorldDate } from './worldHistory';
+import type { WorldDate } from './worldHistory';
 import { projectNpcAssets, projectNpcEquipment, worldEventParticipantIds, type NpcItemRelation } from './worldHistoryProjection';
 import { mapRepository } from '../map/repository';
 import { sameWorldLocation, UNKNOWN_WESTEROS_LOCATION_ID } from '../map/locationResolver';
@@ -30,8 +31,8 @@ import { playerWorldEventViewer, selectVisibleWorldEvents } from './worldEventVi
 
 export const WORLD_CONTEXT_LIMITS = {
   characters: 12,
-  assets: 20,
-  events: 12,
+  assets: 12,
+  events: 6,
   neighboringLocations: 8,
 } as const;
 
@@ -60,6 +61,8 @@ export interface BuildWorldTurnContextInput {
   startCharacters?: readonly WorldCharacterStartRecord[];
   gameplayLocations?: readonly MapLocationSearchEntry[];
   timeline?: readonly CanonicalTimelineEvent[];
+  /** 由场景系统明确登记的在场人物；点名和近期互动不能代替在场证据。 */
+  presentCharacterIds?: readonly CharacterId[];
 }
 
 export interface VisibleWorldItem {
@@ -78,10 +81,22 @@ export interface VisibleWorldSite {
   type: string;
   capacity?: number;
   itemCount: number;
+  usedUnits: number;
   locationTitle?: string;
 }
 
 export interface WorldTurnContext {
+  manifest: {
+    schemaVersion: 1;
+    fullCharacterIds: CharacterId[];
+    compactCharacterIds: CharacterId[];
+    omittedCharacterCount: number;
+    visibleAssetCount: number;
+    visibleEventCount: number;
+    neighboringLocationCount: number;
+    pendingTransactionCount: number;
+    mapStatus: 'available' | 'unavailable';
+  };
   selection: CharacterPromptSelection;
   directlyNamedIds: CharacterId[];
   strongRelationshipIds: CharacterId[];
@@ -117,20 +132,9 @@ function relationIds(record: StaticCharacterRecord | undefined): CharacterId[] {
   ]);
 }
 
-function upcomingPressures(
-  history: GameState['worldHistory'],
-  timeline: readonly CanonicalTimelineEvent[],
-  currentDate: WorldDate,
-): CanonicalTimelineEvent[] {
-  const horizon = advanceWorldDate(currentDate, { days: 30 });
-  return timeline.filter((event) => history.canonical[event.id]?.status === 'scheduled'
-    && compareWorldDates(event.date, currentDate) >= 0
-    && compareWorldDates(event.date, horizon) <= 0).slice(0, 8);
-}
-
 function recentParticipantIds(gameState: GameState, visibleWorldEvents: readonly WorldEvent[]): CharacterId[] {
   const eventsById = new Map(visibleWorldEvents.map((event) => [event.id, event]));
-  return uniqueIds(gameState.worldHistory.turns.slice(-4)
+  return uniqueIds(gameState.worldHistory.turns.slice(-2)
     .flatMap((turn) => turn.eventIds)
     .flatMap((eventId) => {
       const event = eventsById.get(eventId);
@@ -174,6 +178,14 @@ function relationToPlayer(character: ResolvedCharacter, playerId: CharacterId | 
   if (character.fatherId === playerId || character.motherId === playerId) return '子女';
   if (character.spouseIds.includes(playerId)) return '配偶';
   return character.relationships.find((relation) => relation.targetId === playerId)?.kind;
+}
+
+function sharesExplicitScene(character: ResolvedCharacter, location: GameState['lord']['location']): boolean {
+  return character.locationId === location.locationId
+    && typeof character.sceneLocation === 'string'
+    && character.sceneLocation.trim().length > 0
+    && typeof location.sceneLocation === 'string'
+    && character.sceneLocation.trim() === location.sceneLocation.trim();
 }
 
 function visibleCharacterItems(
@@ -253,13 +265,21 @@ export async function buildWorldTurnContext(input: BuildWorldTurnContextInput): 
   const directlyNamedIds = uniqueIds(disambiguateByName(mentionedNonGenealogy).map(mentionId));
   const strongRelationshipIds = relationIds(playerRecord);
   const recentInteractionIds = recentParticipantIds(gameState, visibleWorldEvents);
-  const timelinePressures = upcomingPressures(gameState.worldHistory, timeline, currentDate);
-  const eventParticipantIds = uniqueIds(timelinePressures.flatMap((event) => event.participants.map((person) => person.characterId)));
+  // 未来原作节点只供程序推进世界，不进入模型上下文，也不把未来参与者提前拉入场景。
+  const timelinePressures: CanonicalTimelineEvent[] = [];
+  const eventParticipantIds = [...recentInteractionIds];
+  const storedSceneIds = gameState.activeScene
+    && gameState.activeScene.location.locationId === gameState.lord.location.locationId
+    && (gameState.activeScene.location.sceneLocation?.trim() ?? '') === (gameState.lord.location.sceneLocation?.trim() ?? '')
+    ? gameState.activeScene.presentCharacterIds
+    : [];
+  const explicitPresentIds = uniqueIds(input.presentCharacterIds ?? storedSceneIds);
   const candidateIds = uniqueIds([
     ...directlyNamedIds,
     ...strongRelationshipIds,
     ...recentInteractionIds,
     ...eventParticipantIds,
+    ...explicitPresentIds,
   ]);
   const records = (await repository.getMany(candidateIds)).filter((record) => record.canonTier !== 'genealogy');
   const runId = gameState.worldCharacters?.runId;
@@ -284,10 +304,12 @@ export async function buildWorldTurnContext(input: BuildWorldTurnContextInput): 
   const strongSet = new Set(strongRelationshipIds);
   const recentSet = new Set(recentInteractionIds);
   const eventSet = new Set(eventParticipantIds);
+  const explicitPresentSet = new Set(explicitPresentIds);
   const locationNameById = new Map(mapLocations.map((location) => [location.id, location.name]));
   const candidates: CharacterPromptCandidate[] = resolved.map((character) => {
     const age = characterAgeAtYear(character.birthDate, gameState.currentYear, character.deathDate, character.alive);
     const importedTraits = filterImportedCharacterTraits(character.traits, age);
+    const isPresent = explicitPresentSet.has(character.id) || sharesExplicitScene(character, gameState.lord.location);
     return {
       id: character.id,
       name: character.name,
@@ -296,9 +318,10 @@ export async function buildWorldTurnContext(input: BuildWorldTurnContextInput): 
       hasStrongRelationship: strongSet.has(character.id),
       recentlyInteracted: recentSet.has(character.id),
       isEventParticipant: eventSet.has(character.id),
+      isPresent,
       publicIdentity: character.titles[0],
       role: character.titles[0],
-      locationName: character.locationId ? locationNameById.get(character.locationId) : undefined,
+      locationName: isPresent && character.locationId ? locationNameById.get(character.locationId) : undefined,
       relationToViewer: relationToPlayer(character, playerId, playerRecord),
       visibleTraits: resolveCharacterTraits(importedTraits.visibleTraitIds, []).map((trait) => trait.name),
       memories: character.memories,
@@ -309,10 +332,12 @@ export async function buildWorldTurnContext(input: BuildWorldTurnContextInput): 
     candidates,
     directlyNamedIds,
     eventParticipantIds,
+    presentCharacterIds: explicitPresentIds,
     strongRelationshipIds,
     recentInteractionIds,
   });
-  const full = rawSelection.full.slice(0, WORLD_CONTEXT_LIMITS.characters);
+  // 直接点名与当前说话人允许突破常规上限；不要在这里再次截断 selector 的强制保留结果。
+  const full = rawSelection.full;
   const compactBudget = Math.max(0, WORLD_CONTEXT_LIMITS.characters - full.length);
   const compact = rawSelection.compact.slice(0, compactBudget);
   const selection: CharacterPromptSelection = {
@@ -322,10 +347,9 @@ export async function buildWorldTurnContext(input: BuildWorldTurnContextInput): 
   };
   const selectedIds = new Set<CharacterId>([...selection.full, ...selection.compact].map((entry) => entry.id));
   const presentCharacterIds = uniqueIds([
-    ...directlyNamedIds,
-    ...recentInteractionIds,
-    ...resolved.filter((character) => character.locationId === gameState.lord.location.locationId).map((character) => character.id),
-  ]).filter((id) => selectedIds.has(id));
+    ...explicitPresentIds,
+    ...resolved.filter((character) => sharesExplicitScene(character, gameState.lord.location)).map((character) => character.id),
+  ]);
   // New MOVE/TRANSFER targets must be gameplay locations; the current
   // location stays valid so pre-existing saves on hidden locations can
   // still be referenced and left.
@@ -334,7 +358,7 @@ export async function buildWorldTurnContext(input: BuildWorldTurnContextInput): 
     gameState.lord.location.locationId,
     UNKNOWN_WESTEROS_LOCATION_ID,
   ])];
-  const visibleItems = visibleCharacterItems(resolved, selectedIds, gameState);
+  const visibleItems = visibleCharacterItems(resolved, new Set(presentCharacterIds), gameState);
   // 当前地点据点：容器的在场可见性——名称、类型、容量与现存件数直接进入解析上下文。
   const titlesByTitleId = new Map(semanticTitles.map((title) => [title.titleId, title.name]));
   const itemSystem = gameState.lord.items;
@@ -348,11 +372,13 @@ export async function buildWorldTurnContext(input: BuildWorldTurnContextInput): 
       itemCount: Object.values(itemSystem.placements)
         .filter((placement) => placement.type === 'site' && placement.siteId === site.id)
         .length,
+      usedUnits: getUsedStorageUnits(itemSystem, ITEM_CATALOG, { type: 'site', siteId: site.id }),
       ...(titlesByTitleId.has(site.location.locationId)
         ? { locationTitle: titlesByTitleId.get(site.location.locationId) }
         : {}),
     }))
-    .sort((left, right) => left.name.localeCompare(right.name, 'zh-CN'));
+    .sort((left, right) => left.name.localeCompare(right.name, 'zh-CN'))
+    .slice(0, 8);
   const narrativeLocation = resolveNarrativeLocationContext({
     location: gameState.lord.location,
     locations: mapLocations,
@@ -378,6 +404,17 @@ export async function buildWorldTurnContext(input: BuildWorldTurnContextInput): 
     .slice(-WORLD_CONTEXT_LIMITS.events);
 
   return {
+    manifest: {
+      schemaVersion: 1,
+      fullCharacterIds: selection.full.map((entry) => entry.id),
+      compactCharacterIds: selection.compact.map((entry) => entry.id),
+      omittedCharacterCount: selection.omittedCount ?? 0,
+      visibleAssetCount: Math.min(WORLD_CONTEXT_LIMITS.assets, visibleItems.equipment.length + visibleItems.assets.length),
+      visibleEventCount: recentWorldEvents.length,
+      neighboringLocationCount: neighboringLocations.length,
+      pendingTransactionCount: Math.min(6, gameState.worldRuntime.pendingTransactions.filter((entry) => entry.status === 'pending').length),
+      mapStatus: mapResult.status,
+    },
     selection,
     directlyNamedIds,
     strongRelationshipIds,
@@ -400,7 +437,7 @@ export async function buildWorldTurnContext(input: BuildWorldTurnContextInput): 
     mapAvailability: mapResult.status === 'available'
       ? { status: 'available' }
       : { status: 'unavailable', reason: mapResult.reason },
-    pendingTransactions: gameState.worldRuntime.pendingTransactions.filter((entry) => entry.status === 'pending').slice(0, 12),
+    pendingTransactions: gameState.worldRuntime.pendingTransactions.filter((entry) => entry.status === 'pending').slice(0, 6),
   };
 }
 
@@ -426,9 +463,6 @@ export function formatWorldTurnContext(context: WorldTurnContext): string {
     { viewerId: 'player', knownFactIds: new Set() },
     `${context.currentDate.year}.${context.currentDate.month}.${context.currentDate.day}`,
   );
-  const timelineLines = context.timelinePressures.length
-    ? context.timelinePressures.map((event) => `- ${event.dateDisplay ?? `${event.date.year}.${event.date.month}.${event.date.day}`} · ${event.title}: ${event.summary}`)
-    : ['- 当前三十日内没有原作预定节点。'];
   const equipmentLines = context.visibleWorldEquipment.length
     ? groupVisibleItemsByCharacter(context.visibleWorldEquipment, (item) => `${item.name} (${item.definitionId})`)
     : ['- 当前场景人物没有记录中的实际穿戴。'];
@@ -447,9 +481,9 @@ export function formatWorldTurnContext(context: WorldTurnContext): string {
     : ['- 当前没有待处理世界事务。'];
   const siteLines = context.currentLocationSites.length
     ? context.currentLocationSites.map((site) => {
-        const usage = site.capacity !== undefined ? `${site.itemCount}/${site.capacity}` : `${site.itemCount}`;
+        const usage = site.capacity !== undefined ? `${site.usedUnits}/${site.capacity}` : `${site.usedUnits}`;
         const title = site.locationTitle ? `，隶属领地：${site.locationTitle}` : '';
-        return `- ${site.name} [${site.siteId}]：${site.type}，现存 ${usage} 件${title}`;
+        return `- ${site.name} [${site.siteId}]：${site.type}，${site.itemCount} 个物品条目，占用 ${usage} 容量${title}`;
       })
     : ['- 当前地点没有已知据点或储藏处。'];
   return [
@@ -461,10 +495,6 @@ export function formatWorldTurnContext(context: WorldTurnContext): string {
     ...neighborLines,
     '',
     characterSlice,
-    '',
-    '### 【原作预定压力】',
-    '- 这些是可能发生的未来压力，不是已经发生的事实；前置条件改变时允许偏离。',
-    ...timelineLines,
     '',
     '### 【人物当前实际穿戴】',
     ...equipmentLines,

@@ -2,6 +2,7 @@ import type { CharacterId } from '../../domain/characterId';
 import type { EquipmentPosition, ItemStateCommand, ItemStorageSite, ItemStorageSiteType, ItemSystemState } from '../items/types';
 import type { WorldLocationRef } from '../../domain/worldLocation';
 import type { ActiveJourney, TravelStateCommand } from '../map/travel/types';
+import type { RoutePreference, TravelMode } from '../map/types';
 import type { WorldDate, WorldDateAdvance } from '../../domain/worldDate';
 
 export type WorldPrincipalRef =
@@ -44,9 +45,36 @@ export interface AssetWorldPatch {
   status?: 'normal' | 'stolen' | 'inheritance_pending';
 }
 
+export type TravelWorldIntentKind =
+  | 'plan_travel'
+  | 'start_travel'
+  | 'pause_travel'
+  | 'resume_travel'
+  | 'reroute_travel'
+  | 'return_travel'
+  | 'advance_travel'
+  | 'arrive'
+  | 'cancel_travel'
+  | 'move_inside_location';
+
+export type TravelWorldIntent = {
+  [K in TravelWorldIntentKind]: {
+      kind: K;
+      actorId: CharacterId;
+      targetRef?: WorldSubjectRef;
+      elapsedTime?: WorldDateAdvance;
+      routePreference?: RoutePreference;
+      travelMode?: TravelMode;
+      via?: WorldLocationRef[];
+      companionIds?: CharacterId[];
+      vehicleIds?: string[];
+      evidenceText: string;
+    }
+}[TravelWorldIntentKind];
+
 export type WorldIntent =
   | { kind: 'mention'; actorId: CharacterId; targetRef?: WorldSubjectRef; evidenceText: string }
-  | { kind: 'plan_travel' | 'start_travel' | 'pause_travel' | 'resume_travel' | 'reroute_travel' | 'return_travel' | 'advance_travel' | 'arrive' | 'cancel_travel' | 'move_inside_location'; actorId: CharacterId; targetRef?: WorldSubjectRef; elapsedTime?: WorldDateAdvance; evidenceText: string }
+  | TravelWorldIntent
   | { kind: 'gift_asset'; actorId: CharacterId; assetId: string; recipientId: CharacterId; evidenceText: string }
   | { kind: 'steal_asset'; actorId: CharacterId; assetId: string; evidenceText: string }
   | { kind: 'inherit_asset'; actorId: CharacterId; assetId: string; recipientId: CharacterId; evidenceText: string }

@@ -122,6 +122,7 @@ export function filterMapIntelligence<TSubject extends MapIntelSubject>(
       intelLevel: 'rumored',
       ...(regionId ? { regionId } : {}),
       ...(qualitativeDescription ? { qualitativeDescription } : {}),
+      ...metadata(knowledge),
     }
   }
 

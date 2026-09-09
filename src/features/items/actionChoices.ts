@@ -47,14 +47,8 @@ function samePlacement(left: ItemPlacement, right: ItemPlacement): boolean {
 
 function accessibleLocationLabel(state: ItemSystemState, placement: ItemPlacement, currentLocation: WorldLocationRef): string | undefined {
   if (placement.type === 'carried') return '随身携带';
-  if (placement.type === 'site') {
-    const site = state.sites[placement.siteId];
-    return site && sameWorldLocation(site.location, currentLocation) ? `${site.name} · ${site.locationLabel}` : undefined;
-  }
-  if (placement.type === 'vehicle') {
-    const vehicle = state.vehicles[placement.vehicleId];
-    return vehicle && sameWorldLocation(vehicle.location, currentLocation) ? `${vehicle.name} · ${vehicle.locationLabel}` : undefined;
-  }
+  void state;
+  void currentLocation;
   return undefined;
 }
 
@@ -103,12 +97,8 @@ export function getEquipmentReplacementChoices({
       positionLabel: equipmentPositionLabel(position),
     });
   }
-  const placementOrder: Record<string, number> = { carried: 0, site: 1, vehicle: 2 };
   return choices.sort((left, right) => {
-    const leftPlacement = state.placements[left.instanceId];
-    const rightPlacement = state.placements[right.instanceId];
-    return (placementOrder[leftPlacement.type] ?? 9) - (placementOrder[rightPlacement.type] ?? 9)
-      || left.name.localeCompare(right.name, 'zh-CN')
+    return left.name.localeCompare(right.name, 'zh-CN')
       || left.instanceId.localeCompare(right.instanceId);
   });
 }

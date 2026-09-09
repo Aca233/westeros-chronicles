@@ -1,6 +1,6 @@
 import { stripEmoji } from '../../services/textSanitizer';
 import type { SceneCharacterCandidate, SceneSelectionResult } from './sceneCharacterSelector';
-import { visibleFacts, type KnowledgeViewerContext } from './characterKnowledge';
+import { visibleFacts, visibleMemories, type KnowledgeViewerContext } from './characterKnowledge';
 import { relationshipSummary } from './characterRelationships';
 import type {
   CharacterKnowledge,
@@ -101,6 +101,7 @@ function visibleKnowledgeLines(
   const safeFacts = values.filter(isKnowledge);
 
   return visibleFacts(safeFacts, viewer, currentDate)
+    .slice(0, 4)
     .map((fact) => {
       const field = singleLine(fact.field);
       const value = singleLine(fact.value);
@@ -121,18 +122,6 @@ function isMemory(value: unknown): value is CharacterMemory {
     && memory.participants.every((id) => typeof id === 'string');
 }
 
-function canViewMemory(memory: CharacterMemory, viewer: KnowledgeViewerContext): boolean {
-  if (memory.visibility === 'system') return false;
-  if (memory.visibility === 'public') return true;
-  if (memory.visibility === 'player') return viewer.viewerId === 'player';
-  if (memory.visibility === 'restricted') {
-    if (viewer.knownFactIds.has(memory.id)) return true;
-    if (viewer.viewerId === 'player') return false;
-    return memory.characterId === viewer.viewerId || memory.participants.includes(viewer.viewerId);
-  }
-  return viewer.knownFactIds.has(memory.id);
-}
-
 function visibleMemoryLines(
   candidate: CharacterPromptCandidate,
   viewer: KnowledgeViewerContext,
@@ -140,7 +129,9 @@ function visibleMemoryLines(
   if (!Array.isArray(candidate.memories)) return [];
   return candidate.memories
     .filter(isMemory)
-    .filter((memory) => canViewMemory(memory, viewer))
+    .filter((memory) => visibleMemories([memory], viewer).length > 0)
+    .sort((left, right) => right.importance - left.importance || right.turn - left.turn)
+    .slice(0, 3)
     .map((memory) => singleLine(memory.event))
     .filter(Boolean);
 }
@@ -170,7 +161,7 @@ function formatFullCard(
   appendOptionalLine(lines, '公开身份', singleLine(candidate.publicIdentity) || singleLine(candidate.role));
   appendOptionalLine(lines, '地点', singleLine(candidate.locationName));
   appendOptionalLine(lines, '关系', relationText(candidate.relationToViewer));
-  appendOptionalList(lines, '特质', safeStringList(candidate.visibleTraits));
+  appendOptionalList(lines, '特质', safeStringList(candidate.visibleTraits).slice(0, 6));
   appendOptionalList(lines, '目标', visibleKnowledgeLines(candidate.currentGoals, viewer, currentDate));
   appendOptionalList(lines, '记忆', visibleMemoryLines(candidate, viewer));
   appendOptionalList(lines, '知识', visibleKnowledgeLines(candidate.knowledge, viewer, currentDate));

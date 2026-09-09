@@ -24,6 +24,7 @@ import type {
 } from './types';
 import type { WorldLocationRef } from '../map/types';
 import type { WorldEvent, CharacterWorldPatch } from '../world/worldRuntimeTypes';
+import { visibleMemories, type KnowledgeViewerContext } from './characterKnowledge';
 import {
   EMPTY_CHARACTER_ASSET_GROUPS,
   type CharacterAssetGroups,
@@ -240,6 +241,7 @@ export function createNpcDossier(
   kinship: CharacterKinshipEntry = { spouseIds: character.spouseIds, childIds: [], siblingIds: [] },
   content?: CharacterContentRecord,
   terminology?: Pick<WorldTerminology, 'cultures' | 'faiths'>,
+  viewer: KnowledgeViewerContext = { viewerId: 'player', knownFactIds: new Set<string>() },
 ): NpcCharacterDossier {
   const house = houseMetadata(character.dynastyId);
   const title = character.titles[0] || '未持有封地';
@@ -308,7 +310,7 @@ export function createNpcDossier(
     },
     wounds: [...character.wounds],
     woundLevels: { ...character.woundLevels },
-    memories: [...character.memories],
+    memories: visibleMemories(character.memories, viewer),
     summary: supplement?.summary ?? '暂无可靠的公开生平摘要。',
     publicRoles: supplement?.publicRoles,
     aliases: supplement?.aliases,

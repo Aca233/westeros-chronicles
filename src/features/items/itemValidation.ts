@@ -65,7 +65,7 @@ export function getUsedCarryUnits(state: ItemSystemState, catalog: ItemCatalog):
   }, 0);
 }
 
-function getUsedStorageUnits(
+export function getUsedStorageUnits(
   state: ItemSystemState,
   catalog: ItemCatalog,
   placement: Extract<ItemPlacement, { type: 'site' | 'vehicle' }>,

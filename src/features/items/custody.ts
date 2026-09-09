@@ -15,6 +15,7 @@ export {
   getCarryUnits,
   getStorageUnits,
   getUsedCarryUnits,
+  getUsedStorageUnits,
   listItemsAt,
 } from './itemValidation';
 

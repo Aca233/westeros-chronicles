@@ -2,9 +2,8 @@ import type { BodyZoneKey, WoundLevel } from '../../types/game';
 import { ITEM_CATALOG } from '../../data/itemDefinitions';
 import type { EquipmentPosition } from '../items/types';
 import { createWorldLocationRef } from '../map/locationResolver';
-import { normalizeRelationship } from './characterRelationships';
 import { isCharacterId } from './characterIds';
-import type { CharacterId, CharacterItemRecord, CharacterRelationship, KnowledgeVisibility } from './types';
+import type { CharacterId, CharacterItemRecord, KnowledgeVisibility } from './types';
 import {
   type CharacterCommandContext,
   type CharacterState,
@@ -49,6 +48,7 @@ const PRESENCE_REQUIRED_COMMANDS = new Set([
   'KILL_CHARACTER',
   'MARRY_CHARACTERS',
   'DIVORCE_CHARACTERS',
+  'ADD_CHARACTER_MEMORY',
 ]);
 const ZONE_ALIASES: Record<string, BodyZoneKey> = {
   head: 'head',
@@ -233,6 +233,12 @@ function validateContext(input: unknown): { context?: ValidatedContext; reason?:
       }
     }
   }
+  if (hasOwn(input, 'roleplay') && input.roleplay !== undefined) {
+    if (!isRecord(input.roleplay)
+      || !Array.isArray(input.roleplay.socialEvents)
+      || !Array.isArray(input.roleplay.commitments)
+      || !Array.isArray(input.roleplay.knowledge)) return { reason: '社会关系账本结构不合法' };
+  }
 
   return {
     context: {
@@ -319,29 +325,6 @@ function requireNumberEnum(value: unknown, label: string): WoundLevel | undefine
   return typeof value === 'string' && LEVELS.has(value as WoundLevel) ? value as WoundLevel : undefined;
 }
 
-function relationshipEvent(
-  sourceId: CharacterId,
-  targetId: CharacterId,
-  input: RuntimeRecord,
-): CharacterRelationship | string {
-  if (!isRecord(input)) return '关系必须是对象';
-  const shapeReason = validateRelationshipShape(input, '关系');
-  if (shapeReason) return shapeReason;
-  const kind = input.kind === undefined ? undefined : input.kind as string;
-  const raw: CharacterRelationship = {
-    sourceId,
-    targetId,
-    ...(kind === undefined ? {} : { kind }),
-    opinion: input.opinion as number,
-    trust: input.trust as number,
-    fear: input.fear as number,
-    respect: input.respect as number,
-    attraction: input.attraction as number,
-    obligation: input.obligation as number,
-  };
-  return normalizeRelationship(raw);
-}
-
 function hasDied(context: ValidatedContext, id: CharacterId): boolean {
   return context.eventHistory?.some((entry) => entry.characterId === id && entry.event.type === 'DIE') ?? false;
 }
@@ -353,20 +336,7 @@ function validateCharacterCommandUnsafe(commandInput: unknown, context: Validate
     && (typeof commandInput.commandId !== 'string' || !commandInput.commandId.trim())) return fail('命令 ID 必须是非空字符串');
 
   if (commandInput.type === 'SET_CHARACTER_RELATIONSHIP') {
-    const source = requireCharacter(context, commandInput.sourceCharacterId);
-    const target = requireCharacter(context, commandInput.targetCharacterId);
-    if (typeof source === 'string') return fail(source);
-    if (typeof target === 'string') return fail(target);
-    if (source.id === target.id) return fail('人物不能与自己建立关系');
-    const relationship = relationshipEvent(source.id, target.id, commandInput.relationship as RuntimeRecord);
-    if (typeof relationship === 'string') return fail(relationship);
-    const dead = requireAlive(source) ?? requireAlive(target);
-    if (dead) return fail(dead);
-    const absent = requirePresent([source, target], context);
-    if (absent) return fail(absent);
-    return success([eventInput(commandInput as CharacterStateCommand, context, source.id, {
-      type: 'SET_RELATIONSHIP', relationship,
-    })]);
+    return fail('关系不可由模型直接覆写；请记录有受众和来源的社会行为');
   }
 
   if (commandInput.type === 'CHARACTER_ITEM_TRANSFER') {
@@ -505,25 +475,7 @@ function validateCharacterCommandUnsafe(commandInput: unknown, context: Validate
       })]);
     }
     case 'HEAL_CHARACTER': {
-      let zone: BodyZoneKey | 'all' = 'all';
-      if (hasOwn(commandInput, 'zone') && commandInput.zone !== undefined) {
-        if (commandInput.zone === 'all') zone = 'all';
-        else {
-          const normalizedZone = normalizeZone(commandInput.zone);
-          if (!normalizedZone) return fail('治疗部位枚举值不合法');
-          zone = normalizedZone;
-        }
-      }
-      let level: WoundLevel | undefined;
-      if (hasOwn(commandInput, 'level') && commandInput.level !== undefined) {
-        level = requireNumberEnum(commandInput.level, '伤势等级');
-        if (!level) return fail('伤势等级枚举值不合法');
-      }
-      const clearWound = optionalString(commandInput, 'clearWound', '要清除的伤口');
-      if (clearWound === null) return fail('要清除的伤口必须是非空字符串');
-      return success([eventInput(commandInput as CharacterStateCommand, context, subject.id, {
-        type: 'HEAL', zone, ...(level === undefined ? {} : { level }), ...(clearWound === undefined ? {} : { clearWound }),
-      })]);
+      return fail('NPC 治疗必须经带物资、目标伤口和疗效的专用事务，不能直接清除伤势');
     }
     case 'KILL_CHARACTER': {
       if (hasDied(context, subject.id)) return fail('人物已经死亡，不能重复记录死亡事件');
@@ -554,7 +506,29 @@ function validateCharacterCommandUnsafe(commandInput: unknown, context: Validate
       if (spouseDead) return fail(spouseDead);
       const absent = requirePresent([subject, spouse], context);
       if (absent) return fail(absent);
+      const consentEventId = requiredString(commandInput, 'consentEventId', '同意事件 ID');
+      if (!consentEventId) return fail('正式婚姻变更必须引用双方已经作出的同意事件');
+      const consent = context.roleplay?.socialEvents.find((event) => event.id === consentEventId);
+      const isMutualConsent = Boolean(consent
+        && consent.visibility === 'public'
+        && consent.act === 'accept'
+        && [consent.actorId, ...consent.targetIds].includes(subject.id)
+        && [consent.actorId, ...consent.targetIds].includes(spouse.id));
+      if (!isMutualConsent) return fail('同意事件不存在、未公开或未包含婚姻双方');
       if (commandInput.type === 'MARRY_CHARACTERS') {
+        const commitmentId = requiredString(commandInput, 'commitmentId', '婚约 ID');
+        const commitment = context.roleplay?.commitments.find((entry) => entry.id === commitmentId);
+        const promiseEvent = commitment
+          ? context.roleplay?.socialEvents.find((event) => event.id === commitment.sourceEventId)
+          : undefined;
+        const coversBoth = Boolean(commitment
+          && commitment.status === 'open'
+          && /婚|嫁|娶|夫妻|婚约/.test(commitment.terms)
+          && [commitment.debtorId, ...commitment.creditorIds].includes(subject.id)
+          && [commitment.debtorId, ...commitment.creditorIds].includes(spouse.id));
+        if (!coversBoth || !promiseEvent || !consent || !promiseEvent.exchangeId || promiseEvent.exchangeId !== consent.exchangeId) {
+          return fail('婚姻必须引用仍有效的婚约，以及同一交涉中双方公开接受的事件');
+        }
         if (hasSpouse(subject, spouse.id) || hasSpouse(spouse, subject.id)) return fail('婚姻已存在，不能重复建立');
         if ((subject.spouseIds ?? []).some((id) => id !== spouse.id) || (spouse.spouseIds ?? []).some((id) => id !== subject.id)) {
           return fail('婚姻双方已有其他配偶');
@@ -578,7 +552,7 @@ function validateCharacterCommandUnsafe(commandInput: unknown, context: Validate
       const memory = commandInput.memory;
       const event = requiredString(memory, 'event', '记忆事件');
       if (!event) return fail('记忆事件必须是非空字符串');
-      if (typeof memory.importance !== 'number' || !Number.isFinite(memory.importance) || memory.importance < 1) return fail('记忆重要性必须是有限正数');
+      if (typeof memory.importance !== 'number' || !Number.isInteger(memory.importance) || memory.importance < 1 || memory.importance > 5) return fail('记忆重要性必须是 1 到 5 的整数');
       const attitude = optionalString(memory, 'attitude', '记忆态度');
       if (attitude === null) return fail('记忆态度必须是非空字符串');
       const visibility = memory.visibility === undefined ? 'system' : memory.visibility;

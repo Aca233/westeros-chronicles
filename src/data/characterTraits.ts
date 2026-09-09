@@ -8,6 +8,7 @@ import { IMPORTED_CHARACTER_TRAIT_DEFINITIONS } from './importedCharacterTraitDe
 import {
   AggregatedTraitEffects,
   TraitCheckDomain,
+  TraitMethodEdge,
   TraitRuleSet,
   aggregateTraitRuleEffects,
   formatSignedPercent,
@@ -357,6 +358,18 @@ export function getTraitCheckContributions(
     .map((trait) => ({ id: trait.id, name: trait.name, value: trait.rules.checkModifiers?.[domain] ?? 0 }));
 }
 
+export function getTraitMethodEdges(
+  selectedTraitIds: readonly string[],
+  domain: TraitCheckDomain,
+): Array<TraitMethodEdge & { traitId: string; traitName: string }> {
+  return CHARACTER_TRAITS.flatMap((trait) => {
+    if (!selectedTraitIds.includes(trait.id)) return [];
+    return (trait.rules.methodEdges ?? [])
+      .filter((edge) => edge.domains.includes(domain))
+      .map((edge) => ({ ...edge, traitId: trait.id, traitName: trait.name }));
+  });
+}
+
 export function formatTraitRuleEffects(rules: TraitRuleSet): string[] {
   const multiplierLabels = {
     goldGain: '金币获得',
@@ -375,6 +388,9 @@ export function formatTraitRuleEffects(rules: TraitRuleSet): string[] {
   }
   for (const [key, value] of Object.entries(rules.checkModifiers ?? {}) as Array<[TraitCheckDomain, number]>) {
     lines.push(`${checkLabels[key]}检定 ${value >= 0 ? '+' : ''}${value}`);
+  }
+  for (const edge of rules.methodEdges ?? []) {
+    lines.push(`方法优势「${edge.label}」：${edge.domains.map((domain) => checkLabels[domain]).join('、')}失手不超过 ${edge.maxMiss} 时可转为受限部分成果`);
   }
   return lines;
 }

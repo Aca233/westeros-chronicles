@@ -6,6 +6,7 @@ import {
   type LocationLookupContext,
 } from '../map/locationResolver';
 import type { ActiveJourney } from '../map/travel/types';
+import type { RoutePreference, TravelMode } from '../map/types';
 import type { WorldDateAdvance } from './worldHistory';
 import type { WorldIntent } from './worldRuntimeTypes';
 
@@ -57,6 +58,11 @@ export interface UnresolvedWorldIntent {
   targetId?: string;
   sceneLocation?: string;
   elapsedTime?: WorldDateAdvance;
+  routePreference?: RoutePreference;
+  travelMode?: TravelMode;
+  viaText?: string[];
+  companionIds?: CharacterId[];
+  vehicleIds?: string[];
   assetId?: string;
   recipientId?: CharacterId;
   siteType?: string;
@@ -91,6 +97,11 @@ const INTENT_FIELDS = new Set([
   'targetId',
   'sceneLocation',
   'elapsedTime',
+  'routePreference',
+  'travelMode',
+  'viaText',
+  'companionIds',
+  'vehicleIds',
   'assetId',
   'recipientId',
   'siteType',
@@ -101,6 +112,8 @@ const INTENT_FIELDS = new Set([
 ]);
 const SITE_TYPE_SET = new Set<string>(Object.keys(SITE_TYPE_LABELS));
 const DATE_ADVANCE_FIELDS = new Set(['days', 'months', 'years']);
+const ROUTE_PREFERENCE_SET = new Set<RoutePreference>(['fastest', 'safest', 'cheapest']);
+const TRAVEL_MODE_SET = new Set<TravelMode>(['walk', 'horse', 'carriage', 'ship']);
 const TARGET_REQUIRED_KINDS = new Set<LocationWorldIntentKind>([
   'mention',
   'plan_travel',
@@ -125,6 +138,40 @@ function parseOptionalCharacterId(value: unknown): CharacterId | undefined {
     throw new Error(`actorId 格式无效：${actorId}`);
   }
   return actorId as CharacterId;
+}
+
+function parseOptionalStringArray(value: unknown, field: string): string[] | undefined {
+  if (value === undefined) return undefined;
+  if (!Array.isArray(value)) throw new Error(`${field} 必须是字符串数组`);
+  const values = value.map((entry, index) => trimmedOptionalString(entry, `${field}[${index}]`));
+  return [...new Set(values.filter((entry): entry is string => Boolean(entry)))];
+}
+
+function parseOptionalCharacterIdArray(value: unknown, field: string): CharacterId[] | undefined {
+  if (value === undefined) return undefined;
+  if (!Array.isArray(value)) throw new Error(`${field} 必须是人物 ID 数组`);
+  const values = value.map((entry, index) => {
+    const parsed = parseOptionalCharacterId(entry);
+    if (!parsed) throw new Error(`${field}[${index}] 不能为空`);
+    return parsed;
+  });
+  return [...new Set(values)];
+}
+
+function parseRoutePreference(value: unknown): RoutePreference | undefined {
+  if (value === undefined) return undefined;
+  if (typeof value !== 'string' || !ROUTE_PREFERENCE_SET.has(value as RoutePreference)) {
+    throw new Error(`routePreference 无效：${String(value)}`);
+  }
+  return value as RoutePreference;
+}
+
+function parseTravelMode(value: unknown): TravelMode | undefined {
+  if (value === undefined) return undefined;
+  if (typeof value !== 'string' || !TRAVEL_MODE_SET.has(value as TravelMode)) {
+    throw new Error(`travelMode 无效：${String(value)}`);
+  }
+  return value as TravelMode;
 }
 
 function parseWorldDateAdvance(value: unknown): WorldDateAdvance | undefined {
@@ -171,6 +218,11 @@ function parseUnresolvedWorldIntent(value: unknown, index: number): UnresolvedWo
     ...(record.targetId !== undefined ? { targetId: trimmedOptionalString(record.targetId, 'targetId') } : {}),
     ...(record.sceneLocation !== undefined ? { sceneLocation: trimmedOptionalString(record.sceneLocation, 'sceneLocation') } : {}),
     ...(record.elapsedTime !== undefined ? { elapsedTime: parseWorldDateAdvance(record.elapsedTime) } : {}),
+    ...(record.routePreference !== undefined ? { routePreference: parseRoutePreference(record.routePreference) } : {}),
+    ...(record.travelMode !== undefined ? { travelMode: parseTravelMode(record.travelMode) } : {}),
+    ...(record.viaText !== undefined ? { viaText: parseOptionalStringArray(record.viaText, 'viaText') } : {}),
+    ...(record.companionIds !== undefined ? { companionIds: parseOptionalCharacterIdArray(record.companionIds, 'companionIds') } : {}),
+    ...(record.vehicleIds !== undefined ? { vehicleIds: parseOptionalStringArray(record.vehicleIds, 'vehicleIds') } : {}),
     ...(record.assetId !== undefined ? { assetId: trimmedOptionalString(record.assetId, 'assetId') } : {}),
     ...(record.recipientId !== undefined ? { recipientId: parseOptionalCharacterId(record.recipientId) } : {}),
     ...(record.siteType !== undefined ? { siteType: String(record.siteType) } : {}),
@@ -292,11 +344,19 @@ export function resolveWorldIntent(
         location: createWorldLocationRef(targetLocationId, unresolved.sceneLocation),
       }
     : undefined;
+  const via = unresolved.viaText?.map((targetText) => createWorldLocationRef(
+    resolveUniqueLocationEntry({ targetText }, context).id,
+  ));
   const base = {
     kind,
     actorId,
     ...(targetRef ? { targetRef } : {}),
     ...(unresolved.elapsedTime ? { elapsedTime: { ...unresolved.elapsedTime } } : {}),
+    ...(unresolved.routePreference ? { routePreference: unresolved.routePreference } : {}),
+    ...(unresolved.travelMode ? { travelMode: unresolved.travelMode } : {}),
+    ...(via?.length ? { via } : {}),
+    ...(unresolved.companionIds?.length ? { companionIds: [...unresolved.companionIds] } : {}),
+    ...(unresolved.vehicleIds?.length ? { vehicleIds: [...unresolved.vehicleIds] } : {}),
     evidenceText,
   };
   return base as ResolvedLocationWorldIntent;

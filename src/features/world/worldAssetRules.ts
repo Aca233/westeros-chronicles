@@ -2,7 +2,7 @@ import type { CharacterId } from '../characters/types';
 import { SITE_TEMPLATES, SITE_TYPE_LABELS, type ItemStorageSite } from '../items/types';
 import { stripEmoji } from '../../services/textSanitizer';
 import type { WorldAssetBaseline, WorldBaselineSnapshot } from './worldBaseline';
-import { projectWorldAsset, projectWorldCharacter, resolveAssetMapLocation } from './worldProjection';
+import { projectWorldAsset, projectWorldCharacter, resolveAssetMapLocation, resolvePrincipalCharacter } from './worldProjection';
 import { worldAssetId } from './worldAssetId';
 import type {
   AssetPlacement,
@@ -59,6 +59,18 @@ function requireDirectCustody(asset: WorldAssetBaseline, characterId: CharacterI
   }
 }
 
+function requireUsableCustody(context: WorldAssetRuleContext, asset: WorldAssetBaseline, characterId: CharacterId): void {
+  if (isDirectlyHeldBy(asset, characterId)) return;
+  if (asset.placement?.type !== 'asset') return requireDirectCustody(asset, characterId);
+  const container = requireAsset(context, asset.placement.assetId);
+  const controllerId = resolvePrincipalCharacter(context.baseline, context.runtime, container.controller, 'controllerId');
+  const itemControllerId = resolvePrincipalCharacter(context.baseline, context.runtime, asset.controller, 'controllerId');
+  if (controllerId !== characterId || itemControllerId !== characterId) {
+    throw new Error(`资产 ${asset.id} 所在容器不由人物控制`);
+  }
+  requireSameMapLocation(context, asset, characterId);
+}
+
 function requireSameMapLocation(context: WorldAssetRuleContext, asset: WorldAssetBaseline, actorId: CharacterId): void {
   const actor = projectWorldCharacter(context.baseline, context.runtime, actorId);
   if (!actor?.location) throw new Error(`人物 ${actorId} 的所在地未确认`);
@@ -113,7 +125,7 @@ export function planAssetIntent(
       ];
     }
     case 'transfer_asset': {
-      requireDirectCustody(asset, intent.actorId);
+      requireUsableCustody(context, asset, intent.actorId);
       requireContainerTarget(context, intent.placement);
       return [
         { type: 'asset.set-custodian', assetId: intent.assetId, custodian: custodianForPlacement(intent.placement) },
@@ -121,7 +133,7 @@ export function planAssetIntent(
       ];
     }
     case 'equip_asset':
-      requireDirectCustody(asset, intent.actorId);
+      requireUsableCustody(context, asset, intent.actorId);
       return [{ type: 'asset.equip', assetId: intent.assetId, characterId: intent.actorId, position: { ...intent.position } }];
     case 'unequip_asset':
       requireDirectCustody(asset, intent.actorId);

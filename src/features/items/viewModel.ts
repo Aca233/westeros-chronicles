@@ -153,14 +153,10 @@ function createActions(
     if (definition.equippable && placement.type !== 'character' && placement.type !== 'lost') {
       actions.push({ kind: 'equip', label: '穿上' });
     }
-    if (['medicine', 'poison', 'supply', 'tool'].includes(definition.category)) {
-      actions.push({ kind: 'use', label: '使用' });
-    }
     if (placement.type === 'carried' || placement.type === 'site' || placement.type === 'vehicle') {
       actions.push({ kind: 'transfer', label: '转移' }, { kind: 'gift', label: '赠予' }, { kind: 'discard', label: '放弃' });
     }
   }
-  if (instance.durability < 100) actions.push({ kind: 'repair', label: '修理' });
   if (!instance.isHeirloom) actions.push({ kind: 'mark_heirloom', label: '定为传家宝' });
 
   const pending = pendingActions.find((entry) => entry.instanceId === instance.instanceId);

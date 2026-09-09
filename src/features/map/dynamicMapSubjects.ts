@@ -11,7 +11,8 @@ export interface MapCharacterPoint extends MapPixelPoint {
   locationId: string
   locationName: string
   regionId: string
-  knowledge: 'confirmed'
+  knowledge: 'confirmed' | 'stale'
+  lastKnownTurn?: number
 }
 
 export interface MapAssetPoint extends MapPixelPoint {
@@ -46,6 +47,7 @@ export interface KnownCharacterMapInput {
   characters?: readonly KnownCharacterState[]
   history: CharacterHistoryLike
   names?: ReadonlyMap<string, string>
+  presentCharacterIds?: readonly CharacterId[]
   metrics?: MapSelectionMetrics
 }
 
@@ -83,10 +85,31 @@ export function projectKnownCharacterMapPoints(
   }
   states.set(input.player.id, { alive: true, locationId: input.player.locationId })
 
+  const lastKnownMoveTurn = (characterId: CharacterId, locationId: string): number | undefined => {
+    for (let index = input.history.turns.length - 1; index >= 0; index -= 1) {
+      const turn = input.history.turns[index]
+      const found = turn.acceptedCommands.some((candidate) => {
+        if (!candidate || typeof candidate !== 'object') return false
+        const command = candidate as { type?: unknown; characterId?: unknown; locationId?: unknown }
+        return command.type === 'MOVE_CHARACTER' && command.characterId === characterId && command.locationId === locationId
+      })
+      if (found) return turn.turn
+    }
+    return undefined
+  }
+
   return [...states.entries()].flatMap(([characterId, state]) => {
     if (!state.alive || !state.locationId) return []
     const location = locationById.get(state.locationId)
     if (!location) return []
+    const knowledge = characterId === input.player.id || input.presentCharacterIds?.includes(characterId)
+      ? 'confirmed' as const
+      : 'stale' as const
+    const lastKnownTurn = knowledge === 'stale' ? lastKnownMoveTurn(characterId, location.id) : undefined
+    // 离场人物不能因为后台当前状态恰好带有 locationId 就变成实时雷达。
+    // 只有玩家历史中确有一次可追溯的已知移动，才保留“最后已知位置”；
+    // 否则宁可不在地图显示，也不把后台真相伪装成旧情报。
+    if (knowledge === 'stale' && lastKnownTurn === undefined) return []
     return [{
       id: `character:${characterId}`,
       characterId,
@@ -98,7 +121,8 @@ export function projectKnownCharacterMapPoints(
       regionId: location.regionId,
       mapX: location.mapX,
       mapY: location.mapY,
-      knowledge: 'confirmed' as const,
+      knowledge,
+      ...(lastKnownTurn !== undefined ? { lastKnownTurn } : {}),
     }]
   }).sort((left, right) => left.characterId.localeCompare(right.characterId))
 }

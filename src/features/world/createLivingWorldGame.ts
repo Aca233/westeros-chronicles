@@ -78,7 +78,6 @@ function displayHouse(record: StaticCharacterRecord): string {
 
 function openingFor(lord: LordProfile, playable: PlayableCharacterEntry, startDate: WorldDate): StoryOpening {
   return {
-    think: `${lord.name}的故事从统一世界的当前状态开始。关注点：${playable.focus.join('、')}。`,
     narrate: `征服历${startDate.year}年${startDate.month}月${startDate.day}日，${lord.name}身处${lord.locationLabel}。世界既有的人物、关系、头衔与资产都已存在；从这一刻起，接下来的变化由行动与世界规则共同产生。`,
     branches: ['查看当前处境与身边人物', '处理眼前最紧迫的事务', '了解自己的关系、装备与资产'],
   };

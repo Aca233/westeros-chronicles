@@ -1,6 +1,7 @@
 import type { BodyZoneKey, WoundLevel } from '../../domain/body';
 import type { CharacterId } from '../../domain/characterId';
 import type { EquipmentPosition } from '../items/types';
+import type { RoleplayState } from '../roleplay/types';
 import type {
   CharacterEvent,
   CharacterItemRecord,
@@ -44,8 +45,8 @@ export type CharacterStateCommand =
   | { type: 'INJURE_CHARACTER'; characterId: CharacterId; zone: BodyZoneKey | 'arm' | 'leg'; level: WoundLevel; woundText: string; commandId?: CharacterCommandId }
   | { type: 'HEAL_CHARACTER'; characterId: CharacterId; zone?: BodyZoneKey | 'all'; level?: WoundLevel; clearWound?: string; commandId?: CharacterCommandId }
   | { type: 'KILL_CHARACTER'; characterId: CharacterId; cause: string; killerId?: CharacterId; commandId?: CharacterCommandId }
-  | { type: 'MARRY_CHARACTERS'; characterId: CharacterId; spouseId: CharacterId; reason?: string; commandId?: CharacterCommandId }
-  | { type: 'DIVORCE_CHARACTERS'; characterId: CharacterId; spouseId: CharacterId; reason?: string; commandId?: CharacterCommandId }
+  | { type: 'MARRY_CHARACTERS'; characterId: CharacterId; spouseId: CharacterId; commitmentId: string; consentEventId: string; reason?: string; commandId?: CharacterCommandId }
+  | { type: 'DIVORCE_CHARACTERS'; characterId: CharacterId; spouseId: CharacterId; consentEventId: string; reason: string; commandId?: CharacterCommandId }
   | { type: 'ADD_CHARACTER_MEMORY'; characterId: CharacterId; memory: CharacterMemoryInput; commandId?: CharacterCommandId }
   | { type: 'GRANT_CHARACTER_TITLE'; characterId: CharacterId; titleId: string; commandId?: CharacterCommandId }
   | { type: 'REVOKE_CHARACTER_TITLE'; characterId: CharacterId; titleId: string; commandId?: CharacterCommandId }
@@ -73,6 +74,7 @@ export interface CharacterCommandContext {
   commandSequence: number;
   /** Optional event history lets validation reject duplicate DIE events even if a stale snapshot says alive. */
   eventHistory?: readonly { characterId: CharacterId; event: { type: string } }[];
+  roleplay?: RoleplayState;
 }
 
 export interface CharacterCommandValidationSuccess {

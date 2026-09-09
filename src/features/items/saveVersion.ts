@@ -1,7 +1,8 @@
 import { validateWorldLocationRef } from '../map/locationResolver.ts';
 import { validateWorldRuntimeState } from '../world/worldRuntimeState.ts';
 
-export const ITEM_SAVE_FORMAT_VERSION = 9 as const;
+export const ITEM_SAVE_FORMAT_VERSION = 10 as const;
+export const PREVIOUS_SAVE_FORMAT_VERSION = 9 as const;
 
 const RESET_REQUIRED_MESSAGE = '测试版存档格式已更新，请重置测试存档后重新开始。';
 
@@ -140,7 +141,7 @@ function hasValidActiveJourney(value: unknown): boolean {
 }
 
 export function assertSupportedGameState(value: unknown): asserts value is {
-  saveFormatVersion: 9;
+  saveFormatVersion: 10;
   lord: { items: { schemaVersion: 1 } };
   worldHistory: { schemaVersion: 1 };
   worldRuntime: { schemaVersion: 1 };
@@ -167,13 +168,58 @@ export function assertSupportedGameState(value: unknown): asserts value is {
 }
 
 export function assertSupportedSaveEnvelope(value: unknown): asserts value is {
-  version: 9;
+  version: 9 | 10;
   snapshots: unknown[];
   worldRuns?: unknown[];
   characterEvents?: unknown[];
 } {
-  if (!isRecord(value) || value.version !== ITEM_SAVE_FORMAT_VERSION) {
+  if (!isRecord(value) || (value.version !== ITEM_SAVE_FORMAT_VERSION && value.version !== PREVIOUS_SAVE_FORMAT_VERSION)) {
     throw new Error(RESET_REQUIRED_MESSAGE);
   }
   if (!Array.isArray(value.snapshots)) throw new Error('无效的存档格式：缺少快照列表');
+}
+
+/** Conservatively add v10 runtime ledgers without inferring facts from prose. */
+export function migrateGameStateToCurrent(value: unknown): unknown {
+  if (!isRecord(value) || value.saveFormatVersion !== PREVIOUS_SAVE_FORMAT_VERSION) return value;
+  const lord = isRecord(value.lord) ? value.lord : undefined;
+  const location = lord && validateWorldLocationRef(lord.location) ? lord.location : { locationId: 'b_unknown_westeros' };
+  const turnCount = Number.isInteger(value.turnCount) ? value.turnCount as number : 1;
+  const playerId = lord && typeof lord.canonicalCharacterId === 'string' ? lord.canonicalCharacterId : undefined;
+  return {
+    ...value,
+    saveFormatVersion: ITEM_SAVE_FORMAT_VERSION,
+    activeScene: isRecord(value.activeScene) ? value.activeScene : {
+      schemaVersion: 1,
+      id: `scene:${location.locationId}:${typeof location.sceneLocation === 'string' && location.sceneLocation.trim() ? location.sceneLocation.trim() : 'unspecified'}`,
+      revision: 0,
+      location: { ...location },
+      presentCharacterIds: playerId ? [playerId] : [],
+      updatedTurn: turnCount,
+    },
+    roleplay: isRecord(value.roleplay) ? {
+      ...value.roleplay,
+      relationshipEvidence: Array.isArray(value.roleplay.relationshipEvidence) ? value.roleplay.relationshipEvidence : [],
+      messages: Array.isArray(value.roleplay.messages) ? value.roleplay.messages : [],
+      agendas: Array.isArray(value.roleplay.agendas) ? value.roleplay.agendas : [],
+      projects: Array.isArray(value.roleplay.projects) ? value.roleplay.projects : [],
+      growthOpportunities: Array.isArray(value.roleplay.growthOpportunities) ? value.roleplay.growthOpportunities : [],
+    } : {
+      schemaVersion: 1,
+      revision: 0,
+      socialEvents: [],
+      commitments: [],
+      knowledge: [],
+      relationshipEvidence: [],
+      messages: [],
+      agendas: [],
+      projects: [],
+      growthOpportunities: [],
+    },
+  };
+}
+
+export function migrateSnapshotToCurrent(value: unknown): unknown {
+  if (!isRecord(value) || value.formatVersion !== PREVIOUS_SAVE_FORMAT_VERSION) return value;
+  return { ...value, formatVersion: ITEM_SAVE_FORMAT_VERSION, gameState: migrateGameStateToCurrent(value.gameState) };
 }

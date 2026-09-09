@@ -207,7 +207,7 @@ export type ItemStateCommand =
   | { type: 'ITEM_UNEQUIP'; instanceId: string; to: ItemPlacement }
   | { type: 'ITEM_USE'; instanceId: string; quantity?: number }
   | { type: 'ITEM_TRANSFER'; instanceId: string; to: ItemPlacement; quantity?: number; newInstanceId?: string }
-  | { type: 'ITEM_GIFT'; instanceId: string; recipientId: string; quantity?: number; newInstanceId?: string }
+  | { type: 'ITEM_GIFT'; instanceId: string; recipientId: string; consentEventId?: string; exchangeId?: string; quantity?: number; newInstanceId?: string }
   | { type: 'ITEM_DISCARD'; instanceId: string; quantity?: number; newInstanceId?: string }
   | { type: 'ITEM_REPAIR'; instanceId: string; amount: number }
   | { type: 'ITEM_DAMAGE'; instanceId: string; amount: number; reason: string }

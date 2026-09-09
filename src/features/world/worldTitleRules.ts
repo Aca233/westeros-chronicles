@@ -31,9 +31,15 @@ function formalTransfer(titleId: string, recipientId: CharacterId): WorldMutatio
   ];
 }
 
+function requireCurrentTitleAuthority(title: WorldTitleBaseline, actorId: CharacterId): void {
+  if (title.lawfulHolderId !== actorId && title.controllerId !== actorId) {
+    throw new Error(`人物 ${actorId} 当前无权处置头衔 ${title.id}`);
+  }
+}
+
 /**
  * 将已经确认的头衔事实转换为世界突变。
- * 这里只表达法理与控制的差异；授权、继承顺位和战争胜负应在上游裁定。
+ * 这里只执行可由当前权威状态验证的变更；无法验证的上级封建权与继承顺位必须拒绝。
  */
 export function planTitleIntent(
   intent: TitleWorldIntent,
@@ -56,12 +62,24 @@ export function planTitleIntent(
       }];
     }
     case 'grant_title':
-    case 'inherit_title':
+      requireCharacter(context, intent.recipientId);
+      requireCurrentTitleAuthority(title, intent.actorId);
+      return formalTransfer(intent.titleId, intent.recipientId);
+    case 'inherit_title': {
+      requireCharacter(context, intent.recipientId);
+      if (intent.actorId !== intent.recipientId) throw new Error('继承必须由继承人本人承接');
+      if (!title.lawfulHolderId) throw new Error(`头衔 ${intent.titleId} 没有可验证的前任持有人`);
+      const formerHolder = projectWorldCharacter(context.baseline, context.runtime, title.lawfulHolderId);
+      if (!formerHolder || formerHolder.alive) throw new Error(`头衔 ${intent.titleId} 的前任持有人仍然在世`);
+      return formalTransfer(intent.titleId, intent.recipientId);
+    }
     case 'settle_title_war':
       requireCharacter(context, intent.recipientId);
+      if (title.controllerId !== intent.actorId) throw new Error(`人物 ${intent.actorId} 未实际控制头衔 ${title.id}`);
       return formalTransfer(intent.titleId, intent.recipientId);
     case 'revoke_title':
       requireCharacter(context, intent.holderId);
+      requireCurrentTitleAuthority(title, intent.actorId);
       if (title.lawfulHolderId !== intent.holderId) {
         throw new Error(`头衔 ${intent.titleId} 的法理持有人不符`);
       }

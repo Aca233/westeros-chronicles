@@ -1,4 +1,4 @@
-import type { CharacterId, CharacterKnowledge } from './types';
+import type { CharacterId, CharacterKnowledge, CharacterMemory } from './types';
 
 export interface KnowledgeViewerContext {
   viewerId: CharacterId | 'player';
@@ -27,5 +27,22 @@ export function visibleFacts(
     if (fact.visibility === 'player') return viewer.viewerId === 'player' || viewer.knownFactIds.has(fact.id);
     if (fact.visibility === 'restricted') return fact.knownBy?.includes(viewer.viewerId as CharacterId) ?? false;
     return viewer.knownFactIds.has(fact.id);
+  });
+}
+
+export function visibleMemories(
+  memories: readonly CharacterMemory[],
+  viewer: KnowledgeViewerContext,
+): CharacterMemory[] {
+  return memories.filter((memory) => {
+    if (memory.visibility === 'system') return false;
+    if (memory.visibility === 'public') return true;
+    if (memory.visibility === 'player') return viewer.viewerId === 'player' || viewer.knownFactIds.has(memory.id);
+    if (memory.visibility === 'restricted') {
+      if (viewer.knownFactIds.has(memory.id)) return true;
+      if (viewer.viewerId === 'player') return false;
+      return memory.characterId === viewer.viewerId || memory.participants.includes(viewer.viewerId);
+    }
+    return viewer.knownFactIds.has(memory.id);
   });
 }

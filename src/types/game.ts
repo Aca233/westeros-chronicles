@@ -12,6 +12,8 @@ import type { WorldLocationRef } from '../domain/worldLocation';
 import type { StateCommand } from './stateCommand';
 export type { StateCommand } from './stateCommand';
 import type { ActiveJourney } from '../features/map/travel/types';
+import type { ActiveSceneState } from '../features/world/sceneState';
+import type { RoleplayState } from '../features/roleplay/types';
 export type { BodyZoneKey, WoundLevel } from '../domain/body';
 export type { LordAttributes } from '../domain/character';
 
@@ -76,6 +78,17 @@ export interface D20Check {
   id: string;
   attribute: keyof LordAttributes;
   attributeName: string;
+  /** 旧存档可能没有这些方法构筑字段。 */
+  secondaryAttribute?: keyof LordAttributes;
+  secondaryAttributeName?: string;
+  primaryAttributeValue?: number;
+  secondaryAttributeValue?: number;
+  effectiveAttribute?: number;
+  methodReason?: string;
+  /** 稳定的意图、目标、方法与当前条件签名，用于阻止条件不变时靠改写措辞重掷。 */
+  attemptKey?: string;
+  conditionKey?: string;
+  reusedFromCheckId?: string;
   dc: number;
   roll: number;
   attributeModifier: number;
@@ -90,10 +103,18 @@ export interface D20Check {
   checkDomain: TraitCheckDomain;
   traitModifier: number;
   traitModifierBreakdown: Array<{ traitId: string; name: string; value: number }>;
+  methodEdge?: {
+    traitId: string;
+    traitName: string;
+    label: string;
+    directive: string;
+  };
   outcomeContract: CheckOutcomeContract;
   total: number;
   isNatural20: boolean;
   isNatural1: boolean;
+  outcome?: 'strong_success' | 'success' | 'partial' | 'failure';
+  margin?: number;
   success: boolean;
   actionText: string;
   resultDescription: string;
@@ -123,7 +144,7 @@ export interface WorldCharacterStateRef {
 
 // 游戏全局状态
 export interface GameState {
-  saveFormatVersion: 9;
+  saveFormatVersion: 10;
   currentYear: number;
   currentMonth: number;
   currentDay: number;
@@ -135,6 +156,8 @@ export interface GameState {
   worldArtifacts: WorldArtifactState;
   worldHistory: WorldHistoryState;
   worldRuntime: WorldRuntimeState;
+  activeScene?: ActiveSceneState;
+  roleplay?: RoleplayState;
   activeJourney?: ActiveJourney;
   worldFlags: Record<string, boolean | string | number>;
   isGameOver: boolean;
@@ -147,6 +170,7 @@ export interface ApiConfig {
   baseUrl: string;
   apiKey: string;
   model: string;
+  fallbackModel?: string;
   temperature: number;
 }
 

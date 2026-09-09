@@ -4,6 +4,7 @@ import { projectCharacterEvents } from './characterEventProjection';
 import { generateMissingBaseAttributes } from './attributeGenerator';
 import { expandBaselineLoadout, projectCharacterItems } from './characterItems';
 import type { ResolvedCharacter, StaticCharacterLoadoutProfile, StaticCharacterRecord } from './types';
+import { compactMemories } from './characterMemory';
 
 export interface CharacterProjectionContext {
   datasetVersion: string;
@@ -32,7 +33,10 @@ export function resolveCharacter(
     traits,
     baseAttributes,
     attributes: calculateFinalAttributes(baseAttributes, traits),
-    memories: events.flatMap((entry) => entry.event.type === 'ADD_MEMORY' ? [entry.event.memory] : []),
+    memories: compactMemories(
+      events.flatMap((entry) => entry.event.type === 'ADD_MEMORY' ? [entry.event.memory] : []),
+      { maxDetailed: 8, importantThreshold: 4 },
+    ),
     knowledge: [],
     items: projectCharacterItems(expandBaselineLoadout(staticRecord, context.loadoutProfile), events),
   };
