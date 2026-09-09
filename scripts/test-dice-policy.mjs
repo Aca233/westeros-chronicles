@@ -28,6 +28,21 @@ test('auto mode identifies the primary actionable intent instead of matching any
   assert.equal(intimidation.attribute, 'diplomacy');
 });
 
+test('具体方法可以选择主辅属性，普通单项行动不强塞辅属性', () => {
+  const forged = evaluateDiceRequirement('我仿写一份假的通行许可，骗过守卫');
+  assert.equal(forged.shouldRoll, true);
+  assert.equal(forged.attribute, 'intrigue');
+  assert.equal(forged.secondaryAttribute, 'learning');
+
+  const hiddenClimb = evaluateDiceRequirement('我悄悄攀上后墙，尽量不惊动巡逻');
+  assert.equal(hiddenClimb.attribute, 'prowess');
+  assert.equal(hiddenClimb.secondaryAttribute, 'intrigue');
+
+  const duel = evaluateDiceRequirement('我拔剑与敌方骑士决斗');
+  assert.equal(duel.attribute, 'prowess');
+  assert.equal(duel.secondaryAttribute, undefined);
+});
+
 test('context changes DC without changing whether the action uses a visible roll', () => {
   const normal = evaluateDiceRequirement('我潜入档案室');
   const guarded = evaluateDiceRequirement('我潜入重兵把守且警戒严密的档案室');
