@@ -90,6 +90,7 @@ export const TravelPlanner: React.FC<TravelPlannerProps> = ({ destinationId, ori
   }
   const previewRoute = useMapUiStore((state) => state.previewRoute)
   const closeTravelPlanning = useMapUiStore((state) => state.closeTravelPlanning)
+  const beginDestinationPick = useMapUiStore((state) => state.beginDestinationPick)
 
   const viaKey = waypoints.map((entry) => entry.id).join('|')
 
@@ -256,6 +257,10 @@ export const TravelPlanner: React.FC<TravelPlannerProps> = ({ destinationId, ori
 
   return (
     <section className="map-travel-planner" aria-label="旅行规划器">
+      <div className="map-travel-planner-actions">
+        <button type="button" onClick={beginDestinationPick}>换一个目的地</button>
+        <button type="button" onClick={closeTravelPlanning}>关闭规划</button>
+      </div>
       <h3>旅行规划</h3>
       {!planningDisabled && (
         <>

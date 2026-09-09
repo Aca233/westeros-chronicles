@@ -67,6 +67,8 @@ const lordLocationAllowlist = new Set([
   'src/features/world/worldDisplayResolver.ts',
   'src/features/world/useWorldEventDisplays.ts',
   'src/features/characters/useCharacterDossier.ts',
+  'src/components/character-window/CharacterCurrentTab.tsx',
+  'src/features/debug/DebugOverlay.tsx',
   'src/features/map/TravelPlanner.tsx',
   'src/features/map/JourneyPanel.tsx',
   'src/features/map/MapDrawer.tsx',
@@ -76,6 +78,8 @@ const lordLocationAllowlist = new Set([
   'src/features/items/saveVersion.ts',
   'src/services/api.ts',
   'src/services/promptBuilder.ts',
+  'src/services/attemptPolicy.ts',
+  'src/store/useGameStore.ts',
 ]);
 for (const file of files) {
   const path = normalized(file);

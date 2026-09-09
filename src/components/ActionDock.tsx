@@ -25,7 +25,11 @@ export const ActionDock: React.FC = () => {
     const handler = (event: Event) => {
       const text = (event as CustomEvent<{ text?: string }>).detail?.text;
       if (!text || isStreaming || gameState.isGameOver) return;
-      setCustomInput(stripEmoji(text));
+      setCustomInput((current) => {
+        const incoming = stripEmoji(text).trim();
+        const existing = current.trim();
+        return existing ? existing + '\n' + incoming : incoming;
+      });
       window.setTimeout(() => inputRef.current?.focus(), 0);
     };
     window.addEventListener('agot:prefill-action', handler);

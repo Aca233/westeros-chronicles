@@ -13,7 +13,7 @@ interface CountyDetailsProps {
   onSelectLocation: (countyId: string, locationId: string) => void
   onSelectCharacter: (characterId: CharacterId) => void
   onOpenAsset: (assetId: string) => void
-  onPrefillTravel: (destinationId: string, destinationName: string) => void
+  onPlanTravel: (destinationId: string) => void
   onClose: () => void
 }
 
@@ -25,7 +25,7 @@ export const CountyDetails: React.FC<CountyDetailsProps> = ({
   onSelectLocation,
   onSelectCharacter,
   onOpenAsset,
-  onPrefillTravel,
+  onPlanTravel,
   onClose,
 }) => (
   <aside className="map-county-details" aria-label="伯爵领详情">
@@ -47,9 +47,9 @@ export const CountyDetails: React.FC<CountyDetailsProps> = ({
         </div>
       </header>
 
-      <button type="button" className="map-travel-action" onClick={() => onPrefillTravel(view.primaryLocationId, view.name)}>
+      <button type="button" className="map-travel-action" onClick={() => onPlanTravel(view.primaryLocationId)}>
         <Navigation className="h-4 w-4" />
-        <span>把这里写入行动</span>
+        <span>前往这里</span>
       </button>
 
       <section className="map-details-section">

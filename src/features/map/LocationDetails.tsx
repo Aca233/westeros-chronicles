@@ -8,6 +8,7 @@ import type { MapLocation, MapLocationType, SemanticMembership, SemanticTitle } 
 import type { MapAssetPoint, MapCharacterPoint } from './dynamicMapSubjects.ts'
 import type { PoliticalFeatureState } from './politicalProjection.ts'
 import type { CharacterId } from '../characters/types'
+import type { OngoingWorldAction, WorldSituation } from '../world/livingWorldContracts'
 
 interface LocationDetailsProps {
   locationId: string
@@ -16,10 +17,12 @@ interface LocationDetailsProps {
   politicalState?: PoliticalFeatureState
   semanticMembership?: SemanticMembership
   semanticTitles: readonly SemanticTitle[]
+  knownSituations: readonly WorldSituation[]
+  knownOngoingActions: readonly OngoingWorldAction[]
   onSelectCharacter: (characterId: CharacterId) => void
   onOpenAsset: (assetId: string) => void
   onBackToCounty: () => void
-  onPrefillTravel: (destinationId: string, destinationName: string) => void
+  onPlanTravel: (destinationId: string) => void
   onClose: () => void
 }
 
@@ -43,10 +46,12 @@ export const LocationDetails: React.FC<LocationDetailsProps> = ({
   politicalState,
   semanticMembership,
   semanticTitles,
+  knownSituations,
+  knownOngoingActions,
   onSelectCharacter,
   onOpenAsset,
   onBackToCounty,
-  onPrefillTravel,
+  onPlanTravel,
   onClose,
 }) => {
   const debugEnabled = useGameStore((state) => state.debugEnabled)
@@ -86,6 +91,17 @@ export const LocationDetails: React.FC<LocationDetailsProps> = ({
     ...(semanticMembership ? { semantic: { membership: semanticMembership, titles: semanticTitles } } : {}),
   }) : null, [debugEnabled, knownAssets, knownCharacters, location, politicalState, semanticMembership, semanticTitles])
 
+  const prefillLivingAction = (text: string) => {
+    window.dispatchEvent(new CustomEvent('agot:prefill-action', { detail: { text } }))
+  }
+
+  const situationLabel = (kind: WorldSituation['kind']) => ({
+    ferry_blockade: '渡口封锁', grain_shortage: '粮食短缺', local_dispute: '地方争端',
+  })[kind]
+  const actionLabel = (kind: OngoingWorldAction['kind']) => ({
+    transport: '运输', escort: '护送', investigation: '调查', negotiation: '交涉', relief: '救援', request_help: '求援', reroute: '改道', wait: '等待', report_blocked: '受阻报告', delegated_task: '委派事务',
+  })[kind]
+
   return (
     <aside className="map-location-details" aria-label="地点详情">
       <div className="map-details-handle" aria-hidden="true" />
@@ -118,10 +134,10 @@ export const LocationDetails: React.FC<LocationDetailsProps> = ({
             {view.access.port && <span><Ship className="h-3.5 w-3.5" />可通航港口</span>}
             {view.tags.map((tag) => <span key={tag}>{TAG_LABELS[tag] ?? tag}</span>)}
           </div>
-          <button type="button" className="map-travel-action" onClick={() => onPrefillTravel(locationId, view.name)}>
-            <Navigation className="h-4 w-4" /><span>把这里写入行动</span>
+          <button type="button" className="map-travel-action" onClick={() => onPlanTravel(locationId)}>
+            <Navigation className="h-4 w-4" /><span>前往这里</span>
           </button>
-          <p className="map-location-description">地图只提供你已知的地点情报；路线、准备、随行者与出发方式由你在行动中说明。</p>
+          <p className="map-location-description">先在地图中规划路线、方式与途经点；确认后只写入中央行动草稿，世界状态仍由统一回合结算。</p>
           <section className="map-details-section">
             <h3>通行资料</h3>
             <div className="map-access-list">
@@ -151,6 +167,39 @@ export const LocationDetails: React.FC<LocationDetailsProps> = ({
                 );
               })}
               {knownAssets.length === 0 && <p>没有已确认的据点或运输工具。</p>}
+            </div>
+          </section>
+          <section className="map-details-section map-local-intelligence">
+            <h3>已知局势</h3>
+            <div className="map-intel-list">
+              {knownSituations.map((situation) => (
+                <div key={situation.id} className="map-access-list">
+                  <p><strong>{situationLabel(situation.kind)}</strong> · {situation.stage} · 严重度 {situation.severity ?? 0}</p>
+                  <p>{situation.pressure.join('；') || '暂无已知压力'}</p>
+                  <p><small>局势 ID：{situation.id}</small></p>
+                  <button type="button" className="map-travel-action" onClick={() => prefillLivingAction(`我亲自调查局势【${situation.id}】，查清现场事实与责任来源。`)}>调查</button>
+                  {situation.kind === 'ferry_blockade' && <button type="button" className="map-travel-action" onClick={() => prefillLivingAction(`我在现场就局势【${situation.id}】交涉通行条件，不预设对方会答应。`)}>交涉通行</button>}
+                  {situation.kind === 'grain_shortage' && <button type="button" className="map-travel-action" onClick={() => prefillLivingAction(`我针对局势【${situation.id}】向外请求实际粮食救援，并等待消息与运输按真实时间推进。`)}>请求救援</button>}
+                </div>
+              ))}
+              {knownSituations.length === 0 && <p>你目前没有关于此地持续局势的可靠情报。</p>}
+            </div>
+          </section>
+          <section className="map-details-section map-local-intelligence">
+            <h3>持续行动</h3>
+            <div className="map-intel-list">
+              {knownOngoingActions.map((action) => (
+                <div key={action.id} className="map-access-list">
+                  <p><strong>{actionLabel(action.kind)}</strong> · {action.status} · 进度 {Math.round(action.progress * 100)}%</p>
+                  {action.resource && <p>{action.resource.commodity} · {action.resource.quantity}</p>}
+                  <p><small>行动 ID：{action.id}</small></p>
+                  {action.kind === 'transport' && (action.status === 'active' || action.status === 'blocked') && <>
+                    <button type="button" className="map-travel-action" onClick={() => prefillLivingAction(`我准备亲自组织护送持续行动【${action.id}】，按我的实际权限、位置和现有封锁情况结算。`)}>组织护送</button>
+                    <button type="button" className="map-travel-action" onClick={() => prefillLivingAction(`我要求把持续行动【${action.id}】改走可验证的替代道路；若我没有改变运输安排的权限就拒绝执行。`)}>尝试改道</button>
+                  </>}
+                </div>
+              ))}
+              {knownOngoingActions.length === 0 && <p>你目前不知道有正在此地发生的持续行动。</p>}
             </div>
           </section>
           {debugEnabled && view.intelligence.length > 0 && (

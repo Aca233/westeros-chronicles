@@ -2,7 +2,6 @@ import assert from 'node:assert/strict'
 import { readFileSync, readdirSync, statSync } from 'node:fs'
 import { join, relative } from 'node:path'
 import test from 'node:test'
-import { VERIFICATION_SUITES } from './verify/suites.mjs'
 
 const ROOTS = ['src/features/map']
 // Windows 上 readdirSync/join 产出反斜杠路径,统一转成 POSIX 斜杠再过滤
@@ -28,13 +27,14 @@ test('地图运行时代码不含 Emoji', () => {
   assert.doesNotMatch(runtimeSource, /[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}]/u)
 })
 
-test('真实地图导入不会进入 verify 或 verify:quick', () => {
-  const full = VERIFICATION_SUITES.full.map((step) => step.script).join(' ')
-  const quick = VERIFICATION_SUITES.quick.map((step) => step.script).join(' ')
-  const map = VERIFICATION_SUITES.map.map((step) => step.script).join(' ')
-  assert.doesNotMatch(full, /import:agot-(?:map|models)/)
-  assert.doesNotMatch(quick, /import:agot-(?:map|models)/)
-  assert.doesNotMatch(map, /import:agot-models|agot_model_import\.cli convert/)
+test('真实地图导入保持为显式开发命令，不被运行时检查间接触发', () => {
+  const manifest = JSON.parse(readFileSync('package.json', 'utf8'))
+  const boundaryScripts = [
+    manifest.scripts?.['check:map-runtime-boundaries'],
+    manifest.scripts?.['check:world-runtime-boundaries'],
+    manifest.scripts?.['check:living-world-content-boundaries'],
+  ].filter(Boolean).join(' ')
+  assert.doesNotMatch(boundaryScripts, /import:agot-(?:map|models)|agot_model_import\.cli convert/)
 })
 
 test('MapLibre、路线 Worker 与本地瓦片边界保持独立', () => {
@@ -83,30 +83,11 @@ test('连续缩放处理只更新地形镜头', () => {
   assert.doesNotMatch(handler, /fetch\(|loadSemanticIndex|syncDynamicMapSubjects|syncPoliticalHouseLabels/)
 })
 
-test('完整地图验证包含全部语义测试且不触发真实导入', () => {
-  const verifyMap = VERIFICATION_SUITES.map.map((step) => step.script).join(' ')
-  assert.doesNotMatch(verifyMap, /import:agot-map/)
-  assert.match(verifyMap, /test:map-semantic-zoom/)
-  assert.match(verifyMap, /test:map-semantic-projection/)
-  assert.match(verifyMap, /test:map-semantic-layers/)
-  assert.match(verifyMap, /test:map-narrative-context/)
-  for (const command of [
-    'test:map-terrain-profile',
-    'test:map-terrain-controller',
-    'test:map-terrain-ui',
-    'test:map-terrain-integration',
-    'test:agot-model-import',
-    'test:map-landmark-schema',
-    'test:map-landmark-visibility',
-    'test:map-landmark-transform',
-    'test:map-landmark-lighting-profile',
-    'test:map-landmark-material-profile',
-    'test:map-landmark-contact-shadow',
-    'test:map-landmark-cache',
-    'test:map-landmark-layer',
-    'test:map-landmark-integration',
-    'audit:agot-models',
-  ]) {
-    assert.match(verifyMap, new RegExp(command))
-  }
+test('地图边界检查可在已删除旧测试套件后独立运行', () => {
+  const source = readFileSync('scripts/check-map-runtime-boundaries.mjs', 'utf8')
+  const deletedSuitePath = ['verify/', 'suites.mjs'].join('')
+  const deletedSuiteSymbol = ['VERIFICATION', '_SUITES'].join('')
+  assert.ok(!source.includes(deletedSuitePath))
+  assert.ok(!source.includes(deletedSuiteSymbol))
+  assert.match(source, /node:test/)
 })

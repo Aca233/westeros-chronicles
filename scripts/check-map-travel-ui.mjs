@@ -31,7 +31,8 @@ test('规划结果明确预览时间、费用、风险并二次确认', () => {
   assert.match(planner, /totalRisk/)
   assert.match(planner, /开始旅行/)
   assert.match(planner, /取消出发/)
-  assert.match(planner, /queueTravelCommand/)
+  assert.match(planner, /agot:prefill-action/)
+  assert.match(planner, /写入中央行动草稿/)
 })
 
 test('活动旅程面板显示进度、下一地点、预计抵达与完整控制', () => {
@@ -40,10 +41,10 @@ test('活动旅程面板显示进度、下一地点、预计抵达与完整控�
   assert.match(journeyPanel, /暂停旅程/)
   assert.match(journeyPanel, /继续旅程/)
   assert.match(journeyPanel, /改道/)
-  assert.match(journeyPanel, /返回/)
-  assert.match(journeyPanel, /PAUSE_TRAVEL/)
-  assert.match(journeyPanel, /RESUME_TRAVEL/)
-  assert.match(journeyPanel, /RETURN_TRAVEL/)
+  assert.match(journeyPanel, /折返/)
+  assert.match(journeyPanel, /pendingPause/)
+  assert.match(journeyPanel, /pendingResume/)
+  assert.match(journeyPanel, /prefillAction/)
 })
 
 test('原按钮负责取消待生效计划，不增加全局待处理横条', () => {
@@ -51,7 +52,8 @@ test('原按钮负责取消待生效计划，不增加全局待处理横条', ()
   assert.equal((planner.match(/取消出发/g) ?? []).length >= 1, true)
   assert.match(planner, /pendingElsewhere/)
   assert.match(planner, /先处理现有旅行调整/)
-  assert.match(journeyPanel, /!pendingReturn && currentLocation\.locationId === journey\.routePlan\.from/)
+  assert.match(journeyPanel, /pendingPause \|\| pendingResume/)
+  assert.match(journeyPanel, /cancelTravelCommand/)
   assert.doesNotMatch(drawer, /待处理横条|pending-travel-banner/)
 })
 
@@ -78,10 +80,15 @@ test('伯爵领和地点从原位发起旅行，规划器只由地图抽屉按�
 })
 
 
-test('旅行待处理状态只保存在统一世界事务队列', () => {
-  assert.match(planner, /queueWorldTransaction/)
-  assert.match(journeyPanel, /queueWorldTransaction/)
+test('地图旅行操作只生成中央行动草稿，待处理状态仍只读取统一世界事务队列', () => {
+  assert.match(planner, /agot:prefill-action/)
+  assert.match(journeyPanel, /agot:prefill-action/)
   assert.match(planner, /pendingTravelTransactionFor/)
+  assert.match(journeyPanel, /pendingTravelTransactionFor/)
+  assert.match(planner, /cancelWorldTransaction/)
+  assert.match(journeyPanel, /cancelWorldTransaction/)
+  assert.doesNotMatch(planner, /queueWorldTransaction|queueTravelCommand/)
+  assert.doesNotMatch(journeyPanel, /queueWorldTransaction|queueTravelCommand/)
   assert.doesNotMatch(store, /^\s*pendingTravelCommand:\s*/m)
   assert.doesNotMatch(store, /^\s*queueTravelCommand:\s*/m)
 })
