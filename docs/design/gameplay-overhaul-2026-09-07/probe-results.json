@@ -1,0 +1,64 @@
+{
+  "scope": "isolated runtime function probes, not complete model-driven playthrough",
+  "injury": {
+    "before": "heavy",
+    "after": "minor",
+    "wounds": [
+      "旧重伤",
+      "新擦伤"
+    ]
+  },
+  "refund": {
+    "before": 100,
+    "after": 120
+  },
+  "addTrait": {
+    "traits": [
+      "brave"
+    ],
+    "traitIds": []
+  },
+  "titleProposalWithoutAuthority": {
+    "mutationTypes": [
+      "title.set-holder",
+      "title.set-controller"
+    ]
+  },
+  "attributes": [
+    {
+      "attribute": 10,
+      "modifier": 0,
+      "dc14Success": 0.35
+    },
+    {
+      "attribute": 20,
+      "modifier": 5,
+      "dc14Success": 0.6
+    },
+    {
+      "attribute": 30,
+      "modifier": 10,
+      "dc14Success": 0.85
+    },
+    {
+      "attribute": 60,
+      "modifier": 10,
+      "dc14Success": 0.85
+    },
+    {
+      "attribute": 100,
+      "modifier": 10,
+      "dc14Success": 0.85
+    }
+  ],
+  "medicine": {
+    "definition": "medicine.clean_linen_bandages",
+    "ok": true,
+    "resultKeys": [
+      "ok",
+      "state",
+      "log"
+    ],
+    "instanceRemaining": false
+  }
+}

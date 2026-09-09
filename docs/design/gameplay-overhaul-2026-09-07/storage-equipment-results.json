@@ -1,0 +1,44 @@
+{
+  "scope": "isolated pure runtime probes; no save writes or model requests",
+  "localWarehouseEquip": {
+    "definition": "clothing.beyond_the_wall_fur_garment",
+    "listedByUi": true,
+    "itemLayerAccepted": true,
+    "queuedWorldPlanError": "资产 item:probe_gear 不在人物直接保管范围"
+  },
+  "roomBoundary": {
+    "actorScene": "庭院",
+    "storageScene": "上锁的卧房",
+    "treatedAccessible": true
+  },
+  "siteOwnership": {
+    "explicitOwner": null,
+    "projectedOwner": {
+      "type": "title",
+      "titleId": "b_winterfell"
+    }
+  },
+  "createWarehouse": {
+    "capacity": 150,
+    "requiresOnlyCharacterLocationAndUniqueId": true
+  },
+  "remoteEquip": {
+    "rejected": true,
+    "reason": "来源据点不在当前地点"
+  },
+  "brokenCapacityItem": {
+    "scope": "synthetic fixture, not a current playable item",
+    "actualCapacityDefinitions": 0,
+    "definition": "probe.capacity-bag",
+    "durability": 0,
+    "displayRawCarry": 10,
+    "baseCapacity": 8,
+    "acceptedWithBrokenBag": true,
+    "acceptedWithoutBag": false
+  },
+  "siteAccess": {
+    "transferCaptureVisibility": "public",
+    "equipCommitAccessEventCount": 0,
+    "scope": "commit layer only; queued UI path rejects at planning"
+  }
+}
