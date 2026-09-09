@@ -45,13 +45,17 @@ export const DiceModal: React.FC = () => {
   const traitModifier = activeDiceCheck.traitModifier ?? 0;
   const traitModifierBreakdown = activeDiceCheck.traitModifierBreakdown ?? [];
   const signed = (value: number) => `${value >= 0 ? '+' : ''}${value}`;
+  const methodLabel = activeDiceCheck.secondaryAttributeName
+    ? `${activeDiceCheck.attributeName} 70% ＋ ${activeDiceCheck.secondaryAttributeName} 30%`
+    : activeDiceCheck.attributeName;
 
-  const verdict = activeDiceCheck.isNatural20
-    ? { word: '天 成', tone: 'text-rubric' }
-    : activeDiceCheck.isNatural1
-      ? { word: '溃 败', tone: 'text-rubric-deep' }
-      : activeDiceCheck.success
-        ? { word: '得 手', tone: 'text-emerald-700' }
+  const outcome = activeDiceCheck.outcome ?? (activeDiceCheck.success ? 'success' : 'failure');
+  const verdict = outcome === 'strong_success'
+    ? { word: '占 得 先 机', tone: 'text-gold-bright' }
+    : outcome === 'success'
+      ? { word: '得 手', tone: 'text-emerald-700' }
+      : outcome === 'partial'
+        ? { word: '险 中 有 得', tone: 'text-gold' }
         : { word: '落 空', tone: 'text-rubric' };
 
   return (
@@ -72,7 +76,7 @@ export const DiceModal: React.FC = () => {
           命运星盘 · D20
         </p>
         <h3 className="mt-3 font-serif text-xl font-black tracking-[0.14em] text-parchment">
-          {activeDiceCheck.attributeName}检定
+          {activeDiceCheck.secondaryAttributeName ? '组合能力检定' : `${activeDiceCheck.attributeName}检定`}
         </h3>
         <p className="mt-1.5 line-clamp-2 max-w-xs px-2 font-serif text-[11px] italic leading-relaxed text-parchment-faint">
           “{activeDiceCheck.actionText}”
@@ -99,7 +103,7 @@ export const DiceModal: React.FC = () => {
             <div className="w-full border-y border-hairline py-2.5 font-mono text-[11px] text-parchment-dim">
               <div className="flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1">
                 <span>出目 {activeDiceCheck.roll}</span>
-                <span>属性 {signed(activeDiceCheck.attributeModifier)}</span>
+                <span title={methodLabel}>能力 {activeDiceCheck.effectiveAttribute ?? activeDiceCheck.primaryAttributeValue ?? '旧制'} → {signed(activeDiceCheck.attributeModifier)}</span>
                 {equipmentModifier !== 0 && (
                   <span>物品 {signed(equipmentModifier)}</span>
                 )}
@@ -111,6 +115,16 @@ export const DiceModal: React.FC = () => {
                 <span className="font-bold text-gold-bright">总计 {activeDiceCheck.total}</span>
                 <span>DC {activeDiceCheck.dc}</span>
               </div>
+              {activeDiceCheck.secondaryAttributeName && (
+                <div className="mt-2 border-t border-hairline pt-2 text-[9.5px] text-gold">
+                  {methodLabel}
+                </div>
+              )}
+              {activeDiceCheck.methodReason && (
+                <p className="mt-2 border-t border-hairline pt-2 font-serif text-[10px] leading-relaxed text-parchment-faint">
+                  {activeDiceCheck.methodReason}
+                </p>
+              )}
               {equipmentModifierBreakdown.length > 0 && (
                 <div className="mt-2 flex flex-wrap items-center justify-center gap-1 border-t border-hairline pt-2 text-[9.5px]">
                   {equipmentModifierBreakdown.map((item) => (
@@ -143,6 +157,11 @@ export const DiceModal: React.FC = () => {
                     </span>
                   ))}
                 </div>
+              )}
+              {activeDiceCheck.methodEdge && (
+                <p className="mt-2 border-t border-gold-deep/40 pt-2 font-serif text-[10px] leading-relaxed text-gold">
+                  {activeDiceCheck.methodEdge.traitName} · {activeDiceCheck.methodEdge.label}：{activeDiceCheck.methodEdge.directive}
+                </p>
               )}
             </div>
 

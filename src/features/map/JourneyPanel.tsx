@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import {
   CalendarDays,
   CornerUpLeft,
@@ -12,58 +12,34 @@ import {
 
 import { useGameStore } from '../../store/useGameStore'
 import type { CharacterId } from '../characters/types'
-import { createPendingWorldTransaction, pendingTravelTransactionFor, travelCommandToWorldIntent } from '../world/worldTransactionQueue'
+import { pendingTravelTransactionFor } from '../world/worldTransactionQueue'
 import { advanceWorldDate } from '../world/worldHistory'
 import { useMapUiStore } from './mapUiStore'
-import { mapRepository } from './repository'
-import { RouteClient, RoutePlanningError } from './routing/routeClient'
-import type { ActiveJourney, TravelStateCommand } from './travel/types'
+import type { ActiveJourney } from './travel/types'
 
 interface JourneyPanelProps {
   journey: ActiveJourney
-  season: string
   hasLocationDetails: boolean
-}
-
-let sharedReturnClient: RouteClient | undefined
-
-function returnClient(): RouteClient {
-  sharedReturnClient ??= new RouteClient()
-  return sharedReturnClient
-}
-
-function routeCommand(command: TravelStateCommand | null): command is Extract<TravelStateCommand, { type: 'REROUTE_TRAVEL' | 'RETURN_TRAVEL' }> {
-  return command?.type === 'REROUTE_TRAVEL' || command?.type === 'RETURN_TRAVEL'
 }
 
 function formatDate(date: { year: number; month: number; day: number }): string {
   return `${date.year} AC · ${date.month}月${date.day}日`
 }
 
-export const JourneyPanel: React.FC<JourneyPanelProps> = ({ journey, season, hasLocationDetails }) => {
-  const [returnLoading, setReturnLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+export const JourneyPanel: React.FC<JourneyPanelProps> = ({ journey, hasLocationDetails }) => {
   const gameState = useGameStore((state) => state.gameState)
   const isStreaming = useGameStore((state) => state.isStreaming)
   const currentLocation = gameState.lord.location
   const currentDate = { year: gameState.currentYear, month: gameState.currentMonth, day: gameState.currentDay }
-  const queueWorldTransaction = useGameStore((state) => state.queueWorldTransaction)
   const cancelWorldTransaction = useGameStore((state) => state.cancelWorldTransaction)
   const playerCharacterId = (gameState.lord.canonicalCharacterId
     ?? `save:${gameState.worldCharacters?.runId ?? 'current'}:player`) as CharacterId
   const pendingTravelTransaction = pendingTravelTransactionFor(gameState.worldRuntime.pendingTransactions, playerCharacterId)
   const pendingTravelCommand = pendingTravelTransaction?.travelCommands?.[0] ?? null
-  const queueTravelCommand = (command: TravelStateCommand) => queueWorldTransaction(createPendingWorldTransaction(
-    travelCommandToWorldIntent(command, playerCharacterId, `地图旅行操作：${command.type}`),
-  ))
   const cancelTravelCommand = () => {
     if (pendingTravelTransaction) cancelWorldTransaction(pendingTravelTransaction.id)
   }
-  const interactionState = useMapUiStore((state) => state.interactionState)
-  const beginTravelPlanning = useMapUiStore((state) => state.beginTravelPlanning)
-  const beginDestinationPick = useMapUiStore((state) => state.beginDestinationPick)
-  const cancelDestinationPick = useMapUiStore((state) => state.cancelDestinationPick)
-  const closeTravelPlanning = useMapUiStore((state) => state.closeTravelPlanning)
+  const closeDrawer = useMapUiStore((state) => state.closeDrawer)
   const openMap = useMapUiStore((state) => state.openMap)
 
   const completedDays = useMemo(() => journey.routePlan.legs
@@ -80,39 +56,14 @@ export const JourneyPanel: React.FC<JourneyPanelProps> = ({ journey, season, has
   const destination = journey.locationLabels?.[journey.routePlan.to] ?? journey.routePlan.to
   const origin = journey.locationLabels?.[journey.routePlan.from] ?? journey.routePlan.from
   const estimatedArrival = formatDate(advanceWorldDate(currentDate, { days: Math.ceil(remainingDays) }))
-  const pendingRoute = routeCommand(pendingTravelCommand) ? pendingTravelCommand : null
   const pendingPause = pendingTravelCommand?.type === 'PAUSE_TRAVEL'
   const pendingResume = pendingTravelCommand?.type === 'RESUME_TRAVEL'
-  const pendingReturn = pendingRoute?.type === 'RETURN_TRAVEL'
-  const pendingReroute = pendingRoute?.type === 'REROUTE_TRAVEL'
   const pauseBlocked = Boolean(pendingTravelCommand && !pendingPause && !pendingResume)
-  const rerouteBlocked = Boolean(pendingTravelCommand && !pendingReroute)
-  const returnBlocked = Boolean(pendingTravelCommand && !pendingReturn)
 
-  const queueReturn = async () => {
-    setReturnLoading(true)
-    setError(null)
-    try {
-      const routePlan = await returnClient().plan({
-        from: currentLocation.locationId,
-        to: journey.routePlan.from,
-        preference: journey.routePlan.preference,
-        travelMode: journey.routePlan.travelMode,
-        via: [],
-        season,
-      })
-      const routeIds = new Set([routePlan.from, routePlan.to, ...routePlan.legs.flatMap((leg) => [leg.from, leg.to])])
-      const entries = await mapRepository.loadSearchIndex()
-      const locationLabels = Object.fromEntries(entries
-        .filter((entry) => routeIds.has(entry.id))
-        .map((entry) => [entry.id, entry.name]))
-      queueTravelCommand({ type: 'RETURN_TRAVEL', routePlan, locationLabels })
-      closeTravelPlanning()
-    } catch (reason) {
-      setError(reason instanceof RoutePlanningError ? reason.failure.reason : '返回路线暂时无法规划。')
-    } finally {
-      setReturnLoading(false)
-    }
+  const prefillAction = (text: string) => {
+    if (isStreaming) return
+    window.dispatchEvent(new CustomEvent('agot:prefill-action', { detail: { text } }))
+    closeDrawer()
   }
 
   const pauseOrResume = () => {
@@ -120,21 +71,13 @@ export const JourneyPanel: React.FC<JourneyPanelProps> = ({ journey, season, has
       cancelTravelCommand()
       return
     }
-    queueTravelCommand(journey.status === 'travelling'
-      ? { type: 'PAUSE_TRAVEL' }
-      : { type: 'RESUME_TRAVEL' })
+    prefillAction(journey.status === 'travelling'
+      ? `我决定暂停前往${destination}的旅程，在当前能安全停下的位置停留。请按路况、补给、同行者和当前风险结算；如果这里不能合理停留，说明原因并把决定交还给我。`
+      : `我决定继续前往${destination}的旅程。请沿用我已经确定的路线和同行安排，直到出现新的重要风险或需要我决定的分岔。`)
   }
 
   const toggleReroute = () => {
-    if (pendingReroute) {
-      cancelTravelCommand()
-      return
-    }
-    if (interactionState === 'pick-travel-destination') cancelDestinationPick()
-    else {
-      beginTravelPlanning(journey.routePlan.to)
-      beginDestinationPick()
-    }
+    prefillAction(`我要改变当前前往${destination}的路线。请先根据我已知的道路、风险、时日和补给说明真正有差异的选择，再让我决定具体走法。`)
   }
 
   const statusLabel = journey.status === 'travelling'
@@ -171,26 +114,25 @@ export const JourneyPanel: React.FC<JourneyPanelProps> = ({ journey, season, has
         <span>剩余约 {remainingDays.toFixed(1)} 天</span>
       </div>
       {journey.interruptedBy && <p className="map-journey-interruption">{journey.interruptedBy}</p>}
-      {interactionState === 'pick-travel-destination' && <p className="map-journey-guidance">请选择新的伯爵领作为目的地。</p>}
-      {error && <p className="map-journey-error" role="alert">{error}</p>}
+      <p className="map-journey-guidance">路线与风险是旅途中的情境，不是菜单答案；你可以直接描述赶路方式、戒备和同行安排。</p>
 
       <div className="map-journey-actions">
         <button type="button" onClick={pauseOrResume} disabled={isStreaming || pauseBlocked}>
           <PauseIcon />
           {pendingPause || pendingResume ? '取消调整' : journey.status === 'travelling' ? '暂停旅程' : '继续旅程'}
         </button>
-        <button type="button" onClick={toggleReroute} disabled={isStreaming || rerouteBlocked}>
-          {pendingReroute || interactionState === 'pick-travel-destination' ? <Undo2 /> : <Route />}
-          {pendingReroute || interactionState === 'pick-travel-destination' ? '取消改道' : '改道'}
+        <button type="button" onClick={toggleReroute} disabled={isStreaming}>
+          <Route />
+          改道
         </button>
         <button
           type="button"
-          onClick={pendingReturn ? cancelTravelCommand : queueReturn}
-          disabled={isStreaming || returnLoading || returnBlocked || (!pendingReturn && currentLocation.locationId === journey.routePlan.from)}
+          onClick={() => prefillAction(`我决定折返${origin}。请结合当前路况、伤病、补给、同行者和追兵，理解我如何组织这次折返。`)}
+          disabled={isStreaming || currentLocation.locationId === journey.routePlan.from}
           title={currentLocation.locationId === journey.routePlan.from ? `已经在${origin}` : undefined}
         >
-          {pendingReturn ? <Undo2 /> : <CornerUpLeft />}
-          {pendingReturn ? '取消返回' : returnLoading ? '规划中' : '返回'}
+          <CornerUpLeft />
+          折返
         </button>
       </div>
     </aside>

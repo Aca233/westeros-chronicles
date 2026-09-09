@@ -15,12 +15,16 @@ import { CharacterIdentityHeader } from './character-window/CharacterIdentityHea
 import { CharacterOverview } from './character-window/CharacterOverview';
 import { CharacterRelationsTab } from './character-window/CharacterRelationsTab';
 import { CharacterTraitOverlay } from './character-window/CharacterTraitOverlay';
+import { CharacterDirectoryBar } from './character-window/CharacterDirectoryBar';
+import { CharacterCurrentTab } from './character-window/CharacterCurrentTab';
 
 const TABS = [
-  { id: 'relations', label: '关系与家族', icon: UsersRound },
-  { id: 'health', label: '健康与装备', icon: HeartPulse },
-  { id: 'history', label: '记忆与经历', icon: BookOpen },
-  { id: 'inventory', label: '物品与资产', icon: Backpack },
+  { id: 'overview', label: '眼下', icon: UserRound },
+  { id: 'history', label: '往事', icon: BookOpen },
+  { id: 'relations', label: '关系', icon: UsersRound },
+  { id: 'profile', label: '能力', icon: UserRound, playerOnly: true },
+  { id: 'health', label: '身体装备', icon: HeartPulse, playerOnly: true },
+  { id: 'inventory', label: '行囊', icon: Backpack, playerOnly: true },
 ] as const;
 
 type CharacterTab = (typeof TABS)[number]['id'];
@@ -62,10 +66,13 @@ export const Ck3CharacterWindow: React.FC<Ck3CharacterWindowProps> = ({
   );
   const worldEventDisplays = useWorldEventDisplays(visibleWorldEvents, gameState);
   const { dossier, relatedRecords, status, error, reload } = useCharacterDossier(selectedCharacterId);
-  const [activeTab, setActiveTab] = useState<CharacterTab>('relations');
+  const [activeTab, setActiveTab] = useState<CharacterTab>('overview');
   const [activeTraitId, setActiveTraitId] = useState<string | null>(null);
 
-  useEffect(() => setActiveTraitId(null), [dossier?.id]);
+  useEffect(() => {
+    setActiveTraitId(null);
+    setActiveTab('overview');
+  }, [dossier?.id]);
 
   const displayedTraits = useMemo(
     () => dossier ? resolveCharacterTraits(dossier.traitIds, dossier.legacyTraits) : [],
@@ -103,19 +110,13 @@ export const Ck3CharacterWindow: React.FC<Ck3CharacterWindowProps> = ({
           />
 
           <div className="min-h-0 flex-1 overflow-y-auto">
-            <CharacterOverview
-              dossier={dossier}
-              displayedTraits={displayedTraits}
-              activeTraitId={activeTraitId}
-              onTraitSelect={setActiveTraitId}
-            />
-
+            <CharacterDirectoryBar onSelectCharacter={onSelectCharacter} />
             <nav
               data-character-lower-tabs
               className="sticky top-0 z-20 flex border-b border-hairline/80 bg-ink/95 px-3 backdrop-blur-sm"
               aria-label="人物档案页签"
             >
-              {TABS.map(({ id, label }) => {
+              {TABS.filter((tab) => !('playerOnly' in tab) || !tab.playerOnly || dossier.kind === 'player').map(({ id, label }) => {
                 const active = activeTab === id;
                 return (
                   <button
@@ -134,6 +135,17 @@ export const Ck3CharacterWindow: React.FC<Ck3CharacterWindowProps> = ({
             </nav>
 
             <div className="min-h-[240px]">
+              {activeTab === 'overview' && (
+                <CharacterCurrentTab dossier={dossier} gameState={gameState} onOpenLocation={onOpenLocation} />
+              )}
+              {activeTab === 'profile' && (
+                <CharacterOverview
+                  dossier={dossier}
+                  displayedTraits={displayedTraits}
+                  activeTraitId={activeTraitId}
+                  onTraitSelect={setActiveTraitId}
+                />
+              )}
               {activeTab === 'relations' && (
                 <CharacterRelationsTab
                   dossier={dossier}
@@ -144,6 +156,7 @@ export const Ck3CharacterWindow: React.FC<Ck3CharacterWindowProps> = ({
                   worldCharacters={worldCharacters}
                   worldHistory={gameState.worldHistory}
                   worldRuntime={gameState.worldRuntime}
+                  roleplay={gameState.roleplay}
                 />
               )}
               {activeTab === 'health' && <HealthAndEquipmentPanel dossier={dossier} embedded />}

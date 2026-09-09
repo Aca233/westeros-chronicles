@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useGameStore } from '../store/useGameStore';
-import { Settings, RotateCcw, Feather, Moon, Sun, Calendar, ScrollText } from 'lucide-react';
+import { Settings, RotateCcw, Feather, Moon, Sun, ScrollText } from 'lucide-react';
 
 export const Header: React.FC = () => {
-  const { gameState, isStreaming, openSettings, enterMenu, openTvTimeline, undoTurn } = useGameStore();
+  const { gameState, isStreaming, openSettings, enterMenu, undoTurn } = useGameStore();
   const { currentYear, currentMonth, currentDay, currentSeason, turnCount } = gameState;
 
   // 日间 = 羊皮纸;夜间 = 烛下牛皮卷
@@ -76,15 +76,6 @@ export const Header: React.FC = () => {
           aria-label="主菜单"
         >
           <ScrollText className="h-4 w-4" />
-        </button>
-        <button
-          onClick={openTvTimeline}
-          className="btn-ghost !text-gold hover:!text-gold-bright flex items-center gap-1"
-          title="查看维斯特洛编年史精确时间线 (298 AC - 305 AC)"
-          aria-label="编年时间线"
-        >
-          <Calendar className="h-3.5 w-3.5" />
-          <span className="hidden lg:inline font-serif text-[11px] font-bold">编年时间线</span>
         </button>
         <button
           onClick={toggleTheme}

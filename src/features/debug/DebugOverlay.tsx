@@ -76,6 +76,7 @@ export const DebugOverlay: React.FC = () => {
       `回合 ${lastModelRequestTrace.turnNumber}`,
       `${lastModelRequestTrace.offline ? '离线演示' : '在线'} · ${lastModelRequestTrace.provider} · ${lastModelRequestTrace.model}`,
       lastModelRequestTrace.contextError ? `上下文失败：${lastModelRequestTrace.contextError}` : '',
+      lastModelRequestTrace.contextManifest ? `上下文清单：${JSON.stringify(lastModelRequestTrace.contextManifest, null, 2)}` : '',
       '【自动世界切片】',
       lastModelRequestTrace.worldContext.automatic || '（空）',
       '【结算后世界切片】',
@@ -202,6 +203,12 @@ export const DebugOverlay: React.FC = () => {
                   )}
                   {lastModelRequestTrace.contextError && (
                     <p className="font-serif text-[11px] text-rubric">上下文失败：{lastModelRequestTrace.contextError}</p>
+                  )}
+                  {lastModelRequestTrace.contextManifest && (
+                    <section className="border border-hairline bg-ink-2/70 p-3">
+                      <h4 className="font-serif text-[11px] font-bold text-gold">上下文清单</h4>
+                      <pre className="mt-2 max-h-40 overflow-auto whitespace-pre-wrap break-words font-mono text-[10px] text-parchment-faint">{JSON.stringify(lastModelRequestTrace.contextManifest, null, 2)}</pre>
+                    </section>
                   )}
                   {lastModelRequestTrace.status === 'resolving' && lastModelRequestTrace.resolution.messages.length > 0 && (
                     <p className="font-serif text-[11px] text-gold">规则解析请求已发出，正在等待模型返回。</p>

@@ -5,7 +5,7 @@ import { WESTEROS_ENTITIES, EntityInfo } from '../data/entities';
 import { ArrowDown } from 'lucide-react';
 import { GameIcon, isGameIconId } from './GameIcon';
 import { stripEmoji } from '../services/textSanitizer';
-import { extractNarrativeContent, extractStreamingNarrativeContent, extractThinkingContent } from '../services/modelProtocol';
+import { extractNarrativeContent, extractStreamingNarrativeContent } from '../services/modelProtocol';
 import { OpeningCeremony } from './OpeningCeremony';
 import type { CharacterId } from '../features/characters/types';
 import type { WorldEvent } from '../features/world/worldRuntimeTypes';
@@ -309,7 +309,6 @@ function SceneBlock({
   onOpenLocation: (location: WorldLocationRef) => void;
   onOpenAsset: (assetId: string) => void;
 }) {
-  const [isThinkOpen, setIsThinkOpen] = useState(false);
   const [hoveredEntity, setHoveredEntity] = useState<{ entity: EntityInfo; x: number; y: number; above: boolean } | null>(null);
 
   // 名词考据:墨字黄铜点线 + 悬浮旁注
@@ -458,24 +457,6 @@ function SceneBlock({
         </Reveal>
       )}
 
-      {/* 思维链:一个安静的文字开关 */}
-      {turn.think && !isFirst && (
-        <div className="mb-7 select-none">
-          <button
-            onClick={() => setIsThinkOpen(!isThinkOpen)}
-            className="mx-auto flex items-center gap-2 text-[11px] tracking-[0.2em] text-parchment-faint transition-colors hover:text-gold"
-          >
-            <span className="inline-block h-1 w-1 rotate-45 bg-current" aria-hidden="true" />
-            {isThinkOpen ? '收起思维链' : '展开思维链'}
-          </button>
-          {isThinkOpen && (
-            <div className="panel-pop mt-4 whitespace-pre-wrap border-l border-hairline-bright/60 pl-4 font-mono text-[11px] leading-relaxed text-parchment-dim">
-              {stripEmoji(turn.think)}
-            </div>
-          )}
-        </div>
-      )}
-
       {/* 正文:泥金首字起笔 */}
       <div className="deed-prose deed-prose--illuminated font-serif">
         {extractNarrativeContent(turn.narrate).split(/\n+/).map((para, pIdx) => {
@@ -526,20 +507,25 @@ function DiceLedger({ check }: { check: NonNullable<StoryTurn['diceCheck']> }) {
   const traitModifier = check.traitModifier;
   const traitModifierBreakdown = check.traitModifierBreakdown;
   const signed = (value: number) => `${value >= 0 ? '+' : ''}${value}`;
-  const failed = check.isNatural1 || !check.success;
+  const outcome = check.outcome ?? (check.success ? 'success' : 'failure');
+  const failed = outcome === 'failure';
+  const outcomeLabel = outcome === 'strong_success' ? '占得先机' : outcome === 'success' ? '得手' : outcome === 'partial' ? '险中有得' : '落空';
+  const methodLabel = check.secondaryAttributeName
+    ? `${check.attributeName} 70% + ${check.secondaryAttributeName} 30%`
+    : check.attributeName;
 
   return (
     <div className="mb-9 select-none text-center">
       <p className="font-mono text-[11px] leading-relaxed text-parchment-faint">
-        {check.attributeName}检定 · DC {check.dc}
+        {methodLabel} · DC {check.dc}
         {' '}· 出目 {check.roll}
-        {' '}属性 {signed(check.attributeModifier)}
+        {' '}能力 {check.effectiveAttribute ?? check.primaryAttributeValue ?? '旧制'} → {signed(check.attributeModifier)}
         {equipmentModifier !== 0 && <> 物品 {signed(equipmentModifier)}</>}
         {traitModifier !== 0 && <span className="text-gold"> 特质 {signed(traitModifier)}</span>}
         {' '}总计 <strong className="text-parchment">{check.total}</strong>
         {' '}·{' '}
         <strong className={`font-serif text-[12px] tracking-[0.3em] ${failed ? 'text-rubric' : 'text-parchment'}`}>
-          {check.isNatural20 ? '天成' : check.isNatural1 ? '溃败' : check.success ? '得手' : '落空'}
+          {outcomeLabel}
         </strong>
       </p>
       {equipmentModifierBreakdown.length > 0 && (
@@ -552,6 +538,14 @@ function DiceLedger({ check }: { check: NonNullable<StoryTurn['diceCheck']> }) {
           {traitModifierBreakdown.map((item) => `${item.name} ${signed(item.value)}`).join(' · ')}
         </p>
       )}
+      {check.methodReason && (
+        <p className="mt-1.5 font-serif text-[10px] leading-relaxed text-parchment-faint">{check.methodReason}</p>
+      )}
+      {check.methodEdge && (
+        <p className="mt-1.5 font-serif text-[10px] leading-relaxed text-gold">
+          {check.methodEdge.traitName} · {check.methodEdge.label}：{check.methodEdge.directive}
+        </p>
+      )}
     </div>
   );
 }
@@ -559,9 +553,8 @@ function DiceLedger({ check }: { check: NonNullable<StoryTurn['diceCheck']> }) {
 // 实时流式渲染器
 function LiveStreamingRenderer({ rawText }: { rawText: string }) {
   const safeRawText = stripEmoji(rawText);
-  const liveThink = extractThinkingContent(safeRawText);
   const cleanNarrate = extractStreamingNarrativeContent(safeRawText);
-  if (!cleanNarrate && !liveThink) {
+  if (!cleanNarrate) {
     return (
       <div className="typing-cursor font-serif text-[14px] italic text-parchment-faint">
         羽笔蘸墨,正要落纸……
@@ -571,11 +564,6 @@ function LiveStreamingRenderer({ rawText }: { rawText: string }) {
 
   return (
     <div className="flex flex-col gap-5">
-      {liveThink && (
-        <p className="whitespace-pre-wrap border-l border-hairline-bright/60 pl-4 font-mono text-[10.5px] leading-relaxed text-parchment-faint">
-          {liveThink}
-        </p>
-      )}
       <div className="deed-prose typing-cursor whitespace-pre-wrap font-serif">
         {cleanNarrate || '正在措辞……'}
       </div>

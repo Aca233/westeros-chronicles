@@ -1,9 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { ChevronDown, Hammer, Shield, ThermometerSun, Weight } from 'lucide-react';
 import { ITEM_CATALOG } from '../../data/itemDefinitions';
-import type { CharacterId } from '../../features/characters/types';
 import { pendingItemActionsFromWorldTransactions } from '../../features/items/itemActionQueue';
-import { createPendingWorldTransaction, itemActionToWorldIntent } from '../../features/world/worldTransactionQueue';
 import {
   aggregateEquippedItemEffects,
   getEquipmentBurden,
@@ -12,7 +10,6 @@ import type {
   EquipmentGroup,
   EquipmentPosition,
   ItemAction,
-  ItemPlacement,
   ItemSystemState,
 } from '../../features/items/types';
 import {
@@ -20,9 +17,15 @@ import {
   type EquipmentGroupModel,
   type ItemCardModel,
 } from '../../features/items/viewModel';
-import { getEquipmentReplacementChoices } from '../../features/items/actionChoices';
-import { sameWorldLocation } from '../../features/map/locationResolver';
 import type { WorldLocationRef } from '../../features/map/types';
+import {
+  getEquipmentReplacementChoices,
+  getTransferDestinationChoices,
+  type EquipmentReplacementChoice,
+  type TransferDestinationChoice,
+} from '../../features/items/actionChoices';
+import { equipItem, unequipItem } from '../../features/items/equipment';
+import { getItemDefinition } from '../../features/items/catalog';
 import { useGameStore } from '../../store/useGameStore';
 import type { BodyZoneKey, LordBodyCondition } from '../../types/game';
 import { ItemCard } from './ItemCard';
@@ -49,12 +52,55 @@ const WOUND_LABELS = {
   critical: '危重',
 } as const;
 
-function localStorageDestination(state: ItemSystemState, currentLocation: WorldLocationRef): ItemPlacement {
-  const site = Object.values(state.sites).find((entry) => sameWorldLocation(entry.location, currentLocation));
-  if (site) return { type: 'site', siteId: site.id };
-  const vehicle = Object.values(state.vehicles).find((entry) => sameWorldLocation(entry.location, currentLocation));
-  if (vehicle) return { type: 'vehicle', vehicleId: vehicle.id };
-  return { type: 'carried' };
+function equipmentPositionsEqual(left: EquipmentPosition, right: EquipmentPosition): boolean {
+  if (left.group !== right.group) return false;
+  if (left.group === 'torso') return right.group === 'torso' && left.layer === right.layer;
+  if (left.group === 'legs') return right.group === 'legs' && left.layer === right.layer;
+  if (left.group === 'accessories') return right.group === 'accessories' && left.index === right.index;
+  return true;
+}
+
+function displacedEquipmentIds(
+  state: ItemSystemState,
+  replacement: EquipmentReplacementChoice,
+): string[] {
+  const ids = Object.entries(state.placements)
+    .filter(([, placement]) => placement.type === 'equipped' && equipmentPositionsEqual(placement.position, replacement.position))
+    .map(([id]) => id);
+  const definition = getItemDefinition(ITEM_CATALOG, state.instances[replacement.instanceId].definitionId);
+  if (definition.handedness === 'two' && replacement.position.group === 'mainhand') {
+    for (const [id, placement] of Object.entries(state.placements)) {
+      if (placement.type === 'equipped' && placement.position.group === 'offhand') ids.push(id);
+    }
+  }
+  return [...new Set(ids)];
+}
+
+type StowRequest =
+  | { kind: 'unequip'; instanceId: string; itemName: string; displacedIds: string[] }
+  | { kind: 'equip'; replacement: EquipmentReplacementChoice; itemName: string; displacedIds: string[] };
+
+function validStowChoices(
+  state: ItemSystemState,
+  currentLocation: WorldLocationRef,
+  request: StowRequest,
+): TransferDestinationChoice[] {
+  return getTransferDestinationChoices({ state, currentLocation, from: { type: 'equipped', position: { group: 'mainhand' } } })
+    .filter((choice) => {
+      try {
+        if (request.kind === 'unequip') {
+          unequipItem(state, ITEM_CATALOG, request.instanceId, choice.placement, { currentLocation });
+        } else {
+          equipItem(state, ITEM_CATALOG, request.replacement.instanceId, request.replacement.position, {
+            currentLocation,
+            displacedTo: choice.placement,
+          });
+        }
+        return true;
+      } catch {
+        return false;
+      }
+    });
 }
 
 function groupPositions(group: EquipmentGroupModel): EquipmentPosition[] {
@@ -98,7 +144,6 @@ function cardForEquipment(item: ItemCardModel, canReplace: boolean): ItemCardMod
   const pendingReason = item.actions.find((action) => action.disabledReason)?.disabledReason;
   const actions: ItemCardModel['actions'] = [
     { kind: 'unequip', label: '卸下', disabledReason: pendingReason },
-    ...(item.durabilityLabel === '耐久 100/100' ? [] : [{ kind: 'repair' as const, label: '修理', disabledReason: pendingReason }]),
     ...(canReplace ? [{ kind: 'equip' as const, label: '更换', disabledReason: pendingReason }] : []),
   ];
   return { ...item, actions };
@@ -111,19 +156,30 @@ export interface EquipmentPanelProps {
 }
 
 export const EquipmentPanel: React.FC<EquipmentPanelProps> = ({ body, focusedGroup, onGroupFocus }) => {
-  const { gameState, queueWorldTransaction, cancelWorldTransaction, isStreaming } = useGameStore();
+  const { gameState, cancelWorldTransaction, isStreaming } = useGameStore();
   const state = gameState.lord.items;
   const currentLocation = gameState.lord.location;
-  const playerCharacterId = (gameState.lord.canonicalCharacterId
-    ?? `save:${gameState.worldCharacters?.runId ?? 'current'}:player`) as CharacterId;
   const pendingItemActions = useMemo(() => pendingItemActionsFromWorldTransactions(
     gameState.worldRuntime.pendingTransactions,
     state,
     ITEM_CATALOG,
   ), [gameState.worldRuntime.pendingTransactions, state]);
-  const queueItemAction = (action: ItemAction) => queueWorldTransaction(createPendingWorldTransaction(
-    itemActionToWorldIntent(action, playerCharacterId, `人物卷宗物品操作：${action.kind}`),
-  ));
+  const draftItemAction = (action: ItemAction) => {
+    if (isStreaming) return;
+    if (action.kind !== 'equip' && action.kind !== 'unequip') return;
+    const instance = state.instances[action.instanceId];
+    if (!instance) return;
+    const definition = getItemDefinition(ITEM_CATALOG, instance.definitionId);
+    const name = instance.customName || definition.name;
+    if (action.kind === 'equip') {
+      const positionLabel = { head: '头部', torso: '躯干', mainhand: '主手', offhand: '副手', legs: '腿部', accessories: '配饰' }[action.position.group];
+      window.dispatchEvent(new CustomEvent('agot:prefill-action', { detail: { text: `我准备把【${name}】装备到${positionLabel}。请按当前实际装备、负担和可用保管位置结算；如果必须收起别的装备且存放方式会造成实质差异，先让我决定。` } }));
+      return;
+    }
+    if (action.kind === 'unequip') {
+      window.dispatchEvent(new CustomEvent('agot:prefill-action', { detail: { text: `我准备卸下【${name}】并收好。请按当前位置实际可用的携带或寄存条件结算；如果存放方式会造成实质差异，先让我决定。` } }));
+    }
+  };
   const cancelItemAction = cancelWorldTransaction;
   const groups = useMemo(() => buildEquipmentGroupModels({ state, catalog: ITEM_CATALOG, pendingActions: pendingItemActions }), [state, pendingItemActions]);
   const groupById = useMemo(() => new Map(groups.map((group) => [group.group, group])), [groups]);
@@ -143,6 +199,7 @@ export const EquipmentPanel: React.FC<EquipmentPanelProps> = ({ body, focusedGro
     positions: EquipmentPosition[];
     excludedIds: string[];
   } | null>(null);
+  const [stowRequest, setStowRequest] = useState<StowRequest | null>(null);
 
   const replacementChoices = useMemo(() => replacementRequest ? getEquipmentReplacementChoices({
     state,
@@ -151,6 +208,10 @@ export const EquipmentPanel: React.FC<EquipmentPanelProps> = ({ body, focusedGro
     positions: replacementRequest.positions,
     excludedIds: replacementRequest.excludedIds,
   }) : [], [currentLocation, replacementRequest, state]);
+  const stowChoices = useMemo(
+    () => stowRequest ? validStowChoices(state, currentLocation, stowRequest) : [],
+    [currentLocation, state, stowRequest],
+  );
 
   const toggle = (group: EquipmentGroup) => {
     setExpanded((current) => {
@@ -168,13 +229,30 @@ export const EquipmentPanel: React.FC<EquipmentPanelProps> = ({ body, focusedGro
   const chooseReplacement = (instanceId: string) => {
     const replacement = replacementChoices.find((choice) => choice.instanceId === instanceId);
     if (!replacement || isStreaming) return;
-    queueItemAction({
-      kind: 'equip',
-      instanceId: replacement.instanceId,
-      position: replacement.position,
-      displacedTo: localStorageDestination(state, currentLocation),
-    });
     setReplacementRequest(null);
+    const displacedIds = displacedEquipmentIds(state, replacement);
+    if (!displacedIds.length) {
+      draftItemAction({ kind: 'equip', instanceId: replacement.instanceId, position: replacement.position, displacedTo: { type: 'carried' } });
+      return;
+    }
+    setStowRequest({ kind: 'equip', replacement, itemName: replacement.name, displacedIds });
+  };
+
+  const chooseStowDestination = (choiceId: string) => {
+    if (!stowRequest || isStreaming) return;
+    const choice = stowChoices.find((candidate) => candidate.id === choiceId);
+    if (!choice) return;
+    if (stowRequest.kind === 'unequip') {
+      draftItemAction({ kind: 'unequip', instanceId: stowRequest.instanceId, to: choice.placement });
+    } else {
+      draftItemAction({
+        kind: 'equip',
+        instanceId: stowRequest.replacement.instanceId,
+        position: stowRequest.replacement.position,
+        displacedTo: choice.placement,
+      });
+    }
+    setStowRequest(null);
   };
 
   const renderGroup = (group: EquipmentGroupModel) => {
@@ -271,8 +349,12 @@ export const EquipmentPanel: React.FC<EquipmentPanelProps> = ({ body, focusedGro
                     pendingCancellationDisabled={isStreaming}
                     onAction={(_item, action) => {
                       if (isStreaming) return;
-                      if (action.kind === 'unequip') queueItemAction({ kind: 'unequip', instanceId: position.item!.instanceId, to: localStorageDestination(state, currentLocation) });
-                      else if (action.kind === 'repair') queueItemAction({ kind: 'repair', instanceId: position.item!.instanceId, amount: 25 });
+                      if (action.kind === 'unequip') setStowRequest({
+                        kind: 'unequip',
+                        instanceId: position.item!.instanceId,
+                        itemName: position.item!.name,
+                        displacedIds: [position.item!.instanceId],
+                      });
                       else if (action.kind === 'equip') openReplacementChoices(`更换${position.label}`, [equipmentPosition], [position.item!.instanceId]);
                     }}
                   />
@@ -339,7 +421,7 @@ export const EquipmentPanel: React.FC<EquipmentPanelProps> = ({ body, focusedGro
       {replacementRequest && (
         <ItemChoiceDialog
           title={replacementRequest.title}
-          description="选择一件装备。选择后会加入队列，并在下一次成功对话后穿上。"
+          description="选择一件装备。选择后只会写入中央行动草稿；穿戴、收纳、时间与条件仍由正常回合结算。"
           options={replacementChoices.map((choice) => ({
             id: choice.instanceId,
             title: choice.name,
@@ -350,6 +432,24 @@ export const EquipmentPanel: React.FC<EquipmentPanelProps> = ({ body, focusedGro
           emptyMessage="当前地点没有适合这个位置的可用装备。"
           onChoose={chooseReplacement}
           onClose={() => setReplacementRequest(null)}
+        />
+      )}
+      {stowRequest && (
+        <ItemChoiceDialog
+          title={stowRequest.kind === 'unequip' ? `卸下${stowRequest.itemName}` : `收纳被替换装备`}
+          description={stowRequest.kind === 'unequip'
+            ? '选择卸下后实际存放的位置。只有当前地点且容量足够的保管处可用。'
+            : `穿戴${stowRequest.itemName}后，选择原装备的实际存放位置。`}
+          options={stowChoices.map((choice) => ({
+            id: choice.id,
+            title: choice.label,
+            subtitle: choice.kind === 'carried' ? '随身保管' : choice.kind === 'site' ? '当前据点' : '当前载具',
+            detail: choice.detail,
+            icon: choice.kind,
+          }))}
+          emptyMessage="当前位置没有容量足够的保管位置。请先腾出空间或建立储藏处。"
+          onChoose={chooseStowDestination}
+          onClose={() => setStowRequest(null)}
         />
       )}
     </div>

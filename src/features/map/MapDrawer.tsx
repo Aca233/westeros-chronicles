@@ -8,7 +8,6 @@ import { CountyDetails } from './CountyDetails'
 import { LocationDetails } from './LocationDetails'
 import { JourneyPanel } from './JourneyPanel'
 import { MapToolbar } from './MapToolbar'
-import { TravelPlanner } from './TravelPlanner'
 import { useMapUiStore } from './mapUiStore'
 import { mapRepository } from './repository'
 import { needsCharacterNameData, needsPoliticalData } from './mapDataDemand.ts'
@@ -41,14 +40,10 @@ export const MapDrawer: React.FC<MapDrawerProps> = ({ onSelectCharacter }) => {
   const activeDrawer = useMapUiStore((state) => state.activeDrawer)
   const selection = useMapUiStore((state) => state.selection)
   const overlays = useMapUiStore((state) => state.overlays)
-  const interactionState = useMapUiStore((state) => state.interactionState)
   const focusRequest = useMapUiStore((state) => state.focusRequest)
   const lastViewport = useMapUiStore((state) => state.lastViewport)
   const topDownLocked = useMapUiStore((state) => state.topDownLocked)
   const northResetRequestId = useMapUiStore((state) => state.northResetRequestId)
-  const routePreview = useMapUiStore((state) => state.routePreview)
-  const travelTargetLocationId = useMapUiStore((state) => state.travelTargetLocationId)
-  const travelPickOriginLocationId = useMapUiStore((state) => state.travelPickOriginLocationId)
   const openMap = useMapUiStore((state) => state.openMap)
   const openAsset = useMapUiStore((state) => state.openAsset)
   const closeDrawer = useMapUiStore((state) => state.closeDrawer)
@@ -60,11 +55,6 @@ export const MapDrawer: React.FC<MapDrawerProps> = ({ onSelectCharacter }) => {
   const setOverlay = useMapUiStore((state) => state.setOverlay)
   const toggleTopDown = useMapUiStore((state) => state.toggleTopDown)
   const requestNorthReset = useMapUiStore((state) => state.requestNorthReset)
-  const beginTravelPlanning = useMapUiStore((state) => state.beginTravelPlanning)
-  const beginDestinationPick = useMapUiStore((state) => state.beginDestinationPick)
-  const chooseTravelDestination = useMapUiStore((state) => state.chooseTravelDestination)
-  const cancelDestinationPick = useMapUiStore((state) => state.cancelDestinationPick)
-  const closeTravelPlanning = useMapUiStore((state) => state.closeTravelPlanning)
 
   const [manifest, setManifest] = useState<MapManifest | null>(null)
   const [loadError, setLoadError] = useState(false)
@@ -80,9 +70,8 @@ export const MapDrawer: React.FC<MapDrawerProps> = ({ onSelectCharacter }) => {
   } | null>(null)
   const handledFocusRequest = useRef(0)
 
-  const routeOriginId = useGameStore((state) => state.gameState.lord.location.locationId)
-  const currentSeason = useGameStore((state) => state.gameState.currentSeason)
   const activeJourney = useGameStore((state) => state.gameState.activeJourney)
+  const activeSceneCharacterIds = useGameStore((state) => state.gameState.activeScene?.presentCharacterIds)
   const worldRuntime = useGameStore((state) => state.gameState.worldRuntime)
   const worldHistory = useGameStore((state) => state.gameState.worldHistory)
   const worldCharacters = useGameStore((state) => state.gameState.worldCharacters)
@@ -106,7 +95,7 @@ export const MapDrawer: React.FC<MapDrawerProps> = ({ onSelectCharacter }) => {
     ?? `save:${worldCharacters?.runId ?? 'current'}:player`) as CharacterId
   const pendingTravelCommand = pendingTravelTransactionFor(worldRuntime.pendingTransactions, playerCharacterId)?.travelCommands?.[0] ?? null
   const pendingRoutePlan = pendingTravelCommand && 'routePlan' in pendingTravelCommand ? pendingTravelCommand.routePlan ?? null : null
-  const displayedRoute = routePreview ?? pendingRoutePlan ?? activeJourney?.routePlan ?? null
+  const displayedRoute = pendingRoutePlan ?? activeJourney?.routePlan ?? null
 
   const politicalStates = useMemo(() => politicalSource && needsPolitics
     ? projectPoliticalState(
@@ -135,7 +124,8 @@ export const MapDrawer: React.FC<MapDrawerProps> = ({ onSelectCharacter }) => {
     characters: characterTurnContext?.characters,
     history: worldHistory,
     names: characterNames,
-  }, mapLocations) : [], [characterNames, characterTurnContext?.characters, lord.location.locationId, lord.name, mapLocations, needsCharacters, playerCharacterId, worldHistory])
+    presentCharacterIds: activeSceneCharacterIds,
+  }, mapLocations) : [], [activeSceneCharacterIds, characterNames, characterTurnContext?.characters, lord.location.locationId, lord.name, mapLocations, needsCharacters, playerCharacterId, worldHistory])
   const allAssetPoints = useMemo(() => projectKnownAssetMapPoints(lord.items, mapLocations), [lord.items, mapLocations])
   const countyIdByLocationId = useMemo(() => new Map(
     semanticIndex?.memberships.flatMap((entry) => entry.countyId ? [[entry.locationId, entry.countyId] as const] : []) ?? [],
@@ -217,10 +207,6 @@ export const MapDrawer: React.FC<MapDrawerProps> = ({ onSelectCharacter }) => {
     })
   }, [countyIdByLocationId, lord.items, mapLocations, playerCharacterId, scopedSubjects.characters, selectedPoliticalState, selection.countyId, semanticIndex, worldArtifacts, worldRuntime])
   const assetNames = useMemo(() => new Map(scopedSubjects.assets.map((point) => [point.assetId, point.name])), [scopedSubjects.assets])
-  const travelPickOriginName = useMemo(() => travelPickOriginLocationId
-    ? mapLocations.find((entry) => entry.id === travelPickOriginLocationId)?.name ?? null
-    : null, [mapLocations, travelPickOriginLocationId])
-
   useEffect(() => {
     if (activeDrawer !== 'map') return
     setTerrainAvailable(true)
@@ -297,6 +283,14 @@ export const MapDrawer: React.FC<MapDrawerProps> = ({ onSelectCharacter }) => {
     mapRepository.clear(); setManifest(null); setLoadError(false); setWarning(null); setReloadKey((value) => value + 1)
   }, [])
   const handleSearchTarget = useCallback((target: MapFocusTarget) => openMap(target), [openMap])
+  const prefillTravelIntent = useCallback((_destinationId: string, destinationName: string) => {
+    window.dispatchEvent(new CustomEvent('agot:prefill-action', {
+      detail: {
+        text: `我准备前往${destinationName}。请根据我的身份、装备、同行者与已知路况理解我的安排；若路线选择会造成实质差异，先把选择与代价呈现给我。`,
+      },
+    }))
+    closeDrawer()
+  }, [closeDrawer])
 
   if (activeDrawer !== 'map') return null
   return <div className="fixed inset-0 z-40" role="dialog" aria-modal="true" aria-label="维斯特洛地图">
@@ -322,8 +316,8 @@ export const MapDrawer: React.FC<MapDrawerProps> = ({ onSelectCharacter }) => {
             onWarning={setWarning}
             onTerrainAvailabilityChange={setTerrainAvailable}
             overlays={overlays}
-            interactionState={interactionState}
-            onChooseTravelDestination={chooseTravelDestination}
+            interactionState="browse"
+            onChooseTravelDestination={() => undefined}
             topDownLocked={topDownLocked}
             northResetRequestId={northResetRequestId}
             routePlan={displayedRoute}
@@ -338,11 +332,6 @@ export const MapDrawer: React.FC<MapDrawerProps> = ({ onSelectCharacter }) => {
           : <div className="map-load-state" aria-live="polite"><span className="map-loading-mark" aria-hidden="true" /><strong>正在展开地图</strong><span>读取本地地形与伯爵领索引</span></div>}
         {manifest && !loadError && <MapToolbar overlays={overlays} topDownLocked={topDownLocked} terrainAvailable={terrainAvailable} onOverlayChange={setOverlay} onSelectTarget={handleSearchTarget} onToggleTopDown={toggleTopDown} onResetNorth={requestNorthReset} />}
 
-        {interactionState === 'pick-travel-destination' && <div className="map-destination-pick-notice" role="status">
-          <span>正在选择目的地{travelPickOriginName ? `，原目标为${travelPickOriginName}` : ''}</span>
-          <button type="button" onClick={cancelDestinationPick}>取消选择</button>
-        </div>}
-
         {selection.locationId ? <LocationDetails
           locationId={selection.locationId}
           knownCharacters={scopedSubjects.characters.filter((point) => point.locationId === selection.locationId)}
@@ -353,7 +342,7 @@ export const MapDrawer: React.FC<MapDrawerProps> = ({ onSelectCharacter }) => {
           onSelectCharacter={onSelectCharacter}
           onOpenAsset={(assetId) => openAsset(assetId, null)}
           onBackToCounty={clearLocation}
-          onPlanTravel={beginTravelPlanning}
+          onPrefillTravel={prefillTravelIntent}
           onClose={clearLocation}
         /> : selection.countyId && countyView ? <CountyDetails
           view={countyView}
@@ -363,19 +352,11 @@ export const MapDrawer: React.FC<MapDrawerProps> = ({ onSelectCharacter }) => {
           onSelectLocation={selectLocation}
           onSelectCharacter={onSelectCharacter}
           onOpenAsset={(assetId) => openAsset(assetId, null)}
-          onPlanTravel={beginTravelPlanning}
+          onPrefillTravel={prefillTravelIntent}
           onClose={clearSelection}
         /> : null}
 
-        {travelTargetLocationId && <div className="map-travel-planner-shell">
-          <div className="map-travel-planner-actions">
-            <button type="button" onClick={beginDestinationPick}>在地图上选择</button>
-            <button type="button" onClick={closeTravelPlanning}>关闭规划</button>
-          </div>
-          <TravelPlanner destinationId={travelTargetLocationId} originId={routeOriginId} season={currentSeason} />
-        </div>}
-
-        {activeJourney && activeJourney.status !== 'arrived' && activeJourney.status !== 'planned' && <JourneyPanel journey={activeJourney} season={currentSeason} hasLocationDetails={Boolean(selection.countyId || travelTargetLocationId)} />}
+        {activeJourney && activeJourney.status !== 'arrived' && activeJourney.status !== 'planned' && <JourneyPanel journey={activeJourney} hasLocationDetails={Boolean(selection.countyId)} />}
         {warning && manifest && <div className="map-warning" role="status">{warning}</div>}
       </div>
     </section>

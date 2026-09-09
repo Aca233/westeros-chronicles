@@ -19,7 +19,7 @@ import {
 import { useGameStore } from '../store/useGameStore';
 import { HOUSES } from '../data/houses';
 import { LordAttributes, LordProfile, createDefaultBody } from '../types/game';
-import { createCustomRulerItemState } from '../features/characters/customRulerStart';
+import { createCustomRulerItemState, type CustomStartStatus } from '../features/characters/customRulerStart';
 import { GameIcon, getHouseIconId } from './GameIcon';
 import { CharacterSearch } from './CharacterSearch';
 import { CharacterPortrait } from './CharacterPortrait';
@@ -84,6 +84,12 @@ const RECOMMENDED_CHARACTER_IDS: CharacterId[] = [
   'agot:Stark_7', 'agot:Targaryen_9', 'agot:Stark_8', 'agot:Stark_9',
 ];
 
+const START_STATUSES: Array<{ id: CustomStartStatus; label: string; description: string; title: string }> = [
+  { id: 'landed', label: '封地领主', description: '有私人房间、驮马与较充足的钱财，可处理领地事务。', title: '年轻的封建领主' },
+  { id: 'household', label: '家臣与侍从', description: '寄身于他人屋檐下，只有个人木箱和有限盘缠。', title: '受雇的家臣' },
+  { id: 'wanderer', label: '流浪者', description: '没有固定据点，财物随身或放在驮马上，靠关系与本事立足。', title: '无地的旅人' },
+];
+
 export const CharacterCreator: React.FC = () => {
   const { isCreatorOpen, closeCreator, startNewGame } = useGameStore();
   const [tab, setTab] = useState<'existing' | 'custom'>(() => useGameStore.getState().creatorInitialTab);
@@ -94,6 +100,7 @@ export const CharacterCreator: React.FC = () => {
   const [selectedHouseId, setSelectedHouseId] = useState(HOUSES[0].id);
   const [customName, setCustomName] = useState('维斯特洛新星');
   const [customTitle, setCustomTitle] = useState('年轻的封建领主');
+  const [startStatus, setStartStatus] = useState<CustomStartStatus>('landed');
   const [customAge, setCustomAge] = useState(24);
   const [customGender, setCustomGender] = useState('男');
   const [customAttributes, setCustomAttributes] = useState<LordAttributes>({ ...HOUSES[0].defaultAttributes });
@@ -169,6 +176,7 @@ export const CharacterCreator: React.FC = () => {
     setSelectedHouseId(HOUSES[0].id);
     setCustomName('维斯特洛新星');
     setCustomTitle('年轻的封建领主');
+    setStartStatus('landed');
     setCustomAge(24);
     setCustomGender('男');
     setCustomAttributes({ ...HOUSES[0].defaultAttributes });
@@ -262,13 +270,16 @@ export const CharacterCreator: React.FC = () => {
   const handleStartCustom = () => {
     if (!canComplete) return;
     const chosenTraitNames = selectedTraits.map((trait) => trait.name);
-    const customItems = createCustomRulerItemState();
-    const customLocation = { locationId: 'b_unknown_westeros', sceneLocation: `${effectiveSeat} · 大厅` };
-    const customLocationLabel = `所在地未查明 · ${effectiveSeat} · 大厅`;
+    const customItems = createCustomRulerItemState(startStatus);
+    const sceneName = startStatus === 'landed' ? `${effectiveSeat} · 大厅`
+      : startStatus === 'household' ? `${effectiveSeat} · 仆从厅`
+        : `${effectiveSeat}附近 · 路旁客栈`;
+    const customLocation = { locationId: 'b_unknown_westeros', sceneLocation: sceneName };
+    const customLocationLabel = `所在地未查明 · ${sceneName}`;
     for (const site of Object.values(customItems.sites)) {
       site.location = { ...customLocation };
       site.locationLabel = customLocationLabel;
-      if (site.id === 'custom_ruler_room') site.name = `${effectiveSeat}领主起居室`;
+      if (site.id === 'custom_ruler_room' && startStatus === 'landed') site.name = `${effectiveSeat}领主起居室`;
     }
     for (const vehicle of Object.values(customItems.vehicles)) {
       vehicle.location = { ...customLocation };
@@ -291,22 +302,14 @@ export const CharacterCreator: React.FC = () => {
       locationLabel: customLocationLabel,
       body: createDefaultBody(),
       overallStatus: '强健',
-      goldDragons: 300,
-      silverStags: 100,
+      goldDragons: startStatus === 'landed' ? 300 : startStatus === 'household' ? 20 : 5,
+      silverStags: startStatus === 'landed' ? 100 : startStatus === 'household' ? 35 : 18,
       attributes: finalAttributes,
       baseAttributes: { ...customAttributes },
       traits: [...chosenTraitNames, `${effectiveDynastyName}血脉`],
       traitIds: [...selectedTraitIds],
     };
-    const customOpening = {
-      think: `自创领主开局: ${customLord.name} 刚刚在 ${effectiveSeat} 继任领主之位。维斯特洛七国风云变幻，国王劳勃的王权摇摇欲坠。`,
-      narrate: `微风吹拂着【${effectiveSeat}】高耸的黑色城垛，绣有${effectiveHouseName}纹章的巨大旗帜在风中猎猎作响。\n\n你身着厚实的领主常服，家族佩剑收在触手可及之处，独自站在领主大厅的古老石椅前。高耸的穹顶下，壁炉中的柴火噼啪作响。家族箴言“${effectiveHouseWords}”深刻在壁炉石梁上，历经风雨仍然清晰。\n\n沉重的橡木大门被侍卫推开，城堡总管捧着密封羊皮卷走入内厅，躬身道：“大人，七国各地的使者已在厅外等候。君临的权斗愈发激烈，各方势力都在注视${effectiveDynastyName}的一举一动，请您定夺接下来的方略。”\n\n大厅内归于肃静，骑士与封臣的目光一同落在你的身上。`,
-      branches: [
-        '向封臣发表演说，确立新任领主的权威',
-        '令学士分析各大家族的联姻与密谋动向',
-        '巡视城堡粮仓与兵营，整顿领地防务',
-      ],
-    };
+    const customOpening = customOpeningFor(startStatus, effectiveSeat, effectiveHouseName, effectiveHouseWords);
     void createCustomLivingWorldGame(customLord, customOpening)
       .then((game) => startNewGame(game))
       .catch((error: unknown) => setExistingError(error instanceof Error ? error.message : '无法创建统一世界开局'));
@@ -322,14 +325,14 @@ export const CharacterCreator: React.FC = () => {
               <p className="eyebrow hidden sm:block">Registrum Domini · 御前册封议事</p>
               <div className="flex items-center gap-2.5 mt-1 text-gold-bright font-serif font-bold text-base md:text-xl">
                 <Crown className="w-5 h-5 text-gold" />
-                <span>{tab === 'custom' ? '统治者设计器' : '选择现成人物'}</span>
+                <span>{tab === 'custom' ? '高级沙盒设计器' : '选择现成人物'}</span>
               </div>
             </div>
             <button onClick={closeCreator} aria-label="关闭人物创建器" className="btn-ghost"><X className="w-4 h-4" /></button>
           </div>
           <div className="flex gap-1 mt-3 overflow-x-auto">
             <button onClick={() => setTab('existing')} className={`flex shrink-0 items-center gap-1.5 px-4 py-2 text-xs font-serif font-bold tracking-wider border-b transition-colors ${tab === 'existing' ? 'border-gold text-gold-bright' : 'border-transparent text-parchment-faint hover:text-parchment-dim'}`}><Users className="w-3.5 h-3.5" />选择现成人物</button>
-            <button onClick={() => setTab('custom')} className={`flex shrink-0 items-center gap-1.5 px-4 py-2 text-xs font-serif font-bold tracking-wider border-b transition-colors ${tab === 'custom' ? 'border-gold text-gold-bright' : 'border-transparent text-parchment-faint hover:text-parchment-dim'}`}><UserPlus className="w-3.5 h-3.5" />自定义统治者</button>
+            <button onClick={() => setTab('custom')} className={`flex shrink-0 items-center gap-1.5 px-4 py-2 text-xs font-serif font-bold tracking-wider border-b transition-colors ${tab === 'custom' ? 'border-gold text-gold-bright' : 'border-transparent text-parchment-faint hover:text-parchment-dim'}`}><UserPlus className="w-3.5 h-3.5" />高级沙盒</button>
           </div>
         </header>
 
@@ -375,7 +378,7 @@ export const CharacterCreator: React.FC = () => {
                   <IdentityLine icon={<Crown className="w-3.5 h-3.5" />} label="宗族" value={effectiveDynastyName || '未命名'} />
                   <IdentityLine icon={<BookOpen className="w-3.5 h-3.5" />} label="文化" value={effectiveCulture || '未指定'} />
                   <IdentityLine icon={<Landmark className="w-3.5 h-3.5" />} label="信仰" value={effectiveFaith || '未指定'} />
-                  <IdentityLine icon={<MapPin className="w-3.5 h-3.5" />} label="领地" value={effectiveSeat || '未指定'} />
+                  <IdentityLine icon={<MapPin className="w-3.5 h-3.5" />} label={startStatus === 'landed' ? '领地' : '开局地点'} value={effectiveSeat || '未指定'} />
                 </div>
                 <div className="mt-5"><SectionTitle>已选特质</SectionTitle><div className="mt-3 grid grid-cols-4 gap-2">
                   {selectedTraits.length ? selectedTraits.map((trait) => (
@@ -386,6 +389,14 @@ export const CharacterCreator: React.FC = () => {
 
               <main className="bg-ink-2 p-4 md:p-5 lg:overflow-y-auto min-w-0">
                 <SectionTitle>身份与年龄</SectionTitle>
+                <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-3" aria-label="开局身份">
+                  {START_STATUSES.map((status) => (
+                    <button key={status.id} type="button" onClick={() => { setStartStatus(status.id); setCustomTitle(status.title); }} className={`border p-3 text-left ${startStatus === status.id ? 'border-gold bg-gold-deep/20' : 'border-hairline bg-ink/40'}`}>
+                      <span className="block font-serif text-xs font-bold text-gold-bright">{status.label}</span>
+                      <span className="mt-1 block text-[9px] leading-relaxed text-parchment-faint">{status.description}</span>
+                    </button>
+                  ))}
+                </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
                   <Field label="姓名"><input value={customName} onChange={(event) => setCustomName(stripEmoji(event.target.value))} className="creator-input" maxLength={40} /></Field>
                   <Field label="头衔"><input value={customTitle} onChange={(event) => setCustomTitle(stripEmoji(event.target.value))} className="creator-input" maxLength={48} /></Field>
@@ -452,13 +463,28 @@ export const CharacterCreator: React.FC = () => {
               </div><div className="mt-4 border border-hairline bg-ink-2/60 p-3 text-[10px] text-parchment-faint space-y-2"><div className="flex justify-between"><span>家族</span><span className="text-gold truncate max-w-[180px]">{effectiveHouseName || '未命名'}</span></div><div className="flex justify-between"><span>年龄</span><span className="text-gold">{customAge} 岁</span></div><div className="flex justify-between"><span>特质目录</span><span className="text-gold">{CHARACTER_TRAITS.length} 项</span></div><div className="flex justify-between"><span>已选特质</span><span className="text-gold">{selectedTraits.length} 项</span></div><div className="pt-2 border-t border-hairline flex justify-between font-bold"><span>剩余设计点数</span><span className={`font-display ${remainingPoints < 0 ? 'text-rubric-bright' : 'text-gold-bright'}`}>{remainingPoints}</span></div></div></aside>
             </div>
 
-            <footer className="shrink-0 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 px-4 md:px-6 py-3 border-t border-hairline bg-ink"><div className={`flex items-center gap-2 text-[10px] ${isOverBudget || !hasValidHouse ? 'text-rubric-bright' : 'text-parchment-faint'}`}><ShieldCheck className="w-4 h-4" />{isOverBudget ? `设计点数超出限制 ${usedPoints - DESIGN_POINT_LIMIT} 点` : !hasValidHouse ? '请填写完整的家族与宗族资料' : '设计符合统治者创建规则'}</div><button type="button" onClick={handleStartCustom} disabled={!canComplete} className="btn-decree justify-center">完成统治者设计</button></footer>
+            <footer className="shrink-0 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 px-4 md:px-6 py-3 border-t border-hairline bg-ink"><div className={`flex items-center gap-2 text-[10px] ${isOverBudget || !hasValidHouse ? 'text-rubric-bright' : 'text-parchment-faint'}`}><ShieldCheck className="w-4 h-4" />{isOverBudget ? `设计点数超出限制 ${usedPoints - DESIGN_POINT_LIMIT} 点` : !hasValidHouse ? '请填写完整的家族与宗族资料' : `设计符合${START_STATUSES.find((entry) => entry.id === startStatus)?.label}开局规则`}</div><button type="button" onClick={handleStartCustom} disabled={!canComplete} className="btn-decree justify-center">以此身份开始</button></footer>
           </div>
         )}
       </div>
     </div>
   );
 };
+
+function customOpeningFor(status: CustomStartStatus, seat: string, house: string, words: string): { narrate: string; branches: string[] } {
+  if (status === 'household') return {
+    narrate: `【${seat}】的钟声越过石墙时，你正坐在仆从厅尽头。你姓${house}，却没有一块能由自己发号施令的土地。主人家的管事把一枚封蜡未干的差令放到你面前；接受它能换来位置与报酬，拒绝则可能失去这处容身之地。`,
+    branches: ['先问清差令的目的与报酬', '寻找同僚打听主人近来的麻烦', '拒绝立即表态，检查自己的行装'],
+  };
+  if (status === 'wanderer') return {
+    narrate: `暮色压在【${seat}】附近的道路上。你的姓氏是${house}，箴言仍是“${words}”，但眼下真正属于你的只有随身行装、几枚钱币和一匹瘦驮马。客栈里有人低声谈论一份需要可靠生面孔的差事，门外则有商队准备天亮启程。`,
+    branches: ['向商队询问目的地与护送条件', '在客栈打听那份隐秘差事', '清点钱币和装备，决定下一站'],
+  };
+  return {
+    narrate: `微风吹拂着【${seat}】的城垛，${house}的旗帜在风中猎猎作响。家族箴言“${words}”刻在大厅石梁上。总管捧着粮册与三封来信走入厅中，等待你决定先处理封臣争执、领地补给，还是远方使者的请求。`,
+    branches: ['听取封臣争执的双方陈词', '核对粮仓、军械库与账册', '拆阅远方使者送来的信件'],
+  };
+}
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return <div className="flex items-center gap-2 pb-2 border-b border-hairline"><span className="w-1 h-4 bg-gold-deep" /><h3 className="text-xs font-serif font-bold uppercase tracking-[0.18em] text-gold">{children}</h3></div>;

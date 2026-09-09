@@ -9,9 +9,10 @@ import { CharacterPortrait } from './CharacterPortrait';
 interface CharacterSearchProps {
   onSelectCharacter: (characterId: CharacterId) => void;
   aliveOnly?: boolean;
+  revealStatus?: boolean;
 }
 
-export const CharacterSearch: React.FC<CharacterSearchProps> = ({ onSelectCharacter, aliveOnly = false }) => {
+export const CharacterSearch: React.FC<CharacterSearchProps> = ({ onSelectCharacter, aliveOnly = false, revealStatus = aliveOnly }) => {
   const [isOpen, setOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [includeGenealogy, setIncludeGenealogy] = useState(false);
@@ -118,13 +119,15 @@ export const CharacterSearch: React.FC<CharacterSearchProps> = ({ onSelectCharac
                 characterId={hit.id}
                 houseIcon={icon}
                 alt={`${hit.name}的肖像`}
-                deceased={!hit.alive}
+                deceased={revealStatus ? !hit.alive : false}
                 className="h-9 w-8 shrink-0 border border-hairline-bright"
               />
               <span className="min-w-0 flex-1">
                 <strong className="block truncate font-serif text-[11px] text-parchment">{hit.name}</strong>
                 <span className="mt-0.5 block truncate text-[9px] text-parchment-faint">
-                  {dynasty} · {hit.birthYear === null || hit.birthYear === undefined ? '生年未记录' : `${hit.birthYear} AC 生`} · {hit.alive ? '在世' : '已故'}
+                  {revealStatus
+                    ? `${dynasty} · ${hit.birthYear === null || hit.birthYear === undefined ? '生年未记录' : `${hit.birthYear} AC 生`} · ${hit.alive ? '在世' : '已故'}`
+                    : `${dynasty} · 稳定人物档案`}
                 </span>
               </span>
             </button>

@@ -19,7 +19,7 @@ interface LocationDetailsProps {
   onSelectCharacter: (characterId: CharacterId) => void
   onOpenAsset: (assetId: string) => void
   onBackToCounty: () => void
-  onPlanTravel: (destinationId: string) => void
+  onPrefillTravel: (destinationId: string, destinationName: string) => void
   onClose: () => void
 }
 
@@ -46,7 +46,7 @@ export const LocationDetails: React.FC<LocationDetailsProps> = ({
   onSelectCharacter,
   onOpenAsset,
   onBackToCounty,
-  onPlanTravel,
+  onPrefillTravel,
   onClose,
 }) => {
   const debugEnabled = useGameStore((state) => state.debugEnabled)
@@ -71,7 +71,11 @@ export const LocationDetails: React.FC<LocationDetailsProps> = ({
       knowledge: 'confirmed',
     } : undefined,
     characters: knownCharacters.map((character) => ({
-      id: character.characterId, label: character.name, characterId: character.characterId, knowledge: character.knowledge,
+      id: character.characterId,
+      label: character.name,
+      characterId: character.characterId,
+      knowledge: character.knowledge,
+      ...(character.lastKnownTurn !== undefined ? { lastKnownDate: `第 ${character.lastKnownTurn} 回合` } : {}),
     })),
     assets: knownAssets.map((asset) => ({
       id: asset.assetId, label: `${asset.name} · ${asset.itemCount} 件物品`, knowledge: asset.knowledge,
@@ -114,9 +118,10 @@ export const LocationDetails: React.FC<LocationDetailsProps> = ({
             {view.access.port && <span><Ship className="h-3.5 w-3.5" />可通航港口</span>}
             {view.tags.map((tag) => <span key={tag}>{TAG_LABELS[tag] ?? tag}</span>)}
           </div>
-          <button type="button" className="map-travel-action" onClick={() => onPlanTravel(locationId)}>
-            <Navigation className="h-4 w-4" /><span>前往这里</span>
+          <button type="button" className="map-travel-action" onClick={() => onPrefillTravel(locationId, view.name)}>
+            <Navigation className="h-4 w-4" /><span>把这里写入行动</span>
           </button>
+          <p className="map-location-description">地图只提供你已知的地点情报；路线、准备、随行者与出发方式由你在行动中说明。</p>
           <section className="map-details-section">
             <h3>通行资料</h3>
             <div className="map-access-list">
@@ -125,11 +130,11 @@ export const LocationDetails: React.FC<LocationDetailsProps> = ({
             </div>
           </section>
           <section className="map-details-section map-local-intelligence">
-            <h3>此地点的已知人物</h3>
+            <h3>有关此地的人物情报</h3>
             <div className="map-intel-list">
-              {view.ruler && <button type="button" onClick={() => view.ruler?.characterId && onSelectCharacter(view.ruler.characterId as CharacterId)}><UserRound /><span><small>公开统治者</small><strong>{view.ruler.label}</strong></span></button>}
-              {view.characters.filter((character) => character.id !== view.ruler?.id).map((character) => <button key={character.id} type="button" onClick={() => character.characterId && onSelectCharacter(character.characterId as CharacterId)}><UserRound /><span><small>已确认位于此地</small><strong>{character.label}</strong></span></button>)}
-              {!view.ruler && view.characters.length === 0 && <p>没有已确认的人物位置情报。</p>}
+              {view.ruler && <button type="button" onClick={() => view.ruler?.characterId && onSelectCharacter(view.ruler.characterId as CharacterId)}><UserRound /><span><small>公开统治者 · 不代表在场</small><strong>{view.ruler.label}</strong></span></button>}
+              {view.characters.filter((character) => character.id !== view.ruler?.id).map((character) => <button key={character.id} type="button" onClick={() => character.characterId && onSelectCharacter(character.characterId as CharacterId)}><UserRound /><span><small>{character.stale ? `最后已知位于此地${character.lastKnownDate ? ` · ${character.lastKnownDate}` : ' · 时间未明'} · 来源：已提交行动记录` : character.knowledge === 'rumored' ? '听闻可能在此' : '已确认位于此地'}</small><strong>{character.label}</strong></span></button>)}
+              {!view.ruler && view.characters.length === 0 && <p>没有你能确认的人物位置情报。</p>}
             </div>
           </section>
           <section className="map-details-section map-local-intelligence">

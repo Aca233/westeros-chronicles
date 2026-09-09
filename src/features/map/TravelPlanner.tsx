@@ -14,7 +14,7 @@ import {
 
 import { useGameStore } from '../../store/useGameStore'
 import type { CharacterId } from '../characters/types'
-import { createPendingWorldTransaction, pendingTravelTransactionFor, travelCommandToWorldIntent } from '../world/worldTransactionQueue'
+import { pendingTravelTransactionFor } from '../world/worldTransactionQueue'
 import { sameWorldLocation } from './locationResolver'
 import { useMapUiStore } from './mapUiStore'
 import { mapRepository } from './repository'
@@ -80,15 +80,11 @@ export const TravelPlanner: React.FC<TravelPlannerProps> = ({ destinationId, ori
   const playerLocation = gameState.lord.location
   const vehicles = gameState.lord.items.vehicles
   const isStreaming = useGameStore((state) => state.isStreaming)
-  const queueWorldTransaction = useGameStore((state) => state.queueWorldTransaction)
   const cancelWorldTransaction = useGameStore((state) => state.cancelWorldTransaction)
   const playerCharacterId = (gameState.lord.canonicalCharacterId
     ?? `save:${gameState.worldCharacters?.runId ?? 'current'}:player`) as CharacterId
   const pendingTravelTransaction = pendingTravelTransactionFor(gameState.worldRuntime.pendingTransactions, playerCharacterId)
   const pendingTravelCommand = pendingTravelTransaction?.travelCommands?.[0] ?? null
-  const queueTravelCommand = (command: TravelStateCommand) => queueWorldTransaction(createPendingWorldTransaction(
-    travelCommandToWorldIntent(command, playerCharacterId, `地图旅行操作：${command.type}`),
-  ))
   const cancelTravelCommand = () => {
     if (pendingTravelTransaction) cancelWorldTransaction(pendingTravelTransaction.id)
   }
@@ -141,17 +137,6 @@ export const TravelPlanner: React.FC<TravelPlannerProps> = ({ destinationId, ori
     sharedRouteClient?.cancelPending('路线规划器已经关闭。')
     previewRoute(null)
   }, [previewRoute])
-
-  const coLocatedVehicleIds = useMemo(() => Object.values(vehicles)
-    .filter((vehicle) => sameWorldLocation(vehicle.location, playerLocation))
-    .filter((vehicle) => travelMode === 'ship'
-      ? vehicle.type === 'ship'
-      : travelMode === 'carriage'
-        ? vehicle.type === 'wagon'
-        : travelMode === 'horse'
-          ? vehicle.type === 'packhorse'
-          : false)
-    .map((vehicle) => vehicle.id), [playerLocation, travelMode, vehicles])
 
   const availableModes = useMemo(() => {
     const coLocated = Object.values(vehicles).filter((vehicle) => sameWorldLocation(vehicle.location, playerLocation))
@@ -215,21 +200,17 @@ export const TravelPlanner: React.FC<TravelPlannerProps> = ({ destinationId, ori
       const locationLabels = Object.fromEntries(entries
         .filter((entry) => routeIds.has(entry.id))
         .map((entry) => [entry.id, entry.name]))
-      if (isReroute) {
-        queueTravelCommand({
-          type: isReturnRoute ? 'RETURN_TRAVEL' : 'REROUTE_TRAVEL',
-          routePlan,
-          locationLabels,
-        })
-      } else {
-        queueTravelCommand({
-          type: 'START_TRAVEL',
-          routePlan,
-          companions: [],
-          vehicleIds: coLocatedVehicleIds,
-          locationLabels,
-        })
-      }
+      const destinationName = locationLabels[routePlan.to] ?? routePlan.to
+      const preferenceLabel = ROUTE_PREFERENCES.find((option) => option.id === preference)?.label ?? preference
+      const modeLabel = TRAVEL_MODES.find((option) => option.id === travelMode)?.label ?? travelMode
+      const waypointNames = waypoints.map((entry) => entry.name)
+      const routeIntent = isReroute ? (isReturnRoute ? '沿规划路线折返' : '按规划路线改道') : '按规划路线出发'
+      const viaText = waypointNames.length ? `，途经${waypointNames.join('、')}` : ''
+      window.dispatchEvent(new CustomEvent('agot:prefill-action', {
+        detail: {
+          text: `我决定${routeIntent}前往【${destinationName}】，采用${modeLabel}，路线偏好${preferenceLabel}${viaText}。请按已规划路线、我当前的同行安排、可用载具、补给与路况结算；如果出发前条件已经发生实质变化，先告诉我再决定。`,
+        },
+      }))
       closeTravelPlanning()
     } catch {
       setRouteError('路线地点名称未能读取，请重新规划。')
@@ -257,7 +238,7 @@ export const TravelPlanner: React.FC<TravelPlannerProps> = ({ destinationId, ori
     }
     if (routePlan) return {
       label: isReroute ? (isReturnRoute ? '沿此路线返回' : '确认改走此路') : '开始旅行',
-      note: '下一次成功对话后生效',
+      note: '写入中央行动草稿',
       icon: Navigation,
       action: confirmRoute,
       disabled: false,
@@ -349,7 +330,12 @@ export const TravelPlanner: React.FC<TravelPlannerProps> = ({ destinationId, ori
       {routePlan && !activeForDestination && (
         <div className="map-route-result" role="status">
           <strong>{routePlan.legs.length} 段 · {routePlan.totalDays.toFixed(1)} 天</strong>
-          <span>费用 {routePlan.totalCost.toFixed(1)} · 风险 {Math.round(routePlan.totalRisk * 100)}%</span>
+          <span>
+            启程结算 {Math.ceil(routePlan.totalCost)} 银鹿
+            {' · '}
+            {routePlan.totalRisk < 0.2 ? '路况相对安稳' : routePlan.totalRisk < 0.5 ? '途中存在风险' : '途中风险较高'}
+          </span>
+          {Math.ceil(routePlan.totalCost) > gameState.lord.silverStags && <span className="text-rubric-bright">银鹿不足，启程会被拒绝</span>}
           {routePlan.via.length > 0 && <span>途经 {waypoints.map((entry) => entry.name).join('、')}</span>}
           <small>路线编号 {routePlan.id}</small>
         </div>

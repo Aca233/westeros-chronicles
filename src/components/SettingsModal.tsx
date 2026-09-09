@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useGameStore } from '../store/useGameStore';
 import { Settings, Key, Server, Cpu, Flame, X, RefreshCw, CheckCircle2, AlertCircle } from 'lucide-react';
 import { stripEmoji } from '../services/textSanitizer';
-import { fetchAvailableModels } from '../services/api';
+import { fetchAvailableModels, resolvedModelForConfig } from '../services/api';
 
 export const SettingsModal: React.FC = () => {
   const { isSettingsOpen, closeSettings, apiConfig, setApiConfig, debugEnabled, setDebugEnabled } = useGameStore();
@@ -11,7 +11,9 @@ export const SettingsModal: React.FC = () => {
   const [baseUrl, setBaseUrl] = useState(apiConfig.baseUrl);
   const [apiKey, setApiKey] = useState(apiConfig.apiKey);
   const [model, setModel] = useState(apiConfig.model);
+  const [fallbackModel, setFallbackModel] = useState(apiConfig.fallbackModel ?? '');
   const [temperature, setTemperature] = useState(apiConfig.temperature);
+  const [runtimeModel, setRuntimeModel] = useState<string | null>(null);
 
   // 模型列表拉取状态
   const [fetchedModels, setFetchedModels] = useState<string[]>([]);
@@ -19,6 +21,17 @@ export const SettingsModal: React.FC = () => {
   const [fetchStatus, setFetchStatus] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
   // Esc 关闭
+  useEffect(() => {
+    if (!isSettingsOpen) return;
+    setProvider(apiConfig.provider);
+    setBaseUrl(apiConfig.baseUrl);
+    setApiKey(apiConfig.apiKey);
+    setModel(apiConfig.model);
+    setFallbackModel(apiConfig.fallbackModel ?? '');
+    setTemperature(apiConfig.temperature);
+    setRuntimeModel(resolvedModelForConfig(apiConfig));
+  }, [isSettingsOpen, apiConfig]);
+
   useEffect(() => {
     if (!isSettingsOpen) return;
     const handler = (e: KeyboardEvent) => {
@@ -34,6 +47,9 @@ export const SettingsModal: React.FC = () => {
   const handleProviderChange = (p: typeof provider) => {
     setProvider(p);
     setFetchStatus(null);
+    setFetchedModels([]);
+    setFallbackModel('');
+    setRuntimeModel(null);
     if (p === 'deepseek') {
       setBaseUrl('https://api.deepseek.com/v1');
       setModel('deepseek-chat');
@@ -62,10 +78,12 @@ export const SettingsModal: React.FC = () => {
     try {
       const models = await fetchAvailableModels({ provider, baseUrl, apiKey, model, temperature });
       setFetchedModels(models);
-      setFetchStatus({ type: 'success', message: `成功拉取 ${models.length} 个可用模型!` });
-      if (models.length > 0 && !models.includes(model)) {
-        setModel(models[0]);
-      }
+      setFetchStatus({
+        type: 'success',
+        message: models.includes(model)
+          ? `已读取 ${models.length} 个可用模型。`
+          : `已读取 ${models.length} 个模型；当前主模型不在列表中，请重新选择。`,
+      });
     } catch (err) {
       console.error('拉取模型失败:', err);
       setFetchStatus({
@@ -83,6 +101,7 @@ export const SettingsModal: React.FC = () => {
       baseUrl,
       apiKey,
       model,
+      fallbackModel: fallbackModel === model ? '' : fallbackModel,
       temperature,
     });
     closeSettings();
@@ -212,6 +231,11 @@ export const SettingsModal: React.FC = () => {
                 onChange={(e) => setModel(stripEmoji(e.target.value))}
                 className="creator-input cursor-pointer !font-mono !text-gold-bright"
               >
+                {!fetchedModels.includes(model) && model && (
+                  <option value={model} disabled className="bg-ink-2 text-rubric-bright">
+                    {model}（当前不可用）
+                  </option>
+                )}
                 {fetchedModels.map((m) => (
                   <option key={m} value={m} className="bg-ink-2 text-parchment">
                     {m}
@@ -235,6 +259,40 @@ export const SettingsModal: React.FC = () => {
               className="creator-input !font-mono"
             />
           )}
+
+          <div className="mt-1 flex flex-col gap-1.5 border-t border-hairline pt-2.5">
+            <label className="text-[11px] tracking-wide text-parchment-dim">备用模型</label>
+            {fetchedModels.length > 0 ? (
+              <select
+                value={fallbackModel}
+                onChange={(event) => setFallbackModel(stripEmoji(event.target.value))}
+                className="creator-input cursor-pointer !font-mono"
+              >
+                <option value="">自动选择同系列可用模型</option>
+                {fetchedModels.filter((candidate) => candidate !== model).map((candidate) => (
+                  <option key={candidate} value={candidate} className="bg-ink-2 text-parchment">
+                    {candidate}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <input
+                type="text"
+                value={fallbackModel}
+                onChange={(event) => setFallbackModel(stripEmoji(event.target.value))}
+                placeholder="留空则自动选择"
+                className="creator-input !font-mono"
+              />
+            )}
+            <span className="text-[10px] leading-relaxed text-parchment-faint">
+              仅在主模型明确不存在时启用；留空由端点模型列表自动选择。
+            </span>
+            {runtimeModel && runtimeModel !== model && (
+              <span className="border border-amber-700/40 bg-amber-900/10 px-2 py-1 text-[10px] text-gold-bright">
+                当前会话实际使用：{runtimeModel}
+              </span>
+            )}
+          </div>
 
           {/* 状态提示信息 */}
           {fetchStatus && (

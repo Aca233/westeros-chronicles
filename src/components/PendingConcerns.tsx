@@ -2,6 +2,8 @@ import React from 'react';
 import { AlertTriangle, Compass, Hourglass } from 'lucide-react';
 import { useGameStore } from '../store/useGameStore';
 import type { GameState } from '../types/game';
+import type { CharacterId } from '../domain/characterId';
+import { openSocialOffersForViewer, roleplayCommitmentsForViewer } from '../features/roleplay/state';
 
 // 中循环可见性：把跨回合的悬置线（旅程、伤势、待处理事务）聚成一条
 // 常驻细条，让玩家不必翻卷宗和地图才知道"我还有什么事没了"。
@@ -33,6 +35,41 @@ export function collectPendingConcerns(gameState: GameState): string[] {
 
   const pending = gameState.worldRuntime.pendingTransactions.filter((entry) => entry.status === 'pending');
   if (pending.length) concerns.push(`待处理事务 ×${pending.length}`);
+
+  const playerId = (gameState.lord.canonicalCharacterId
+    ?? `save:${gameState.worldCharacters?.runId ?? 'current'}:player`) as CharacterId;
+  for (const commitment of roleplayCommitmentsForViewer(gameState.roleplay, playerId).slice(-4)) {
+    const currentDate = `${gameState.currentYear}.${gameState.currentMonth}.${gameState.currentDay}`;
+    const overdue = commitment.dueDate && commitment.dueDate.localeCompare(currentDate, undefined, { numeric: true }) < 0;
+    concerns.push(`承诺：${commitment.terms}${commitment.dueDate ? `（${overdue ? '已逾期 · ' : ''}期限 ${commitment.dueDate}）` : ''}`);
+  }
+
+  for (const offer of openSocialOffersForViewer(gameState.roleplay, playerId).slice(-3)) {
+    concerns.push(`待回应的条件：${offer.summary}`);
+  }
+
+  const messages = (gameState.roleplay?.messages ?? [])
+    .filter((message) => message.status === 'in_transit'
+      && (message.senderId === playerId || message.recipientIds.includes(playerId)))
+    .slice(-3);
+  for (const message of messages) concerns.push(`在途消息：${message.summary}（预计 ${message.arrivesOn}）`);
+
+  const agendas = (gameState.roleplay?.agendas ?? [])
+    .filter((agenda) => agenda.status === 'due' && agenda.heardByIds.includes(playerId))
+    .slice(-3);
+  for (const agenda of agendas) concerns.push(`到期议程：${agenda.summary}`);
+
+  const projects = (gameState.roleplay?.projects ?? [])
+    .filter((project) => project.ownerId === playerId && (project.status === 'active' || project.status === 'due'))
+    .slice(-4);
+  for (const project of projects) concerns.push(`委派${project.status === 'due' ? '到期' : '进行中'}：${project.objective}（${project.dueDate}）`);
+
+  const growthOpportunities = (gameState.roleplay?.growthOpportunities ?? [])
+    .filter((entry) => entry.status === 'open')
+    .slice(-3);
+  for (const growth of growthOpportunities) {
+    concerns.push(`成长选择：${growth.summary}（${growth.options.map((option) => option.label).join(' / ')}）`);
+  }
 
   return concerns;
 }

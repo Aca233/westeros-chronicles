@@ -12,6 +12,8 @@ import { stripEmoji } from './services/textSanitizer';
 import { useCharacterNavigation } from './features/characters/useCharacterNavigation';
 import type { CharacterId } from './features/characters/types';
 import { useMapUiStore } from './features/map/mapUiStore';
+import { EndOfLifePanel } from './components/EndOfLifePanel';
+import { PlayerStatusRail } from './components/PlayerStatusRail';
 
 // 地图抽屉按需分包:MapLibre 不进首屏,首次打开时才加载
 const MapDrawer = lazy(() => import('./features/map/MapDrawer').then((module) => ({ default: module.MapDrawer })));
@@ -107,9 +109,20 @@ export const App: React.FC = () => {
             {bootStatus === 'loading' ? '正在清点存档位与物品目录。' : bootError}
           </p>
           {bootStatus === 'error' && (
-            <button type="button" className="btn-decree mt-5 !px-5 !py-2 !text-xs" onClick={() => void resetStoredGame()}>
-              清空本地存档并重试
-            </button>
+            <div className="mt-5 flex flex-wrap justify-center gap-2">
+              <button type="button" className="btn-decree !px-5 !py-2 !text-xs" onClick={() => void hydrateSaveSlots()}>
+                重试读取
+              </button>
+              <button
+                type="button"
+                className="btn-ghost !px-4 !py-2 !text-xs text-rubric"
+                onClick={() => {
+                  if (window.confirm('这会永久删除本机的全部游戏存档。确定继续吗？')) void resetStoredGame();
+                }}
+              >
+                删除全部本地存档
+              </button>
+            </div>
           )}
         </div>
       </div>
@@ -182,9 +195,15 @@ export const App: React.FC = () => {
       )}
 
       {/* 舞台:一整列文字 */}
-      <main className="relative z-10 flex min-h-0 flex-1 flex-col">
-        <StoryFeed onSelectCharacter={openStoryCharacter} onOpenLocation={(location) => openMap({ kind: 'location', locationId: location.locationId })} onOpenAsset={openAsset} />
-        <ActionDock />
+      <main className="relative z-10 flex min-h-0 flex-1">
+        <PlayerStatusRail
+          onOpenCharacter={() => { characterNavigation.returnToPlayer(); openCharacterDrawer(); }}
+          onOpenLocation={() => openMap({ kind: 'location', locationId: useGameStore.getState().gameState.lord.location.locationId })}
+        />
+        <div className="flex min-w-0 flex-1 flex-col">
+          <StoryFeed onSelectCharacter={openStoryCharacter} onOpenLocation={(location) => openMap({ kind: 'location', locationId: location.locationId })} onOpenAsset={openAsset} />
+          <ActionDock />
+        </div>
       </main>
 
       {/* 地图竖签(左缘) */}
@@ -256,6 +275,7 @@ export const App: React.FC = () => {
 
       {/* 模态弹窗系统 */}
       <DiceModal />
+      <EndOfLifePanel />
       <Suspense fallback={null}>
         {isSettingsOpen && <SettingsModal />}
         {isCreatorOpen && <CharacterCreator />}

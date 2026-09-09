@@ -58,7 +58,7 @@ export const NewGameScreen: React.FC = () => {
           </article>;
         })}
       </div>
-      <div className="mt-6 flex flex-wrap items-center gap-2.5 border-t border-hairline/60 pt-4"><span className="eyebrow !text-[9px]">或选择其他视角</span><button type="button" className="btn-ghost !py-2" onClick={() => openCreator('existing')}><Users className="h-3.5 w-3.5 text-gold" /><span>从人物名册中选择</span></button><button type="button" className="btn-ghost !py-2" onClick={() => openCreator('custom')}><UserPlus className="h-3.5 w-3.5 text-gold" /><span>自定义统治者</span></button></div>
+      <div className="mt-6 flex flex-wrap items-center gap-2.5 border-t border-hairline/60 pt-4"><span className="eyebrow !text-[9px]">或选择其他视角</span><button type="button" className="btn-ghost !py-2" onClick={() => openCreator('existing')}><Users className="h-3.5 w-3.5 text-gold" /><span>从人物名册中选择</span></button><button type="button" className="btn-ghost !py-2" onClick={() => openCreator('custom')}><UserPlus className="h-3.5 w-3.5 text-gold" /><span>高级沙盒创建</span></button></div>
       {startError && <p className="mt-3 font-serif text-[11px] text-rubric-bright">{startError}</p>}
     </div>
   );

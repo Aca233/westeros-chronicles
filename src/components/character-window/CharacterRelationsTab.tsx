@@ -6,6 +6,8 @@ import type { WorldTerminology } from '../../features/world-content/types';
 import type { WorldHistoryState } from '../../features/world/worldHistory';
 import type { WorldRuntimeState } from '../../features/world/worldRuntimeTypes';
 import type { LordProfile, WorldCharacterStateRef } from '../../types/game';
+import { relationshipEvidenceForViewer } from '../../features/roleplay/state';
+import type { RoleplayState } from '../../features/roleplay/types';
 import { CharacterPortrait } from '../CharacterPortrait';
 import { CharacterSearch } from '../CharacterSearch';
 import { getHouseIconId } from '../GameIcon';
@@ -22,6 +24,7 @@ export function CharacterRelationsTab({
   worldCharacters,
   worldHistory,
   worldRuntime,
+  roleplay,
 }: {
   dossier: CharacterDossier;
   relatedRecords: ReadonlyMap<CharacterId, StaticCharacterRecord>;
@@ -31,6 +34,7 @@ export function CharacterRelationsTab({
   worldCharacters: WorldCharacterStateRef | undefined;
   worldHistory: WorldHistoryState;
   worldRuntime: WorldRuntimeState;
+  roleplay: RoleplayState | undefined;
 }) {
   const { family, isLoading } = useVerifiedLordFamily(
     dossier.kind === 'player' ? lord : null,
@@ -53,6 +57,13 @@ export function CharacterRelationsTab({
     ? playerRelationshipCards(family, dossier, relatedRecords, terminology)
     : npcRelationshipCards(dossier, relatedRecords, terminology);
   const byGroup = (group: RelationshipCard['group']) => relationshipCards.filter((card) => card.group === group);
+  const playerId = (lord.canonicalCharacterId
+    ?? `save:${worldCharacters?.runId ?? 'current'}:player`) as CharacterId;
+  const sharedEvidence = relationshipEvidenceForViewer(
+    roleplay,
+    playerId,
+    dossier.kind === 'player' ? undefined : dossier.id,
+  ).slice(-6).reverse();
 
   // 族谱次序:配偶 → 子女 → 父母 → 兄弟姐妹 → 重要关系
   const groupSections: Array<{
@@ -137,6 +148,24 @@ export function CharacterRelationsTab({
           );
         })}
       </div>
+      {sharedEvidence.length > 0 && (
+        <section aria-label="共同经历">
+          <div className="flex items-center justify-between border-b border-hairline/70 pb-1.5">
+            <p className="eyebrow">共同经历</p>
+            <span className="font-mono text-[9.5px] text-parchment-faint">有据可查</span>
+          </div>
+          <ul className="space-y-1.5 pt-2">
+            {sharedEvidence.map((entry) => (
+              <li key={entry.id} className="border-l border-gold-deep/50 py-0.5 pl-3">
+                <p className="font-serif text-[12px] leading-relaxed text-parchment-dim">{entry.summary}</p>
+                <p className="mt-0.5 font-mono text-[9px] text-parchment-faint">
+                  第 {entry.turn} 回合 · {relationshipImpactLabel(entry.impact)} · 依据 {entry.sourceEventId}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
       <CharacterSearch onSelectCharacter={onSelectCharacter} />
       <p className="border-t border-hairline/60 pt-3 text-center font-serif text-[10px] italic leading-relaxed text-parchment-faint">
         {dossier.kind === 'player'
@@ -145,6 +174,10 @@ export function CharacterRelationsTab({
       </p>
     </div>
   );
+}
+
+function relationshipImpactLabel(impact: 'positive' | 'negative' | 'obligation' | 'neutral'): string {
+  return { positive: '善意结果', negative: '关系受损', obligation: '形成义务', neutral: '事实记录' }[impact];
 }
 
 function RelationshipRow({

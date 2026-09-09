@@ -4,28 +4,21 @@ import { ITEM_CATALOG } from '../../data/itemDefinitions';
 import type { PlayerCharacterDossier } from '../../features/characters/characterDossier';
 import type { CharacterId } from '../../features/characters/types';
 import { pendingItemActionsFromWorldTransactions } from '../../features/items/itemActionQueue';
-import { createPendingWorldTransaction, itemActionToWorldIntent } from '../../features/world/worldTransactionQueue';
 import { getItemDefinition } from '../../features/items/catalog';
-import { DEFAULT_CARRIED_CAPACITY, getUsedCarryUnits } from '../../features/items/custody';
-import type {
-  EquipmentPosition,
-  ItemAction,
-  ItemCategory,
-  ItemPlacement,
-} from '../../features/items/types';
+import { DEFAULT_CARRIED_CAPACITY, getUsedCarryUnits, getUsedStorageUnits } from '../../features/items/custody';
+import type { ItemCategory } from '../../features/items/types';
 import {
   buildItemCardModels,
   type CustodyTab,
   type ItemCardModel,
 } from '../../features/items/viewModel';
 import { getTransferDestinationChoices } from '../../features/items/actionChoices';
-import { sameWorldLocation } from '../../features/map/locationResolver';
 import type { WorldLocationRef } from '../../features/map/types';
 import type { WorldAssetBaseline } from '../../features/world/worldBaseline';
 import { useGameStore } from '../../store/useGameStore';
+import { useMapUiStore } from '../../features/map/mapUiStore';
 import { ItemCard } from './ItemCard';
 import { ItemChoiceDialog } from './ItemChoiceDialog';
-import { ItemGiftDialog } from './ItemGiftDialog';
 import { assetCustodianLabel, assetPrincipalLabel } from './worldAssetPresentation';
 
 const CUSTODY_TABS: Array<{ id: CustodyTab; label: string }> = [
@@ -42,14 +35,6 @@ const CATEGORY_LABELS: Record<ItemCategory, string> = {
 const QUALITY_ORDER = { rough: 0, common: 1, fine: 2, masterwork: 3, legendary: 4 } as const;
 type SortMode = 'location' | 'category' | 'quality' | 'durability' | 'name';
 
-function preferredStorage(state: ReturnType<typeof useGameStore.getState>['gameState']['lord']['items'], currentLocation: WorldLocationRef): ItemPlacement {
-  const site = Object.values(state.sites).find((entry) => sameWorldLocation(entry.location, currentLocation));
-  if (site) return { type: 'site', siteId: site.id };
-  const vehicle = Object.values(state.vehicles).find((entry) => sameWorldLocation(entry.location, currentLocation));
-  if (vehicle) return { type: 'vehicle', vehicleId: vehicle.id };
-  return { type: 'carried' };
-}
-
 function exactActions(
   card: ItemCardModel,
   tab: CustodyTab,
@@ -62,25 +47,14 @@ function exactActions(
   const pendingReason = card.actions.find((action) => action.disabledReason)?.disabledReason;
   const disabled = (reason?: string) => pendingReason ?? reason;
   const actions: ItemCardModel['actions'] = [];
-  if (placement.type === 'equipped') {
-    actions.push({ kind: 'unequip', label: '卸下', disabledReason: disabled() });
-  } else if (definition.equippable) {
-    actions.push({ kind: 'equip', label: '穿戴', disabledReason: disabled(instance.durability <= 0 ? '物品已经完全损坏' : undefined) });
-  }
-  if (['medicine', 'poison', 'supply', 'tool'].includes(definition.category)) actions.push({ kind: 'use', label: '使用', disabledReason: disabled() });
   if (placement.type === 'carried' || placement.type === 'site' || placement.type === 'vehicle') {
-    actions.push({ kind: 'transfer', label: '转移', disabledReason: disabled() });
-    actions.push({ kind: 'gift', label: '赠送', disabledReason: disabled() });
-    actions.push({ kind: 'discard', label: '丢弃', disabledReason: disabled() });
+    if (definition.category === 'medicine') {
+      actions.push({ kind: 'use', label: '拟定治疗', disabledReason: disabled() });
+    }
+    actions.push({ kind: 'transfer', label: '拟定转移', disabledReason: disabled() });
+    actions.push({ kind: 'discard', label: '写入丢弃', disabledReason: disabled() });
   }
-  if (instance.durability < 100) actions.push({ kind: 'repair', label: '修理', disabledReason: disabled() });
-  if (!instance.isHeirloom) actions.push({ kind: 'mark_heirloom', label: '设为传家宝', disabledReason: disabled() });
-  if (definition.stackable && instance.quantity > 1) actions.push({ kind: 'split', label: '拆分', disabledReason: disabled() });
-  const mergeTarget = Object.values(state.instances).find((candidate) => candidate.instanceId !== instance.instanceId
-    && candidate.definitionId === instance.definitionId
-    && state.placements[candidate.instanceId]?.type !== 'lost'
-    && state.placements[candidate.instanceId]?.type !== 'character');
-  if (definition.stackable && mergeTarget) actions.push({ kind: 'merge', label: '合并', disabledReason: disabled() });
+  if (!instance.isHeirloom) actions.push({ kind: 'mark_heirloom', label: '拟定传家认定', disabledReason: disabled() });
   return actions;
 }
 
@@ -177,7 +151,8 @@ export const ItemManagementPanel: React.FC<ItemManagementPanelProps> = ({
   onOpenLocation,
   onOpenAsset,
 }) => {
-  const { gameState, queueWorldTransaction, cancelWorldTransaction, isStreaming } = useGameStore();
+  const { gameState, cancelWorldTransaction, isStreaming } = useGameStore();
+  const closeDrawer = useMapUiStore((store) => store.closeDrawer);
   const { lord } = gameState;
   const state = lord.items;
   const playerCharacterId = (lord.canonicalCharacterId
@@ -187,22 +162,33 @@ export const ItemManagementPanel: React.FC<ItemManagementPanelProps> = ({
     state,
     ITEM_CATALOG,
   ), [gameState.worldRuntime.pendingTransactions, state]);
-  const queueItemAction = (action: ItemAction) => queueWorldTransaction(createPendingWorldTransaction(
-    itemActionToWorldIntent(action, playerCharacterId, `人物卷宗物品操作：${action.kind}`),
-  ));
   const cancelItemAction = cancelWorldTransaction;
   const [activeTab, setActiveTab] = useState<CustodyTab>('carried');
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState<ItemCategory | 'all'>('all');
   const [sortMode, setSortMode] = useState<SortMode>('location');
   const [transferRequest, setTransferRequest] = useState<{ instanceId: string; name: string } | null>(null);
-  const [giftRequest, setGiftRequest] = useState<{ instanceId: string; name: string } | null>(null);
+  const [treatmentRequest, setTreatmentRequest] = useState<{ instanceId: string; name: string } | null>(null);
   const pendingByInstance = useMemo(() => new Map(pendingItemActions.map((action) => [action.instanceId, action])), [pendingItemActions]);
   const assetsByInstance = useMemo(() => assetMapForDossier(dossier), [dossier]);
   const storageAssets = useMemo(() => [
-    ...Object.values(state.sites).map((site) => ({ id: `site:${site.id}`, name: site.name, locationId: site.location.locationId, locationLabel: site.locationLabel, kind: '据点' })),
-    ...Object.values(state.vehicles).map((vehicle) => ({ id: `vehicle:${vehicle.id}`, name: vehicle.name, locationId: vehicle.location.locationId, locationLabel: vehicle.locationLabel, kind: '载具' })),
-  ], [state.sites, state.vehicles]);
+    ...Object.values(state.sites).map((site) => ({
+      id: `site:${site.id}`,
+      name: site.name,
+      locationId: site.location.locationId,
+      locationLabel: site.locationLabel,
+      kind: '据点',
+      usage: `${getUsedStorageUnits(state, ITEM_CATALOG, { type: 'site', siteId: site.id })}/${site.capacity ?? '∞'}`,
+    })),
+    ...Object.values(state.vehicles).map((vehicle) => ({
+      id: `vehicle:${vehicle.id}`,
+      name: vehicle.name,
+      locationId: vehicle.location.locationId,
+      locationLabel: vehicle.locationLabel,
+      kind: '载具',
+      usage: `${getUsedStorageUnits(state, ITEM_CATALOG, { type: 'vehicle', vehicleId: vehicle.id })}/${vehicle.capacity}`,
+    })),
+  ], [state]);
   const characterNames = useMemo(() => new Map<CharacterId, string>([[playerCharacterId, lord.name]]), [lord.name, playerCharacterId]);
   const assetNames = useMemo(() => new Map<string, string>([
     ...Object.values(state.sites).map((site) => [`site:${site.id}`, site.name] as const),
@@ -235,6 +221,20 @@ export const ItemManagementPanel: React.FC<ItemManagementPanelProps> = ({
     if (!placement) return [];
     return getTransferDestinationChoices({ state, currentLocation: lord.location, from: placement });
   }, [lord.location, state, transferRequest]);
+  const treatmentOptions = useMemo(() => {
+    if (!treatmentRequest) return [];
+    const instance = state.instances[treatmentRequest.instanceId];
+    if (!instance) return [];
+    const tags = new Set(getItemDefinition(ITEM_CATALOG, instance.definitionId).tags);
+    return [
+      ...((tags.has('bandage') || tags.has('injury')) ? (['head', 'torso', 'arms', 'legs'] as const)
+        .filter((zone) => lord.body[zone].level !== 'intact')
+        .map((zone) => ({ id: `zone:${zone}`, title: lord.body[zone].name, subtitle: lord.body[zone].level, detail: lord.body[zone].wounds.join('、') || '已记录部位创伤', icon: 'carried' as const })) : []),
+      ...(lord.body.isBleeding && (tags.has('bleeding') || tags.has('bandage')) ? [{ id: 'condition:bleeding', title: '持续失血', subtitle: '异常状态', detail: '尝试加压止血', icon: 'carried' as const }] : []),
+      ...(lord.body.isPoisoned && (tags.has('antidote') || tags.has('poison')) ? [{ id: 'condition:poisoned', title: '中毒', subtitle: '异常状态', detail: '尝试使用相符解毒剂', icon: 'carried' as const }] : []),
+      ...(lord.body.isInfected && tags.has('infection') ? [{ id: 'condition:infected', title: '感染', subtitle: '异常状态', detail: '尝试处理感染', icon: 'carried' as const }] : []),
+    ];
+  }, [lord.body, state.instances, treatmentRequest]);
 
   const cards = useMemo(() => {
     const models = buildItemCardModels({ state, catalog: ITEM_CATALOG, currentLocation: lord.location, pendingActions: pendingItemActions, tab: activeTab });
@@ -258,47 +258,33 @@ export const ItemManagementPanel: React.FC<ItemManagementPanelProps> = ({
       });
   }, [activeTab, category, lord.location, pendingItemActions, query, sortMode, state]);
 
-  const queueCardAction = (card: ItemCardModel, action: ItemCardModel['actions'][number]) => {
+  const prefillAction = (text: string) => {
+    window.dispatchEvent(new CustomEvent('agot:prefill-action', { detail: { text } }));
+    closeDrawer();
+  };
+
+  const handleCardAction = (card: ItemCardModel, action: ItemCardModel['actions'][number]) => {
     if (isStreaming || action.disabledReason || activeTab === 'remote-site') return;
-    const instance = state.instances[card.instanceId];
-    const definition = getItemDefinition(ITEM_CATALOG, instance.definitionId);
-    const placement = state.placements[card.instanceId];
-    let queued: ItemAction | undefined;
     switch (action.kind) {
-      case 'equip': {
-        const position = definition.allowedPositions[0] as EquipmentPosition | undefined;
-        if (position) queued = { kind: 'equip', instanceId: card.instanceId, position, displacedTo: preferredStorage(state, lord.location) };
-        break;
-      }
-      case 'unequip': queued = { kind: 'unequip', instanceId: card.instanceId, to: preferredStorage(state, lord.location) }; break;
-      case 'use': queued = { kind: 'use', instanceId: card.instanceId }; break;
       case 'transfer': {
         setTransferRequest({ instanceId: card.instanceId, name: card.name });
         return;
       }
-      case 'gift': {
-        setGiftRequest({ instanceId: card.instanceId, name: card.name });
+      case 'use': {
+        setTreatmentRequest({ instanceId: card.instanceId, name: card.name });
         return;
       }
-      case 'discard': queued = { kind: 'discard', instanceId: card.instanceId }; break;
-      case 'repair': queued = { kind: 'repair', instanceId: card.instanceId, amount: 25 }; break;
-      case 'mark_heirloom': queued = { kind: 'mark_heirloom', instanceId: card.instanceId, houseId: lord.house }; break;
-      case 'split': queued = { kind: 'split', instanceId: card.instanceId, quantity: 1, newInstanceId: `${card.instanceId}.split.${Date.now()}`, to: placement }; break;
-      case 'merge': {
-        const target = Object.values(state.instances).find((candidate) => candidate.instanceId !== card.instanceId && candidate.definitionId === instance.definitionId);
-        if (target) queued = { kind: 'merge', sourceInstanceId: card.instanceId, targetInstanceId: target.instanceId };
-        break;
-      }
+      case 'discard': prefillAction(`我把【${card.name}】丢弃在${lord.locationLabel}。`); return;
+      case 'mark_heirloom': prefillAction(`我要正式将【${card.name}】认作${lord.house}的传家之物，并承担这一公开认定带来的责任。`); return;
       default: break;
     }
-    if (queued) queueItemAction(queued);
   };
 
   const chooseTransferDestination = (choiceId: string) => {
     if (!transferRequest || isStreaming) return;
     const choice = transferChoices.find((candidate) => candidate.id === choiceId);
     if (!choice) return;
-    queueItemAction({ kind: 'transfer', instanceId: transferRequest.instanceId, to: choice.placement });
+    prefillAction(`我把【${transferRequest.name}】转移到${choice.label}；如果这需要保管者同意、搬运时间或额外人手，先按实际条件处理。`);
     setTransferRequest(null);
   };
 
@@ -327,7 +313,7 @@ export const ItemManagementPanel: React.FC<ItemManagementPanelProps> = ({
         <div className="flex flex-wrap gap-1.5" data-storage-assets>
           {storageAssets.map((storage) => (
             <div key={storage.id} className="flex items-center border border-hairline bg-ink-3/35 text-[9.5px]">
-              <button type="button" onClick={() => onOpenAsset?.(storage.id)} className="px-2 py-1 text-gold-dim hover:text-gold-bright">{storage.kind} · {storage.name}</button>
+              <button type="button" onClick={() => onOpenAsset?.(storage.id)} className="px-2 py-1 text-gold-dim hover:text-gold-bright">{storage.kind} · {storage.name} · {storage.usage}</button>
               <button type="button" onClick={() => onOpenLocation?.(storage.locationId)} className="border-l border-hairline px-2 py-1 text-parchment-faint hover:text-parchment">{storage.locationLabel}</button>
             </div>
           ))}
@@ -359,6 +345,7 @@ export const ItemManagementPanel: React.FC<ItemManagementPanelProps> = ({
 
       <div className="flex items-center justify-between gap-2 font-mono text-[10px] text-parchment-dim">
         <span>{activeTab === 'carried' ? `随身体积 ${usedCarry}/${DEFAULT_CARRIED_CAPACITY}` : CUSTODY_TABS.find((tab) => tab.id === activeTab)?.label}</span>
+        {activeTab === 'carried' && <span>穿戴与卸装请在“身体装备”页完成</span>}
         {activeTab === 'remote-site' && <span>远方物品只读,抵达对应地点后才能操作</span>}
       </div>
 
@@ -386,7 +373,7 @@ export const ItemManagementPanel: React.FC<ItemManagementPanelProps> = ({
                     onOpenAsset={onOpenAsset}
                   />
                 ) : undefined}
-                onAction={queueCardAction}
+                onAction={handleCardAction}
               />
             );
           })}
@@ -398,7 +385,7 @@ export const ItemManagementPanel: React.FC<ItemManagementPanelProps> = ({
     {transferRequest && (
       <ItemChoiceDialog
         title={`转移${transferRequest.name}`}
-        description="选择物品要转移到的保管位置。选择后会加入队列,并在下一次成功对话后完成。"
+        description="选择目标保管位置。系统只会把这件事写入行动草稿，你仍可以补充由谁搬运、何时完成或是否隐瞒。"
         options={transferChoices.map((choice) => ({
           id: choice.id,
           title: choice.label,
@@ -411,14 +398,23 @@ export const ItemManagementPanel: React.FC<ItemManagementPanelProps> = ({
         onClose={() => setTransferRequest(null)}
       />
     )}
-    {giftRequest && (
-      <ItemGiftDialog
-        itemName={giftRequest.name}
-        onConfirm={(recipientId) => {
-          if (!isStreaming) queueItemAction({ kind: 'gift', instanceId: giftRequest.instanceId, recipientId });
-          setGiftRequest(null);
+    {treatmentRequest && (
+      <ItemChoiceDialog
+        title={`使用${treatmentRequest.name}治疗`}
+        description="选择要处理的伤处。选择后只会填入行动草稿，疗效和消耗仍由正常回合结算。"
+        options={treatmentOptions}
+        emptyMessage="当前没有已记录的伤势或异常状态。"
+        onChoose={(choice) => {
+          const zone = choice.startsWith('zone:') ? choice.slice('zone:'.length) as 'head' | 'torso' | 'arms' | 'legs' : undefined;
+          const condition = choice.startsWith('condition:') ? choice.slice('condition:'.length) : undefined;
+          const target = zone ? `我的【${lord.body[zone].name}】` : condition === 'bleeding' ? '我的持续失血' : condition === 'poisoned' ? '我的中毒状态' : '我的感染状态';
+          window.dispatchEvent(new CustomEvent('agot:prefill-action', {
+            detail: { text: `我使用【${treatmentRequest.name}】治疗${target}；按我的做法、物品实际用途和当前伤势结算。` },
+          }));
+          setTreatmentRequest(null);
+          closeDrawer();
         }}
-        onClose={() => setGiftRequest(null)}
+        onClose={() => setTreatmentRequest(null)}
       />
     )}
     </>

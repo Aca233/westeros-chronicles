@@ -1,16 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Dices, Hourglass, Send, Square } from 'lucide-react';
+import { ChevronDown, Lightbulb, Send, Square } from 'lucide-react';
 import { useGameStore } from '../store/useGameStore';
 import { stripEmoji } from '../services/textSanitizer';
-import type { DiceMode } from '../services/dicePolicy';
 import { normalizeBranchOptions } from '../services/branchOptions';
 import { PendingConcerns } from './PendingConcerns';
-
-const DICE_MODES: ReadonlyArray<{ id: DiceMode; label: string; title: string }> = [
-  { id: 'auto', label: '自动判断', title: '由模型判断当前行动是否需要检定、用哪项属性、难度几许，再由程序掷骰结算' },
-  { id: 'force', label: '强制检定', title: '跳过模型判断，为当前行动强制进行 D20 检定' },
-  { id: 'narrative', label: '叙事行动', title: '不进行任何隐藏 D20,只按人物与局势叙事' },
-];
 
 const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI'];
 
@@ -23,46 +16,36 @@ export const ActionDock: React.FC = () => {
     cancelCurrentTurn,
   } = useGameStore();
   const [customInput, setCustomInput] = useState('');
-  const [diceMode, setDiceMode] = useState<DiceMode>('auto');
-  const inputRef = useRef<HTMLInputElement>(null);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const latestTurn = gameState.turns[gameState.turns.length - 1];
   const branches = normalizeBranchOptions(latestTurn?.branches ?? []);
 
-  // 回合落定后自动聚焦命令行
-  const prevStreaming = useRef(isStreaming);
   useEffect(() => {
-    if (prevStreaming.current && !isStreaming && !gameState.isGameOver) {
-      inputRef.current?.focus();
-    }
-    prevStreaming.current = isStreaming;
-  }, [isStreaming, gameState.isGameOver]);
-
-  // 数字键 1-6 直接落子决断分支
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if (e.key < '1' || e.key > '6') return;
-      const target = e.target as HTMLElement | null;
-      if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) return;
-      const idx = Number(e.key) - 1;
-      const branch = branches[idx];
-      if (!branch || isStreaming || gameState.isGameOver) return;
-      e.preventDefault();
-      void submitAction(branch, diceMode);
+    const handler = (event: Event) => {
+      const text = (event as CustomEvent<{ text?: string }>).detail?.text;
+      if (!text || isStreaming || gameState.isGameOver) return;
+      setCustomInput(stripEmoji(text));
+      window.setTimeout(() => inputRef.current?.focus(), 0);
     };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
-  }, [branches, isStreaming, gameState.isGameOver, diceMode, submitAction]);
+    window.addEventListener('agot:prefill-action', handler);
+    return () => window.removeEventListener('agot:prefill-action', handler);
+  }, [gameState.isGameOver, isStreaming]);
 
   const handleBranchClick = (branchText: string) => {
     if (isStreaming || gameState.isGameOver) return;
-    void submitAction(branchText, diceMode);
+    setCustomInput(branchText);
+    setShowSuggestions(false);
+    inputRef.current?.focus();
   };
 
-  const handleCustomSubmit = (event: React.FormEvent) => {
+  const handleCustomSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!customInput.trim() || isStreaming || gameState.isGameOver) return;
-    void submitAction(customInput.trim(), diceMode);
-    setCustomInput('');
+    const submittedText = customInput.trim();
+    const previousTurn = gameState.turnCount;
+    await submitAction(submittedText, 'auto');
+    if (useGameStore.getState().gameState.turnCount > previousTurn) setCustomInput('');
   };
 
   if (gameState.isGameOver) {
@@ -80,8 +63,6 @@ export const ActionDock: React.FC = () => {
     );
   }
 
-  const SubmitIcon = diceMode === 'narrative' ? Send : diceMode === 'force' ? Dices : Hourglass;
-
   const stageLabel = {
     idle: '',
     resolving: '正在解析行动',
@@ -92,62 +73,59 @@ export const ActionDock: React.FC = () => {
   return (
     <footer className="dock-enter relative z-20 shrink-0 px-5 pb-5 pt-2 md:px-6">
       <div className="mx-auto flex w-full max-w-[42rem] flex-col gap-4">
-        <PendingConcerns />
-        {/* 决断:无框列表,朱红序数,墨痕扫过 */}
+        <div className="lg:hidden"><PendingConcerns /></div>
+        {/* 建议默认退居幕后，只在玩家需要灵感时展开。 */}
         {branches.length > 0 && !isStreaming && (
-          <nav aria-label="决断分支" className="select-none">
-            {branches.map((branch, index) => (
-              <button
-                key={index}
-                onClick={() => handleBranchClick(branch)}
-                disabled={isStreaming}
-                title={`按 ${index + 1} 快捷选择`}
-                className="branch-row"
-              >
-                <span className="branch-numeral">{ROMAN[index] ?? `${index + 1}`}</span>
-                <span className="font-serif text-[13.5px] leading-relaxed">{branch}</span>
-              </button>
-            ))}
-          </nav>
+          <div className="select-none">
+            <button
+              type="button"
+              onClick={() => setShowSuggestions((value) => !value)}
+              className="flex items-center gap-2 font-serif text-[11px] tracking-[0.08em] text-parchment-dim transition-colors hover:text-gold"
+              aria-expanded={showSuggestions}
+            >
+              <Lightbulb className="h-3.5 w-3.5" />
+              需要灵感时查看 {branches.length} 个可能方向
+              <ChevronDown className={`h-3.5 w-3.5 transition-transform${showSuggestions ? ' rotate-180' : ''}`} />
+            </button>
+            {showSuggestions && (
+              <nav aria-label="行动灵感" className="mt-2">
+                {branches.map((branch, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    onClick={() => handleBranchClick(branch)}
+                    disabled={isStreaming}
+                    className="branch-row"
+                  >
+                    <span className="branch-numeral">{ROMAN[index] ?? `${index + 1}`}</span>
+                    <span className="font-serif text-[13.5px] leading-relaxed">{branch}</span>
+                  </button>
+                ))}
+              </nav>
+            )}
+          </div>
         )}
 
-        {/* 御令:墨线自画 + 火漆钤印 */}
+        {/* 行动草稿：建议只预填，玩家修改后明确执行。 */}
         <form onSubmit={handleCustomSubmit} className="flex items-end gap-3">
-          <span className="shrink-0 pb-2.5 font-serif text-[13px] font-bold tracking-[0.2em] text-gold">御令</span>
+          <label htmlFor="command-input" className="shrink-0 pb-2.5 font-serif text-[13px] font-bold tracking-[0.12em] text-gold">你的行动</label>
           <div className={`command-line${isStreaming ? ' is-streaming' : ''}`}>
-            <input
+            <textarea
               ref={inputRef}
               id="command-input"
-              type="text"
+              rows={2}
               value={customInput}
               onChange={(event) => setCustomInput(stripEmoji(event.target.value))}
-              disabled={isStreaming}
-              placeholder={isStreaming ? `${stageLabel}，可随时取消……` : '口述你的行动(按 / 聚焦,按 1-6 选分支)……'}
-              className="command-input"
+              onKeyDown={(event) => {
+                if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+                  event.preventDefault();
+                  event.currentTarget.form?.requestSubmit();
+                }
+              }}
+              readOnly={isStreaming}
+              placeholder={isStreaming ? `${stageLabel}，原草稿已保留……` : '写下你要做什么、怎么做、对谁说什么。Ctrl/Cmd+Enter 执行。'}
+              className="command-input min-h-[3.25rem] resize-y py-2 leading-relaxed"
             />
-          </div>
-          <div className="flex items-center gap-1 pb-1" role="group" aria-label="D20 检定模式">
-            {DICE_MODES.map((mode) => {
-              const ModeIcon = mode.id === 'auto' ? Hourglass : mode.id === 'force' ? Dices : Send;
-              const active = diceMode === mode.id;
-              return (
-                <button
-                  key={mode.id}
-                  type="button"
-                  onClick={() => setDiceMode(mode.id)}
-                  title={`${mode.label}:${mode.title}`}
-                  aria-pressed={active}
-                  className={`relative flex h-7 w-7 items-center justify-center rounded-full transition-all duration-200 ${
-                    active ? 'scale-110 text-gold' : 'text-parchment-faint hover:text-parchment-dim'
-                  }`}
-                >
-                  <ModeIcon className="h-3.5 w-3.5" />
-                  {active && (
-                    <span className="absolute -bottom-0.5 left-1/2 h-1 w-1 -translate-x-1/2 rotate-45 bg-gold" aria-hidden="true" />
-                  )}
-                </button>
-              );
-            })}
           </div>
           {isStreaming && turnStage !== 'settling' ? (
             <button
@@ -169,10 +147,10 @@ export const ActionDock: React.FC = () => {
               type="submit"
               disabled={!customInput.trim()}
               className="btn-decree shrink-0"
-              title={diceMode === 'narrative' ? '口述此行' : diceMode === 'force' ? '掷骰而行' : '下令'}
-              aria-label="提交御令"
+              title="执行行动（Ctrl/Cmd+Enter）"
+              aria-label="执行行动"
             >
-              <SubmitIcon className="h-4 w-4" />
+              <Send className="h-4 w-4" />
             </button>
           )}
         </form>

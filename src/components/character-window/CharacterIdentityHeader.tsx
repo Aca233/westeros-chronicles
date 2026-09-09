@@ -62,27 +62,24 @@ export function CharacterIdentityHeader({
 
           <p className="mt-3 font-serif text-[12px] font-semibold leading-relaxed text-gold">
             {dossier.title}
-            {dossier.age !== undefined && <span className="ml-2 font-mono text-[10px] font-normal text-parchment-faint">{dossier.age} 岁</span>}
-            {dossier.kind === 'npc' ? (
-              <span data-npc-status className={`ml-2 inline-flex items-center gap-1 text-[10px] font-semibold ${dossier.alive ? 'text-emerald-700' : 'text-rubric'}`}>
-                <span className={`h-1 w-1 rounded-full ${dossier.alive ? 'bg-emerald-700' : 'bg-rubric'}`} aria-hidden="true" />
-                {dossier.alive ? '在世' : '已故'}
-              </span>
-            ) : (
-              !dossier.alive && <span className="ml-2 text-[10px] font-bold text-rubric">已故</span>
-            )}
+            {dossier.kind === 'player' && dossier.age !== undefined && <span className="ml-2 font-mono text-[10px] font-normal text-parchment-faint">{dossier.age} 岁</span>}
+            {dossier.kind === 'player' && !dossier.alive && <span className="ml-2 text-[10px] font-bold text-rubric">已故</span>}
           </p>
           <div className="mt-2.5 flex flex-col items-start gap-1 text-[10px] text-parchment-faint">
             <span>{dossier.house}</span>
-            <span>{dossier.culture} · {dossier.faith}</span>
-            <button
-              type="button"
-              disabled={!dossier.worldLocation}
-              onClick={() => dossier.worldLocation && onOpenLocation(dossier.worldLocation.locationId)}
-              className="inline-flex min-w-0 items-center gap-1 text-left transition-colors enabled:hover:text-gold disabled:cursor-default"
-            >
-              <MapPin className="h-3 w-3 shrink-0 text-gold-deep" /><span className="truncate">{dossier.location}</span>
-            </button>
+            {dossier.kind === 'player' && <span>{dossier.culture} · {dossier.faith}</span>}
+            {dossier.kind === 'player' ? (
+              <button
+                type="button"
+                disabled={!dossier.worldLocation}
+                onClick={() => dossier.worldLocation && onOpenLocation(dossier.worldLocation.locationId)}
+                className="inline-flex min-w-0 items-center gap-1 text-left transition-colors enabled:hover:text-gold disabled:cursor-default"
+              >
+                <MapPin className="h-3 w-3 shrink-0 text-gold-deep" /><span className="truncate">{dossier.location}</span>
+              </button>
+            ) : (
+              <span className="inline-flex items-center gap-1"><MapPin className="h-3 w-3 text-gold-deep" />所在地需由消息或会面确认</span>
+            )}
           </div>
           {dossier.summary && (
             <p data-character-summary className="mt-3 border-l-2 border-gold-deep/50 pl-2.5 font-serif text-[11px] leading-relaxed text-parchment-dim">
@@ -103,7 +100,7 @@ export function CharacterIdentityHeader({
             houseIcon={houseIcon}
             alt={`${dossier.name}的肖像`}
             priority
-            deceased={!dossier.alive}
+            deceased={dossier.kind === 'player' && !dossier.alive}
             className="h-full w-full pb-7"
           />
           <div className="absolute inset-x-2 bottom-2 border-t border-gold-deep/40 pt-1.5 text-center sm:inset-x-3">
