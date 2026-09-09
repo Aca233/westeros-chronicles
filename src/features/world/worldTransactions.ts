@@ -17,6 +17,7 @@ import {
   resolvePrincipalCharacter,
 } from './worldProjection';
 import { cloneWorldRuntimeState, validateWorldRuntimeState } from './worldRuntimeState';
+import { applyLivingWorldIntent } from './livingWorldEngine';
 import type {
   AssetPlacement,
   AssetWorldPatch,
@@ -349,6 +350,30 @@ function applySiteCreations(items: ItemSystemState, sites: readonly import('../i
   }
 }
 
+function applyLivingIntents(
+  state: WorldCommitSlice,
+  baseline: WorldBaselineSnapshot,
+  transaction: WorldTransaction,
+): WorldEvent[] {
+  const events: WorldEvent[] = [];
+  for (const intent of transaction.intents) {
+    if (!['investigate_situation', 'negotiate_access', 'escort_transport', 'reroute_transport', 'request_relief', 'delegate_relief'].includes(intent.kind)) continue;
+    const actor = projectWorldCharacter(baseline, state.runtime, intent.actorId);
+    if (!actor?.location) throw new Error(`地方事务行动者当前位置不可验证：${intent.actorId}`);
+    const applied = applyLivingWorldIntent(state.runtime, intent as import('./worldRuntimeTypes').LivingWorldIntent, state.date, {
+      turn: transaction.turn,
+      actorId: intent.actorId,
+      actorLocation: actor.location,
+      transactionId: transaction.id,
+      // 委派同意已在回合准备阶段依据 roleplay 账本验证；原子提交只重放已接受意图。
+      hasDelegationConsent: () => true,
+    });
+    state.runtime = applied.runtime;
+    events.push(...applied.events);
+  }
+  return events;
+}
+
 export function commitWorldTransaction(
   state: WorldCommitSlice,
   baseline: WorldBaselineSnapshot,
@@ -375,6 +400,7 @@ export function commitWorldTransaction(
     applyItemCommands(next, baseline, transaction);
     const rebuiltBaseline = rebuildBaseline(baseline, next.items, transaction);
     transaction.mutations.forEach((mutation) => applyMutation(next.runtime, rebuiltBaseline, mutation));
+    const livingEvents = applyLivingIntents(next, rebuiltBaseline, transaction);
     if (transaction.dateAdvance) next.date = advanceWorldDate(next.date, transaction.dateAdvance);
     if (transaction.nextJourney === null) delete next.journey;
     else if (transaction.nextJourney !== undefined) next.journey = structuredClone(transaction.nextJourney);
@@ -395,7 +421,7 @@ export function commitWorldTransaction(
     next.runtime.events.push(...accessEvents);
     next.runtime.revision += 1;
     validateWorldRuntimeState(next.runtime);
-    return { ok: true, state: next, transactionId: transaction.id, duplicate: false, events };
+    return { ok: true, state: next, transactionId: transaction.id, duplicate: false, events: [...livingEvents, ...events, ...accessEvents] };
   } catch (error) {
     return {
       ok: false,

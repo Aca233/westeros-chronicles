@@ -17,6 +17,7 @@ import type {
 } from '../../features/world/worldRuntimeTypes';
 import type { UnresolvedWorldIntent, RejectedWorldIntent, ResolvedLocationWorldIntent } from '../../features/world/worldIntentResolver';
 import type { WorldBaselineSnapshot } from '../../features/world/worldBaseline';
+import type { RoleplayState } from '../../features/roleplay/types';
 import type { ApiConfig, D20Check, GameState, LordProfile, StateCommand } from '../../types/game';
 import type { CharacterCommandBatchBaseContext } from '../stateReducer';
 
@@ -63,6 +64,7 @@ export interface SettledTurn {
   worldRuntime: WorldRuntimeState;
   resolvedFacts: ResolvedTurnFacts;
   activeJourney?: ActiveJourney;
+  roleplay?: RoleplayState;
   transactionId: string;
   worldLocation: WorldLocationRef;
   narrationContext: string;

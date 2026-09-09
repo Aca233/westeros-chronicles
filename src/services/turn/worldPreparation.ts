@@ -12,17 +12,18 @@ import type { WorldLocationRef, MapLocationSearchEntry, SemanticMembership, Trav
 import { advanceJourney } from '../../features/map/travel/journeyReducer';
 import { applyTravelCommands, isTravelStateCommand } from '../../features/map/travel/travelCommands';
 import type { ActiveJourney, TravelStateCommand } from '../../features/map/travel/types';
-import type { AssetWorldIntent, WorldRuntimeState, WorldIntent, WorldMutation, WorldTransaction } from '../../features/world/worldRuntimeTypes';
+import type { AssetWorldIntent, LivingWorldIntent, WorldRuntimeState, WorldIntent, WorldMutation, WorldTransaction } from '../../features/world/worldRuntimeTypes';
 import { buildWorldAssetBaseline, createWorldBaselineSnapshot, worldAssetId, type WorldBaselineSnapshot } from '../../features/world/worldBaseline';
 import { commitWorldTransaction } from '../../features/world/worldTransactions';
 import { planJourneyTransaction, planExplicitArrivalTransaction } from '../../features/world/worldTravelRules';
 import { projectWorldAsset, projectWorldCharacter, resolveAssetMapLocation } from '../../features/world/worldProjection';
-import { resolveWorldIntents, type RejectedWorldIntent, type ResolvedDirectWorldIntent, type ResolvedLocationWorldIntent, type ResolvedTitleWorldIntent, type ResolvedWorldIntent } from '../../features/world/worldIntentResolver';
+import { LOCATION_WORLD_INTENT_KINDS, resolveWorldIntents, type RejectedWorldIntent, type ResolvedDirectWorldIntent, type ResolvedLivingWorldIntent, type ResolvedLocationWorldIntent, type ResolvedTitleWorldIntent, type ResolvedWorldIntent } from '../../features/world/worldIntentResolver';
 import { planAssetIntent, planCreateSiteIntent } from '../../features/world/worldAssetRules';
 import { planTitleIntent } from '../../features/world/worldTitleRules';
 import type { RoutePlan, RouteRequest } from '../../features/map/routing/types';
 import { RouteClient } from '../../features/map/routing/routeClient';
 import { mapRepository } from '../../features/map/repository';
+import { advanceLivingWorld, applyLivingWorldIntent, routeBlockReason } from '../../features/world/livingWorldEngine';
 export function buildTravelBaseline(
   gameState: GameState,
   lord: LordProfile,
@@ -277,6 +278,8 @@ async function handleTravelCommand(
     ...(via?.length ? { via } : {}),
     season: env.gameState.currentSeason,
   });
+  const blockedReason = routeBlockReason(env.gameState.worldRuntime, [routePlan.from, ...routePlan.legs.map((leg) => leg.to)]);
+  if (blockedReason) throw new Error(`当前路线无法通行：${blockedReason}`);
   const type = intent.kind === 'plan_travel' ? 'PLAN_TRAVEL'
     : intent.kind === 'start_travel' ? 'START_TRAVEL'
       : intent.kind === 'reroute_travel' ? 'REROUTE_TRAVEL'
@@ -376,8 +379,15 @@ function handleAdvanceTravel(
 ): void {
   const days = elapsedDays(intent as ResolvedLocationWorldIntent);
   if (days <= 0) throw new Error('旅行推进缺少明确的正数时长');
-  const patch = advanceJourney(envWorldSnapshot(env), days);
-  const planned = planJourneyTransaction({ ...patch, elapsedDays: days }, {
+  const preview = advanceLivingWorld(env.gameState.worldRuntime, env.currentDate, days, {
+    turn: env.nextTurnNumber,
+    playerId: env.playerId,
+    playerLocation: env.gameState.lord.location,
+    transactionId: `${env.transactionId}:preview`,
+  });
+  const actualDays = preview.actualDays;
+  const patch = advanceJourney(envWorldSnapshot(env), actualDays);
+  const planned = planJourneyTransaction({ ...patch, elapsedDays: actualDays }, {
     playerId: env.playerId,
     turn: env.nextTurnNumber,
     transactionId: env.transactionId,
@@ -387,6 +397,18 @@ function handleAdvanceTravel(
   });
   mergeWorldTransaction(env.transaction, planned);
   env.workingJourney.current = planned.nextJourney ? structuredClone(planned.nextJourney) : undefined;
+  if (preview.stoppedForDecision && actualDays < days) {
+    env.transaction.eventDrafts.push({
+      type: 'time.interrupted_for_decision',
+      actorIds: [env.playerId],
+      subjectRefs: [],
+      location: { ...env.gameState.lord.location },
+      reason: `请求推进 ${days} 天，实际推进 ${actualDays} 天后因需要决定的局势停止。`,
+      visibility: 'secret',
+      knownBy: [env.playerId],
+      causeSource: { type: 'rule', id: preview.stoppedForDecision.situationId },
+    });
+  }
 }
 
 function handleMoveInside(
@@ -500,6 +522,35 @@ async function handleDirectAssetIntent(
   }
 }
 
+async function handleLivingWorldIntent(
+  intent: ResolvedWorldIntent,
+  _target: LocationRef | undefined,
+  env: TurnIntentEnv,
+): Promise<void> {
+  const livingIntent = intent as ResolvedLivingWorldIntent;
+  const roleplay = env.gameState.roleplay;
+  const hasDelegationConsent = (assigneeId: CharacterId | undefined) => Boolean(assigneeId && roleplay?.socialEvents.some((event) => (
+    event.act === 'accept'
+    && event.actorId === assigneeId
+    && event.targetIds.includes(env.playerId)
+  )));
+  try {
+    applyLivingWorldIntent(env.gameState.worldRuntime, livingIntent as LivingWorldIntent, env.currentDate, {
+      turn: env.nextTurnNumber,
+      actorId: env.playerId,
+      actorLocation: env.gameState.lord.location,
+      transactionId: env.transactionId,
+      hasDelegationConsent,
+    });
+    env.transaction.intents.push(livingIntent);
+  } catch (error) {
+    env.rejected.push({
+      intent: { ...livingIntent, evidenceText: livingIntent.evidenceText },
+      reason: stripEmoji(error instanceof Error ? error.message : '地方事务意图无法结算'),
+    });
+  }
+}
+
 async function handleTitleIntent(
   intent: ResolvedWorldIntent,
   _target: LocationRef | undefined,
@@ -547,6 +598,12 @@ const INTENT_HANDLERS: Partial<Record<ResolvedWorldIntent['kind'], TurnIntentHan
   cancel_travel: handleTravelPause,
   advance_travel: handleAdvanceTravel,
   move_inside_location: handleMoveInside,
+  investigate_situation: handleLivingWorldIntent,
+  negotiate_access: handleLivingWorldIntent,
+  escort_transport: handleLivingWorldIntent,
+  reroute_transport: handleLivingWorldIntent,
+  request_relief: handleLivingWorldIntent,
+  delegate_relief: handleLivingWorldIntent,
   gift_asset: handleDirectAssetIntent,
   steal_asset: handleDirectAssetIntent,
   inherit_asset: handleDirectAssetIntent,
@@ -563,7 +620,10 @@ export async function prepareWorldTurn(input: PrepareWorldTurnInput): Promise<Pr
   const pending = input.pendingTransactions.filter((entry) => entry.status === 'pending');
   const queuedTravelCommands = pending.flatMap((entry) => entry.travelCommands ?? []);
   const locationStateCommands = input.draft.stateCommands.filter((command) => command.type === 'CHANGE_LOCATION');
-  const needsMap = (input.draft.worldIntents?.length ?? 0) > 0
+  const mapIntentKindSet = new Set<string>(LOCATION_WORLD_INTENT_KINDS);
+  const mapDependentIntents = (input.draft.worldIntents ?? []).filter((intent) => mapIntentKindSet.has(intent.kind));
+  const mapIndependentIntents = (input.draft.worldIntents ?? []).filter((intent) => !mapIntentKindSet.has(intent.kind));
+  const needsMap = mapDependentIntents.length > 0
     || queuedTravelCommands.length > 0
     || locationStateCommands.length > 0;
   let locations: MapLocationSearchEntry[] = [];
@@ -595,19 +655,26 @@ export async function prepareWorldTurn(input: PrepareWorldTurnInput): Promise<Pr
   const countyIdByLocationId = new Map(memberships.flatMap((entry) => entry.countyId
     ? [[entry.locationId, entry.countyId] as const]
     : []));
+  const resolveContext = {
+    defaultActorId: playerId,
+    currentLocation: input.gameState.lord.location,
+    activeJourney: input.gameState.activeJourney,
+    locations,
+    countyIdByLocationId,
+    neighboringCountyIds: sameDuchyNeighborCounties(input.gameState.lord.location.locationId, memberships),
+  };
   const resolution = mapFailureReason
-    ? {
-        resolved: [] as ResolvedLocationWorldIntent[],
-        rejected: (input.draft.worldIntents ?? []).map((intent) => ({ intent, reason: mapFailureReason })),
-      }
-    : resolveWorldIntents(input.draft.worldIntents ?? [], {
-        defaultActorId: playerId,
-        currentLocation: input.gameState.lord.location,
-        activeJourney: input.gameState.activeJourney,
-        locations,
-        countyIdByLocationId,
-        neighboringCountyIds: sameDuchyNeighborCounties(input.gameState.lord.location.locationId, memberships),
-      });
+    ? (() => {
+        const independent = resolveWorldIntents(mapIndependentIntents, resolveContext);
+        return {
+          resolved: independent.resolved,
+          rejected: [
+            ...independent.rejected,
+            ...mapDependentIntents.map((intent) => ({ intent, reason: mapFailureReason! })),
+          ],
+        };
+      })()
+    : resolveWorldIntents(input.draft.worldIntents ?? [], resolveContext);
   const mapRejectedCommands: RejectedWorldCommand[] = mapFailureReason
     ? [
         ...locationStateCommands.map((command) => ({ type: command.type, reason: mapFailureReason! })),
@@ -720,8 +787,32 @@ export async function prepareWorldTurn(input: PrepareWorldTurnInput): Promise<Pr
     if (!transaction.dateAdvance) {
       const temporal = prepareTemporalCommand(input.draft.stateCommands, currentDate);
       if (temporal.command && temporal.days !== undefined) {
-        transaction.dateAdvance = { days: temporal.days };
-        acceptedCommands.push(temporal.command);
+        const preview = advanceLivingWorld(input.gameState.worldRuntime, currentDate, temporal.days, {
+          turn: input.nextTurnNumber,
+          playerId,
+          playerLocation: input.gameState.lord.location,
+          transactionId: `${transactionId}:preview-time`,
+        });
+        transaction.dateAdvance = { days: preview.actualDays };
+        if (preview.actualDays < temporal.days) {
+          acceptedCommands.push({
+            type: 'ADVANCE_TIME',
+            days: preview.actualDays,
+            reason: `原请求推进 ${temporal.days} 天，因需要玩家决定的局势在 ${preview.actualDays} 天后停止`,
+          });
+          transaction.eventDrafts.push({
+            type: 'time.interrupted_for_decision',
+            actorIds: [playerId],
+            subjectRefs: [],
+            location: { ...input.gameState.lord.location },
+            reason: `时间推进在第 ${preview.actualDays} 天因需要玩家决定的局势停止。`,
+            visibility: 'secret',
+            knownBy: [playerId],
+            ...(preview.stoppedForDecision ? { causeSource: { type: 'rule' as const, id: preview.stoppedForDecision.situationId } } : {}),
+          });
+        } else {
+          acceptedCommands.push(temporal.command);
+        }
       }
     }
 

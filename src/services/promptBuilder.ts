@@ -80,7 +80,26 @@ export const WORLD_INTENT_RESOLUTION_PROMPT = `
 2. grant_title 与 inherit_title 的区别：grant 是在世者主动授予，inherit 是因死亡或退位依法传承。
 3. occupy_title 只转移实际控制权（controller），不动法理持有人（lawfulHolder）；原有持有人进入 contested 状态。
 4. revoke_title 必须提供 holderId 且与当前法理持有人一致，否则程序拒绝。
-5. settle_title_war 同时转移法理与控制权，用于战争结果或和平协议的正式了结。`;
+5. settle_title_war 同时转移法理与控制权，用于战争结果或和平协议的正式了结。
+
+### 【地方局势与持续行动意图】
+当玩家明确针对“玩家已知的持续局势/持续行动”采取地方行动时，同样写入 <world_intent>。这些意图只声明玩家本回合采取的做法，后续进展由统一时钟和规则引擎推进：
+
+| 场景 | kind | 必填稳定字段 |
+| --- | --- | --- |
+| 亲自到相关地点调查一个已知或现场可发现的局势 | investigate_situation | situationId |
+| 在封锁地点与相关方交涉通行 | negotiate_access | situationId |
+| 亲自组织/批准护送一项已知运输 | escort_transport | actionId |
+| 改变一项已知运输的既定路线 | reroute_transport | actionId |
+| 身处短缺地点，向外请求实际救援 | request_relief | situationId |
+| 把救援/处置任务委派给已明确同意的受任者 | delegate_relief | situationId、assigneeId |
+
+要求：
+1. situationId 与 actionId 只能逐字引用当前世界切片【玩家已知的持续局势/持续行动】中出现的稳定 ID，不得编造或从隐藏信息猜测。
+2. 调查、交涉、护送和求援仍受人物实际位置、权限、信息来源、资源与授权校验；玩家一句“我命令成功”不能越过程序规则。
+3. delegate_relief 的 assigneeId 只能引用当前人物切片已有的稳定人物 ID，并且必须存在此前明确接受的交涉/委派证据；否则程序会拒绝。
+4. 地方事务只产生或改变持续行动，不得直接把短缺、封锁、运输等局势写成“已解决”。解决与升级必须由统一时钟按连接、库存、消息与持续行动状态判定。
+5. 玩家只是询问、回忆或观察局势时，不要输出地方事务意图。`;
 
 // 规则解析阶段使用的法则宪章：只负责判定当前行动能否改变世界，不写小说。
 // 叙事阶段使用的文学宪章见 GOT_LITERARY_PROMPT；两者职责互不重叠，禁止再合并。

@@ -2,7 +2,6 @@ import type { PreparedWorldTurn, SettleTurnDraftInput, SettledTurn, TurnResoluti
 import { settleLegacyTurnDraft } from './legacySettlement';
 import { committedNarrationContext, deriveSeason, playerCharacterId, worldEventAsFact, worldEventFromFact } from './settlementFacts';
 import { CANONICAL_TIMELINE } from '../../data/generated/canonicalTimeline';
-import { resolveDueCanonicalEvents } from '../../features/world/canonicalTimeline';
 import type { WorldEventFact } from '../../features/world/worldHistory';
 import type { LordProfile, StateCommand } from '../../types/game';
 import { stripEmoji } from '../textSanitizer';
@@ -13,6 +12,7 @@ import { settleWorldTransactionStatus } from '../../features/world/worldTransact
 import { worldAssetId } from '../../features/world/worldBaseline';
 import { commitWorldTransaction } from '../../features/world/worldTransactions';
 import { projectWorldCharacter, resolveAssetMapLocation } from '../../features/world/worldProjection';
+import { advanceWorldScheduler } from '../../features/world/worldScheduler';
 
 function isWorldManagedStateCommand(command: StateCommand): boolean {
   return command.type.startsWith('ITEM_')
@@ -142,36 +142,28 @@ export function settleTurnDraft(input: SettleTurnDraftInput): SettledTurn {
   }, prepared.baseline, prepared.transaction);
   if (!committed.ok) return rejectedPreparedTurn(input, base, prepared, committed.reason);
 
-  const canonicalResolution = resolveDueCanonicalEvents(
-    base.worldHistory,
-    input.timeline ?? CANONICAL_TIMELINE,
-    currentDate,
-    committed.state.date,
-    committed.state.runtime.events,
-  );
-  const timelineFacts: WorldEventFact[] = canonicalResolution.dueEvents.map((event) => {
-    const transition = canonicalResolution.transitions.find((entry) => entry.eventId === event.id);
-    const occurred = transition?.status === 'occurred';
-    return {
-      id: `timeline:${event.id}:${input.nextTurnNumber}`,
-      turn: input.nextTurnNumber,
-      date: occurred ? { ...event.date } : { ...committed.state.date },
-      source: 'timeline',
-      kind: occurred ? 'timeline.occurred' : 'timeline.diverged',
-      title: event.title,
-      summary: occurred ? event.summary : transition?.reason ?? event.summary,
-      participantIds: event.participants.flatMap((person) => person.characterId ? [person.characterId] : []),
-      commandTypes: [],
-      canonicalEventId: event.id,
-    };
+  const knownEventTurns = new Map<string, number>();
+  for (const turn of base.worldHistory.turns) for (const eventId of turn.eventIds) knownEventTurns.set(eventId, turn.turn);
+  for (const event of input.gameState.roleplay?.socialEvents ?? []) knownEventTurns.set(event.id, event.turn);
+  const scheduler = advanceWorldScheduler({
+    runtime: committed.state.runtime,
+    roleplay: input.gameState.roleplay,
+    history: base.worldHistory,
+    timeline: input.timeline ?? CANONICAL_TIMELINE,
+    from: currentDate,
+    to: committed.state.date,
+    turn: input.nextTurnNumber,
+    playerId: playerCharacterId(input.gameState),
+    playerLocation: input.gameState.lord.location,
+    presentCharacterIds: Array.from(input.characterContext?.presentCharacterIds ?? []),
+    knownEventTurns,
+    transactionId: prepared.transactionId,
   });
-  const timelineEvents = timelineFacts.map((fact) => worldEventFromFact(fact, prepared.transactionId));
   let runtime = {
-    ...withPendingStatuses(committed.state.runtime, input.pendingTransactions, 'committed'),
+    ...withPendingStatuses(scheduler.runtime, input.pendingTransactions, 'committed'),
     // The ledger revision belongs to the narrative turn, not to each internal
     // transaction committed while resolving that turn.
     revision: base.worldRuntime.revision,
-    events: [...committed.state.runtime.events, ...timelineEvents],
   };
   const projectedPlayer = projectWorldCharacter(prepared.baseline, runtime, playerCharacterId(input.gameState));
   if (!projectedPlayer?.location) {
@@ -195,14 +187,14 @@ export function settleTurnDraft(input: SettleTurnDraftInput): SettledTurn {
       })),
     },
   };
-  const committedEvents = [...committed.events, ...timelineEvents];
+  const committedEvents = [...committed.events, ...scheduler.events];
   const worldFacts = committedEvents.map(worldEventAsFact);
   const acceptedCommands = [...base.acceptedCommands, ...prepared.acceptedCommands];
   const rejectedCommands = [...base.rejectedCommands, ...locationRejections];
-  const turns = canonicalResolution.history.turns.map((turn, index, entries) => index === entries.length - 1
+  const turns = scheduler.history.turns.map((turn, index, entries) => index === entries.length - 1
     ? {
         ...turn,
-        resolvedOn: { ...committed.state.date },
+        resolvedOn: { ...scheduler.finalDate },
         acceptedCommands,
         rejectedCommands,
         eventIds: [...new Set([...turn.eventIds, ...committedEvents.map((event) => event.id)])],
@@ -219,20 +211,21 @@ export function settleTurnDraft(input: SettleTurnDraftInput): SettledTurn {
     updatedLord,
     acceptedCommands,
     rejectedCommands,
-    changesLog: [...base.changesLog, ...committedEvents.map((event) => stripEmoji(event.reason))],
-    nextDate: { ...committed.state.date },
-    nextSeason: deriveSeason(committed.state.date.month),
-    worldHistory: { ...canonicalResolution.history, turns },
+    changesLog: [...base.changesLog, ...scheduler.roleplayChanges, ...committedEvents.map((event) => stripEmoji(event.reason))],
+    nextDate: { ...scheduler.finalDate },
+    nextSeason: deriveSeason(scheduler.finalDate.month),
+    worldHistory: { ...scheduler.history, turns },
     worldRuntime: runtime,
     resolvedFacts: {
       ...base.resolvedFacts,
-      resolvedOn: { ...committed.state.date },
+      resolvedOn: { ...scheduler.finalDate },
       acceptedCommands,
-      changes: [...base.resolvedFacts.changes, ...committedEvents.map((event) => stripEmoji(event.reason))],
+      changes: [...base.resolvedFacts.changes, ...scheduler.roleplayChanges, ...committedEvents.map((event) => stripEmoji(event.reason))],
       facts: [...base.resolvedFacts.facts, ...worldFacts],
-      canonicalTransitions: canonicalResolution.transitions,
+      canonicalTransitions: scheduler.canonicalTransitions,
     },
     activeJourney: committed.state.journey,
+    roleplay: scheduler.roleplay,
     transactionId: committed.transactionId,
     worldLocation: { ...projectedPlayer.location },
     narrationContext,

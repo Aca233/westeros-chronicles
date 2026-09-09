@@ -4,6 +4,7 @@ import type { CharacterEventEnvelope, CharacterEventInput } from '../features/ch
 import type { CharacterId } from '../domain/characterId';
 import {
   ITEM_SAVE_FORMAT_VERSION,
+  PREVIOUS_SAVE_FORMAT_VERSION,
   assertSupportedGameState,
   assertSupportedSaveEnvelope,
   isCompatibleTurnBaseline,
@@ -14,7 +15,7 @@ import {
 export interface GameSnapshot {
   id?: number;
   slotId: string;
-  formatVersion: typeof ITEM_SAVE_FORMAT_VERSION;
+  formatVersion: typeof ITEM_SAVE_FORMAT_VERSION | typeof PREVIOUS_SAVE_FORMAT_VERSION;
   turnNumber: number;
   timestamp: number;
   gameState: GameState;
@@ -226,13 +227,6 @@ export class GotDatabase extends Dexie {
       worldRuns: '&runId, datasetHash, revision',
       characterEvents: '&[runId+id], [runId+turn], [runId+characterId], runId, turn, characterId',
       characterStateCache: '&[runId+characterId], runId, characterId, revision',
-    }).upgrade(async (tx) => {
-      const snapshotsTable = tx.table('snapshots');
-      const snapshots = await snapshotsTable.toArray();
-      for (const snapshot of snapshots) {
-        const migrated = migrateSnapshotToCurrent(snapshot) as { id?: number };
-        if (migrated !== snapshot && migrated.id != null) await snapshotsTable.put(migrated);
-      }
     });
   }
 }
@@ -453,12 +447,17 @@ export async function exportSaveData(slotId: string): Promise<string> {
     db.characterEvents.toArray(),
   ]);
   snapshots.sort((left, right) => left.turnNumber - right.turnNumber);
-  snapshots.forEach(assertSupportedSnapshot);
+  // Persisted snapshot schemas are immutable. Validate compatibility against an
+  // in-memory migrated projection, but export the original stored snapshots.
+  snapshots.forEach((snapshot) => assertSupportedSnapshot(migrateSnapshotToCurrent(snapshot)));
   const runIds = new Set(snapshots
     .map((snapshot) => snapshot.gameState.worldCharacters?.runId)
     .filter((runId): runId is string => Boolean(runId)));
+  const envelopeVersion = snapshots.length > 0 && snapshots.every((snapshot) => snapshot.formatVersion === PREVIOUS_SAVE_FORMAT_VERSION)
+    ? PREVIOUS_SAVE_FORMAT_VERSION
+    : ITEM_SAVE_FORMAT_VERSION;
   return JSON.stringify({
-    version: ITEM_SAVE_FORMAT_VERSION,
+    version: envelopeVersion,
     exportedAt: new Date().toISOString(),
     slotId,
     snapshots,

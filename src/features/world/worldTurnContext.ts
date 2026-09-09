@@ -28,6 +28,8 @@ import type { WorldCharacterStartRecord } from '../world-content/types';
 import { worldContentRepository } from '../world-content/repository';
 import { projectResolvedCharacterWorldFacts } from './characterWorldFacts';
 import { playerWorldEventViewer, selectVisibleWorldEvents } from './worldEventVisibility';
+import { knownLivingWorldActions, knownLivingWorldSituations } from './livingWorldEngine';
+import type { OngoingWorldAction, WorldSituation } from './livingWorldContracts';
 
 export const WORLD_CONTEXT_LIMITS = {
   characters: 12,
@@ -111,6 +113,8 @@ export interface WorldTurnContext {
   narrativeLocation: NarrativeLocationContext;
   neighboringLocations: MapLocationSearchEntry[];
   recentWorldEvents: WorldEvent[];
+  knownSituations: WorldSituation[];
+  knownOngoingActions: OngoingWorldAction[];
   mapAvailability: { status: 'available' | 'unavailable'; reason?: string };
   pendingTransactions: PendingWorldTransaction[];
 }
@@ -227,9 +231,11 @@ export async function buildWorldTurnContext(input: BuildWorldTurnContextInput): 
   const { gameState } = input;
   const currentDate = { year: gameState.currentYear, month: gameState.currentMonth, day: gameState.currentDay };
   const playerId = gameState.lord.canonicalCharacterId;
+  const worldViewer = playerWorldEventViewer(gameState);
+  const viewerCharacterId = worldViewer.kind === 'player' ? worldViewer.characterId : undefined;
   const visibleWorldEvents = selectVisibleWorldEvents(
     gameState.worldRuntime.events,
-    playerWorldEventViewer(gameState),
+    worldViewer,
   );
   const [, manifest, playerRecord, mentioned, mapResult, startCharacters, gameplayLocations] = await Promise.all([
     preloadNpcLoadoutContent(),
@@ -402,6 +408,12 @@ export async function buildWorldTurnContext(input: BuildWorldTurnContextInput): 
     .filter((event) => event.location?.locationId === gameState.lord.location.locationId
       || event.actorIds.some((id) => selectedIds.has(id)))
     .slice(-WORLD_CONTEXT_LIMITS.events);
+  const knownSituations = viewerCharacterId
+    ? knownLivingWorldSituations(gameState.worldRuntime, viewerCharacterId)
+    : [];
+  const knownOngoingActions = viewerCharacterId
+    ? knownLivingWorldActions(gameState.worldRuntime, viewerCharacterId)
+    : [];
 
   return {
     manifest: {
@@ -434,6 +446,8 @@ export async function buildWorldTurnContext(input: BuildWorldTurnContextInput): 
     narrativeLocation,
     neighboringLocations,
     recentWorldEvents,
+    knownSituations,
+    knownOngoingActions,
     mapAvailability: mapResult.status === 'available'
       ? { status: 'available' }
       : { status: 'unavailable', reason: mapResult.reason },
@@ -476,6 +490,12 @@ export function formatWorldTurnContext(context: WorldTurnContext): string {
   const eventLines = context.recentWorldEvents.length
     ? context.recentWorldEvents.map((event) => `- ${event.reason}`)
     : ['- 当前地点和在场人物没有近期已提交事件。'];
+  const situationLines = context.knownSituations.length
+    ? context.knownSituations.map((situation) => `- ${situation.id}：${situation.kind}，地点 ${situation.location.locationId}，阶段 ${situation.stage}，压力 ${situation.pressure.join('、') || '无'}，来源事件 ${situation.sourceEventIds.join('、') || '无'}`)
+    : ['- 当前没有玩家已知的持续局势。'];
+  const ongoingActionLines = context.knownOngoingActions.length
+    ? context.knownOngoingActions.map((action) => `- ${action.id}：${action.kind}，状态 ${action.status}，目标 ${action.target.locationId}，进度 ${Math.round(action.progress * 100)}%${action.resource ? `，物资 ${action.resource.commodity} ${action.resource.quantity}` : ''}${action.sourceSituationId ? `，关联局势 ${action.sourceSituationId}` : ''}`)
+    : ['- 当前没有玩家已知的持续行动。'];
   const pendingLines = context.pendingTransactions.length
     ? context.pendingTransactions.map((entry) => `- ${entry.id}：等待下一次成功回合结算。`)
     : ['- 当前没有待处理世界事务。'];
@@ -509,6 +529,14 @@ export function formatWorldTurnContext(context: WorldTurnContext): string {
     '',
     '### 【近期已提交世界事件】',
     ...eventLines,
+    '',
+    '### 【玩家已知的持续局势】',
+    '- 这里只列玩家通过目击、消息或公开记录实际知道的局势；不得据此推断隐藏局势。地方事务意图只能引用这里出现的 situationId。',
+    ...situationLines,
+    '',
+    '### 【玩家已知的持续行动】',
+    '- 地方事务中的 actionId 只能引用这里出现的稳定 ID；blocked/active 等状态由程序维护。',
+    ...ongoingActionLines,
     '',
     '### 【待处理世界事务】',
     ...pendingLines,

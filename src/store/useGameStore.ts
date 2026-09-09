@@ -25,6 +25,7 @@ import { preloadNpcLoadoutContent } from '../features/items/npcLoadoutContent';
 import { AGOT_CHARACTER_DATASET_HASH, createInitialAgotArtifactWorldState } from '../features/items/worldArtifacts';
 import { createWorldHistoryState, type WorldDate } from '../features/world/worldHistory';
 import { createWorldRuntimeState } from '../features/world/worldRuntimeState';
+import { createRiverlandsCrisisInitialEvents, createRiverlandsCrisisLivingWorld } from '../features/world/livingWorldScenario';
 import { CANONICAL_TIMELINE } from '../data/generated/canonicalTimeline';
 import { initializeCanonicalStates } from '../features/world/canonicalTimeline';
 import type { CharacterId } from '../features/characters/types';
@@ -404,7 +405,10 @@ export const useGameStore = create<GameStore>((set, get) => ({
       worldCharacters: { runId: createWorldRunId(), datasetHash: game.characterDatasetHash || AGOT_DATASET_HASH, revision: 0 },
       worldArtifacts: structuredClone(game.worldArtifacts),
       worldHistory: createInitialWorldHistory(startDate),
-      worldRuntime: createWorldRuntimeState(),
+      worldRuntime: createWorldRuntimeState({
+        livingWorld: createRiverlandsCrisisLivingWorld(startDate),
+        initialEvents: createRiverlandsCrisisInitialEvents(startDate),
+      }),
       activeScene: createActiveScene(safeLord.location, 1),
       roleplay: createRoleplayState(),
       worldFlags: {},
@@ -678,7 +682,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
           ? [{ opportunityId: command.growthChoiceId, optionId: command.growthOptionId }]
           : []
       ));
-      const roleplayResult = settleRoleplayCommands(gameState.roleplay, roleplayCommands, {
+      const roleplayResult = settleRoleplayCommands(settled.roleplay ?? gameState.roleplay, roleplayCommands, {
         turn: nextTurnNumber,
         playerId: playerCharacterId,
         presentCharacterIds: Array.from(effectiveCharacterContext?.presentCharacterIds ?? []),
