@@ -43,13 +43,24 @@ export const TITLE_WORLD_INTENT_KINDS = [
   'occupy_title',
 ] as const satisfies readonly WorldIntent['kind'][];
 
+export const LIVING_WORLD_INTENT_KINDS = [
+  'investigate_situation',
+  'negotiate_access',
+  'escort_transport',
+  'reroute_transport',
+  'request_relief',
+  'delegate_relief',
+] as const satisfies readonly WorldIntent['kind'][];
+
 export type LocationWorldIntentKind = (typeof LOCATION_WORLD_INTENT_KINDS)[number];
 export type DirectWorldIntentKind = (typeof DIRECT_WORLD_INTENT_KINDS)[number];
 export type TitleWorldIntentKind = (typeof TITLE_WORLD_INTENT_KINDS)[number];
+export type LivingWorldIntentKind = (typeof LIVING_WORLD_INTENT_KINDS)[number];
 export type ResolvedLocationWorldIntent = Extract<WorldIntent, { kind: LocationWorldIntentKind }>;
 export type ResolvedDirectWorldIntent = Extract<WorldIntent, { kind: DirectWorldIntentKind }>;
 export type ResolvedTitleWorldIntent = Extract<WorldIntent, { kind: TitleWorldIntentKind }>;
-export type ResolvedWorldIntent = ResolvedLocationWorldIntent | ResolvedDirectWorldIntent | ResolvedTitleWorldIntent;
+export type ResolvedLivingWorldIntent = Extract<WorldIntent, { kind: LivingWorldIntentKind }>;
+export type ResolvedWorldIntent = ResolvedLocationWorldIntent | ResolvedDirectWorldIntent | ResolvedTitleWorldIntent | ResolvedLivingWorldIntent;
 
 export interface UnresolvedWorldIntent {
   kind: WorldIntent['kind'];
@@ -69,6 +80,9 @@ export interface UnresolvedWorldIntent {
   name?: string;
   titleId?: string;
   holderId?: CharacterId;
+  situationId?: string;
+  actionId?: string;
+  assigneeId?: CharacterId;
   evidenceText: string;
 }
 
@@ -90,6 +104,7 @@ export interface ResolveWorldIntentsResult {
 const LOCATION_KIND_SET = new Set<string>(LOCATION_WORLD_INTENT_KINDS);
 const DIRECT_KIND_SET = new Set<string>(DIRECT_WORLD_INTENT_KINDS);
 const TITLE_KIND_SET = new Set<string>(TITLE_WORLD_INTENT_KINDS);
+const LIVING_KIND_SET = new Set<string>(LIVING_WORLD_INTENT_KINDS);
 const INTENT_FIELDS = new Set([
   'kind',
   'actorId',
@@ -108,6 +123,9 @@ const INTENT_FIELDS = new Set([
   'name',
   'titleId',
   'holderId',
+  'situationId',
+  'actionId',
+  'assigneeId',
   'evidenceText',
 ]);
 const SITE_TYPE_SET = new Set<string>(Object.keys(SITE_TYPE_LABELS));
@@ -201,7 +219,7 @@ function parseUnresolvedWorldIntent(value: unknown, index: number): UnresolvedWo
   const record = value as Record<string, unknown>;
   const unknownFields = Object.keys(record).filter((field) => !INTENT_FIELDS.has(field));
   if (unknownFields.length) throw new Error(`世界意图包含未知字段：${unknownFields.join('、')}`);
-  if (typeof record.kind !== 'string' || !(LOCATION_KIND_SET.has(record.kind) || DIRECT_KIND_SET.has(record.kind) || TITLE_KIND_SET.has(record.kind))) {
+  if (typeof record.kind !== 'string' || !(LOCATION_KIND_SET.has(record.kind) || DIRECT_KIND_SET.has(record.kind) || TITLE_KIND_SET.has(record.kind) || LIVING_KIND_SET.has(record.kind))) {
     throw new Error(`未知的世界意图类型：${String(record.kind ?? '')}`);
   }
   if (typeof record.evidenceText !== 'string' || !record.evidenceText.trim()) {
@@ -229,6 +247,9 @@ function parseUnresolvedWorldIntent(value: unknown, index: number): UnresolvedWo
     ...(record.name !== undefined ? { name: trimmedOptionalString(record.name, 'name') } : {}),
     ...(record.titleId !== undefined ? { titleId: trimmedOptionalString(record.titleId, 'titleId') } : {}),
     ...(record.holderId !== undefined ? { holderId: parseOptionalCharacterId(record.holderId) } : {}),
+    ...(record.situationId !== undefined ? { situationId: trimmedOptionalString(record.situationId, 'situationId') } : {}),
+    ...(record.actionId !== undefined ? { actionId: trimmedOptionalString(record.actionId, 'actionId') } : {}),
+    ...(record.assigneeId !== undefined ? { assigneeId: parseOptionalCharacterId(record.assigneeId) } : {}),
     evidenceText: record.evidenceText.trim(),
   };
 }
@@ -283,6 +304,25 @@ export function resolveWorldIntent(
       ...(unresolved.name ? { name: unresolved.name } : {}),
       evidenceText,
     };
+  }
+  if (LIVING_KIND_SET.has(unresolved.kind)) {
+    const kind = unresolved.kind as LivingWorldIntentKind;
+    const actorId = unresolved.actorId || context.defaultActorId;
+    const evidenceText = unresolved.evidenceText?.trim();
+    if (!actorId.trim()) throw new Error('世界意图缺少行动人物');
+    if (!evidenceText) throw new Error('世界意图证据文本不能为空');
+    if ((kind === 'escort_transport' || kind === 'reroute_transport') && !unresolved.actionId) {
+      throw new Error(`${kind} 意图缺少 actionId`);
+    }
+    if (kind === 'delegate_relief' && !unresolved.assigneeId) throw new Error('delegate_relief 意图缺少 assigneeId');
+    return {
+      kind,
+      actorId,
+      ...(unresolved.situationId ? { situationId: unresolved.situationId } : {}),
+      ...(unresolved.actionId ? { actionId: unresolved.actionId } : {}),
+      ...(unresolved.assigneeId ? { assigneeId: unresolved.assigneeId } : {}),
+      evidenceText,
+    } as ResolvedLivingWorldIntent;
   }
   if (TITLE_KIND_SET.has(unresolved.kind)) {
     const kind = unresolved.kind as TitleWorldIntentKind;

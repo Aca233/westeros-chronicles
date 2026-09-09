@@ -1,5 +1,6 @@
 import { validateWorldLocationRef } from '../map/locationResolver.ts';
 import type { EquipmentPosition } from '../items/types';
+import type { LivingWorldState } from './livingWorldContracts';
 import type {
   AssetPlacement,
   AssetWorldPatch,
@@ -112,6 +113,31 @@ function assertEvent(value: unknown): asserts value is WorldEvent {
     if (!Array.isArray(value.knownBy)) throw new Error('世界事件知情人物不合法');
     value.knownBy.forEach((id) => assertCharacterId(id, '世界事件知情人物 ID'));
   }
+  if (value.causeEventIds !== undefined) {
+    if (!Array.isArray(value.causeEventIds)) throw new Error('世界事件真实前因不合法');
+    value.causeEventIds.forEach((id) => assertStableId(id, '世界事件前因 ID'));
+  }
+  if (value.claimedCauseEventIds !== undefined) {
+    if (!Array.isArray(value.claimedCauseEventIds)) throw new Error('世界事件声称前因不合法');
+    value.claimedCauseEventIds.forEach((id) => assertStableId(id, '世界事件声称前因 ID'));
+  }
+  if (value.causeSource !== undefined) {
+    if (!isRecord(value.causeSource) || !['rule', 'action', 'canonical', 'claim'].includes(String(value.causeSource.type))) throw new Error('世界事件因果来源不合法');
+    assertStableId(value.causeSource.id, '世界事件因果来源 ID');
+  }
+  if (value.affectedRefs !== undefined) {
+    if (!Array.isArray(value.affectedRefs)) throw new Error('世界事件受影响对象不合法');
+    value.affectedRefs.forEach(assertSubjectRef);
+  }
+  if (value.occurredAt !== undefined) assertDate(value.occurredAt);
+  if (value.knowledgeBasis !== undefined) {
+    if (!Array.isArray(value.knowledgeBasis)) throw new Error('世界事件知情依据不合法');
+    value.knowledgeBasis.forEach((basis) => {
+      if (!isRecord(basis) || !['witness', 'message', 'public_record'].includes(String(basis.kind))) throw new Error('世界事件知情依据类型不合法');
+      assertCharacterId(basis.characterId, '知情依据人物 ID');
+      if (basis.sourceEventId !== undefined) assertStableId(basis.sourceEventId, '知情依据来源事件 ID');
+    });
+  }
 }
 
 function assertAssetPatch(assetId: string, value: unknown): asserts value is AssetWorldPatch {
@@ -157,15 +183,21 @@ function assertPendingTransaction(value: unknown): asserts value is PendingWorld
   }
 }
 
-export function createWorldRuntimeState(): WorldRuntimeState {
+export interface CreateWorldRuntimeOptions {
+  livingWorld?: LivingWorldState;
+  initialEvents?: WorldEvent[];
+}
+
+export function createWorldRuntimeState(options: CreateWorldRuntimeOptions = {}): WorldRuntimeState {
   return {
     schemaVersion: 1,
     revision: 0,
     characters: {},
     titles: {},
     assets: {},
-    events: [],
+    events: structuredClone(options.initialEvents ?? []),
     pendingTransactions: [],
+    ...(options.livingWorld ? { livingWorld: structuredClone(options.livingWorld) } : {}),
   };
 }
 
@@ -221,4 +253,54 @@ export function validateWorldRuntimeState(value: unknown): asserts value is Worl
     if (transactionIds.has(transaction.id)) throw new Error(`待处理世界事务 ID 重复：${transaction.id}`);
     transactionIds.add(transaction.id);
   });
+
+  if (value.livingWorld !== undefined) {
+    if (!isRecord(value.livingWorld)
+      || value.livingWorld.schemaVersion !== 1
+      || typeof value.livingWorld.scenarioId !== 'string'
+      || !value.livingWorld.scenarioId.trim()
+      || !isRecord(value.livingWorld.connections)
+      || !Array.isArray(value.livingWorld.situations)
+      || !Array.isArray(value.livingWorld.actions)
+      || !Array.isArray(value.livingWorld.stockpiles)
+      || !Array.isArray(value.livingWorld.information)
+      || !Array.isArray(value.livingWorld.causalLinks)
+      || !Array.isArray(value.livingWorld.processedScheduleKeys)) {
+      throw new Error('活世界运行时关系状态不合法');
+    }
+    const connections = value.livingWorld.connections;
+    for (const key of ['roads', 'supplyLinks', 'authorityLinks', 'informationLinks']) {
+      if (!Array.isArray(connections[key])) throw new Error(`世界连接网络 ${key} 不合法`);
+    }
+    for (const road of connections.roads as unknown[]) {
+      if (!isRecord(road)) throw new Error('道路连接不合法');
+      assertStableId(road.id, '道路连接 ID'); assertLocation(road.from); assertLocation(road.to); assertDate(road.updatedAt);
+      if (typeof road.open !== 'boolean') throw new Error(`道路 ${road.id} 开放状态不合法`);
+    }
+    for (const situation of value.livingWorld.situations) {
+      if (!isRecord(situation)) throw new Error('世界局势不合法');
+      assertStableId(situation.id, '局势 ID'); assertLocation(situation.location); assertDate(situation.nextCheck);
+      if (!Array.isArray(situation.participants) || !Array.isArray(situation.pressure) || !Array.isArray(situation.knownBy) || !Array.isArray(situation.sourceEventIds)) throw new Error(`局势 ${situation.id} 关系不合法`);
+      situation.participants.forEach((id) => assertCharacterId(id, '局势参与人物 ID'));
+      situation.knownBy.forEach((id) => assertCharacterId(id, '局势知情人物 ID'));
+    }
+    for (const action of value.livingWorld.actions) {
+      if (!isRecord(action)) throw new Error('持续行动不合法');
+      assertStableId(action.id, '持续行动 ID'); assertLocation(action.target); assertDate(action.nextEventAt);
+      if (!Array.isArray(action.actorIds) || !Number.isFinite(action.progress)) throw new Error(`持续行动 ${action.id} 进度或执行者不合法`);
+      action.actorIds.forEach((id) => assertCharacterId(id, '持续行动人物 ID'));
+    }
+    for (const stockpile of value.livingWorld.stockpiles) {
+      if (!isRecord(stockpile)) throw new Error('供应储备不合法');
+      assertStableId(stockpile.id, '供应储备 ID'); assertLocation(stockpile.location); assertDate(stockpile.updatedAt);
+      for (const field of ['quantity', 'dailyConsumption', 'shortageThreshold', 'criticalThreshold']) if (!Number.isFinite(stockpile[field])) throw new Error(`供应储备 ${stockpile.id} 数值不合法`);
+    }
+    for (const message of value.livingWorld.information) {
+      if (!isRecord(message)) throw new Error('传播消息不合法');
+      assertStableId(message.id, '传播消息 ID'); assertStableId(message.sourceEventId, '传播来源事件 ID'); assertLocation(message.source); assertLocation(message.destination); assertDate(message.sentAt); assertDate(message.arrivesAt);
+      if (!Array.isArray(message.recipientIds)) throw new Error(`传播消息 ${message.id} 接收者不合法`);
+      message.recipientIds.forEach((id) => assertCharacterId(id, '传播消息接收者 ID'));
+    }
+    if (!value.livingWorld.processedScheduleKeys.every((key) => typeof key === 'string' && key.trim())) throw new Error('统一调度处理标识不合法');
+  }
 }
