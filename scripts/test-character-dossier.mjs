@@ -257,6 +257,26 @@ test('存档人物事件会投影到同一套 NPC 人物栏', () => {
   assert.deepEqual(dossier.memories.map((entry) => entry.id), ['memory_1']);
 });
 
+test('NPC 卷宗只显示玩家有权知道的记忆', () => {
+  const character = resolved({
+    memories: [
+      { id: 'public', characterId: 'agot:test', turn: 1, event: '公开宣誓', importance: 2, participants: [], visibility: 'public' },
+      { id: 'player', characterId: 'agot:test', turn: 2, event: '玩家亲历', importance: 2, participants: [], visibility: 'player' },
+      { id: 'restricted', characterId: 'agot:test', turn: 3, event: '私人密谈', importance: 4, participants: [], visibility: 'restricted' },
+      { id: 'secret', characterId: 'agot:test', turn: 4, event: '未曝光秘密', importance: 5, participants: [], visibility: 'secret' },
+      { id: 'system', characterId: 'agot:test', turn: 5, event: '系统内幕', importance: 5, participants: [], visibility: 'system' },
+    ],
+  });
+  assert.deepEqual(createNpcDossier(character, 298).memories.map((entry) => entry.id), ['public', 'player']);
+  assert.deepEqual(
+    createNpcDossier(character, 298, undefined, undefined, undefined, {
+      viewerId: 'player',
+      knownFactIds: new Set(['restricted', 'secret']),
+    }).memories.map((entry) => entry.id),
+    ['public', 'player', 'restricted', 'secret'],
+  );
+});
+
 test('未知家族仍保留可读名称而不是伪造主要家族', () => {
   const dossier = createNpcDossier(resolved({ dynastyId: 'dynn_Flint_of_Widows_Watch' }), 298);
   assert.equal(dynastySlug(dossier.dynastyId), 'Flint of Widows Watch');
