@@ -1,200 +1,130 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { parseDiceResolutionOutput, GOT_DICE_REQUEST_PROMPT } from '../src/services/turn/diceRequest.ts';
+import {
+  GOT_DICE_REQUEST_PROMPT,
+  ResolutionProtocolError,
+  parseDiceResolutionOutput,
+} from '../src/services/turn/diceRequest.ts';
 
-test('判骰说明不含小说创作指令和 state_cmd 示例', () => {
-  assert.doesNotMatch(GOT_DICE_REQUEST_PROMPT, /600 ~ 1200/);
-  assert.doesNotMatch(GOT_DICE_REQUEST_PROMPT, /600~1200/);
-  // 判骰阶段不回放完整 state_cmd 示例数组（只在 GOT_CONSTITUTION_PROMPT 里）
-  assert.doesNotMatch(GOT_DICE_REQUEST_PROMPT, /<state_cmd>\s*\n\s*\[/);
-  // 应包含领域映射表和 DC 规则
+const noRoll = ({ state = '[]', world = '[]' } = {}) => `<resolution>日常行动。</resolution>
+<dice_request>{"roll":false,"attribute":"diplomacy","dc":12,"domain":"diplomacy","reason":"普通行动"}</dice_request>
+<state_cmd>${state}</state_cmd>
+<world_intent>${world}</world_intent>`;
+
+const roll = ({ success = '[]', failure = '[]', successWorld = '[]', failureWorld = '[]' } = {}) => `
+<resolution>需要检定。</resolution>
+<dice_request>{"roll":true,"attribute":"prowess","dc":14,"domain":"duel","reason":"存在真实对抗"}</dice_request>
+<state_cmd_success>${success}</state_cmd_success>
+<state_cmd_failure>${failure}</state_cmd_failure>
+<world_intent_success>${successWorld}</world_intent_success>
+<world_intent_failure>${failureWorld}</world_intent_failure>`;
+
+test('判骰提示要求状态和世界意图双轨且不含小说创作指令', () => {
+  assert.doesNotMatch(GOT_DICE_REQUEST_PROMPT, /600\s*~\s*1200/);
   assert.match(GOT_DICE_REQUEST_PROMPT, /duel.*prowess/);
   assert.match(GOT_DICE_REQUEST_PROMPT, /DC 夹在 8-20 之间/);
+  assert.match(GOT_DICE_REQUEST_PROMPT, /主属性 70% \+ 辅属性 30%/);
+  assert.match(GOT_DICE_REQUEST_PROMPT, /world_intent_success/);
+  assert.match(GOT_DICE_REQUEST_PROMPT, /空数组/);
 });
 
-test('roll:false 的输出解析为不检定，命令走单轨 state_cmd', () => {
-  const raw = `<resolution>日常行动。</resolution>
-<dice_request>
-{ "roll": false, "attribute": "diplomacy", "dc": 12, "domain": "diplomacy", "reason": "普通问候" }
-</dice_request>
-<state_cmd>
-[{ "type": "ADVANCE_TIME", "days": 1, "reason": "交谈" }]
-</state_cmd>
-<world_intent>[]</world_intent>`;
-  const parsed = parseDiceResolutionOutput(raw);
+test('roll:false 只解析普通状态命令和世界意图', () => {
+  const parsed = parseDiceResolutionOutput(noRoll({
+    state: '[{"type":"ADVANCE_TIME","days":1,"reason":"交谈"}]',
+    world: '[{"kind":"mention","targetText":"君临","evidenceText":"提及君临"}]',
+  }));
   assert.equal(parsed.diceRequest.roll, false);
-  assert.equal(parsed.diceRequest.attribute, 'diplomacy');
-  assert.equal(parsed.diceRequest.dc, 12);
-  assert.equal(parsed.diceRequest.domain, 'diplomacy');
-  assert.equal(parsed.successCommands.length, 1);
   assert.equal(parsed.successCommands[0].type, 'ADVANCE_TIME');
   assert.equal(parsed.failureCommands.length, 0);
+  assert.equal(parsed.worldIntents[0].kind, 'mention');
+  assert.deepEqual(parsed.successWorldIntents, []);
+  assert.deepEqual(parsed.failureWorldIntents, []);
 });
 
-test('roll:true 的输出解析为双轨命令', () => {
-  const raw = `<resolution>与骑士决斗。</resolution>
-<dice_request>
-{ "roll": true, "attribute": "prowess", "dc": 14, "domain": "duel", "reason": "真实战斗阻力" }
-</dice_request>
-<state_cmd_success>
-[{ "type": "INJURE_ZONE", "zone": "torso", "level": "minor", "woundText": "骑士被划伤" }]
-</state_cmd_success>
-<state_cmd_failure>
-[{ "type": "INJURE_ZONE", "zone": "arms", "level": "minor", "woundText": "自身右臂中剑" }]
-</state_cmd_failure>
-<world_intent>[]</world_intent>`;
-  const parsed = parseDiceResolutionOutput(raw);
-  assert.equal(parsed.diceRequest.roll, true);
-  assert.equal(parsed.diceRequest.attribute, 'prowess');
-  assert.equal(parsed.diceRequest.dc, 14);
-  assert.equal(parsed.diceRequest.domain, 'duel');
-  assert.equal(parsed.successCommands.length, 1);
+test('roll:true 的状态命令和世界意图严格按结果分轨', () => {
+  const parsed = parseDiceResolutionOutput(roll({
+    success: '[{"type":"INJURE_ZONE","zone":"torso","level":"minor","woundText":"敌人被划伤"}]',
+    failure: '[{"type":"INJURE_ZONE","zone":"arms","level":"minor","woundText":"自身中剑"}]',
+    successWorld: '[{"kind":"mention","targetText":"胜利","evidenceText":"赢得决斗"}]',
+    failureWorld: '[{"kind":"mention","targetText":"失败","evidenceText":"输掉决斗"}]',
+  }));
   assert.equal(parsed.successCommands[0].zone, 'torso');
-  assert.equal(parsed.failureCommands.length, 1);
   assert.equal(parsed.failureCommands[0].zone, 'arms');
+  assert.equal(parsed.successWorldIntents[0].targetText, '胜利');
+  assert.equal(parsed.failureWorldIntents[0].targetText, '失败');
+  assert.deepEqual(parsed.worldIntents, []);
 });
 
-test('头衔意图被 resolver 接受而非拒绝', () => {
-  const raw = `<resolution>册封封臣。</resolution>
-<state_cmd>[]</state_cmd>
-<world_intent>
-[
-  { "kind": "grant_title", "actorId": "agot:Stark_3", "titleId": "b_the_north", "recipientId": "agot:Stark_5", "evidenceText": "艾德将北境封臣之权授予罗柏" },
-  { "kind": "occupy_title", "actorId": "agot:Lannister_2", "titleId": "b_harrenhal", "evidenceText": "兰尼斯特军占领赫伦堡" }
-]
-</world_intent>`;
-  const parsed = parseDiceResolutionOutput(raw);
-  assert.equal(parsed.worldIntents.length, 2);
-  assert.equal(parsed.worldIntents[0].kind, 'grant_title');
-  assert.equal(parsed.worldIntents[1].kind, 'occupy_title');
+test('roll:true 允许任一结果轨合法地没有变化', () => {
+  const parsed = parseDiceResolutionOutput(roll());
+  assert.deepEqual(parsed.successCommands, []);
+  assert.deepEqual(parsed.failureCommands, []);
+  assert.deepEqual(parsed.successWorldIntents, []);
+  assert.deepEqual(parsed.failureWorldIntents, []);
 });
 
-test('revoke_title 意图要求 holderId 字段', () => {
-  const raw = `<resolution>剥夺头衔。</resolution>
-<state_cmd>[]</state_cmd>
-<world_intent>
-[
-  { "kind": "revoke_title", "actorId": "agot:Stark_3", "titleId": "b_winterfell", "holderId": "agot:Stark_5", "evidenceText": "收回罗柏的临冬城封地" }
-]
-</world_intent>`;
-  const parsed = parseDiceResolutionOutput(raw);
-  assert.equal(parsed.worldIntents.length, 1);
-  assert.equal(parsed.worldIntents[0].kind, 'revoke_title');
+test('缺失 dice_request 会拒绝整份结算', () => {
+  assert.throws(
+    () => parseDiceResolutionOutput('<state_cmd>[]</state_cmd><world_intent>[]</world_intent>'),
+    ResolutionProtocolError,
+  );
 });
 
-test('无 dice_request 标签时默认不检定', () => {
-  const raw = `<resolution>继续行动。</resolution>
-<state_cmd>
-[{ "type": "ADVANCE_TIME", "days": 1, "reason": "行进" }]
-</state_cmd>
-<world_intent>[]</world_intent>`;
-  const parsed = parseDiceResolutionOutput(raw);
-  assert.equal(parsed.diceRequest.roll, false);
-  assert.equal(parsed.diceRequest.reason, '模型未输出判骰结果，默认不检定');
-  assert.equal(parsed.successCommands.length, 1);
+test('字符串 false、非法领域和空 reason 都会拒绝', () => {
+  for (const request of [
+    '{"roll":"false","dc":12,"domain":"diplomacy","reason":"普通行动"}',
+    '{"roll":true,"dc":12,"domain":"fishing","reason":"钓鱼"}',
+    '{"roll":true,"dc":12,"domain":"duel","reason":""}',
+  ]) {
+    assert.throws(
+      () => parseDiceResolutionOutput(`<dice_request>${request}</dice_request>`),
+      ResolutionProtocolError,
+    );
+  }
 });
 
-test('模型给出的非法 domain 被回退为 diplomacy', () => {
-  const raw = `<dice_request>
-{ "roll": true, "domain": "fishing", "dc": 15 }
-</dice_request>
-<state_cmd_success>[]</state_cmd_success>
-<state_cmd_failure>[]</state_cmd_failure>
-<world_intent>[]</world_intent>`;
-  const parsed = parseDiceResolutionOutput(raw);
-  assert.equal(parsed.diceRequest.domain, 'diplomacy');
-  assert.equal(parsed.diceRequest.attribute, 'diplomacy');
+test('DC 被夹在 8-20 之间，模型按具体方法提交合法属性', () => {
+  const high = parseDiceResolutionOutput(roll().replace('"dc":14', '"dc":99').replace('"attribute":"prowess"', '"attribute":"learning"'));
+  const low = parseDiceResolutionOutput(roll().replace('"dc":14', '"dc":2'));
+  assert.equal(high.diceRequest.dc, 20);
+  assert.equal(high.diceRequest.attribute, 'learning');
+  assert.equal(low.diceRequest.dc, 8);
 });
 
-test('DC 被夹在 8-20 之间', () => {
-  const tooHigh = `<dice_request>
-{ "roll": true, "dc": 99, "domain": "duel" }
-</dice_request>
-<state_cmd_success>[]</state_cmd_success>
-<state_cmd_failure>[]</state_cmd_failure>
-<world_intent>[]</world_intent>`;
-  const parsedHigh = parseDiceResolutionOutput(tooHigh);
-  assert.equal(parsedHigh.diceRequest.dc, 20);
-
-  const tooLow = `<dice_request>
-{ "roll": true, "dc": 2, "domain": "duel" }
-</dice_request>
-<state_cmd_success>[]</state_cmd_success>
-<state_cmd_failure>[]</state_cmd_failure>
-<world_intent>[]</world_intent>`;
-  const parsedLow = parseDiceResolutionOutput(tooLow);
-  assert.equal(parsedLow.diceRequest.dc, 8);
+test('可选辅属性被保留，非法或重复属性会拒绝', () => {
+  const combined = parseDiceResolutionOutput(roll().replace('"attribute":"prowess"', '"attribute":"prowess","secondaryAttribute":"martial"'));
+  assert.equal(combined.diceRequest.attribute, 'prowess');
+  assert.equal(combined.diceRequest.secondaryAttribute, 'martial');
+  for (const replacement of [
+    '"attribute":"magic"',
+    '"attribute":"prowess","secondaryAttribute":"magic"',
+    '"attribute":"prowess","secondaryAttribute":"prowess"',
+  ]) {
+    assert.throws(
+      () => parseDiceResolutionOutput(roll().replace('"attribute":"prowess"', replacement)),
+      ResolutionProtocolError,
+    );
+  }
 });
 
-test('roll:true 但双轨都为空时回退到普通 state_cmd', () => {
-  const raw = `<dice_request>
-{ "roll": true, "dc": 14, "domain": "duel" }
-</dice_request>
-<state_cmd>
-[{ "type": "INJURE_ZONE", "zone": "torso", "level": "minor", "woundText": "受伤" }]
-</state_cmd>
-<world_intent>[]</world_intent>`;
-  const parsed = parseDiceResolutionOutput(raw);
-  assert.equal(parsed.diceRequest.roll, true);
-  assert.equal(parsed.successCommands.length, 1);
-  assert.equal(parsed.failureCommands.length, 1);
-  // 回退时两边都用同一个 state_cmd
-  assert.deepEqual(parsed.successCommands, parsed.failureCommands);
+test('roll:true 缺任一结果标签时拒绝，绝不回退另一轨', () => {
+  assert.throws(
+    () => parseDiceResolutionOutput(roll().replace('<state_cmd_failure>[]</state_cmd_failure>', '')),
+    /state_cmd_failure/,
+  );
+  assert.throws(
+    () => parseDiceResolutionOutput(roll().replace('<world_intent_failure>[]</world_intent_failure>', '')),
+    /world_intent_failure/,
+  );
 });
 
-test('缺少 type 字段的畸形命令被丢弃，不致下游 startsWith 崩溃', () => {
-  const raw = `<resolution>行动。</resolution>
-<state_cmd>
-[{ "type": "ADVANCE_TIME", "days": 1 }, { "zone": "torso" }, {}]
-</state_cmd>
-<world_intent>[]</world_intent>`;
-  const parsed = parseDiceResolutionOutput(raw);
-  assert.equal(parsed.successCommands.length, 1);
-  assert.equal(parsed.successCommands[0].type, 'ADVANCE_TIME');
-});
-
-test('双轨 state_cmd 中畸形元素同样被过滤', () => {
-  const raw = `<dice_request>
-{ "roll": true, "dc": 14, "domain": "duel" }
-</dice_request>
-<state_cmd_success>
-[{ "type": "INJURE_ZONE", "zone": "torso", "level": "minor", "woundText": "划伤" }, { "no_type": true }]
-</state_cmd_success>
-<state_cmd_failure>
-[{}, { "type": "INJURE_ZONE", "zone": "arms", "level": "minor", "woundText": "中剑" }]
-</state_cmd_failure>
-<world_intent>[]</world_intent>`;
-  const parsed = parseDiceResolutionOutput(raw);
-  assert.equal(parsed.successCommands.length, 1);
-  assert.equal(parsed.successCommands[0].zone, 'torso');
-  assert.equal(parsed.failureCommands.length, 1);
-  assert.equal(parsed.failureCommands[0].zone, 'arms');
-});
-
-test('头衔意图被 resolver 接受而非拒绝', () => {
-  const raw = `<resolution>册封封臣。</resolution>
-<state_cmd>[]</state_cmd>
-<world_intent>
-[
-  { "kind": "grant_title", "actorId": "agot:Stark_3", "titleId": "b_the_north", "recipientId": "agot:Stark_5", "evidenceText": "艾德将北境封臣之权授予罗柏" },
-  { "kind": "occupy_title", "actorId": "agot:Lannister_2", "titleId": "b_harrenhal", "evidenceText": "兰尼斯特军占领赫伦堡" }
-]
-</world_intent>`;
-  const parsed = parseDiceResolutionOutput(raw);
-  assert.equal(parsed.worldIntents.length, 2);
-  assert.equal(parsed.worldIntents[0].kind, 'grant_title');
-  assert.equal(parsed.worldIntents[1].kind, 'occupy_title');
-});
-
-test('revoke_title 意图要求 holderId 字段', () => {
-  const raw = `<resolution>剥夺头衔。</resolution>
-<state_cmd>[]</state_cmd>
-<world_intent>
-[
-  { "kind": "revoke_title", "actorId": "agot:Stark_3", "titleId": "b_winterfell", "holderId": "agot:Stark_5", "evidenceText": "收回罗柏的临冬城封地" }
-]
-</world_intent>`;
-  const parsed = parseDiceResolutionOutput(raw);
-  assert.equal(parsed.worldIntents.length, 1);
-  assert.equal(parsed.worldIntents[0].kind, 'revoke_title');
+test('畸形命令和损坏 JSON 会拒绝整份结算', () => {
+  assert.throws(
+    () => parseDiceResolutionOutput(noRoll({ state: '[{"type":"ADVANCE_TIME"},{}]' })),
+    /缺少字符串 type/,
+  );
+  assert.throws(
+    () => parseDiceResolutionOutput(noRoll({ world: '[{"kind":"mention",}]' })),
+    /JSON 解析失败/,
+  );
 });
