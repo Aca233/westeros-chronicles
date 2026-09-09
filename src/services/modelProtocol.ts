@@ -8,13 +8,21 @@ const PROTOCOL_TAG_NAMES = [
   'choice',
   'option',
   'state_cmd',
+  'state_cmd_strong_success',
+  'state_cmd_success',
+  'state_cmd_partial',
+  'state_cmd_failure',
   'world_intent',
+  'world_intent_strong_success',
+  'world_intent_success',
+  'world_intent_partial',
+  'world_intent_failure',
 ] as const;
 
 const PROTOCOL_NAME_PATTERN = PROTOCOL_TAG_NAMES.join('|');
 const COMPLETE_PROTOCOL_TAG = new RegExp(`</?(?:${PROTOCOL_NAME_PATTERN})\\b[^>]*>`, 'gi');
 const NON_NARRATIVE_SECTION = new RegExp(
-  `<(?:think|thought|reasoning|branch|state_cmd|world_intent)\\b[^>]*>[\\s\\S]*?(?:<\\/(?:think|thought|reasoning|branch|state_cmd|world_intent)\\s*>|$)`,
+  `<(?:think|thought|reasoning|branch|state_cmd(?:_strong_success|_success|_partial|_failure)?|world_intent(?:_strong_success|_success|_partial|_failure)?)\\b[^>]*>[\\s\\S]*?(?:<\\/(?:think|thought|reasoning|branch|state_cmd(?:_strong_success|_success|_partial|_failure)?|world_intent(?:_strong_success|_success|_partial|_failure)?)\\s*>|$)`,
   'gi',
 );
 
@@ -22,10 +30,10 @@ const NON_NARRATIVE_SECTION = new RegExp(
 export function normalizeModelProtocolMarkup(rawText: string): string {
   return rawText
     .replace(
-      /&lt;(\/?(?:think|thought|reasoning|narrate|speak|branch|choice|option|state_cmd|world_intent)\b[^&<>]*?)&gt;/gi,
+      /&lt;(\/?(?:think|thought|reasoning|narrate|speak|branch|choice|option|state_cmd(?:_strong_success|_success|_partial|_failure)?|world_intent(?:_strong_success|_success|_partial|_failure)?)\b[^&<>]*?)&gt;/gi,
       '<$1>',
     )
-    .replace(/\\(?=<\/?(?:think|thought|reasoning|narrate|speak|branch|choice|option|state_cmd|world_intent)\b)/gi, '');
+    .replace(/\\(?=<\/?(?:think|thought|reasoning|narrate|speak|branch|choice|option|state_cmd(?:_strong_success|_success|_partial|_failure)?|world_intent(?:_strong_success|_success|_partial|_failure)?)\b)/gi, '');
 }
 
 function removeTrailingPartialProtocolTag(text: string): string {
@@ -63,7 +71,7 @@ export function extractNarrativeContent(rawText: string): string {
     const bodyStart = opening.index + opening[0].length;
     const remainder = normalized.slice(bodyStart);
     const closingIndex = remainder.search(/<\/narrate\s*>/i);
-    const nextSectionIndex = remainder.search(/<(?:branch|state_cmd|world_intent|think|thought|reasoning)\b/i);
+    const nextSectionIndex = remainder.search(/<(?:branch|state_cmd(?:_strong_success|_success|_partial|_failure)?|world_intent(?:_strong_success|_success|_partial|_failure)?|think|thought|reasoning)\b/i);
     const cutAt = [closingIndex, nextSectionIndex].filter((index) => index >= 0);
     const body = cutAt.length ? remainder.slice(0, Math.min(...cutAt)) : remainder;
     return stripProtocolMarkup(body);

@@ -2,7 +2,7 @@ import { GameState, D20Check } from '../types/game';
 import type { PendingWorldTransaction } from '../features/world/worldRuntimeTypes';
 import { stripEmoji } from './textSanitizer';
 import { formatWorldTurnContext, type WorldTurnContext as WorldTurnContextObject } from '../features/world/worldTurnContext';
-import { aggregateSelectedTraitEffects, formatTraitDescription, formatTraitRuleEffects, getTraitCheckContributions } from '../data/characterTraits';
+import { aggregateSelectedTraitEffects, CHARACTER_TRAITS, formatTraitDescription, formatTraitRuleEffects, getTraitCheckContributions } from '../data/characterTraits';
 import { inferCheckFromAction, inferItemSceneTags } from './diceEngine';
 import { describeNarrativeAdvantage } from './traitEffectEngine';
 import type { DiceDecision, DiceMode } from './dicePolicy';
@@ -12,6 +12,8 @@ import { aggregateEquippedItemEffects, formatItemNarrativeDirectives, getEquipme
 import { getUsedCarryUnits } from '../features/items/custody';
 import { formatPendingItemPrompt, pendingItemActionsFromWorldTransactions } from '../features/items/itemActionQueue';
 import { sameWorldLocation } from '../features/map/locationResolver';
+import { recentContextTurns } from './contextHistory';
+import { formatRoleplayContext } from '../features/roleplay/state';
 
 export const WORLD_INTENT_RESOLUTION_PROMPT = `
 ### 【地点事实与旅行意图】
@@ -31,14 +33,15 @@ export const WORLD_INTENT_RESOLUTION_PROMPT = `
 2. evidenceText 必须引用支持该分类的原文短句，不能为空；不得把模型自行续写的内容当证据。
 3. targetId 只能使用当前世界切片明确提供的稳定地点 ID；否则填写 targetText，不得编造内部地点键。
 4. sceneLocation 只填写地点内部的自然场景名。elapsedTime 只填写原文明确表达的时间，不得估算。
-5. 愿望、计划和提及绝不等于出发；出发绝不等于抵达；没有可验证旅程或明确时间流逝不得输出 arrive。
-6. 没有地点事实时也必须输出空数组。
+5. 旅行意图若原文明确说明路线偏好、方式、途经点、同行者或具体载具，必须结构化保留：routePreference 只能是 fastest/safest/cheapest；travelMode 只能是 walk/horse/carriage/ship；viaText 按原顺序填写自然地点名；companionIds 与 vehicleIds 只能使用当前上下文明示的稳定 ID，不得编造。没有明确说明的字段省略。
+6. 愿望、计划和提及绝不等于出发；出发绝不等于抵达；没有可验证旅程或明确时间流逝不得输出 arrive。
+7. 没有地点事实时也必须输出空数组。
 
 <world_intent>
 [
   { "kind": "mention", "targetText": "君临", "evidenceText": "我想起了君临" },
   { "kind": "plan_travel", "targetText": "君临", "evidenceText": "我准备明日去君临" },
-  { "kind": "start_travel", "targetText": "君临", "evidenceText": "我骑马赶往君临" },
+  { "kind": "start_travel", "targetText": "君临", "routePreference": "safest", "travelMode": "horse", "viaText": ["赫伦堡"], "evidenceText": "我骑马走更安全的路，经赫伦堡赶往君临" },
   { "kind": "arrive", "targetText": "红堡", "sceneLocation": "议事厅", "elapsedTime": { "days": 15 }, "evidenceText": "半个月后，我推开红堡议事厅的门" }
 ]
 </world_intent>
@@ -84,17 +87,24 @@ export const WORLD_INTENT_RESOLUTION_PROMPT = `
 export const GOT_CONSTITUTION_PROMPT = `
 # 核心指令：维斯特洛规则解析法则 (Rule Resolution Charter)
 
-你是在维斯特洛大陆担任规则判定的书记官。本阶段只判定玩家当前行动能确认的直接结果，不写小说正文、不替玩家追加台词、不输出 <narrate> 或 <branch>。
+你是在维斯特洛大陆担任规则判定的书记官。本阶段只判定玩家当前行动能确认的直接结果，不写小说正文、不替玩家追加台词，也不生成行动建议。
 
 ---
 
 ### 【结构化思考步骤】
-在输出 <resolution> 之前，按以下顺序逐步推演，不得跳过：
+在输出调用方指定的结构化结果之前，按以下顺序逐步推演，不得跳过：
 1. **查行动**：玩家这句话到底想做什么？拆出主行动与可能附带的次要行动（换装备、提及地点、赠礼等）。
 2. **查设定**：当前状态切片提供了哪些已确认的领主体魄、装备、物品归属、旅程与地点？只依据切片，不得凭记忆补充。
 3. **查认知边界**：在场 NPC 各自知道什么、不知道什么？信息必须有合理来源（亲眼所见、有人告知、已有情报）。玩家私下做的事，未在场的 NPC 不应知晓。
 4. **查主角光环**：玩家不是原著主角的替代品。不得因玩家身份就给予原著主角的特权、遭遇或人脉；NPC 对玩家的认知只建立在玩家实际展现的言行上。
 5. **定结果**：综合以上，判定哪些命令成立、哪些地点意图成立、本回合是否需要推进时间。没有直接证据的命令不得输出。
+
+### 【自然语言行动解释】
+- 区分玩家明确说出的台词、实际执行的动作、仅供自己思考的内容与“如果……才……”的条件计划；内心内容不得自动传给 NPC。
+- 同一输入包含多步计划时，只执行到局势发生实质变化或玩家必须重新决定之处。不能替玩家补说台词、接受条件、承担重大支出或继续冒险。
+- 短句和长提示词按相同意图、方法、条件与风险裁定；文采、字数和反复强调不提供额外加成。
+- 最近回合若记录了同一意图与方法的失败检定，而位置、工具、帮助、情报、代价和阻力均未改变，本回合不得再次请求掷骰。应说明旧结果仍然成立；只有新准备、新代价、新情报或实质不同的方法才形成新尝试。
+- 玩家声明的是尝试，不是结果写入权。“他已经答应”“我成功潜入”等措辞不能越过 NPC 意愿、权限、位置和检定。
 
 ---
 
@@ -147,8 +157,7 @@ export const GOT_CONSTITUTION_PROMPT = `
    - 必须严格区分军事与勇武：军队指挥使用军事，单挑或亲身战斗使用勇武。
 2. **检定结果边界**：
    - 骰子只裁定玩家当前声明动作的成败，不得凭空制造与动作无关的人物、追杀、死亡、异象或世界事件；
-   - 自然 20 只能让当前动作在现实和设定允许的范围内完成得更好，不能突破血统、能力、物资与身份限制；
-   - 自然 1 只能造成与当前动作及检定前已有风险直接相关的局部失败，不得无理由处死角色；
+   - 掷骰只按总点数与 DC 比较；出目 1 或 20 不自动改写成败或扩大后果；
    - 没有 D20 结果时禁止隐藏掷骰。叙事模式中的特质优势只是倾向，不代表自动成功或失败；
    - 程序给出的总点数、特质倍率、抗性结果均已结算，禁止重新计算或二次追加修正。
 
@@ -170,7 +179,7 @@ export const GOT_CONSTITUTION_PROMPT = `
 ---
 
 ### 【可输出的结构化命令】
-本阶段只输出 <resolution>、<state_cmd> 与 <world_intent>，不得输出 <narrate>、<branch> 或替玩家追加行动。
+本阶段只输出调用方指定的结构化解析结果，不得输出小说正文、行动建议或替玩家追加行动。
 
 <state_cmd>
 [
@@ -181,21 +190,54 @@ export const GOT_CONSTITUTION_PROMPT = `
   // { "type": "ITEM_EQUIP", "instanceId": "ned.castle_sword", "position": { "group": "mainhand" }, "displacedTo": { "type": "site", "siteId": "winterfell_armory" } },
   // { "type": "ITEM_UNEQUIP", "instanceId": "ned.chainmail", "to": { "type": "site", "siteId": "winterfell_armory" } },
   // { "type": "ITEM_TRANSFER", "instanceId": "ned.staunching_herbs", "to": { "type": "site", "siteId": "winterfell_room" } },
-  // { "type": "ITEM_USE", "instanceId": "ned.staunching_herbs" },
-  // { "type": "ITEM_GIFT", "instanceId": "gift_ring", "recipientId": "agot:Stark_5" },
-  // 获得物品时只能使用目录中已存在的 definitionId，并提供全局唯一 instanceId；不得凭空定义未知名剑、战甲或奇物。
+  // 赠礼先通过社会互动取得对方明确接受；后续交割必须引用该事件和同一交涉 ID：
+  // { "type": "ITEM_GIFT", "instanceId": "item:实例ID", "recipientId": "agot:人物ID", "consentEventId": "social:回合:序号", "exchangeId": "gift-sword" },
+  // 没有对方 accept、人物不一致或交涉 ID 不一致时程序拒绝，不得强迫收受。
+  // 普通购买：{ "type": "BUY_CATALOG_ITEM", "definitionId": "目录ID", "instanceId": "全局唯一实例ID", "sellerId": "agot:人物ID", "placement": { "type": "carried" }, "silverCost": 12, "consentEventId": "social:回合:序号", "exchangeId": "market-cloak" }。
+  // 出售：{ "type": "SELL_ITEM", "instanceId": "item:实例ID", "buyerId": "agot:人物ID", "silverPrice": 8, "consentEventId": "social:回合:序号", "exchangeId": "sell-cloak" }。交易物品和银鹿原子结算。
+  // 不得用 ITEM_CREATE 凭空获得商品；唯一名物只能通过世界资产事务转移。
   // 前端已排队的 ITEM_* 动作由程序在成功回复后结算，模型不得重复输出。
   //
   //  肢体创伤、铠甲磨损、伤口治愈、状态与金币收支：
   // { "type": "INJURE_ZONE", "zone": "arms", "level": "minor", "woundText": "右臂格挡划伤" },
-  // { "type": "HEAL_ZONE", "zone": "arms", "clearWound": "右臂格挡划伤" },
-  // { "type": "SET_BLEEDING", "value": false },
+  // { "type": "TREAT_WOUND", "zone": "arms", "instanceId": "item:可访问的医疗物品实例ID", "clearWound": "右臂格挡划伤", "clearCondition": "bleeding" },
+  // 治疗只能引用当前可访问物品中的 medicine 实例，并消耗 1 次或 1 件；不得用 HEAL_ZONE 或 SET_* false 免费治愈。
+  // 绷带只处理创伤/失血，止血药草只处理失血，解毒剂只处理中毒；止痛药不会降低伤势等级。用途不符时程序拒绝且不消耗。
+  // 修理必须引用当前可访问的受损物品与维护工具，并结算费用和时间：
+  // { "type": "REPAIR_ITEM", "instanceId": "item:受损物品", "toolInstanceId": "item:维护工具", "amount": 20, "silverCost": 4, "days": 1 },
+  // amount 1-40、days 1-30；工具必须带 repair/maintenance/smithing/sewing 标签，余额不足或物品不可访问时整项拒绝。
+  // { "type": "SET_BLEEDING", "value": true },
   // { "type": "SET_POISONED", "value": true },
-  // { "type": "SET_INFECTED", "value": false },
-  // { "type": "MODIFY_STAT", "stat": "martial", "delta": 1, "reason": "战火淬炼后的成长" },
-  // { "type": "ADD_TRAIT", "trait": "wrathful" },
-  // { "type": "CHANGE_TITLE", "title": "北境守护" },
-  // { "type": "MODIFY_GOLD", "goldDragons": 100, "reason": "国王劳勃的丰厚赏赐" },
+  // { "type": "SET_INFECTED", "value": true },
+  // 永久成长不能从普通成功、漂亮台词或单次低风险行为直接生成。只能走“成长机会 -> 玩家明确选择 -> 永久变更”的两拍流程。
+  // 只有【可引用成长证据事件】中的真实事件 ID 可以作为 OFFER_GROWTH_CHOICE.evidenceEventIds；training 至少引用两个不同回合，experience 至少引用一个关键事件。
+  // { "type": "OFFER_GROWTH_CHOICE", "basis": "training", "summary": "连续训练形成新的军事判断", "evidenceEventIds": ["event:旧ID1", "event:旧ID2"], "options": [{ "id": "martial", "label": "军事 +1", "effect": { "kind": "stat", "stat": "martial", "delta": 1 } }, { "id": "strategist", "label": "形成战略家的做事方法", "effect": { "kind": "trait", "traitId": "strategist" } }] },
+  // 玩家未明确选择前，不得输出 CLAIM_GROWTH_CHOICE、MODIFY_STAT 或 ADD_TRAIT。不得根据一句台词擅自判定玩家永久性格。
+  // 玩家明确选择已有成长机会时，必须同时输出 CLAIM_GROWTH_CHOICE 和完全一致的永久变更，并引用同一 opportunityId/optionId：
+  // { "type": "CLAIM_GROWTH_CHOICE", "actorId": "save:周目ID:player", "opportunityId": "growth:回合:序号", "optionId": "martial" },
+  // { "type": "MODIFY_STAT", "stat": "martial", "delta": 1, "growthChoiceId": "growth:回合:序号", "growthOptionId": "martial", "reason": "玩家确认成长方向" },
+  // 若选择的是特质选项，则使用 ADD_TRAIT，并同样携带 growthChoiceId / growthOptionId；程序会拒绝不匹配、重复或已消费的成长。
+  // 玩家头衔只能通过受权的世界头衔事务变更，不得输出 CHANGE_TITLE。
+  // MODIFY_GOLD 只可用于玩家本回合明确承担的、有可追溯用途的资金支出；正向入账必须来自 BUY/SELL、报酬或其他受验证的专用事务，不能用通用数值命令凭空创造。
+  // 只有会改变人物日后态度或选择的重要在场互动，才为对应 NPC 写一条记忆：
+  // { "type": "ADD_CHARACTER_MEMORY", "characterId": "agot:稳定人物ID", "memory": { "event": "玩家当众拒绝了他的求援", "attitude": "受辱并心生戒备", "importance": 4, "visibility": "player" } },
+  // 每名 NPC 每回合最多一条；importance 只能是 1-5。寒暄、重复信息和环境描写不得写入记忆。
+  // characterId 与可选 participants 只能引用当前场景人物卡中的稳定 ID；不在场人物不得获得亲历记忆。
+  // 请求、答复、明确承诺、秘密披露以及履约/违约必须写入社会账本；普通寒暄不要写：
+  // { "type": "RECORD_SOCIAL_BEAT", "act": "request", "actorId": "agot:人物ID", "targetIds": ["save:周目ID:player"], "summary": "请求玩家明日归还佩剑", "visibility": "private", "exchangeId": "return-sword" },
+  // { "type": "RECORD_SOCIAL_BEAT", "act": "promise", "actorId": "save:周目ID:player", "targetIds": ["agot:人物ID"], "summary": "承诺明日归还佩剑", "visibility": "private", "exchangeId": "return-sword", "dueDate": "298.5.11" },
+  // 正式结婚只能在后续回合引用已经提交的公开婚约与双方 accept 事件：
+  // { "type": "MARRY_CHARACTERS", "characterId": "agot:人物ID", "spouseId": "agot:人物ID", "commitmentId": "commitment:回合:序号", "consentEventId": "social:回合:序号", "reason": "公开仪式完成" },
+  // 不得输出 SET_CHARACTER_RELATIONSHIP 或 HEAL_CHARACTER；关系由有来源的互动解释，NPC 治疗等待专用物资事务。
+  // act 只能是 request/accept/reject/conditional/promise/disclose/fulfill/break。只能记录玩家明确说出或 NPC 本拍明确作出的语义；不得把考虑、沉默或请求升级为承诺。
+  // request、conditional、accept、reject 必须使用同一个 exchangeId 串起一次交涉。NPC 修改玩家条件时必须记录 conditional，不能写成 accept；玩家未明确答应前，不得替玩家接受反提议或生成承诺。
+  // conditional 的 summary 必须写清楚 NPC 真正愿意做什么、拒绝什么或要求什么。它是下一拍可继续协商的局面，不是装饰对白。
+  // fulfill/break 必须引用社会账本中现有 commitmentId。private 只让发言双方知情，public 才让全场听见。
+  // 向远方人物发送消息：{ "type": "SEND_MESSAGE", "senderId": "save:周目ID:player", "recipientIds": ["agot:人物ID"], "summary": "信中实际传达的内容", "travelDays": 3 },
+  // NPC 明确约定未来行动时可创建议程：{ "type": "SCHEDULE_NPC_AGENDA", "actorId": "agot:人物ID", "targetIds": ["save:周目ID:player"], "summary": "三日后带回调查结果", "dueDate": "298.5.14", "visibility": "private" },
+  // 到期且当事 NPC 在场时可引用 agendaId 输出 RESOLVE_NPC_AGENDA；不得替不在场 NPC 隔空完成行动。
+  // 委派必须先由受任者明确接受，再引用同一交涉：{ "type": "DELEGATE_PROJECT", "ownerId": "save:周目ID:player", "assigneeId": "agot:人物ID", "objective": "调查港口账目", "dueDate": "298.5.20", "consentEventId": "social:回合:序号", "exchangeId": "harbor-audit" },
+  // 受任者到场报告时使用：{ "type": "RESOLVE_PROJECT", "projectId": "project:回合:序号", "assigneeId": "agot:人物ID", "outcome": "success", "summary": "查明三笔伪造账目" }。不能替不在场人物自动报告。
   // 金币支出必须余额充足；不足时程序拒绝执行该笔扣减，不影响同一回合的其他命令。
   // 地图位置、人物移动和旅程进度只由地图旅行系统与统一回合结算。
   // 模型不得输出任何改变地点、移动人物或推进旅程的状态命令，也不得使用内部地点键。
@@ -314,26 +356,19 @@ export const GOT_LITERARY_PROMPT = `
 ---
 
 ### 【输出格式】
-只使用以下标准 XML 标签：
-
-<think>
-这里写下你的后台逻辑推演：结合程序已确认的事实、玩家行动与在场 NPC 的立场，推演本拍的氛围、人物反应与局势走向。
-</think>
+只使用以下标准 XML 标签，不得输出思考过程：
 
 <narrate>
 这里写下高质量、长篇、小说化的文学正文。段落清晰，将人物动作、场景气氛、心理博弈与【自然对白】完美交织在一起。
 </narrate>
 
 <branch>
-提供 3 个符合维斯特洛贵族逻辑且差异鲜明的行动分支供玩家抉择：
-1. 第一个行动（偏向勇武的个人迎击，或偏向军事的军队行动与强硬施压）
-2. 第二个行动（偏向谋略/刺探密谋/暗中调查）
-3. 第三个行动（偏向外交/妥协周旋/隐忍安抚）
+提供 2—4 个当前确实可执行、方法或代价不同的行动建议。优先回应眼前人物的诉求和未了事项；可行时允许追问、拒绝、等待或离开。建议只描述尝试，不预告成功，也不按固定属性路线凑数。每行使用“序号. 行动”纯文本。
 </branch>
 `;
 
 // 构建当前世界状态切片 (Dynamic State Slice)
-export function buildStateSlice(gameState: GameState): string {
+export function buildStateSlice(gameState: GameState, currentAction = ''): string {
   const { lord, currentYear, currentMonth, currentDay, currentSeason, turnCount } = gameState;
   const body = lord.body;
   const itemState = lord.items;
@@ -343,7 +378,7 @@ export function buildStateSlice(gameState: GameState): string {
     placement: itemState.placements[instance.instanceId],
   }));
   const equippedEntries = itemEntries.filter((entry) => entry.placement.type === 'equipped');
-  const accessibleEntries = itemEntries.filter((entry) => {
+  const allAccessibleEntries = itemEntries.filter((entry) => {
     if (entry.placement.type === 'carried') return true;
     if (entry.placement.type === 'site') {
       const site = itemState.sites[entry.placement.siteId];
@@ -355,6 +390,22 @@ export function buildStateSlice(gameState: GameState): string {
     }
     return false;
   });
+  const normalizedAction = currentAction.trim().toLocaleLowerCase('zh-CN');
+  const accessibleEntries = allAccessibleEntries
+    .map((entry) => {
+      const searchKeys = [
+        entry.instance.customName,
+        entry.definition.name,
+        entry.instance.instanceId,
+        entry.definition.id,
+      ].filter((value): value is string => Boolean(value)).map((value) => value.toLocaleLowerCase('zh-CN'));
+      const placementPriority = entry.placement.type === 'carried' ? 2 : 1;
+      return { entry, score: normalizedAction && searchKeys.some((key) => normalizedAction.includes(key)) ? 100 : placementPriority };
+    })
+    .sort((left, right) => right.score - left.score || left.entry.instance.instanceId.localeCompare(right.entry.instance.instanceId))
+    .slice(0, 24)
+    .map(({ entry }) => entry);
+  const omittedAccessibleItems = Math.max(0, allAccessibleEntries.length - accessibleEntries.length);
   const formatEntry = (entry: typeof itemEntries[number]) => {
     const count = entry.instance.quantity > 1 ? `,数量:${entry.instance.quantity}` : '';
     const charges = entry.instance.charges !== undefined ? `,次数:${entry.instance.charges}` : '';
@@ -391,9 +442,13 @@ export function buildStateSlice(gameState: GameState): string {
     }),
   ];
   const accessibleSummary = accessibleParts.join('｜') || '无';
+  const accessibleVehiclesSummary = Object.values(itemState.vehicles)
+    .filter((vehicle) => sameWorldLocation(vehicle.location, lord.location))
+    .map((vehicle) => `${vehicle.name}{vehicleId:${vehicle.id},type:${vehicle.type}}`)
+    .join('；') || '无';
   const equippedEffects = aggregateEquippedItemEffects(itemState, ITEM_CATALOG);
   const burden = getEquipmentBurden(equippedEffects);
-  const itemDirectives = formatItemNarrativeDirectives(equippedEffects).slice(0, 16).join('；') || '无额外装备事实';
+  const itemDirectives = formatItemNarrativeDirectives(equippedEffects).slice(0, 6).join('；') || '无额外装备事实';
   const carryUsage = getUsedCarryUnits(itemState, ITEM_CATALOG);
 
 
@@ -418,7 +473,7 @@ export function buildStateSlice(gameState: GameState): string {
 
   const traitEffects = aggregateSelectedTraitEffects(lord.traitIds ?? []);
   const ruleSummary = formatTraitRuleEffects(traitEffects).join(' · ') || '无额外规则效果';
-  const roleplaySummary = traitEffects.roleplayDirectives.slice(0, 10)
+  const roleplaySummary = traitEffects.roleplayDirectives.slice(0, 4)
     .map((directive) => formatTraitDescription(directive, lord.name)).join('；') || '无额外人物倾向';
   const journey = gameState.activeJourney;
   const journeyLabel = (locationId: string, fallback: string): string => {
@@ -428,12 +483,25 @@ export function buildStateSlice(gameState: GameState): string {
   const journeySummary = !journey
     ? '无'
     : `${journey.status}；路线 ${journeyLabel(journey.routePlan.from, '已确认起点')} -> ${journeyLabel(journey.routePlan.to, '已确认终点')}；分段 ${journey.currentLeg + 1}/${Math.max(1, journey.routePlan.legs.length)}；本段已行 ${journey.progressDays} 天${journey.interruptedBy ? `；中断原因 ${journey.interruptedBy}` : ''}`;
+  const playerCharacterId = (lord.canonicalCharacterId
+    ?? `save:${gameState.worldCharacters?.runId ?? 'current'}:player`) as import('../domain/characterId').CharacterId;
+  const roleplayContext = formatRoleplayContext(gameState.roleplay, playerCharacterId, `${currentYear}.${currentMonth}.${currentDay}`);
+  const growthEvidenceSummary = [
+    ...gameState.worldHistory.turns.slice(-8).flatMap((turn) => turn.eventIds.map((eventId) => `${eventId}@T${turn.turn}:${stripEmoji(turn.action).slice(0, 80)}`)),
+    ...(gameState.roleplay?.socialEvents ?? []).slice(-8).map((event) => `${event.id}@T${event.turn}:社交 ${event.summary}`),
+  ].slice(-12).join('；') || '无';
+  const growthMethodCatalog = CHARACTER_TRAITS
+    .filter((trait) => trait.rules.methodEdges?.length && !(lord.traitIds ?? []).includes(trait.id))
+    .slice(0, 24)
+    .map((trait) => `${trait.id}=${trait.name}(${trait.rules.methodEdges?.map((edge) => edge.label).join('/') ?? ''})`)
+    .join('；') || '无';
 
   return stripEmoji(`
 ---
 ### 【当前世界与领主状态切片 (Turn ${turnCount + 1})】
 - 当前时间: 征服历 ${currentYear} AC · ${currentMonth || 10}月${currentDay || 15}日 · ${currentSeason}
 - 领主身份: ${lord.house} · ${lord.name} (${lord.title})
+- 玩家稳定人物 ID: ${playerCharacterId}
 - 宗族与箴言: ${lord.dynastyName || lord.house} · ${lord.houseWords}
 - 文化与信仰: ${lord.culture || '未指定'} · ${lord.faith || '未指定'}
 - 当前旅程: ${journeySummary}
@@ -441,16 +509,21 @@ export function buildStateSlice(gameState: GameState): string {
 - 部位伤情: ${bodySummary}
 - 当前装备（唯一真实穿戴状态）: ${equippedSummary}
 - 当前可访问物品（随身、当前据点与随行运输工具）: ${accessibleSummary}
+- 当前地点可用旅行载具（仅这些 vehicleId 可用于本回合出发）: ${accessibleVehiclesSummary}
+- 未展开的可访问物品: ${omittedAccessibleItems} 件；若行动明确涉及它们，应先从界面转移或携带后再操作
 - 随身体积: ${carryUsage}/8
 - 装备负担: ${burden > 0 ? burden : '无明显负担'}
 - 装备确定性事实与场景代价: ${itemDirectives}
 - 远方储藏: 不向当前场景提供原始清单，不能直接取用
 - 随身财富: ${lord.goldDragons} 金龙, ${lord.silverStags} 银鹿
 - CK3 六项能力: 外交 ${lord.attributes.diplomacy}, 军事 ${lord.attributes.martial}, 管理 ${lord.attributes.stewardship}, 谋略 ${lord.attributes.intrigue}, 学识 ${lord.attributes.learning}, 勇武 ${lord.attributes.prowess}
-- 特质标签: ${lord.traits.join(', ')}
+- 特质标签: ${lord.traits.slice(0, 8).join(', ')}
 - 已结算特质规则: ${ruleSummary}
+- 可引用成长证据事件: ${growthEvidenceSummary}
+- 可选方法型成长特质（traitId=名称/方法优势）: ${growthMethodCatalog}
 - RP 人物倾向: ${roleplaySummary}
 - 特质约束: 上述倍率和抗性由程序结算；只用于当前相关行动，不得替玩家决定行为。
+${roleplayContext}
 ---
 `);
 }
@@ -496,11 +569,11 @@ export function buildChatMessages(
   });
 
   // 2. 状态切片
-  const stateSlice = buildStateSlice(gameState);
+  const stateSlice = buildStateSlice(gameState, currentUserInput);
 
   // 3. 历史对话窗口：规则阶段只回放行动与已接受命令，不回放上一章正文，
   //    避免"先当小说家再改口"导致规则随文风漂移。
-  const recentTurns = gameState.turns.slice(-4);
+  const recentTurns = recentContextTurns(gameState.turns);
   for (const turn of recentTurns) {
     messages.push({
       role: 'user',
@@ -508,11 +581,21 @@ export function buildChatMessages(
     });
 
     const visibleCommands = modelVisibleStateCommands(turn.stateCommands);
-    const assistantContent = visibleCommands.length
-      ? `<state_cmd>
-${JSON.stringify(visibleCommands)}
-</state_cmd>`
-      : '<state_cmd>[]</state_cmd>';
+    const assistantContent = JSON.stringify({
+      acceptedStateCommands: visibleCommands,
+      ...(turn.diceCheck ? {
+        resolvedCheck: {
+          intent: turn.diceCheck.actionText,
+          domain: turn.diceCheck.checkDomain,
+          method: turn.diceCheck.secondaryAttribute
+            ? `${turn.diceCheck.attribute}+${turn.diceCheck.secondaryAttribute}`
+            : turn.diceCheck.attribute,
+          outcome: turn.diceCheck.outcome ?? (turn.diceCheck.success ? 'success' : 'failure'),
+          total: turn.diceCheck.total,
+          dc: turn.diceCheck.dc,
+        },
+      } : {}),
+    });
 
     messages.push({
       role: 'assistant',
@@ -536,19 +619,32 @@ ${JSON.stringify(visibleCommands)}
       ? diceCheck.equipmentModifierBreakdown.map((item) => `${item.name}“${item.reason}” ${item.value >= 0 ? '+' : ''}${item.value}`).join(' · ')
       : '无相关物品修正';
     const contract = diceCheck.outcomeContract;
+    const methodLabel = diceCheck.secondaryAttributeName
+      ? `${diceCheck.attributeName} 70% + ${diceCheck.secondaryAttributeName} 30%`
+      : diceCheck.attributeName;
+    const outcomeLabel = diceCheck.outcome === 'strong_success'
+      ? '优势成功：当前动作成功，并只可附加一个与动作直接相关的小优势'
+      : diceCheck.outcome === 'partial'
+        ? '部分成果：只能采用 partial 轨的有限进展与相关代价'
+        : diceCheck.success
+          ? '当前动作成功'
+          : '当前动作失败';
+    const methodEdgeText = diceCheck.methodEdge
+      ? `${diceCheck.methodEdge.traitName}触发「${diceCheck.methodEdge.label}」：${diceCheck.methodEdge.directive}`
+      : '未触发改变失败后果的专长';
     currentActionPrompt += `
 
 【D20 规则检定结果：程序已完成结算，禁止重新计算】
 - 当前动作: ${contract.intent}
-- 检定项目: ${diceCheck.attributeName} vs 难度 DC ${diceCheck.dc}
-- 掷骰公式: D20 ${diceCheck.roll} + 属性 ${diceCheck.attributeModifier >= 0 ? '+' : ''}${diceCheck.attributeModifier} + 物品 ${diceCheck.equipmentModifier >= 0 ? '+' : ''}${diceCheck.equipmentModifier} + 特质 ${diceCheck.traitModifier >= 0 ? '+' : ''}${diceCheck.traitModifier} = ${diceCheck.total}
+- 检定项目: ${methodLabel} vs 难度 DC ${diceCheck.dc}
+- 能力构成: 有效能力 ${diceCheck.effectiveAttribute ?? diceCheck.primaryAttributeValue ?? '旧制存档'}，除以 5 后计入 ${diceCheck.attributeModifier >= 0 ? '+' : ''}${diceCheck.attributeModifier}
+- 掷骰公式: D20 ${diceCheck.roll} + 能力贡献 ${diceCheck.attributeModifier >= 0 ? '+' : ''}${diceCheck.attributeModifier} + 物品 ${diceCheck.equipmentModifier >= 0 ? '+' : ''}${diceCheck.equipmentModifier} + 特质 ${diceCheck.traitModifier >= 0 ? '+' : ''}${diceCheck.traitModifier} = ${diceCheck.total}
 - 物品明细: ${itemBreakdown}
 - 特质明细: ${traitBreakdown}
-- 判定结论: ${diceCheck.isNatural20 ? '自然 20，当前动作在合理边界内取得更佳结果' : diceCheck.isNatural1 ? '自然 1，当前动作在既有风险内遭遇局部失败' : diceCheck.success ? '当前动作成功' : '当前动作失败'}
+- 方法优势: ${methodEdgeText}
+- 判定结论: ${outcomeLabel}；余量 ${diceCheck.margin ?? diceCheck.total - diceCheck.dc}；出目 1 或 20 不自动改写结果
 - 成功边界: ${contract.successOutcome}
 - 失败边界: ${contract.failureOutcome}
-- 自然 20 上限: ${contract.criticalSuccessLimit}
-- 自然 1 上限: ${contract.criticalFailureLimit}
 - 禁止升级: ${contract.forbiddenEscalations.join('；')}
 - 叙事要求: 只呈现当前动作的成败与直接后果，不得追加无关灾难、奇遇、追杀或身份跃升。`;
   } else if (diceContext) {

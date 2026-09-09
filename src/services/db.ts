@@ -7,6 +7,7 @@ import {
   assertSupportedGameState,
   assertSupportedSaveEnvelope,
   isCompatibleTurnBaseline,
+  migrateSnapshotToCurrent,
   repairKnownTurnRevisionDrift,
 } from '../features/items/saveVersion';
 
@@ -219,6 +220,20 @@ export class GotDatabase extends Dexie {
       const latest = legacy.reduce((left, right) => (right.turnNumber > left.turnNumber ? right : left));
       await tx.table('saveSlots').put(slotMetaFromGameState(slotId, latest.gameState, { updatedAt: latest.timestamp || Date.now() }));
     });
+    this.version(4).stores({
+      snapshots: '++id, slotId, turnNumber, timestamp, [slotId+turnNumber]',
+      saveSlots: '&slotId, updatedAt',
+      worldRuns: '&runId, datasetHash, revision',
+      characterEvents: '&[runId+id], [runId+turn], [runId+characterId], runId, turn, characterId',
+      characterStateCache: '&[runId+characterId], runId, characterId, revision',
+    }).upgrade(async (tx) => {
+      const snapshotsTable = tx.table('snapshots');
+      const snapshots = await snapshotsTable.toArray();
+      for (const snapshot of snapshots) {
+        const migrated = migrateSnapshotToCurrent(snapshot) as { id?: number };
+        if (migrated !== snapshot && migrated.id != null) await snapshotsTable.put(migrated);
+      }
+    });
   }
 }
 
@@ -272,11 +287,12 @@ function assertSupportedSnapshot(snapshot: unknown): asserts snapshot is GameSna
 
 /** Validate and detach a persisted snapshot before exposing it to live state. */
 export function gameStateFromSnapshot(snapshot: unknown): GameState {
-  if (typeof snapshot !== 'object' || snapshot === null
-    || (snapshot as { formatVersion?: unknown }).formatVersion !== ITEM_SAVE_FORMAT_VERSION) {
+  const migrated = migrateSnapshotToCurrent(snapshot);
+  if (typeof migrated !== 'object' || migrated === null
+    || (migrated as { formatVersion?: unknown }).formatVersion !== ITEM_SAVE_FORMAT_VERSION) {
     throw new Error('测试版存档格式已更新，请重置测试存档后重新开始。');
   }
-  const candidate = snapshot as GameSnapshot;
+  const candidate = migrated as GameSnapshot;
   const repairedState = repairKnownTurnRevisionDrift(candidate.gameState);
   const repairedSnapshot: GameSnapshot = { ...candidate, gameState: repairedState };
   assertSupportedSnapshot(repairedSnapshot);
@@ -460,10 +476,11 @@ export async function importSaveData(jsonString: string): Promise<SaveSlotMeta |
     const parsed: unknown = JSON.parse(jsonString);
     assertSupportedSaveEnvelope(parsed);
     if (parsed.snapshots.length === 0) throw new Error('存档包中没有可用的快照');
-    parsed.snapshots.forEach(assertSupportedSnapshot);
+    const migratedSnapshots = parsed.snapshots.map(migrateSnapshotToCurrent);
+    migratedSnapshots.forEach(assertSupportedSnapshot);
     const slotId = createSlotId();
     const importedRunId = createImportedRunId();
-    const snapshots = clone(parsed.snapshots as GameSnapshot[]).map((snapshot) => ({
+    const snapshots = clone(migratedSnapshots as GameSnapshot[]).map((snapshot) => ({
       ...snapshot,
       id: undefined,
       slotId,

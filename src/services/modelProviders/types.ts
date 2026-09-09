@@ -22,12 +22,44 @@ export interface ModelProviderAdapter {
 }
 
 export function normalizeModelOutput(reasoning: string, content: string): string {
-  return reasoning && !content.includes('<think>')
-    ? `<think>\n${reasoning}\n</think>\n\n${content}`
-    : content;
+  void reasoning;
+  return content;
+}
+
+export class ModelApiError extends Error {
+  constructor(
+    message: string,
+    readonly status: number,
+    readonly code: string | null,
+    readonly detail: string,
+  ) {
+    super(message);
+    this.name = 'ModelApiError';
+  }
+}
+
+export function isUnavailableModelError(error: unknown): error is ModelApiError {
+  if (!(error instanceof ModelApiError)) return false;
+  const evidence = `${error.code ?? ''} ${error.detail} ${error.message}`.toLowerCase();
+  return evidence.includes('upstream_model_unavailable')
+    || evidence.includes('model_not_found')
+    || evidence.includes('model not found')
+    || evidence.includes('unknown model');
 }
 
 export async function responseError(response: Response, label: string): Promise<Error> {
   const detail = await response.text().catch(() => '');
-  return new Error(`${label} (${response.status}): ${detail || '未知错误'}`);
+  let code: string | null = null;
+  try {
+    const payload = JSON.parse(detail) as { error?: { code?: unknown } };
+    if (typeof payload.error?.code === 'string') code = payload.error.code;
+  } catch {
+    // Some compatible providers return plain text or an HTML gateway error.
+  }
+  return new ModelApiError(
+    `${label} (${response.status}): ${detail || '未知错误'}`,
+    response.status,
+    code,
+    detail,
+  );
 }

@@ -37,6 +37,60 @@ import { commitWorldTransaction } from '../../features/world/worldTransactions';
 import { planJourneyTransaction } from '../../features/world/worldTravelRules';
 import { projectWorldCharacter, resolveAssetMapLocation } from '../../features/world/worldProjection';
 
+function parseRoleplayDate(value: string): WorldDate | undefined {
+  const match = /^(\d{1,6})\.(\d{1,2})\.(\d{1,2})$/.exec(value);
+  if (!match) return undefined;
+  const date = { year: Number(match[1]), month: Number(match[2]), day: Number(match[3]) };
+  return Number.isInteger(date.year) && date.month >= 1 && date.month <= 12 && date.day >= 1 && date.day <= 30 ? date : undefined;
+}
+
+function dateOrdinal(date: WorldDate): number {
+  return date.year * 360 + (date.month - 1) * 30 + date.day - 1;
+}
+
+function earliestPlayerDeadline(gameState: SettleTurnDraftInput['gameState'], after: WorldDate, before: WorldDate): { date: WorldDate; label: string } | undefined {
+  const playerId = playerCharacterId(gameState);
+  const candidates: Array<{ value?: string; label: string }> = [
+    ...(gameState.roleplay?.messages ?? []).filter((entry) => entry.status === 'in_transit' && (entry.senderId === playerId || entry.recipientIds.includes(playerId))).map((entry) => ({ value: entry.arrivesOn, label: `消息送达：${entry.summary}` })),
+    ...(gameState.roleplay?.agendas ?? []).filter((entry) => entry.status === 'scheduled' && entry.heardByIds.includes(playerId)).map((entry) => ({ value: entry.dueDate, label: `议程到期：${entry.summary}` })),
+    ...(gameState.roleplay?.projects ?? []).filter((entry) => entry.status === 'active' && (entry.ownerId === playerId || entry.assigneeId === playerId)).map((entry) => ({ value: entry.dueDate, label: `委派到期：${entry.objective}` })),
+    ...(gameState.roleplay?.commitments ?? []).filter((entry) => entry.status === 'open' && (entry.debtorId === playerId || entry.creditorIds.includes(playerId))).map((entry) => ({ value: entry.dueDate, label: `承诺期限：${entry.terms}` })),
+  ];
+  return candidates.map((entry) => ({ date: entry.value ? parseRoleplayDate(entry.value) : undefined, label: entry.label }))
+    .filter((entry): entry is { date: WorldDate; label: string } => Boolean(entry.date))
+    .filter((entry) => dateOrdinal(entry.date) > dateOrdinal(after) && dateOrdinal(entry.date) < dateOrdinal(before))
+    .sort((left, right) => dateOrdinal(left.date) - dateOrdinal(right.date))[0];
+}
+
+function growthMutationRejection(
+  command: Extract<StateCommand, { type: 'MODIFY_STAT' | 'ADD_TRAIT' }>,
+  commands: readonly StateCommand[],
+  gameState: SettleTurnDraftInput['gameState'],
+): string | undefined {
+  const opportunityId = command.growthChoiceId?.trim();
+  const optionId = command.growthOptionId?.trim();
+  if (!opportunityId || !optionId) return '永久属性与特质成长必须引用一个未消费的成长机会与明确选项';
+  const opportunity = (gameState.roleplay?.growthOpportunities ?? []).find((entry) => entry.id === opportunityId);
+  if (!opportunity || opportunity.status !== 'open') return '成长机会不存在或已经使用';
+  const option = opportunity.options.find((entry) => entry.id === optionId);
+  if (!option) return '成长选项不存在';
+  const claim = commands.find((candidate) => candidate.type === 'CLAIM_GROWTH_CHOICE'
+    && candidate.actorId === playerCharacterId(gameState)
+    && candidate.opportunityId === opportunityId
+    && candidate.optionId === optionId);
+  if (!claim) return '成长必须由玩家在本回合明确确认该成长选项';
+  if (command.type === 'MODIFY_STAT') {
+    if (option.effect.kind !== 'stat' || option.effect.stat !== command.stat || option.effect.delta !== command.delta) {
+      return '属性变更与玩家选择的成长效果不一致';
+    }
+    return undefined;
+  }
+  if (option.effect.kind !== 'trait' || option.effect.traitId !== command.trait) return '特质变更与玩家选择的成长效果不一致';
+  if ((gameState.lord.traitIds ?? []).includes(command.trait)) return '玩家已经拥有该成长特质';
+  return undefined;
+}
+
+
 export function settleLegacyTurnDraft(input: SettleTurnDraftInput): SettledTurn {
   const { gameState } = input;
   const submittedTransactions = input.pendingTransactions ?? [];
@@ -85,6 +139,7 @@ export function settleLegacyTurnDraft(input: SettleTurnDraftInput): SettledTurn 
   let nextDate = currentDate;
   let nextSeason = gameState.currentSeason;
   let rejectedTemporal: StateCommand | undefined;
+  let interruptedByDeadline: string | undefined;
   const setDate = stateCommands.find((command) => command.type === 'SET_DATE');
   const advanceTime = stateCommands.find((command) => command.type === 'ADVANCE_TIME');
   const explicitTravelAdvance = stateCommands.find((command): command is TravelStateCommand & { type: 'ADVANCE_TRAVEL' } => command.type === 'ADVANCE_TRAVEL');
@@ -126,7 +181,16 @@ export function settleLegacyTurnDraft(input: SettleTurnDraftInput): SettledTurn 
         rejectedCommands.push({ type: command.type, reason: '缺少地图地点索引，旅行命令未执行' });
       });
     } else {
-      const result = applyTravelCommands(activeJourney, travelCommands, {
+      const payableTravelCommands = travelCommands.filter((command) => {
+        if (command.type !== 'START_TRAVEL') return true;
+        const route = command.routePlan ?? activeJourney?.routePlan;
+        const silverCost = route ? Math.max(0, Math.ceil(route.totalCost)) : 0;
+        if (silverCost <= gameState.lord.silverStags) return true;
+        travelRejected.add(command);
+        rejectedCommands.push({ type: command.type, reason: `旅费不足：需要 ${silverCost} 银鹿，当前只有 ${gameState.lord.silverStags}` });
+        return false;
+      });
+      const result = applyTravelCommands(activeJourney, payableTravelCommands, {
         currentLocation: gameState.lord.location,
         currentDate,
         knownLocationIds,
@@ -144,6 +208,97 @@ export function settleLegacyTurnDraft(input: SettleTurnDraftInput): SettledTurn 
   }
 
   let acceptedCommands = preliminarilyAccepted.filter((command) => !isTravelStateCommand(command) || !travelRejected.has(command));
+  const rejectedLordCommands = new Set<StateCommand>();
+  const treatmentItems = new Set<string>();
+  let repairCount = 0;
+  for (const command of acceptedCommands) {
+    let reason: string | undefined;
+    if (command.type === 'HEAL_ZONE') reason = '治疗必须消耗当前可访问的医疗物品';
+    else if (command.type === 'CHANGE_TITLE') reason = '头衔必须通过受权的世界头衔事务变更';
+    else if (command.type === 'MODIFY_STAT' || command.type === 'ADD_TRAIT') reason = growthMutationRejection(command, acceptedCommands, gameState);
+    else if (command.type === 'MODIFY_GOLD') {
+      const goldDelta = Math.round(command.goldDragons ?? 0);
+      const silverDelta = Math.round(command.silverStags ?? 0);
+      if (goldDelta > 0 || silverDelta > 0) reason = '正向资金入账必须来自受验证的交易、报酬或世界资产事务，不能由通用数值命令直接创造';
+      else if ((goldDelta !== 0 || silverDelta !== 0) && !command.reason?.trim()) reason = '资金支出必须说明可追溯用途';
+    }
+    else if (command.type === 'ITEM_REPAIR') reason = '旧式即时修理已停用，必须使用带工具、费用与耗时的 REPAIR_ITEM';
+    else if ((command.type === 'ITEM_TRANSFER' || command.type === 'ITEM_GIFT' || command.type === 'ITEM_DISCARD')
+      && gameState.lord.items.placements[command.instanceId]?.type === 'equipped') reason = '装备必须先通过 ITEM_UNEQUIP 明确卸下去向';
+    else if ((command.type === 'SET_BLEEDING' || command.type === 'SET_POISONED' || command.type === 'SET_INFECTED') && !command.value) {
+      reason = '恢复异常状态必须通过消耗物资的治疗事务';
+    } else if (command.type === 'TREAT_WOUND') {
+      const conflictsWithItemCommand = acceptedCommands.some((candidate) => candidate !== command
+        && candidate.type.startsWith('ITEM_')
+        && 'instanceId' in candidate
+        && candidate.instanceId === command.instanceId);
+      if (treatmentItems.has(command.instanceId)) reason = '同一医疗物品每回合只能用于一次治疗';
+      else if (conflictsWithItemCommand) reason = '治疗物品不能在同一回合同时执行其他物品动作';
+      else {
+        treatmentItems.add(command.instanceId);
+        const preview = applyStateCommands(gameState.lord, [command]);
+        const failed = preview.changesLog.find((entry) => entry.includes('治疗未执行'));
+        if (failed) reason = failed.replace(/^\s*/, '');
+      }
+    } else if (command.type === 'ITEM_GIFT') {
+      const consent = gameState.roleplay?.socialEvents.find((event) => event.id === command.consentEventId);
+      const playerId = playerCharacterId(gameState);
+      if (!consent || consent.act !== 'accept') reason = '赠礼必须引用受赠者此前明确接受的社会事件';
+      else if (consent.actorId !== command.recipientId || !consent.targetIds.includes(playerId)) reason = '接受事件的当事人与本次赠礼不一致';
+      else if (!consent.exchangeId || consent.exchangeId !== command.exchangeId) reason = '赠礼必须与接受事件使用同一交涉 ID';
+    } else if (command.type === 'REPAIR_ITEM') {
+      repairCount += 1;
+      const hasTravelAction = acceptedCommands.some((candidate) => isTravelStateCommand(candidate));
+      const hasTemporalAction = acceptedCommands.some((candidate) => candidate.type === 'ADVANCE_TIME' || candidate.type === 'SET_DATE');
+      const conflicts = acceptedCommands.some((candidate) => candidate !== command
+        && ((candidate.type.startsWith('ITEM_') && 'instanceId' in candidate
+          && (candidate.instanceId === command.instanceId || candidate.instanceId === command.toolInstanceId))
+          || (candidate.type === 'REPAIR_ITEM'
+            && (candidate.instanceId === command.instanceId || candidate.toolInstanceId === command.toolInstanceId))));
+      if (repairCount > 1) reason = '每回合只能结算一次修理';
+      else if (hasTravelAction) reason = '修理与启程、改道或推进旅程不能在同一回合结算';
+      else if (hasTemporalAction) reason = '修理已自带耗时，不能与其他时间命令重复结算';
+      else if (conflicts) reason = '修理目标或工具不能在同一回合参与其他物品动作';
+      else {
+        const preview = applyStateCommands(gameState.lord, [command]);
+        const failed = preview.changesLog.find((entry) => entry.includes('修理未执行'));
+        if (failed) reason = failed.replace(/^\s*/, '');
+      }
+    } else if (command.type === 'BUY_CATALOG_ITEM' || command.type === 'SELL_ITEM') {
+      const counterpartyId = command.type === 'BUY_CATALOG_ITEM' ? command.sellerId : command.buyerId;
+      const consent = gameState.roleplay?.socialEvents.find((event) => event.id === command.consentEventId);
+      const playerId = playerCharacterId(gameState);
+      const itemInstanceId = command.type === 'BUY_CATALOG_ITEM' ? command.instanceId : command.instanceId;
+      const conflicts = acceptedCommands.some((candidate) => candidate !== command
+        && ((candidate.type.startsWith('ITEM_') && 'instanceId' in candidate && candidate.instanceId === itemInstanceId)
+          || ((candidate.type === 'BUY_CATALOG_ITEM' || candidate.type === 'SELL_ITEM') && candidate.instanceId === itemInstanceId)));
+      if (!consent || consent.act !== 'accept' || consent.actorId !== counterpartyId || !consent.targetIds.includes(playerId)) reason = '交易必须引用交易对手此前明确接受的社会事件';
+      else if (!consent.exchangeId || consent.exchangeId !== command.exchangeId) reason = '交易必须与接受事件使用同一交涉 ID';
+      else if (conflicts) reason = '同一商品不能在同一回合参与多个物品事务';
+      else {
+        const preview = applyStateCommands(gameState.lord, [command]);
+        const failed = preview.changesLog.find((entry) => entry.includes('交易未执行'));
+        if (failed) reason = failed.replace(/^\s*/, '');
+      }
+    }
+    if (reason) {
+      rejectedLordCommands.add(command);
+      rejectedCommands.push({ type: command.type, reason });
+    }
+  }
+
+  const deadline = earliestPlayerDeadline(gameState, currentDate, nextDate);
+  if (deadline) {
+    nextDate = deadline.date;
+    nextSeason = deriveSeason(nextDate.month);
+    interruptedByDeadline = deadline.label;
+  }
+  if (rejectedLordCommands.size) acceptedCommands = acceptedCommands.filter((command) => !rejectedLordCommands.has(command));
+  const acceptedRepair = acceptedCommands.find((command) => command.type === 'REPAIR_ITEM');
+  if (!setDate && !advanceTime && !explicitTravelAdvance && acceptedRepair?.type === 'REPAIR_ITEM') {
+    nextDate = advanceWorldDate(currentDate, { days: acceptedRepair.days });
+    nextSeason = deriveSeason(nextDate.month);
+  }
   const elapsedDays = (nextDate.year - currentDate.year) * 360
     + (nextDate.month - currentDate.month) * 30
     + nextDate.day - currentDate.day;
@@ -156,6 +311,7 @@ export function settleLegacyTurnDraft(input: SettleTurnDraftInput): SettledTurn 
   const lordResult = applyStateCommands(gameState.lord, lordCommands);
   let updatedLord = lordResult.updatedLord;
   const changesLog = [...lordResult.changesLog];
+  if (interruptedByDeadline) changesLog.push(`时间停在待回应节点：${interruptedByDeadline}`);
   let characterEvents = [...characterBatch.events];
   let characterContext = characterBatch.context;
 
@@ -217,6 +373,16 @@ export function settleLegacyTurnDraft(input: SettleTurnDraftInput): SettledTurn 
       activeJourney = committed.state.journey;
       nextDate = committed.state.date;
       nextSeason = deriveSeason(nextDate.month);
+
+      const startedTravel = acceptedTravelCommands.find((command) => command.type === 'START_TRAVEL');
+      if (startedTravel?.type === 'START_TRAVEL') {
+        const route = startedTravel.routePlan ?? activeJourney?.routePlan;
+        const silverCost = route ? Math.max(0, Math.ceil(route.totalCost)) : 0;
+        if (silverCost > 0) {
+          updatedLord = { ...updatedLord, silverStags: updatedLord.silverStags - silverCost };
+          changesLog.push(`支付旅行补给: -${silverCost} 银鹿`);
+        }
+      }
 
       const projectedPlayer = projectWorldCharacter(baseline, travelRuntime, playerCharacterId(gameState));
       if (!projectedPlayer?.location) throw new Error('旅行提交后玩家地点未能投影');

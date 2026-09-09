@@ -1,13 +1,15 @@
 import { LordProfile, StateCommand, BodyZoneKey, WoundLevel } from '../types/game';
 import { stripEmoji } from './textSanitizer';
 import { normalizeCk3Attributes } from '../data/ck3Skills';
-import { aggregateSelectedTraitEffects } from '../data/characterTraits';
-import { applyPositiveMultiplier, didTraitResistanceTrigger } from './traitEffectEngine';
+import { calculateFinalAttributes, CHARACTER_TRAITS } from '../data/characterTraits';
 import type { CharacterEvent, CharacterId, CharacterRelationship } from '../features/characters/types';
 import type { CharacterCommandContext, CharacterState, CharacterStateCommand, ValidatedCharacterEventInput } from '../features/characters/characterCommands';
+import type { RoleplayState } from '../features/roleplay/types';
 import { validateCharacterCommand } from '../features/characters/characterCommandValidator';
-import { applyItemActions, type ItemActionContext } from '../features/items/actions';
+import { applyItemActions, validateItemAction, type ItemActionContext } from '../features/items/actions';
 import { ITEM_CATALOG } from '../data/itemDefinitions';
+import { getItemDefinition } from '../features/items/catalog';
+import { createItemInstance } from '../features/items/state';
 import type { ItemAction, ItemStateCommand } from '../features/items/types';
 import { aggregateEquippedItemEffects, getZoneProtection, mitigateWoundLevel } from '../features/items/effects';
 import { createWorldLocationRef, fallbackLocationLabel, sameWorldLocation } from '../features/map/locationResolver';
@@ -106,10 +108,10 @@ export function applyStateCommands(
   commands: StateCommand[],
   random: () => number = Math.random
 ): { updatedLord: LordProfile; changesLog: string[]; isFatalDeath: boolean } {
+  void random;
   const next: LordProfile = JSON.parse(JSON.stringify(lord));
   next.attributes = normalizeCk3Attributes(next.attributes);
   const changesLog: string[] = [];
-  const traitEffects = aggregateSelectedTraitEffects(next.traitIds ?? []);
   let isFatalDeath = false;
 
   const itemCommands = commands.filter(isItemStateCommand);
@@ -145,30 +147,28 @@ export function applyStateCommands(
             && entry.effect.damageTags.some((tag) => damageTags.includes(tag)));
           const armorNames = [...new Set(matchingArmor.map((entry) => entry.itemName))];
           const itemContext = createItemActionContext(next);
-          for (const instanceId of new Set(matchingArmor.map((entry) => entry.instanceId))) {
-            const instance = next.items.instances[instanceId];
-            if (instance) {
-              instance.durability = Math.max(0, instance.durability - 5);
-              instance.history.push({
-                id: `${instanceId}:damaged:${Date.now()}:${Math.random().toString(36).slice(2, 6)}`,
-                type: 'damaged',
-                date: itemContext.gameDate,
-                summary: `因格挡【${cmd.level}】伤势而受损`,
-                actorId: itemContext.actorId,
-              });
+          if (cmd.level === 'heavy' || cmd.level === 'critical') {
+            const damageAmount = cmd.level === 'critical' ? 25 : 15;
+            for (const instanceId of new Set(matchingArmor.map((entry) => entry.instanceId))) {
+              const instance = next.items.instances[instanceId];
+              if (instance) {
+                instance.durability = Math.max(0, instance.durability - damageAmount);
+                instance.history.push({
+                  id: `${instanceId}:damaged:${instance.history.length}`,
+                  type: 'damaged',
+                  date: itemContext.gameDate,
+                  summary: `因承受【${cmd.level}】冲击而受损`,
+                  actorId: itemContext.actorId,
+                });
+              }
             }
           }
-          changesLog.push(` 护甲减伤: ${armorNames.join('、') || '当前防护'}将伤势由【${cmd.level}】减轻为【${effectiveLevel}】，耐久受损`);
+          changesLog.push(` 护甲减伤: ${armorNames.join('、') || '当前防护'}将伤势由【${cmd.level}】减轻为【${effectiveLevel}】`);
         }
 
-        const beforeTraitResistance = effectiveLevel;
-        const injuryResistance = traitEffects.resistances.injury ?? 0;
-        if (didTraitResistanceTrigger(injuryResistance, random())) {
-          effectiveLevel = levels[Math.max(0, levels.indexOf(effectiveLevel) - 1)];
-          changesLog.push(` 特质抵抗: 受伤抗性生效，伤势由【${beforeTraitResistance}】减轻为【${effectiveLevel}】`);
-        }
-
-        zone.level = effectiveLevel;
+        const previousLevel = zone.level;
+        const resolvedLevel = levels[Math.max(levels.indexOf(previousLevel), levels.indexOf(effectiveLevel))];
+        zone.level = resolvedLevel;
         if (effectiveLevel !== 'intact' && cmd.woundText && !zone.wounds.includes(cmd.woundText)) {
           zone.wounds.push(stripEmoji(cmd.woundText));
         }
@@ -176,9 +176,9 @@ export function applyStateCommands(
         const levelNames: Record<WoundLevel, string> = {
           intact: '完好', minor: '轻创擦伤', heavy: '严重创伤', critical: '残废致命',
         };
-        changesLog.push(` 部位受创: [${zone.name}] 伤情变为【${levelNames[effectiveLevel]}】${effectiveLevel !== 'intact' && cmd.woundText ? ` · ${cmd.woundText}` : ''}`);
+        changesLog.push(` 部位受创: [${zone.name}] 伤情变为【${levelNames[resolvedLevel]}】${effectiveLevel !== 'intact' && cmd.woundText ? ` · ${cmd.woundText}` : ''}`);
 
-        if (zone.isFatalZone && effectiveLevel === 'critical') {
+        if (zone.isFatalZone && previousLevel !== 'critical' && resolvedLevel === 'critical') {
           isFatalDeath = true;
           changesLog.push(` 致命重创! [${zone.name}] 遭受致命打击，领主阵亡！`);
         }
@@ -187,32 +187,160 @@ export function applyStateCommands(
 
       //  伤口包扎治疗
       case 'HEAL_ZONE': {
-        if (cmd.zone === 'all') {
-          (Object.keys(next.body) as BodyZoneKey[]).forEach((k) => {
-            const z = next.body[k];
-            if (z && typeof z === 'object' && 'level' in z) {
-              if (z.level === 'heavy') z.level = 'minor';
-              else if (z.level === 'minor') z.level = 'intact';
-            }
-          });
-          changesLog.push(` 伤势好转: 全身各处伤口得到妥善包扎处理`);
-        } else {
-          const z = next.body[cmd.zone];
-          if (z) {
-            z.level = cmd.level || 'intact';
-            if (cmd.clearWound) {
-              z.wounds = z.wounds.filter((w) => w !== cmd.clearWound);
-            }
-            changesLog.push(` 创口调理: [${z.name}] 伤势有所缓解`);
-          }
+        changesLog.push(' 治疗未执行: 必须使用 TREAT_WOUND 并消耗当前可访问的医疗或补给物品');
+        break;
+      }
+
+      case 'TREAT_WOUND': {
+        const instance = next.items.instances[cmd.instanceId];
+        if (!instance) {
+          changesLog.push(` 治疗未执行: 医疗物品不存在【${cmd.instanceId}】`);
+          break;
         }
+        const definition = getItemDefinition(ITEM_CATALOG, instance.definitionId);
+        if (definition.category !== 'medicine') {
+          changesLog.push(` 治疗未执行: 【${definition.name}】不是医疗物品`);
+          break;
+        }
+        const tags = new Set(definition.tags);
+        const zone = cmd.zone ? next.body[cmd.zone] : undefined;
+        const canTreatWound = Boolean(zone && zone.level !== 'intact' && (tags.has('bandage') || tags.has('injury')));
+        const canClearCondition = cmd.clearCondition === 'bleeding'
+          ? next.body.isBleeding && (tags.has('bleeding') || tags.has('bandage'))
+          : cmd.clearCondition === 'poisoned'
+            ? next.body.isPoisoned && (tags.has('antidote') || tags.has('poison'))
+            : cmd.clearCondition === 'infected'
+              ? next.body.isInfected && tags.has('infection')
+              : false;
+        if (!canTreatWound && !canClearCondition) {
+          changesLog.push(` 治疗未执行: 【${definition.name}】与当前指定伤势或异常状态不匹配`);
+          break;
+        }
+        const treatment = applyItemActions(
+          next.items,
+          [{ kind: 'use', instanceId: cmd.instanceId, quantity: 1 }],
+          createItemActionContext(next),
+          ITEM_CATALOG,
+        );
+        if (!treatment.ok) {
+          changesLog.push(` 治疗未执行: ${treatment.error}`);
+          break;
+        }
+        next.items = treatment.state;
+        const levels: WoundLevel[] = ['intact', 'minor', 'heavy', 'critical'];
+        if (canTreatWound && zone) {
+          const currentIndex = levels.indexOf(zone.level);
+          zone.level = levels[Math.max(0, currentIndex - 1)];
+          if (cmd.clearWound) zone.wounds = zone.wounds.filter((wound) => wound !== cmd.clearWound);
+        }
+        if (cmd.clearCondition === 'bleeding') next.body.isBleeding = false;
+        if (cmd.clearCondition === 'poisoned') next.body.isPoisoned = false;
+        if (cmd.clearCondition === 'infected') next.body.isInfected = false;
+        changesLog.push(` 使用【${definition.name}】完成治疗${canTreatWound && zone ? `，[${zone.name}]伤势缓解一级` : ''}${canClearCondition ? `，${cmd.clearCondition === 'bleeding' ? '失血得到控制' : cmd.clearCondition === 'poisoned' ? '毒性得到处理' : '感染得到处理'}` : ''}`);
+        break;
+      }
+
+      case 'REPAIR_ITEM': {
+        const target = next.items.instances[cmd.instanceId];
+        const tool = next.items.instances[cmd.toolInstanceId];
+        if (!target || !tool) {
+          changesLog.push(' 修理未执行: 目标物品或维护工具不存在');
+          break;
+        }
+        const targetDefinition = getItemDefinition(ITEM_CATALOG, target.definitionId);
+        const toolDefinition = getItemDefinition(ITEM_CATALOG, tool.definitionId);
+        const validTool = toolDefinition.category === 'tool'
+          && toolDefinition.tags.some((tag) => ['repair', 'maintenance', 'smithing', 'sewing'].includes(tag));
+        if (!validTool) {
+          changesLog.push(` 修理未执行: 【${toolDefinition.name}】不是维护工具`);
+          break;
+        }
+        if (!Number.isInteger(cmd.amount) || cmd.amount < 1 || cmd.amount > 40
+          || !Number.isInteger(cmd.silverCost) || cmd.silverCost < 1
+          || !Number.isInteger(cmd.days) || cmd.days < 1 || cmd.days > 30) {
+          changesLog.push(' 修理未执行: 修理量、费用或耗时不合法');
+          break;
+        }
+        if (next.silverStags < cmd.silverCost) {
+          changesLog.push(` 修理未执行: 需要 ${cmd.silverCost} 银鹿，当前只有 ${next.silverStags}`);
+          break;
+        }
+        const itemContext = createItemActionContext(next);
+        try {
+          validateItemAction(next.items, { kind: 'use', instanceId: cmd.toolInstanceId, quantity: 1 }, itemContext, ITEM_CATALOG);
+        } catch (error) {
+          changesLog.push(` 修理未执行: ${error instanceof Error ? error.message : '维护工具当前不可用'}`);
+          break;
+        }
+        const repaired = applyItemActions(next.items, [{ kind: 'repair', instanceId: cmd.instanceId, amount: cmd.amount }], itemContext, ITEM_CATALOG);
+        if (!repaired.ok) {
+          changesLog.push(` 修理未执行: ${repaired.error}`);
+          break;
+        }
+        next.items = repaired.state;
+        next.silverStags -= cmd.silverCost;
+        changesLog.push(` 使用【${toolDefinition.name}】维护【${targetDefinition.name}】，支付 ${cmd.silverCost} 银鹿，耗时 ${cmd.days} 天`);
+        break;
+      }
+
+      case 'BUY_CATALOG_ITEM': {
+        let definition;
+        try { definition = getItemDefinition(ITEM_CATALOG, cmd.definitionId); }
+        catch { changesLog.push(' 交易未执行: 商品定义不存在'); break; }
+        if (definition.unique) {
+          changesLog.push(' 交易未执行: 唯一物品不能通过普通商品交易创建');
+          break;
+        }
+        if (!Number.isInteger(cmd.silverCost) || cmd.silverCost < 1 || next.silverStags < cmd.silverCost) {
+          changesLog.push(` 交易未执行: 银鹿不足或价格不合法（需要 ${cmd.silverCost}）`);
+          break;
+        }
+        if (!cmd.instanceId.trim() || next.items.instances[cmd.instanceId]) {
+          changesLog.push(' 交易未执行: 商品实例 ID 为空或已经存在');
+          break;
+        }
+        const acquired = applyItemActions(next.items, [{
+          kind: 'acquire',
+          instance: createItemInstance(ITEM_CATALOG, cmd.definitionId, cmd.instanceId),
+          placement: cmd.placement,
+          historyType: 'acquired',
+        }], createItemActionContext(next), ITEM_CATALOG);
+        if (!acquired.ok) {
+          changesLog.push(` 交易未执行: ${acquired.error}`);
+          break;
+        }
+        next.items = acquired.state;
+        next.silverStags -= cmd.silverCost;
+        changesLog.push(` 向${cmd.sellerId}购买【${definition.name}】，支付 ${cmd.silverCost} 银鹿`);
+        break;
+      }
+
+      case 'SELL_ITEM': {
+        const instance = next.items.instances[cmd.instanceId];
+        if (!instance || !Number.isInteger(cmd.silverPrice) || cmd.silverPrice < 1) {
+          changesLog.push(' 交易未执行: 出售物品不存在或价格不合法');
+          break;
+        }
+        if (next.items.placements[cmd.instanceId]?.type === 'equipped') {
+          changesLog.push(' 交易未执行: 必须先明确卸下装备及其去向');
+          break;
+        }
+        const definition = getItemDefinition(ITEM_CATALOG, instance.definitionId);
+        const sold = applyItemActions(next.items, [{ kind: 'gift', instanceId: cmd.instanceId, recipientId: cmd.buyerId }], createItemActionContext(next), ITEM_CATALOG);
+        if (!sold.ok) {
+          changesLog.push(` 交易未执行: ${sold.error}`);
+          break;
+        }
+        next.items = sold.state;
+        next.silverStags += cmd.silverPrice;
+        changesLog.push(` 将【${definition.name}】售予${cmd.buyerId}，收入 ${cmd.silverPrice} 银鹿`);
         break;
       }
 
       //  异常体态 (失血/剧毒/感染)
       case 'SET_BLEEDING': {
-        if (cmd.value && didTraitResistanceTrigger(traitEffects.resistances.bleeding ?? 0, random())) {
-          changesLog.push(' 特质抵抗: 失血抗性生效，出血未形成持续状态');
+        if (!cmd.value) {
+          changesLog.push(' 止血未执行: 必须通过 TREAT_WOUND 消耗医疗或补给物品');
           break;
         }
         next.body.isBleeding = cmd.value;
@@ -221,8 +349,8 @@ export function applyStateCommands(
       }
 
       case 'SET_POISONED': {
-        if (cmd.value && didTraitResistanceTrigger(traitEffects.resistances.poison ?? 0, random())) {
-          changesLog.push(' 特质抵抗: 中毒抗性生效，毒素未能形成持续影响');
+        if (!cmd.value) {
+          changesLog.push(' 解毒未执行: 必须通过 TREAT_WOUND 消耗医疗或补给物品');
           break;
         }
         next.body.isPoisoned = cmd.value;
@@ -231,8 +359,8 @@ export function applyStateCommands(
       }
 
       case 'SET_INFECTED': {
-        if (cmd.value && didTraitResistanceTrigger(traitEffects.resistances.disease ?? 0, random())) {
-          changesLog.push(' 特质抵抗: 疾病抗性生效，感染未能形成持续影响');
+        if (!cmd.value) {
+          changesLog.push(' 感染治疗未执行: 必须通过 TREAT_WOUND 消耗医疗或补给物品');
           break;
         }
         next.body.isInfected = cmd.value;
@@ -244,7 +372,7 @@ export function applyStateCommands(
       case 'MODIFY_GOLD': {
         const reason = cmd.reason ? `（${cmd.reason}）` : '';
         if (cmd.goldDragons !== undefined) {
-          const goldDelta = applyPositiveMultiplier(cmd.goldDragons, traitEffects.multipliers.goldGain);
+          const goldDelta = Math.round(cmd.goldDragons);
           if (goldDelta < 0 && next.goldDragons + goldDelta < 0) {
             changesLog.push(` 金龙不足，支出未执行: 需 ${Math.abs(goldDelta)}，仅有 ${next.goldDragons}${reason}`);
           } else {
@@ -255,7 +383,7 @@ export function applyStateCommands(
           }
         }
         if (cmd.silverStags !== undefined) {
-          const silverDelta = applyPositiveMultiplier(cmd.silverStags, traitEffects.multipliers.goldGain);
+          const silverDelta = Math.round(cmd.silverStags);
           if (silverDelta < 0 && next.silverStags + silverDelta < 0) {
             changesLog.push(` 银鹿不足，支出未执行: 需 ${Math.abs(silverDelta)}，仅有 ${next.silverStags}${reason}`);
           } else {
@@ -284,10 +412,22 @@ export function applyStateCommands(
 
 
       case 'ADD_TRAIT': {
-        if (!next.traits.includes(cmd.trait)) {
-          next.traits.push(stripEmoji(cmd.trait));
-          changesLog.push(` 获得特质: 【${cmd.trait}】`);
+        const trait = CHARACTER_TRAITS.find((entry) => entry.id === cmd.trait);
+        if (!trait) {
+          changesLog.push(` 特质未添加: 未知特质 ID【${cmd.trait}】`);
+          break;
         }
+        if ((next.traitIds ?? []).includes(trait.id)) break;
+        next.traitIds = [...(next.traitIds ?? []), trait.id];
+        next.traits = [...new Set([...(next.traits ?? []), trait.name])];
+        if (next.baseAttributes) next.attributes = calculateFinalAttributes(next.baseAttributes, next.traitIds);
+        else {
+          for (const [key, value] of Object.entries(trait.modifiers)) {
+            const attribute = key as keyof typeof next.attributes;
+            next.attributes[attribute] = Math.max(0, Math.min(100, next.attributes[attribute] + (value ?? 0)));
+          }
+        }
+        changesLog.push(` 获得特质: 【${trait.name}】`);
         break;
       }
 
@@ -299,8 +439,7 @@ export function applyStateCommands(
       }
 
       case 'CHANGE_TITLE': {
-        next.title = stripEmoji(cmd.title);
-        changesLog.push(` 获得新头衔: 【${cmd.title}】`);
+        changesLog.push(' 头衔未变更: 必须通过受权的世界头衔事务结算');
         break;
       }
     }
@@ -332,6 +471,7 @@ export interface CharacterCommandBatchBaseContext {
   presentCharacterIds?: ReadonlySet<CharacterId> | readonly CharacterId[];
   knownLocationIds?: ReadonlySet<string> | readonly string[];
   eventHistory?: readonly { characterId: CharacterId; event: { type: string } }[];
+  roleplay?: RoleplayState;
 }
 
 export interface CharacterCommandBatchResult {
@@ -409,8 +549,13 @@ export function validateCharacterCommandBatch(
   let present = base.presentCharacterIds ? new Set(base.presentCharacterIds) : undefined;
   const events: ValidatedCharacterEventInput[] = [];
   const rejected: CharacterCommandBatchResult['rejected'] = [];
+  const memorySubjects = new Set<CharacterId>();
 
   for (const { command, commandSequence } of characterEntries) {
+    if (command.type === 'ADD_CHARACTER_MEMORY' && memorySubjects.has(command.characterId)) {
+      rejected.push({ command, commandSequence, reason: '同一人物每回合最多新增一条记忆' });
+      continue;
+    }
     const result = validateCharacterCommand(command, {
       ...base,
       characters,
@@ -431,6 +576,7 @@ export function validateCharacterCommandBatch(
         present.delete(input.characterId);
       }
     }
+    if (command.type === 'ADD_CHARACTER_MEMORY') memorySubjects.add(command.characterId);
     events.push(...result.events);
   }
 

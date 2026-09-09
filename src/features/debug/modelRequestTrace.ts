@@ -22,6 +22,10 @@ export interface ModelRequestTrace {
   blockedReason?: string;
   error?: string;
   contextError?: string;
+  contextManifest?: {
+    resolution?: import('../world/worldTurnContext').WorldTurnContext['manifest'];
+    committed?: import('../world/worldTurnContext').WorldTurnContext['manifest'];
+  };
   worldContext: {
     automatic: string;
     committed: string;
@@ -43,6 +47,7 @@ export interface BuildModelRequestTraceInput {
   blockedReason?: string;
   error?: string;
   contextError?: string;
+  contextManifest?: ModelRequestTrace['contextManifest'];
   worldContext?: Partial<ModelRequestTrace['worldContext']>;
   resolutionMessages?: ReadonlyArray<{ role: string; content: string }>;
   narrationMessages?: ReadonlyArray<{ role: string; content: string }>;
@@ -79,6 +84,7 @@ export function buildModelRequestTrace(input: BuildModelRequestTraceInput): Mode
     ...(input.blockedReason ? { blockedReason: input.blockedReason } : {}),
     ...(input.error ? { error: input.error } : {}),
     ...(input.contextError ? { contextError: input.contextError } : {}),
+    ...(input.contextManifest ? { contextManifest: input.contextManifest } : {}),
     worldContext: {
       ...EMPTY_WORLD_CONTEXT,
       ...input.worldContext,

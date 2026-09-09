@@ -36,6 +36,9 @@ import {
 import { readDebugEnabled, writeDebugEnabled } from '../features/debug/debugSettings';
 import type { ModelRequestTrace } from '../features/debug/modelRequestTrace';
 import { buildModelRequestTrace } from '../features/debug/modelRequestTrace';
+import { createActiveScene, synchronizeActiveScene } from '../features/world/sceneState';
+import { createRoleplayState, isRoleplayStateCommand, settleRoleplayCommands } from '../features/roleplay/state';
+import { buildAttemptIdentity, findUnchangedFailedAttempt } from '../services/attemptPolicy';
 
 export interface CharacterTurnContext extends CharacterCommandBatchBaseContext { promptContext?: string; }
 
@@ -105,6 +108,7 @@ const DEFAULT_API_CONFIG: ApiConfig = {
   baseUrl: 'https://api.deepseek.com/v1',
   apiKey: '',
   model: 'deepseek-chat',
+  fallbackModel: '',
   temperature: 0.7,
 };
 
@@ -159,6 +163,8 @@ function createInitialGameState(): GameState {
     worldArtifacts: createInitialAgotArtifactWorldState(),
     worldHistory: createInitialWorldHistory(startDate),
     worldRuntime: createWorldRuntimeState(),
+    activeScene: createActiveScene({ locationId: 'b_unknown_westeros' }, 1),
+    roleplay: createRoleplayState(),
     worldFlags: {},
     isGameOver: false,
   };
@@ -173,6 +179,10 @@ function sanitizeRestoredState(restored: GameState): GameState {
   state.lord = migrateLordIdentityData(migrateLordTraitData(state.lord));
   state.lord.attributes = normalizeCk3Attributes(state.lord.attributes);
   if (state.lord.baseAttributes) state.lord.baseAttributes = normalizeCk3Attributes(state.lord.baseAttributes);
+  state.activeScene = state.activeScene
+    ? synchronizeActiveScene(state.activeScene, state.lord.location, state.turnCount, state.activeScene.presentCharacterIds)
+    : createActiveScene(state.lord.location, state.turnCount);
+  state.roleplay ??= createRoleplayState();
   return state;
 }
 
@@ -395,6 +405,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
       worldArtifacts: structuredClone(game.worldArtifacts),
       worldHistory: createInitialWorldHistory(startDate),
       worldRuntime: createWorldRuntimeState(),
+      activeScene: createActiveScene(safeLord.location, 1),
+      roleplay: createRoleplayState(),
       worldFlags: {},
       isGameOver: false,
     };
@@ -470,7 +482,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     try {
       const [
         { performD20Check },
-        { inferActionCheck },
+        { inferActionCheck, getRuleOwnedDc },
         { buildTurnResolutionMessages, prepareWorldTurn, requestTurnResolution, settleTurnDraft },
         { buildSettledNarrativeMessages, streamSettledNarrative },
         { buildWorldTurnContext, formatWorldTurnContext },
@@ -501,7 +513,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       const resolutionWorldContext = characterTurnContext?.promptContext ?? automaticWorldContext ?? '';
       const nextTurnNumber = gameState.turnCount + 1;
 
-      // 第一阶段：判骰 + 规则解析合一。模型先输出 <dice_request>，再输出双轨 state_cmd。
+      // 第一阶段：判骰 + 规则解析合一。模型先提出判骰请求，再分别给出成功、部分成果与失败轨。
       // 此时不传 diceCheck（还没骰），diceContext 也不传（判骰说明已拼进 system）。
       const resolutionMessages = buildTurnResolutionMessages(
         gameState,
@@ -523,6 +535,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
           automatic: automaticPromptContext,
           resolutionPrompt: typeof resolutionWorldContext === 'string' ? resolutionWorldContext : automaticPromptContext,
         },
+        ...(automaticWorldContext ? { contextManifest: { resolution: automaticWorldContext.manifest } } : {}),
         resolutionMessages,
       }));
       const draft = await requestTurnResolution(
@@ -545,43 +558,101 @@ export const useGameStore = create<GameStore>((set, get) => ({
         diceRequest = {
           roll: true,
           attribute: inferred.attribute,
+          ...(inferred.secondaryAttribute ? { secondaryAttribute: inferred.secondaryAttribute } : {}),
           dc: inferred.dc,
           domain: inferred.domain,
           reason: '玩家强制检定',
         };
       }
       if (diceRequest.roll) {
-        diceCheck = performD20Check(
-          safeActionText,
-          gameState.lord.attributes,
-          gameState.lord.items,
-          ITEM_CATALOG,
-          gameState.lord.traitIds ?? [],
-          diceRequest.attribute,
-          diceRequest.dc,
-          diceRequest.domain,
-        );
+        const ruleOwnedDc = getRuleOwnedDc(safeActionText, diceRequest.domain, { overallStatus: gameState.lord.overallStatus });
+        diceRequest = {
+          ...diceRequest,
+          dc: ruleOwnedDc,
+          reason: `${diceRequest.reason}；DC ${ruleOwnedDc} 由程序规则根据行动方法、真实阻力与伤势校准，文本中自称的准备或协助不直接降低难度`,
+        };
+        const attemptIdentity = buildAttemptIdentity(gameState, safeActionText, diceRequest, {
+          stateCommands: [
+            ...(draft.strongSuccessCommands ?? []),
+            ...(draft.stateCommands ?? []),
+            ...(draft.partialCommands ?? []),
+            ...(draft.failureCommands ?? []),
+          ],
+          worldIntents: [
+            ...(draft.strongSuccessWorldIntents ?? []),
+            ...(draft.worldIntents ?? []),
+            ...(draft.partialWorldIntents ?? []),
+            ...(draft.failureWorldIntents ?? []),
+          ],
+        });
+        const unchangedFailure = findUnchangedFailedAttempt(gameState.turns, attemptIdentity);
+        diceCheck = unchangedFailure
+          ? {
+              ...unchangedFailure,
+              id: `check_reuse_${Date.now()}`,
+              actionText: safeActionText,
+              timestamp: Date.now(),
+              reusedFromCheckId: unchangedFailure.id,
+              resultDescription: `【沿用失败】行动目标、方法与可验证条件均未改变，不重新掷骰。沿用检定 ${unchangedFailure.id} 的失败结果；需要新的准备、代价、情报或实质不同的方法后才能重新裁定。`,
+            }
+          : performD20Check(
+              safeActionText,
+              gameState.lord.attributes,
+              gameState.lord.items,
+              ITEM_CATALOG,
+              gameState.lord.traitIds ?? [],
+              diceRequest.attribute,
+              diceRequest.dc,
+              diceRequest.domain,
+              undefined,
+              Math.random,
+              {
+                secondaryAttribute: diceRequest.secondaryAttribute,
+                reason: diceRequest.reason,
+                attemptKey: attemptIdentity.attemptKey,
+                conditionKey: attemptIdentity.conditionKey,
+              },
+            );
         set({
           activeDiceCheck: diceCheck,
           isDiceModalOpen: true,
         });
       }
-
       // 第三阶段：按骰子结果选用对应版本的 state_cmd。
+      const reusedUnchangedAttempt = Boolean(diceCheck?.reusedFromCheckId);
       const selectedDraft: import('../services/turn/resolutionTypes').TurnResolutionDraft = {
-        outcomeSummary: draft.outcomeSummary,
-        stateCommands: diceCheck
-          ? (diceCheck.success ? draft.stateCommands : draft.failureCommands.length > 0 ? draft.failureCommands : draft.stateCommands)
-          : draft.stateCommands,
-        worldIntents: draft.worldIntents,
-      };
-      const preparedWorld = await prepareWorldTurn({
+        outcomeSummary: reusedUnchangedAttempt
+          ? '本次行动与此前失败尝试的目标、方法和可验证条件均未改变，因此沿用旧失败，不产生第二次掷骰或重复后果。'
+          : draft.outcomeSummary,
+        stateCommands: reusedUnchangedAttempt
+          ? []
+          : diceCheck
+            ? (diceCheck.outcome === 'strong_success'
+              ? (draft.strongSuccessCommands ?? draft.stateCommands)
+              : diceCheck.outcome === 'partial'
+                ? (draft.partialCommands ?? [])
+                : diceCheck.success
+                  ? draft.stateCommands
+                  : draft.failureCommands)
+            : draft.stateCommands,
+        worldIntents: reusedUnchangedAttempt
+          ? []
+          : diceCheck
+            ? (diceCheck.outcome === 'strong_success'
+              ? (draft.strongSuccessWorldIntents ?? draft.worldIntents)
+              : diceCheck.outcome === 'partial'
+                ? (draft.partialWorldIntents ?? [])
+                : diceCheck.success
+                  ? draft.worldIntents
+                  : draft.failureWorldIntents)
+            : draft.worldIntents,
+      };      const preparedWorld = await prepareWorldTurn({
         gameState,
         draft: selectedDraft,
         actionText: safeActionText,
         nextTurnNumber,
         pendingTransactions: submittedWorldTransactions,
-        characterContext: effectiveCharacterContext,
+        characterContext: effectiveCharacterContext ? { ...effectiveCharacterContext, roleplay: gameState.roleplay } : effectiveCharacterContext,
       });
       const settled = settleTurnDraft({
         gameState,
@@ -594,6 +665,48 @@ export const useGameStore = create<GameStore>((set, get) => ({
         preparedWorld,
       });
 
+      const roleplayCommands = settled.acceptedCommands.filter(isRoleplayStateCommand);
+      const playerCharacterId = (gameState.lord.canonicalCharacterId
+        ?? `save:${gameState.worldCharacters?.runId ?? 'current'}:player`) as CharacterId;
+      const knownEventTurns = new Map<string, number>();
+      for (const turn of settled.worldHistory.turns) {
+        for (const eventId of turn.eventIds) knownEventTurns.set(eventId, turn.turn);
+      }
+      for (const event of gameState.roleplay?.socialEvents ?? []) knownEventTurns.set(event.id, event.turn);
+      const appliedGrowthChoices = settled.acceptedCommands.flatMap((command) => (
+        (command.type === 'MODIFY_STAT' || command.type === 'ADD_TRAIT') && command.growthChoiceId && command.growthOptionId
+          ? [{ opportunityId: command.growthChoiceId, optionId: command.growthOptionId }]
+          : []
+      ));
+      const roleplayResult = settleRoleplayCommands(gameState.roleplay, roleplayCommands, {
+        turn: nextTurnNumber,
+        playerId: playerCharacterId,
+        presentCharacterIds: Array.from(effectiveCharacterContext?.presentCharacterIds ?? []),
+        currentDate: `${settled.nextDate.year}.${settled.nextDate.month}.${settled.nextDate.day}`,
+        knownEventTurns,
+        appliedGrowthChoices,
+      });
+      if (roleplayCommands.length || roleplayResult.changes.length) {
+        const acceptedRoleplay = new Set(roleplayResult.accepted);
+        settled.acceptedCommands = settled.acceptedCommands.filter((command) => (
+          !isRoleplayStateCommand(command) || acceptedRoleplay.has(command)
+        ));
+        const roleplayRejections = roleplayResult.rejected.map((entry) => ({ type: entry.command.type, reason: entry.reason }));
+        settled.rejectedCommands = [...settled.rejectedCommands, ...roleplayRejections];
+        settled.changesLog = [...settled.changesLog, ...roleplayResult.changes];
+        settled.worldHistory = {
+          ...settled.worldHistory,
+          turns: settled.worldHistory.turns.map((turn, index, turns) => index === turns.length - 1
+            ? { ...turn, acceptedCommands: settled.acceptedCommands, rejectedCommands: settled.rejectedCommands }
+            : turn),
+        };
+        settled.resolvedFacts = {
+          ...settled.resolvedFacts,
+          acceptedCommands: settled.acceptedCommands,
+          changes: [...settled.resolvedFacts.changes, ...roleplayResult.changes],
+        };
+      }
+
       // 第二阶段只能根据程序已接受的事实生成正文。
       const committedContextState: GameState = {
         ...gameState,
@@ -605,14 +718,18 @@ export const useGameStore = create<GameStore>((set, get) => ({
         worldHistory: settled.worldHistory,
         worldRuntime: settled.worldRuntime,
         activeJourney: settled.activeJourney,
+        roleplay: roleplayResult.state,
       };
-      const committedWorldContext = await buildWorldTurnContext({
+      const committedWorldContextObject = await buildWorldTurnContext({
         gameState: committedContextState,
         actionText: safeActionText,
-      }).then(formatWorldTurnContext).catch((error: unknown) => {
+      }).catch((error: unknown) => {
         if (!contextError) contextError = error instanceof Error ? error.message : String(error);
-        return '';
+        return null;
       });
+      const committedWorldContext = committedWorldContextObject
+        ? formatWorldTurnContext(committedWorldContextObject)
+        : '';
       const narrationPrompt = [settled.narrationContext, committedWorldContext].filter(Boolean).join('\n\n');
       const narrativeMessages = buildSettledNarrativeMessages({
         gameState: committedContextState,
@@ -633,6 +750,10 @@ export const useGameStore = create<GameStore>((set, get) => ({
           committed: committedWorldContext,
           resolutionPrompt: typeof resolutionWorldContext === 'string' ? resolutionWorldContext : automaticPromptContext,
           narrationPrompt,
+        },
+        contextManifest: {
+          ...(automaticWorldContext ? { resolution: automaticWorldContext.manifest } : {}),
+          ...(committedWorldContextObject ? { committed: committedWorldContextObject.manifest } : {}),
         },
         resolutionMessages,
         narrationMessages: narrativeMessages,
@@ -673,6 +794,13 @@ export const useGameStore = create<GameStore>((set, get) => ({
         worldCharacters: { ...currentWorldRef, revision: currentWorldRef.revision + 1 },
         worldHistory: settled.worldHistory,
         worldRuntime: settled.worldRuntime,
+        activeScene: synchronizeActiveScene(
+          gameState.activeScene,
+          settled.updatedLord.location,
+          nextTurnNumber,
+          Array.from(committedWorldContextObject?.characterCommandContext.presentCharacterIds ?? []),
+        ),
+        roleplay: roleplayResult.state,
         activeJourney: settled.activeJourney,
         isGameOver: settled.isFatalDeath,
         deathReason: settled.isFatalDeath ? '要害遭受致命创伤，领主陨落于维斯特洛的残酷权谋之中' : undefined,
@@ -697,7 +825,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
           : null,
         changesLog: [
           ...settled.changesLog,
-          diceCheck ? `检定结果: ${diceCheck.attributeName} ${diceCheck.success ? '成功' : '失败'} (总点数 ${diceCheck.total} vs DC ${diceCheck.dc})` : '',
+          diceCheck ? `检定结果: ${diceCheck.attributeName} ${diceCheck.outcome === 'strong_success' ? '优势成功' : diceCheck.outcome === 'partial' ? '部分成果' : diceCheck.success ? '成功' : '失败'} (总点数 ${diceCheck.total} vs DC ${diceCheck.dc})` : '',
         ].filter(Boolean),
         ...(get().lastModelRequestTrace ? {
           lastModelRequestTrace: { ...get().lastModelRequestTrace!, status: 'complete' as const },

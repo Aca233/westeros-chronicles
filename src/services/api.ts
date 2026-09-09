@@ -1,6 +1,7 @@
 import { ApiConfig, StoryTurn, StateCommand, GameState } from '../types/game';
 import { pendingItemActionsFromWorldTransactions } from '../features/items/itemActionQueue';
 import type { PendingWorldTransaction } from '../features/world/worldRuntimeTypes';
+import { configForModelRole, modelRolePolicy } from './modelRuntime/profiles';
 import { stripEmoji } from './textSanitizer';
 import { ITEM_CATALOG } from '../data/itemDefinitions';
 import { getItemDefinition } from '../features/items/catalog';
@@ -8,7 +9,7 @@ import type { EquipmentPosition, ItemPlacement } from '../features/items/types';
 import { sameWorldLocation } from '../features/map/locationResolver';
 import { parseBranchOptions } from './branchOptions';
 import { extractNarrativeContent, normalizeModelProtocolMarkup } from './modelProtocol';
-import { listProviderModels, requestModelCompletion } from './modelProviders';
+import { getResolvedModelAlias, listProviderModels, requestModelCompletion } from './modelProviders';
 
 // 解析模型输出的 XML 结构化标签 (小说流全融合 + 深度思考全捕获)
 export function parseModelOutput(
@@ -17,16 +18,6 @@ export function parseModelOutput(
   playerInput: string
 ): Omit<StoryTurn, 'id' | 'timestamp'> {
   const safeRawText = normalizeModelProtocolMarkup(stripEmoji(rawText));
-  let think = '';
-  const thinkMatch =
-    safeRawText.match(/<think>([\s\S]*?)<\/think>/i) ||
-    safeRawText.match(/<thought>([\s\S]*?)<\/thought>/i) ||
-    safeRawText.match(/<reasoning>([\s\S]*?)<\/reasoning>/i);
-
-  if (thinkMatch) {
-    think = thinkMatch[1].trim();
-  }
-
   let narrate = extractNarrativeContent(safeRawText);
 
   // 如果某些模型依然输出了 <speak> 标签，将其无缝融入小说叙事流中，杜绝孤立卡片
@@ -52,9 +43,9 @@ export function parseModelOutput(
 
   if (branches.length === 0) {
     branches.push(
-      '拔出佩剑，以凛冬守护者的强硬威严震慑全场',
-      '不动声色，令学士暗中翻阅各大家族的密报档案',
-      '召集封臣与重装骑士，立刻布防城隘以防不测'
+      '观察眼前人的反应，暂不作出新的承诺',
+      '追问对方的条件、证据与真正顾虑',
+      '结束当前交谈，保留稍后再决定的余地'
     );
   }
 
@@ -64,7 +55,6 @@ export function parseModelOutput(
   return {
     turnNumber,
     playerInput: stripEmoji(playerInput),
-    think,
     narrate,
     branches,
     stateCommands,
@@ -124,7 +114,6 @@ export function generateOfflineDemoResponse(
   playerInput = stripEmoji(playerInput);
   const stateCommands: StateCommand[] = [];
   let dynamicNarrate = '';
-  const think = `AI 幕后推演 (Turn ${turnNumber}): 领主下达指令【${playerInput}】。系统判定其行动意图，并动态推演战备变化与封臣反应。`;
 
   const availableItems = gameState
     ? Object.values(gameState.lord.items.instances).flatMap((instance) => {
@@ -183,11 +172,18 @@ export function generateOfflineDemoResponse(
     } else {
       dynamicNarrate = '你下意识按向腰侧，却没有让一柄不存在的武器凭空出现。当前可访问物品中没有合适兵器。';
     }
-  } else if (/药|草药|毒/i.test(playerInput)) {
-    const medicine = availableItems.find((entry) => entry.definition.category === 'medicine' || entry.definition.category === 'poison');
+  } else if (/药|草药|包扎|治疗|止血|伤口/i.test(playerInput)) {
+    const medicine = availableItems.find((entry) => entry.definition.category === 'medicine');
     if (medicine) {
-      stateCommands.push({ type: 'ITEM_USE', instanceId: medicine.instance.instanceId });
-      dynamicNarrate = `你取出【${medicine.instance.customName ?? medicine.definition.name}】，先确认瓶塞、包布和剩余次数，再按它的真实用途使用。药物不会凭空治愈重伤，实际效果仍受伤势和场景限制。`;
+      const damagedZone = gameState
+        ? (['head', 'torso', 'arms', 'legs'] as const).find((zone) => gameState.lord.body[zone].level !== 'intact')
+        : undefined;
+      if (damagedZone) {
+        stateCommands.push({ type: 'TREAT_WOUND', instanceId: medicine.instance.instanceId, zone: damagedZone });
+        dynamicNarrate = `你取出【${medicine.instance.customName ?? medicine.definition.name}】，清理并包扎创处。物资会实际消耗，伤情至多缓解一级。`;
+      } else {
+        dynamicNarrate = `你取出【${medicine.instance.customName ?? medicine.definition.name}】检查妥当；身上没有需要处理的已记录创伤，因此没有消耗它。`;
+      }
     } else {
       dynamicNarrate = '当前随身行囊、据点和同行车驾中没有可用药物，叙事不会临时创造一份。';
     }
@@ -203,7 +199,6 @@ export function generateOfflineDemoResponse(
         })[0] ?? '厚实的日常外衣'
       : '厚实的日常外衣';
     dynamicNarrate = `风雪在古老城垛间发出低沉尖啸，冷气掠过石墙和窗缝。你理了理身上的【${currentClothing}】，走入烛火摇曳的大厅。封臣们停下低语，等待你给出下一道命令；任何武器、衣物或药品的变化都必须来自当前真实物品状态。`;
-    stateCommands.push({ type: 'MODIFY_GOLD', silverStags: 1 });
   }
 
 
@@ -214,18 +209,14 @@ export function generateOfflineDemoResponse(
     dynamicNarrate = `${queuedNarrative}\n\n${dynamicNarrate}`;
   }
 
-  // 推进时间
-  stateCommands.push({ type: 'ADVANCE_TIME', days: 1, reason: '大厅军令交接与战备整肃' });
-
   return {
     turnNumber,
     playerInput,
-    think,
     narrate: dynamicNarrate,
     branches: [
-      '拔剑出鞘发表誓师演说，确立你在家族中的绝对领袖权威',
-      '令学士仔细分析各大家族的联姻与密谋动向，谋定而后动',
-      '巡视城堡粮仓与兵营，下令立刻操练骑士并囤积越冬粮草'
+      '观察眼前人物对这次行动的直接反应',
+      '追问当前局势中仍未解决的问题',
+      '暂缓决定，先检查自己实际掌握的资源与身份权限'
     ],
     stateCommands,
   };
@@ -248,7 +239,6 @@ export async function streamChatCompletion(
       pendingTransactions,
     );
     const rawText = [
-      `<think>\n${demo.think}\n</think>`,
       `<narrate>\n${demo.narrate}\n</narrate>`,
       `<branch>\n${demo.branches.map((branch, index) => `${index + 1}. ${branch}`).join('\n')}\n</branch>`,
       `<state_cmd>\n${JSON.stringify(demo.stateCommands || [])}\n</state_cmd>`,
@@ -257,10 +247,10 @@ export async function streamChatCompletion(
   }
 
   return requestModelCompletion({
-    config,
+    config: configForModelRole(config, 'narrator'),
     messages,
     stream: true,
-    maxTokens: 3000,
+    maxTokens: modelRolePolicy(config, 'narrator').maxTokens,
     onChunk,
     signal,
   });
@@ -272,6 +262,7 @@ export async function requestTurnResolutionCompletion(
   gameState?: GameState,
   pendingTransactions: PendingWorldTransaction[] = [],
   signal?: AbortSignal,
+  role: 'resolver' | 'repair' = 'resolver',
 ): Promise<string> {
   if (!config.apiKey || config.apiKey.trim() === '') {
     if (signal?.aborted) throw signal.reason ?? new DOMException('规则解析已取消', 'AbortError');
@@ -281,22 +272,21 @@ export async function requestTurnResolutionCompletion(
       gameState,
       pendingTransactions,
     );
-    return `<resolution>程序离线解析了当前行动，最终事实仍以命令验证结果为准。</resolution>
-<state_cmd>
-${JSON.stringify(demo.stateCommands ?? [])}
-</state_cmd>
-<world_intent>[]</world_intent>`;
+    return JSON.stringify({
+      schemaVersion: 2,
+      resolution: '程序离线解析了当前行动，最终事实仍以命令验证结果为准。',
+      diceRequest: { roll: false, attribute: 'diplomacy', dc: 12, domain: 'diplomacy', reason: '离线模式直接使用本地规则结算' },
+      outcomes: { deterministic: { stateCommands: demo.stateCommands ?? [], worldIntents: [] } },
+    });
   }
   const output = await requestModelCompletion({
-    config: { ...config, temperature: Math.min(config.temperature ?? 0.7, 0.4) },
+    config: configForModelRole(config, role),
     messages,
     stream: false,
-    maxTokens: 1600,
+    maxTokens: modelRolePolicy(config, role).maxTokens,
     signal,
   });
-  if (output.includes('<resolution>')) return output;
-  const thinkMatch = output.match(/<think>([\s\S]*?)<\/think>/i);
-  return thinkMatch ? `<resolution>${thinkMatch[1].trim()}</resolution>\n${output.replace(thinkMatch[0], '').trim()}` : output;
+  return output;
 }
 
 function offlineSettledNarrative(messages: Array<{ role: string; content: string }>): string {
@@ -323,7 +313,6 @@ function offlineSettledNarrative(messages: Array<{ role: string; content: string
   paragraphs.push('场景只沿着这些已经成立的结果继续，没有额外的命运转折被凭空加入。');
 
   return [
-    '<think>离线叙述仅整理程序已经确认的本回合事实。</think>',
     `<narrate>${paragraphs.join('\n\n')}</narrate>`,
     '<branch>\n1. 观察在场人物对结果的直接反应\n2. 追问当前局势中仍未解决的问题\n3. 根据已经发生的变化采取下一步行动\n</branch>',
   ].join('\n\n');
@@ -358,10 +347,10 @@ export async function streamNarrativeCompletion(
     return streamOfflineText(offlineSettledNarrative(messages), onChunk, signal);
   }
   return requestModelCompletion({
-    config,
+    config: configForModelRole(config, 'narrator'),
     messages,
     stream: true,
-    maxTokens: 3000,
+    maxTokens: modelRolePolicy(config, 'narrator').maxTokens,
     onChunk,
     signal,
   });
@@ -371,4 +360,8 @@ export async function streamNarrativeCompletion(
 export async function fetchAvailableModels(config: ApiConfig, signal?: AbortSignal): Promise<string[]> {
   const models = await listProviderModels(config, signal);
   return models.filter((id) => !id.includes('whisper') && !id.includes('embedding') && !id.includes('tts') && !id.includes('dall-e'));
+}
+
+export function resolvedModelForConfig(config: ApiConfig): string | null {
+  return getResolvedModelAlias(config);
 }

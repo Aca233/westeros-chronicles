@@ -15,10 +15,19 @@ export type TraitMultiplierTarget = 'goldGain';
 
 export type TraitResistanceTarget = 'injury' | 'disease' | 'poison' | 'bleeding';
 
+export interface TraitMethodEdge {
+  domains: TraitCheckDomain[];
+  /** A miss no worse than this can become a constrained partial result. */
+  maxMiss: number;
+  label: string;
+  directive: string;
+}
+
 export interface TraitRuleSet {
   multipliers?: Partial<Record<TraitMultiplierTarget, number>>;
   resistances?: Partial<Record<TraitResistanceTarget, number>>;
   checkModifiers?: Partial<Record<TraitCheckDomain, number>>;
+  methodEdges?: TraitMethodEdge[];
   roleplayDirectives?: string[];
 }
 
@@ -26,6 +35,7 @@ export interface AggregatedTraitEffects {
   multipliers: Partial<Record<TraitMultiplierTarget, number>>;
   resistances: Partial<Record<TraitResistanceTarget, number>>;
   checkModifiers: Partial<Record<TraitCheckDomain, number>>;
+  methodEdges: TraitMethodEdge[];
   roleplayDirectives: string[];
 }
 
@@ -36,6 +46,7 @@ export function aggregateTraitRuleEffects(rules: readonly TraitRuleSet[]): Aggre
     multipliers: {},
     resistances: {},
     checkModifiers: {},
+    methodEdges: [],
     roleplayDirectives: [],
   };
 
@@ -48,6 +59,9 @@ export function aggregateTraitRuleEffects(rules: readonly TraitRuleSet[]): Aggre
     }
     for (const [domain, value] of Object.entries(rule.checkModifiers ?? {}) as Array<[TraitCheckDomain, number]>) {
       result.checkModifiers[domain] = clamp((result.checkModifiers[domain] ?? 0) + value, -10, 10);
+    }
+    for (const edge of rule.methodEdges ?? []) {
+      if (!result.methodEdges.some((candidate) => candidate.label === edge.label)) result.methodEdges.push(edge);
     }
     for (const directive of rule.roleplayDirectives ?? []) {
       if (!result.roleplayDirectives.includes(directive)) result.roleplayDirectives.push(directive);

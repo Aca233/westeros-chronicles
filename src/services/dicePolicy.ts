@@ -12,6 +12,7 @@ export interface DiceDecision {
   isImpossible: boolean;
   reason: string;
   attribute?: keyof LordAttributes;
+  secondaryAttribute?: keyof LordAttributes;
   domain?: TraitCheckDomain;
   dc?: number;
   intentLabel?: string;
@@ -28,6 +29,7 @@ export interface CheckOutcomeContract {
 
 export interface InferredActionCheck {
   attribute: keyof LordAttributes;
+  secondaryAttribute?: keyof LordAttributes;
   domain: TraitCheckDomain;
   dc: number;
   intentLabel: string;
@@ -37,6 +39,16 @@ interface ActionIntent {
   label: string;
   attribute: keyof LordAttributes;
   domain: TraitCheckDomain;
+  baseDc: number;
+  patterns: readonly RegExp[];
+  physical?: boolean;
+}
+
+interface ActionMethod {
+  attribute: keyof LordAttributes;
+  secondaryAttribute?: keyof LordAttributes;
+  domain: TraitCheckDomain;
+  label: string;
   baseDc: number;
   patterns: readonly RegExp[];
   physical?: boolean;
@@ -64,6 +76,18 @@ const ACTION_INTENTS: readonly ActionIntent[] = [
   { label: '生存行动', attribute: 'learning', domain: 'survival', baseDc: 13, physical: true, patterns: [/追踪|狩猎|荒野求生|求生|逃脱|逃生|攀爬|泅渡|觅食|穿越急流/] },
 ];
 
+// 方法优先于场景大类：同样是“进城”，伪造文书与翻墙应形成不同构筑。
+// 辅属性只在它对执行方式确有因果作用时出现，不强迫所有检定使用两项属性。
+const ACTION_METHODS: readonly ActionMethod[] = [
+  { label: '伪造文书', attribute: 'intrigue', secondaryAttribute: 'learning', domain: 'intrigue', baseDc: 16, patterns: [/伪造|仿写|假(?:的)?(?:通行证|许可|军令|文书|印章)/] },
+  { label: '隐蔽攀爬', attribute: 'prowess', secondaryAttribute: 'intrigue', domain: 'survival', baseDc: 15, physical: true, patterns: [/悄悄.*攀|攀.*(?:避开|躲开|不惊动)|翻(?:过|越).*(?:墙|城垛)/] },
+  { label: '攀爬', attribute: 'prowess', domain: 'survival', baseDc: 13, physical: true, patterns: [/攀爬|翻墙|爬上|爬下|攀上|攀下/] },
+  { label: '追踪', attribute: 'learning', secondaryAttribute: 'prowess', domain: 'survival', baseDc: 13, physical: true, patterns: [/追踪|循着踪迹|辨认足迹|寻找兽迹/] },
+  { label: '武力威慑', attribute: 'diplomacy', secondaryAttribute: 'prowess', domain: 'intimidation', baseDc: 14, patterns: [/(?:拔剑|佩剑|展示武器|武力).*(?:威胁|恐吓|震慑)|(?:威胁|恐吓|震慑).*(?:拔剑|佩剑|武器|动手)/] },
+  { label: '识破文书', attribute: 'learning', secondaryAttribute: 'intrigue', domain: 'learning', baseDc: 14, patterns: [/(?:检查|识破|核验|辨认).*(?:文书|印章|签名|许可|军令)/] },
+  { label: '伏击谋划', attribute: 'martial', secondaryAttribute: 'intrigue', domain: 'battle', baseDc: 15, patterns: [/伏击|佯攻|诱敌|设伏/] },
+];
+
 const TRIVIAL_PATTERNS = [
   /^(我)?(?:坐下|站起|走路|散步|喝水|吃饭|睡觉|休息|点头|摇头)/,
   /^(我)?(?:询问|问候|打招呼|自我介绍)/,
@@ -81,8 +105,21 @@ const LOW_STAKES_PATTERNS = [
 
 const HARD_SITUATION_PATTERNS = [/重兵把守|警戒严密|戒备森严|身经百战|暴风雪|湍急|悬崖|几乎无光/];
 const MODERATE_SITUATION_PATTERNS = [/守卫把守|上锁|警戒|敌方骑士|敌人阻拦|恶劣天气|黑暗|负重前进/];
-const STRONG_ADVANTAGE_PATTERNS = [/内应协助|提前准备|有钥匙|熟悉密道|对方信任|侍从协助|占据绝对优势/];
-const SMALL_ADVANTAGE_PATTERNS = [/有人协助|已有准备|工具齐全|熟悉地形|出其不意/];
+const DOMAIN_BASE_DCS: Record<TraitCheckDomain, number> = {
+  duel: 14,
+  battle: 14,
+  intrigue: 15,
+  diplomacy: 14,
+  stewardship: 13,
+  learning: 13,
+  medicine: 13,
+  survival: 13,
+  intimidation: 14,
+  seduction: 14,
+  resistFear: 13,
+};
+
+const PHYSICAL_DOMAINS = new Set<TraitCheckDomain>(['duel', 'survival', 'resistFear']);
 
 function firstPatternIndex(action: string, patterns: readonly RegExp[]): number {
   let first = Number.POSITIVE_INFINITY;
@@ -95,6 +132,24 @@ function firstPatternIndex(action: string, patterns: readonly RegExp[]): number 
 
 export function inferActionCheck(actionText: string): InferredActionCheck {
   const action = actionText.trim();
+  let selectedMethod: ActionMethod | undefined;
+  let selectedMethodIndex = Number.POSITIVE_INFINITY;
+  for (const method of ACTION_METHODS) {
+    const index = firstPatternIndex(action, method.patterns);
+    if (index < selectedMethodIndex) {
+      selectedMethod = method;
+      selectedMethodIndex = index;
+    }
+  }
+  if (selectedMethod) {
+    return {
+      attribute: selectedMethod.attribute,
+      ...(selectedMethod.secondaryAttribute ? { secondaryAttribute: selectedMethod.secondaryAttribute } : {}),
+      domain: selectedMethod.domain,
+      dc: selectedMethod.baseDc,
+      intentLabel: selectedMethod.label,
+    };
+  }
   let selected: ActionIntent | undefined;
   let selectedIndex = Number.POSITIVE_INFINITY;
   for (const intent of ACTION_INTENTS) {
@@ -115,12 +170,17 @@ export function inferActionCheck(actionText: string): InferredActionCheck {
   };
 }
 
-function findIntent(action: string): ActionIntent | undefined {
+function findIntent(action: string): ActionIntent | ActionMethod | undefined {
   const inferred = inferActionCheck(action);
-  return ACTION_INTENTS.find((intent) => intent.domain === inferred.domain && intent.label === inferred.intentLabel);
+  return ACTION_METHODS.find((method) => method.domain === inferred.domain && method.label === inferred.intentLabel)
+    ?? ACTION_INTENTS.find((intent) => intent.domain === inferred.domain && intent.label === inferred.intentLabel);
 }
 
-function calculateContextualDc(action: string, intent: ActionIntent, context?: DiceEvaluationContext): { dc: number; factors: string[] } {
+function calculateContextualDc(
+  action: string,
+  intent: Pick<ActionIntent | ActionMethod, 'baseDc' | 'physical'>,
+  context?: DiceEvaluationContext,
+): { dc: number; factors: string[] } {
   let adjustment = 0;
   const factors: string[] = [];
   if (HARD_SITUATION_PATTERNS.some((pattern) => pattern.test(action))) {
@@ -130,13 +190,8 @@ function calculateContextualDc(action: string, intent: ActionIntent, context?: D
     adjustment += 1;
     factors.push('场景阻力 +1');
   }
-  if (STRONG_ADVANTAGE_PATTERNS.some((pattern) => pattern.test(action))) {
-    adjustment -= 2;
-    factors.push('充分准备或协助 -2');
-  } else if (SMALL_ADVANTAGE_PATTERNS.some((pattern) => pattern.test(action))) {
-    adjustment -= 1;
-    factors.push('有利条件 -1');
-  }
+  // 准备、工具、协助和关系优势不得仅凭玩家在文本中自称成立。
+  // 它们由装备效果、人物/社会账本、世界事实等已验证状态单独结算。
   if (intent.physical && context?.overallStatus) {
     const woundAdjustment = context.overallStatus === '垂危' ? 4 : context.overallStatus === '负重伤' ? 2 : context.overallStatus === '挂彩' ? 1 : 0;
     if (woundAdjustment) {
@@ -147,19 +202,35 @@ function calculateContextualDc(action: string, intent: ActionIntent, context?: D
   return { dc: Math.max(8, Math.min(20, intent.baseDc + adjustment)), factors };
 }
 
+/** DC 由程序规则拥有；玩家或模型不能仅靠措辞获得准备/协助优惠。 */
+export function getRuleOwnedDc(
+  actionText: string,
+  domain: TraitCheckDomain,
+  context?: DiceEvaluationContext,
+): number {
+  const action = actionText.trim();
+  const inferredIntent = findIntent(action);
+  const ruleShape = inferredIntent?.domain === domain
+    ? { baseDc: inferredIntent.baseDc, physical: inferredIntent.physical }
+    : { baseDc: DOMAIN_BASE_DCS[domain], physical: PHYSICAL_DOMAINS.has(domain) };
+  return calculateContextualDc(action, ruleShape, context).dc;
+}
+
 export function evaluateDiceRequirement(actionText: string, context?: DiceEvaluationContext): DiceDecision {
   const action = actionText.trim();
   if (IMPOSSIBLE_PATTERNS.some((pattern) => pattern.test(action))) {
     return { shouldRoll: false, isImpossible: true, reason: '行动明显超出当前世界条件，骰子不能将不可能变成奇迹。' };
   }
 
+  const inferred = inferActionCheck(action);
   const intent = findIntent(action);
   if (intent && LOW_STAKES_PATTERNS.some((pattern) => pattern.test(action))) {
     return {
       shouldRoll: false,
       isImpossible: false,
       reason: `识别为${intent.label}，但当前没有真实阻力或有意义的失败代价，因此不检定。`,
-      attribute: intent.attribute,
+      attribute: inferred.attribute,
+      ...(inferred.secondaryAttribute ? { secondaryAttribute: inferred.secondaryAttribute } : {}),
       domain: intent.domain,
       dc: intent.baseDc,
       intentLabel: intent.label,
@@ -172,7 +243,8 @@ export function evaluateDiceRequirement(actionText: string, context?: DiceEvalua
       shouldRoll: true,
       isImpossible: false,
       reason: `识别为${intent.label}；行动存在真实阻力和直接失败后果${factors.length ? `；${factors.join('，')}` : ''}。`,
-      attribute: intent.attribute,
+      attribute: inferred.attribute,
+      ...(inferred.secondaryAttribute ? { secondaryAttribute: inferred.secondaryAttribute } : {}),
       domain: intent.domain,
       dc,
       intentLabel: intent.label,
@@ -206,11 +278,11 @@ export function buildOutcomeContract(actionText: string, domain: TraitCheckDomai
     intent: actionText.trim(),
     successOutcome: outcome.success,
     failureOutcome: outcome.failure,
-    criticalSuccessLimit: '自然 20 只让当前动作在现实与设定允许的合理边界内完成得更干净、更迅速或代价更小，不创造超能力、身份跃升或天降异象。',
-    criticalFailureLimit: '自然 1 只造成与当前动作和检定前已有风险直接相关的局部挫折，不得凭空处死角色或制造无关追杀。',
+    criticalSuccessLimit: '自然 20 没有自动成功或额外奖励；仍按总值与难度比较，并受现实与设定的合理边界约束。',
+    criticalFailureLimit: '自然 1 没有自动失败或额外惩罚；仍按总值与难度比较，只能产生与当前行动直接相关的后果，不得凭空制造灾难。',
     forbiddenEscalations: [
       '不得凭空引入与当前行动无关的追杀、死亡或世界事件',
-      '不得因自然 20 突破血统、能力、物资和世界设定限制',
+      '不得因单次原始骰面突破血统、能力、物资和世界设定限制',
       '不得因失败替玩家作出后续选择',
     ],
   };

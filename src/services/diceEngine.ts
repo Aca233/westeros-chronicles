@@ -2,6 +2,7 @@ import type { D20Check, LordAttributes } from '../types/game';
 import {
   aggregateSelectedTraitEffects,
   getTraitCheckContributions,
+  getTraitMethodEdges,
 } from '../data/characterTraits';
 import type { ItemCatalog, ItemSystemState } from '../features/items/types';
 import {
@@ -22,14 +23,30 @@ export const ATTRIBUTE_NAMES: Record<keyof LordAttributes, string> = {
 };
 
 export function getAttributeModifier(attrValue: number): number {
-  return Math.max(-5, Math.min(10, Math.floor((attrValue - 10) / 2)));
+  return Math.round((Math.max(0, attrValue) / 5) * 100) / 100;
+}
+
+export function getEffectiveAttribute(
+  attributes: LordAttributes,
+  primary: keyof LordAttributes,
+  secondary?: keyof LordAttributes,
+): number {
+  const primaryValue = Math.max(0, attributes[primary] ?? 0);
+  if (!secondary || secondary === primary) return primaryValue;
+  const secondaryValue = Math.max(0, attributes[secondary] ?? 0);
+  return Math.round((primaryValue * 0.7 + secondaryValue * 0.3) * 10) / 10;
 }
 
 export function inferCheckFromAction(
   actionText: string,
-): { attribute: keyof LordAttributes; dc: number; domain: TraitCheckDomain } {
+): { attribute: keyof LordAttributes; secondaryAttribute?: keyof LordAttributes; dc: number; domain: TraitCheckDomain } {
   const inferred = inferActionCheck(actionText);
-  return { attribute: inferred.attribute, dc: inferred.dc, domain: inferred.domain };
+  return {
+    attribute: inferred.attribute,
+    ...(inferred.secondaryAttribute ? { secondaryAttribute: inferred.secondaryAttribute } : {}),
+    dc: inferred.dc,
+    domain: inferred.domain,
+  };
 }
 
 /**
@@ -66,13 +83,27 @@ export function performD20Check(
   domainOverride?: TraitCheckDomain,
   sceneTags?: readonly string[],
   random: () => number = Math.random,
+  method?: {
+    secondaryAttribute?: keyof LordAttributes;
+    reason?: string;
+    attemptKey?: string;
+    conditionKey?: string;
+  },
 ): D20Check {
   const inferred = inferCheckFromAction(actionText);
   const attribute = attributeOverride || inferred.attribute;
+  const secondaryAttribute = method
+    ? method.secondaryAttribute
+    : inferred.secondaryAttribute;
   const dc = dcOverride !== undefined ? dcOverride : inferred.dc;
   const domain = domainOverride || inferred.domain;
   const roll = Math.floor(random() * 20) + 1;
-  const attributeModifier = getAttributeModifier(attributes[attribute] ?? 0);
+  const primaryAttributeValue = Math.max(0, attributes[attribute] ?? 0);
+  const secondaryAttributeValue = secondaryAttribute === undefined
+    ? undefined
+    : Math.max(0, attributes[secondaryAttribute] ?? 0);
+  const effectiveAttribute = getEffectiveAttribute(attributes, attribute, secondaryAttribute);
+  const attributeModifier = getAttributeModifier(effectiveAttribute);
 
   const itemEffects = aggregateEquippedItemEffects(items, catalog);
   const itemContext = {
@@ -94,11 +125,24 @@ export function performD20Check(
   const traitModifier = effects.checkModifiers[domain] ?? 0;
   const traitModifierBreakdown = getTraitCheckContributions(traitIds, domain)
     .map(({ id, name, value }) => ({ traitId: id, name, value }));
+  const availableMethodEdges = getTraitMethodEdges(traitIds, domain);
   const outcomeContract = buildOutcomeContract(actionText, domain);
   const isNatural20 = roll === 20;
   const isNatural1 = roll === 1;
-  const total = roll + attributeModifier + equipmentModifier + traitModifier;
-  const success = isNatural20 || (!isNatural1 && total >= dc);
+  const total = Math.round((roll + attributeModifier + equipmentModifier + traitModifier) * 100) / 100;
+  const margin = Math.round((total - dc) * 100) / 100;
+  const rolledOutcome: NonNullable<D20Check['outcome']> = margin >= 5
+    ? 'strong_success'
+    : margin >= 0
+      ? 'success'
+      : margin >= -3
+        ? 'partial'
+        : 'failure';
+  const activatedMethodEdge = rolledOutcome === 'failure'
+    ? availableMethodEdges.find((edge) => margin >= -edge.maxMiss)
+    : undefined;
+  const outcome: NonNullable<D20Check['outcome']> = activatedMethodEdge ? 'partial' : rolledOutcome;
+  const success = outcome === 'strong_success' || outcome === 'success';
 
   const traitText = traitModifier
     ? `，特质修正 ${traitModifier >= 0 ? '+' : ''}${traitModifier}`
@@ -107,15 +151,29 @@ export function performD20Check(
     ? `，物品修正 ${equipmentModifier >= 0 ? '+' : ''}${equipmentModifier}`
     : '';
   let resultDescription = '';
-  if (isNatural20) resultDescription = '【自然 20】当前行动在现实与设定允许的范围内完成得更好。';
-  else if (isNatural1) resultDescription = '【自然 1】当前行动在已有风险范围内失手，不会产生无关灾难。';
-  else if (success) resultDescription = `【检定成功】总点数 ${total} >= 难度 DC ${dc}${itemText}${traitText}。`;
-  else resultDescription = `【检定失败】总点数 ${total} < 难度 DC ${dc}${itemText}${traitText}。`;
+  const methodText = secondaryAttribute
+    ? `${ATTRIBUTE_NAMES[attribute]} 70% + ${ATTRIBUTE_NAMES[secondaryAttribute]} 30% = 有效能力 ${effectiveAttribute}`
+    : `${ATTRIBUTE_NAMES[attribute]} = 有效能力 ${effectiveAttribute}`;
+  if (outcome === 'strong_success') resultDescription = `【优势成功】${methodText}；总点数 ${total} 超过难度 DC ${dc} 达 5 点，可获得一个与当前行动直接相关的小优势${itemText}${traitText}。`;
+  else if (outcome === 'success') resultDescription = `【检定成功】${methodText}；总点数 ${total} >= 难度 DC ${dc}${itemText}${traitText}。`;
+  else if (outcome === 'partial' && activatedMethodEdge) resultDescription = `【部分成果·${activatedMethodEdge.label}】${methodText}；原检定失败，但专长改变了失败后还能保住的东西：${activatedMethodEdge.directive}${itemText}${traitText}。`;
+  else if (outcome === 'partial') resultDescription = `【部分成果】${methodText}；总点数 ${total} 距难度 DC ${dc} 不超过 3 点，只能取得有限进展、接受相关代价，或面对一个条件机会${itemText}${traitText}。`;
+  else resultDescription = `【检定失败】${methodText}；总点数 ${total} 距难度 DC ${dc} 超过 3 点${itemText}${traitText}。`;
 
   return {
     id: `check_${Date.now()}`,
     attribute,
     attributeName: ATTRIBUTE_NAMES[attribute],
+    ...(secondaryAttribute ? {
+      secondaryAttribute,
+      secondaryAttributeName: ATTRIBUTE_NAMES[secondaryAttribute],
+      secondaryAttributeValue,
+    } : {}),
+    primaryAttributeValue,
+    effectiveAttribute,
+    ...(method?.reason?.trim() ? { methodReason: method.reason.trim() } : {}),
+    ...(method?.attemptKey ? { attemptKey: method.attemptKey } : {}),
+    ...(method?.conditionKey ? { conditionKey: method.conditionKey } : {}),
     dc,
     roll,
     attributeModifier,
@@ -124,10 +182,18 @@ export function performD20Check(
     checkDomain: domain,
     traitModifier,
     traitModifierBreakdown,
+    ...(activatedMethodEdge ? { methodEdge: {
+      traitId: activatedMethodEdge.traitId,
+      traitName: activatedMethodEdge.traitName,
+      label: activatedMethodEdge.label,
+      directive: activatedMethodEdge.directive,
+    } } : {}),
     outcomeContract,
     total,
     isNatural20,
     isNatural1,
+    outcome,
+    margin,
     success,
     actionText,
     resultDescription,

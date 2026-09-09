@@ -7,8 +7,8 @@ import { advanceWorldDate, setWorldDateForward, type RejectedWorldCommand, type 
 import type { GameState, LordProfile, StateCommand } from '../../types/game';
 import type { CharacterCommandBatchBaseContext } from '../stateReducer';
 import { stripEmoji } from '../textSanitizer';
-import { fallbackLocationLabel } from '../../features/map/locationResolver';
-import type { WorldLocationRef, MapLocationSearchEntry, SemanticMembership } from '../../features/map/types';
+import { fallbackLocationLabel, sameWorldLocation } from '../../features/map/locationResolver';
+import type { WorldLocationRef, MapLocationSearchEntry, SemanticMembership, TravelMode } from '../../features/map/types';
 import { advanceJourney } from '../../features/map/travel/journeyReducer';
 import { applyTravelCommands, isTravelStateCommand } from '../../features/map/travel/travelCommands';
 import type { ActiveJourney, TravelStateCommand } from '../../features/map/travel/types';
@@ -262,21 +262,64 @@ async function handleTravelCommand(
   env: TurnIntentEnv,
 ): Promise<void> {
   if (!target) throw new Error(`${intent.kind} 意图缺少目标地点`);
+  const travelIntent = intent as Extract<ResolvedLocationWorldIntent, {
+    kind: 'plan_travel' | 'start_travel' | 'reroute_travel' | 'return_travel';
+  }>;
+  const previousRoute = env.workingJourney.current?.routePlan;
+  const routePreference = travelIntent.routePreference ?? previousRoute?.preference ?? 'fastest';
+  const travelMode = travelIntent.travelMode ?? previousRoute?.travelMode ?? 'walk';
+  const via = travelIntent.via?.map((entry) => entry.locationId);
   const routePlan = await env.planner({
     from: env.gameState.lord.location.locationId,
     to: target.locationId,
-    preference: 'fastest',
-    travelMode: 'horse',
+    preference: routePreference,
+    travelMode,
+    ...(via?.length ? { via } : {}),
     season: env.gameState.currentSeason,
   });
   const type = intent.kind === 'plan_travel' ? 'PLAN_TRAVEL'
     : intent.kind === 'start_travel' ? 'START_TRAVEL'
       : intent.kind === 'reroute_travel' ? 'REROUTE_TRAVEL'
         : 'RETURN_TRAVEL';
+  const locationLabels = Object.fromEntries(env.locations.map((entry) => [entry.id, entry.name]));
+  let companionIds: CharacterId[] | undefined;
+  let vehicleIds: string[] | undefined;
+  if (type === 'PLAN_TRAVEL' || type === 'START_TRAVEL') {
+    if (travelIntent.companionIds?.length) {
+      const presentIds = new Set(env.fallbackContext.presentCharacterIds);
+      companionIds = [...new Set(travelIntent.companionIds)].filter((id) => id !== env.playerId);
+      const absent = companionIds.filter((id) => !presentIds.has(id));
+      if (absent.length) throw new Error(`同行者当前不在场：${absent.join('、')}`);
+    }
+
+    const explicitVehicleIds = [...new Set(travelIntent.vehicleIds ?? [])];
+    const availableVehicles = Object.values(env.gameState.lord.items.vehicles)
+      .filter((vehicle) => sameWorldLocation(vehicle.location, env.gameState.lord.location));
+    if (explicitVehicleIds.length) {
+      const availableIds = new Set(availableVehicles.map((vehicle) => vehicle.id));
+      const unavailable = explicitVehicleIds.filter((id) => !availableIds.has(id));
+      if (unavailable.length) throw new Error(`旅行载具当前不可用：${unavailable.join('、')}`);
+      vehicleIds = explicitVehicleIds;
+    } else {
+      const expectedType: Partial<Record<TravelMode, 'packhorse' | 'wagon' | 'ship'>> = {
+        horse: 'packhorse',
+        carriage: 'wagon',
+        ship: 'ship',
+      };
+      const requiredType = expectedType[travelMode];
+      vehicleIds = requiredType
+        ? availableVehicles.filter((vehicle) => vehicle.type === requiredType).map((vehicle) => vehicle.id)
+        : [];
+      if (requiredType && !vehicleIds.length) throw new Error(`当前地点没有可用于${travelMode}旅行的载具`);
+    }
+  }
+
   const command: TravelStateCommand = {
     type,
     routePlan,
-    locationLabels: Object.fromEntries(env.locations.map((entry) => [entry.id, entry.name])),
+    locationLabels,
+    ...((type === 'PLAN_TRAVEL' || type === 'START_TRAVEL') && companionIds ? { companions: companionIds } : {}),
+    ...((type === 'PLAN_TRAVEL' || type === 'START_TRAVEL') && vehicleIds ? { vehicleIds } : {}),
   } as TravelStateCommand;
   const applied = applyTravelCommands(env.workingJourney.current, [command], {
     currentLocation: env.gameState.lord.location,
