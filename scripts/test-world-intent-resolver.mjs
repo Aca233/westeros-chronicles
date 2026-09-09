@@ -190,6 +190,7 @@ test('模型地点意图结构拒绝未知类型、空证据和多余字段', ()
 
 test('回合解析同时读取状态命令和结构化地点意图', () => {
   const draft = parseTurnResolutionOutput(`
+    <dice_request>{"roll":false,"attribute":"diplomacy","dc":12,"domain":"diplomacy","reason":"制定行程不需要检定"}</dice_request>
     <resolution>决定明日动身。</resolution>
     <state_cmd>[{"type":"ADVANCE_TIME","days":1,"reason":"等待至次日"}]</state_cmd>
     <world_intent>[{"kind":"plan_travel","targetText":"君临","evidenceText":"我准备明日去君临"}]</world_intent>

@@ -37,8 +37,8 @@ const createLord = (traitIds = []) => ({
 
 const chainmailEquip = { type: 'ITEM_EQUIP', instanceId: 'ned.chainmail', position: { group: 'torso', layer: 'armor' }, displacedTo: { type: 'site', siteId: 'winterfell_armory' } };
 
-test('贪婪只放大金币收益，不放大支出', () => {
-  assert.equal(applyStateCommands(createLord(['greedy']), [{ type: 'MODIFY_GOLD', goldDragons: 100 }]).updatedLord.goldDragons, 1120);
+test('金币命令按明确数额结算，不被性格特质偷偷改写', () => {
+  assert.equal(applyStateCommands(createLord(['greedy']), [{ type: 'MODIFY_GOLD', goldDragons: 100 }]).updatedLord.goldDragons, 1100);
   assert.equal(applyStateCommands(createLord(['greedy']), [{ type: 'MODIFY_GOLD', goldDragons: -100 }]).updatedLord.goldDragons, 900);
 });
 
@@ -51,6 +51,35 @@ test('受伤抗性触发时将伤势降低一级', () => {
 test('抗性未触发时保留原始伤势', () => {
   const result = applyStateCommands(createLord(['brave']), [{ type: 'INJURE_ZONE', zone: 'arms', level: 'heavy', woundText: '手臂受创' }], () => 0.5);
   assert.equal(result.updatedLord.body.arms.level, 'heavy');
+});
+
+test('新增正式特质同步 ID、显示名和属性效果', () => {
+  const lord = createLord();
+  lord.baseAttributes = { ...lord.attributes };
+  const result = applyStateCommands(lord, [{ type: 'ADD_TRAIT', trait: 'brave' }]);
+  assert.ok(result.updatedLord.traitIds.includes('brave'));
+  assert.ok(result.updatedLord.traits.includes('勇敢'));
+  assert.equal(result.updatedLord.attributes.prowess, 13);
+});
+
+test('较轻的新伤不会覆盖同一部位原有重伤', () => {
+  const lord = createLord();
+  lord.body.arms.level = 'heavy';
+  lord.body.arms.wounds = ['旧箭伤'];
+  const result = applyStateCommands(lord, [
+    { type: 'INJURE_ZONE', zone: 'arms', level: 'minor', woundText: '新擦伤' },
+  ]);
+  assert.equal(result.updatedLord.body.arms.level, 'heavy');
+  assert.deepEqual(result.updatedLord.body.arms.wounds, ['旧箭伤', '新擦伤']);
+});
+
+test('治疗命令只能改善伤势，不能把轻伤治疗成重伤', () => {
+  const lord = createLord();
+  lord.body.arms.level = 'minor';
+  const result = applyStateCommands(lord, [
+    { type: 'HEAL_ZONE', zone: 'arms', level: 'heavy' },
+  ]);
+  assert.equal(result.updatedLord.body.arms.level, 'minor');
 });
 
 test('不存在的物品实例不能凭空装备', () => {

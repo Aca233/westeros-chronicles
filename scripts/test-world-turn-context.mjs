@@ -26,7 +26,7 @@ const base = {
 };
 const records = new Map([
   ['agot:player_1', { ...base, id: 'agot:player_1', name: '玩家原型', fatherId: 'agot:relative_1' }],
-  ['agot:named_1', { ...base, id: 'agot:named_1', name: '劳勃', locationId: 'b_winterfell', traits: ['brave', 'family_first', 'education_martial_prowess_3', 'rowdy', 'knight'], titles: ['七国国王'] }],
+  ['agot:named_1', { ...base, id: 'agot:named_1', name: '劳勃', locationId: 'b_winterfell', sceneLocation: '神木林', traits: ['brave', 'family_first', 'education_martial_prowess_3', 'rowdy', 'knight'], titles: ['七国国王'] }],
   ['agot:relative_1', { ...base, id: 'agot:relative_1', name: '父亲' }],
   ['agot:recent_1', { ...base, id: 'agot:recent_1', name: '近来人物' }],
   ['agot:due_1', { ...base, id: 'agot:due_1', name: '时间线人物' }],
@@ -94,13 +94,14 @@ const timeline = [{
 }];
 const context = await buildWorldTurnContext({ gameState, actionText: '与劳勃交谈', repository, eventStore, mapLocationRepository, timeline });
 const selectedIds = [...context.selection.full, ...context.selection.compact].map((entry) => entry.id);
-for (const id of ['agot:named_1', 'agot:relative_1', 'agot:recent_1', 'agot:due_1']) {
+for (const id of ['agot:named_1', 'agot:relative_1', 'agot:recent_1']) {
   assert.ok(selectedIds.includes(id), `${id} should be selected`);
 }
 assert.equal(selectedIds.includes('agot:genealogy_1'), false);
 assert.ok(context.directlyNamedIds.includes('agot:named_1'));
 assert.ok(context.strongRelationshipIds.includes('agot:relative_1'));
-assert.ok(context.eventParticipantIds.includes('agot:due_1'));
+assert.ok(context.eventParticipantIds.includes('agot:recent_1'));
+assert.equal(selectedIds.includes('agot:due_1'), false);
 assert.ok(context.recentInteractionIds.includes('agot:recent_1'));
 assert.ok(context.characterCommandContext.presentCharacterIds.includes('agot:named_1'));
 assert.ok(context.visibleWorldEquipment.some((item) => item.definitionId === 'clothing.common_linen_tunic'));
@@ -118,13 +119,21 @@ assert.match(formatted, /临冬城 · 神木林 · 临冬城伯爵领 · 临冬�
 assert.doesNotMatch(formatted, /b_winterfell|baronyId|男爵领/);
 assert.match(formatted, /特质: 勇敢；家族至上；骑士/);
 assert.doesNotMatch(formatted, /education_martial_prowess_3|family_first|rowdy/);
-assert.match(formatted, /原作预定压力/);
+assert.doesNotMatch(formatted, /原作预定压力|将要发生/);
 assert.match(formatted, /当前实际穿戴/);
 assert.match(formatted, /朴素亚麻束腰衣/);
 assert.match(formatted, /瓦雷利亚钢长剑“长爪”[\s\S]*本人保管/);
 assert.match(formatted, /领地资产/);
 assert.match(formatted, /不代表当前随身携带/);
 assert.doesNotMatch(formatted, /genealogy_1/);
+
+const otherSceneState = structuredClone(gameState);
+otherSceneState.lord.location.sceneLocation = '大厅';
+const mentionedButAbsent = await buildWorldTurnContext({
+  gameState: otherSceneState, actionText: '谈论劳勃', repository, eventStore, mapLocationRepository, timeline,
+});
+assert.equal(mentionedButAbsent.characterCommandContext.presentCharacterIds.includes('agot:named_1'), false);
+assert.equal(mentionedButAbsent.visibleWorldEquipment.length, 0);
 
 const semanticFailureRepository = {
   ...mapLocationRepository,

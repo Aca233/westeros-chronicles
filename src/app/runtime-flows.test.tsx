@@ -255,8 +255,9 @@ describe('critical rendered runtime flows', () => {
 
     render(<App />);
     await enterGameViaMenu('298 AC');
+    expect(screen.getByRole('complementary', { name: '我的角色' })).toBeInTheDocument();
     await user.type(screen.getByRole('textbox'), '继续讨论守城安排');
-    await user.click(screen.getByRole('button', { name: '提交御令' }));
+    await user.click(screen.getByRole('button', { name: '执行行动' }));
 
     await waitFor(() => expect(useGameStore.getState().gameState.turnCount).toBe(2), { timeout: 10_000 });
     expect(await screen.findByText('守卫完成了换岗。', {}, { timeout: 10_000 })).toBeInTheDocument();

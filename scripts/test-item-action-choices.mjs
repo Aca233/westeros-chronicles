@@ -25,7 +25,7 @@ const {
 } = await import(url);
 await preloadItemCatalog();
 
-test('更换返回全部可接触的兼容装备而不是直接取第一个', () => {
+test('更换只返回已经随身携带的兼容装备', () => {
   const state = createNedItemState();
   state.instances['ned.spare_sword'] = createItemInstance(ITEM_CATALOG, 'weapon.castle_bastard_sword', 'ned.spare_sword', { customName: '备用临冬城长名称骑行佩剑' });
   state.placements['ned.spare_sword'] = { type: 'carried' };
@@ -43,7 +43,7 @@ test('更换返回全部可接触的兼容装备而不是直接取第一个', ()
     excludedIds: ['ned.ice'],
   });
 
-  assert.deepEqual(new Set(choices.map((choice) => choice.instanceId)), new Set(['ned.castle_sword', 'ned.spare_sword']));
+  assert.deepEqual(new Set(choices.map((choice) => choice.instanceId)), new Set(['ned.spare_sword']));
   assert.ok(choices.every((choice) => choice.position.group === 'mainhand'));
   assert.ok(choices.some((choice) => choice.name === '备用临冬城长名称骑行佩剑'));
   assert.ok(choices.every((choice) => choice.instanceId !== 'ned.remote_sword' && choice.instanceId !== 'ned.broken_sword'));
