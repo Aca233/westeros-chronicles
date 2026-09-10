@@ -8,12 +8,20 @@ import type { WorldRuntimeState } from '../features/world/worldRuntimeTypes';
 import type { BodyZoneKey, WoundLevel } from '../domain/body';
 import type { LordAttributes } from '../domain/character';
 import type { CharacterId } from '../domain/characterId';
+import type { CharacterBuildProfile } from '../domain/characterBuild';
 import type { WorldLocationRef } from '../domain/worldLocation';
 import type { StateCommand } from './stateCommand';
 export type { StateCommand } from './stateCommand';
 import type { ActiveJourney } from '../features/map/travel/types';
 import type { ActiveSceneState } from '../features/world/sceneState';
 import type { RoleplayState } from '../features/roleplay/types';
+import type { HealthRuntimeState } from '../features/health/types';
+import type { TimePrecision } from '../features/time/gameClock';
+import type {
+  CharacterCreationDraft,
+  CustomCharacterOverlayState,
+  OpeningFacts,
+} from '../features/characters/customCharacterStart';
 export type { BodyZoneKey, WoundLevel } from '../domain/body';
 export type { LordAttributes } from '../domain/character';
 
@@ -71,6 +79,8 @@ export interface LordProfile {
   traits: string[];
   traitIds?: string[];
   importedTraitIds?: string[]; // 现成人物保留的完整离线原始特质，显示时按年龄与呈现策略投影
+  /** 人物构筑方向：用于行动和叙事倾向，不替代六维属性。 */
+  build?: CharacterBuildProfile;
 }
 
 // D20 跑团检定定义
@@ -103,6 +113,14 @@ export interface D20Check {
   checkDomain: TraitCheckDomain;
   traitModifier: number;
   traitModifierBreakdown: Array<{ traitId: string; name: string; value: number }>;
+  /** 旧检定记录没有身体结算字段，因此保持可选以兼容存档。 */
+  healthModifier?: number;
+  healthModifierBreakdown?: Array<{
+    injuryId: string;
+    label: string;
+    value: number;
+    capabilities: string[];
+  }>;
   methodEdge?: {
     traitId: string;
     traitName: string;
@@ -144,10 +162,14 @@ export interface WorldCharacterStateRef {
 
 // 游戏全局状态
 export interface GameState {
-  saveFormatVersion: 10;
+  saveFormatVersion: 11;
   currentYear: number;
   currentMonth: number;
   currentDay: number;
+  /** 日内分钟，0=00:00，1439=23:59。 */
+  currentMinute: number;
+  /** 旧档只有日期时保留 day_only，直到下一次经过程序结算的时间推进。 */
+  currentTimePrecision: TimePrecision;
   currentSeason: string;
   turnCount: number;
   lord: LordProfile;
@@ -156,8 +178,14 @@ export interface GameState {
   worldArtifacts: WorldArtifactState;
   worldHistory: WorldHistoryState;
   worldRuntime: WorldRuntimeState;
+  /** 人物健康的权威状态；lord.body 仅为向旧界面/旧规则提供的兼容投影。 */
+  health: HealthRuntimeState;
   activeScene?: ActiveSceneState;
   roleplay?: RoleplayState;
+  /** 自创人物新局的可选扩展。旧存档没有这些字段时按空数据处理。 */
+  characterCreationDraft?: CharacterCreationDraft;
+  customCharacters?: CustomCharacterOverlayState;
+  openingFacts?: OpeningFacts;
   activeJourney?: ActiveJourney;
   worldFlags: Record<string, boolean | string | number>;
   isGameOver: boolean;
