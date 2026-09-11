@@ -18,6 +18,8 @@ import type {
 import type { UnresolvedWorldIntent, RejectedWorldIntent, ResolvedLocationWorldIntent } from '../../features/world/worldIntentResolver';
 import type { WorldBaselineSnapshot } from '../../features/world/worldBaseline';
 import type { RoleplayState } from '../../features/roleplay/types';
+import type { HealthRuntimeState } from '../../features/health/types';
+import type { ActionPhaseDraft, TimePrecision } from '../../features/time/gameClock';
 import type { ApiConfig, D20Check, GameState, LordProfile, StateCommand } from '../../types/game';
 import type { CharacterCommandBatchBaseContext } from '../stateReducer';
 
@@ -25,6 +27,8 @@ export interface TurnResolutionDraft {
   outcomeSummary: string;
   stateCommands: StateCommand[];
   worldIntents: UnresolvedWorldIntent[];
+  /** LLM 只提出阶段与耗时；程序验证并按阶段推进。 */
+  actionPhases?: ActionPhaseDraft[];
 }
 
 export interface ResolvedTurnFacts {
@@ -59,9 +63,12 @@ export interface SettledTurn {
   characterContext: CharacterCommandBatchBaseContext;
   changesLog: string[];
   nextDate: WorldDate;
+  nextMinute: number;
+  nextTimePrecision: TimePrecision;
   nextSeason: string;
   worldHistory: WorldHistoryState;
   worldRuntime: WorldRuntimeState;
+  health: HealthRuntimeState;
   resolvedFacts: ResolvedTurnFacts;
   activeJourney?: ActiveJourney;
   roleplay?: RoleplayState;

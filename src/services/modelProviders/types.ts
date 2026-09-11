@@ -38,6 +38,52 @@ export class ModelApiError extends Error {
   }
 }
 
+export function payloadError(payload: unknown, label: string, status = 200): ModelApiError | null {
+  if (!payload || typeof payload !== 'object') return null;
+  const error = (payload as { error?: unknown }).error;
+  if (!error) return null;
+
+  const record = typeof error === 'object' && error !== null
+    ? error as Record<string, unknown>
+    : null;
+  const code = typeof record?.code === 'string' ? record.code : null;
+  const message = typeof record?.message === 'string'
+    ? record.message
+    : typeof error === 'string'
+      ? error
+      : '';
+  let detail: string;
+  try {
+    detail = JSON.stringify(payload);
+  } catch {
+    detail = message || String(error);
+  }
+  const evidence = `${code ?? ''} ${message} ${detail}`.toLowerCase();
+
+  if (evidence.includes('upstream authentication failed')) {
+    return new ModelApiError(
+      `${label}：中转服务已收到请求，但连接上游模型时认证失败。请更换中转节点/模型，或让中转服务管理员修复上游账号凭据。`,
+      status,
+      code,
+      detail,
+    );
+  }
+  if (evidence.includes('upstream_server_error')) {
+    return new ModelApiError(
+      `${label}：中转服务返回了 HTTP ${status}，但响应正文明确标记为 upstream_server_error；上游模型未能完成请求。这不是成功响应，请重试或切换备用模型/节点。`,
+      status,
+      code,
+      detail,
+    );
+  }
+  return new ModelApiError(
+    `${label}：接口返回了错误对象${code ? ` (${code})` : ''}${message ? `：${message}` : ''}`,
+    status,
+    code,
+    detail,
+  );
+}
+
 export function isUnavailableModelError(error: unknown): error is ModelApiError {
   if (!(error instanceof ModelApiError)) return false;
   const evidence = `${error.code ?? ''} ${error.detail} ${error.message}`.toLowerCase();
@@ -55,6 +101,15 @@ export async function responseError(response: Response, label: string): Promise<
     if (typeof payload.error?.code === 'string') code = payload.error.code;
   } catch {
     // Some compatible providers return plain text or an HTML gateway error.
+  }
+  const evidence = `${code ?? ''} ${detail}`.toLowerCase();
+  if (response.status === 502 && evidence.includes('upstream authentication failed')) {
+    return new ModelApiError(
+      `${label} (502)：中转服务已收到请求，但它连接上游模型时认证失败。请先重试一次；若持续出现，请更换中转节点/模型，或让中转服务管理员修复上游账号凭据。`,
+      response.status,
+      code,
+      detail,
+    );
   }
   return new ModelApiError(
     `${label} (${response.status}): ${detail || '未知错误'}`,

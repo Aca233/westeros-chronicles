@@ -39,9 +39,13 @@ if (!equipmentPanel.includes("['head', 'torso', 'mainhand', 'offhand', 'legs', '
 if (!equipmentPanel.includes('data-hand-pair')) failures.push('Main-hand and off-hand are not arranged symmetrically.');
 
 
-const characterCreator = await readFile(join(root, 'src/components/CharacterCreator.tsx'), 'utf8');
+const characterCreator = [
+  await readFile(join(root, 'src/components/CharacterCreator.tsx'), 'utf8'),
+  await readFile(join(root, 'src/components/character-creator/CharacterReadoutPanel.tsx'), 'utf8'),
+  await readFile(join(root, 'src/components/character-creator/characterReadout.ts'), 'utf8'),
+].join('\n');
 if (!characterCreator.includes('CK3_SKILLS.map')) failures.push('Character creator does not render all six CK3 skills.');
-if (!characterCreator.includes('handleStatChange(skill.key, 1)')) failures.push('Character creator does not allocate CK3 skills one point at a time.');
+if (!characterCreator.includes('onChange(skill.key, 1)')) failures.push('Character creator does not allocate CK3 skills one point at a time.');
 
 const stateReducer = await readFile(join(root, 'src/services/stateReducer.ts'), 'utf8');
 if (!stateReducer.includes('normalizeCk3Attributes(next.attributes)')) failures.push('State reducer does not normalize CK3 attributes.');

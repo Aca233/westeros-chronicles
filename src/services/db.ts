@@ -5,6 +5,7 @@ import type { CharacterId } from '../domain/characterId';
 import {
   ITEM_SAVE_FORMAT_VERSION,
   PREVIOUS_SAVE_FORMAT_VERSION,
+  LEGACY_SAVE_FORMAT_VERSION,
   assertSupportedGameState,
   assertSupportedSaveEnvelope,
   isCompatibleTurnBaseline,
@@ -15,7 +16,7 @@ import {
 export interface GameSnapshot {
   id?: number;
   slotId: string;
-  formatVersion: typeof ITEM_SAVE_FORMAT_VERSION | typeof PREVIOUS_SAVE_FORMAT_VERSION;
+  formatVersion: typeof ITEM_SAVE_FORMAT_VERSION | typeof PREVIOUS_SAVE_FORMAT_VERSION | typeof LEGACY_SAVE_FORMAT_VERSION;
   turnNumber: number;
   timestamp: number;
   gameState: GameState;
@@ -326,10 +327,10 @@ export async function ensureTurnSnapshotBaseline(slotId: string, gameState: Game
     const latest = await latestSnapshotOf(slotId);
     if (latest && isCompatibleTurnBaseline(latest, gameState)) {
       try {
-        assertSupportedSnapshot(latest);
+        gameStateFromSnapshot(latest);
         return 'ready' as const;
       } catch {
-        // A current-version but internally inconsistent test snapshot is stale.
+        // Structurally inconsistent baselines are stale; raw compatible old snapshots remain untouched.
       }
     }
 
@@ -377,8 +378,8 @@ export async function commitTurnAtomically(
   return db.transaction('rw', db.snapshots, db.saveSlots, db.worldRuns, db.characterEvents, db.characterStateCache, async () => {
     const previousSnapshot = await latestSnapshotOf(slotId);
     if (!previousSnapshot) throw new Error('缺少前一回合快照，无法原子提交');
-    assertSupportedSnapshot(previousSnapshot);
-    assertTurnSuccessor(previousSnapshot.gameState, gameState);
+    const previousGameState = gameStateFromSnapshot(previousSnapshot);
+    assertTurnSuccessor(previousGameState, gameState);
     if (ref) {
       for (const [sequence, input] of characterEvents.entries()) {
         const key: [string, string] = [ref.runId, input.id];
@@ -403,8 +404,11 @@ export async function commitTurnAtomically(
 
 export async function getRecentSnapshots(slotId: string, limit = 10): Promise<GameSnapshot[]> {
   const snapshots = await slotChain(slotId).reverse().limit(limit).toArray();
-  snapshots.forEach(assertSupportedSnapshot);
-  return snapshots;
+  return snapshots.map((snapshot) => ({
+    ...snapshot,
+    formatVersion: ITEM_SAVE_FORMAT_VERSION,
+    gameState: gameStateFromSnapshot(snapshot),
+  }));
 }
 
 export async function rollbackLastTurn(slotId: string): Promise<GameState | null> {
@@ -413,9 +417,9 @@ export async function rollbackLastTurn(slotId: string): Promise<GameState | null
     if (all.length < 2) return null;
     const current = all[all.length - 1];
     const previous = all[all.length - 2];
-    assertSupportedSnapshot(current);
-    assertSupportedSnapshot(previous);
-    assertTurnSuccessor(previous.gameState, current.gameState);
+    const currentState = gameStateFromSnapshot(current);
+    const previousState = gameStateFromSnapshot(previous);
+    assertTurnSuccessor(previousState, currentState);
     if (current.id) await db.snapshots.delete(current.id);
     const ref = current.gameState.worldCharacters ?? previous.gameState.worldCharacters;
     if (ref) {
@@ -428,9 +432,9 @@ export async function rollbackLastTurn(slotId: string): Promise<GameState | null
         await db.worldRuns.put({ ...restoredRef, createdAt: existing?.createdAt ?? Date.now() });
       } else await db.worldRuns.delete(ref.runId);
     }
-    assertSupportedGameState(previous.gameState);
-    await upsertSlotMeta(slotId, previous.gameState);
-    return clone(previous.gameState);
+    assertSupportedGameState(previousState);
+    await upsertSlotMeta(slotId, previousState);
+    return clone(previousState);
   });
 }
 
@@ -453,8 +457,9 @@ export async function exportSaveData(slotId: string): Promise<string> {
   const runIds = new Set(snapshots
     .map((snapshot) => snapshot.gameState.worldCharacters?.runId)
     .filter((runId): runId is string => Boolean(runId)));
-  const envelopeVersion = snapshots.length > 0 && snapshots.every((snapshot) => snapshot.formatVersion === PREVIOUS_SAVE_FORMAT_VERSION)
-    ? PREVIOUS_SAVE_FORMAT_VERSION
+  const storedVersions = new Set(snapshots.map((snapshot) => snapshot.formatVersion));
+  const envelopeVersion = storedVersions.size === 1
+    ? snapshots[0]?.formatVersion ?? ITEM_SAVE_FORMAT_VERSION
     : ITEM_SAVE_FORMAT_VERSION;
   return JSON.stringify({
     version: envelopeVersion,

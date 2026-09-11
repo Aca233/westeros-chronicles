@@ -35,7 +35,7 @@ export type ItemPlacement =
   | { type: 'character'; characterId: string }
   | { type: 'lost'; reason: string };
 
-export type ItemBodyZone = 'head' | 'torso' | 'arms' | 'legs';
+export type ItemBodyZone = 'head' | 'chest' | 'abdomen' | 'left_arm' | 'right_arm' | 'left_hand' | 'right_hand' | 'left_leg' | 'right_leg' | 'left_foot' | 'right_foot' | 'torso' | 'arms' | 'legs';
 
 export type ItemImageRef =
   | { type: 'game'; icon: string }

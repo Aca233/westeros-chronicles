@@ -26,6 +26,33 @@ export interface TerrainSurfaceController {
   isNear(): boolean
 }
 
+export interface TerrainSurfaceErrorEventLike {
+  sourceId?: string
+  tile?: unknown
+  error?: {
+    name?: string
+    message?: string
+  }
+}
+
+export type TerrainSurfaceErrorDisposition = 'unrelated' | 'transient' | 'fatal'
+
+export function classifyTerrainSurfaceError(event: TerrainSurfaceErrorEventLike): TerrainSurfaceErrorDisposition {
+  if (event.sourceId !== MATERIAL_TERRAIN_SOURCE) return 'unrelated'
+
+  const name = event.error?.name ?? ''
+  const message = event.error?.message ?? ''
+  if (/abort/i.test(name) || /\babort(?:ed|ing)?\b/i.test(message)) return 'transient'
+
+  // Raster tile errors include the failed tile. Keep the source alive so the far-map layer can
+  // show through under that one missing tile instead of permanently disabling all near detail.
+  if (event.tile != null) return 'transient'
+
+  // An error from this source without a tile is source-level and cannot recover by moving to a
+  // different viewport tile, so only this class of failure permanently degrades to the far map.
+  return 'fatal'
+}
+
 const browserFrameScheduler: FrameScheduler = {
   request: (callback) => requestAnimationFrame(callback),
   cancel: (id) => cancelAnimationFrame(id),

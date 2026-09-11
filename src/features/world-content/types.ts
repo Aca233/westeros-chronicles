@@ -2,6 +2,7 @@ import type { CharacterId } from '../../domain/characterId';
 import type { WorldDate } from '../../domain/worldDate';
 import type { WorldLocationRef } from '../../domain/worldLocation';
 import type { CharacterDossierSupplement } from '../characters/characterSupplementTypes';
+import type { CharacterCreationCatalog } from '../characters/customCharacterStart';
 import type { ItemDefinition, ItemStorageSite, ItemTransport, EquipmentPosition } from '../items/types';
 import type { MapLocationSearchEntry, MapLocationType } from '../map/types';
 import type { AssetPlacement, WorldCustodianRef, WorldPrincipalRef } from '../world/worldRuntimeTypes';
@@ -24,6 +25,7 @@ export interface LivingWorldManifest {
     holderSummaries: string;
     ordinaryItems: string;
     loadouts: string;
+    characterCreation: string;
   };
 }
 
@@ -168,3 +170,4 @@ export interface WorldLoadoutContent {
 }
 
 export type OrdinaryItemContent = ItemDefinition;
+export type CharacterCreationContent = CharacterCreationCatalog;

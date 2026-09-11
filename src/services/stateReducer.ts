@@ -1,7 +1,7 @@
 import { LordProfile, StateCommand, BodyZoneKey, WoundLevel } from '../types/game';
 import { stripEmoji } from './textSanitizer';
 import { normalizeCk3Attributes } from '../data/ck3Skills';
-import { calculateFinalAttributes, CHARACTER_TRAITS } from '../data/characterTraits';
+import { calculateFinalAttributes, CHARACTER_TRAITS, isDerivedInjuryTraitId } from '../data/characterTraits';
 import type { CharacterEvent, CharacterId, CharacterRelationship } from '../features/characters/types';
 import type { CharacterCommandContext, CharacterState, CharacterStateCommand, ValidatedCharacterEventInput } from '../features/characters/characterCommands';
 import type { RoleplayState } from '../features/roleplay/types';
@@ -415,6 +415,10 @@ export function applyStateCommands(
         const trait = CHARACTER_TRAITS.find((entry) => entry.id === cmd.trait);
         if (!trait) {
           changesLog.push(` 特质未添加: 未知特质 ID【${cmd.trait}】`);
+          break;
+        }
+        if (isDerivedInjuryTraitId(trait.id)) {
+          changesLog.push(` 特质未添加: 【${trait.name}】由身体伤势系统自动派生，请使用 APPLY_HIT 记录具体伤势`);
           break;
         }
         if ((next.traitIds ?? []).includes(trait.id)) break;

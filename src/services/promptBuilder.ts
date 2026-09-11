@@ -14,6 +14,8 @@ import { formatPendingItemPrompt, pendingItemActionsFromWorldTransactions } from
 import { sameWorldLocation } from '../features/map/locationResolver';
 import { recentContextTurns } from './contextHistory';
 import { formatRoleplayContext } from '../features/roleplay/state';
+import { ANATOMICAL_ZONE_LABELS, deriveHealthCapabilities } from '../features/health/state';
+import { formatMinuteOfDay } from '../features/time/gameClock';
 
 export const WORLD_INTENT_RESOLUTION_PROMPT = `
 ### 【地点事实与旅行意图】
@@ -217,11 +219,16 @@ export const GOT_CONSTITUTION_PROMPT = `
   // 不得用 ITEM_CREATE 凭空获得商品；唯一名物只能通过世界资产事务转移。
   // 前端已排队的 ITEM_* 动作由程序在成功回复后结算，模型不得重复输出。
   //
-  //  肢体创伤、铠甲磨损、伤口治愈、状态与金币收支：
-  // { "type": "INJURE_ZONE", "zone": "arms", "level": "minor", "woundText": "右臂格挡划伤" },
-  // { "type": "TREAT_WOUND", "zone": "arms", "instanceId": "item:可访问的医疗物品实例ID", "clearWound": "右臂格挡划伤", "clearCondition": "bleeding" },
-  // 治疗只能引用当前可访问物品中的 medicine 实例，并消耗 1 次或 1 件；不得用 HEAL_ZONE 或 SET_* false 免费治愈。
-  // 绷带只处理创伤/失血，止血药草只处理失血，解毒剂只处理中毒；止痛药不会降低伤势等级。用途不符时程序拒绝且不消耗。
+  // 身体伤病、治疗、生存与休整：
+  // 命中必须指定精确身体部位，只允许 head/chest/abdomen/left_arm/right_arm/left_hand/right_hand/left_leg/right_leg/left_foot/right_foot：
+  // { "type": "APPLY_HIT", "zone": "right_hand", "injuryKind": "cut_puncture", "severity": "heavy", "cause": "短剑割开右手掌", "damageTags": ["slash"] },
+  // 护甲覆盖、伤害类型、耐久与防护由程序只结算一次；模型不得先手动降伤势再输出 APPLY_HIT。
+  // 治疗必须引用状态切片中已有的 injuryId 与实际可访问医疗物资：
+  // { "type": "TREAT_INJURY", "injuryId": "injury:...", "treatment": "first_aid", "supplyInstanceId": "item:绷带", "environment": "shelter" },
+  // treatment 仅允许 first_aid/immobilize/definitive。包扎只控制出血，固定骨折不代表恢复行动能力，正式处理也不会立即降低伤势等级。
+  // 物资不可访问、用途不符或 injuryId 不存在时程序整项拒绝且不消耗物品。不得再输出 HEAL_ZONE/TREAT_WOUND 或 SET_* false 免费治愈。
+  // 显式进食饮水可用 { "type": "CONSUME_SURVIVAL", "resource": "food|water", "instanceId": "可选的实际物品实例" }；正常行动中的自动吃喝由程序处理，不得自动购买、偷取或服药。
+  // 休整可用 { "type": "REST", "minutes": 480, "sleep": true }；只有安排了 sleep=true 的休整才算睡眠。
   // 修理必须引用当前可访问的受损物品与维护工具，并结算费用和时间：
   // { "type": "REPAIR_ITEM", "instanceId": "item:受损物品", "toolInstanceId": "item:维护工具", "amount": 20, "silverCost": 4, "days": 1 },
   // amount 1-40、days 1-30；工具必须带 repair/maintenance/smithing/sewing 标签，余额不足或物品不可访问时整项拒绝。
@@ -388,7 +395,7 @@ export const GOT_LITERARY_PROMPT = `
 
 // 构建当前世界状态切片 (Dynamic State Slice)
 export function buildStateSlice(gameState: GameState, currentAction = ''): string {
-  const { lord, currentYear, currentMonth, currentDay, currentSeason, turnCount } = gameState;
+  const { lord, currentYear, currentMonth, currentDay, currentMinute, currentTimePrecision, currentSeason, turnCount } = gameState;
   const body = lord.body;
   const itemState = lord.items;
   const itemEntries = Object.values(itemState.instances).map((instance) => ({
@@ -471,6 +478,9 @@ export function buildStateSlice(gameState: GameState, currentAction = ''): strin
   const carryUsage = getUsedCarryUnits(itemState, ITEM_CATALOG);
 
 
+  const playerCharacterId = (lord.canonicalCharacterId
+    ?? `save:${gameState.worldCharacters?.runId ?? 'current'}:player`) as import('../domain/characterId').CharacterId;
+  const detailedHealth = gameState.health.characters[playerCharacterId];
   const levelNames: Record<string, string> = {
     intact: '完好',
     minor: '轻创',
@@ -478,12 +488,23 @@ export function buildStateSlice(gameState: GameState, currentAction = ''): strin
     critical: '残废致命',
   };
 
-  const bodySummary = [
-    `头部: 【${levelNames[body.head.level]}】${body.head.wounds.length ? `(${body.head.wounds.join(',')})` : ''}`,
-    `躯干: 【${levelNames[body.torso.level]}】${body.torso.wounds.length ? `(${body.torso.wounds.join(',')})` : ''}`,
-    `双臂: 【${levelNames[body.arms.level]}】${body.arms.wounds.length ? `(${body.arms.wounds.join(',')})` : ''}`,
-    `双腿: 【${levelNames[body.legs.level]}】${body.legs.wounds.length ? `(${body.legs.wounds.join(',')})` : ''}`,
-  ].join(' | ');
+  const bodySummary = detailedHealth
+    ? detailedHealth.injuries.filter((injury) => injury.recovery.stage !== 'healed')
+      .map((injury) => `${ANATOMICAL_ZONE_LABELS[injury.zone]}:${levelNames[injury.severity]}{injuryId:${injury.id},类型:${injury.kind},出血:${injury.bleeding}/3,疼痛:${injury.pain}/3,感染:${injury.infection},处理:${injury.recovery.stage},恢复:${Math.round(injury.recovery.progress)}%,原因:${injury.cause}}`)
+      .join(' | ') || '11 个精确部位均无未愈伤病'
+    : [
+        `头部: 【${levelNames[body.head.level]}】${body.head.wounds.length ? `(${body.head.wounds.join(',')})` : ''}`,
+        `躯干: 【${levelNames[body.torso.level]}】${body.torso.wounds.length ? `(${body.torso.wounds.join(',')})` : ''}`,
+        `双臂: 【${levelNames[body.arms.level]}】${body.arms.wounds.length ? `(${body.arms.wounds.join(',')})` : ''}`,
+        `双腿: 【${levelNames[body.legs.level]}】${body.legs.wounds.length ? `(${body.legs.wounds.join(',')})` : ''}`,
+      ].join(' | ');
+  const healthCapabilities = detailedHealth ? deriveHealthCapabilities(detailedHealth) : undefined;
+  const healthCapabilitySummary = healthCapabilities
+    ? `惯用手:${detailedHealth?.dominantHand === 'left' ? '左' : '右'}；左握持:${healthCapabilities.left_grip.score}；右握持:${healthCapabilities.right_grip.score}；双手协作:${healthCapabilities.two_hand_coordination.score}；行走:${healthCapabilities.walk.score}；奔跑:${healthCapabilities.run.score}；视力:${healthCapabilities.sight.score}；听力:${healthCapabilities.hearing.score}；清醒:${healthCapabilities.consciousness.score}`
+    : '仅有旧身体兼容投影';
+  const survivalSummary = detailedHealth
+    ? `饥饿 ${Math.round(detailedHealth.survival.hunger)}/100；口渴 ${Math.round(detailedHealth.survival.thirst)}/100；疲劳 ${Math.round(detailedHealth.survival.fatigue)}/100`
+    : '无详细生存状态';
 
   const statusList = [];
   if (body.isBleeding) statusList.push('持续失血');
@@ -502,30 +523,42 @@ export function buildStateSlice(gameState: GameState, currentAction = ''): strin
   const journeySummary = !journey
     ? '无'
     : `${journey.status}；路线 ${journeyLabel(journey.routePlan.from, '已确认起点')} -> ${journeyLabel(journey.routePlan.to, '已确认终点')}；分段 ${journey.currentLeg + 1}/${Math.max(1, journey.routePlan.legs.length)}；本段已行 ${journey.progressDays} 天${journey.interruptedBy ? `；中断原因 ${journey.interruptedBy}` : ''}`;
-  const playerCharacterId = (lord.canonicalCharacterId
-    ?? `save:${gameState.worldCharacters?.runId ?? 'current'}:player`) as import('../domain/characterId').CharacterId;
   const roleplayContext = formatRoleplayContext(gameState.roleplay, playerCharacterId, `${currentYear}.${currentMonth}.${currentDay}`);
+  const customStartContext = gameState.openingFacts
+    ? [
+        '### 【自创人物开局事实】',
+        ...gameState.openingFacts.backgroundFacts.map((fact) => `- 身世：${fact}`),
+        ...gameState.openingFacts.publicFacts.map((fact) => `- 公开开局背景：${fact}`),
+        `- 初始处境：${gameState.openingFacts.situationSummary}`,
+        ...gameState.openingFacts.knownRelationships.map((fact) => `- 初始关系 [${fact.id}]：${fact.summary}；公开=${fact.publiclyKnown ? '是' : '否'}；知情者=${fact.heardByIds.join(',')}`),
+        '- 约束：私密关系即使出现在上下文中，也只能由列出的知情者据此行动或说话；远方亲属不得因为存在关系记录而被写成当前在场。',
+      ].join('\n')
+    : '';
   const growthEvidenceSummary = [
     ...gameState.worldHistory.turns.slice(-8).flatMap((turn) => turn.eventIds.map((eventId) => `${eventId}@T${turn.turn}:${stripEmoji(turn.action).slice(0, 80)}`)),
     ...(gameState.roleplay?.socialEvents ?? []).slice(-8).map((event) => `${event.id}@T${event.turn}:社交 ${event.summary}`),
   ].slice(-12).join('；') || '无';
+  const learningTargets = new Set(gameState.characterCreationDraft?.learningTraitIds ?? []);
   const growthMethodCatalog = CHARACTER_TRAITS
-    .filter((trait) => trait.rules.methodEdges?.length && !(lord.traitIds ?? []).includes(trait.id))
+    .filter((trait) => (trait.rules.methodEdges?.length || learningTargets.has(trait.id)) && !(lord.traitIds ?? []).includes(trait.id))
+    .sort((left, right) => Number(learningTargets.has(right.id)) - Number(learningTargets.has(left.id)))
     .slice(0, 24)
-    .map((trait) => `${trait.id}=${trait.name}(${trait.rules.methodEdges?.map((edge) => edge.label).join('/') ?? ''})`)
+    .map((trait) => `${trait.id}=${trait.name}(${trait.rules.methodEdges?.map((edge) => edge.label).join('/') ?? ''})${learningTargets.has(trait.id) ? '【玩家计划学习；尚未掌握，仍需实际证据与玩家确认】' : ''}`)
     .join('；') || '无';
 
   return stripEmoji(`
 ---
 ### 【当前世界与领主状态切片 (Turn ${turnCount + 1})】
-- 当前时间: 征服历 ${currentYear} AC · ${currentMonth || 10}月${currentDay || 15}日 · ${currentSeason}
+  - 当前时间: 征服历 ${currentYear} AC · ${currentMonth || 10}月${currentDay || 15}日 ${formatMinuteOfDay(currentMinute)}${currentTimePrecision === 'day_only' ? '（旧档仅确定到日期）' : ''} · ${currentSeason}
 - 领主身份: ${lord.house} · ${lord.name} (${lord.title})
 - 玩家稳定人物 ID: ${playerCharacterId}
 - 宗族与箴言: ${lord.dynastyName || lord.house} · ${lord.houseWords}
 - 文化与信仰: ${lord.culture || '未指定'} · ${lord.faith || '未指定'}
 - 当前旅程: ${journeySummary}
 - 整体体魄: 【${lord.overallStatus}】 (异常体态: ${statusList.length > 0 ? statusList.join(', ') : '无'})
-- 部位伤情: ${bodySummary}
+  - 部位伤情: ${bodySummary}
+  - 身体能力（程序已去重推导，同一伤病不得再次手工叠加惩罚）: ${healthCapabilitySummary}
+  - 生存需求: ${survivalSummary}
 - 当前装备（唯一真实穿戴状态）: ${equippedSummary}
 - 当前可访问物品（随身、当前据点与随行运输工具）: ${accessibleSummary}
 - 当前地点可用旅行载具（仅这些 vehicleId 可用于本回合出发）: ${accessibleVehiclesSummary}
@@ -542,6 +575,7 @@ export function buildStateSlice(gameState: GameState, currentAction = ''): strin
 - 可选方法型成长特质（traitId=名称/方法优势）: ${growthMethodCatalog}
 - RP 人物倾向: ${roleplaySummary}
 - 特质约束: 上述倍率和抗性由程序结算；只用于当前相关行动，不得替玩家决定行为。
+${customStartContext}
 ${roleplayContext}
 ---
 `);

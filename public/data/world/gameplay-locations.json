@@ -30,9 +30,9 @@
       "important-place": 13,
       "major-route-port": 408,
       "political-center": 262,
-      "start-reference": 6
+      "start-reference": 5
     },
-    "total": 658
+    "total": 657
   },
   "entries": [
     {
@@ -5854,18 +5854,6 @@
       ],
       "regionId": "world_westeros_the_stormlands",
       "type": "castle"
-    },
-    {
-      "id": "b_pentos",
-      "importance": 20,
-      "mapX": 2627,
-      "mapY": 3166,
-      "name": "潘托斯",
-      "reasons": [
-        "start-reference"
-      ],
-      "regionId": "world_essos_free_cities",
-      "type": "city"
     },
     {
       "id": "b_pepperpot",

@@ -40,3 +40,7 @@
 ## 验证状态
 
 2026-09-08 已通过 `npx tsc --noEmit` 与 `npm run build` 生产构建。依照本轮要求，没有新增或运行测试。构建已将主入口由 663 KB 降至 353 KB，地图功能代码由 1.16 MB 降至 94 KB，3D 地标逻辑由 629 KB 降至 22 KB；MapLibre、Three 与大型物品资料分别保留为按需缓存块。真实模型长局、100 回合回放、数值分布校准和真人盲评仍是发布验证，不能从本次编译结果推断已经通过。
+
+2026-09-11 人物设计器信息层级整理（`src/components/CharacterCreator.tsx`、`src/components/character-creator/CharacterReadoutPanel.tsx`、`src/components/character-creator/characterReadout.ts`）：栏目改为带序号与完成状态的 1 人物 → 2 家族 → 3 身世 → 4 关系 → 5 特质 → 6 开局，不再使用分步向导；右侧开发式面板改为“人物概览”（优势、弱点、社会地位、开局风险）与 CK3 式能力卡（基础值、特质修正、最终值），设计点数明细收进“高级明细”折叠区；特质新增来源标注（天生 / 经历自带 / 亲手所选 / 成长方向），经历关联特质不再显示原始契合分；关系栏新增“本地可以结识的人”，直接读取与开局地点相同的已建档活人并接入统一头像组件。以上均为呈现层改动，未新增或修改存档字段与规则。
+
+同日在 Windows Node 下通过 `tsc --noEmit`、`vite build`（CharacterCreator 块 95.76 KB，入口 594 KB / 预算 768 KB）与 `check:character-creator`、`check:character-portraits-ui`、`check:ck3-attributes`、`check:trait-display`、`check:creation-trait-rules`、`check:no-emoji` 等结构校验；并在 WSL 用 Windows Chrome 无头模式实际打开 1680×1000 与 430×900 两种视口，逐个栏目截图核对，宽窄布局都无横向溢出。`check:module-cycles` 仍报告 `characterCommands → creationTraitRules → … → stateCommand` 旧循环，`check:trait-effects` 仍报告 `methodEdges` 规则字段，两者均早于本次改动且不在人物设计器路径上。

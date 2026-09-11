@@ -37,6 +37,7 @@ scan(
   /(?:\.placements\s*\[[^\]]+\]\s*=|delete\s+[^;\n]*\.placements\s*\[)/,
   [
     'src/features/items/actions.ts',
+    'src/features/items/consumption.ts',
     'src/features/items/custody.ts',
     'src/features/items/equipment.ts',
     'src/features/world/worldTransactions.ts',
@@ -60,6 +61,7 @@ scan(
 const lordLocationAllowlist = new Set([
   'src/services/turn/legacySettlement.ts',
   'src/services/turn/settlement.ts',
+  'src/services/turn/healthSettlement.ts',
   'src/services/turn/worldPreparation.ts',
   'src/services/stateReducer.ts',
   'src/features/world/createLivingWorldGame.ts',

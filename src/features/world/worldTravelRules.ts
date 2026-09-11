@@ -68,7 +68,7 @@ export function planJourneyTransaction(
       evidenceText: context.reason,
     }],
     mutations,
-    ...(patch.elapsedDays > 0 ? { dateAdvance: { days: patch.elapsedDays } } : {}),
+    ...(patch.elapsedDays > 0 ? { timeAdvanceMinutes: Math.round(patch.elapsedDays * 1440) } : {}),
     nextJourney: patch.journey ? structuredClone(patch.journey) : null,
     eventDrafts: [{
       type: patch.journey?.status === 'arrived' ? 'travel.arrived' : 'travel.progress',

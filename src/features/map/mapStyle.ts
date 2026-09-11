@@ -1,6 +1,11 @@
 import type { ExpressionSpecification, StyleSpecification } from 'maplibre-gl'
 
-import { semanticLabelSizeExpression, semanticRankOpacityExpression } from './semanticZoom.ts'
+import {
+  semanticBoundaryZoomRange,
+  semanticLabelSizeExpression,
+  semanticRankOpacityExpression,
+  semanticRankZoomRange,
+} from './semanticZoom.ts'
 import {
   FAR_MAP_LAYER,
   FAR_MAP_SOURCE,
@@ -29,6 +34,7 @@ function semanticAdministrativeLayers(): NonNullable<StyleSpecification['layers'
     return [
       {
         id: `agot-${rank}-surface`,
+        ...semanticRankZoomRange(rank),
         type: 'fill' as const,
         source: 'agot-semantic',
         'source-layer': `${rank}_surfaces`,
@@ -39,6 +45,7 @@ function semanticAdministrativeLayers(): NonNullable<StyleSpecification['layers'
       },
       {
         id: `agot-${rank}-boundaries-casing`,
+        ...semanticBoundaryZoomRange(rank),
         type: 'line' as const,
         source: 'agot-semantic',
         'source-layer': `${rank}_boundaries`,
@@ -51,6 +58,7 @@ function semanticAdministrativeLayers(): NonNullable<StyleSpecification['layers'
       },
       {
         id: `agot-${rank}-boundaries`,
+        ...semanticBoundaryZoomRange(rank),
         type: 'line' as const,
         source: 'agot-semantic',
         'source-layer': `${rank}_boundaries`,
@@ -68,6 +76,7 @@ function semanticAdministrativeLayers(): NonNullable<StyleSpecification['layers'
 function semanticTitleLayers(): NonNullable<StyleSpecification['layers']> {
   return SEMANTIC_RANKS.map((rank) => ({
     id: `agot-${rank}-labels`,
+    ...(rank === 'county' ? semanticBoundaryZoomRange(rank) : semanticRankZoomRange(rank)),
     type: 'symbol' as const,
     source: 'agot-semantic',
     'source-layer': 'title_labels',
@@ -77,8 +86,9 @@ function semanticTitleLayers(): NonNullable<StyleSpecification['layers']> {
       'text-font': ['Noto Sans CJK SC Regular'],
       'text-size': semanticLabelSizeExpression(rank),
       'text-letter-spacing': rank === 'hegemon' || rank === 'empire' ? 0.14 : 0.08,
-      'text-allow-overlap': rank !== 'county',
-      'text-ignore-placement': rank !== 'county',
+      'text-allow-overlap': false,
+      'text-ignore-placement': false,
+      'text-padding': 5,
       'symbol-sort-key': ['-', 100, ['get', 'importance']],
     },
     paint: {

@@ -2,6 +2,8 @@ import { getItemDefinition } from './catalog';
 import { assertPlacementAccessible } from './custody';
 import { validateItemSystem } from './state';
 import type { WorldLocationRef } from '../map/types';
+import type { CharacterHealthState } from '../health/types';
+import { validateHeldEquipmentAgainstHealth } from '../health/engine';
 import type {
   AccessoryIndex,
   EquipmentGroup,
@@ -35,6 +37,7 @@ export interface EquipmentGroupView {
 export interface EquipOptions {
   currentLocation: WorldLocationRef;
   displacedTo: ItemPlacement;
+  health?: CharacterHealthState;
 }
 
 export interface UnequipOptions {
@@ -77,6 +80,12 @@ export function getEquipmentGroups(state: ItemSystemState): EquipmentGroupView[]
   }));
 }
 
+export function physicalHandForEquipmentPosition(position: EquipmentPosition, dominantHand: 'left' | 'right'): 'left' | 'right' | undefined {
+  if (position.group === 'mainhand') return dominantHand;
+  if (position.group === 'offhand') return dominantHand === 'right' ? 'left' : 'right';
+  return undefined;
+}
+
 export function getReservedPositions(state: ItemSystemState, catalog: ItemCatalog): EquipmentPosition[] {
   const mainhand = getEquippedInstance(state, { group: 'mainhand' });
   if (!mainhand) return [];
@@ -89,6 +98,7 @@ function getEquipRejectionReason(
   catalog: ItemCatalog,
   instanceId: string,
   position: EquipmentPosition,
+  health?: CharacterHealthState,
 ): string | undefined {
   const instance = state.instances[instanceId];
   if (!instance) return `物品实例不存在：${instanceId}`;
@@ -108,6 +118,10 @@ function getEquipRejectionReason(
       if (mainhandDefinition.handedness === 'two') return '双手武器占用副手';
     }
   }
+  if (health && (position.group === 'mainhand' || position.group === 'offhand')) {
+    const rejection = validateHeldEquipmentAgainstHealth(health, position.group, definition.handedness === 'two');
+    if (rejection) return rejection;
+  }
   return undefined;
 }
 
@@ -116,8 +130,9 @@ export function canEquipItem(
   catalog: ItemCatalog,
   instanceId: string,
   position: EquipmentPosition,
+  health?: CharacterHealthState,
 ): boolean {
-  return getEquipRejectionReason(state, catalog, instanceId, position) === undefined;
+  return getEquipRejectionReason(state, catalog, instanceId, position, health) === undefined;
 }
 
 function assertEquipmentDestination(placement: ItemPlacement): asserts placement is Extract<ItemPlacement, { type: 'carried' | 'site' | 'vehicle' }> {
@@ -167,7 +182,7 @@ export function equipItem(
   options: EquipOptions,
 ): ItemSystemState {
   validateItemSystem(state, catalog);
-  const rejection = getEquipRejectionReason(state, catalog, instanceId, position);
+  const rejection = getEquipRejectionReason(state, catalog, instanceId, position, options.health);
   if (rejection) throw new Error(rejection);
   assertEquipmentDestination(options.displacedTo);
   assertPlacementAccessible(state, options.displacedTo, options.currentLocation, '目标');

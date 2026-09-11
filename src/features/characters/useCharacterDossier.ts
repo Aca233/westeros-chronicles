@@ -13,7 +13,8 @@ import {
 import { resolveCharacter } from './characterProjector';
 import { projectRelationshipRecords } from './characterRelationshipProjection';
 import { StaticCharacterRepository } from './staticCharacterRepository';
-import type { CharacterId, CharacterItemRecord, StaticCharacterRecord } from './types';
+import type { CharacterId, CharacterItemRecord, ResolvedCharacter, StaticCharacterRecord } from './types';
+import type { CustomCharacterOverlayState, CustomCharacterRuntimeRecord } from './customCharacterStart';
 import {
   buildWorldAssetBaseline,
   createWorldBaselineSnapshot,
@@ -53,6 +54,87 @@ function characterItemAsset(item: CharacterItemRecord): WorldAssetBaseline {
 
 function playerCharacterId(lord: LordProfile, runId: string | undefined): CharacterId {
   return lord.canonicalCharacterId ?? `save:${runId ?? 'current'}:player`;
+}
+
+function resolveCustomCharacter(
+  record: CustomCharacterRuntimeRecord,
+  overlay: CustomCharacterOverlayState,
+): ResolvedCharacter {
+  const relationFacts = overlay.relationships.filter((fact) => fact.participantIds.includes(record.id));
+  return {
+    id: record.id,
+    rawId: record.id,
+    canonTier: 'mod_supporting',
+    name: record.name,
+    dynastyId: record.dynastyName ? `save_${record.dynastyName}` : null,
+    cultureId: record.culture,
+    faithId: record.faith,
+    female: record.gender === '女',
+    born: true,
+    alive: true,
+    birthDate: `${record.birthYear}.1.1`,
+    baseAttributes: { ...record.attributes },
+    traits: [...record.traitIds],
+    spouseIds: [],
+    relations: relationFacts.flatMap((fact) => fact.participantIds
+      .filter((id) => id !== record.id)
+      .map((targetId) => ({ kind: fact.kind, target_id: targetId }))),
+    titleIds: [],
+    titles: [],
+    hasDna: false,
+    source: { file: 'save:custom-character-overlay', line: 0 },
+    attributes: { ...record.attributes },
+    locationId: record.location.locationId,
+    ...(record.location.sceneLocation ? { sceneLocation: record.location.sceneLocation } : {}),
+    currentActivity: 'idle',
+    wounds: [],
+    woundLevels: {},
+    relationships: [],
+    memories: [],
+    knowledge: [],
+    items: [],
+  };
+}
+
+function attachCustomRelationshipFacts(
+  dossier: CharacterDossier,
+  overlay: CustomCharacterOverlayState | undefined,
+  viewerId: CharacterId,
+): CharacterDossier {
+  if (!overlay) return dossier;
+  const subjectId = dossier.worldCharacterId;
+  const additions = overlay.relationships
+    .filter((fact) => fact.participantIds.includes(subjectId) && (fact.publiclyKnown || fact.heardByIds.includes(viewerId)))
+    .flatMap((fact) => fact.participantIds
+      .filter((targetId) => targetId !== subjectId)
+      .map((targetId) => ({ kind: fact.kind, targetId, description: fact.summary })));
+  if (additions.length === 0) return dossier;
+  const seen = new Set(dossier.relations.notableRelations.map((entry) => `${entry.kind}:${entry.targetId}`));
+  const notableRelations = [...dossier.relations.notableRelations];
+  for (const addition of additions) {
+    const key = `${addition.kind}:${addition.targetId}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    notableRelations.push(addition);
+  }
+  return { ...dossier, relations: { ...dossier.relations, notableRelations } };
+}
+
+async function loadRelatedRecordsIncludingOverlay(
+  dossier: CharacterDossier,
+  overlay: CustomCharacterOverlayState | undefined,
+): Promise<ReadonlyMap<CharacterId, StaticCharacterRecord>> {
+  const ids = relatedCharacterIds(dossier);
+  const staticIds = ids.filter((id) => !overlay?.records[id]);
+  const staticRecords = staticIds.length ? await dossierRepository.getMany(staticIds) : [];
+  const records = new Map<CharacterId, StaticCharacterRecord>(staticRecords.map((record) => [record.id, record]));
+  if (overlay) {
+    for (const id of ids) {
+      const custom = overlay.records[id];
+      if (custom) records.set(id, resolveCustomCharacter(custom, overlay));
+    }
+  }
+  return records;
 }
 
 function attachCurrentWorld(
@@ -159,7 +241,7 @@ export interface CharacterDossierLoadResult {
 }
 
 export function useCharacterDossier(selectedCharacterId: CharacterId | null): CharacterDossierLoadResult {
-  const { lord, currentYear, worldCharacters, worldArtifacts, worldHistory, worldRuntime } = useGameStore((state) => state.gameState);
+  const { lord, currentYear, worldCharacters, worldArtifacts, worldHistory, worldRuntime, customCharacters } = useGameStore((state) => state.gameState);
   const playerId = playerCharacterId(lord, worldCharacters?.runId);
   const [playerContent, setPlayerContent] = useState<CharacterContentRecord | undefined>(undefined);
   const [terminology, setTerminology] = useState<WorldTerminology | undefined>(undefined);
@@ -175,8 +257,12 @@ export function useCharacterDossier(selectedCharacterId: CharacterId | null): Ch
     return () => { cancelled = true; };
   }, [playerId]);
   const playerDossier = useMemo(
-    () => createPlayerDossier(lord, currentYear, playerId, playerContent, terminology),
-    [lord, currentYear, playerId, playerContent, terminology],
+    () => attachCustomRelationshipFacts(
+      createPlayerDossier(lord, currentYear, playerId, playerContent, terminology),
+      customCharacters,
+      playerId,
+    ),
+    [lord, currentYear, playerId, playerContent, terminology, customCharacters],
   );
   const isPlayer = !selectedCharacterId || selectedCharacterId === playerId;
   const [dossier, setDossier] = useState<CharacterDossier | null>(isPlayer ? playerDossier : null);
@@ -192,7 +278,13 @@ export function useCharacterDossier(selectedCharacterId: CharacterId | null): Ch
       setRelatedRecords(new Map());
       setStatus('ready');
       setError(null);
-      return;
+      let cancelled = false;
+      void loadRelatedRecordsIncludingOverlay(playerDossier, customCharacters).then((records) => {
+        if (!cancelled) setRelatedRecords(records);
+      }).catch(() => {
+        if (!cancelled) setRelatedRecords(new Map());
+      });
+      return () => { cancelled = true; };
     }
 
     let cancelled = false;
@@ -202,6 +294,24 @@ export function useCharacterDossier(selectedCharacterId: CharacterId | null): Ch
     setError(null);
 
     const load = async () => {
+      const customRecord = customCharacters?.records[selectedCharacterId];
+      if (customRecord && customCharacters) {
+        const mapLocations = await mapRepository.loadSearchIndex().catch(() => []);
+        const resolved = resolveCustomCharacter(customRecord, customCharacters);
+        const nextDossier = attachCustomRelationshipFacts({
+          ...createNpcDossier(resolved, currentYear, undefined, undefined, terminology),
+          dynastyName: customRecord.dynastyName ?? customRecord.houseName ?? '无家族',
+          house: customRecord.houseName ?? '无家族',
+          houseSigil: customRecord.houseSigil ?? 'unknown',
+          location: mapLocations.find((entry) => entry.id === customRecord.location.locationId)?.name ?? customRecord.location.locationId,
+        }, customCharacters, playerId);
+        const customRelatedRecords = await loadRelatedRecordsIncludingOverlay(nextDossier, customCharacters);
+        if (cancelled) return;
+        setDossier(nextDossier);
+        setRelatedRecords(customRelatedRecords);
+        setStatus('ready');
+        return;
+      }
       const record = await dossierRepository.get(selectedCharacterId);
       if (!record) throw new Error('没有找到这个人物的稳定 AGOT 档案');
       const [events, kinship, loadoutProfile, mapLocations, startCharacters, characterContent, loadedTerminology] = await Promise.all([
@@ -229,10 +339,10 @@ export function useCharacterDossier(selectedCharacterId: CharacterId | null): Ch
         mapLocations,
         startCharacters,
       });
-      const nextDossier = {
+      const nextDossier = attachCustomRelationshipFacts({
         ...createNpcDossier(resolved, currentYear, kinship, characterContent, loadedTerminology),
         location: characterWorldLocationLabel(resolved, mapLocations),
-      };
+      }, customCharacters, playerId);
       const relatives = await dossierRepository.getMany(relatedCharacterIds(nextDossier));
       const projectedRelatives = await projectRelationshipRecords(
         relatives,
@@ -246,9 +356,16 @@ export function useCharacterDossier(selectedCharacterId: CharacterId | null): Ch
           startCharacters,
         },
       );
+      const mergedRelatives = new Map<CharacterId, StaticCharacterRecord>(projectedRelatives);
+      if (customCharacters) {
+        for (const id of relatedCharacterIds(nextDossier)) {
+          const custom = customCharacters.records[id];
+          if (custom) mergedRelatives.set(id, resolveCustomCharacter(custom, customCharacters));
+        }
+      }
       if (cancelled) return;
       setDossier(nextDossier);
-      setRelatedRecords(projectedRelatives);
+      setRelatedRecords(mergedRelatives);
       setStatus('ready');
     };
 
@@ -261,7 +378,7 @@ export function useCharacterDossier(selectedCharacterId: CharacterId | null): Ch
     });
 
     return () => { cancelled = true; };
-  }, [selectedCharacterId, playerDossier, currentYear, worldCharacters?.runId, worldCharacters?.datasetHash, worldCharacters?.revision, worldRuntime.revision, worldHistory, reloadToken]);
+  }, [selectedCharacterId, playerDossier, currentYear, worldCharacters?.runId, worldCharacters?.datasetHash, worldCharacters?.revision, worldRuntime.revision, worldHistory, customCharacters, terminology, reloadToken]);
 
   const projectedDossier = useMemo(
     () => dossier ? attachCurrentWorld(dossier, lord, playerId, worldArtifacts, worldRuntime) : null,

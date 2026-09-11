@@ -370,7 +370,10 @@ export function projectPoliticalState(
       const controllerId = controllerTitleId ? controllers.get(controllerTitleId) : undefined
       const controllerStyle = styleForHolder(controllerId)
       const contestedByIds = controllerTitleId ? [...(contestedByTitle.get(controllerTitleId) ?? [])] : []
-      const isContested = contestedByIds.length > 0 || Boolean(controllerId && holderId && controllerId !== holderId)
+      // Compare the controller with the lawful holder of that same title.
+      // A county lord and their baron being different people is normal vassalage.
+      const controllerLawfulHolderId = controllerTitleId ? holders.get(controllerTitleId) : undefined
+      const isContested = contestedByIds.length > 0 || Boolean(controllerId && controllerLawfulHolderId && controllerId !== controllerLawfulHolderId)
       const realmTitleId = politicalRealmHierarchy(title).find((titleId) => holders.has(titleId))
       const realmHolderId = realmTitleId ? holders.get(realmTitleId) : undefined
       const realmHolder = realmHolderId ? charactersById.get(realmHolderId) : undefined

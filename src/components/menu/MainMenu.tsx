@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { AmbientCanvas } from '../AmbientCanvas';
 import { useGameStore } from '../../store/useGameStore';
-import { NewGameScreen } from './NewGameScreen';
 import { LoadGameScreen } from './LoadGameScreen';
 
 const TITLE = '维斯特洛';
@@ -23,6 +22,7 @@ const TitleView: React.FC = () => {
   const slotActionError = useGameStore((state) => state.slotActionError);
   const continueGame = useGameStore((state) => state.continueGame);
   const setMenuView = useGameStore((state) => state.setMenuView);
+  const openCreator = useGameStore((state) => state.openCreator);
   const openSettings = useGameStore((state) => state.openSettings);
   const menuRef = useRef<HTMLDivElement>(null);
   const [skipped, setSkipped] = useState(false);
@@ -100,7 +100,7 @@ const TitleView: React.FC = () => {
           type="button"
           className="menu-entry font-serif text-[15px] font-bold tracking-[0.42em]"
           style={{ '--d': '1.9s' } as React.CSSProperties}
-          onClick={() => setMenuView('new')}
+          onClick={() => openCreator('custom')}
         >
           <span>开创新局</span>
         </button>
@@ -136,7 +136,7 @@ const TitleView: React.FC = () => {
   );
 };
 
-/** 主菜单外壳:管理标题屏 / 开局界面 / 读取存档三幕。 */
+/** 主菜单外壳:标题屏与读取存档；新局直接进入单页人物设计器。 */
 export const MainMenu: React.FC = () => {
   const menuView = useGameStore((state) => state.menuView);
 
@@ -144,8 +144,7 @@ export const MainMenu: React.FC = () => {
     <div className="relative flex h-screen w-screen flex-col overflow-hidden bg-ink text-parchment">
       <AmbientCanvas />
       <div className="grain" aria-hidden="true" />
-      {menuView === 'title' && <TitleView />}
-      {menuView === 'new' && <NewGameScreen />}
+      {menuView !== 'load' && <TitleView />}
       {menuView === 'load' && <LoadGameScreen />}
     </div>
   );

@@ -31,7 +31,7 @@ export const App: React.FC = () => {
   const activeDrawer = useMapUiStore((state) => state.activeDrawer);
   const openCharacterDrawer = useMapUiStore((state) => state.openCharacterDrawer);
   const closeDrawer = useMapUiStore((state) => state.closeDrawer);
-  const toggleCharacter = useMapUiStore((state) => state.toggleCharacter);
+
   const toggleMap = useMapUiStore((state) => state.toggleMap);
   const openMap = useMapUiStore((state) => state.openMap);
   const dismissMapContext = useMapUiStore((state) => state.dismissMapContext);
@@ -53,7 +53,7 @@ export const App: React.FC = () => {
     openAsset(assetId, characterNavigation.selectedCharacterId);
   }, [characterNavigation.selectedCharacterId, openAsset]);
 
-  // 全局快捷键:/ 聚焦命令行;C 开合卷宗;Esc 收起卷宗(仅游戏内生效)
+  // 全局快捷键:/ 聚焦命令行;M 开合地图;Esc 收起当前抽屉(仅游戏内生效)
   useEffect(() => {
     if (activeScreen !== 'game') return;
     const handler = (e: KeyboardEvent) => {
@@ -63,9 +63,7 @@ export const App: React.FC = () => {
         e.preventDefault();
         document.getElementById('command-input')?.focus();
       }
-      if ((e.key === 'c' || e.key === 'C') && !typing) {
-        toggleCharacter();
-      }
+
       if ((e.key === 'm' || e.key === 'M') && !typing) {
         toggleMap();
       }
@@ -80,7 +78,7 @@ export const App: React.FC = () => {
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [activeScreen, activeDrawer, closeDrawer, dismissMapContext, toggleCharacter, toggleMap]);
+  }, [activeScreen, activeDrawer, closeDrawer, dismissMapContext, toggleMap]);
 
   // 浏览器空闲时预热地图分包,首次开图无需等待下载(进入游戏后才开始)
   useEffect(() => {
@@ -135,8 +133,15 @@ export const App: React.FC = () => {
         selectedCharacterId={characterNavigation.selectedCharacterId}
         onSelectCharacter={characterNavigation.openCharacter}
         canGoBack={characterNavigation.canGoBack}
-        onBack={characterNavigation.goBack}
-        onReturnToPlayer={characterNavigation.returnToPlayer}
+        onBack={() => {
+          const previous = characterNavigation.history[characterNavigation.history.length - 1];
+          characterNavigation.goBack();
+          if (previous == null) closeDrawer();
+        }}
+        onReturnToPlayer={() => {
+          characterNavigation.returnToPlayer();
+          closeDrawer();
+        }}
         onOpenLocation={(locationId) => openMap({ kind: 'location', locationId })}
         onOpenAsset={openDossierAsset}
       />
@@ -197,10 +202,11 @@ export const App: React.FC = () => {
       {/* 舞台:一整列文字 */}
       <main className="relative z-10 flex min-h-0 flex-1">
         <PlayerStatusRail
-          onOpenCharacter={() => { characterNavigation.returnToPlayer(); openCharacterDrawer(); }}
-          onOpenLocation={() => openMap({ kind: 'location', locationId: useGameStore.getState().gameState.lord.location.locationId })}
+          onSelectCharacter={openStoryCharacter}
+          onOpenLocation={(locationId) => openMap({ kind: 'location', locationId })}
+          onOpenAsset={openAsset}
         />
-        <div className="flex min-w-0 flex-1 flex-col">
+        <div className="flex min-w-0 flex-1 flex-col lg:pr-[180px] xl:pr-[200px] 2xl:pr-[400px]">
           <StoryFeed onSelectCharacter={openStoryCharacter} onOpenLocation={(location) => openMap({ kind: 'location', locationId: location.locationId })} onOpenAsset={openAsset} />
           <ActionDock />
         </div>
@@ -219,21 +225,9 @@ export const App: React.FC = () => {
         </button>
       )}
 
-      {/* 卷宗竖签(右缘) */}
-      {activeDrawer === null && (
-        <button
-          type="button"
-          onClick={openCharacterDrawer}
-          className="dossier-tab fixed right-0 top-1/2 z-30 -translate-y-1/2"
-          aria-label="打开人物卷宗"
-          title="人物卷宗(按 C)"
-        >
-          人物卷宗
-        </button>
-      )}
 
-      {/* 卷宗抽屉 */}
-      {activeDrawer === 'character' && (
+      {/* NPC 卷宗只由正文人名、关系人物或人物检索按需打开。 */}
+      {activeDrawer === 'character' && characterNavigation.selectedCharacterId && (
         <div className="fixed inset-0 z-40" role="dialog" aria-modal="true" aria-label="人物卷宗">
           <div className="modal-backdrop absolute inset-0" onClick={closeDrawer} />
           <div className="drawer-enter absolute right-0 top-0 flex h-full w-[92vw] max-w-[460px] flex-col border-l border-hairline-bright bg-ink shadow-[-32px_0_80px_rgba(0,0,0,0.45)]">

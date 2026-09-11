@@ -15,7 +15,6 @@ import {
   ASSET_POINT_LAYER,
   CHARACTER_POINT_LAYER,
   COUNTY_HIT_LAYER,
-  MATERIAL_TERRAIN_SOURCE,
   SELECTED_COUNTY_LOCATION_LAYER,
 } from '../mapLayers';
 import type { MapInteractionState, MapOverlayPreferences } from '../mapInteraction';
@@ -24,7 +23,7 @@ import { createLocalMapStyle } from '../mapStyle';
 import type { MapFocusRequest, MapViewport } from '../mapUiStore';
 import type { PoliticalFeatureState } from '../politicalProjection';
 import { createTerrainController, type TerrainController } from '../terrainController';
-import { createTerrainSurfaceController, type TerrainSurfaceController } from '../terrainSurfaceController';
+import { classifyTerrainSurfaceError, createTerrainSurfaceController, type TerrainSurfaceController, type TerrainSurfaceErrorEventLike } from '../terrainSurfaceController';
 import type { MapManifest } from '../types';
 import type { RoutePlan } from '../routing/types';
 import type { ActiveJourney } from '../travel/types';
@@ -179,7 +178,10 @@ export function useMapLifecycle(input: UseMapLifecycleInput): MapLifecycleResult
   useEffect(() => {
     routeRef.current = { routePlan, journey };
     const map = mapRef.current;
-    if (map?.isStyleLoaded()) syncJourneyLayers(map, manifest, routePlan, journey);
+    if (map && styleReadyRef.current) {
+      syncJourneyLayers(map, manifest, routePlan, journey);
+      applyCurrentPresentation();
+    }
   }, [journey, manifest, routePlan]);
 
   useEffect(() => {
@@ -265,14 +267,17 @@ export function useMapLifecycle(input: UseMapLifecycleInput): MapLifecycleResult
     const landmarkController = createLandmarkRuntimeController(map, manifest);
     let terrainController: TerrainController | null = null;
     let terrainSurfaceController: TerrainSurfaceController | null = null;
-    let materialSurfaceFailed = false;
+    let materialSurfaceUnavailable = false;
 
     const handleMapError = (event: MapLibreErrorEvent) => {
-      const terrainEvent = event as MapLibreErrorEvent & { sourceId?: string };
+      const terrainEvent = event as MapLibreErrorEvent & TerrainSurfaceErrorEventLike;
       const message = event.error?.message ?? '';
-      if (terrainEvent.sourceId === MATERIAL_TERRAIN_SOURCE || /agot-material-terrain/i.test(message)) {
-        materialSurfaceFailed = true;
-        terrainSurfaceController?.disable('近景地形材质不可用');
+      const materialError = classifyTerrainSurfaceError(terrainEvent);
+      if (materialError !== 'unrelated') {
+        if (materialError === 'fatal') {
+          materialSurfaceUnavailable = true;
+          terrainSurfaceController?.disable('近景地形材质不可用');
+        }
         return;
       }
       if (terrainEvent.sourceId === 'agot-dem' || /agot-dem|terrain(?:-rgb)?\s+(?:decode|tile)/i.test(message)) {
@@ -289,7 +294,6 @@ export function useMapLifecycle(input: UseMapLifecycleInput): MapLifecycleResult
       landmarkController.sync('moveend');
     };
     const handleZoomEnd = (event?: { agotWheelCamera?: boolean }) => {
-      landmarkController.sync('zoomend');
       if (event?.agotWheelCamera) {
         terrainControllerRef.current?.requestSync(terrainInput());
       } else {
@@ -370,7 +374,7 @@ export function useMapLifecycle(input: UseMapLifecycleInput): MapLifecycleResult
       });
       map.on('zoom', handleTerrainZoom);
       terrainController.syncNow(terrainInput(), true);
-      if (materialSurfaceFailed) terrainSurfaceController.disable('近景地形材质不可用');
+      if (materialSurfaceUnavailable) terrainSurfaceController.disable('近景地形材质不可用');
       else terrainSurfaceController.syncNow(map.getZoom());
       map.on('click', SELECTED_COUNTY_LOCATION_LAYER, handleExpandedLocationClick);
       map.on('mouseenter', SELECTED_COUNTY_LOCATION_LAYER, showPointer);
@@ -435,13 +439,6 @@ export function useMapLifecycle(input: UseMapLifecycleInput): MapLifecycleResult
       mapRef.current = null;
     };
   }, [applyCurrentPresentation, manifest, refreshSemanticSubjects]);
-
-  useEffect(() => {
-    if (mapRef.current && styleReadyRef.current) {
-      applyCurrentPresentation();
-      refreshSemanticSubjects();
-    }
-  }, [applyCurrentPresentation, overlays, refreshSemanticSubjects, selectedCountyId]);
 
   return { containerRef, mapRef, styleReadyRef, initializationError, semanticInitializationError };
 }

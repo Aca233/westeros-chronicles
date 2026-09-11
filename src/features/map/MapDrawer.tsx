@@ -158,8 +158,8 @@ export const MapDrawer: React.FC<MapDrawerProps> = ({ onSelectCharacter }) => {
   const mapSubjectPoints = useMemo(() => ({
     characters: allCharacterPoints,
     assets: allAssetPoints,
-    characterPoints: allCharacterPoints.slice(0, 8),
-    assetPoints: allAssetPoints.slice(0, 6),
+    characterPoints: allCharacterPoints,
+    assetPoints: allAssetPoints,
   }), [allCharacterPoints, allAssetPoints])
 
   // 首次开图（lastViewport 为空）落在两大陆之间的海面：bounds 扩展后中心经度为 0。

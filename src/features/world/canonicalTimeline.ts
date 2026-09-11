@@ -32,6 +32,18 @@ export interface CanonicalResolutionResult {
   dueEvents: CanonicalTimelineEvent[];
 }
 
+/** 游戏的第一天。世界在此刻的状态就是既有正史，也决定原作节点的历史/预定分界。 */
+export const GAME_START_DATE: WorldDate = { year: 298, month: 5, day: 10 };
+
+/**
+ * 开局分界必须与 resolveDueCanonicalEvents 的时间窗语义互补。
+ *
+ * 调度器每天推进一个半开区间 (cursor, day]，并且只在事件日期落在该区间内时结算。
+ * 因此开局日当天及之前的事件永远不会进入任何时间窗，必须在初始化时直接判为已发生的正史；
+ * 早先这里用严格 <（即只认"开局日之前"），会让正好落在开局当天的事件既不是 historical
+ * 也永远排不到 scheduled，永久卡死——琼恩·艾林的死亡事件（298.4.5，开局日 298.5.10）因此
+ * 从未结算，导致他在整局里一直是活人。
+ */
 export function initializeCanonicalStates(
   events: readonly CanonicalTimelineEvent[],
   startDate: WorldDate,

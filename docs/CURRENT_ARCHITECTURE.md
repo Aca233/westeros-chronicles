@@ -163,19 +163,18 @@ Dexie schema 3 保存回合快照、存档位元数据（`saveSlots`）、世界
 
 `npm run check:bundle-budget` 对生产入口 JavaScript 设置 750 KiB 上限。地图与生成数据可以形成较大的独立 chunk，但不得重新并入首屏入口。
 
-## 10. 验证边界
+## 10. 工程检查边界
 
-- `npm run verify:quick`：核心源码检查、规则测试与轻量生产构建
-- `npm run verify:map`：地图导入器、schema、语义层、地形、旅行、地标和运行时边界
-- `npm run test:ui`：标题屏继续/开局、导入新存档位、正文到人物、资产返回和地图故障降级的 DOM 交互
+- `npx tsc --noEmit`：TypeScript 静态类型检查
+- `npm run build` / `npm run build:code`：生产与轻量生产构建
 - `npm run check:bundle-budget`：首屏入口包预算
-- `npm run verify`：完整 Node、Python、DOM、地图、包体与生产构建验证
+- `npm run check:*`：保留的静态结构、数据与运行时边界检查
 
 正式地图清单、瓦片与模型位于 `public/data/agot-map` 和 `public/assets/agot-map`。`tmp/`、构建目录和本地分析文件不属于运行时合同。
 
 ## 11. 工程边界
 
-- 验证编排由 `scripts/verify/suites.mjs` 和 `scripts/verify/run-suite.mjs` 统一维护；现有单项 `test:*`、`check:*` 继续作为稳定叶子入口。
+- 仓库不再维护自动化测试套件；保留的 `check:*` 只用于静态结构、数据和构建边界检查。
 - `src/domain` 保存 `CharacterId`、人物属性、身体状态键、世界日期和世界地点引用等无 feature 反向依赖的基础合同；旧聚合模块保留兼容 re-export。
 - `src/services/turnResolution.ts` 是回合解析与结算的公共 facade，协议、世界准备、新结算和旧结算分别位于 `src/services/turn`。
 - `src/components/Ck3CharacterWindow.tsx` 是人物窗口公共组合入口；具体页签、身份头部、关系卡与数据 hook 位于 `src/components/character-window`。
@@ -183,4 +182,4 @@ Dexie schema 3 保存回合快照、存档位元数据（`saveSlots`）、世界
 - `src/features/map/MapCanvas.tsx` 是地图画布公共组合入口；旅行图层、语义投影、地标控制、镜头同步和 MapLibre 生命周期位于 `src/features/map/canvas`。
 - `scripts/check-module-cycles.mjs` 要求 `src` 的静态相对 import/export 图不存在循环依赖。
 
-开发入口与数据生成边界见 [`INDEX.md`](INDEX.md)、[`TESTING.md`](TESTING.md) 和 [`DATA_PIPELINES.md`](DATA_PIPELINES.md)。
+开发入口与数据生成边界见 [`INDEX.md`](INDEX.md) 和 [`DATA_PIPELINES.md`](DATA_PIPELINES.md)。

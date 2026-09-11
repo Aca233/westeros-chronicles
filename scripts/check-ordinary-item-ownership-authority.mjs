@@ -8,8 +8,6 @@ const ordinaryItemFiles = [
   'src/features/items/viewModel.ts',
   'src/features/characters/customRulerStart.ts',
   'src/features/world/worldStartState.ts',
-  'scripts/test-item-actions.mjs',
-  'scripts/test-item-view-model.mjs',
 ];
 
 const violations = [];

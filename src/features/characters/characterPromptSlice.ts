@@ -23,6 +23,9 @@ export interface CharacterPromptCandidate extends SceneCharacterCandidate {
   currentGoals?: readonly CharacterKnowledge[];
   knowledge?: readonly CharacterKnowledge[];
   memories?: readonly CharacterMemory[];
+  /** 生死状态必须进入提示词，否则模型会把已故人物当成在场角色继续写。 */
+  alive?: boolean;
+  deathDate?: string | null;
 }
 
 /** Structurally compatible with SceneSelectionResult while preserving its order. */
@@ -142,6 +145,17 @@ function relationText(value: CharacterPromptCandidate['relationToViewer']): stri
   return singleLine(relationshipSummary(value));
 }
 
+/**
+ * 生死是一等叙事事实：不写出来，模型就会把已故人物当作可交谈的在场角色。
+ * 只输出存亡与死亡日期；死因与凶手可能属于未获知的秘密，不进提示词。
+ */
+function lifeStatusText(candidate: CharacterPromptCandidate): string {
+  if (typeof candidate.alive !== 'boolean') return '';
+  if (candidate.alive) return '在世';
+  const date = singleLine(candidate.deathDate ?? '');
+  return date ? `已故（卒于 ${date} AC），不可作为在场角色出现` : '已故，不可作为在场角色出现';
+}
+
 function appendOptionalLine(lines: string[], label: string, value: string): void {
   if (value) lines.push(`- ${label}: ${value}`);
 }
@@ -159,6 +173,7 @@ function formatFullCard(
   appendOptionalLine(lines, '稳定人物 ID', singleLine(candidate.id));
   appendOptionalLine(lines, '姓名', singleLine(candidate.name));
   appendOptionalLine(lines, '公开身份', singleLine(candidate.publicIdentity) || singleLine(candidate.role));
+  appendOptionalLine(lines, '存亡', lifeStatusText(candidate));
   appendOptionalLine(lines, '地点', singleLine(candidate.locationName));
   appendOptionalLine(lines, '关系', relationText(candidate.relationToViewer));
   appendOptionalList(lines, '特质', safeStringList(candidate.visibleTraits).slice(0, 6));
@@ -173,6 +188,7 @@ function formatCompactCard(candidate: CharacterPromptCandidate): string {
   appendOptionalLine(lines, '稳定人物 ID', singleLine(candidate.id));
   appendOptionalLine(lines, '姓名', singleLine(candidate.name));
   appendOptionalLine(lines, '角色', singleLine(candidate.role));
+  appendOptionalLine(lines, '存亡', lifeStatusText(candidate));
   appendOptionalLine(lines, '地点', singleLine(candidate.locationName));
   appendOptionalLine(lines, '关系', relationText(candidate.relationToViewer));
   return lines.join('\n');

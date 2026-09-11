@@ -11,8 +11,17 @@ try { manager = await read('src/components/items/ItemManagementPanel.tsx'); } ca
 for (const marker of ["id: 'carried'", "id: 'current-site'", "id: 'vehicle'", "id: 'remote-site'", 'data-custody-tab={tab.id}']) {
   if (manager && !manager.includes(marker)) failures.push(`Item management is missing custody marker ${marker}.`);
 }
-for (const marker of ['data-item-search', 'data-item-category-filter', 'data-item-sort', '<ItemCard', 'queueItemAction']) {
+for (const marker of ['data-item-search', 'data-item-category-filter', 'data-item-sort', '<ItemCard', 'agot:prefill-action']) {
   if (manager && !manager.includes(marker)) failures.push(`Item management is missing ${marker}.`);
+}
+if (manager.includes('queueItemAction') || manager.includes('queueWorldTransaction')) {
+  failures.push('Item management still bypasses the central action draft by directly queueing item/world actions.');
+}
+for (const marker of ['treatmentSupplySupports', 'injuryId:', 'supplyInstanceId:', 'TREATMENT_LABELS']) {
+  if (manager && !manager.includes(marker)) failures.push(`Detailed treatment drafting is missing ${marker}.`);
+}
+if (manager.includes("choice.startsWith('zone:')") || manager.includes('lord.body[zone]')) {
+  failures.push('Item treatment still targets legacy four-zone body state instead of a concrete injuryId.');
 }
 for (const option of ['当前位置', '类别', '品质', '耐久', '名称']) {
   if (manager && !manager.includes(option)) failures.push(`Item sorting is missing ${option}.`);

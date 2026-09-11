@@ -11,6 +11,8 @@ import {
   getItemCheckModifierBreakdown,
 } from '../features/items/effects';
 import type { TraitCheckDomain } from './traitEffectEngine';
+import type { CharacterHealthState } from '../features/health/types';
+import { deriveHealthCheckEffects } from '../features/health/checkEffects';
 import { buildOutcomeContract, inferActionCheck } from './dicePolicy';
 
 export const ATTRIBUTE_NAMES: Record<keyof LordAttributes, string> = {
@@ -89,6 +91,7 @@ export function performD20Check(
     attemptKey?: string;
     conditionKey?: string;
   },
+  health?: CharacterHealthState,
 ): D20Check {
   const inferred = inferCheckFromAction(actionText);
   const attribute = attributeOverride || inferred.attribute;
@@ -125,11 +128,14 @@ export function performD20Check(
   const traitModifier = effects.checkModifiers[domain] ?? 0;
   const traitModifierBreakdown = getTraitCheckContributions(traitIds, domain)
     .map(({ id, name, value }) => ({ traitId: id, name, value }));
+  const healthEffects = deriveHealthCheckEffects(health, actionText, domain);
+  const healthModifier = healthEffects.modifier;
+  const healthModifierBreakdown = healthEffects.breakdown;
   const availableMethodEdges = getTraitMethodEdges(traitIds, domain);
   const outcomeContract = buildOutcomeContract(actionText, domain);
   const isNatural20 = roll === 20;
   const isNatural1 = roll === 1;
-  const total = Math.round((roll + attributeModifier + equipmentModifier + traitModifier) * 100) / 100;
+  const total = Math.round((roll + attributeModifier + equipmentModifier + traitModifier + healthModifier) * 100) / 100;
   const margin = Math.round((total - dc) * 100) / 100;
   const rolledOutcome: NonNullable<D20Check['outcome']> = margin >= 5
     ? 'strong_success'
@@ -150,15 +156,18 @@ export function performD20Check(
   const itemText = equipmentModifier
     ? `，物品修正 ${equipmentModifier >= 0 ? '+' : ''}${equipmentModifier}`
     : '';
+  const healthText = healthModifier
+    ? `，身体状态 ${healthModifier >= 0 ? '+' : ''}${healthModifier}`
+    : '';
   let resultDescription = '';
   const methodText = secondaryAttribute
     ? `${ATTRIBUTE_NAMES[attribute]} 70% + ${ATTRIBUTE_NAMES[secondaryAttribute]} 30% = 有效能力 ${effectiveAttribute}`
     : `${ATTRIBUTE_NAMES[attribute]} = 有效能力 ${effectiveAttribute}`;
-  if (outcome === 'strong_success') resultDescription = `【优势成功】${methodText}；总点数 ${total} 超过难度 DC ${dc} 达 5 点，可获得一个与当前行动直接相关的小优势${itemText}${traitText}。`;
-  else if (outcome === 'success') resultDescription = `【检定成功】${methodText}；总点数 ${total} >= 难度 DC ${dc}${itemText}${traitText}。`;
-  else if (outcome === 'partial' && activatedMethodEdge) resultDescription = `【部分成果·${activatedMethodEdge.label}】${methodText}；原检定失败，但专长改变了失败后还能保住的东西：${activatedMethodEdge.directive}${itemText}${traitText}。`;
-  else if (outcome === 'partial') resultDescription = `【部分成果】${methodText}；总点数 ${total} 距难度 DC ${dc} 不超过 3 点，只能取得有限进展、接受相关代价，或面对一个条件机会${itemText}${traitText}。`;
-  else resultDescription = `【检定失败】${methodText}；总点数 ${total} 距难度 DC ${dc} 超过 3 点${itemText}${traitText}。`;
+  if (outcome === 'strong_success') resultDescription = `【优势成功】${methodText}；总点数 ${total} 超过难度 DC ${dc} 达 5 点，可获得一个与当前行动直接相关的小优势${itemText}${traitText}${healthText}。`;
+  else if (outcome === 'success') resultDescription = `【检定成功】${methodText}；总点数 ${total} >= 难度 DC ${dc}${itemText}${traitText}${healthText}。`;
+  else if (outcome === 'partial' && activatedMethodEdge) resultDescription = `【部分成果·${activatedMethodEdge.label}】${methodText}；原检定失败，但专长改变了失败后还能保住的东西：${activatedMethodEdge.directive}${itemText}${traitText}${healthText}。`;
+  else if (outcome === 'partial') resultDescription = `【部分成果】${methodText}；总点数 ${total} 距难度 DC ${dc} 不超过 3 点，只能取得有限进展、接受相关代价，或面对一个条件机会${itemText}${traitText}${healthText}。`;
+  else resultDescription = `【检定失败】${methodText}；总点数 ${total} 距难度 DC ${dc} 超过 3 点${itemText}${traitText}${healthText}。`;
 
   return {
     id: `check_${Date.now()}`,
@@ -182,6 +191,8 @@ export function performD20Check(
     checkDomain: domain,
     traitModifier,
     traitModifierBreakdown,
+    healthModifier,
+    healthModifierBreakdown,
     ...(activatedMethodEdge ? { methodEdge: {
       traitId: activatedMethodEdge.traitId,
       traitName: activatedMethodEdge.traitName,

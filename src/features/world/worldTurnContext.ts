@@ -332,6 +332,9 @@ export async function buildWorldTurnContext(input: BuildWorldTurnContextInput): 
       visibleTraits: resolveCharacterTraits(importedTraits.visibleTraitIds, []).map((trait) => trait.name),
       memories: character.memories,
       knowledge: character.knowledge,
+      // 已故人物仍可能因为被玩家点名等原因进入候选，必须把存亡一并交给提示词。
+      alive: character.alive,
+      deathDate: character.deathDate ?? null,
     };
   });
   const rawSelection = selectSceneCharacters({

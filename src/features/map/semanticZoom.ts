@@ -23,6 +23,30 @@ export const semanticDetailOpacityExpression: ExpressionSpecification = [
   'interpolate', ['linear'], ['zoom'], DETAIL_CROSS_FADE[0], 0, DETAIL_CROSS_FADE[1], 1, MAX_SEMANTIC_ZOOM, 1,
 ]
 
+// Camera expressions must keep zoom at the top-level interpolation.
+export function semanticDetailOpacity(maximum = 1, aggregate = false): ExpressionSpecification {
+  return ['interpolate', ['linear'], ['zoom'],
+    DETAIL_CROSS_FADE[0], aggregate ? maximum : 0,
+    DETAIL_CROSS_FADE[1], aggregate ? 0 : maximum]
+}
+
+export function semanticRankZoomRange(rank: SemanticRank): { minzoom: number; maxzoom: number } {
+  const ranges: Record<SemanticRank, [number, number]> = {
+    hegemon: [0, HEGEMON_MAX_ZOOM],
+    empire: [HEGEMON_MAX_ZOOM, EMPIRE_MAX_ZOOM],
+    kingdom: [EMPIRE_MAX_ZOOM, KINGDOM_MAX_ZOOM],
+    duchy: [KINGDOM_MAX_ZOOM, DUCHY_MAX_ZOOM],
+    county: [DUCHY_MAX_ZOOM, LOCAL_MIN_ZOOM],
+  }
+  const [minzoom, maxzoom] = ranges[rank]
+  return { minzoom, maxzoom }
+}
+
+export function semanticBoundaryZoomRange(rank: SemanticRank): { minzoom: number; maxzoom?: number } {
+  if (rank === 'county') return { minzoom: DUCHY_MAX_ZOOM }
+  return semanticRankZoomRange(rank)
+}
+
 export interface SemanticZoomState {
   zoom: number
   primaryRank: SemanticRank

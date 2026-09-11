@@ -3,6 +3,9 @@ import { MapPin, PackageOpen, Search } from 'lucide-react';
 import { ITEM_CATALOG } from '../../data/itemDefinitions';
 import type { PlayerCharacterDossier } from '../../features/characters/characterDossier';
 import type { CharacterId } from '../../features/characters/types';
+import { treatmentSupplySupports } from '../../features/health/engine';
+import { ANATOMICAL_ZONE_LABELS } from '../../features/health/state';
+import type { CharacterInjury, TreatmentKind } from '../../features/health/types';
 import { pendingItemActionsFromWorldTransactions } from '../../features/items/itemActionQueue';
 import { getItemDefinition } from '../../features/items/catalog';
 import { DEFAULT_CARRIED_CAPACITY, getUsedCarryUnits, getUsedStorageUnits } from '../../features/items/custody';
@@ -33,6 +36,9 @@ const CATEGORY_LABELS: Record<ItemCategory, string> = {
   document: '文书', medicine: '药品', poison: '毒物', supply: '补给', keepsake: '信物',
 };
 const QUALITY_ORDER = { rough: 0, common: 1, fine: 2, masterwork: 3, legendary: 4 } as const;
+const TREATMENT_RESOURCE_TAGS = new Set(['medicine', 'bandage', 'injury', 'antidote', 'poison', 'cleaning', 'repair']);
+const TREATMENT_LABELS: Record<TreatmentKind, string> = { first_aid: '急救', immobilize: '固定', definitive: '正式处理' };
+const INJURY_SEVERITY_LABELS = { minor: '轻创', heavy: '重创', critical: '危重' } as const;
 type SortMode = 'location' | 'category' | 'quality' | 'durability' | 'name';
 
 function exactActions(
@@ -48,7 +54,7 @@ function exactActions(
   const disabled = (reason?: string) => pendingReason ?? reason;
   const actions: ItemCardModel['actions'] = [];
   if (placement.type === 'carried' || placement.type === 'site' || placement.type === 'vehicle') {
-    if (definition.category === 'medicine') {
+    if (definition.category === 'medicine' || definition.tags.some((tag) => TREATMENT_RESOURCE_TAGS.has(tag))) {
       actions.push({ kind: 'use', label: '拟定治疗', disabledReason: disabled() });
     }
     actions.push({ kind: 'transfer', label: '拟定转移', disabledReason: disabled() });
@@ -157,6 +163,7 @@ export const ItemManagementPanel: React.FC<ItemManagementPanelProps> = ({
   const state = lord.items;
   const playerCharacterId = (lord.canonicalCharacterId
     ?? `save:${gameState.worldCharacters?.runId ?? 'current'}:player`) as CharacterId;
+  const playerHealth = gameState.health.characters[playerCharacterId];
   const pendingItemActions = useMemo(() => pendingItemActionsFromWorldTransactions(
     gameState.worldRuntime.pendingTransactions,
     state,
@@ -222,19 +229,29 @@ export const ItemManagementPanel: React.FC<ItemManagementPanelProps> = ({
     return getTransferDestinationChoices({ state, currentLocation: lord.location, from: placement });
   }, [lord.location, state, transferRequest]);
   const treatmentOptions = useMemo(() => {
-    if (!treatmentRequest) return [];
+    if (!treatmentRequest || !playerHealth) return [];
     const instance = state.instances[treatmentRequest.instanceId];
     if (!instance) return [];
-    const tags = new Set(getItemDefinition(ITEM_CATALOG, instance.definitionId).tags);
-    return [
-      ...((tags.has('bandage') || tags.has('injury')) ? (['head', 'torso', 'arms', 'legs'] as const)
-        .filter((zone) => lord.body[zone].level !== 'intact')
-        .map((zone) => ({ id: `zone:${zone}`, title: lord.body[zone].name, subtitle: lord.body[zone].level, detail: lord.body[zone].wounds.join('、') || '已记录部位创伤', icon: 'carried' as const })) : []),
-      ...(lord.body.isBleeding && (tags.has('bleeding') || tags.has('bandage')) ? [{ id: 'condition:bleeding', title: '持续失血', subtitle: '异常状态', detail: '尝试加压止血', icon: 'carried' as const }] : []),
-      ...(lord.body.isPoisoned && (tags.has('antidote') || tags.has('poison')) ? [{ id: 'condition:poisoned', title: '中毒', subtitle: '异常状态', detail: '尝试使用相符解毒剂', icon: 'carried' as const }] : []),
-      ...(lord.body.isInfected && tags.has('infection') ? [{ id: 'condition:infected', title: '感染', subtitle: '异常状态', detail: '尝试处理感染', icon: 'carried' as const }] : []),
-    ];
-  }, [lord.body, state.instances, treatmentRequest]);
+    const tags = getItemDefinition(ITEM_CATALOG, instance.definitionId).tags;
+    const treatmentKinds: TreatmentKind[] = ['first_aid', 'immobilize', 'definitive'];
+    return playerHealth.injuries
+      .filter((injury) => injury.recovery.stage !== 'healed')
+      .flatMap((injury: CharacterInjury) => treatmentKinds.flatMap((treatment) => {
+        if (!treatmentSupplySupports(treatment, injury, tags)) return [];
+        if (treatment === 'first_aid' && injury.treatment.firstAid && (injury.bleeding === 0 || injury.treatment.bleedingControlled)) return [];
+        if (treatment === 'immobilize' && injury.treatment.immobilized) return [];
+        if (treatment === 'definitive' && injury.treatment.definitive && injury.recovery.stage === 'recovering') return [];
+        return [{
+          id: `treatment:${treatment}:${injury.id}`,
+          title: `${ANATOMICAL_ZONE_LABELS[injury.zone]} · ${injury.cause}`,
+          subtitle: `${INJURY_SEVERITY_LABELS[injury.severity]} · ${TREATMENT_LABELS[treatment]}`,
+          detail: `${injury.infection === 'infected' ? '已感染 · ' : injury.infection === 'risk' ? '有感染风险 · ' : ''}${injury.bleeding > 0 && !injury.treatment.bleedingControlled ? `出血 ${injury.bleeding} 级 · ` : ''}恢复 ${Math.round(injury.recovery.progress)}%`,
+          icon: 'carried' as const,
+          injury,
+          treatment,
+        }];
+      }));
+  }, [playerHealth, state.instances, treatmentRequest]);
 
   const cards = useMemo(() => {
     const models = buildItemCardModels({ state, catalog: ITEM_CATALOG, currentLocation: lord.location, pendingActions: pendingItemActions, tab: activeTab });
@@ -401,15 +418,15 @@ export const ItemManagementPanel: React.FC<ItemManagementPanelProps> = ({
     {treatmentRequest && (
       <ItemChoiceDialog
         title={`使用${treatmentRequest.name}治疗`}
-        description="选择要处理的伤处。选择后只会填入行动草稿，疗效和消耗仍由正常回合结算。"
-        options={treatmentOptions}
-        emptyMessage="当前没有已记录的伤势或异常状态。"
+        description="选择具体伤病与处理方式。这里只写入行动草稿；程序会再次验证 injuryId、物资实例、用途、可访问性、环境和耗时。"
+        options={treatmentOptions.map(({ injury: _injury, treatment: _treatment, ...option }) => option)}
+        emptyMessage="这件物资当前没有可合法处理的已记录伤病。"
         onChoose={(choice) => {
-          const zone = choice.startsWith('zone:') ? choice.slice('zone:'.length) as 'head' | 'torso' | 'arms' | 'legs' : undefined;
-          const condition = choice.startsWith('condition:') ? choice.slice('condition:'.length) : undefined;
-          const target = zone ? `我的【${lord.body[zone].name}】` : condition === 'bleeding' ? '我的持续失血' : condition === 'poisoned' ? '我的中毒状态' : '我的感染状态';
+          const selected = treatmentOptions.find((option) => option.id === choice);
+          if (!selected) return;
+          const target = `【${ANATOMICAL_ZONE_LABELS[selected.injury.zone]} · ${selected.injury.cause}】`;
           window.dispatchEvent(new CustomEvent('agot:prefill-action', {
-            detail: { text: `我使用【${treatmentRequest.name}】治疗${target}；按我的做法、物品实际用途和当前伤势结算。` },
+            detail: { text: `我使用【${treatmentRequest.name}】（supplyInstanceId:${treatmentRequest.instanceId}）对${target}执行${TREATMENT_LABELS[selected.treatment]}（injuryId:${selected.injury.id}; treatment:${selected.treatment}）。只处理这条已记录伤病；先验证物资用途、可访问性、治疗环境和实际耗时，若条件不满足则拒绝且不要消耗物资。` },
           }));
           setTreatmentRequest(null);
           closeDrawer();

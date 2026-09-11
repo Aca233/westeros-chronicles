@@ -1,8 +1,8 @@
 # 项目文档索引
 
-文档按“当前实现 → 当前设计 → 验证记录 → 历史决策”阅读。实现和文档冲突时，以源码、生成数据校验和 [`CURRENT_ARCHITECTURE.md`](CURRENT_ARCHITECTURE.md) 为准。
+文档按“当前实现 → 当前设计 → 试玩记录 → 历史决策”阅读。实现和文档冲突时，以源码、生成数据校验和 [`CURRENT_ARCHITECTURE.md`](CURRENT_ARCHITECTURE.md) 为准。
 
-全量文件分类见 [`CATALOG.md`](CATALOG.md)；它同时区分人工文档、内容源、生成产物、测试夹具和临时文件。
+全量文件分类见 [`CATALOG.md`](CATALOG.md)；它同时区分人工文档、内容源、生成产物和临时文件。
 
 ## 0. 项目入口与范围
 
@@ -16,7 +16,6 @@
 | --- | --- |
 | [`CURRENT_ARCHITECTURE.md`](CURRENT_ARCHITECTURE.md) | 当前运行时状态、回合闭环、存档/持久化、世界状态和地图降级边界；这是实现层的权威说明。 |
 | [`design/IMPLEMENTATION_STATUS.md`](design/IMPLEMENTATION_STATUS.md) | 最近一轮角色扮演重构的实际接线状态、已撤下机制、兼容策略和验证边界。 |
-| [`TESTING.md`](TESTING.md) | 验证套件、单项调试入口、手工验证方式以及不会自动执行的高成本操作。 |
 | [`DATA_PIPELINES.md`](DATA_PIPELINES.md) | 离线 AGOT 数据的输入、生成器、产物、校验和运行时边界。 |
 
 ## 2. 当前产品与玩法设计
@@ -50,7 +49,7 @@
 | [`model-prompts.md`](design/roleplay-context-v2/model-prompts.md) | Resolver、Narrator、Memory Compressor、Repair 的协议和提示词。 |
 | [`implementation.md`](design/roleplay-context-v2/implementation.md) | 分阶段实施、目录映射、存档迁移、回归案例和发布门槛。 |
 
-## 3. 验证、试玩与专项资料
+## 3. 试玩与专项资料
 
 目录导航：[`qa/README.md`](qa/README.md)
 

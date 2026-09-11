@@ -44,23 +44,12 @@
 
 清单、报告和 schema 是可审计产物，不是新的人工事实来源。具体流水线见 [`DATA_PIPELINES.md`](DATA_PIPELINES.md)。
 
-## 四、测试输入与开发依赖说明
-
-`scripts/fixtures/` 共 40 个文件，全部是离线测试输入或视觉/导入器夹具，不属于产品文档：
-
-- 13 个 `.txt`：Paradox/AGOT 结构化样例。
-- 3 个 `.yml`：本地化样例。
-- 2 个 `.csv`：地图定义和邻接关系样例。
-- 8 个 `.json`：模型、肖像和导入器校验夹具。
-- 其余为 `.mjs`、`.ts`、`.map`、`.mod`、`.png`、`.dds` 等运行测试所需输入。
-
-目录入口：[`scripts/fixtures/`](../scripts/fixtures/)。
+## 四、开发依赖说明
 
 脚本依赖说明：
 
 - [`scripts/requirements-map.txt`](../scripts/requirements-map.txt)：地图导入依赖。
 - [`scripts/requirements-models.txt`](../scripts/requirements-models.txt)：模型导入依赖。
-- [`TESTING.md`](TESTING.md)：验证命令和不会自动执行的导入操作。
 
 ## 五、暂存内容与排除项
 

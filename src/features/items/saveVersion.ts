@@ -1,41 +1,88 @@
+import type { CharacterId } from '../../domain/characterId';
+import type { LordBodyCondition } from '../../types/game';
+import { migrateLegacyBodyToHealth } from '../health/state';
 import { validateWorldLocationRef } from '../map/locationResolver.ts';
 import { validateWorldRuntimeState } from '../world/worldRuntimeState.ts';
 
-export const ITEM_SAVE_FORMAT_VERSION = 10 as const;
-export const PREVIOUS_SAVE_FORMAT_VERSION = 9 as const;
+export const ITEM_SAVE_FORMAT_VERSION = 11 as const;
+export const PREVIOUS_SAVE_FORMAT_VERSION = 10 as const;
+export const LEGACY_SAVE_FORMAT_VERSION = 9 as const;
 
-const RESET_REQUIRED_MESSAGE = '测试版存档格式已更新，请重置测试存档后重新开始。';
+const RESET_REQUIRED_MESSAGE = '存档格式无法安全迁移，请保留原档并重新选择可兼容的存档。';
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null;
 }
 
+function isLegacyBody(value: unknown): value is LordBodyCondition {
+  if (!isRecord(value)) return false;
+  for (const key of ['head', 'torso', 'arms', 'legs'] as const) {
+    const zone = value[key];
+    if (!isRecord(zone)
+      || typeof zone.key !== 'string'
+      || typeof zone.name !== 'string'
+      || !['intact', 'minor', 'heavy', 'critical'].includes(String(zone.level))
+      || !Array.isArray(zone.wounds)
+      || !zone.wounds.every((entry) => typeof entry === 'string')) return false;
+  }
+  return typeof value.isBleeding === 'boolean'
+    && typeof value.isPoisoned === 'boolean'
+    && typeof value.isInfected === 'boolean';
+}
+
+function hasValidHealthState(value: unknown): boolean {
+  if (!isRecord(value) || value.schemaVersion !== 1 || !isRecord(value.characters)) return false;
+  return Object.entries(value.characters).every(([characterId, health]) => {
+    if (!characterId.trim() || !isRecord(health)
+      || health.schemaVersion !== 1
+      || health.characterId !== characterId
+      || typeof health.alive !== 'boolean'
+      || !['left', 'right'].includes(String(health.dominantHand))
+      || !['exact', 'day_only'].includes(String(health.timePrecision))
+      || !Array.isArray(health.injuries)
+      || !isRecord(health.survival)
+      || !isRecord(health.lastUpdatedAt)
+      || !isRecord(health.lastUpdatedAt.date)
+      || !Number.isInteger(health.lastUpdatedAt.minuteOfDay)) return false;
+    const survival = health.survival;
+    if (!['hunger', 'thirst', 'fatigue'].every((key) => typeof survival[key] === 'number' && Number.isFinite(survival[key] as number))) return false;
+    return health.injuries.every((injury) => isRecord(injury)
+      && typeof injury.id === 'string'
+      && typeof injury.cause === 'string'
+      && typeof injury.kind === 'string'
+      && typeof injury.zone === 'string'
+      && ['minor', 'heavy', 'critical'].includes(String(injury.severity))
+      && isRecord(injury.treatment)
+      && isRecord(injury.recovery));
+  });
+}
 
 /**
- * A persisted baseline may be reused only when it describes the exact in-memory
- * run and committed revision that is about to advance. Old test saves are not
- * migrated; callers can discard them and seed the visible current state.
+ * A persisted baseline may be reused when its in-memory migrated projection
+ * describes the exact visible run/revision. The raw stored snapshot is not
+ * rewritten merely to make it reusable.
  */
 export function isCompatibleTurnBaseline(snapshot: unknown, currentState: unknown): boolean {
-  if (!isRecord(snapshot)
-    || snapshot.formatVersion !== ITEM_SAVE_FORMAT_VERSION
-    || !Number.isInteger(snapshot.turnNumber)
-    || !isRecord(snapshot.gameState)) return false;
+  const migratedSnapshot = migrateSnapshotToCurrent(snapshot);
+  if (!isRecord(migratedSnapshot)
+    || migratedSnapshot.formatVersion !== ITEM_SAVE_FORMAT_VERSION
+    || !Number.isInteger(migratedSnapshot.turnNumber)
+    || !isRecord(migratedSnapshot.gameState)) return false;
 
   try {
-    assertSupportedGameState(snapshot.gameState);
+    assertSupportedGameState(migratedSnapshot.gameState);
     assertSupportedGameState(currentState);
   } catch {
     return false;
   }
 
-  const persisted = snapshot.gameState as Record<string, unknown>;
+  const persisted = migratedSnapshot.gameState as Record<string, unknown>;
   const current = currentState as Record<string, unknown>;
   const persistedCharacters = persisted.worldCharacters;
   const currentCharacters = current.worldCharacters;
   const persistedRuntime = persisted.worldRuntime;
   const currentRuntime = current.worldRuntime;
-  if (snapshot.turnNumber !== current.turnCount
+  if (migratedSnapshot.turnNumber !== current.turnCount
     || persisted.turnCount !== current.turnCount
     || !isRecord(persistedCharacters)
     || !isRecord(currentCharacters)
@@ -49,13 +96,7 @@ export function isCompatibleTurnBaseline(snapshot: unknown, currentState: unknow
   return true;
 }
 
-
-/**
- * Repair the revision-only drift produced by the former turn resolver, which
- * could append a valid ledger turn without advancing the runtime counter.
- * This is deliberately narrow: future counters or structurally inconsistent
- * story/ledger lengths are left untouched and rejected by the commit guard.
- */
+/** Repair only the former revision-counter drift; never infer missing gameplay facts. */
 export function repairKnownTurnRevisionDrift<T extends {
   saveFormatVersion: number;
   turnCount: number;
@@ -83,9 +124,7 @@ export function repairKnownTurnRevisionDrift<T extends {
 
   const characterRevision = gameState.worldCharacters?.revision;
   if (gameState.worldRuntime.revision === expectedRevision
-    && (characterRevision === undefined || characterRevision === expectedRevision)) {
-    return gameState;
-  }
+    && (characterRevision === undefined || characterRevision === expectedRevision)) return gameState;
 
   return {
     ...gameState,
@@ -104,7 +143,6 @@ function hasValidContainerLocations(items: Record<string, unknown>): boolean {
     && typeof container.locationLabel === 'string'
     && Boolean(container.locationLabel.trim()));
 }
-
 
 function hasValidActiveJourney(value: unknown): boolean {
   if (value === undefined) return true;
@@ -141,13 +179,19 @@ function hasValidActiveJourney(value: unknown): boolean {
 }
 
 export function assertSupportedGameState(value: unknown): asserts value is {
-  saveFormatVersion: 10;
+  saveFormatVersion: 11;
   lord: { items: { schemaVersion: 1 } };
   worldHistory: { schemaVersion: 1 };
   worldRuntime: { schemaVersion: 1 };
+  health: { schemaVersion: 1 };
 } {
   if (!isRecord(value)
     || value.saveFormatVersion !== ITEM_SAVE_FORMAT_VERSION
+    || !Number.isInteger(value.currentMinute)
+    || (value.currentMinute as number) < 0
+    || (value.currentMinute as number) >= 1440
+    || !['exact', 'day_only'].includes(String(value.currentTimePrecision))
+    || !hasValidHealthState(value.health)
     || !isRecord(value.lord)
     || !validateWorldLocationRef(value.lord.location)
     || typeof value.lord.locationLabel !== 'string'
@@ -168,27 +212,30 @@ export function assertSupportedGameState(value: unknown): asserts value is {
 }
 
 export function assertSupportedSaveEnvelope(value: unknown): asserts value is {
-  version: 9 | 10;
+  version: 9 | 10 | 11;
   snapshots: unknown[];
   worldRuns?: unknown[];
   characterEvents?: unknown[];
 } {
-  if (!isRecord(value) || (value.version !== ITEM_SAVE_FORMAT_VERSION && value.version !== PREVIOUS_SAVE_FORMAT_VERSION)) {
+  if (!isRecord(value)
+    || (value.version !== ITEM_SAVE_FORMAT_VERSION
+      && value.version !== PREVIOUS_SAVE_FORMAT_VERSION
+      && value.version !== LEGACY_SAVE_FORMAT_VERSION)) {
     throw new Error(RESET_REQUIRED_MESSAGE);
   }
   if (!Array.isArray(value.snapshots)) throw new Error('无效的存档格式：缺少快照列表');
 }
 
-/** Conservatively add v10 runtime ledgers without inferring facts from prose. */
-export function migrateGameStateToCurrent(value: unknown): unknown {
-  if (!isRecord(value) || value.saveFormatVersion !== PREVIOUS_SAVE_FORMAT_VERSION) return value;
+/** Conservatively add v10 scene/roleplay ledgers without inferring facts from prose. */
+function migrateGameStateV9ToV10(value: unknown): unknown {
+  if (!isRecord(value) || value.saveFormatVersion !== LEGACY_SAVE_FORMAT_VERSION) return value;
   const lord = isRecord(value.lord) ? value.lord : undefined;
   const location = lord && validateWorldLocationRef(lord.location) ? lord.location : { locationId: 'b_unknown_westeros' };
   const turnCount = Number.isInteger(value.turnCount) ? value.turnCount as number : 1;
   const playerId = lord && typeof lord.canonicalCharacterId === 'string' ? lord.canonicalCharacterId : undefined;
   return {
     ...value,
-    saveFormatVersion: ITEM_SAVE_FORMAT_VERSION,
+    saveFormatVersion: PREVIOUS_SAVE_FORMAT_VERSION,
     activeScene: isRecord(value.activeScene) ? value.activeScene : {
       schemaVersion: 1,
       id: `scene:${location.locationId}:${typeof location.sceneLocation === 'string' && location.sceneLocation.trim() ? location.sceneLocation.trim() : 'unspecified'}`,
@@ -219,7 +266,50 @@ export function migrateGameStateToCurrent(value: unknown): unknown {
   };
 }
 
+/**
+ * v10 -> v11: add minute clock and authoritative detailed health. Old four-zone
+ * wounds are kept as one unknown-side injury each; they are never duplicated
+ * across left/right. The migration only reflects already-recorded disability
+ * traits and never invents a new death or disability.
+ */
+function migrateGameStateV10ToV11(value: unknown): unknown {
+  if (!isRecord(value) || value.saveFormatVersion !== PREVIOUS_SAVE_FORMAT_VERSION) return value;
+  const lord = isRecord(value.lord) ? value.lord : undefined;
+  if (!lord || !isLegacyBody(lord.body)) throw new Error(RESET_REQUIRED_MESSAGE);
+  const year = Number.isInteger(value.currentYear) ? value.currentYear as number : 298;
+  const month = Number.isInteger(value.currentMonth) ? value.currentMonth as number : 1;
+  const day = Number.isInteger(value.currentDay) ? value.currentDay as number : 1;
+  const runId = isRecord(value.worldCharacters) && typeof value.worldCharacters.runId === 'string'
+    ? value.worldCharacters.runId
+    : 'legacy';
+  const playerId = (typeof lord.canonicalCharacterId === 'string'
+    ? lord.canonicalCharacterId
+    : `save:${runId}:player`) as CharacterId;
+  const traitIds = Array.isArray(lord.traitIds)
+    ? lord.traitIds.filter((entry): entry is string => typeof entry === 'string')
+    : [];
+  const currentMinute = 12 * 60;
+  const playerHealth = migrateLegacyBodyToHealth(
+    playerId,
+    lord.body,
+    { date: { year, month, day }, minuteOfDay: currentMinute },
+    { precision: 'day_only', traitIds },
+  );
+  return {
+    ...value,
+    saveFormatVersion: ITEM_SAVE_FORMAT_VERSION,
+    currentMinute,
+    currentTimePrecision: 'day_only',
+    health: { schemaVersion: 1, characters: { [playerId]: playerHealth } },
+  };
+}
+
+export function migrateGameStateToCurrent(value: unknown): unknown {
+  return migrateGameStateV10ToV11(migrateGameStateV9ToV10(value));
+}
+
 export function migrateSnapshotToCurrent(value: unknown): unknown {
-  if (!isRecord(value) || value.formatVersion !== PREVIOUS_SAVE_FORMAT_VERSION) return value;
+  if (!isRecord(value)
+    || (value.formatVersion !== LEGACY_SAVE_FORMAT_VERSION && value.formatVersion !== PREVIOUS_SAVE_FORMAT_VERSION)) return value;
   return { ...value, formatVersion: ITEM_SAVE_FORMAT_VERSION, gameState: migrateGameStateToCurrent(value.gameState) };
 }

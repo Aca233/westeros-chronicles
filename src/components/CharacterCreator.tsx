@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   BookOpen,
   Check,
@@ -11,493 +11,683 @@ import {
   RotateCcw,
   Search,
   ShieldCheck,
-  Swords,
-  UserPlus,
+  Sparkles,
+  UserRound,
   Users,
   X,
 } from 'lucide-react';
 import { useGameStore } from '../store/useGameStore';
 import { HOUSES } from '../data/houses';
-import { LordAttributes, LordProfile, createDefaultBody } from '../types/game';
-import { createCustomRulerItemState, type CustomStartStatus } from '../features/characters/customRulerStart';
-import { GameIcon, getHouseIconId } from './GameIcon';
-import { CharacterSearch } from './CharacterSearch';
-import { CharacterPortrait } from './CharacterPortrait';
-import { dossierRepository } from '../features/characters/useCharacterDossier';
-import { resolveCharacter } from '../features/characters/characterProjector';
-import { characterDatasetYear } from '../features/characters/characterDossier';
-import { formatWorldCulture, formatWorldFaith } from '../features/world-content/terminology';
-import type { WorldTerminology } from '../features/world-content/types';
-import { worldContentRepository } from '../features/world-content/repository';
-import type { CharacterId, ResolvedCharacter } from '../features/characters/types';
-import { preloadNpcLoadoutContent } from '../features/items/npcLoadoutContent';
-import { createLivingWorldGame, createCustomLivingWorldGame } from '../features/world/createLivingWorldGame';
-import { CoatOfArms } from './CoatOfArms';
-import { stripEmoji } from '../services/textSanitizer';
-import { CK3_SKILLS, getCk3SkillRank } from '../data/ck3Skills';
 import {
   CHARACTER_TRAITS,
   DESIGN_POINT_LIMIT,
-  MAX_PERSONALITY_TRAITS,
-  TRAIT_CATEGORY_LABELS,
-  TraitCategory,
-  calculateDesignPointUsage,
   calculateFinalAttributes,
   orderCharacterTraitsForDisplay,
-  formatTraitDescription,
-  formatTraitModifiers,
-  formatTraitRuleEffects,
-  getHouseIdentity,
 } from '../data/characterTraits';
-import { filterImportedCharacterTraits } from '../data/importedCharacterTraitPolicy';
+import type { LordAttributes } from '../types/game';
+import type { CharacterId } from '../features/characters/types';
+import type { GameplayLocationEntry } from '../features/world-content/types';
+import { dossierRepository } from '../features/characters/useCharacterDossier';
+import { characterAgeAtYear } from '../features/characters/characterDossier';
+import { worldContentRepository } from '../features/world-content/repository';
+import { CharacterSearch } from './CharacterSearch';
+import { CharacterPortrait } from './CharacterPortrait';
+import { TraitWorkbench, TraitInspector } from './character-creator/TraitWorkbench';
+import { previewCreationTrait } from '../features/characters/creationTraitRules';
+import { CoatOfArms } from './CoatOfArms';
+import { CREATOR_PANELS, type CreatorPanel } from './character-creator/creatorTypes';
+import { AttributeBoard, CharacterReadoutPanel, CreatorTraitSummary, TraitSourceTag } from './character-creator/CharacterReadoutPanel';
+import { characterReadout, skillReadouts, traitSourceOf, TRAIT_SOURCES } from './character-creator/characterReadout';
+import { GameIcon, getHouseIconId, type GameIconId } from './GameIcon';
 import {
-  CoatOfArmsDesign,
   DEFAULT_COAT_OF_ARMS,
   HERALDRY_COLORS,
   HERALDRY_EMBLEMS,
   HERALDRY_PATTERNS,
   HERALDRY_SHIELDS,
+  type CoatOfArmsDesign,
 } from '../data/heraldry';
+import { stripEmoji } from '../services/textSanitizer';
+import { generateCustomOpening, type OpeningGenerationProgress } from '../services/openingGeneration';
+import { createCustomLivingWorldGame, prepareCustomOpeningFacts } from '../features/world/createLivingWorldGame';
+import {
+  DEFAULT_CHARACTER_CREATION_CATALOG,
+  backgroundTraitRecommendations,
+  createCustomRunId,
+  createDefaultCharacterCreationDraft,
+  legalTraitIdsForAge,
+  rebaseDraftForBackground,
+  resolveCharacterCreationDraft,
+  suggestedBackgroundAttributes,
+  validateCharacterCreationDraft,
+  type CharacterCreationDraft,
+  type CreationKinshipDraft,
+  type CreationRelationDraft,
+  type CustomExperience,
+  type CustomIdentityRole,
+  type CustomLivelihood,
+  type CustomOrigin,
+  type CustomRelationKind,
+  type CustomSituationKind,
+} from '../features/characters/customCharacterStart';
 
-const TRAIT_CATEGORY_ORDER: readonly TraitCategory[] = ['personality', 'education', 'lifestyle', 'congenital', 'health', 'fame'];
-
-const getConflictingTraitIds = (trait: (typeof CHARACTER_TRAITS)[number]): Set<string> => {
-  const conflicts = new Set(trait.incompatibleTraitIds ?? []);
-  for (const entry of CHARACTER_TRAITS) {
-    if (trait.exclusiveGroup && entry.exclusiveGroup === trait.exclusiveGroup) conflicts.add(entry.id);
-    if (entry.incompatibleTraitIds?.includes(trait.id)) conflicts.add(entry.id);
-  }
-  conflicts.delete(trait.id);
-  return conflicts;
-};
-const CUSTOM_HOUSE_BASE_ATTRIBUTES: LordAttributes = {
-  diplomacy: 10,
-  martial: 10,
-  stewardship: 10,
-  intrigue: 10,
-  learning: 10,
-  prowess: 10,
-};
-
-const RECOMMENDED_CHARACTER_IDS: CharacterId[] = [
-  'agot:Stark_3', 'agot:Baratheon_2', 'agot:Lannister_6', 'agot:Lannister_8',
-  'agot:Stark_7', 'agot:Targaryen_9', 'agot:Stark_8', 'agot:Stark_9',
-];
-
-const START_STATUSES: Array<{ id: CustomStartStatus; label: string; description: string; title: string }> = [
-  { id: 'landed', label: '封地领主', description: '有私人房间、驮马与较充足的钱财，可处理领地事务。', title: '年轻的封建领主' },
-  { id: 'household', label: '家臣与侍从', description: '寄身于他人屋檐下，只有个人木箱和有限盘缠。', title: '受雇的家臣' },
-  { id: 'wanderer', label: '流浪者', description: '没有固定据点，财物随身或放在驮马上，靠关系与本事立足。', title: '无地的旅人' },
-];
+const ROLE_HOUSE_REQUIRED = new Set<CustomIdentityRole>(['retainer', 'knight', 'landless_noble']);
 
 export const CharacterCreator: React.FC = () => {
-  const { isCreatorOpen, closeCreator, startNewGame } = useGameStore();
-  const [tab, setTab] = useState<'existing' | 'custom'>(() => useGameStore.getState().creatorInitialTab);
-  const [recommendedCharacters, setRecommendedCharacters] = useState<ResolvedCharacter[]>([]);
-  const [existingError, setExistingError] = useState<string | null>(null);
-  const [startingCharacterId, setStartingCharacterId] = useState<CharacterId | null>(null);
-  const [houseMode, setHouseMode] = useState<'preset' | 'custom'>('preset');
-  const [selectedHouseId, setSelectedHouseId] = useState(HOUSES[0].id);
-  const [customName, setCustomName] = useState('维斯特洛新星');
-  const [customTitle, setCustomTitle] = useState('年轻的封建领主');
-  const [startStatus, setStartStatus] = useState<CustomStartStatus>('landed');
-  const [customAge, setCustomAge] = useState(24);
-  const [customGender, setCustomGender] = useState('男');
-  const [customAttributes, setCustomAttributes] = useState<LordAttributes>({ ...HOUSES[0].defaultAttributes });
-  const [selectedTraitIds, setSelectedTraitIds] = useState<string[]>(['ambitious']);
-  const [activeTraitCategory, setActiveTraitCategory] = useState<TraitCategory>('personality');
-  const [traitSearch, setTraitSearch] = useState('');
-
-  const [customHouseName, setCustomHouseName] = useState('鸦冠家族');
-  const [customDynastyName, setCustomDynastyName] = useState('鸦冠宗族');
-  const [customHouseWords, setCustomHouseWords] = useState('以铁与誓言');
-  const [customSeat, setCustomSeat] = useState('暮鸦堡');
-  const [customCulture, setCustomCulture] = useState('安达尔人');
-  const [customFaith, setCustomFaith] = useState('七神信仰');
-  const [customCoatOfArms, setCustomCoatOfArms] = useState<CoatOfArmsDesign>({ ...DEFAULT_COAT_OF_ARMS });
-
-  const currentHouse = HOUSES.find((house) => house.id === selectedHouseId) || HOUSES[0];
-  const presetIdentity = getHouseIdentity(currentHouse.id);
-  const isCustomHouse = houseMode === 'custom';
-  const effectiveHouseName = isCustomHouse ? stripEmoji(customHouseName).trim() : currentHouse.name;
-  const effectiveDynastyName = isCustomHouse ? stripEmoji(customDynastyName).trim() : currentHouse.name;
-  const effectiveHouseWords = isCustomHouse ? stripEmoji(customHouseWords).trim() : currentHouse.words;
-  const effectiveSeat = isCustomHouse ? stripEmoji(customSeat).trim() : currentHouse.seat;
-  const effectiveCulture = isCustomHouse ? stripEmoji(customCulture).trim() : presetIdentity.culture;
-  const effectiveFaith = isCustomHouse ? stripEmoji(customFaith).trim() : presetIdentity.faith;
-  const houseBaseAttributes = isCustomHouse ? CUSTOM_HOUSE_BASE_ATTRIBUTES : currentHouse.defaultAttributes;
-
-  const selectedTraits = orderCharacterTraitsForDisplay(CHARACTER_TRAITS.filter((trait) => selectedTraitIds.includes(trait.id)));
-  const visibleTraits = useMemo(() => {
-    const query = traitSearch.trim().toLowerCase();
-    return CHARACTER_TRAITS.filter((trait) => {
-      if (!filterImportedCharacterTraits([trait.id], customAge).visibleTraitIds.includes(trait.id)) return false;
-      if (!query) return trait.category === activeTraitCategory;
-      return `${trait.name} ${trait.description} ${formatTraitModifiers(trait.modifiers)} ${formatTraitRuleEffects(trait.rules).join(' ')}`.toLowerCase().includes(query);
-    });
-  }, [activeTraitCategory, customAge, traitSearch]);
-  const finalAttributes = useMemo(
-    () => calculateFinalAttributes(customAttributes, selectedTraitIds),
-    [customAttributes, selectedTraitIds]
-  );
-  const usedPoints = calculateDesignPointUsage(houseBaseAttributes, customAttributes, selectedTraitIds, customAge);
-  const remainingPoints = DESIGN_POINT_LIMIT - usedPoints;
-  const isOverBudget = usedPoints > DESIGN_POINT_LIMIT;
-  const hasValidHouse = !isCustomHouse || Boolean(
-    effectiveHouseName && effectiveDynastyName && effectiveHouseWords && effectiveSeat && effectiveCulture && effectiveFaith
-  );
-  const canComplete = !isOverBudget && hasValidHouse && customName.trim().length > 0 && customTitle.trim().length > 0;
-
-  const handleStatChange = (key: keyof LordAttributes, delta: number) => {
-    const current = customAttributes[key];
-    if (delta < 0 && current <= 0) return;
-    if (delta > 0 && current >= 30) return;
-    setCustomAttributes((attributes) => ({ ...attributes, [key]: attributes[key] + delta }));
-  };
-
-  const handleHouseSelect = (houseId: string) => {
-    const house = HOUSES.find((entry) => entry.id === houseId) || HOUSES[0];
-    setHouseMode('preset');
-    setSelectedHouseId(house.id);
-    setCustomAttributes({ ...house.defaultAttributes });
-  };
-
-  const handleCreateHouse = () => {
-    if (!isCustomHouse) setCustomAttributes({ ...CUSTOM_HOUSE_BASE_ATTRIBUTES });
-    setHouseMode('custom');
-  };
-
-  const updateCoatOfArms = <K extends keyof CoatOfArmsDesign>(key: K, value: CoatOfArmsDesign[K]) => {
-    setCustomCoatOfArms((current) => ({ ...current, [key]: value }));
-  };
-
-  const resetCustomDesign = () => {
-    setHouseMode('preset');
-    setSelectedHouseId(HOUSES[0].id);
-    setCustomName('维斯特洛新星');
-    setCustomTitle('年轻的封建领主');
-    setStartStatus('landed');
-    setCustomAge(24);
-    setCustomGender('男');
-    setCustomAttributes({ ...HOUSES[0].defaultAttributes });
-    setSelectedTraitIds(['ambitious']);
-    setActiveTraitCategory('personality');
-    setTraitSearch('');
-    setCustomHouseName('鸦冠家族');
-    setCustomDynastyName('鸦冠宗族');
-    setCustomHouseWords('以铁与誓言');
-    setCustomSeat('暮鸦堡');
-    setCustomCulture('安达尔人');
-    setCustomFaith('七神信仰');
-    setCustomCoatOfArms({ ...DEFAULT_COAT_OF_ARMS });
-  };
-
-  const handleTraitToggle = (traitId: string) => {
-    const trait = CHARACTER_TRAITS.find((entry) => entry.id === traitId);
-    if (!trait) return;
-    setSelectedTraitIds((current) => {
-      if (current.includes(trait.id)) return current.filter((id) => id !== trait.id);
-      const conflictingIds = getConflictingTraitIds(trait);
-      const withoutConflicts = current.filter((id) => !conflictingIds.has(id));
-      const personalityCount = CHARACTER_TRAITS.filter(
-        (entry) => entry.category === 'personality' && withoutConflicts.includes(entry.id)
-      ).length;
-      if (trait.category === 'personality' && personalityCount >= MAX_PERSONALITY_TRAITS) return current;
-      return [...withoutConflicts, trait.id];
-    });
-  };
-
-  const isTraitDisabled = (traitId: string) => {
-    const trait = CHARACTER_TRAITS.find((entry) => entry.id === traitId);
-    if (!trait || trait.category !== 'personality' || selectedTraitIds.includes(trait.id)) return false;
-    const conflictingIds = getConflictingTraitIds(trait);
-    const willReplaceSelected = selectedTraitIds.some((id) => conflictingIds.has(id));
-    const personalityCount = selectedTraits.filter((entry) => entry.category === 'personality').length;
-    return personalityCount >= MAX_PERSONALITY_TRAITS && !willReplaceSelected;
-  };
+  const { isCreatorOpen, closeCreator, startNewGame, apiConfig, openSettings } = useGameStore();
+  const [draft, setDraft] = useState<CharacterCreationDraft>(() => createDefaultCharacterCreationDraft());
+  const [inspectedTraitId, setInspectedTraitId] = useState<string | null>(null);
+  const [previousDraft, setPreviousDraft] = useState<CharacterCreationDraft | null>(null);
+  const [locations, setLocations] = useState<GameplayLocationEntry[]>([]);
+  const [locationQuery, setLocationQuery] = useState('');
+  const [locationError, setLocationError] = useState<string | null>(null);
+  const [localCandidates, setLocalCandidates] = useState<LocalCandidate[]>([]);
+  const [candidateState, setCandidateState] = useState<'idle' | 'loading' | 'ready' | 'error'>('idle');
+  const [invalidated, setInvalidated] = useState<string[]>([]);
+  const [relationKind, setRelationKind] = useState<CustomRelationKind>('acquaintance');
+  const [kinshipKind, setKinshipKind] = useState<'none' | 'cadet_branch' | 'bastard_child'>('none');
+  const [activePanel, setActivePanel] = useState<CreatorPanel>('identity');
+  const [error, setError] = useState<string | null>(null);
+  const [progress, setProgress] = useState<OpeningGenerationProgress | null>(null);
+  const [isSubmitting, setSubmitting] = useState(false);
+  const [resolvedRunId, setResolvedRunId] = useState<string | null>(null);
+  const abortRef = useRef<AbortController | null>(null);
+  const submitEpochRef = useRef(0);
 
   useEffect(() => {
-    setSelectedTraitIds((current) => current.filter((traitId) => (
-      filterImportedCharacterTraits([traitId], customAge).visibleTraitIds.includes(traitId)
-    )));
-  }, [customAge]);
-
-  const [terminology, setTerminology] = useState<WorldTerminology | undefined>(undefined);
-  useEffect(() => {
+    if (!isCreatorOpen) return;
     let cancelled = false;
-    worldContentRepository.loadTerminology()
-      .then((loaded) => { if (!cancelled) setTerminology(loaded); })
-      .catch(() => { if (!cancelled) setTerminology(undefined); });
-    return () => { cancelled = true; };
-  }, []);
-
-  useEffect(() => {
-    if (!isCreatorOpen || tab !== 'existing') return;
-    let cancelled = false;
-    preloadNpcLoadoutContent().then(() => Promise.all(RECOMMENDED_CHARACTER_IDS.map(async (id) => {
-      const record = await dossierRepository.get(id);
-      if (!record || !record.born || !record.alive || record.canonTier === 'genealogy') return undefined;
-      const profile = await dossierRepository.getLoadoutProfile(id);
-      return resolveCharacter(record, [], {
-        datasetVersion: 'agot-local-dataset',
-        currentYear: characterDatasetYear(298, record.birthDate),
-        loadoutProfile: profile,
+    worldContentRepository.loadGameplayLocations()
+      .then((entries) => {
+        if (cancelled) return;
+        setLocations(entries);
+        setLocationError(null);
+        setDraft((current) => current.location || entries.length === 0 ? current : {
+          ...current,
+          location: toDraftLocation(recommendLocations(entries, current)[0] ?? entries[0]),
+        });
+      })
+      .catch((reason: unknown) => {
+        if (!cancelled) setLocationError(reason instanceof Error ? reason.message : '地点资料读取失败');
       });
-    }))).then((characters) => {
-      if (!cancelled) setRecommendedCharacters(characters.filter((entry): entry is ResolvedCharacter => Boolean(entry)));
-    }).catch((error: unknown) => {
-      if (!cancelled) setExistingError(error instanceof Error ? error.message : '人物数据读取失败');
-    });
     return () => { cancelled = true; };
-  }, [isCreatorOpen, tab]);
+  }, [isCreatorOpen]);
+
+  useEffect(() => {
+    if (!isCreatorOpen) return;
+    const locationId = draft.location?.locationId;
+    if (!locationId) { setLocalCandidates([]); setCandidateState('idle'); return; }
+    let cancelled = false;
+    setCandidateState('loading');
+    const timer = setTimeout(() => {
+      loadLocalCandidates(locationId)
+        .then((entries) => { if (!cancelled) { setLocalCandidates(entries); setCandidateState('ready'); } })
+        .catch(() => { if (!cancelled) { setLocalCandidates([]); setCandidateState('error'); } });
+    }, 220);
+    return () => { cancelled = true; clearTimeout(timer); };
+  }, [isCreatorOpen, draft.location?.locationId]);
+
+  useEffect(() => () => abortRef.current?.abort(), []);
+
+  const validation = useMemo(() => validateCharacterCreationDraft(draft), [draft]);
+  const recommendedLocations = useMemo(() => recommendLocations(locations, draft), [locations, draft]);
+  const visibleLocations = useMemo(() => {
+    const query = locationQuery.trim().toLocaleLowerCase('zh-CN');
+    if (!query) return recommendedLocations.slice(0, 12);
+    return locations.filter((entry) => `${entry.name} ${entry.englishName ?? ''} ${entry.regionId}`.toLocaleLowerCase('zh-CN').includes(query)).slice(0, 20);
+  }, [locationQuery, locations, recommendedLocations]);
+  const selectedTraits = useMemo(() => orderCharacterTraitsForDisplay(CHARACTER_TRAITS.filter((trait) => draft.traitIds.includes(trait.id))), [draft.traitIds]);
+  const finalAttributes = useMemo(() => calculateFinalAttributes(draft.attributes, draft.traitIds), [draft.attributes, draft.traitIds]);
+  const traitRecommendations = useMemo(
+    () => backgroundTraitRecommendations(draft),
+    [draft.age, draft.experience, draft.livelihood, draft.origin, draft.role],
+  );
+  const recommendedTraitCards = useMemo(() => traitRecommendations
+    .slice(0, 8)
+    .map((recommendation) => ({ recommendation, trait: CHARACTER_TRAITS.find((entry) => entry.id === recommendation.traitId) }))
+    .filter((entry): entry is typeof entry & { trait: NonNullable<typeof entry.trait> } => Boolean(entry.trait)), [traitRecommendations]);
+  const role = DEFAULT_CHARACTER_CREATION_CATALOG.roles.find((entry) => entry.id === draft.role)!;
+  const origin = DEFAULT_CHARACTER_CREATION_CATALOG.origins.find((entry) => entry.id === draft.origin)!;
+  const experience = DEFAULT_CHARACTER_CREATION_CATALOG.experiences.find((entry) => entry.id === draft.experience)!;
+  const livelihood = DEFAULT_CHARACTER_CREATION_CATALOG.livelihoods.find((entry) => entry.id === draft.livelihood)!;
+  const situation = DEFAULT_CHARACTER_CREATION_CATALOG.situations.find((entry) => entry.id === draft.situation)!;
+  const skillReadoutList = useMemo(() => skillReadouts(draft, finalAttributes), [draft, finalAttributes]);
+  const readout = useMemo(() => characterReadout(draft, finalAttributes, validation, {
+    roleLabel: role.label,
+    originLabel: origin.label,
+    experienceLabel: experience.label,
+    livelihoodLabel: livelihood.label,
+    situationLabel: situation.label,
+    houseRecommended: ROLE_HOUSE_REQUIRED.has(draft.role),
+  }), [draft, finalAttributes, validation, role.label, origin.label, experience.label, livelihood.label, situation.label]);
+  const panelStatus = useMemo(() => creatorPanelStatus(draft), [draft]);
 
   if (!isCreatorOpen) return null;
 
-  const handleStartExisting = async (characterId: CharacterId) => {
-    setStartingCharacterId(characterId);
-    setExistingError(null);
+  const updateBackground = (patch: Partial<Pick<CharacterCreationDraft, 'role' | 'origin' | 'experience' | 'livelihood'>>) => {
+    setPreviousDraft(structuredClone(draft));
+    setDraft((current) => {
+      const next = rebaseDraftForBackground(current, {
+        role: patch.role ?? current.role,
+        origin: patch.origin ?? current.origin,
+        experience: patch.experience ?? current.experience,
+        livelihood: patch.livelihood ?? current.livelihood,
+      });
+      setInvalidated(next.invalidated);
+      return {
+        ...next.draft,
+      };
+    });
+    setResolvedRunId(null);
+  };
+
+  const setAge = (age: number) => {
+    const safeAge = Math.max(16, Math.min(100, Math.round(age)));
+    setDraft((current) => {
+      const legal = legalTraitIdsForAge(current.traitIds, safeAge);
+      setInvalidated(legal.removed.map((id) => `特质 ${CHARACTER_TRAITS.find((trait) => trait.id === id)?.name ?? id} 不适用于当前年龄，已移除`));
+      return {
+        ...current,
+        age: safeAge,
+        traitIds: legal.traitIds,
+        backgroundTraitIds: (current.backgroundTraitIds ?? []).filter((id) => legal.traitIds.includes(id)),
+      };
+    });
+    setResolvedRunId(null);
+  };
+
+  const toggleTrait = (traitId: string) => {
+    if (isSubmitting) return;
+    const preview = previewCreationTrait(draft, traitId);
+    setInspectedTraitId(traitId);
+    if (preview.blocked) { setInvalidated([preview.blocked]); return; }
+    setPreviousDraft(structuredClone(draft));
+    const isEducation = CHARACTER_TRAITS.find((trait) => trait.id === traitId)?.category === 'education';
+    setDraft({ ...draft, traitIds: preview.traitIds,
+      backgroundTraitIds: (draft.backgroundTraitIds ?? []).filter((id) => id !== traitId && preview.traitIds.includes(id)),
+      learningTraitIds: (draft.learningTraitIds ?? []).filter((id) => !preview.traitIds.includes(id)),
+      ...(isEducation ? { educationMode: 'manual' } : {}),
+    });
+    setInvalidated(preview.replaces.map((id) => `已替换 ${CHARACTER_TRAITS.find((trait) => trait.id === id)?.name ?? id}，可撤销本次操作。`));
+    setResolvedRunId(null);
+  };
+
+  const changeTraitDraft = (patch: Partial<CharacterCreationDraft>) => {
+    if (isSubmitting) return;
+    setPreviousDraft(structuredClone(draft));
+    setDraft((current) => ({ ...current, ...patch }));
+    setResolvedRunId(null);
+  };
+
+  const chooseHouse = (houseId: string) => {
+    const house = HOUSES.find((entry) => entry.id === houseId);
+    if (!house) return;
+    setDraft((current) => ({
+      ...current,
+      house: {
+        houseId: house.id,
+        houseName: house.name,
+        dynastyName: house.name,
+        houseWords: house.words,
+        houseSigil: house.sigil,
+      },
+    }));
+    setResolvedRunId(null);
+  };
+
+  const createCustomHouse = () => {
+    setDraft((current) => ({
+      ...current,
+      house: {
+        houseId: 'save:custom-house',
+        houseName: current.house?.houseName || '新家族',
+        dynastyName: current.house?.dynastyName || '新宗族',
+        houseWords: current.house?.houseWords || '尚无箴言',
+        houseSigil: 'custom-coat-of-arms',
+        coatOfArms: current.house?.coatOfArms ?? { ...DEFAULT_COAT_OF_ARMS },
+      },
+    }));
+    setResolvedRunId(null);
+  };
+
+  const selectRelationTarget = async (targetId: CharacterId) => {
     try {
-      const record = await dossierRepository.get(characterId);
-      if (!record || !record.born || !record.alive || record.canonTier === 'genealogy') throw new Error('该人物不能用于当前开局');
-      await startNewGame(await createLivingWorldGame(characterId));
-    } catch (error) {
-      setExistingError(error instanceof Error ? error.message : '无法以该人物开始游戏');
-    } finally {
-      setStartingCharacterId(null);
+      const record = await dossierRepository.get(targetId);
+      if (!record?.born || !record.alive || record.canonTier === 'genealogy') throw new Error('该人物不适合作为当前关系候选');
+      const targetAge = characterAgeAtYear(record.birthDate, 298, record.deathDate, record.alive);
+      const targetLocationId = await worldContentRepository.loadStartState()
+        .then((state) => state.characters.find((entry) => entry.characterId === targetId)?.location.locationId)
+        .catch(() => undefined);
+      const relation: CreationRelationDraft = {
+        kind: relationKind,
+        targetId,
+        targetName: record.name,
+        ...(targetAge !== undefined ? { targetAge } : {}),
+        ...(targetLocationId ? { targetLocationId } : {}),
+      };
+      setDraft((current) => ({
+        ...current,
+        relations: [...current.relations.filter((entry) => !(entry.kind === relation.kind && entry.targetId === relation.targetId)), relation],
+      }));
+      setResolvedRunId(null);
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : '无法读取关系人物');
     }
   };
 
-  const handleStartCustom = () => {
-    if (!canComplete) return;
-    const chosenTraitNames = selectedTraits.map((trait) => trait.name);
-    const customItems = createCustomRulerItemState(startStatus);
-    const sceneName = startStatus === 'landed' ? `${effectiveSeat} · 大厅`
-      : startStatus === 'household' ? `${effectiveSeat} · 仆从厅`
-        : `${effectiveSeat}附近 · 路旁客栈`;
-    const customLocation = { locationId: 'b_unknown_westeros', sceneLocation: sceneName };
-    const customLocationLabel = `所在地未查明 · ${sceneName}`;
-    for (const site of Object.values(customItems.sites)) {
-      site.location = { ...customLocation };
-      site.locationLabel = customLocationLabel;
-      if (site.id === 'custom_ruler_room' && startStatus === 'landed') site.name = `${effectiveSeat}领主起居室`;
+  const selectKinshipTarget = async (targetId: CharacterId) => {
+    if (kinshipKind === 'none') return;
+    try {
+      const record = await dossierRepository.get(targetId);
+      if (!record?.born || record.canonTier === 'genealogy') throw new Error('请选择有稳定原著档案的人物');
+      const targetLocationId = await worldContentRepository.loadStartState()
+        .then((state) => state.characters.find((entry) => entry.characterId === targetId)?.location.locationId)
+        .catch(() => undefined);
+      const kinship: CreationKinshipDraft = {
+        kind: kinshipKind,
+        targetId,
+        targetName: record.name,
+        ...(characterAgeAtYear(record.birthDate, 298, record.deathDate, record.alive) !== undefined
+          ? { targetAge: characterAgeAtYear(record.birthDate, 298, record.deathDate, record.alive) }
+          : {}),
+        ...(targetLocationId ? { targetLocationId } : {}),
+        publiclyKnown: kinshipKind === 'cadet_branch',
+        knowerIds: [],
+      };
+      setDraft((current) => ({ ...current, kinship }));
+      setResolvedRunId(null);
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : '无法读取亲属人物');
     }
-    for (const vehicle of Object.values(customItems.vehicles)) {
-      vehicle.location = { ...customLocation };
-      vehicle.locationLabel = customLocationLabel;
-    }
-    const customLord: LordProfile = {
-      items: customItems,
-      name: stripEmoji(customName) || '维斯特洛新星',
-      house: effectiveHouseName,
-      dynastyName: effectiveDynastyName,
-      houseWords: effectiveHouseWords,
-      houseSigil: isCustomHouse ? 'custom-coat-of-arms' : currentHouse.sigil,
-      coatOfArms: isCustomHouse ? customCoatOfArms : undefined,
-      title: stripEmoji(customTitle) || '年轻的封建领主',
-      age: customAge,
-      gender: customGender,
-      culture: effectiveCulture,
-      faith: effectiveFaith,
-      location: customLocation,
-      locationLabel: customLocationLabel,
-      body: createDefaultBody(),
-      overallStatus: '强健',
-      goldDragons: startStatus === 'landed' ? 300 : startStatus === 'household' ? 20 : 5,
-      silverStags: startStatus === 'landed' ? 100 : startStatus === 'household' ? 35 : 18,
-      attributes: finalAttributes,
-      baseAttributes: { ...customAttributes },
-      traits: [...chosenTraitNames, `${effectiveDynastyName}血脉`],
-      traitIds: [...selectedTraitIds],
-    };
-    const customOpening = customOpeningFor(startStatus, effectiveSeat, effectiveHouseName, effectiveHouseWords);
-    void createCustomLivingWorldGame(customLord, customOpening)
-      .then((game) => startNewGame(game))
-      .catch((error: unknown) => setExistingError(error instanceof Error ? error.message : '无法创建统一世界开局'));
   };
+
+  const handleStart = async () => {
+    if (isSubmitting) return;
+    const currentValidation = validateCharacterCreationDraft(draft);
+    if (!currentValidation.valid) {
+      setError(currentValidation.errors.join('；'));
+      return;
+    }
+    const epoch = ++submitEpochRef.current;
+    const controller = new AbortController();
+    abortRef.current?.abort();
+    abortRef.current = controller;
+    setSubmitting(true);
+    setError(null);
+    setProgress({ phase: 'requesting', partialText: '' });
+    try {
+      const runId = resolvedRunId ?? createCustomRunId();
+      const resolved = resolveCharacterCreationDraft(draft, runId);
+      if (!resolvedRunId) setResolvedRunId(runId);
+      const openingFacts = await prepareCustomOpeningFacts(resolved);
+      const preparedResolved = { ...resolved, openingFacts };
+      const opening = await generateCustomOpening(openingFacts, apiConfig, {
+        signal: controller.signal,
+        onProgress: (next) => { if (submitEpochRef.current === epoch) setProgress(next); },
+      });
+      if (controller.signal.aborted || submitEpochRef.current !== epoch) return;
+      const game = await createCustomLivingWorldGame(preparedResolved, opening);
+      if (controller.signal.aborted || submitEpochRef.current !== epoch) return;
+      await startNewGame(game);
+    } catch (reason) {
+      if (controller.signal.aborted || submitEpochRef.current !== epoch) return;
+      setError(reason instanceof Error ? reason.message : '无法创建人物开局');
+    } finally {
+      if (submitEpochRef.current === epoch) {
+        setSubmitting(false);
+        setProgress(null);
+      }
+    }
+  };
+
+  const cancelGeneration = () => {
+    submitEpochRef.current += 1;
+    abortRef.current?.abort(new DOMException('玩家取消了开场生成', 'AbortError'));
+    abortRef.current = null;
+    setSubmitting(false);
+    setProgress(null);
+    setError('已取消开场生成。人物草案与已分配的开局事实保持不变，可直接重试。');
+  };
+
+  const changeAttribute = (key: keyof LordAttributes, delta: number) => {
+    setDraft((current) => ({
+      ...current,
+      attributeAdjustments: { ...current.attributeAdjustments, [key]: Math.max(0, Math.min(30, current.attributes[key] + delta)) - suggestedBackgroundAttributes(current)[key] },
+      attributes: {
+        ...current.attributes,
+        [key]: Math.max(0, Math.min(30, current.attributes[key] + delta)),
+      },
+    }));
+    setResolvedRunId(null);
+  };
+
+  const resetEditor = () => {
+    if (isSubmitting) return;
+    const next = createDefaultCharacterCreationDraft();
+    if (locations.length > 0) next.location = toDraftLocation(recommendLocations(locations, next)[0] ?? locations[0]);
+    setDraft(next);
+    setPreviousDraft(null);
+    setInspectedTraitId(null);
+    setLocationQuery('');
+    setInvalidated([]);
+    setRelationKind('acquaintance');
+    setKinshipKind('none');
+    setActivePanel('identity');
+    setError(null);
+    setProgress(null);
+    setResolvedRunId(null);
+  };
+
+  const previewHouse = draft.house ? HOUSES.find((house) => house.id === draft.house?.houseId) : undefined;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center modal-backdrop p-2 md:p-4 select-none">
-      <div className="panel-iron relative w-full max-w-[1380px] h-[96vh] flex flex-col overflow-hidden scene-enter">
+    <div className="fixed inset-0 z-50 flex items-center justify-center modal-backdrop p-2 md:p-4 creator-v2" data-character-creation-flow data-character-editor-layout>
+      <div className="panel-iron relative flex h-[96vh] w-full max-w-[1680px] flex-col overflow-hidden scene-enter">
         <div className="ck3-ornament-line" />
-        <header className="shrink-0 border-b border-hairline bg-gradient-to-r from-ink-2 via-ink-3 to-ink-2 px-4 md:px-6 pt-3 pb-0">
-          <div className="flex items-center justify-between gap-3">
-            <div className="min-w-0">
-              <p className="eyebrow hidden sm:block">Registrum Domini · 御前册封议事</p>
-              <div className="flex items-center gap-2.5 mt-1 text-gold-bright font-serif font-bold text-base md:text-xl">
-                <Crown className="w-5 h-5 text-gold" />
-                <span>{tab === 'custom' ? '高级沙盒设计器' : '选择现成人物'}</span>
+
+        <header className="shrink-0 border-b border-hairline bg-gradient-to-r from-ink-3 via-ink-2 to-ink-3 px-4 py-3 md:px-6">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex min-w-0 items-center gap-3">
+              <Crown className="h-6 w-6 shrink-0 text-gold" />
+              <div className="min-w-0">
+                <p className="eyebrow hidden sm:block">Ruler Designer · Westeros 298 AC</p>
+                <h1 className="truncate font-serif text-lg font-bold text-gold-bright md:text-xl">人物设计器</h1>
               </div>
             </div>
-            <button onClick={closeCreator} aria-label="关闭人物创建器" className="btn-ghost"><X className="w-4 h-4" /></button>
-          </div>
-          <div className="flex gap-1 mt-3 overflow-x-auto">
-            <button onClick={() => setTab('existing')} className={`flex shrink-0 items-center gap-1.5 px-4 py-2 text-xs font-serif font-bold tracking-wider border-b transition-colors ${tab === 'existing' ? 'border-gold text-gold-bright' : 'border-transparent text-parchment-faint hover:text-parchment-dim'}`}><Users className="w-3.5 h-3.5" />选择现成人物</button>
-            <button onClick={() => setTab('custom')} className={`flex shrink-0 items-center gap-1.5 px-4 py-2 text-xs font-serif font-bold tracking-wider border-b transition-colors ${tab === 'custom' ? 'border-gold text-gold-bright' : 'border-transparent text-parchment-faint hover:text-parchment-dim'}`}><UserPlus className="w-3.5 h-3.5" />高级沙盒</button>
+            <div className="flex flex-wrap items-center justify-end gap-2">
+              <div className={`border px-3 py-1.5 text-xs ${validation.remainingDesignPoints < 0 && !draft.freeMode ? 'border-rubric text-rubric-bright' : 'border-gold-deep/70 text-parchment-dim'}`}>
+                <span className="mr-2 text-parchment-faint">设计点</span>
+                <strong className="font-display text-base text-gold-bright">{draft.freeMode ? '∞' : validation.remainingDesignPoints}</strong>
+                <span className="ml-2 text-parchment-faint">/ {DESIGN_POINT_LIMIT}</span>
+              </div>
+              <label className="flex items-center gap-2 border border-hairline px-3 py-2 text-xs text-parchment-dim"><input type="checkbox" checked={draft.freeMode} onChange={(event) => { setDraft((current) => ({ ...current, freeMode: event.target.checked })); setResolvedRunId(null); }} />自由模式</label>
+              {previousDraft && <button type="button" disabled={isSubmitting} onClick={() => { setDraft(previousDraft); setPreviousDraft(null); setResolvedRunId(null); setInvalidated([]); }} className="btn-ghost text-xs">撤销</button>}
+              <button type="button" onClick={resetEditor} disabled={isSubmitting} className="btn-ghost text-xs"><RotateCcw className="h-3.5 w-3.5" />重置</button>
+              <button type="button" onClick={closeCreator} aria-label="关闭人物创建器" className="btn-ghost"><X className="h-4 w-4" /></button>
+            </div>
           </div>
         </header>
 
-        {tab === 'existing' && (
-          <div className="flex-1 overflow-y-auto bg-ink p-4 md:p-6" data-existing-character-start>
-            <div className="mb-4 flex items-end justify-between gap-3">
-              <div><p className="eyebrow">推荐角色</p><p className="mt-1 font-serif text-[11px] text-parchment-faint">推荐项直接引用完整人物档案，不是固定属性预设。</p></div>
-            </div>
-            {existingError && <p className="mb-3 border border-rubric/60 px-3 py-2 text-[11px] text-rubric">{existingError}</p>}
-            <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4" data-recommended-characters>
-              {recommendedCharacters.map((character) => (
-                <article key={character.id} className="flex flex-col border border-hairline bg-ink-2 p-4 hover:border-gold-deep">
-                  <div className="flex items-center gap-3"><CharacterPortrait characterId={character.id} houseIcon={getHouseIconId((character.dynastyId ?? '').replace(/^dynn_/i, '').toLowerCase())} alt={`${character.name}的肖像`} deceased={!character.alive} className="h-12 w-12 shrink-0 border border-hairline-bright" /><div className="min-w-0"><h3 className="truncate font-serif text-sm font-bold text-gold">{character.name}</h3><p className="truncate text-[10px] text-parchment-faint">{character.titles[0] ?? '未持有封地'}</p></div></div>
-                  <p className="mt-3 line-clamp-2 min-h-8 font-serif text-[10.5px] text-parchment-dim">{formatWorldCulture(character.cultureId, terminology)} · {formatWorldFaith(character.faithId, terminology)}</p>
-                  <button type="button" disabled={startingCharacterId !== null} onClick={() => void handleStartExisting(character.id)} className="btn-ghost mt-3 w-full justify-center">{startingCharacterId === character.id ? '正在载入' : '以此人物开局'}</button>
-                </article>
-              ))}
-            </div>
-            <div className="mt-5 border-t border-hairline pt-4"><p className="eyebrow mb-2">查找其他人物</p><CharacterSearch onSelectCharacter={(id) => void handleStartExisting(id)} aliveOnly /></div>
-          </div>
-        )}
-
-        {tab === 'custom' && (
-          <div className="flex-1 min-h-0 flex flex-col" data-creator-layout="ck3">
-            <div className="shrink-0 flex flex-wrap items-center justify-between gap-2 px-4 md:px-6 py-2 border-b border-hairline bg-ink-2">
-              <div className="flex items-center gap-4 text-[10px] uppercase tracking-wider">
-                <span className="text-parchment-faint">已用设计点数 <strong className={`font-display text-base ${isOverBudget ? 'text-rubric-bright' : 'text-gold-bright'}`}>{usedPoints}</strong></span>
-                <span className="text-parchment-faint">上限 <strong className="font-display text-parchment-dim">{DESIGN_POINT_LIMIT}</strong></span>
-                <span className="text-parchment-faint">剩余 <strong className={`font-display ${remainingPoints < 0 ? 'text-rubric-bright' : 'text-gold'}`}>{remainingPoints}</strong></span>
+        <div {...({ inert: isSubmitting ? '' : undefined } as React.HTMLAttributes<HTMLDivElement>)} className="creator-body min-h-0 flex-1 grid grid-cols-1 overflow-y-auto lg:grid-cols-[260px_minmax(0,1fr)_350px] lg:overflow-hidden">
+          <aside className="border-r border-hairline bg-gradient-to-b from-ink-3 via-ink-2 to-ink p-4 lg:overflow-y-auto">
+            <div className="relative min-h-[250px] overflow-hidden border border-hairline bg-ink bg-[radial-gradient(circle_at_50%_38%,rgba(201,164,92,0.18),transparent_55%)]">
+              <div className="absolute inset-0 flex items-center justify-center pb-8"><UserRound className="h-32 w-32 text-gold-deep/45" strokeWidth={0.8} /></div>
+              <div className="absolute bottom-3 right-3 flex h-20 w-20 items-center justify-center border border-gold-deep/70 bg-ink-3/95 p-2 shadow-lg">
+                {draft.house?.coatOfArms ? <CoatOfArms design={draft.house.coatOfArms} className="h-full" /> : previewHouse ? <GameIcon icon={getHouseIconId(previewHouse.sigil)} className="h-full w-full" /> : <ShieldCheck className="h-10 w-10 text-gold-deep/50" />}
               </div>
-              <button type="button" onClick={resetCustomDesign} className="btn-ghost text-[10px]"><RotateCcw className="w-3 h-3" />重置设计</button>
+              <span className="absolute inset-x-0 bottom-0 border-t border-hairline bg-ink/90 py-2 pl-3 pr-24 font-display text-[10px] tracking-[0.22em] text-gold-deep">{draft.house?.dynastyName || '无宗族'}</span>
             </div>
 
-            <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[270px_minmax(0,1fr)_330px] overflow-y-auto lg:overflow-hidden divide-y lg:divide-y-0 lg:divide-x divide-hairline">
-              <aside className="bg-gradient-to-b from-ink-2 to-ink p-4 lg:overflow-y-auto">
-                <div className="ck3-heraldry-frame min-h-[188px] bg-ink bg-[radial-gradient(circle_at_center,rgba(201,164,92,0.14),transparent_65%)] flex items-center justify-center relative overflow-hidden">
-                  {isCustomHouse ? <CoatOfArms design={customCoatOfArms} className="h-36" /> : <GameIcon icon={getHouseIconId(currentHouse.sigil)} className="w-36 h-36 drop-shadow-[0_5px_6px_rgba(0,0,0,0.7)]" />}
-                  <span className="absolute inset-x-0 bottom-0 bg-ink/85 py-1.5 text-center text-[10px] font-display text-gold-deep tracking-[0.3em]">{effectiveDynastyName || '未命名宗族'}</span>
-                </div>
-                <div className="text-center mt-4"><h2 className="font-serif text-xl font-bold text-gold-bright">{customName || '未命名角色'}</h2><p className="text-xs text-parchment-dim mt-1">{customTitle || '无头衔'}</p><p className="text-[10px] italic text-parchment-faint mt-2">“{effectiveHouseWords || '尚无箴言'}”</p></div>
-                <div className="mt-5 border-y border-hairline py-3 space-y-2 text-[10px]">
-                  <IdentityLine icon={<Users className="w-3.5 h-3.5" />} label="家族" value={effectiveHouseName || '未命名'} />
-                  <IdentityLine icon={<Crown className="w-3.5 h-3.5" />} label="宗族" value={effectiveDynastyName || '未命名'} />
-                  <IdentityLine icon={<BookOpen className="w-3.5 h-3.5" />} label="文化" value={effectiveCulture || '未指定'} />
-                  <IdentityLine icon={<Landmark className="w-3.5 h-3.5" />} label="信仰" value={effectiveFaith || '未指定'} />
-                  <IdentityLine icon={<MapPin className="w-3.5 h-3.5" />} label={startStatus === 'landed' ? '领地' : '开局地点'} value={effectiveSeat || '未指定'} />
-                </div>
-                <div className="mt-5"><SectionTitle>已选特质</SectionTitle><div className="mt-3 grid grid-cols-4 gap-2">
-                  {selectedTraits.length ? selectedTraits.map((trait) => (
-                    <button key={trait.id} type="button" onClick={() => handleTraitToggle(trait.id)} title={`移除 ${trait.name}`} className="group relative aspect-square border border-hairline bg-ink/60 p-1 hover:border-rubric transition-colors"><GameIcon icon={trait.icon} className="w-full h-full" /><span className="absolute inset-x-0 bottom-0 bg-ink/90 text-[8px] text-parchment-dim truncate px-0.5">{trait.name}</span><X className="absolute -top-1 -right-1 hidden group-hover:block w-3 h-3 bg-ink text-rubric-bright" /></button>
-                  )) : <p className="col-span-4 text-[10px] text-parchment-faint">尚未选择特质</p>}
-                </div></div>
-              </aside>
+            <div className="border-x border-b border-hairline bg-ink-2/55 px-3 py-4 text-center">
+              <h2 className="font-serif text-2xl font-bold text-gold-bright">{draft.name || '未命名角色'}</h2>
+              <p className="mt-1 text-xs text-parchment-dim">{role.label} · {draft.gender} · {draft.age} 岁</p>
+              <p className="mt-2 text-xs italic text-parchment-faint">“{draft.house?.houseWords || '命运尚未写定'}”</p>
+              <p className="mt-2 border-t border-hairline pt-2 text-[10px] leading-relaxed text-parchment-faint">{readout.headline}：{origin.label}出身，{livelihood.label}为生。</p>
+            </div>
 
-              <main className="bg-ink-2 p-4 md:p-5 lg:overflow-y-auto min-w-0">
-                <SectionTitle>身份与年龄</SectionTitle>
-                <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-3" aria-label="开局身份">
-                  {START_STATUSES.map((status) => (
-                    <button key={status.id} type="button" onClick={() => { setStartStatus(status.id); setCustomTitle(status.title); }} className={`border p-3 text-left ${startStatus === status.id ? 'border-gold bg-gold-deep/20' : 'border-hairline bg-ink/40'}`}>
-                      <span className="block font-serif text-xs font-bold text-gold-bright">{status.label}</span>
-                      <span className="mt-1 block text-[9px] leading-relaxed text-parchment-faint">{status.description}</span>
-                    </button>
-                  ))}
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
-                  <Field label="姓名"><input value={customName} onChange={(event) => setCustomName(stripEmoji(event.target.value))} className="creator-input" maxLength={40} /></Field>
-                  <Field label="头衔"><input value={customTitle} onChange={(event) => setCustomTitle(stripEmoji(event.target.value))} className="creator-input" maxLength={48} /></Field>
-                  <Field label="性别"><div className="grid grid-cols-2 border border-hairline">{['男', '女'].map((gender) => <button key={gender} type="button" onClick={() => setCustomGender(gender)} className={`py-2 text-xs font-serif transition-colors ${customGender === gender ? 'bg-gold-deep/25 text-gold-bright' : 'bg-ink/40 text-parchment-faint hover:text-parchment-dim'}`}>{gender}</button>)}</div></Field>
-                  <Field label="年龄"><div className="flex border border-hairline bg-ink/40"><button type="button" onClick={() => setCustomAge((age) => Math.max(16, age - 1))} className="creator-step-button"><Minus className="w-3.5 h-3.5" /></button><span className="flex-1 text-center py-2 text-sm font-mono text-parchment">{customAge}</span><button type="button" onClick={() => setCustomAge((age) => Math.min(100, age + 1))} className="creator-step-button"><Plus className="w-3.5 h-3.5" /></button></div></Field>
-                </div>
+            <div className="mt-4 space-y-2 border-y border-hairline py-3 text-xs">
+              <IdentityLine icon={<Users className="h-3.5 w-3.5" />} label="家族" value={draft.house?.houseName || '无'} />
+              <IdentityLine icon={<BookOpen className="h-3.5 w-3.5" />} label="文化" value={draft.culture || '未指定'} />
+              <IdentityLine icon={<Landmark className="h-3.5 w-3.5" />} label="信仰" value={draft.faith || '未指定'} />
+              <IdentityLine icon={<MapPin className="h-3.5 w-3.5" />} label="地点" value={draft.location?.name || '未选择'} />
+            </div>
 
-                <div className="mt-5"><SectionTitle>选择或创建家族</SectionTitle><div className="grid grid-cols-2 sm:grid-cols-5 gap-2 mt-3">
-                  {HOUSES.map((house) => <button key={house.id} type="button" onClick={() => handleHouseSelect(house.id)} title={`${house.name}：${house.description}`} className={`min-w-0 p-2 border flex items-center gap-2 text-left transition-colors ${!isCustomHouse && selectedHouseId === house.id ? 'border-gold bg-gold-deep/20 text-gold-bright' : 'border-hairline bg-ink/40 text-parchment-dim hover:border-hairline-bright'}`}><GameIcon icon={getHouseIconId(house.sigil)} className="w-9 h-9 shrink-0" /><span className="min-w-0"><span className="block text-[11px] font-bold truncate">{house.name.replace('家族', '')}</span><span className="block text-[9px] text-parchment-faint truncate">{house.region}</span></span></button>)}
-                  <button type="button" onClick={handleCreateHouse} className={`min-w-0 p-2 border flex items-center gap-2 text-left transition-colors ${isCustomHouse ? 'border-gold bg-gold-deep/20 text-gold-bright' : 'border-gold-deep/50 bg-ink-3 text-gold hover:border-gold'}`}><Palette className="w-8 h-8 shrink-0" /><span><span className="block text-[11px] font-bold">创建新家族</span><span className="block text-[9px] text-parchment-faint">自定义纹章</span></span></button>
-                </div></div>
+            <div className="mt-4">
+              <SectionTitle>人物特质</SectionTitle>
+              <div className="mt-3 grid grid-cols-4 gap-2">
+                {selectedTraits.length > 0 ? selectedTraits.slice(0, 11).map((trait) => (
+                  <button key={trait.id} type="button" onClick={() => { setInspectedTraitId(trait.id); setActivePanel('traits'); }} title={`${trait.name} · ${TRAIT_SOURCES[traitSourceOf(draft, trait.id)].label}`} data-trait-source-tile={traitSourceOf(draft, trait.id)} className={`group relative aspect-square border bg-ink/60 p-1 transition-colors hover:border-gold ${traitSourceOf(draft, trait.id) === 'background' ? 'border-gold-deep/70' : 'border-hairline'}`}>
+                    <GameIcon icon={trait.icon} className="h-full w-full" />
+                    <span className="absolute inset-x-0 top-0 flex justify-end p-0.5"><TraitSourceTag draft={draft} traitId={trait.id} /></span>
+                    <span className="absolute inset-x-0 bottom-0 truncate bg-ink/90 px-0.5 text-[8px] text-parchment-dim">{trait.name}</span>
+                  </button>
+                )) : <button type="button" onClick={() => setActivePanel('traits')} className="col-span-4 border border-dashed border-hairline px-3 py-4 text-xs text-parchment-faint">添加人物特质</button>}
+                {selectedTraits.length > 11 && <button type="button" onClick={() => setActivePanel('traits')} className="flex aspect-square flex-col items-center justify-center border border-dashed border-hairline bg-ink/40 text-[10px] text-parchment-faint hover:border-gold-deep hover:text-parchment-dim"><span className="font-display text-base text-gold">+{selectedTraits.length - 11}</span><span>其余</span></button>}
+              </div>
+              <div className="mt-3"><CreatorTraitSummary draft={draft} readouts={skillReadoutList} /></div>
+            </div>
 
-                {isCustomHouse && (
-                  <section className="creator-heraldry-panel mt-4 border border-gold-deep/40 bg-ink/50 p-3" aria-label="纹章编辑">
-                    <div className="flex items-center gap-2 text-gold text-xs font-serif font-bold"><Palette className="w-4 h-4" />纹章编辑与家族资料</div>
-                    <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_190px] gap-4 mt-3">
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <Field label="家族名称"><input value={customHouseName} onChange={(event) => setCustomHouseName(stripEmoji(event.target.value))} className="creator-input" maxLength={32} /></Field>
-                        <Field label="宗族名称"><input value={customDynastyName} onChange={(event) => setCustomDynastyName(stripEmoji(event.target.value))} className="creator-input" maxLength={32} /></Field>
-                        <Field label="家族箴言"><input value={customHouseWords} onChange={(event) => setCustomHouseWords(stripEmoji(event.target.value))} className="creator-input" maxLength={48} /></Field>
-                        <Field label="根据地"><input value={customSeat} onChange={(event) => setCustomSeat(stripEmoji(event.target.value))} className="creator-input" maxLength={32} /></Field>
-                        <Field label="文化"><input value={customCulture} onChange={(event) => setCustomCulture(stripEmoji(event.target.value))} className="creator-input" maxLength={24} /></Field>
-                        <Field label="信仰"><input value={customFaith} onChange={(event) => setCustomFaith(stripEmoji(event.target.value))} className="creator-input" maxLength={24} /></Field>
-                        <Field label="盾形"><select value={customCoatOfArms.shield} onChange={(event) => updateCoatOfArms('shield', event.target.value as CoatOfArmsDesign['shield'])} className="creator-input">{HERALDRY_SHIELDS.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}</select></Field>
-                        <Field label="底纹分区"><select value={customCoatOfArms.pattern} onChange={(event) => updateCoatOfArms('pattern', event.target.value as CoatOfArmsDesign['pattern'])} className="creator-input">{HERALDRY_PATTERNS.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}</select></Field>
-                        <Field label="徽记"><select value={customCoatOfArms.emblem} onChange={(event) => updateCoatOfArms('emblem', event.target.value as CoatOfArmsDesign['emblem'])} className="creator-input">{HERALDRY_EMBLEMS.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}</select></Field>
-                        <div className="sm:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-3">
-                          <ColorPicker label="主色" value={customCoatOfArms.primaryColor} onChange={(value) => updateCoatOfArms('primaryColor', value)} />
-                          <ColorPicker label="副色" value={customCoatOfArms.secondaryColor} onChange={(value) => updateCoatOfArms('secondaryColor', value)} />
-                          <ColorPicker label="徽记色" value={customCoatOfArms.emblemColor} onChange={(value) => updateCoatOfArms('emblemColor', value)} />
+            <div className="mt-5">
+              <SectionTitle>开局摘要</SectionTitle>
+              <div className="mt-3 space-y-2 text-xs leading-relaxed text-parchment-faint">
+                <div>身世：<span className="text-parchment-dim">{origin.label} · {experience.label}</span></div>
+                <div>生计：<span className="text-parchment-dim">{livelihood.label}</span></div>
+                <div>处境：<span className="text-parchment-dim">{situation.label}</span></div>
+                {draft.relations.length > 0 && <div>关系：<span className="text-parchment-dim">{draft.relations.map((entry) => entry.targetName).join('、')}</span></div>}
+                {draft.kinship && <div className="text-gold">架空亲属：{draft.kinship.targetName}</div>}
+              </div>
+            </div>
+          </aside>
+
+          <main className="min-w-0 bg-ink-2 lg:flex lg:min-h-0 lg:flex-col">
+            <nav className="grid shrink-0 grid-cols-3 border-b border-hairline bg-ink-3/75 sm:grid-cols-6" aria-label="人物设计栏目">
+              {CREATOR_PANELS.map(({ id, label, note, icon: Icon }, index) => {
+                const active = activePanel === id;
+                const status = panelStatus[id];
+                return <button key={id} type="button" onClick={() => setActivePanel(id)} aria-pressed={active} title={note} data-creator-panel={id} data-panel-status={status.tone} className={`relative flex min-w-0 items-center justify-center gap-2 border-r border-hairline px-2 py-3 text-left transition-colors last:border-r-0 ${active ? 'bg-gold-deep/15 text-gold-bright' : 'text-parchment-dim hover:bg-ink-2 hover:text-parchment'}`}>
+                  <span className="flex shrink-0 flex-col items-center gap-0.5">
+                    <Icon className={`h-4 w-4 ${active ? 'text-gold' : 'text-parchment-faint'}`} />
+                    <span className="font-display text-[9px] text-gold-deep">{index + 1}</span>
+                  </span>
+                  <span className="min-w-0"><strong className="block truncate font-serif text-xs">{label}</strong><span className={`hidden truncate text-[8px] xl:block ${status.tone === 'done' ? 'text-gold-deep' : status.tone === 'todo' ? 'text-rubric-bright' : 'text-parchment-faint'}`}>{status.text}</span></span>
+                  {active && <span className="absolute inset-x-2 bottom-0 h-0.5 bg-gold" />}
+                </button>;
+              })}
+            </nav>
+
+            <div className="min-h-0 flex-1 p-4 md:p-5 lg:overflow-y-auto">
+              {activePanel === 'identity' && <section>
+                <div className="mb-5"><p className="eyebrow">Identity</p><h2 className="mt-1 font-serif text-2xl text-gold-bright">身份与年龄</h2><p className="mt-2 max-w-3xl text-sm leading-relaxed text-parchment-dim">先确定你在维斯特洛是什么人。身份影响身世建议、地点推荐与关系语境，但不会替你决定性格。</p></div>
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-5" aria-label="开局身份">
+                  {DEFAULT_CHARACTER_CREATION_CATALOG.roles.map((entry) => <ChoiceCard key={entry.id} active={draft.role === entry.id} title={entry.label} description={entry.description} onClick={() => updateBackground({ role: entry.id })} />)}
+                </div>
+                <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                  <Field label="姓名"><input value={draft.name} onChange={(event) => { setDraft((current) => ({ ...current, name: stripEmoji(event.target.value) })); setResolvedRunId(null); }} className="creator-input" maxLength={40} /></Field>
+                  <Field label="性别"><div className="grid grid-cols-2 border border-hairline">{(['男', '女'] as const).map((gender) => <button key={gender} type="button" onClick={() => { setDraft((current) => ({ ...current, gender })); setResolvedRunId(null); }} className={`py-2.5 font-serif text-sm transition-colors ${draft.gender === gender ? 'bg-gold-deep/25 text-gold-bright' : 'bg-ink/40 text-parchment-faint hover:text-parchment-dim'}`}>{gender}</button>)}</div></Field>
+                  <Field label="年龄"><Stepper value={draft.age} min={16} max={100} onChange={setAge} /></Field>
+                  <Field label="文化"><input value={draft.culture} onChange={(event) => { setDraft((current) => ({ ...current, culture: stripEmoji(event.target.value) })); setResolvedRunId(null); }} className="creator-input" /></Field>
+                  <Field label="信仰"><input value={draft.faith} onChange={(event) => { setDraft((current) => ({ ...current, faith: stripEmoji(event.target.value) })); setResolvedRunId(null); }} className="creator-input" /></Field>
+                </div>
+              </section>}
+
+              {activePanel === 'house' && <section>
+                <div className="mb-5"><p className="eyebrow">Dynasty & Heraldry</p><h2 className="mt-1 font-serif text-2xl text-gold-bright">家族与纹章</h2><p className="mt-2 text-sm leading-relaxed text-parchment-dim">选择原著家族，创建自己的宗族，或以无家族身份进入世界。</p></div>
+                {draft.role === 'commoner' && <div className="mb-4 border border-hairline bg-ink/40 p-3 text-xs leading-relaxed text-parchment-faint">平民可以没有家族、族语和纹章；手动添加家族也不会自动获得贵族权利。</div>}
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-5">
+                  {HOUSES.map((house) => <button key={house.id} type="button" onClick={() => chooseHouse(house.id)} title={`${house.name}：${house.description}`} className={`min-w-0 border p-3 flex items-center gap-2 text-left transition-colors ${draft.house?.houseId === house.id ? 'border-gold bg-gold-deep/20 text-gold-bright' : 'border-hairline bg-ink/40 text-parchment-dim hover:border-hairline-bright'}`}><GameIcon icon={getHouseIconId(house.sigil)} className="h-11 w-11 shrink-0" /><span className="min-w-0"><span className="block truncate text-sm font-bold">{house.name.replace('家族', '')}</span><span className="block truncate text-xs text-parchment-faint">{house.region}</span></span></button>)}
+                  <button type="button" onClick={createCustomHouse} className={`min-w-0 border p-3 flex items-center gap-2 text-left transition-colors ${draft.house?.houseId === 'save:custom-house' ? 'border-gold bg-gold-deep/20 text-gold-bright' : 'border-gold-deep/50 bg-ink-3 text-gold hover:border-gold'}`}><Palette className="h-9 w-9 shrink-0" /><span><span className="block text-sm font-bold">创建新家族</span><span className="block text-xs text-parchment-faint">自定义纹章</span></span></button>
+                  <button type="button" onClick={() => { setDraft((current) => ({ ...current, house: undefined })); setResolvedRunId(null); }} className="border border-hairline bg-ink/40 p-3 text-sm text-parchment-faint hover:border-hairline-bright">不设家族</button>
+                </div>
+                {ROLE_HOUSE_REQUIRED.has(draft.role) && !draft.house && <p className="mt-3 text-xs leading-relaxed text-rubric-bright">此身份通常需要家族归属，但不会因此获得领地或继承权。</p>}
+                {draft.house?.houseId === 'save:custom-house' && <div className="mt-5 max-w-3xl border border-hairline bg-ink/35 p-4"><CustomHouseEditor draft={draft} setDraft={setDraft} onDraftChanged={() => setResolvedRunId(null)} /></div>}
+              </section>}
+
+              {activePanel === 'background' && <section>
+                <div className="mb-5"><p className="eyebrow">Background</p><h2 className="mt-1 font-serif text-2xl text-gold-bright">身世与生计</h2><p className="mt-2 text-sm leading-relaxed text-parchment-dim">决定人物来自哪里、经历过什么，以及如今靠什么在世界中立足。</p></div>
+                <div className="space-y-5">
+                  <ChoiceGroup title="出身" entries={DEFAULT_CHARACTER_CREATION_CATALOG.origins} value={draft.origin} onChoose={(id) => updateBackground({ origin: id as CustomOrigin })} />
+                  <ChoiceGroup title="主要经历" entries={DEFAULT_CHARACTER_CREATION_CATALOG.experiences} value={draft.experience} onChoose={(id) => updateBackground({ experience: id as CustomExperience })} />
+                  <ChoiceGroup title="当前生计" entries={DEFAULT_CHARACTER_CREATION_CATALOG.livelihoods} value={draft.livelihood} onChoose={(id) => updateBackground({ livelihood: id as CustomLivelihood })} />
+                </div>
+                <div className="mt-5 border border-gold-deep/40 bg-ink/55 p-4" data-background-trait-links>
+                  <div className="flex items-start justify-between gap-3"><div><h3 className="flex items-center gap-2 font-serif text-base font-bold text-gold"><Sparkles className="h-4 w-4" />身世关联特质</h3><p className="mt-1 text-xs leading-relaxed text-parchment-dim">性格始终由你选择。教育可由经历带入；手动调整教育后，切换经历不会覆盖它。</p><button type="button" onClick={() => { const cleared = { ...draft, educationMode: 'background' as const, traitIds: draft.traitIds.filter((id) => CHARACTER_TRAITS.find((trait) => trait.id === id)?.category !== 'education'), backgroundTraitIds: [], suppressedBackgroundTraitIds: [] }; const rebased = rebaseDraftForBackground(cleared, cleared).draft; changeTraitDraft(rebased); }} className="mt-2 text-xs text-gold underline underline-offset-4">让教育重新跟随经历</button></div><span className="shrink-0 font-display text-xs text-gold-deep">TOP {recommendedTraitCards.length}</span></div>
+                  <div className="mt-4 grid gap-2 sm:grid-cols-2 xl:grid-cols-4">{recommendedTraitCards.map(({ recommendation, trait }) => { const selected = draft.traitIds.includes(trait.id); const backgroundGranted = draft.backgroundTraitIds?.includes(trait.id) ?? false; return <button key={`background:${trait.id}`} type="button" onClick={() => toggleTrait(trait.id)} className={`relative flex items-center gap-2 border p-2.5 text-left transition-colors ${selected ? 'border-gold bg-gold-deep/15' : 'border-gold-deep/30 bg-ink-2/45 hover:border-gold-deep'}`}><GameIcon icon={trait.icon} className="h-10 w-10 shrink-0" /><span className="min-w-0 flex-1"><span className="flex items-center justify-between gap-2"><span className="truncate text-xs font-bold text-parchment">{trait.name}</span><span className={`shrink-0 text-[8px] ${backgroundGranted ? 'text-gold-bright' : 'text-gold-deep'}`}>{backgroundGranted ? '经历自带' : selected ? TRAIT_SOURCES[traitSourceOf(draft, trait.id)].label : recommendation.score >= 5 ? '高度契合' : '可以选'}</span></span><span className="mt-1 block line-clamp-2 text-[9px] leading-relaxed text-parchment-faint">{recommendation.reasons.join(' · ')}</span></span>{selected && <Check className="absolute right-1 top-1 h-3 w-3 text-gold-bright" />}</button>; })}</div>
+                </div>
+                {invalidated.length > 0 && <div className="mt-3 border border-rubric/50 bg-rubric/5 p-3 text-xs text-rubric-bright">{invalidated.map((message) => <div key={message}>• {message}</div>)}</div>}
+              </section>}
+
+              {activePanel === 'relations' && <section>
+                <div className="mb-5"><p className="eyebrow">Relations</p><h2 className="mt-1 font-serif text-2xl text-gold-bright">关系（可选）</h2><p className="mt-2 text-sm leading-relaxed text-parchment-dim">把人物放进已有世界：熟人、雇主、效忠对象，以及与原著家族的旁支或私生关系。</p></div>
+                <div className="grid gap-5 xl:grid-cols-2">
+                  <div className="border border-hairline bg-ink/35 p-4"><h3 className="font-serif text-base font-bold text-parchment">社会关系</h3><div className="mt-3 grid grid-cols-3 border border-hairline">{(['acquaintance', 'employer', 'fealty'] as const).map((kind) => <button key={kind} type="button" onClick={() => setRelationKind(kind)} className={`py-2.5 text-xs ${relationKind === kind ? 'bg-gold-deep/25 text-gold' : 'bg-ink text-parchment-faint'}`}>{relationLabel(kind)}</button>)}</div><div className="mt-3 border border-hairline bg-ink/25 p-2.5" data-local-candidates>
+                    <div className="flex items-center justify-between gap-2"><h4 className="text-xs text-gold-deep">本地可以结识的人</h4><span className="truncate text-[10px] text-parchment-faint">{draft.location?.name ?? '尚未选定地点'}</span></div>
+                    {candidateState === 'loading' && <p className="mt-2 text-[10px] text-parchment-faint">正在读取同地人物档案…</p>}
+                    {candidateState === 'error' && <p className="mt-2 text-[10px] text-rubric-bright">人物档案读取失败，可以直接搜索。</p>}
+                    {candidateState === 'ready' && localCandidates.length === 0 && <p className="mt-2 text-[10px] leading-relaxed text-parchment-faint">这个地方暂时没有可用的原著人物档案；换一座城镇，或直接在下方搜索全世界的活人。</p>}
+                    <div className="mt-2 grid gap-2 sm:grid-cols-2">{localCandidates.map((character) => (
+                      <article key={character.id} className="flex items-center gap-2 border border-hairline bg-ink/60 p-2">
+                        <CharacterPortrait characterId={character.id} houseIcon={character.houseIcon} alt={`${character.name}的肖像`} className="h-11 w-11 shrink-0 border border-hairline-bright" />
+                        <div className="min-w-0 flex-1">
+                          <h5 className="truncate font-serif text-xs text-gold">{character.name}</h5>
+                          <p className="truncate text-[10px] text-parchment-faint">{character.age !== undefined ? `${character.age} 岁` : '年龄未知'} · 同住{character.locationName}</p>
+                          <button type="button" onClick={() => void selectRelationTarget(character.id)} className="mt-1 text-[10px] text-gold underline underline-offset-2">设为{relationLabel(relationKind)}</button>
                         </div>
-                      </div>
-                      <div className="flex flex-col items-center justify-center border border-hairline bg-ink p-3"><CoatOfArms design={customCoatOfArms} className="h-40" /><p className="mt-2 text-[10px] text-parchment-faint">{customHouseName || '未命名家族'}</p></div>
-                    </div>
-                  </section>
-                )}
-
-                <div className="mt-5"><SectionTitle>人物特质</SectionTitle>
-                  <div className="relative mt-3"><Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-parchment-faint" /><input value={traitSearch} onChange={(event) => setTraitSearch(stripEmoji(event.target.value))} className="creator-input pl-8" placeholder={`搜索特质，共 ${CHARACTER_TRAITS.length} 项`} aria-label="搜索特质" />{traitSearch && <button type="button" onClick={() => setTraitSearch('')} aria-label="清除特质搜索" className="absolute right-2 top-1/2 -translate-y-1/2 text-parchment-faint hover:text-parchment transition-colors"><X className="w-3.5 h-3.5" /></button>}</div>
-                  <div className="grid grid-cols-3 sm:grid-cols-6 border border-hairline mt-2">
-                    {TRAIT_CATEGORY_ORDER.map((category) => {
-                      const selectedCount = selectedTraits.filter((trait) => trait.category === category).length;
-                      const totalCount = CHARACTER_TRAITS.filter((trait) => trait.category === category).length;
-                      return (
-                        <button
-                          key={category}
-                          type="button"
-                          onClick={() => { setActiveTraitCategory(category); setTraitSearch(''); }}
-                          className={`py-2 px-1 text-[9px] font-serif border-r border-b border-hairline transition-colors ${activeTraitCategory === category && !traitSearch ? 'bg-gold-deep/25 text-gold-bright' : 'bg-ink/40 text-parchment-faint hover:bg-ink-3 hover:text-parchment-dim'}`}
-                        >
-                          <span className="block">{TRAIT_CATEGORY_LABELS[category]}</span>
-                          <span className="text-[8px] font-display opacity-70">{selectedCount}/{totalCount}</span>
-                        </button>
-                      );
-                    })}
+                      </article>
+                    ))}</div>
                   </div>
-                  <div className="creator-trait-browser grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2 max-h-[370px] overflow-y-auto pr-1">{visibleTraits.map((trait) => { const selected = selectedTraitIds.includes(trait.id); const disabled = isTraitDisabled(trait.id); return <button key={trait.id} type="button" onClick={() => handleTraitToggle(trait.id)} disabled={disabled} className={`relative p-2 border flex items-start gap-2 text-left transition-colors ${selected ? 'border-gold bg-gold-deep/15 shadow-[inset_0_0_14px_rgba(201,164,92,0.12)]' : 'border-hairline bg-ink/40 hover:border-hairline-bright'} disabled:opacity-35 disabled:cursor-not-allowed`}><GameIcon icon={trait.icon} className="w-12 h-12 shrink-0" /><span className="min-w-0 flex-1"><span className="flex justify-between gap-2 text-[11px] font-bold"><span className={selected ? 'text-gold-bright' : 'text-parchment'}>{trait.name}</span><span className={`font-display ${trait.cost < 0 ? 'text-parchment' : 'text-gold'}`}>{trait.cost >= 0 ? '+' : ''}{trait.cost}</span></span><span className="block text-[9px] text-parchment-dim mt-0.5">{formatTraitModifiers(trait.modifiers) || '无能力修正'}</span><span className="block text-[9px] text-parchment-faint leading-relaxed mt-1 line-clamp-2">{formatTraitDescription(trait.description, customName)}</span>{formatTraitRuleEffects(trait.rules).length > 0 && <span className="block text-[9px] text-gold-deep leading-relaxed mt-1 line-clamp-2">规则：{formatTraitRuleEffects(trait.rules).join(' · ')}</span>}<span className="block text-[9px] text-parchment-faint leading-relaxed mt-1 line-clamp-2">RP：{formatTraitDescription(trait.rules.roleplayDirectives?.[0] ?? trait.description, customName)}</span></span>{selected && <Check className="absolute top-1 right-1 w-3 h-3 text-gold-bright" />}</button>; })}{visibleTraits.length === 0 && <div className="sm:col-span-2 py-10 text-center text-xs text-parchment-faint">没有匹配的特质</div>}</div>
-                  <p className="text-[9px] text-parchment-faint mt-2">性格特质最多选择 {MAX_PERSONALITY_TRAITS} 项；同组教育、先天等级和互斥性格会自动替换。</p>
+                  <div className="mt-3"><CharacterSearch aliveOnly onSelectCharacter={(id) => void selectRelationTarget(id)} /></div><div className="mt-3 space-y-2">{draft.relations.map((relation, index) => <RelationRow key={`${relation.kind}:${relation.targetId}`} text={`${relationLabel(relation.kind)} · ${relation.targetName}`} onRemove={() => { setDraft((current) => ({ ...current, relations: current.relations.filter((_, i) => i !== index) })); setResolvedRunId(null); }} />)}</div></div>
+                  <div className="border border-hairline bg-ink/35 p-4"><h3 className="font-serif text-base font-bold text-parchment">原著家族新增亲属</h3><p className="mt-1 text-xs leading-relaxed text-parchment-faint">只创建架空关系，不替换原著人物，也不自动获得领地或继承权。</p><div className="mt-3 grid grid-cols-3 border border-hairline">{(['none', 'cadet_branch', 'bastard_child'] as const).map((kind) => <button key={kind} type="button" onClick={() => { setKinshipKind(kind); if (kind === 'none') { setDraft((current) => ({ ...current, kinship: undefined })); setResolvedRunId(null); } }} className={`py-2.5 text-xs ${kinshipKind === kind ? 'bg-gold-deep/25 text-gold' : 'bg-ink text-parchment-faint'}`}>{kind === 'none' ? '不设置' : kind === 'cadet_branch' ? '新增旁支' : '私生子女'}</button>)}</div>{kinshipKind !== 'none' && <div className="mt-3"><CharacterSearch onSelectCharacter={(id) => void selectKinshipTarget(id)} /></div>}{draft.kinship && <div className="mt-3 border border-gold-deep/50 bg-ink p-3 text-xs text-parchment-dim"><div className="flex items-center justify-between"><span>{draft.kinship.kind === 'cadet_branch' ? '旁支连接' : '私生亲属'} · {draft.kinship.targetName}</span><button type="button" onClick={() => { setDraft((current) => ({ ...current, kinship: undefined })); setKinshipKind('none'); setResolvedRunId(null); }}><X className="h-3.5 w-3.5" /></button></div>{draft.kinship.kind === 'bastard_child' && <div className="mt-3 space-y-2"><label className="flex items-center gap-2"><input type="checkbox" checked={draft.kinship.publiclyKnown} onChange={(event) => { setDraft((current) => current.kinship ? ({ ...current, kinship: { ...current.kinship, publiclyKnown: event.target.checked } }) : current); setResolvedRunId(null); }} />身份公开</label>{draft.relations.length > 0 && <div className="flex flex-wrap gap-1.5">{draft.relations.map((relation) => { const checked = draft.kinship?.knowerIds.includes(relation.targetId) ?? false; return <label key={`knower:${relation.targetId}`} className="flex items-center gap-1 border border-hairline px-2 py-1"><input type="checkbox" checked={checked} onChange={(event) => { setDraft((current) => current.kinship ? ({ ...current, kinship: { ...current.kinship, knowerIds: event.target.checked ? [...new Set([...current.kinship.knowerIds, relation.targetId])] : current.kinship.knowerIds.filter((id) => id !== relation.targetId) } }) : current); setResolvedRunId(null); }} />{relation.targetName}</label>; })}</div>}</div>}</div>}</div>
                 </div>
-              </main>
+              </section>}
 
-              <aside className="bg-ink p-4 lg:overflow-y-auto"><SectionTitle>六项能力</SectionTitle><p className="text-[10px] text-parchment-faint mt-2">家族基础、手动分配和特质修正共同决定最终能力。</p><div className="space-y-2 mt-4">
-                {CK3_SKILLS.map((skill) => { const allocatedValue = customAttributes[skill.key]; const finalValue = finalAttributes[skill.key]; const traitDelta = finalValue - allocatedValue; return <div key={skill.key} className="border border-hairline bg-ink-2/60 p-2.5 flex items-center gap-2"><GameIcon icon={skill.icon} className="w-12 h-12 shrink-0" /><div className="min-w-0 flex-1"><div className="flex items-center justify-between"><span className="text-xs font-bold text-parchment">{skill.label}</span><span className="text-[9px] text-parchment-faint">{getCk3SkillRank(finalValue)}</span></div><div className="flex items-center gap-1.5 mt-1"><button type="button" onClick={() => handleStatChange(skill.key, -1)} disabled={allocatedValue <= 0} aria-label={`降低${skill.label}`} className="creator-stat-button"><Minus className="w-3 h-3" /></button><span className="w-8 text-center font-display text-base font-bold text-gold-bright">{finalValue}</span><button type="button" onClick={() => handleStatChange(skill.key, 1)} disabled={allocatedValue >= 30} aria-label={`提高${skill.label}`} className="creator-stat-button"><Plus className="w-3 h-3" /></button><span className="ml-auto text-[9px] text-parchment-faint">基础 {allocatedValue}</span>{traitDelta !== 0 && <span className={`text-[9px] font-display ${traitDelta > 0 ? 'text-gold' : 'text-rubric-bright'}`}>{traitDelta > 0 ? '+' : ''}{traitDelta}</span>}</div></div></div>; })}
-              </div><div className="mt-4 border border-hairline bg-ink-2/60 p-3 text-[10px] text-parchment-faint space-y-2"><div className="flex justify-between"><span>家族</span><span className="text-gold truncate max-w-[180px]">{effectiveHouseName || '未命名'}</span></div><div className="flex justify-between"><span>年龄</span><span className="text-gold">{customAge} 岁</span></div><div className="flex justify-between"><span>特质目录</span><span className="text-gold">{CHARACTER_TRAITS.length} 项</span></div><div className="flex justify-between"><span>已选特质</span><span className="text-gold">{selectedTraits.length} 项</span></div><div className="pt-2 border-t border-hairline flex justify-between font-bold"><span>剩余设计点数</span><span className={`font-display ${remainingPoints < 0 ? 'text-rubric-bright' : 'text-gold-bright'}`}>{remainingPoints}</span></div></div></aside>
+              {activePanel === 'traits' && <TraitWorkbench draft={draft} inspectedId={inspectedTraitId} onInspect={setInspectedTraitId} onToggle={toggleTrait} onChange={changeTraitDraft} />}
+
+              {activePanel === 'situation' && <section>
+                <div className="mb-5"><p className="eyebrow">Starting Situation</p><h2 className="mt-1 font-serif text-2xl text-gold-bright">开局处境</h2><p className="mt-2 text-sm leading-relaxed text-parchment-dim">决定第一幕开始时你正在做什么，以及故事从维斯特洛的哪里落笔。</p></div>
+                <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4">{DEFAULT_CHARACTER_CREATION_CATALOG.situations.map((entry) => <ChoiceCard key={entry.id} active={draft.situation === entry.id} title={entry.label} description={entry.description} impact={entry.impact} onClick={() => { setDraft((current) => ({ ...current, situation: entry.id })); setResolvedRunId(null); }} />)}</div>
+                <div className="mt-6 border border-hairline bg-ink/35 p-4"><div className="flex items-center justify-between gap-3"><div><h3 className="font-serif text-base font-bold text-parchment">开局地点</h3><p className="mt-1 text-xs text-parchment-faint">按身份、经历和已选关系推荐。</p></div>{draft.location && <span className="text-xs text-gold"><MapPin className="mr-1 inline h-3.5 w-3.5" />{draft.location.name}</span>}</div><label className="relative mt-3 block"><Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-parchment-faint" /><input className="creator-input pl-9" value={locationQuery} onChange={(event) => setLocationQuery(event.target.value)} placeholder="搜索城镇、城堡、港口或地区" /></label>{locationError && <p className="mt-2 text-xs text-rubric-bright">{locationError}</p>}<div className="mt-3 grid max-h-[46vh] gap-2 overflow-y-auto sm:grid-cols-2 xl:grid-cols-3">{visibleLocations.map((entry) => <button key={entry.id} type="button" onClick={() => { setDraft((current) => ({ ...current, location: toDraftLocation(entry) })); setResolvedRunId(null); }} className={`border p-3 text-left transition-colors ${draft.location?.locationId === entry.id ? 'border-gold bg-gold-deep/20' : 'border-hairline bg-ink/60 hover:border-gold-deep'}`}><span className="block font-serif text-sm text-parchment">{entry.name}</span><span className="mt-1 block text-xs text-parchment-faint">{entry.type} · {entry.regionId}</span></button>)}</div></div>
+              </section>}
             </div>
+          </main>
 
-            <footer className="shrink-0 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 px-4 md:px-6 py-3 border-t border-hairline bg-ink"><div className={`flex items-center gap-2 text-[10px] ${isOverBudget || !hasValidHouse ? 'text-rubric-bright' : 'text-parchment-faint'}`}><ShieldCheck className="w-4 h-4" />{isOverBudget ? `设计点数超出限制 ${usedPoints - DESIGN_POINT_LIMIT} 点` : !hasValidHouse ? '请填写完整的家族与宗族资料' : `设计符合${START_STATUSES.find((entry) => entry.id === startStatus)?.label}开局规则`}</div><button type="button" onClick={handleStartCustom} disabled={!canComplete} className="btn-decree justify-center">以此身份开始</button></footer>
-          </div>
-        )}
+          <aside className="border-l border-hairline bg-ink p-4 lg:overflow-y-auto">
+            {activePanel === 'traits' && <TraitInspector draft={draft} inspectedId={inspectedTraitId} onInspect={setInspectedTraitId} onToggle={toggleTrait} onChange={changeTraitDraft} />}
+
+            <CharacterReadoutPanel draft={draft} validation={validation} readout={readout} />
+
+            <AttributeBoard readouts={skillReadoutList} freeMode={draft.freeMode} onChange={changeAttribute} />
+
+          </aside>
+        </div>
+
+        <footer className="shrink-0 border-t border-hairline bg-ink px-4 py-3 md:px-6">
+          {progress && <div className="mb-3 flex flex-wrap items-center gap-3 border border-gold-deep/50 bg-ink-2 p-2 text-xs text-gold"><Sparkles className="h-3.5 w-3.5" /><span>{progress.phase === 'requesting' ? '正在准备第一幕' : progress.phase === 'streaming' ? '正在演绎第一幕' : '正在校验人物与地点引用'}</span>{progress.partialText && <span className="min-w-0 flex-1 truncate text-parchment-faint">{stripOpeningTags(progress.partialText).slice(-240)}</span>}<button type="button" onClick={cancelGeneration} className="btn-ghost !py-1 text-xs">取消生成</button></div>}
+          {error && <div className="mb-3 flex flex-wrap items-center gap-2 border border-rubric/50 bg-rubric/5 p-2 text-xs text-rubric-bright"><span className="min-w-0 flex-1">{error}</span><button type="button" onClick={() => void handleStart()} disabled={isSubmitting} className="btn-ghost !py-1 text-xs">重试同一开局</button><button type="button" onClick={openSettings} className="btn-ghost !py-1 text-xs">模型设置</button></div>}
+          <div className="flex flex-col items-stretch justify-between gap-2 sm:flex-row sm:items-center"><div className={`flex items-center gap-2 text-xs ${validation.valid ? 'text-parchment-faint' : 'text-rubric-bright'}`}><ShieldCheck className="h-4 w-4" />{validation.valid ? `设计可用 · ${draft.freeMode ? '自由模式' : `剩余 ${validation.remainingDesignPoints} 点`} · 第一幕生成并保存成功后进入游戏` : validation.errors.join('；')}</div><button type="button" onClick={() => void handleStart()} disabled={!validation.valid || isSubmitting} className="btn-decree min-w-40 justify-center">{isSubmitting ? '正在生成并保存第一幕' : '以此身份开始'}</button></div>
+        </footer>
       </div>
     </div>
   );
 };
 
-function customOpeningFor(status: CustomStartStatus, seat: string, house: string, words: string): { narrate: string; branches: string[] } {
-  if (status === 'household') return {
-    narrate: `【${seat}】的钟声越过石墙时，你正坐在仆从厅尽头。你姓${house}，却没有一块能由自己发号施令的土地。主人家的管事把一枚封蜡未干的差令放到你面前；接受它能换来位置与报酬，拒绝则可能失去这处容身之地。`,
-    branches: ['先问清差令的目的与报酬', '寻找同僚打听主人近来的麻烦', '拒绝立即表态，检查自己的行装'],
-  };
-  if (status === 'wanderer') return {
-    narrate: `暮色压在【${seat}】附近的道路上。你的姓氏是${house}，箴言仍是“${words}”，但眼下真正属于你的只有随身行装、几枚钱币和一匹瘦驮马。客栈里有人低声谈论一份需要可靠生面孔的差事，门外则有商队准备天亮启程。`,
-    branches: ['向商队询问目的地与护送条件', '在客栈打听那份隐秘差事', '清点钱币和装备，决定下一站'],
-  };
+function recommendLocations(entries: GameplayLocationEntry[], draft: CharacterCreationDraft): GameplayLocationEntry[] {
+  const preferredTypes = draft.role === 'traveler' || draft.experience === 'trade_travel'
+    ? new Set(['port', 'city', 'town', 'castle'])
+    : draft.role === 'knight' || draft.role === 'retainer' || draft.role === 'landless_noble'
+      ? new Set(['castle', 'city', 'town'])
+      : new Set(['town', 'city', 'castle', 'village']);
+  const relatedLocationIds = new Set([
+    ...draft.relations.flatMap((relation) => relation.targetLocationId ? [relation.targetLocationId] : []),
+    ...(draft.kinship?.targetLocationId ? [draft.kinship.targetLocationId] : []),
+  ]);
+  return [...entries].sort((a, b) => Number(relatedLocationIds.has(b.id)) - Number(relatedLocationIds.has(a.id))
+    || Number(preferredTypes.has(b.type)) - Number(preferredTypes.has(a.type))
+    || b.importance - a.importance);
+}
+
+function toDraftLocation(entry: GameplayLocationEntry): NonNullable<CharacterCreationDraft['location']> {
+  return { locationId: entry.id, name: entry.name, regionId: entry.regionId, type: entry.type };
+}
+
+interface LocalCandidate {
+  id: CharacterId;
+  name: string;
+  age?: number;
+  houseIcon: GameIconId;
+  locationName: string;
+}
+
+/** 读取与开局地点相同的已建档原著人物，作为关系的就近候选。 */
+async function loadLocalCandidates(locationId: string): Promise<LocalCandidate[]> {
+  const state = await worldContentRepository.loadStartState();
+  const nameById = new Map((await worldContentRepository.loadGameplayLocations()).map((entry) => [entry.id, entry.name]));
+  const here = state.characters
+    .filter((entry) => entry.location.locationId === locationId && entry.aliveOverride !== false)
+    .slice(0, 24);
+  const resolved = await Promise.all(here.map(async (entry): Promise<LocalCandidate | undefined> => {
+    const dossier = await dossierRepository.get(entry.characterId).catch(() => undefined);
+    if (!dossier?.born || !dossier.alive || dossier.canonTier === 'genealogy') return undefined;
+    return {
+      id: dossier.id,
+      name: dossier.name,
+      age: characterAgeAtYear(dossier.birthDate, 298, dossier.deathDate, dossier.alive),
+      houseIcon: getHouseIconId((dossier.dynastyId ?? '').replace(/^dynn_/i, '').toLowerCase()),
+      locationName: nameById.get(locationId) ?? '此地',
+    } satisfies LocalCandidate;
+  }));
+  return resolved.filter((entry): entry is LocalCandidate => Boolean(entry)).slice(0, 6);
+}
+
+interface PanelStatus {
+  text: string;
+  tone: 'done' | 'todo' | 'optional';
+}
+
+/** 每个栏目当前的完成情况，用于导航上的状态提示。 */
+function creatorPanelStatus(draft: CharacterCreationDraft): Record<CreatorPanel, PanelStatus> {
+  const identityReady = draft.name.trim().length > 0 && draft.culture.trim().length > 0 && draft.faith.trim().length > 0;
   return {
-    narrate: `微风吹拂着【${seat}】的城垛，${house}的旗帜在风中猎猎作响。家族箴言“${words}”刻在大厅石梁上。总管捧着粮册与三封来信走入厅中，等待你决定先处理封臣争执、领地补给，还是远方使者的请求。`,
-    branches: ['听取封臣争执的双方陈词', '核对粮仓、军械库与账册', '拆阅远方使者送来的信件'],
+    identity: identityReady ? { text: '已确定', tone: 'done' } : { text: '待填写', tone: 'todo' },
+    house: draft.house
+      ? { text: draft.house.houseName, tone: 'done' }
+      : ROLE_HOUSE_REQUIRED.has(draft.role) ? { text: '建议补上', tone: 'todo' } : { text: '可以没有', tone: 'optional' },
+    background: { text: '已选定', tone: 'done' },
+    relations: draft.relations.length > 0 ? { text: `${draft.relations.length} 段关系`, tone: 'done' } : { text: '可选', tone: 'optional' },
+    traits: draft.traitIds.length > 0 ? { text: `${draft.traitIds.length} 项特质`, tone: 'done' } : { text: '尚未选择', tone: 'optional' },
+    situation: draft.location ? { text: '地点已定', tone: 'done' } : { text: '待选地点', tone: 'todo' },
   };
 }
 
+function relationLabel(kind: CustomRelationKind): string {
+  return kind === 'acquaintance' ? '熟人' : kind === 'employer' ? '雇主' : '效忠';
+}
+
+function stripOpeningTags(value: string): string {
+  return value.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
 function SectionTitle({ children }: { children: React.ReactNode }) {
-  return <div className="flex items-center gap-2 pb-2 border-b border-hairline"><span className="w-1 h-4 bg-gold-deep" /><h3 className="text-xs font-serif font-bold uppercase tracking-[0.18em] text-gold">{children}</h3></div>;
+  return <div className="flex items-center gap-2 border-b border-hairline pb-2"><span className="h-4 w-1 bg-gold-deep" /><h3 className="font-serif text-xs font-bold uppercase tracking-[0.18em] text-gold">{children}</h3></div>;
+}
+
+function IdentityLine({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
+  return <div className="flex items-center gap-2"><span className="text-gold-deep">{icon}</span><span>{label}</span><span className="ml-auto max-w-[150px] truncate text-right text-parchment-dim">{value}</span></div>;
+}
+
+function ChoiceCard({ active, title, description, impact, onClick }: { active: boolean; title: string; description: string; impact?: string; onClick: () => void }) {
+  return <button type="button" onClick={onClick} className={`border p-3 text-left transition-colors ${active ? 'border-gold bg-gold-deep/20' : 'border-hairline bg-ink-2/45 hover:border-hairline-bright'}`}><span className="flex items-center justify-between font-serif text-sm font-bold text-gold-bright">{title}{active && <Check className="h-3.5 w-3.5" />}</span><span className="mt-1 block text-[10px] leading-relaxed text-parchment-dim">{description}</span>{impact && <span className="mt-2 block text-[9px] leading-relaxed text-gold-deep">{impact}</span>}</button>;
+}
+
+function ChoiceGroup<T extends string>({ title, entries, value, onChoose }: { title: string; entries: Array<{ id: T; label: string; description: string; impact?: string }>; value: T; onChoose: (id: T) => void }) {
+  return <section><h3 className="mb-2 font-serif text-sm font-bold text-gold">{title}</h3><div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-5">{entries.map((entry) => <ChoiceCard key={entry.id} active={value === entry.id} title={entry.label} description={entry.description} impact={entry.impact} onClick={() => onChoose(entry.id)} />)}</div></section>;
 }
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return <label className="flex flex-col gap-1.5 text-[10px] tracking-wider text-parchment-faint"><span>{label}</span>{children}</label>;
 }
 
-function IdentityLine({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
-  return <div className="flex items-center gap-2"><span className="text-gold-deep">{icon}</span><span className="text-parchment-faint">{label}</span><span className="ml-auto text-parchment-dim truncate max-w-[140px]">{value}</span></div>;
+function Stepper({ value, min, max, onChange }: { value: number; min: number; max: number; onChange: (value: number) => void }) {
+  return <div className="flex border border-hairline bg-ink"><button type="button" onClick={() => onChange(Math.max(min, value - 1))} className="creator-step-button"><Minus className="h-3.5 w-3.5" /></button><input type="number" min={min} max={max} value={value} onChange={(event) => onChange(Number(event.target.value))} className="min-w-0 flex-1 bg-transparent text-center font-mono text-sm text-parchment outline-none" /><button type="button" onClick={() => onChange(Math.min(max, value + 1))} className="creator-step-button"><Plus className="h-3.5 w-3.5" /></button></div>;
+}
+
+function CustomHouseEditor({ draft, setDraft, onDraftChanged }: { draft: CharacterCreationDraft; setDraft: React.Dispatch<React.SetStateAction<CharacterCreationDraft>>; onDraftChanged: () => void }) {
+  if (!draft.house) return null;
+  const coatOfArms = draft.house.coatOfArms ?? DEFAULT_COAT_OF_ARMS;
+  const updateHouseField = (key: 'houseName' | 'dynastyName' | 'houseWords', value: string) => {
+    setDraft((current) => current.house ? ({ ...current, house: { ...current.house, [key]: stripEmoji(value) } }) : current);
+    onDraftChanged();
+  };
+  const updateCoat = <K extends keyof CoatOfArmsDesign>(key: K, value: CoatOfArmsDesign[K]) => {
+    setDraft((current) => current.house ? ({ ...current, house: { ...current.house, coatOfArms: { ...(current.house.coatOfArms ?? DEFAULT_COAT_OF_ARMS), [key]: value } } }) : current);
+    onDraftChanged();
+  };
+  return <div className="mt-3 space-y-3 border-t border-hairline pt-3"><Field label="家族名称"><input className="creator-input" value={draft.house.houseName} onChange={(event) => updateHouseField('houseName', event.target.value)} /></Field><Field label="宗族名称"><input className="creator-input" value={draft.house.dynastyName} onChange={(event) => updateHouseField('dynastyName', event.target.value)} /></Field><Field label="家族箴言"><input className="creator-input" value={draft.house.houseWords} onChange={(event) => updateHouseField('houseWords', event.target.value)} /></Field><div className="grid grid-cols-2 gap-2"><Field label="盾形"><select className="creator-input" value={coatOfArms.shield} onChange={(event) => updateCoat('shield', event.target.value as CoatOfArmsDesign['shield'])}>{HERALDRY_SHIELDS.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}</select></Field><Field label="底纹"><select className="creator-input" value={coatOfArms.pattern} onChange={(event) => updateCoat('pattern', event.target.value as CoatOfArmsDesign['pattern'])}>{HERALDRY_PATTERNS.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}</select></Field></div><Field label="徽记"><select className="creator-input" value={coatOfArms.emblem} onChange={(event) => updateCoat('emblem', event.target.value as CoatOfArmsDesign['emblem'])}>{HERALDRY_EMBLEMS.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}</select></Field><ColorPicker label="主色" value={coatOfArms.primaryColor} onChange={(value) => updateCoat('primaryColor', value)} /><ColorPicker label="副色" value={coatOfArms.secondaryColor} onChange={(value) => updateCoat('secondaryColor', value)} /><ColorPicker label="徽记色" value={coatOfArms.emblemColor} onChange={(value) => updateCoat('emblemColor', value)} /><div className="flex items-center justify-center border border-hairline bg-ink p-2"><CoatOfArms design={coatOfArms} className="h-24" /></div><p className="text-[8px] leading-relaxed text-parchment-faint">纹章只代表家族身份，不会自动创建领地或继承权。</p></div>;
 }
 
 function ColorPicker({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {
-  return <div className="text-[10px] text-parchment-faint"><span>{label}</span><div className="flex flex-wrap gap-1 mt-1.5">{HERALDRY_COLORS.map((color) => <button key={color} type="button" onClick={() => onChange(color)} aria-label={`${label} ${color}`} className={`w-5 h-5 border ${value === color ? 'border-gold-bright ring-1 ring-gold' : 'border-black/60'}`} style={{ backgroundColor: color }} />)}</div></div>;
+  return <div><span className="text-[9px] text-parchment-faint">{label}</span><div className="mt-1 flex flex-wrap gap-1">{HERALDRY_COLORS.map((color) => <button key={color} type="button" onClick={() => onChange(color)} aria-label={`${label} ${color}`} className={`h-5 w-5 border ${value === color ? 'border-gold-bright ring-1 ring-gold' : 'border-black/60'}`} style={{ backgroundColor: color }} />)}</div></div>;
+}
+
+function RelationRow({ text, onRemove }: { text: string; onRemove: () => void }) {
+  return <div className="flex items-center justify-between border border-hairline bg-ink px-3 py-2 text-[10px] text-parchment-dim"><span>{text}</span><button type="button" onClick={onRemove}><X className="h-3.5 w-3.5" /></button></div>;
 }

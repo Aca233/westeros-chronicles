@@ -4,6 +4,7 @@ import type { MapManifest } from '../map/types';
 import {
   parseCharacterContentIndex,
   parseCharacterContentShard,
+  parseCharacterCreationContent,
   parseGameplayLocationDataset,
   parseHolderSummaryDataset,
   parseLivingWorldManifest,
@@ -16,6 +17,7 @@ import {
 import type {
   CharacterContentIndex,
   CharacterContentRecord,
+  CharacterCreationContent,
   GameplayLocationDataset,
   GameplayLocationEntry,
   HolderSummary,
@@ -136,6 +138,11 @@ export class WorldContentRepository {
   async loadLoadouts(): Promise<WorldLoadoutContent> {
     const manifest = await this.loadManifest();
     return this.load(manifest.paths.loadouts, parseWorldLoadouts);
+  }
+
+  async loadCharacterCreation(): Promise<CharacterCreationContent> {
+    const manifest = await this.loadManifest();
+    return this.load(manifest.paths.characterCreation, parseCharacterCreationContent);
   }
 
   private async loadCharacterContentIndex(): Promise<CharacterContentIndex> {

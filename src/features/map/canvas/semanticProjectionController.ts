@@ -4,6 +4,7 @@ import { buildCountyInteractionIndex, type CountyInteractionIndex } from '../cou
 import type { MapAssetPoint, MapCharacterPoint } from '../dynamicMapSubjects';
 import {
   addSelectedCountyLocationLayers,
+  addDynamicMapSubjectLayers,
   applyMapPresentation,
   applyPoliticalFeatureStates,
   loadCountyLocationIcons,
@@ -48,52 +49,75 @@ export function createMapSemanticProjectionController(input: {
   onWarning(message: string): void;
 }): MapSemanticProjectionController {
   let destroyed = false;
+  let layersReady = false;
+  let presentationKey = '';
+  let subjectInputs: readonly unknown[] = [];
 
   const syncPresentation = (): void => {
-    const semantic = input.semanticRef.current;
+    if (destroyed || !layersReady) return;
+    const presentation = input.getPresentation();
+    const hasRoute = input.hasRoute();
+    const key = JSON.stringify([presentation, hasRoute]);
+    if (key === presentationKey) return;
     applyMapPresentation(
       input.map,
-      input.getPresentation(),
-      input.hasRoute(),
-      semantic?.primaryRank ?? semanticZoomState(input.map.getZoom()).primaryRank,
+      presentation,
+      hasRoute,
+      semanticZoomState(input.map.getZoom()).primaryRank,
     );
+    presentationKey = key;
   };
 
   const refreshSubjects = (): void => {
     const semantic = input.semanticRef.current;
     const presentation = input.getPresentation();
-    if (!input.map.isStyleLoaded() || !semantic || (!presentation.characters && !presentation.assets)) return;
+    if (destroyed || !layersReady || !semantic || (!presentation.characters && !presentation.assets)) return;
+    const bounds = viewportPixelBounds(input.map, input.manifest);
+    const zoomState = semanticZoomState(input.map.getZoom());
+    const characters = input.getCharacterPoints();
+    const assets = input.getAssetPoints();
+    const characterMarkers = input.getCharacterMarkers?.() ?? characters;
+    const assetMarkers = input.getAssetMarkers?.() ?? assets;
+    const nextInputs = [semantic, characters, assets, characterMarkers, assetMarkers,
+      bounds.minX, bounds.minY, bounds.maxX, bounds.maxY,
+      zoomState.primaryRank, zoomState.zoom >= 4.1, zoomState.zoom <= 4.4];
+    if (nextInputs.length === subjectInputs.length && nextInputs.every((value, index) => value === subjectInputs[index])) return;
     syncDynamicMapSubjects(
       input.map,
       input.manifest,
-      input.getCharacterPoints(),
-      input.getAssetPoints(),
-      viewportPixelBounds(input.map, input.manifest),
-      { ...semantic, zoomState: semanticZoomState(input.map.getZoom()) },
+      characters,
+      assets,
+      bounds,
+      { ...semantic, zoomState },
       {
-        characters: input.getCharacterMarkers?.() ?? input.getCharacterPoints(),
-        assets: input.getAssetMarkers?.() ?? input.getAssetPoints(),
+        characters: characterMarkers,
+        assets: assetMarkers,
       },
     );
+    subjectInputs = nextInputs;
   };
 
   const syncSelection = (): void => {
     const index = input.countyInteractionRef.current;
-    if (!index || !input.map.isStyleLoaded()) return;
+    if (destroyed || !layersReady || !index) return;
     syncSelectedCountyLocations(input.map, input.manifest, index, input.getSelectedCountyId());
   };
 
   return {
     async initialize() {
-      addSelectedCountyLocationLayers(input.map);
-      const locationIconsReady = loadCountyLocationIcons(input.map)
-        .catch(() => input.onWarning('伯爵领内部地点图标未能载入，其他地图内容不受影响'));
-      this.syncPoliticalStates();
+      if (destroyed) return;
       try {
+        addSelectedCountyLocationLayers(input.map);
+        addDynamicMapSubjectLayers(input.map);
+        layersReady = true;
+        syncPresentation();
+        void loadCountyLocationIcons(input.map, () => destroyed).catch(() => {
+          if (!destroyed) input.onWarning('伯爵领内部地点图标未能载入，其他地图内容不受影响');
+        });
+        this.syncPoliticalStates();
         const [entries, semantic] = await Promise.all([
           mapRepository.loadSearchIndex(),
           mapRepository.loadSemanticIndex(),
-          locationIconsReady,
         ]);
         if (destroyed) return;
         input.semanticRef.current = { ...semantic, primaryRank: semanticZoomState(input.map.getZoom()).primaryRank };
@@ -112,21 +136,25 @@ export function createMapSemanticProjectionController(input: {
     },
     refreshSubjects,
     syncZoom() {
+      syncPresentation();
       const semantic = input.semanticRef.current;
       if (!semantic) return;
       const state = semanticZoomState(input.map.getZoom());
       if (state.primaryRank === semantic.primaryRank) return;
       semantic.primaryRank = state.primaryRank;
-      refreshSubjects();
+      // moveend follows zoomend; it refreshes the subjects once with settled bounds.
     },
     syncSelection,
     syncPoliticalStates(previous = []) {
+      if (destroyed || !layersReady) return;
       const current = input.getPoliticalStates();
       applyPoliticalFeatureStates(input.map, current, changedTitleIds(previous, current), previous);
     },
     syncPresentation,
     destroy() {
       destroyed = true;
+      layersReady = false;
+      subjectInputs = [];
       input.semanticRef.current = null;
       input.countyInteractionRef.current = null;
     },

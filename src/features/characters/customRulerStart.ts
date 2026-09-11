@@ -1,4 +1,5 @@
 import { ITEM_CATALOG } from '../../data/itemDefinitions';
+import type { WorldLocationRef } from '../../domain/worldLocation';
 import { createItemInstance, createEmptyItemSystem, validateItemSystem } from '../items/state';
 import type {
   ItemInstance,
@@ -7,7 +8,7 @@ import type {
   ItemSystemState,
   ItemTransport,
 } from '../items/types';
-import { UNKNOWN_WESTEROS_LOCATION_ID } from '../map/locationResolver';
+import type { CustomItemPackage, CustomSituationKind } from './customCharacterStart';
 
 interface PresetEntry {
   instanceId: string;
@@ -16,7 +17,13 @@ interface PresetEntry {
   overrides?: Partial<ItemInstance>;
 }
 
-export type CustomStartStatus = 'landed' | 'household' | 'wanderer';
+export interface CustomCharacterItemStateInput {
+  itemPackage: CustomItemPackage;
+  location: WorldLocationRef;
+  locationLabel: string;
+  situation: CustomSituationKind;
+  hasHouse: boolean;
+}
 
 function createPreset(
   entries: readonly PresetEntry[],
@@ -42,38 +49,79 @@ function createPreset(
 }
 
 /**
- * The custom ruler's immediate kit is a player-creation rule, not a 298 AC
- * historical fact, so it stays in code instead of the world start content.
+ * Custom-character equipment is derived from the resolved background and the
+ * selected real location. It never allocates canon unique artifacts or a
+ * placeholder "unknown Westeros" storage site.
  */
-export function createCustomRulerItemState(status: CustomStartStatus = 'landed'): ItemSystemState {
-  const state = createPreset([
+export function createCustomCharacterItemState(input: CustomCharacterItemStateInput): ItemSystemState {
+  const lodgingSite: ItemStorageSite | undefined = input.situation === 'lodging'
+    ? {
+      id: 'custom_lodging_chest',
+      name: '借住处的木箱',
+      type: 'room',
+      location: { ...input.location },
+      locationLabel: input.locationLabel,
+      description: '借住期间可使用的一只普通木箱，只能存放个人物品，不代表对房屋或土地拥有产权。',
+      capacity: 8,
+    }
+    : undefined;
+  const packhorse: ItemTransport | undefined = input.itemPackage === 'traveler'
+    ? {
+      id: 'custom_packhorse',
+      name: '旧驮马',
+      type: 'packhorse',
+      location: { ...input.location },
+      locationLabel: input.locationLabel,
+      capacity: 8,
+      description: '一匹用于驮运行李的普通旧马，没有血统或剧情唯一性。',
+    }
+    : undefined;
+
+  const entries: PresetEntry[] = [
     { instanceId: 'custom.wool_tunic', definitionId: 'clothing.northern_wool_tunic', placement: { type: 'equipped', position: { group: 'torso', layer: 'garment' } } },
     { instanceId: 'custom.travel_trousers', definitionId: 'legwear.sturdy_travel_trousers', placement: { type: 'equipped', position: { group: 'legs', layer: 'legwear' } } },
     { instanceId: 'custom.travel_boots', definitionId: 'footwear.sturdy_travel_boots', placement: { type: 'equipped', position: { group: 'legs', layer: 'footwear' } } },
-    { instanceId: 'custom.silver_ring', definitionId: 'jewelry.simple_silver_ring', placement: { type: 'equipped', position: { group: 'accessories', index: 0 } } },
-    { instanceId: 'custom.house_seal', definitionId: 'keepsake.house_seal', placement: { type: 'equipped', position: { group: 'accessories', index: 1 } }, overrides: { customName: '自建家族印章' } },
-    { instanceId: 'custom.castle_sword', definitionId: 'weapon.castle_bastard_sword', placement: { type: 'carried' } },
-    { instanceId: 'custom.staunching_herbs', definitionId: 'medicine.maester_staunching_herbs', placement: { type: 'carried' }, overrides: { charges: 2 } },
-    { instanceId: 'custom.repair_kit', definitionId: 'tool.field_repair_kit', placement: { type: 'site', siteId: 'custom_ruler_room' } },
-  ], [
-    { id: 'custom_ruler_room', name: '领主起居室', type: 'room', location: { locationId: UNKNOWN_WESTEROS_LOCATION_ID, sceneLocation: '当前据点' }, locationLabel: '所在地未查明 · 当前据点', description: '自建人物在当前据点可直接取用的私人储藏空间。', capacity: 24 },
-  ], [
-    { id: 'custom_packhorse', name: '驮马', type: 'packhorse', location: { locationId: UNKNOWN_WESTEROS_LOCATION_ID, sceneLocation: '当前据点' }, locationLabel: '所在地未查明 · 当前据点', capacity: 12, description: '可随队移动并装载中型或大型行李。' },
-  ]);
-  if (status !== 'landed') {
-    delete state.instances['custom.house_seal'];
-    delete state.placements['custom.house_seal'];
+  ];
+
+  if (input.hasHouse) entries.push({
+    instanceId: 'custom.house_seal',
+    definitionId: 'keepsake.house_seal',
+    placement: { type: 'carried' },
+    overrides: { customName: '私人家族印章' },
+  });
+
+  switch (input.itemPackage) {
+    case 'knight':
+      entries.push(
+        { instanceId: 'custom.castle_sword', definitionId: 'weapon.castle_bastard_sword', placement: { type: 'equipped', position: { group: 'mainhand' } } },
+        { instanceId: 'custom.staunching_herbs', definitionId: 'medicine.maester_staunching_herbs', placement: { type: 'carried' }, overrides: { charges: 2 } },
+      );
+      break;
+    case 'scholar':
+      entries.push(
+        { instanceId: 'custom.history_book', definitionId: 'document.citadel_history_book', placement: { type: 'carried' } },
+        { instanceId: 'custom.staunching_herbs', definitionId: 'medicine.maester_staunching_herbs', placement: { type: 'carried' }, overrides: { charges: 1 } },
+      );
+      break;
+    case 'traveler':
+      entries.push({
+        instanceId: 'custom.repair_kit',
+        definitionId: 'tool.field_repair_kit',
+        placement: packhorse ? { type: 'vehicle', vehicleId: packhorse.id } : { type: 'carried' },
+      });
+      break;
+    case 'retainer':
+      entries.push(
+        { instanceId: 'custom.silver_ring', definitionId: 'jewelry.simple_silver_ring', placement: { type: 'equipped', position: { group: 'accessories', index: 0 } } },
+        { instanceId: 'custom.repair_kit', definitionId: 'tool.field_repair_kit', placement: lodgingSite ? { type: 'site', siteId: lodgingSite.id } : { type: 'carried' } },
+      );
+      break;
+    case 'commoner':
+      entries.push({ instanceId: 'custom.repair_kit', definitionId: 'tool.field_repair_kit', placement: { type: 'carried' } });
+      break;
   }
-  if (status === 'household') {
-    delete state.vehicles.custom_packhorse;
-    state.sites.custom_ruler_room = { ...state.sites.custom_ruler_room, name: '借住处的木箱', capacity: 8, description: '由主人家暂借的一只上锁木箱，只能存放个人物品。' };
-    state.placements['custom.castle_sword'] = { type: 'site', siteId: 'custom_ruler_room' };
-  }
-  if (status === 'wanderer') {
-    delete state.sites.custom_ruler_room;
-    state.placements['custom.repair_kit'] = { type: 'carried' };
-    state.vehicles.custom_packhorse = { ...state.vehicles.custom_packhorse, name: '瘦驮马', capacity: 8, description: '一匹能驮行李的旧马，也是旅途中最贵重的家当。' };
-  }
+
+  const state = createPreset(entries, lodgingSite ? [lodgingSite] : [], packhorse ? [packhorse] : []);
   validateItemSystem(state, ITEM_CATALOG);
   return state;
 }

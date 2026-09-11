@@ -32,6 +32,10 @@ const healthPanelSource = await read('src/components/items/HealthAndEquipmentPan
 const itemManagementSource = await read('src/components/items/ItemManagementPanel.tsx');
 const assetSectionsSource = await read('src/components/items/WorldAssetSections.tsx');
 const dossierHookSource = await read('src/features/characters/useCharacterDossier.ts');
+// 去重断言需要按文件定位：同一条信息不应在两个页签里各显示一次。
+const identityHeaderSource = await read('src/components/character-window/CharacterIdentityHeader.tsx');
+const currentTabSource = await read('src/components/character-window/CharacterCurrentTab.tsx');
+const styleSource = await read('src/index.css');
 
 if (!containerSource.includes('data-ck3-character-window')) failures.push('人物窗口缺少 CK3 根标记。');
 const importsCk3CharacterWindow = appSource.includes("import { Ck3CharacterWindow } from './components/Ck3CharacterWindow'")
@@ -81,26 +85,52 @@ if (!assetSectionsSource.includes('data-world-asset-sections')) failures.push('�
 if (!dossierHookSource.includes('dossier.character.items')) failures.push('NPC 人物卷宗没有把人物投影后的普通物品接入世界基线。');
 if (!windowSource.includes('法理所有、实际控制、直接保管、物理位置与装备状态分别记录')) failures.push('人物物品与资产页没有区分各类世界关系。');
 if (windowSource.includes("id: 'inventory', label: '随身物品'")) failures.push('人物卷宗页签不应再命名为“随身物品”。');
-if (!windowSource.includes('data-npc-status')) failures.push('NPC 人物栏缺少三项状态栏标记。');
-if (windowSource.includes('value={dossier.titles.length} label="头衔"')) failures.push('NPC 状态栏不应重复显示头衔数量。');
+// 存亡状态对玩家与 NPC 都要可见：死者必须在身份区标出，不能让已故 NPC 看起来仍可交谈。
+if (!windowSource.includes('已故')) failures.push('人物窗口没有标记已故人物。');
+const aliveUsages = windowSource.match(/dossier\.alive/g) ?? [];
+if (aliveUsages.length < 2) failures.push('存亡状态没有同时覆盖玩家与 NPC 分支。');
 if (!windowSource.includes('<HealthAndEquipmentPanel dossier={dossier} embedded')) failures.push('玩家与 NPC 没有统一使用健康与装备面板。');
 if (windowSource.includes('state.gameState.worldArtifacts')) failures.push('人物窗口不应直接订阅原始世界唯一物品状态。');
 if (windowSource.includes("dossier.kind === 'player' ? <CharacterSheet embedded")) failures.push('健康与装备页仍保留玩家旧面板分支。');
-for (const tab of ['关系与家族', '健康与装备', '记忆与经历', '物品与资产']) {
-  if (!windowSource.includes(tab)) failures.push(`缺少页签：${tab}`);
+// 页签按当前信息架构断言：眼下/往事/关系 共用，能力/身体装备/行囊 仅玩家。
+for (const tab of ["id: 'overview'", "id: 'history'", "id: 'relations'", "id: 'profile'", "id: 'health'", "id: 'inventory'"]) {
+  if (!containerSource.includes(tab)) failures.push(`缺少页签定义：${tab}`);
 }
-if (!windowSource.includes('data-character-lower-tabs')) failures.push('四个功能页签没有放在人物概览下方。');
+if (!containerSource.includes('data-character-lower-tabs')) failures.push('人物功能页签没有放在人物概览下方。');
+if (!containerSource.includes("!('playerOnly' in tab) || !tab.playerOnly || dossier.kind === 'player'")) failures.push('玩家专属页签没有按人物类型过滤。');
 if (windowSource.includes("id: 'titles'") || windowSource.includes('function TitlesTab')) failures.push('第一版不应实现“头衔与宣称”页签。');
 if (windowSource.includes('const ACTIONS') || windowSource.includes('人物互动')) failures.push('第一版不应实现右侧人物互动区。');
 for (const relation of ['配偶', '继承人', '领主', '父亲', '母亲', '重要关系']) {
   if (!windowSource.includes(relation)) failures.push(`缺少关系人物卡：${relation}`);
 }
 if (!healthPanelSource.includes('data-hand-pair')) failures.push('NPC 主手与副手没有使用对称手部布局。');
-if (!healthPanelSource.includes('body-model--mainhand') || !healthPanelSource.includes('body-model--offhand')) failures.push('统一面板没有区分主手与副手的人体高亮。');
+/**
+ * 主手/副手高亮约束：一是两只手对称布局，二是选择逻辑为每个部位返回一个真实存在于
+ * 样式表里的人体高亮类名。类名在 2026-09 重构中由 body-model--mainhand/--offhand 改为
+ * body-model--right-upper/--left-upper（两者在 index.css 中指向同一组多边形），因此这里
+ * 校验的是"映射完整且类名有定义"这条不变量，而不是钉死某个历史类名。
+ */
+const bodyModelZones = ['mainhand', 'offhand', 'left_upper', 'right_upper', 'left_lower'];
+for (const zone of bodyModelZones) {
+  if (!healthPanelSource.includes(`zone === '${zone}'`)) failures.push(`人体高亮缺少部位映射：${zone}。`);
+}
+for (const className of healthPanelSource.match(/body-model--[a-z-]+/g) ?? []) {
+  if (className === 'body-model') continue;
+  if (!styleSource.includes(`.${className} `)) failures.push(`人体高亮类名没有样式定义：${className}。`);
+}
 if (!windowSource.includes('<ItemManagementPanel')) failures.push('玩家物品页签没有接入集中物品管理。');
 for (const marker of ["id: 'carried'", "id: 'current-site'", "id: 'vehicle'", "id: 'remote-site'", 'data-item-search', 'data-item-category-filter', 'data-item-sort']) {
   if (!itemManagementSource.includes(marker)) failures.push(`集中物品管理缺少 ${marker}。`);
 }
+
+// 去重：同一信息只允许有一个权威位置，防止页签之间再次互相复制。
+if (currentTabSource.includes('dossier.memories')) failures.push('人物记忆同时出现在眼下与往事两页。');
+if (identityHeaderSource.includes('onOpenLocation')) failures.push('身份头部重复提供所在地入口。');
+if (identityHeaderSource.includes('dossier.worldLocation')) failures.push('身份头部重复显示所在位置。');
+if (currentTabSource.includes('gameState.currentSeason')) failures.push('眼下页重复显示全局时点。');
+const houseCaptionUses = (identityHeaderSource.match(/dossier\.house\}/g) ?? []).length;
+if (houseCaptionUses > 1) failures.push('身份头部重复显示家族名。');
+if (currentTabSource.includes('gameState.lord.location.locationId')) failures.push('眼下页位置没有使用权威世界位置。');
 
 if (failures.length) {
   console.error(failures.join('\n'));

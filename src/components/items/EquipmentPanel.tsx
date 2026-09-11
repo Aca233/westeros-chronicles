@@ -24,7 +24,8 @@ import {
   type EquipmentReplacementChoice,
   type TransferDestinationChoice,
 } from '../../features/items/actionChoices';
-import { equipItem, unequipItem } from '../../features/items/equipment';
+import { canEquipItem, equipItem, physicalHandForEquipmentPosition, unequipItem } from '../../features/items/equipment';
+import type { CharacterHealthState } from '../../features/health/types';
 import { getItemDefinition } from '../../features/items/catalog';
 import { useGameStore } from '../../store/useGameStore';
 import type { BodyZoneKey, LordBodyCondition } from '../../types/game';
@@ -84,6 +85,7 @@ function validStowChoices(
   state: ItemSystemState,
   currentLocation: WorldLocationRef,
   request: StowRequest,
+  health?: CharacterHealthState,
 ): TransferDestinationChoice[] {
   return getTransferDestinationChoices({ state, currentLocation, from: { type: 'equipped', position: { group: 'mainhand' } } })
     .filter((choice) => {
@@ -94,6 +96,7 @@ function validStowChoices(
           equipItem(state, ITEM_CATALOG, request.replacement.instanceId, request.replacement.position, {
             currentLocation,
             displacedTo: choice.placement,
+            health,
           });
         }
         return true;
@@ -153,12 +156,32 @@ export interface EquipmentPanelProps {
   body: LordBodyCondition;
   focusedGroup?: string | null;
   onGroupFocus?: (group: EquipmentGroup | null) => void;
+  visibleGroups?: readonly EquipmentGroup[];
+  showStatusSummary?: boolean;
+  showWoundBadge?: boolean;
+  compact?: boolean;
 }
 
-export const EquipmentPanel: React.FC<EquipmentPanelProps> = ({ body, focusedGroup, onGroupFocus }) => {
+export const EquipmentPanel: React.FC<EquipmentPanelProps> = ({
+  body,
+  focusedGroup,
+  onGroupFocus,
+  visibleGroups,
+  showStatusSummary = true,
+  showWoundBadge = true,
+  compact = false,
+}) => {
   const { gameState, cancelWorldTransaction, isStreaming } = useGameStore();
   const state = gameState.lord.items;
   const currentLocation = gameState.lord.location;
+  const playerId = gameState.lord.canonicalCharacterId ?? `save:${gameState.worldCharacters?.runId ?? 'current'}:player`;
+  const playerHealth = gameState.health.characters[playerId];
+  const handLabel = (position: EquipmentPosition): string => {
+    const physical = playerHealth ? physicalHandForEquipmentPosition(position, playerHealth.dominantHand) : undefined;
+    if (!physical) return position.group === 'mainhand' ? '惯用手' : position.group === 'offhand' ? '非惯用手' : '';
+    const dominant = physical === playerHealth?.dominantHand;
+    return `${physical === 'right' ? '右手' : '左手'}${dominant ? '（惯用）' : '（非惯用）'}`;
+  };
   const pendingItemActions = useMemo(() => pendingItemActionsFromWorldTransactions(
     gameState.worldRuntime.pendingTransactions,
     state,
@@ -172,7 +195,9 @@ export const EquipmentPanel: React.FC<EquipmentPanelProps> = ({ body, focusedGro
     const definition = getItemDefinition(ITEM_CATALOG, instance.definitionId);
     const name = instance.customName || definition.name;
     if (action.kind === 'equip') {
-      const positionLabel = { head: '头部', torso: '躯干', mainhand: '主手', offhand: '副手', legs: '腿部', accessories: '配饰' }[action.position.group];
+      const positionLabel = action.position.group === 'mainhand' || action.position.group === 'offhand'
+        ? handLabel(action.position)
+        : { head: '头部', torso: '躯干', legs: '腿部', accessories: '配饰' }[action.position.group];
       window.dispatchEvent(new CustomEvent('agot:prefill-action', { detail: { text: `我准备把【${name}】装备到${positionLabel}。请按当前实际装备、负担和可用保管位置结算；如果必须收起别的装备且存放方式会造成实质差异，先让我决定。` } }));
       return;
     }
@@ -207,10 +232,10 @@ export const EquipmentPanel: React.FC<EquipmentPanelProps> = ({ body, focusedGro
     currentLocation,
     positions: replacementRequest.positions,
     excludedIds: replacementRequest.excludedIds,
-  }) : [], [currentLocation, replacementRequest, state]);
+  }).filter((choice) => canEquipItem(state, ITEM_CATALOG, choice.instanceId, choice.position, playerHealth)) : [], [currentLocation, replacementRequest, state, playerHealth]);
   const stowChoices = useMemo(
-    () => stowRequest ? validStowChoices(state, currentLocation, stowRequest) : [],
-    [currentLocation, state, stowRequest],
+    () => stowRequest ? validStowChoices(state, currentLocation, stowRequest, playerHealth) : [],
+    [currentLocation, state, stowRequest, playerHealth],
   );
 
   const toggle = (group: EquipmentGroup) => {
@@ -263,7 +288,8 @@ export const EquipmentPanel: React.FC<EquipmentPanelProps> = ({ body, focusedGro
       currentLocation,
       positions,
       excludedIds: group.items.map((item) => item.instanceId),
-    });
+    }).filter((choice) => canEquipItem(state, ITEM_CATALOG, choice.instanceId, choice.position, playerHealth));
+    const displayGroupLabel = group.group === 'mainhand' || group.group === 'offhand' ? handLabel(positions[0]) : group.label;
     const zone = BODY_ZONE_BY_GROUP[group.group];
     const wound = zone ? WOUND_LABELS[body[zone].level] : undefined;
     const woundLevel = zone ? body[zone].level : 'intact';
@@ -279,7 +305,7 @@ export const EquipmentPanel: React.FC<EquipmentPanelProps> = ({ body, focusedGro
         onMouseLeave={() => onGroupFocus?.(null)}
         className={`border bg-ink-2/60 transition-colors ${isFocused ? 'border-gold shadow-[inset_0_0_16px_rgba(201,164,92,0.1)]' : 'border-hairline'}`}
       >
-        <div className="flex items-center gap-2 px-2.5 py-2">
+        <div className={`flex items-center gap-2 ${compact ? 'px-2 py-1.5' : 'px-2.5 py-2'}`}>
           <button
             type="button"
             data-equipment-toggle={group.group}
@@ -288,19 +314,19 @@ export const EquipmentPanel: React.FC<EquipmentPanelProps> = ({ body, focusedGro
             className="group flex min-w-0 flex-1 items-center gap-2.5 text-left transition-colors hover:bg-parchment/[0.035] focus-visible:outline focus-visible:outline-1 focus-visible:outline-gold-deep"
           >
             {group.items[0] ? (
-              <span className="h-14 w-14 shrink-0 border border-hairline-bright bg-ink-3 p-1 transition-colors group-hover:border-gold-deep">
+              <span className={`${compact ? 'h-10 w-10' : 'h-14 w-14'} shrink-0 border border-hairline-bright bg-ink-3 p-1 transition-colors group-hover:border-gold-deep`}>
                 <ItemImage image={group.items[0].image} alt={group.items[0].name} className="h-full w-full" />
               </span>
             ) : (
-              <span className="flex h-14 w-14 shrink-0 items-center justify-center border border-dashed border-hairline-bright bg-ink-3/40 font-display text-lg text-parchment-faint transition-colors group-hover:border-gold-deep">—</span>
+              <span className={`flex ${compact ? 'h-10 w-10 text-sm' : 'h-14 w-14 text-lg'} shrink-0 items-center justify-center border border-dashed border-hairline-bright bg-ink-3/40 font-display text-parchment-faint transition-colors group-hover:border-gold-deep`}>—</span>
             )}
             <span className="min-w-0 flex-1">
               <span className="flex flex-wrap items-center gap-2">
-                <strong className="shrink-0 whitespace-nowrap font-serif text-[13px] font-bold text-gold-bright">{group.label}</strong>
-                {wound && <span className={`font-mono text-[10px] ${woundLevel === 'intact' ? 'text-parchment-faint' : 'font-bold text-rubric'}`}>{wound}</span>}
+                <strong className={`shrink-0 whitespace-nowrap font-serif font-bold text-gold-bright ${compact ? 'text-[11.5px]' : 'text-[13px]'}`}>{displayGroupLabel}</strong>
+                {showWoundBadge && wound && <span className={`font-mono text-[10px] ${woundLevel === 'intact' ? 'text-parchment-faint' : 'font-bold text-rubric'}`}>{wound}</span>}
                 {pendingEntry && <span className="pending-chip">待生效 · {pendingEntry.label}</span>}
               </span>
-              <span className="mt-0.5 line-clamp-2 block break-words font-serif text-[10.5px] leading-relaxed text-parchment-dim" title={group.summary}>{group.summary}</span>
+              <span className={`mt-0.5 line-clamp-2 block break-words font-serif leading-relaxed text-parchment-dim ${compact ? 'text-[9.5px]' : 'text-[10.5px]'}`} title={group.summary}>{group.summary}</span>
             </span>
             <ChevronDown className={`h-4 w-4 shrink-0 text-gold-dim transition-all group-hover:text-gold ${isExpanded ? 'rotate-180' : ''}`} />
           </button>
@@ -309,11 +335,11 @@ export const EquipmentPanel: React.FC<EquipmentPanelProps> = ({ body, focusedGro
             disabled={isStreaming || (!pendingReplacement && group.reservedByTwoHandedItem)}
             title={pendingReplacement
               ? isStreaming ? '本次对话完成后才能取消操作' : `取消${pendingReplacement.label}`
-              : group.reservedByTwoHandedItem ? '副手由双手武器占用'
+              : group.reservedByTwoHandedItem ? '另一只手由双手武器占用'
                 : groupReplacementChoices.length ? '选择替换装备' : '查看当前地点的可用装备'}
             onClick={() => {
               if (pendingReplacement) cancelItemAction(pendingReplacement.id);
-              else openReplacementChoices(`更换${group.label}`, positions, group.items.map((item) => item.instanceId));
+              else openReplacementChoices(`更换${displayGroupLabel}`, positions, group.items.map((item) => item.instanceId));
             }}
             className={`item-action shrink-0 disabled:cursor-not-allowed disabled:opacity-35 ${pendingReplacement ? 'item-action--danger' : 'item-action--primary'}`}
           >
@@ -322,7 +348,7 @@ export const EquipmentPanel: React.FC<EquipmentPanelProps> = ({ body, focusedGro
         </div>
 
         {isExpanded && (
-          <div className="space-y-2 border-t border-hairline p-2">
+          <div className={`border-t border-hairline ${compact ? 'space-y-1.5 p-1.5' : 'space-y-2 p-2'}`}>
             {group.positions.map((position, index) => {
               const equipmentPosition = positions[index];
               const positionReplacementChoices = getEquipmentReplacementChoices({
@@ -331,7 +357,7 @@ export const EquipmentPanel: React.FC<EquipmentPanelProps> = ({ body, focusedGro
                 currentLocation,
                 positions: [equipmentPosition],
                 excludedIds: position.item ? [position.item.instanceId] : [],
-              });
+              }).filter((choice) => canEquipItem(state, ITEM_CATALOG, choice.instanceId, choice.position, playerHealth));
               return (
               <div key={position.key} data-equipment-position={position.key}>
                 {(group.group === 'torso' || group.group === 'legs' || group.group === 'accessories') && (
@@ -387,10 +413,11 @@ export const EquipmentPanel: React.FC<EquipmentPanelProps> = ({ body, focusedGro
   const offhand = groupById.get('offhand')!;
   const legs = groupById.get('legs')!;
   const accessories = groupById.get('accessories')!;
+  const groupVisible = (group: EquipmentGroup) => !visibleGroups || visibleGroups.includes(group);
 
   return (
     <div className="space-y-2.5" data-equipment-panel>
-      <div className="grid grid-cols-2 gap-1.5 border border-hairline bg-ink-3/35 p-2 sm:grid-cols-4">
+      {showStatusSummary && <div className="grid grid-cols-2 gap-1.5 border border-hairline bg-ink-3/35 p-2 sm:grid-cols-4">
         <span className="flex items-center gap-1.5 px-1 py-0.5" title="各部位当前防护值">
           <Shield className="h-4 w-4 shrink-0 text-gold" />
           <span className="min-w-0"><span className="block font-serif text-[9.5px] text-parchment-faint">防护</span><span className="block truncate font-mono text-[10.5px] text-parchment">{status.protection}</span></span>
@@ -408,15 +435,17 @@ export const EquipmentPanel: React.FC<EquipmentPanelProps> = ({ body, focusedGro
           <span className="min-w-0"><span className="block font-serif text-[9.5px] text-parchment-faint">威慑</span><span className="block truncate font-mono text-[10.5px] text-parchment">{status.social || '无'}</span></span>
         </span>
         {status.restrictions.length > 0 && <p className="col-span-full border-t border-hairline pt-1.5 font-serif text-[10px] leading-relaxed text-parchment-dim">限制：{status.restrictions.join('；')}</p>}
-      </div>
-      {renderGroup(head)}
-      {renderGroup(torso)}
-      <div data-hand-pair className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-        {renderGroup(mainhand)}
-        {renderGroup(offhand)}
-      </div>
-      {renderGroup(legs)}
-      {renderGroup(accessories)}
+      </div>}
+      {groupVisible('head') && renderGroup(head)}
+      {groupVisible('torso') && renderGroup(torso)}
+      {(groupVisible('mainhand') || groupVisible('offhand')) && (
+        <div data-hand-pair className={`grid grid-cols-1 gap-2 ${groupVisible('mainhand') && groupVisible('offhand') ? 'sm:grid-cols-2' : ''}`}>
+          {groupVisible('mainhand') && renderGroup(mainhand)}
+          {groupVisible('offhand') && renderGroup(offhand)}
+        </div>
+      )}
+      {groupVisible('legs') && renderGroup(legs)}
+      {groupVisible('accessories') && renderGroup(accessories)}
       <span className="sr-only">{TORSO_POSITION_LABELS.join('、')} · {LEG_POSITION_LABELS.join('、')} · {ACCESSORY_POSITION_COUNT}</span>
       {replacementRequest && (
         <ItemChoiceDialog

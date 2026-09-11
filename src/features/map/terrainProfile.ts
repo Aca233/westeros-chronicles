@@ -10,7 +10,7 @@ export const TERRAIN_MAX_PITCH = 55
 // deliberately stylised vertical scale to remain legible.
 export const TERRAIN_VISUAL_SCALE = 32
 
-const TERRAIN_PROFILE = { pitch: 52, exaggeration: TERRAIN_VISUAL_SCALE } as const
+const TERRAIN_PROFILE = { pitch: 40, exaggeration: TERRAIN_VISUAL_SCALE } as const
 
 export interface TerrainProfileInput {
   zoom: number

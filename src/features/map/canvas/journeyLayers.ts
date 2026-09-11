@@ -116,7 +116,7 @@ export function syncJourneyLayers(
   routePlan: RoutePlan | null | undefined,
   journey: ActiveJourney | undefined,
 ): void {
-  if (!map.isStyleLoaded()) return
+  if (!map.getSource('agot-vector')) return
   ensureJourneyLayers(map)
   const route = routePlan ? routeCoordinates(routePlan, manifest) : []
   const progress = routePlan ? progressCoordinates(routePlan, journey, manifest) : []

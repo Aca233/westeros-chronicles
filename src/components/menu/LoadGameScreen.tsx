@@ -34,6 +34,7 @@ export const LoadGameScreen: React.FC = () => {
   const saveSlots = useGameStore((state) => state.saveSlots);
   const slotActionError = useGameStore((state) => state.slotActionError);
   const setMenuView = useGameStore((state) => state.setMenuView);
+  const openCreator = useGameStore((state) => state.openCreator);
   const continueGame = useGameStore((state) => state.continueGame);
   const deleteSlot = useGameStore((state) => state.deleteSlot);
   const importSlot = useGameStore((state) => state.importSlot);
@@ -113,7 +114,7 @@ export const LoadGameScreen: React.FC = () => {
         <div className="flex flex-1 flex-col items-center justify-center gap-4 py-16 text-center">
           <ScrollText className="h-10 w-10 text-gold-dim" strokeWidth={1.2} />
           <p className="font-serif text-sm text-parchment-dim">卷轴架上空空如也,还没有任何一段传奇被写下。</p>
-          <button type="button" className="btn-decree !px-5 !py-2 !text-xs" onClick={() => setMenuView('new')}>
+          <button type="button" className="btn-decree !px-5 !py-2 !text-xs" onClick={() => openCreator('custom')}>
             去开创新局
           </button>
         </div>

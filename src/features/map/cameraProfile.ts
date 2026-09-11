@@ -31,6 +31,7 @@ export type Ck3MapOptions = Pick<
   | 'maxTileCacheZoomLevels'
   | 'canvasContextAttributes'
   | 'refreshExpiredTiles'
+  | 'pixelRatio'
 >
 
 export function cameraAnimation(
@@ -79,6 +80,8 @@ export function createCk3MapOptions(
     // 多栅格/矢量来源同时存在时，默认保留 5 个缩放层会放大显存占用。
     // 三层仍覆盖连续滚轮回看，同时避免每个来源积压过多已解码瓦片。
     maxTileCacheZoomLevels: 3,
+    // Bound fill rate on high-DPI displays while keeping text oversampled.
+    pixelRatio: Math.min(1.5, typeof window === 'undefined' ? 1 : window.devicePixelRatio || 1),
     // 烘焙瓦片内容永不变化,回看时不再做过期再校验请求
     refreshExpiredTiles: false,
     // 双显卡设备上请求高性能 GPU,避免浏览器回退到核显或软件渲染

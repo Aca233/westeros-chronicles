@@ -5,6 +5,7 @@ import type { ActiveJourney, TravelStateCommand } from '../map/travel/types';
 import type { RoutePreference, TravelMode } from '../map/types';
 import type { WorldDate, WorldDateAdvance } from '../../domain/worldDate';
 import type { LivingWorldState } from './livingWorldContracts';
+import type { HealthRuntimeState } from '../health/types';
 
 export type WorldPrincipalRef =
   | { type: 'character'; characterId: CharacterId }
@@ -52,6 +53,6 @@ export type WorldMutation =
  | {type:'asset.unequip';assetId:string}
  | {type:'asset.set-status';assetId:string;status:AssetWorldPatch['status']}
  | {type:'asset.delete-runtime-patch';assetId:string};
-export interface WorldCommitSlice { runtime:WorldRuntimeState; items:ItemSystemState; journey?:ActiveJourney; date:WorldDate; }
-export interface WorldTransaction { id:string; turn:number; source:WorldEvent['source']; reason:string; intents:WorldIntent[]; mutations:WorldMutation[]; dateAdvance?:WorldDateAdvance; itemCommands?:ItemStateCommand[]; siteCreations?:ItemStorageSite[]; nextJourney?:ActiveJourney|null; eventDrafts:Array<Omit<WorldEvent,'id'|'transactionId'|'turn'|'date'|'source'>>; }
+export interface WorldCommitSlice { runtime:WorldRuntimeState; items:ItemSystemState; health?:HealthRuntimeState; journey?:ActiveJourney; date:WorldDate; minuteOfDay:number; }
+export interface WorldTransaction { id:string; turn:number; source:WorldEvent['source']; reason:string; intents:WorldIntent[]; mutations:WorldMutation[]; dateAdvance?:WorldDateAdvance; timeAdvanceMinutes?:number; itemCommands?:ItemStateCommand[]; siteCreations?:ItemStorageSite[]; nextJourney?:ActiveJourney|null; eventDrafts:Array<Omit<WorldEvent,'id'|'transactionId'|'turn'|'date'|'source'>>; }
 export type WorldTransactionResult = {ok:true;state:WorldCommitSlice;transactionId:string;duplicate:boolean;events:WorldEvent[]} | {ok:false;state:WorldCommitSlice;transactionId:string;reason:string};

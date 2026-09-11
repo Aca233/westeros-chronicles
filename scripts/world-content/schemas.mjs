@@ -398,6 +398,37 @@ export function validateOrdinaryItems(value) {
   return document;
 }
 
+const CHARACTER_CREATION_GROUPS = {
+  roles: new Set(['commoner', 'traveler', 'retainer', 'knight', 'landless_noble']),
+  origins: new Set(['smallfolk', 'town', 'household', 'minor_nobility']),
+  experiences: new Set(['household_service', 'martial_training', 'trade_travel', 'academy_learning', 'wandering_life']),
+  livelihoods: new Set(['day_labor', 'household_wage', 'guard_work', 'trade', 'scribe_work']),
+  situations: new Set(['lodging', 'awaiting_work', 'arrival', 'making_living']),
+};
+
+export function validateCharacterCreation(value) {
+  const document = record(value, '人物创建选项');
+  validateExactKeys(document, new Set(['schemaVersion', ...Object.keys(CHARACTER_CREATION_GROUPS)]), '人物创建选项');
+  if (document.schemaVersion !== 1) throw new Error('人物创建选项版本必须为 1');
+  for (const [group, expectedIds] of Object.entries(CHARACTER_CREATION_GROUPS)) {
+    const entries = array(document[group], `人物创建选项.${group}`);
+    const ids = new Set();
+    for (const entry of entries) {
+      const option = record(entry, `人物创建选项.${group}`);
+      validateExactKeys(option, new Set(['id', 'label', 'description', 'impact']), `人物创建选项.${group}`);
+      if (!expectedIds.has(option.id)) throw new Error(`人物创建选项.${group} ID 无效：${String(option.id)}`);
+      if (ids.has(option.id)) throw new Error(`人物创建选项.${group} ID 重复：${option.id}`);
+      ids.add(option.id);
+      for (const field of ['label', 'description']) {
+        if (typeof option[field] !== 'string' || !option[field].trim()) throw new Error(`人物创建选项.${group}.${option.id}.${field} 无效`);
+      }
+      if ('impact' in option && (typeof option.impact !== 'string' || !option.impact.trim())) throw new Error(`人物创建选项.${group}.${option.id}.impact 无效`);
+    }
+    if (ids.size !== expectedIds.size) throw new Error(`人物创建选项.${group} 不完整`);
+  }
+  return document;
+}
+
 export function validateWorldSource(source) {
   validateWorldManifest(source.manifest);
   const playable = array(source.playableCharacters, '可玩人物');
@@ -445,5 +476,6 @@ export function validateWorldSource(source) {
   validateLoadoutTemplates(source.loadoutTemplates);
   validateLoadoutOverrides(source.loadoutOverrides);
   validateCharacterContents(source.characterContents);
+  validateCharacterCreation(source.characterCreation);
   return source;
 }

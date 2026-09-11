@@ -121,30 +121,22 @@ node scripts/audit-agot-models.mjs \
   --assets /path/to/asset-root
 ```
 
-完整的非浏览器验证：
+当前保留的非浏览器检查：
 
 ```bash
-npm run test:agot-model-import
-npm run test:map-landmark-schema
-npm run test:map-landmark-visibility
-npm run test:map-landmark-transform
-npm run test:map-landmark-cache
-npm run test:map-landmark-layer
-npm run test:map-landmark-integration
 npm run audit:agot-models
 npm run check:map-runtime-boundaries
 npx tsc --noEmit
-npm run verify:map
 npm run build:code
 ```
 
-`import:agot-models` 不得加入 `verify`、`verify:quick` 或 `verify:map`。常规验证只运行 fixture 测试和已生成文件审计，不读取真实 AGOT 源。
+`import:agot-models` 不得被 `check:*` 或构建命令隐式触发。常规工程检查只审计已生成文件和运行时边界，不读取真实 AGOT 源。
 
 ## 运行时与人工验收
 
 Three.js 自定义层复用 MapLibre 的 canvas、WebGL2 context、相机矩阵和渲染调用。它不创建第二 canvas、独立 RAF、控制器或 raycast。加载同步只发生在清单就绪、`moveend` 和 `zoomend`；模型失败只输出局部警告，不能触发“地图资料未能载入”、关闭 DEM 或影响正文与人物卷宗。
 
-自动测试只能验证身份、坐标、预算、GLB 结构、生命周期和边界。以下项目仍需用户在实际地图中人工检查：
+自动化测试套件已从仓库移除。以下项目需用户在实际地图中人工检查：
 
 - 模型朝向和视觉比例；
 - 建筑基座是否贴合 DEM；

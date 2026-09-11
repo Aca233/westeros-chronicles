@@ -14,7 +14,7 @@ import { CharacterHistoryTab } from './character-window/CharacterHistoryTab';
 import { CharacterIdentityHeader } from './character-window/CharacterIdentityHeader';
 import { CharacterOverview } from './character-window/CharacterOverview';
 import { CharacterRelationsTab } from './character-window/CharacterRelationsTab';
-import { CharacterTraitOverlay } from './character-window/CharacterTraitOverlay';
+
 import { CharacterDirectoryBar } from './character-window/CharacterDirectoryBar';
 import { CharacterCurrentTab } from './character-window/CharacterCurrentTab';
 
@@ -67,10 +67,10 @@ export const Ck3CharacterWindow: React.FC<Ck3CharacterWindowProps> = ({
   const worldEventDisplays = useWorldEventDisplays(visibleWorldEvents, gameState);
   const { dossier, relatedRecords, status, error, reload } = useCharacterDossier(selectedCharacterId);
   const [activeTab, setActiveTab] = useState<CharacterTab>('overview');
-  const [activeTraitId, setActiveTraitId] = useState<string | null>(null);
+
 
   useEffect(() => {
-    setActiveTraitId(null);
+
     setActiveTab('overview');
   }, [dossier?.id]);
 
@@ -78,7 +78,7 @@ export const Ck3CharacterWindow: React.FC<Ck3CharacterWindowProps> = ({
     () => dossier ? resolveCharacterTraits(dossier.traitIds, dossier.legacyTraits) : [],
     [dossier],
   );
-  const selectedTrait = displayedTraits.find((trait) => trait.id === activeTraitId) ?? null;
+
   const houseIcon = getHouseIconId(dossier?.houseSigil || dossier?.house || 'artifact-crown');
 
   return (
@@ -106,7 +106,6 @@ export const Ck3CharacterWindow: React.FC<Ck3CharacterWindowProps> = ({
             canGoBack={canGoBack}
             onBack={onBack}
             onReturnToPlayer={onReturnToPlayer}
-            onOpenLocation={onOpenLocation}
           />
 
           <div className="min-h-0 flex-1 overflow-y-auto">
@@ -142,8 +141,8 @@ export const Ck3CharacterWindow: React.FC<Ck3CharacterWindowProps> = ({
                 <CharacterOverview
                   dossier={dossier}
                   displayedTraits={displayedTraits}
-                  activeTraitId={activeTraitId}
-                  onTraitSelect={setActiveTraitId}
+
+
                 />
               )}
               {activeTab === 'relations' && (
@@ -173,7 +172,7 @@ export const Ck3CharacterWindow: React.FC<Ck3CharacterWindowProps> = ({
             </div>
           </div>
 
-          {selectedTrait && <CharacterTraitOverlay trait={selectedTrait} characterName={dossier.name} onClose={() => setActiveTraitId(null)} />}
+
         </>
       )}
     </aside>

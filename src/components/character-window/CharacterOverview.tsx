@@ -1,20 +1,18 @@
 import React from 'react';
 import { Coins, HeartPulse } from 'lucide-react';
-import { CK3_SKILLS, getCk3SkillRank } from '../../data/ck3Skills';
-import { formatTraitDescription, resolveCharacterTraits } from '../../data/characterTraits';
+import { CK3_SKILLS } from '../../data/ck3Skills';
+import { resolveCharacterTraits } from '../../data/characterTraits';
 import type { CharacterDossier } from '../../features/characters/characterDossier';
 import { GameIcon } from '../GameIcon';
+import { CharacterAttributeHoverCard } from './CharacterAttributeHoverCard';
+import { CharacterTraitHoverCard } from './CharacterTraitHoverCard';
 
 export function CharacterOverview({
   dossier,
   displayedTraits,
-  activeTraitId,
-  onTraitSelect,
 }: {
   dossier: CharacterDossier;
   displayedTraits: ReturnType<typeof resolveCharacterTraits>;
-  activeTraitId: string | null;
-  onTraitSelect: (traitId: string | null) => void;
 }) {
   return (
     <div className="flex flex-col gap-5 px-5 pb-6">
@@ -24,7 +22,7 @@ export function CharacterOverview({
           <span className="font-mono text-[9px] text-parchment-faint">{displayedTraits.length} 项 · 教育优先</span>
         </div>
         {displayedTraits.length > 0 ? (
-          <div className="flex flex-wrap items-start gap-x-0.5 gap-y-1.5" aria-label="人物特质列表">
+          <div className="flex flex-wrap items-start gap-1.5" aria-label="人物特质列表">
             {(['education', 'personality', 'other'] as const)
               .map((bucket) => displayedTraits.filter((trait) =>
                 bucket === 'other' ? trait.category !== 'education' && trait.category !== 'personality' : trait.category === bucket))
@@ -32,34 +30,21 @@ export function CharacterOverview({
               .map((cluster, clusterIndex) => (
                 <React.Fragment key={clusterIndex}>
                   {cluster.map((trait, traitIndex) => {
-                    const active = activeTraitId === trait.id;
                     const clusterStart = clusterIndex > 0 && traitIndex === 0;
                     return (
-                      <button
+                      <CharacterTraitHoverCard
                         key={trait.id}
-                        type="button"
-                        onClick={() => onTraitSelect(active ? null : trait.id)}
-                        aria-pressed={active}
-                        title={`${trait.name}:${formatTraitDescription(trait.description, dossier.name)}`}
-                        className={`trait-chip relative flex w-[52px] shrink-0 flex-col items-center px-0.5 pb-1 pt-1 ${
-                          clusterStart ? 'trait-chip--cluster-start' : ''
-                        } ${
-                          active ? 'text-gold' : 'text-parchment-dim hover:text-parchment'
-                        }`}
+                        trait={trait}
+                        characterName={dossier.name}
+                        className={`h-10 w-10 ${clusterStart ? 'ml-2' : ''}`}
                       >
-                        {trait.category === 'education' && (
-                          <span className="absolute left-0 top-0 z-10 bg-rubric px-1 text-[7px] leading-3 text-[#f6efdd]">教育</span>
-                        )}
-                        <GameIcon icon={trait.icon} className="h-9 w-9 shrink-0" />
-                        <span className="mt-0.5 w-full truncate text-[9px] font-bold">{trait.name}</span>
-                        {active && <span className="absolute inset-x-2.5 bottom-0 h-[1.5px] bg-gold" aria-hidden="true" />}
-                      </button>
+                        <GameIcon icon={trait.icon} className="h-10 w-10 shrink-0 transition-transform duration-150 group-hover:-translate-y-0.5 group-hover:scale-110 group-focus-visible:scale-110" />
+                      </CharacterTraitHoverCard>
                     );
                   })}
                 </React.Fragment>
               ))}
-          </div>
-        ) : (
+          </div>        ) : (
           <EmptyState label="尚未记录人物特质" />
         )}
       </section>
@@ -68,16 +53,22 @@ export function CharacterOverview({
         <div className="grid grid-cols-6">
           {CK3_SKILLS.map((skill) => {
             const value = dossier.attributes[skill.key] ?? 0;
+            const isPlayer = dossier.kind === 'player';
             return (
-              <div
+              <CharacterAttributeHoverCard
                 key={skill.key}
-                className="group flex min-w-0 flex-col items-center pb-1 pt-0.5"
-                title={`${skill.label}:${getCk3SkillRank(value)}`}
-                aria-label={`${skill.label} ${value}`}
+                skill={skill}
+                value={value}
+                baseValue={isPlayer ? dossier.player.baseAttributes?.[skill.key] : undefined}
+                traits={displayedTraits}
+                items={isPlayer ? dossier.player.items : undefined}
+                isNpcArchive={!isPlayer}
               >
-                <GameIcon icon={skill.icon} className="h-[44px] w-[44px] shrink-0 transition-transform duration-300 group-hover:scale-110" />
-                <span className={`font-display text-[15px] font-bold leading-none ${getSkillValueColor(value)}`}>{value}</span>
-              </div>
+                <div className="group flex min-w-0 flex-col items-center pb-1 pt-0.5">
+                  <GameIcon icon={skill.icon} className="h-[44px] w-[44px] shrink-0 transition-transform duration-300 group-hover:scale-110" />
+                  <span className={`font-display text-[15px] font-bold leading-none ${getSkillValueColor(value)}`}>{value}</span>
+                </div>
+              </CharacterAttributeHoverCard>
             );
           })}
         </div>

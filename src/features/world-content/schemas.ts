@@ -2,6 +2,7 @@ import { z } from 'zod';
 import type {
   CharacterContentIndex,
   CharacterContentRecord,
+  CharacterCreationContent,
   GameplayLocationDataset,
   HolderSummaryDataset,
   LivingWorldManifest,
@@ -54,6 +55,7 @@ const manifestSchema = z.object({
     holderSummaries: localPath,
     ordinaryItems: localPath,
     loadouts: localPath,
+    characterCreation: localPath,
   }).strict(),
 }).strict();
 
@@ -169,6 +171,22 @@ const loadoutsSchema = z.object({
   }).strict()),
 }).strict();
 
+const creationOption = <T extends [string, ...string[]]>(ids: T) => z.object({
+  id: z.enum(ids),
+  label: z.string().trim().min(1),
+  description: z.string().trim().min(1),
+  impact: z.string().trim().min(1).optional(),
+}).strict();
+
+const characterCreationSchema = z.object({
+  schemaVersion: z.literal(1),
+  roles: z.array(creationOption(['commoner', 'traveler', 'retainer', 'knight', 'landless_noble'])),
+  origins: z.array(creationOption(['smallfolk', 'town', 'household', 'minor_nobility'])),
+  experiences: z.array(creationOption(['household_service', 'martial_training', 'trade_travel', 'academy_learning', 'wandering_life'])),
+  livelihoods: z.array(creationOption(['day_labor', 'household_wage', 'guard_work', 'trade', 'scribe_work'])),
+  situations: z.array(creationOption(['lodging', 'awaiting_work', 'arrival', 'making_living'])),
+}).strict();
+
 function parse<T>(schema: z.ZodType<T>, value: unknown, label: string): T {
   const result = schema.safeParse(value);
   if (!result.success) throw new Error(`${label}格式无效：${result.error.issues.map((issue) => `${issue.path.join('.')}: ${issue.message}`).join('; ')}`);
@@ -188,6 +206,7 @@ export const parseCharacterContentShard = (value: unknown): Record<string, Chara
   for (const [id, record] of Object.entries(value)) result[id] = parse(characterContentSchema, record, `人物内容 ${id}`) as CharacterContentRecord;
   return result;
 };
+export const parseCharacterCreationContent = (value: unknown): CharacterCreationContent => parse(characterCreationSchema, value, '人物创建选项') as CharacterCreationContent;
 const itemEffectSchema = z.union([
   z.object({
     kind: z.literal('check_modifier'),

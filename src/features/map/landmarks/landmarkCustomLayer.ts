@@ -177,7 +177,7 @@ class SharedContextLandmarkLayer implements LandmarkCustomLayer {
     _gl: WebGLRenderingContext | WebGL2RenderingContext,
     options: CustomRenderMethodInput,
   ): void {
-    if (!this.renderer || !this.supported || this.contextLost) return
+    if (!this.renderer || !this.supported || this.contextLost || this.objects.size === 0) return
     this.camera.projectionMatrix.fromArray(options.defaultProjectionData.mainMatrix)
     this.renderer.resetState()
     try {

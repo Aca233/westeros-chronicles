@@ -3,6 +3,7 @@ import { transferItem } from './custody';
 import { equipItem, unequipItem } from './equipment';
 import { validateItemSystem } from './state';
 import type { WorldLocationRef } from '../map/types';
+import type { CharacterHealthState } from '../health/types';
 import type {
   ItemAction,
   ItemCatalog,
@@ -18,6 +19,7 @@ export interface ItemActionContext {
   gameDate: string;
   accessibleSiteIds: ReadonlySet<string>;
   accessibleVehicleIds: ReadonlySet<string>;
+  health?: CharacterHealthState;
 }
 
 export type ItemActionResult =
@@ -304,6 +306,7 @@ function applyOne(
       const next = equipItem(state, catalog, action.instanceId, action.position, {
         currentLocation: context.actorLocation,
         displacedTo: action.displacedTo,
+        health: context.health,
       });
       return { state: next, log: `装备【${getItemDefinition(catalog, next.instances[action.instanceId].definitionId).name}】` };
     }

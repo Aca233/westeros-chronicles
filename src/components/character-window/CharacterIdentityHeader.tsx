@@ -1,4 +1,4 @@
-import { ArrowLeft, MapPin, UserRound } from 'lucide-react';
+import { ArrowLeft, UserRound } from 'lucide-react';
 import type { CharacterDossier } from '../../features/characters/characterDossier';
 import { CharacterPortrait } from '../CharacterPortrait';
 import { CoatOfArms } from '../CoatOfArms';
@@ -10,14 +10,12 @@ export function CharacterIdentityHeader({
   canGoBack,
   onBack,
   onReturnToPlayer,
-  onOpenLocation,
 }: {
   dossier: CharacterDossier;
   houseIcon: ReturnType<typeof getHouseIconId>;
   canGoBack: boolean;
   onBack: () => void;
   onReturnToPlayer: () => void;
-  onOpenLocation: (locationId: string) => void;
 }) {
   return (
     <header className="relative shrink-0 px-4 pb-5 pt-5">
@@ -62,25 +60,13 @@ export function CharacterIdentityHeader({
 
           <p className="mt-3 font-serif text-[12px] font-semibold leading-relaxed text-gold">
             {dossier.title}
-            {dossier.kind === 'player' && dossier.age !== undefined && <span className="ml-2 font-mono text-[10px] font-normal text-parchment-faint">{dossier.age} 岁</span>}
-            {dossier.kind === 'player' && !dossier.alive && <span className="ml-2 text-[10px] font-bold text-rubric">已故</span>}
+            {dossier.age !== undefined && <span className="ml-2 font-mono text-[10px] font-normal text-parchment-faint">{dossier.age} 岁</span>}
+            {!dossier.alive && <span className="ml-2 text-[10px] font-bold text-rubric">已故</span>}
           </p>
-          <div className="mt-2.5 flex flex-col items-start gap-1 text-[10px] text-parchment-faint">
-            <span>{dossier.house}</span>
-            {dossier.kind === 'player' && <span>{dossier.culture} · {dossier.faith}</span>}
-            {dossier.kind === 'player' ? (
-              <button
-                type="button"
-                disabled={!dossier.worldLocation}
-                onClick={() => dossier.worldLocation && onOpenLocation(dossier.worldLocation.locationId)}
-                className="inline-flex min-w-0 items-center gap-1 text-left transition-colors enabled:hover:text-gold disabled:cursor-default"
-              >
-                <MapPin className="h-3 w-3 shrink-0 text-gold-deep" /><span className="truncate">{dossier.location}</span>
-              </button>
-            ) : (
-              <span className="inline-flex items-center gap-1"><MapPin className="h-3 w-3 text-gold-deep" />所在地需由消息或会面确认</span>
-            )}
-          </div>
+          {/* 家族名只在肖像说明里出现一次；所在地只在“眼下”页出现一次。 */}
+          <p className="mt-2.5 font-serif text-[10px] leading-relaxed text-parchment-faint">
+            {dossier.culture} · {dossier.faith}
+          </p>
           {dossier.summary && (
             <p data-character-summary className="mt-3 border-l-2 border-gold-deep/50 pl-2.5 font-serif text-[11px] leading-relaxed text-parchment-dim">
               {dossier.summary}

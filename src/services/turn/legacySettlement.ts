@@ -96,7 +96,8 @@ export function settleLegacyTurnDraft(input: SettleTurnDraftInput): SettledTurn 
   const submittedTransactions = input.pendingTransactions ?? [];
   const parsedCommands = input.draft.stateCommands ?? [];
   const modelItemCommands = parsedCommands.filter((command): command is ItemStateCommand => command.type.startsWith('ITEM_'));
-  const nonItemCommands = parsedCommands.filter((command) => !command.type.startsWith('ITEM_'));
+  const nonItemCommands = parsedCommands.filter((command) => !command.type.startsWith('ITEM_')
+    && !['APPLY_HIT', 'TREAT_INJURY', 'CONSUME_SURVIVAL', 'REST'].includes(command.type));
   const stateCommands: StateCommand[] = [
     ...mergePendingWorldItemCommands(submittedTransactions, modelItemCommands),
     ...submittedTransactions.flatMap((transaction) => transaction.status === 'pending' ? transaction.travelCommands ?? [] : []),
@@ -209,11 +210,11 @@ export function settleLegacyTurnDraft(input: SettleTurnDraftInput): SettledTurn 
 
   let acceptedCommands = preliminarilyAccepted.filter((command) => !isTravelStateCommand(command) || !travelRejected.has(command));
   const rejectedLordCommands = new Set<StateCommand>();
-  const treatmentItems = new Set<string>();
   let repairCount = 0;
   for (const command of acceptedCommands) {
     let reason: string | undefined;
-    if (command.type === 'HEAL_ZONE') reason = '治疗必须消耗当前可访问的医疗物品';
+    if (command.type === 'HEAL_ZONE' || command.type === 'TREAT_WOUND') reason = '旧式即时降级治疗已停用；必须对具体 injuryId 使用 TREAT_INJURY';
+    else if (command.type === 'INJURE_ZONE') reason = '旧式四区伤势命令已停用；必须使用 APPLY_HIT 指定精确身体部位';
     else if (command.type === 'CHANGE_TITLE') reason = '头衔必须通过受权的世界头衔事务变更';
     else if (command.type === 'MODIFY_STAT' || command.type === 'ADD_TRAIT') reason = growthMutationRejection(command, acceptedCommands, gameState);
     else if (command.type === 'MODIFY_GOLD') {
@@ -227,19 +228,6 @@ export function settleLegacyTurnDraft(input: SettleTurnDraftInput): SettledTurn 
       && gameState.lord.items.placements[command.instanceId]?.type === 'equipped') reason = '装备必须先通过 ITEM_UNEQUIP 明确卸下去向';
     else if ((command.type === 'SET_BLEEDING' || command.type === 'SET_POISONED' || command.type === 'SET_INFECTED') && !command.value) {
       reason = '恢复异常状态必须通过消耗物资的治疗事务';
-    } else if (command.type === 'TREAT_WOUND') {
-      const conflictsWithItemCommand = acceptedCommands.some((candidate) => candidate !== command
-        && candidate.type.startsWith('ITEM_')
-        && 'instanceId' in candidate
-        && candidate.instanceId === command.instanceId);
-      if (treatmentItems.has(command.instanceId)) reason = '同一医疗物品每回合只能用于一次治疗';
-      else if (conflictsWithItemCommand) reason = '治疗物品不能在同一回合同时执行其他物品动作';
-      else {
-        treatmentItems.add(command.instanceId);
-        const preview = applyStateCommands(gameState.lord, [command]);
-        const failed = preview.changesLog.find((entry) => entry.includes('治疗未执行'));
-        if (failed) reason = failed.replace(/^\s*/, '');
-      }
     } else if (command.type === 'ITEM_GIFT') {
       const consent = gameState.roleplay?.socialEvents.find((event) => event.id === command.consentEventId);
       const playerId = playerCharacterId(gameState);
@@ -362,8 +350,10 @@ export function settleLegacyTurnDraft(input: SettleTurnDraftInput): SettledTurn 
       const committed = commitWorldTransaction({
         runtime: gameState.worldRuntime,
         items: updatedLord.items,
+        health: gameState.health,
         ...(gameState.activeJourney ? { journey: gameState.activeJourney } : {}),
         date: currentDate,
+        minuteOfDay: gameState.currentMinute,
       }, baseline, transaction);
       if (!committed.ok) throw new Error(committed.reason);
 
@@ -545,9 +535,12 @@ export function settleLegacyTurnDraft(input: SettleTurnDraftInput): SettledTurn 
       ...timelineFacts.map((fact) => `时间线${fact.kind === 'timeline.occurred' ? '发生' : '偏离'}: ${fact.title}`),
     ],
     nextDate,
+    nextMinute: gameState.currentMinute,
+    nextTimePrecision: gameState.currentTimePrecision,
     nextSeason,
     worldHistory,
     worldRuntime,
+    health: structuredClone(gameState.health),
     resolvedFacts,
     activeJourney,
     transactionId,

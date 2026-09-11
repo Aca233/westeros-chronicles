@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "roles": [
+    { "id": "commoner", "label": "平民", "description": "没有封地或贵族身份，以劳动、手艺与地方关系立足。", "impact": "最低初始钱财；家族与纹章均可留空。" },
+    { "id": "traveler", "label": "旅人", "description": "常年在道路、港口与客栈之间移动。", "impact": "偏重随身补给、维修工具与机动性。" },
+    { "id": "retainer", "label": "家臣", "description": "受雇于某个家宅、商号或贵族家庭。", "impact": "适合建立雇主关系，并获得稳定但有限的盘缠。" },
+    { "id": "knight", "label": "骑士", "description": "受过正式武艺训练、拥有身份声望，但没有自己的封地。", "impact": "获得普通骑士武备，不获得领地或原著唯一武器。" },
+    { "id": "landless_noble", "label": "无地贵族", "description": "出身贵族却没有可直接支配的领地。", "impact": "家族身份更重要，初始钱财略高但没有封臣与领地产权。" }
+  ],
+  "origins": [
+    { "id": "smallfolk", "label": "乡野人家", "description": "在村庄、庄园或农舍中长大。", "impact": "体魄与务实能力略有优势。" },
+    { "id": "town", "label": "城镇街巷", "description": "熟悉市场、码头、手工业与人情往来。", "impact": "外交与经营能力略有优势。" },
+    { "id": "household", "label": "家宅附属", "description": "成长于较大的家宅、城堡或商人院落。", "impact": "管事、礼仪与察言观色更熟练。" },
+    { "id": "minor_nobility", "label": "没落小贵族", "description": "保留贵族教育与姓氏，却没有足以安身的产业。", "impact": "学习与社交基础较好；不会自动获得土地。" }
+  ],
+  "experiences": [
+    { "id": "household_service", "label": "家宅侍奉", "description": "做过侍从、管事助手、贴身仆役或家宅差使。", "impact": "建议勤勉；偏管事与交际。" },
+    { "id": "martial_training", "label": "武艺训练", "description": "长期接受武器、骑乘、护卫或军伍训练。", "impact": "建议勇敢与武艺教育；偏军事与勇武。" },
+    { "id": "trade_travel", "label": "商旅谋生", "description": "随商队、船队或市场买卖积累经验。", "impact": "建议合群；偏经营、交涉与旅行装备。" },
+    { "id": "academy_learning", "label": "书院学习", "description": "在学士、修士、书记或私人教师身边系统学习。", "impact": "建议耐心与学习教育；获得普通书册而非唯一藏品。" },
+    { "id": "wandering_life", "label": "漂泊生活", "description": "长期没有固定住处，在道路与陌生聚落中求生。", "impact": "偏洞察、勇武与轻装出行。" }
+  ],
+  "livelihoods": [
+    { "id": "day_labor", "label": "零工与手艺", "description": "靠短工、手艺或季节性劳动过活。", "impact": "钱少但没有固定雇主。" },
+    { "id": "household_wage", "label": "家宅薪俸", "description": "靠长期家宅服务领取食宿或薪俸。", "impact": "较适合家臣与雇主关系。" },
+    { "id": "guard_work", "label": "护卫差事", "description": "靠护卫、巡逻、押运或武艺吃饭。", "impact": "钱财中等，骑士与武艺经历装备更完整。" },
+    { "id": "trade", "label": "商旅买卖", "description": "靠货运、跑商、引路或中间交易谋生。", "impact": "盘缠较多，旅人更容易拥有驮运工具。" },
+    { "id": "scribe_work", "label": "书记与教习", "description": "靠读写、记账、抄写或教学换取收入。", "impact": "书院出身获得普通书册与书写用品倾向。" }
+  ],
+  "situations": [
+    { "id": "lodging", "label": "借宿", "description": "目前暂住在他人的屋檐、客房或租来的床位。", "impact": "存在一处有限的临时储藏位置。" },
+    { "id": "awaiting_work", "label": "候差", "description": "已经来到此地，正在等候工作、雇主或下一班差事。", "impact": "眼前没有被程序强制指定的危机或任务。" },
+    { "id": "arrival", "label": "抵达", "description": "刚到此地，尚未决定下一步如何落脚。", "impact": "大多数物品仍在身上或随行载具中。" },
+    { "id": "making_living", "label": "谋生", "description": "已在本地短期谋生，但尚未形成稳定产业。", "impact": "可以从熟悉的日常环境开始第一幕。" }
+  ]
+}

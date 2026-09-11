@@ -1,4 +1,4 @@
-import { CalendarDays, MapPin, MessageSquareText, ScrollText, UsersRound } from 'lucide-react';
+import { MapPin, MessageSquareText, ScrollText, UsersRound } from 'lucide-react';
 import type { CharacterId } from '../../domain/characterId';
 import type { CharacterDossier } from '../../features/characters/characterDossier';
 import type { GameState } from '../../types/game';
@@ -110,32 +110,38 @@ export function CharacterCurrentTab({
   const otherPeopleCount = presentIds.filter((id) => id !== viewerId).length;
   const entries = currentEntries(dossier, gameState);
   const interactions = recentInteractions(dossier, gameState);
-  const sharedEvidence = isPlayer ? [] : relationshipEvidenceForViewer(gameState.roleplay, viewerId, subjectId).slice(-4).reverse();
+  const allSharedEvidence = isPlayer ? [] : relationshipEvidenceForViewer(gameState.roleplay, viewerId, subjectId);
+  const sharedEvidence = allSharedEvidence.slice(-4).reverse();
   const sceneName = gameState.activeScene?.location.sceneLocation || gameState.lord.location.sceneLocation || '具体场所未记录';
-  const sceneLocation = gameState.lord.locationLabel || gameState.lord.location.locationId;
-  const displayedLocation = isPlayer || isPresent ? sceneLocation : '所在地未确认';
-  const displayedScene = isPlayer || isPresent ? sceneName : '离场后不读取后台实时位置；请依据消息、会面或可追溯情报确认';
+  // 位置是"处境"不是"身份"：只在眼下这一处显示，并且使用权威世界位置，避免与旧存档字段互相矛盾。
+  const locationId = dossier.worldLocation?.locationId;
+  const canLocate = Boolean(locationId) && isPresent;
+  // 在场者一律用当前场景名，避免与静态档案里的地点互相矛盾；不在场者不读后台实时位置。
+  const displayedLocation = canLocate
+    ? (gameState.activeScene?.location.sceneLocation || dossier.location || '所在地未记录')
+    : '所在地未确认';
+  const displayedScene = canLocate
+    ? (isPlayer ? sceneName : '与你在同一场景')
+    : (isPlayer ? sceneName : '离场后不读取后台实时位置；请依据消息、会面或可追溯情报确认');
+  const latestSharedEvidence = sharedEvidence[0];
+  // 计数必须用完整列表：sharedEvidence 已截断，用它反推会少报。
+  const remainingSharedEvidence = Math.max(0, allSharedEvidence.length - 1);
 
   return (
     <div className="space-y-5 px-5 pb-6 pt-4" aria-label="眼下情况">
       <SectionTitle title="眼下" subtitle="只列当前可确认、仍能回应并会影响下一步的事情" />
 
-      <section className="grid grid-cols-2 gap-2" aria-label="当前场景">
+      <section aria-label="当前场景">
         <button
           type="button"
-          onClick={() => (isPlayer || isPresent) && onOpenLocation(gameState.lord.location.locationId)}
-          disabled={!isPlayer && !isPresent}
-          className="border border-hairline bg-ink-2/60 p-3 text-left transition-colors enabled:hover:border-gold-deep/60 disabled:cursor-default"
+          onClick={() => locationId && onOpenLocation(locationId)}
+          disabled={!canLocate}
+          className="w-full border border-hairline bg-ink-2/60 p-3 text-left transition-colors enabled:hover:border-gold-deep/60 disabled:cursor-default"
         >
           <span className="flex items-center gap-1.5 text-[9px] tracking-wider text-gold-deep"><MapPin className="h-3 w-3" />当前位置</span>
           <strong className="mt-1 block truncate font-serif text-[11px] text-parchment">{displayedLocation}</strong>
           <span className="mt-0.5 block truncate text-[9px] text-parchment-faint">{displayedScene}</span>
         </button>
-        <div className="border border-hairline bg-ink-2/60 p-3">
-          <span className="flex items-center gap-1.5 text-[9px] tracking-wider text-gold-deep"><CalendarDays className="h-3 w-3" />当前时点</span>
-          <strong className="mt-1 block font-serif text-[11px] text-parchment">{gameState.currentYear} AC · {gameState.currentMonth}月{gameState.currentDay}日</strong>
-          <span className="mt-0.5 block text-[9px] text-parchment-faint">{gameState.currentSeason}</span>
-        </div>
       </section>
 
       <section aria-label="在场情况">
@@ -173,29 +179,19 @@ export function CharacterCurrentTab({
         <section aria-label="你们之间">
           <div className="flex items-center justify-between border-b border-hairline pb-2">
             <span className="text-[10px] font-bold tracking-[0.14em] text-gold">你们之间</span>
-            <span className="text-[9px] text-parchment-faint">只显示有事件依据的经历</span>
+            <span className="text-[9px] text-parchment-faint">最近一次 · 完整经历见“关系”</span>
           </div>
-          {sharedEvidence.length ? sharedEvidence.map((entry) => (
-            <div key={entry.id} className="border-l border-gold-deep/50 py-1 pl-3 mt-2">
-              <p className="font-serif text-[11px] leading-relaxed text-parchment-dim">{entry.summary}</p>
-              <span className="text-[9px] text-parchment-faint">第 {entry.turn} 回合 · 依据 {entry.sourceEventId}</span>
-            </div>
-          )) : <EmptyState label="你们之间还没有形成可追溯的共同经历。" />}
-        </section>
-      )}
-
-      {!isPlayer && (
-        <section aria-label="已知线索">
-          <div className="flex items-center justify-between border-b border-hairline pb-2">
-            <span className="text-[10px] font-bold tracking-[0.14em] text-gold">已知线索</span>
-            <span className="text-[9px] text-parchment-faint">不是读心结果</span>
-          </div>
-          {dossier.memories.length ? dossier.memories.slice(-5).reverse().map((memory) => (
-            <div key={memory.id} className="border-b border-hairline/60 py-2.5 last:border-0">
-              <p className="font-serif text-[11px] leading-relaxed text-parchment-dim">{memory.event}</p>
-              <span className="text-[9px] text-parchment-faint">第 {memory.turn} 回合 · 可见经历</span>
-            </div>
-          )) : <EmptyState label="尚无可核对的线索。可直接在中央输入交谈、观察、打听或写信。" />}
+          {latestSharedEvidence ? (
+            <>
+              <div key={latestSharedEvidence.id} className="border-l border-gold-deep/50 py-1 pl-3 mt-2">
+                <p className="font-serif text-[11px] leading-relaxed text-parchment-dim">{latestSharedEvidence.summary}</p>
+                <span className="text-[9px] text-parchment-faint">第 {latestSharedEvidence.turn} 回合 · 依据 {latestSharedEvidence.sourceEventId}</span>
+              </div>
+              {remainingSharedEvidence > 0 && (
+                <p className="mt-2 font-serif text-[10px] text-parchment-faint">另有 {remainingSharedEvidence} 条共同经历，见“关系”页。</p>
+              )}
+            </>
+          ) : <EmptyState label="你们之间还没有形成可追溯的共同经历。" />}
         </section>
       )}
     </div>

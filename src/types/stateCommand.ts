@@ -4,6 +4,7 @@ import type { CharacterStateCommand } from '../features/characters/characterComm
 import type { ItemPlacement, ItemStateCommand } from '../features/items/types';
 import type { TravelStateCommand } from '../features/map/travel/types';
 import type { RoleplayStateCommand } from '../features/roleplay/types';
+import type { HealthStateCommand } from '../features/health/types';
 
 export type StateCommand =
   | { type: 'INJURE_ZONE'; zone: BodyZoneKey; level: WoundLevel; woundText: string; reason?: string; damageTags?: string[] }
@@ -20,8 +21,9 @@ export type StateCommand =
   | { type: 'ADD_TRAIT'; trait: string; growthChoiceId?: string; growthOptionId?: string }
   | { type: 'CHANGE_LOCATION'; locationId: string; sceneLocation?: string }
   | { type: 'CHANGE_TITLE'; title: string }
-  | { type: 'ADVANCE_TIME'; days?: number; months?: number; years?: number; season?: string; reason?: string }
+  | { type: 'ADVANCE_TIME'; minutes?: number; hours?: number; days?: number; months?: number; years?: number; season?: string; reason?: string }
   | { type: 'SET_DATE'; year?: number; month?: number; day?: number; season?: string; reason?: string }
+  | HealthStateCommand
   | ItemStateCommand
   | CharacterStateCommand
   | RoleplayStateCommand

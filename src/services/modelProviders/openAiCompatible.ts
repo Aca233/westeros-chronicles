@@ -1,5 +1,5 @@
 import type { ModelCompletionRequest, ModelProviderAdapter } from './types';
-import { normalizeModelOutput, responseError } from './types';
+import { normalizeModelOutput, payloadError, responseError } from './types';
 
 function endpoint(baseUrl: string, path: string): string {
   return `${baseUrl.replace(/\/+$/, '')}${path}`;
@@ -24,6 +24,16 @@ function coerceText(value: unknown): string {
 
 function reasoningOf(delta: Record<string, unknown>): string {
   return coerceText(delta.reasoning_content ?? delta.reasoning ?? delta.thought ?? delta.thinking);
+}
+
+function completionFromPayload(payload: any, status: number): string {
+  const embeddedError = payloadError(payload, 'API 接口错误', status);
+  if (embeddedError) throw embeddedError;
+  const message = payload?.choices?.[0]?.message;
+  return normalizeModelOutput(
+    reasoningOf((message ?? {}) as Record<string, unknown>),
+    coerceText(message?.content),
+  );
 }
 
 function appendDelta(payload: any, state: { reasoning: string; content: string }): void {
@@ -83,13 +93,16 @@ export const openAiCompatibleAdapter: ModelProviderAdapter = {
       signal: request.signal,
     });
     if (!response.ok) throw await responseError(response, 'API 接口错误');
-    if (request.stream) return readSse(response, request.onChunk);
-    const payload = await response.json();
-    const message = payload?.choices?.[0]?.message;
-    return normalizeModelOutput(
-      reasoningOf((message ?? {}) as Record<string, unknown>),
-      coerceText(message?.content),
-    );
+    if (request.stream) {
+      const contentType = response.headers.get('content-type')?.toLowerCase() ?? '';
+      // 部分 OpenAI 兼容中转即使请求了 stream，也会在上游失败时返回
+      // HTTP 200 + application/json + { error: ... }。不能把这种响应当成空 SSE。
+      if (contentType.includes('application/json')) {
+        return completionFromPayload(await response.json(), response.status);
+      }
+      return readSse(response, request.onChunk);
+    }
+    return completionFromPayload(await response.json(), response.status);
   },
   async listModels(config, signal) {
     const response = await fetch(endpoint(config.baseUrl, '/models'), {

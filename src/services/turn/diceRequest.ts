@@ -2,6 +2,7 @@ import type { LordAttributes } from '../../domain/character';
 import type { TraitCheckDomain } from '../traitEffectEngine';
 import type { StateCommand } from '../../types/game';
 import { stripEmoji } from '../textSanitizer.ts';
+import { normalizeActionPhases, type ActionPhaseDraft } from '../../features/time/gameClock';
 
 export interface DiceRequest {
   roll: boolean;
@@ -140,6 +141,7 @@ export interface ParsedDiceResolution {
   failureWorldIntents: unknown[];
   /** roll: true 时的部分成果世界意图 */
   partialWorldIntents: unknown[];
+  actionPhases: ActionPhaseDraft[];
 }
 
 interface ResolutionOutcomeV2 {
@@ -151,6 +153,7 @@ interface ResolutionEnvelopeV2 {
   schemaVersion: 2;
   resolution: string;
   diceRequest: unknown;
+  actionPhases?: ActionPhaseDraft[];
   outcomes: {
     deterministic?: ResolutionOutcomeV2;
     strongSuccess?: ResolutionOutcomeV2;
@@ -161,7 +164,7 @@ interface ResolutionEnvelopeV2 {
 }
 
 const ALLOWED_STATE_COMMAND_TYPES = new Set([
-  'INJURE_ZONE', 'TREAT_WOUND', 'REPAIR_ITEM', 'BUY_CATALOG_ITEM', 'SELL_ITEM', 'SET_BLEEDING', 'SET_POISONED', 'SET_INFECTED',
+  'APPLY_HIT', 'TREAT_INJURY', 'CONSUME_SURVIVAL', 'REST', 'REPAIR_ITEM', 'BUY_CATALOG_ITEM', 'SELL_ITEM', 'SET_BLEEDING', 'SET_POISONED', 'SET_INFECTED',
   'MODIFY_GOLD', 'MODIFY_STAT', 'ADD_TRAIT', 'ADVANCE_TIME', 'SET_DATE',
   'ITEM_EQUIP', 'ITEM_UNEQUIP', 'ITEM_TRANSFER', 'ITEM_GIFT', 'ITEM_DISCARD',
   'ITEM_DAMAGE', 'ITEM_SPLIT', 'ITEM_MERGE', 'ITEM_MARK_HEIRLOOM',
@@ -204,6 +207,7 @@ export function parseDiceResolutionOutput(rawText: string): ParsedDiceResolution
       strongSuccessWorldIntents: [],
       failureWorldIntents: [],
       partialWorldIntents: [],
+      actionPhases: [],
     };
   }
 
@@ -225,6 +229,7 @@ export function parseDiceResolutionOutput(rawText: string): ParsedDiceResolution
       : successWorldIntents,
     failureWorldIntents: extractProtocolArray(safe, 'world_intent_failure'),
     partialWorldIntents: extractProtocolArray(safe, 'world_intent_partial'),
+    actionPhases: [],
   };
 }
 
@@ -359,6 +364,12 @@ function parseResolutionEnvelopeV2(text: string): ParsedDiceResolution | undefin
   if (typeof envelope.resolution !== 'string') throw new ResolutionProtocolError('resolution 必须是字符串。');
   if (!envelope.outcomes || typeof envelope.outcomes !== 'object') throw new ResolutionProtocolError('outcomes 必须是对象。');
   const diceRequest = validateDiceRequest(envelope.diceRequest);
+  let actionPhases: ActionPhaseDraft[];
+  try {
+    actionPhases = normalizeActionPhases(envelope.actionPhases);
+  } catch (error) {
+    throw new ResolutionProtocolError(`actionPhases 无效：${error instanceof Error ? error.message : String(error)}`);
+  }
   if (diceRequest.roll) {
     if (envelope.outcomes.deterministic !== undefined) throw new ResolutionProtocolError('需要检定时不得提供 deterministic 结果轨。');
     const strongSuccess = validateOutcome(envelope.outcomes.strongSuccess, 'outcomes.strongSuccess');
@@ -378,6 +389,7 @@ function parseResolutionEnvelopeV2(text: string): ParsedDiceResolution | undefin
       strongSuccessWorldIntents: strongSuccess.worldIntents,
       failureWorldIntents: failure.worldIntents,
       partialWorldIntents: partial.worldIntents,
+      actionPhases,
     };
   }
   if (envelope.outcomes.strongSuccess !== undefined || envelope.outcomes.success !== undefined || envelope.outcomes.partial !== undefined || envelope.outcomes.failure !== undefined) {
@@ -396,6 +408,7 @@ function parseResolutionEnvelopeV2(text: string): ParsedDiceResolution | undefin
     strongSuccessWorldIntents: [],
     failureWorldIntents: [],
     partialWorldIntents: [],
+    actionPhases,
   };
 }
 

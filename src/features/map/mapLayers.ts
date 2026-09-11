@@ -9,7 +9,7 @@ import {
 import type { RegisteredMapIntelType, VisibleMapSubject } from './intelligence.ts'
 import type { PoliticalFeatureState } from './politicalProjection.ts'
 import type { CountyInteractionIndex } from './countyInteraction.ts'
-import { semanticDetailOpacityExpression, type SemanticZoomState } from './semanticZoom.ts'
+import { semanticDetailOpacity, type SemanticZoomState } from './semanticZoom.ts'
 import { aggregateAssetPoints, aggregateCharacterPoints, type SemanticSubjectAggregate } from './semanticAggregation.ts'
 import type {
   MapBounds,
@@ -194,9 +194,10 @@ export function addDynamicMapSubjectLayers(map: MapLibreMap): void {
   if (!map.getSource(ASSET_POINT_SOURCE)) map.addSource(ASSET_POINT_SOURCE, { type: 'geojson', data: empty })
   if (!map.getSource(CHARACTER_AGGREGATE_SOURCE)) map.addSource(CHARACTER_AGGREGATE_SOURCE, { type: 'geojson', data: empty })
   if (!map.getSource(ASSET_AGGREGATE_SOURCE)) map.addSource(ASSET_AGGREGATE_SOURCE, { type: 'geojson', data: empty })
-  const aggregateOpacity: ExpressionSpecification = ['-', 1, semanticDetailOpacityExpression]
+  const aggregateOpacity = semanticDetailOpacity(1, true)
   if (!map.getLayer(CHARACTER_AGGREGATE_LAYER)) map.addLayer({
     id: CHARACTER_AGGREGATE_LAYER,
+    maxzoom: 4.4,
     type: 'circle',
     source: CHARACTER_AGGREGATE_SOURCE,
     layout: { visibility: 'none' },
@@ -206,10 +207,12 @@ export function addDynamicMapSubjectLayers(map: MapLibreMap): void {
       'circle-stroke-color': '#302516',
       'circle-stroke-width': 2,
       'circle-opacity': aggregateOpacity,
+      'circle-stroke-opacity': aggregateOpacity,
     },
   })
   if (!map.getLayer(CHARACTER_AGGREGATE_COUNT_LAYER)) map.addLayer({
     id: CHARACTER_AGGREGATE_COUNT_LAYER,
+    maxzoom: 4.4,
     type: 'symbol',
     source: CHARACTER_AGGREGATE_SOURCE,
     layout: {
@@ -222,6 +225,7 @@ export function addDynamicMapSubjectLayers(map: MapLibreMap): void {
   })
   if (!map.getLayer(ASSET_AGGREGATE_LAYER)) map.addLayer({
     id: ASSET_AGGREGATE_LAYER,
+    maxzoom: 4.4,
     type: 'circle',
     source: ASSET_AGGREGATE_SOURCE,
     layout: { visibility: 'none' },
@@ -231,10 +235,12 @@ export function addDynamicMapSubjectLayers(map: MapLibreMap): void {
       'circle-stroke-color': '#1e3034',
       'circle-stroke-width': 2,
       'circle-opacity': aggregateOpacity,
+      'circle-stroke-opacity': aggregateOpacity,
     },
   })
   if (!map.getLayer(ASSET_AGGREGATE_COUNT_LAYER)) map.addLayer({
     id: ASSET_AGGREGATE_COUNT_LAYER,
+    maxzoom: 4.4,
     type: 'symbol',
     source: ASSET_AGGREGATE_SOURCE,
     layout: {
@@ -247,6 +253,7 @@ export function addDynamicMapSubjectLayers(map: MapLibreMap): void {
   })
   if (!map.getLayer(CHARACTER_POINT_LAYER)) map.addLayer({
     id: CHARACTER_POINT_LAYER,
+    minzoom: 4.1,
     type: 'circle',
     source: CHARACTER_POINT_SOURCE,
     layout: { visibility: 'none' },
@@ -255,11 +262,13 @@ export function addDynamicMapSubjectLayers(map: MapLibreMap): void {
       'circle-color': '#d8c38b',
       'circle-stroke-color': '#302516',
       'circle-stroke-width': 2,
-      'circle-opacity': ['*', 0.96, semanticDetailOpacityExpression],
+      'circle-opacity': semanticDetailOpacity(0.96),
+      'circle-stroke-opacity': semanticDetailOpacity(),
     },
   })
   if (!map.getLayer(ASSET_POINT_LAYER)) map.addLayer({
     id: ASSET_POINT_LAYER,
+    minzoom: 4.1,
     type: 'circle',
     source: ASSET_POINT_SOURCE,
     layout: { visibility: 'none' },
@@ -268,7 +277,8 @@ export function addDynamicMapSubjectLayers(map: MapLibreMap): void {
       'circle-color': '#8db8c4',
       'circle-stroke-color': '#1e3034',
       'circle-stroke-width': 2,
-      'circle-opacity': ['*', 0.94, semanticDetailOpacityExpression],
+      'circle-opacity': semanticDetailOpacity(0.94),
+      'circle-stroke-opacity': semanticDetailOpacity(),
     },
   })
 }
@@ -306,7 +316,7 @@ export function syncDynamicMapSubjects(
   semanticContext?: SemanticSubjectContext,
   markerPoints?: { characters: readonly MapCharacterPoint[]; assets: readonly MapAssetPoint[] },
 ): void {
-  if (!map.isStyleLoaded()) return
+  if (!map.getSource('agot-vector')) return
   addDynamicMapSubjectLayers(map)
   const zoom = semanticContext?.zoomState.zoom
   const sendsAggregates = zoom !== undefined && zoom <= 4.4
@@ -355,7 +365,8 @@ export function applyMapPresentation(
   setVisible([JOURNEY_ROUTE_SOURCE, JOURNEY_PROGRESS_SOURCE, JOURNEY_POSITION_SOURCE], hasRoute)
   for (const rank of ['hegemon', 'empire', 'kingdom', 'duchy', 'county'] as const) {
     setVisible([`agot-${rank}-boundaries-casing`, `agot-${rank}-boundaries`], true)
-    setVisible([`agot-${rank}-labels`], rank === primaryRank)
+    // Native zoom ranges select the rank without changing layout every zoom frame.
+    setVisible([`agot-${rank}-labels`], true)
   }
   const surfacePaint = presentation.politicalSurface
     ? { saturation: -0.12, brightness: 0.9 }
@@ -373,7 +384,7 @@ function countyLocationIconId(locationId: string, type: keyof typeof GENERIC_COU
     : `agot-county-location-${type}`
 }
 
-export async function loadCountyLocationIcons(map: MapLibreMap): Promise<void> {
+export async function loadCountyLocationIcons(map: MapLibreMap, isCancelled: () => boolean = () => false): Promise<void> {
   const definitions = [
     ...Object.entries(GENERIC_COUNTY_LOCATION_ICONS)
       .map(([type, path]) => [`agot-county-location-${type}`, path] as const),
@@ -383,6 +394,7 @@ export async function loadCountyLocationIcons(map: MapLibreMap): Promise<void> {
   await Promise.all(definitions.map(async ([imageId, path]) => {
     if (map.hasImage(imageId)) return
     const image = await map.loadImage(path)
+    if (isCancelled()) return
     if (!map.hasImage(imageId)) map.addImage(imageId, image.data)
   }))
 }
@@ -426,6 +438,8 @@ export function addSelectedCountyLocationLayers(map: MapLibreMap): void {
 }
 
 
+const countyLocationSelections = new WeakMap<object, { index: CountyInteractionIndex; countyId: string | null }>()
+
 export function syncSelectedCountyLocations(
   map: MapLibreMap,
   manifest: MapManifest,
@@ -435,6 +449,9 @@ export function syncSelectedCountyLocations(
   addSelectedCountyLocationLayers(map)
   const source = map.getSource(SELECTED_COUNTY_LOCATION_SOURCE) as GeoJSONSource | undefined
   if (!source) return
+  const previous = countyLocationSelections.get(source)
+  if (previous?.index === index && previous.countyId === selectedCountyId) return
+  countyLocationSelections.set(source, { index, countyId: selectedCountyId })
   const selected = selectedCountyId ? index.locationsForCounty(selectedCountyId) : undefined
   source.setData({
     type: 'FeatureCollection',

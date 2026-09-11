@@ -18,6 +18,13 @@ export const DESIGN_POINT_LIMIT = 400;
 export const MAX_PERSONALITY_TRAITS = 3;
 export const MIN_CHARACTER_TRAIT_COUNT = 100;
 
+/** 临时受伤等级仅作为旧档/展示摘要；真实伤势由 CharacterHealthState.injuries 统一结算。 */
+export const DERIVED_INJURY_TRAIT_IDS = new Set(['wounded_1', 'wounded_2', 'wounded_3'] as const);
+
+export function isDerivedInjuryTraitId(traitId: string): boolean {
+  return DERIVED_INJURY_TRAIT_IDS.has(traitId as 'wounded_1' | 'wounded_2' | 'wounded_3');
+}
+
 export interface CharacterTraitDefinition extends BaseCharacterTraitDefinition {
   rules: TraitRuleSet;
 }
@@ -225,12 +232,12 @@ const CHARACTER_TRAIT_DEFINITIONS: readonly BaseCharacterTraitDefinition[] = [
     description: '远超常人的高大身躯兼具力量与负担。', modifiers: { prowess: 6, diplomacy: -1 } },
   { id: 'dwarf', name: '侏儒', category: 'congenital', cost: -20, icon: 'trait-dwarf', exclusiveGroup: 'stature',
     description: '先天身材矮小，但并不妨碍才智。', modifiers: { prowess: -3, learning: 1 } },
-  { id: 'wounded_1', name: '受伤', category: 'health', cost: -15, icon: 'trait-wounded-1', exclusiveGroup: 'wound',
-    description: '尚未痊愈的轻伤影响行动。', modifiers: { prowess: -1 } },
-  { id: 'wounded_2', name: '身受重伤', category: 'health', cost: -35, icon: 'trait-wounded-2', exclusiveGroup: 'wound',
-    description: '严重创伤持续削弱身体。', modifiers: { prowess: -4, martial: -1 } },
-  { id: 'wounded_3', name: '严重撕裂', category: 'health', cost: -60, icon: 'trait-wounded-3', exclusiveGroup: 'wound',
-    description: '濒死伤势使战斗能力大幅下降。', modifiers: { prowess: -7, martial: -2 } },
+  { id: 'wounded_1', name: '受伤', category: 'health', cost: 0, icon: 'trait-wounded-1', exclusiveGroup: 'wound',
+    description: '当前存在尚未痊愈的轻伤；该标签由身体伤势系统派生，不独立修改能力。', modifiers: {} },
+  { id: 'wounded_2', name: '身受重伤', category: 'health', cost: 0, icon: 'trait-wounded-2', exclusiveGroup: 'wound',
+    description: '当前存在重伤；该标签由身体伤势系统派生，不独立修改能力。', modifiers: {} },
+  { id: 'wounded_3', name: '严重撕裂', category: 'health', cost: 0, icon: 'trait-wounded-3', exclusiveGroup: 'wound',
+    description: '当前存在危重创伤；该标签由身体伤势系统派生，不独立修改能力。', modifiers: {} },
   { id: 'ill', name: '患病', category: 'health', cost: -15, icon: 'trait-ill', exclusiveGroup: 'illness',
     description: '常见疾病带来发热和虚弱。', modifiers: { prowess: -2 } },
   { id: 'infirm', name: '体弱多病', category: 'health', cost: -40, icon: 'trait-infirm', exclusiveGroup: 'frailty',
@@ -250,17 +257,17 @@ const CHARACTER_TRAIT_DEFINITIONS: readonly BaseCharacterTraitDefinition[] = [
   { id: 'great_pox', name: '梅毒', category: 'health', cost: -55, icon: 'trait-great-pox', exclusiveGroup: 'illness',
     description: '顽固疾病损伤身体与神志。', modifiers: { diplomacy: -2, learning: -2, prowess: -3 } },
   { id: 'disfigured', name: '毁容', category: 'health', cost: -25, icon: 'trait-disfigured', exclusiveGroup: 'maiming',
-    description: '严重伤痕永久改变了面容。', modifiers: { diplomacy: -3, prowess: 1 } },
+    description: '严重伤痕永久改变了面容。', modifiers: { diplomacy: -3 } },
   { id: 'blind', name: '失明', category: 'health', cost: -45, icon: 'trait-blind', exclusiveGroup: 'maiming',
-    description: '失去视力后只能依靠其他感官。', modifiers: { prowess: -6, learning: 1 } },
+    description: '失去视力后只能依靠其他感官；视觉限制由身体能力系统结算。', modifiers: { learning: 1 } },
   { id: 'one_eyed', name: '独眼', category: 'health', cost: -15, icon: 'trait-one-eyed', exclusiveGroup: 'maiming',
-    description: '失去一只眼睛影响观察与距离判断。', modifiers: { prowess: -2 } },
+    description: '失去一只眼睛影响观察与距离判断；视觉限制由身体能力系统结算。', modifiers: {} },
   { id: 'one_legged', name: '独腿', category: 'health', cost: -30, icon: 'trait-one-legged', exclusiveGroup: 'maiming',
-    description: '失去一条腿严重限制移动。', modifiers: { prowess: -5 } },
+    description: '失去一条腿严重限制移动；移动限制由身体能力系统结算。', modifiers: {} },
   { id: 'maimed', name: '残废', category: 'health', cost: -50, icon: 'trait-maimed', exclusiveGroup: 'maiming',
-    description: '惨烈创伤留下永久残疾。', modifiers: { martial: -2, prowess: -6 } },
+    description: '惨烈创伤留下永久残疾；物理限制由身体能力系统结算。', modifiers: {} },
   { id: 'scarred', name: '伤疤', category: 'health', cost: 5, icon: 'trait-scarred',
-    description: '显眼的旧伤证明曾经幸存。', modifiers: { prowess: 1 } },
+    description: '显眼的旧伤证明曾经幸存。', modifiers: {} },
   { id: 'adulterer', name: '通奸者', category: 'fame', cost: -10, icon: 'trait-adulterer', exclusiveGroup: 'sexual_reputation',
     description: '被世人认定违背婚姻誓言。', modifiers: { diplomacy: -1 } },
   { id: 'fornicator', name: '私通者', category: 'fame', cost: -5, icon: 'trait-fornicator', exclusiveGroup: 'sexual_reputation',
@@ -296,11 +303,11 @@ const CHARACTER_TRAIT_DEFINITIONS: readonly BaseCharacterTraitDefinition[] = [
   { id: 'uncouth', name: '邋遢', category: 'fame', cost: -10, icon: 'trait-agot-uncouth', incompatibleTraitIds: ['fashionable'],
     description: '个人形象低于常人标准，却对此毫不在意。', modifiers: { diplomacy: -1 } },
   { id: 'one_handed', name: '独臂', category: 'health', cost: -15, icon: 'trait-agot-one-handed',
-    description: '只有一只手。', modifiers: { prowess: -15 } },
+    description: '只有一只手；双手动作限制由身体能力系统结算。', modifiers: {} },
   { id: 'scurvy', name: '坏血病', category: 'health', cost: -10, icon: 'trait-agot-scurvy',
     description: '长期饮食不当导致身体虚弱与出血。', modifiers: { diplomacy: -1, martial: -1, stewardship: -1, intrigue: -1, learning: -2, prowess: -20 } },
   { id: 'crippled', name: '残疾', category: 'health', cost: -40, icon: 'trait-agot-crippled',
-    description: '已经瘫痪，大部分身体部位无法动弹。', modifiers: { diplomacy: -1, martial: -3, prowess: -30 } },
+    description: '已经瘫痪，大部分身体部位无法动弹；物理限制由身体能力系统结算。', modifiers: { diplomacy: -1 } },
   { id: 'greyscale', name: '灰鳞病', category: 'health', cost: -30, icon: 'trait-agot-greyscale',
     description: '大面积皮肤龟裂剥落。', modifiers: { diplomacy: -5, prowess: -5 } },
   { id: 'burned', name: '烧伤', category: 'health', cost: 0, icon: 'trait-agot-burned',
@@ -308,7 +315,7 @@ const CHARACTER_TRAIT_DEFINITIONS: readonly BaseCharacterTraitDefinition[] = [
   { id: 'mute', name: '失声者', category: 'health', cost: -15, icon: 'trait-agot-mute',
     description: '无法用声音表述任何想法。', modifiers: { diplomacy: -5, intrigue: 2 } },
   { id: 'half_blind', name: '半失明', category: 'health', cost: 10, icon: 'trait-agot-half-blind', incompatibleTraitIds: ['one_eyed', 'blind'],
-    description: '一只眼睛失明了。', modifiers: { prowess: -2 } },
+    description: '一只眼睛失明了；视觉限制由身体能力系统结算。', modifiers: {} },
   { id: 'the_mark', name: '记号', category: 'congenital', cost: -5, icon: 'trait-agot-the-mark',
     description: '双手像青蛙一样有蹼。', modifiers: {} },
   { id: 'dragon_dreams', name: '龙梦', category: 'fame', cost: 100, icon: 'trait-agot-dragon-dreams',
@@ -345,7 +352,9 @@ export const CHARACTER_TRAITS: readonly CharacterTraitDefinition[] = CHARACTER_T
 
 export function aggregateSelectedTraitEffects(selectedTraitIds: readonly string[]): AggregatedTraitEffects {
   return aggregateTraitRuleEffects(
-    CHARACTER_TRAITS.filter((trait) => selectedTraitIds.includes(trait.id)).map((trait) => trait.rules)
+    CHARACTER_TRAITS
+      .filter((trait) => selectedTraitIds.includes(trait.id) && !isDerivedInjuryTraitId(trait.id))
+      .map((trait) => trait.rules)
   );
 }
 
@@ -354,7 +363,7 @@ export function getTraitCheckContributions(
   domain: TraitCheckDomain
 ): Array<{ id: string; name: string; value: number }> {
   return CHARACTER_TRAITS
-    .filter((trait) => selectedTraitIds.includes(trait.id) && trait.rules.checkModifiers?.[domain])
+    .filter((trait) => selectedTraitIds.includes(trait.id) && !isDerivedInjuryTraitId(trait.id) && trait.rules.checkModifiers?.[domain])
     .map((trait) => ({ id: trait.id, name: trait.name, value: trait.rules.checkModifiers?.[domain] ?? 0 }));
 }
 
@@ -363,7 +372,7 @@ export function getTraitMethodEdges(
   domain: TraitCheckDomain,
 ): Array<TraitMethodEdge & { traitId: string; traitName: string }> {
   return CHARACTER_TRAITS.flatMap((trait) => {
-    if (!selectedTraitIds.includes(trait.id)) return [];
+    if (!selectedTraitIds.includes(trait.id) || isDerivedInjuryTraitId(trait.id)) return [];
     return (trait.rules.methodEdges ?? [])
       .filter((edge) => edge.domains.includes(domain))
       .map((edge) => ({ ...edge, traitId: trait.id, traitName: trait.name }));
@@ -440,7 +449,7 @@ export function calculateFinalAttributes(
 ): LordAttributes {
   const result = { ...baseAttributes };
   for (const trait of CHARACTER_TRAITS) {
-    if (!selectedTraitIds.includes(trait.id)) continue;
+    if (!selectedTraitIds.includes(trait.id) || isDerivedInjuryTraitId(trait.id)) continue;
     for (const [key, modifier] of Object.entries(trait.modifiers) as Array<[keyof LordAttributes, number]>) {
       result[key] = Math.max(0, Math.min(100, result[key] + modifier));
     }
@@ -457,7 +466,7 @@ export function calculateDesignPointUsage(
   const attributeCost = (Object.keys(houseBaseAttributes) as Array<keyof LordAttributes>)
     .reduce((total, key) => total + (allocatedAttributes[key] - houseBaseAttributes[key]) * 10, 0);
   const traitCost = CHARACTER_TRAITS
-    .filter((trait) => selectedTraitIds.includes(trait.id))
+    .filter((trait) => selectedTraitIds.includes(trait.id) && !isDerivedInjuryTraitId(trait.id))
     .reduce((total, trait) => total + trait.cost, 0);
   const ageCost = age <= 30 ? (30 - age) * 2 : -Math.min(30, Math.floor((age - 30) / 2));
   return attributeCost + traitCost + ageCost;

@@ -40,6 +40,8 @@ import { buildModelRequestTrace } from '../features/debug/modelRequestTrace';
 import { createActiveScene, synchronizeActiveScene } from '../features/world/sceneState';
 import { createRoleplayState, isRoleplayStateCommand, settleRoleplayCommands } from '../features/roleplay/state';
 import { buildAttemptIdentity, findUnchangedFailedAttempt } from '../services/attemptPolicy';
+import { createHealthyCharacterHealthState, migrateLegacyBodyToHealth, projectLegacyBodyFromHealth } from '../features/health/state';
+import { formatMinuteOfDay } from '../features/time/gameClock';
 
 export interface CharacterTurnContext extends CharacterCommandBatchBaseContext { promptContext?: string; }
 
@@ -144,11 +146,17 @@ function formatWorldDate(date: WorldDate): string {
 
 function createInitialGameState(): GameState {
   const startDate = { ...INITIAL_WORLD_DATE };
+  const startMinute = 8 * 60;
+  const runId = createWorldRunId();
+  const playerId = `save:${runId}:player` as CharacterId;
+  const initialHealth = createHealthyCharacterHealthState(playerId, { date: startDate, minuteOfDay: startMinute });
   return {
     saveFormatVersion: ITEM_SAVE_FORMAT_VERSION,
     currentYear: startDate.year,
     currentMonth: startDate.month,
     currentDay: startDate.day,
+    currentMinute: startMinute,
+    currentTimePrecision: 'exact',
     currentSeason: '暮春',
     turnCount: 1,
     lord: {
@@ -160,10 +168,11 @@ function createInitialGameState(): GameState {
       attributes: { diplomacy: 0, martial: 0, stewardship: 0, intrigue: 0, learning: 0, prowess: 0 }, traits: [], traitIds: [],
     },
     turns: [],
-    worldCharacters: { runId: createWorldRunId(), datasetHash: AGOT_DATASET_HASH, revision: 0 },
+    worldCharacters: { runId, datasetHash: AGOT_DATASET_HASH, revision: 0 },
     worldArtifacts: createInitialAgotArtifactWorldState(),
     worldHistory: createInitialWorldHistory(startDate),
     worldRuntime: createWorldRuntimeState(),
+    health: { schemaVersion: 1, characters: { [playerId]: initialHealth } },
     activeScene: createActiveScene({ locationId: 'b_unknown_westeros' }, 1),
     roleplay: createRoleplayState(),
     worldFlags: {},
@@ -318,18 +327,26 @@ export const useGameStore = create<GameStore>((set, get) => ({
   // 回到主菜单;叙事生成中禁止离开,避免半途状态与界面脱钩
   enterMenu: (view) => {
     if (get().isStreaming) return false;
+    const opensCreator = view === 'new';
     set({
       activeScreen: 'menu',
-      menuView: view ?? 'title',
+      menuView: opensCreator ? 'title' : (view ?? 'title'),
       isSettingsOpen: false,
-      isCreatorOpen: false,
+      isCreatorOpen: opensCreator,
+      ...(opensCreator ? { creatorInitialTab: 'custom' as const } : {}),
       isTvTimelineOpen: false,
       slotActionError: null,
     });
     void get().refreshSaveSlots();
     return true;
   },
-  setMenuView: (view) => set({ menuView: view, slotActionError: null }),
+  setMenuView: (view) => {
+    if (view === 'new') {
+      set({ menuView: 'title', isCreatorOpen: true, creatorInitialTab: 'custom', slotActionError: null });
+      return;
+    }
+    set({ menuView: view, slotActionError: null });
+  },
   deleteSlot: async (slotId) => {
     try {
       await deleteSaveSlot(slotId);
@@ -380,6 +397,16 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const startSeason = stripEmoji(game.season);
     const safeLord = migrateLordIdentityData(migrateLordTraitData(stripEmojiDeep(game.lord)));
     const opening = game.opening;
+    const runId = game.runId ?? createWorldRunId();
+    const playerId = (safeLord.canonicalCharacterId ?? `save:${runId}:player`) as CharacterId;
+    const startMinute = game.startMinute ?? 8 * 60;
+    const playerHealth = migrateLegacyBodyToHealth(
+      playerId,
+      safeLord.body,
+      { date: startDate, minuteOfDay: startMinute },
+      { precision: 'exact', traitIds: safeLord.traitIds },
+    );
+    safeLord.body = projectLegacyBodyFromHealth(playerHealth);
     safeLord.attributes = normalizeCk3Attributes(safeLord.attributes);
     if (safeLord.baseAttributes) safeLord.baseAttributes = normalizeCk3Attributes(safeLord.baseAttributes);
     const newTurn: StoryTurn = {
@@ -398,19 +425,25 @@ export const useGameStore = create<GameStore>((set, get) => ({
       currentYear: startDate.year,
       currentMonth: startDate.month,
       currentDay: startDate.day,
+      currentMinute: startMinute,
+      currentTimePrecision: 'exact',
       currentSeason: startSeason,
       turnCount: 1,
       lord: safeLord,
       turns: [newTurn],
-      worldCharacters: { runId: createWorldRunId(), datasetHash: game.characterDatasetHash || AGOT_DATASET_HASH, revision: 0 },
+      worldCharacters: { runId, datasetHash: game.characterDatasetHash || AGOT_DATASET_HASH, revision: 0 },
       worldArtifacts: structuredClone(game.worldArtifacts),
       worldHistory: createInitialWorldHistory(startDate),
       worldRuntime: createWorldRuntimeState({
         livingWorld: createRiverlandsCrisisLivingWorld(startDate),
         initialEvents: createRiverlandsCrisisInitialEvents(startDate),
       }),
-      activeScene: createActiveScene(safeLord.location, 1),
-      roleplay: createRoleplayState(),
+      health: { schemaVersion: 1, characters: { [playerId]: playerHealth } },
+      activeScene: game.initialScene ? structuredClone(game.initialScene) : createActiveScene(safeLord.location, 1),
+      roleplay: game.initialRoleplay ? structuredClone(game.initialRoleplay) : createRoleplayState(),
+      ...(game.characterCreationDraft ? { characterCreationDraft: structuredClone(game.characterCreationDraft) } : {}),
+      ...(game.customCharacters ? { customCharacters: structuredClone(game.customCharacters) } : {}),
+      ...(game.openingFacts ? { openingFacts: structuredClone(game.openingFacts) } : {}),
       worldFlags: {},
       isGameOver: false,
     };
@@ -616,6 +649,9 @@ export const useGameStore = create<GameStore>((set, get) => ({
                 attemptKey: attemptIdentity.attemptKey,
                 conditionKey: attemptIdentity.conditionKey,
               },
+              gameState.lord.canonicalCharacterId
+                ? gameState.health.characters[gameState.lord.canonicalCharacterId]
+                : undefined,
             );
         set({
           activeDiceCheck: diceCheck,
@@ -717,10 +753,13 @@ export const useGameStore = create<GameStore>((set, get) => ({
         currentYear: settled.nextDate.year,
         currentMonth: settled.nextDate.month,
         currentDay: settled.nextDate.day,
+        currentMinute: settled.nextMinute,
+        currentTimePrecision: settled.nextTimePrecision,
         currentSeason: settled.nextSeason,
         lord: settled.updatedLord,
         worldHistory: settled.worldHistory,
         worldRuntime: settled.worldRuntime,
+        health: settled.health,
         activeJourney: settled.activeJourney,
         roleplay: roleplayResult.state,
       };
@@ -791,6 +830,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
         currentYear: settled.nextDate.year,
         currentMonth: settled.nextDate.month,
         currentDay: settled.nextDate.day,
+        currentMinute: settled.nextMinute,
+        currentTimePrecision: settled.nextTimePrecision,
         currentSeason: settled.nextSeason,
         turnCount: nextTurnNumber,
         lord: settled.updatedLord,
@@ -798,6 +839,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
         worldCharacters: { ...currentWorldRef, revision: currentWorldRef.revision + 1 },
         worldHistory: settled.worldHistory,
         worldRuntime: settled.worldRuntime,
+        health: settled.health,
         activeScene: synchronizeActiveScene(
           gameState.activeScene,
           settled.updatedLord.location,
@@ -836,7 +878,13 @@ export const useGameStore = create<GameStore>((set, get) => ({
         } : {}),
       });
     } catch (err) {
-      const cancelled = turnController.signal.aborted || (err instanceof DOMException && err.name === 'AbortError');
+      // 只有本回合控制器真的被玩家取消时才视为取消。fetch/网关也可能抛 AbortError，不能静默吞掉。
+      const cancelled = turnController.signal.aborted;
+      const failedStage = get().turnStage;
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      const stageLabel = failedStage === 'resolving' ? '解析行动'
+        : failedStage === 'narrating' ? '生成正文'
+          : '结算世界';
       const previous = get().lastModelRequestTrace;
       if (previous && get().debugEnabled) {
         set({
@@ -855,7 +903,9 @@ export const useGameStore = create<GameStore>((set, get) => ({
         isStreaming: false,
         turnStage: 'idle',
         streamingText: '',
-        ...(cancelled ? { changesLog: ['当前回合已取消，世界状态未改变'] } : {}),
+        ...(cancelled
+          ? { changesLog: ['当前回合已取消，世界状态未改变'] }
+          : { changesLog: [`生成失败（${stageLabel}）：${errorMessage}`] }),
       });
     } finally {
       if (currentTurnController === turnController) currentTurnController = null;

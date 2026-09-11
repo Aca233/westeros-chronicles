@@ -38,16 +38,13 @@ export function landmarkLightingProfile(
 ): LandmarkLightingProfile {
   const low = (hardware.hardwareConcurrency ?? Infinity) <= 4
     || (hardware.deviceMemory !== undefined && hardware.deviceMemory < 4)
-  const high = !low
-    && hardware.hardwareConcurrency !== undefined
-    && hardware.hardwareConcurrency >= 8
-    && hardware.deviceMemory !== undefined
-    && hardware.deviceMemory >= 8
-  const quality: LandmarkLightingQuality = low ? 'low' : high ? 'high' : 'medium'
+  // CPU count and system RAM do not identify GPU capability. Default to one
+  // modest shadow map; retain the sunlight and contact shadows on every tier.
+  const quality: LandmarkLightingQuality = low ? 'low' : 'medium'
   return {
     quality,
-    shadowMapSize: quality === 'high' ? 2048 : quality === 'medium' ? 1024 : 0,
-    realtimeShadowLimit: quality === 'high' ? 2 : quality === 'medium' ? 1 : 0,
+    shadowMapSize: quality === 'medium' ? 1024 : 0,
+    realtimeShadowLimit: quality === 'medium' ? 1 : 0,
     sunColor: 0xffe3c2,
     sunIntensity: 2.45,
     skyColor: 0xc9d7e6,

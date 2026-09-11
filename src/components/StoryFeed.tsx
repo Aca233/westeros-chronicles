@@ -199,6 +199,17 @@ export const StoryFeed: React.FC<StoryFeedProps> = ({
     setShowJump(false);
   };
 
+  useEffect(() => {
+    const handler = () => {
+      window.setTimeout(() => {
+        bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+        setShowJump(false);
+      }, 0);
+    };
+    window.addEventListener('agot:story-jump-latest', handler);
+    return () => window.removeEventListener('agot:story-jump-latest', handler);
+  }, []);
+
   const isEmptyStage = gameState.turns.length === 0 && !isStreaming;
   const eventViewer = useMemo(() => playerWorldEventViewer(gameState), [gameState.lord.canonicalCharacterId, gameState.worldCharacters?.runId]);
   const visibleWorldEvents = useMemo(
@@ -506,6 +517,8 @@ function DiceLedger({ check }: { check: NonNullable<StoryTurn['diceCheck']> }) {
   const equipmentModifierBreakdown = check.equipmentModifierBreakdown;
   const traitModifier = check.traitModifier;
   const traitModifierBreakdown = check.traitModifierBreakdown;
+  const healthModifier = check.healthModifier ?? 0;
+  const healthModifierBreakdown = check.healthModifierBreakdown ?? [];
   const signed = (value: number) => `${value >= 0 ? '+' : ''}${value}`;
   const outcome = check.outcome ?? (check.success ? 'success' : 'failure');
   const failed = outcome === 'failure';
@@ -521,7 +534,7 @@ function DiceLedger({ check }: { check: NonNullable<StoryTurn['diceCheck']> }) {
         {' '}· 出目 {check.roll}
         {' '}能力 {check.effectiveAttribute ?? check.primaryAttributeValue ?? '旧制'} → {signed(check.attributeModifier)}
         {equipmentModifier !== 0 && <> 物品 {signed(equipmentModifier)}</>}
-        {traitModifier !== 0 && <span className="text-gold"> 特质 {signed(traitModifier)}</span>}
+        {traitModifier !== 0 && <span className="text-gold"> 特质 {signed(traitModifier)}</span>}{healthModifier !== 0 && <span className="text-rubric"> 身体 {signed(healthModifier)}</span>}
         {' '}总计 <strong className="text-parchment">{check.total}</strong>
         {' '}·{' '}
         <strong className={`font-serif text-[12px] tracking-[0.3em] ${failed ? 'text-rubric' : 'text-parchment'}`}>
@@ -536,6 +549,11 @@ function DiceLedger({ check }: { check: NonNullable<StoryTurn['diceCheck']> }) {
       {traitModifierBreakdown.length > 0 && (
         <p className="mt-1.5 font-mono text-[9.5px] text-parchment-faint">
           {traitModifierBreakdown.map((item) => `${item.name} ${signed(item.value)}`).join(' · ')}
+        </p>
+      )}
+      {healthModifierBreakdown.length > 0 && (
+        <p className="mt-1.5 font-mono text-[9.5px] text-rubric">
+          {healthModifierBreakdown.map((item) => `身体 · ${item.label} ${signed(item.value)}`).join(' · ')}
         </p>
       )}
       {check.methodReason && (

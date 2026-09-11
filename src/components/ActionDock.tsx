@@ -10,13 +10,16 @@ const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI'];
 export const ActionDock: React.FC = () => {
   const {
     gameState,
+    activeSlotId,
     isStreaming,
     turnStage,
     submitAction,
     cancelCurrentTurn,
   } = useGameStore();
   const [customInput, setCustomInput] = useState('');
-  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [showSuggestions, setShowSuggestions] = useState(true);
+  const autoExpandedTurnRef = useRef<number | null>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const latestTurn = gameState.turns[gameState.turns.length - 1];
   const branches = normalizeBranchOptions(latestTurn?.branches ?? []);
@@ -36,6 +39,13 @@ export const ActionDock: React.FC = () => {
     return () => window.removeEventListener('agot:prefill-action', handler);
   }, [gameState.isGameOver, isStreaming]);
 
+  useEffect(() => {
+    if (branches.length === 0 || isStreaming) return;
+    if (autoExpandedTurnRef.current === gameState.turnCount) return;
+    autoExpandedTurnRef.current = gameState.turnCount;
+    setShowSuggestions(true);
+  }, [branches.length, gameState.turnCount, isStreaming]);
+
   const handleBranchClick = (branchText: string) => {
     if (isStreaming || gameState.isGameOver) return;
     setCustomInput(branchText);
@@ -46,10 +56,37 @@ export const ActionDock: React.FC = () => {
   const handleCustomSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!customInput.trim() || isStreaming || gameState.isGameOver) return;
+    if (!activeSlotId) {
+      const reason = '当前游戏没有绑定到有效存档位。请返回主菜单重新载入当前存档后再执行行动。';
+      console.warn('行动未提交:', reason);
+      setSubmitError(reason);
+      return;
+    }
+    setSubmitError(null);
     const submittedText = customInput.trim();
     const previousTurn = gameState.turnCount;
     await submitAction(submittedText, 'auto');
-    if (useGameStore.getState().gameState.turnCount > previousTurn) setCustomInput('');
+    const stateAfterSubmit = useGameStore.getState();
+    if (stateAfterSubmit.gameState.turnCount > previousTurn) {
+      setCustomInput('');
+      setSubmitError(null);
+      window.dispatchEvent(new CustomEvent('agot:story-jump-latest'));
+    } else if (!stateAfterSubmit.isStreaming) {
+      const failure = stateAfterSubmit.changesLog[0];
+      setSubmitError(
+        failure
+          ? `本次行动没有生成新回合：${failure}`
+          : `本次行动没有生成新回合（仍为回合 ${previousTurn}）。请查看控制台中的“行动提交诊断”。`,
+      );
+      console.error('行动提交诊断:', {
+        previousTurn,
+        currentTurn: stateAfterSubmit.gameState.turnCount,
+        turnStage: stateAfterSubmit.turnStage,
+        isStreaming: stateAfterSubmit.isStreaming,
+        activeSlotId: stateAfterSubmit.activeSlotId,
+        changesLog: stateAfterSubmit.changesLog,
+      });
+    }
   };
 
   if (gameState.isGameOver) {
@@ -78,7 +115,7 @@ export const ActionDock: React.FC = () => {
     <footer className="dock-enter relative z-20 shrink-0 px-5 pb-5 pt-2 md:px-6">
       <div className="mx-auto flex w-full max-w-[42rem] flex-col gap-4">
         <div className="lg:hidden"><PendingConcerns /></div>
-        {/* 建议默认退居幕后，只在玩家需要灵感时展开。 */}
+        {/* 新生成的行动选项默认展开；玩家仍可在当前回合手动收起。 */}
         {branches.length > 0 && !isStreaming && (
           <div className="select-none">
             <button
@@ -119,7 +156,10 @@ export const ActionDock: React.FC = () => {
               id="command-input"
               rows={2}
               value={customInput}
-              onChange={(event) => setCustomInput(stripEmoji(event.target.value))}
+              onChange={(event) => {
+                setCustomInput(stripEmoji(event.target.value));
+                if (submitError) setSubmitError(null);
+              }}
               onKeyDown={(event) => {
                 if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
                   event.preventDefault();
@@ -158,6 +198,11 @@ export const ActionDock: React.FC = () => {
             </button>
           )}
         </form>
+        {submitError && (
+          <p className="font-serif text-[11px] leading-relaxed text-rubric-bright" role="alert">
+            {submitError}
+          </p>
+        )}
       </div>
     </footer>
   );

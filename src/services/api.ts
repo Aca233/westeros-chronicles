@@ -173,19 +173,21 @@ export function generateOfflineDemoResponse(
       dynamicNarrate = '你下意识按向腰侧，却没有让一柄不存在的武器凭空出现。当前可访问物品中没有合适兵器。';
     }
   } else if (/药|草药|包扎|治疗|止血|伤口/i.test(playerInput)) {
-    const medicine = availableItems.find((entry) => entry.definition.category === 'medicine');
-    if (medicine) {
-      const damagedZone = gameState
-        ? (['head', 'torso', 'arms', 'legs'] as const).find((zone) => gameState.lord.body[zone].level !== 'intact')
-        : undefined;
-      if (damagedZone) {
-        stateCommands.push({ type: 'TREAT_WOUND', instanceId: medicine.instance.instanceId, zone: damagedZone });
-        dynamicNarrate = `你取出【${medicine.instance.customName ?? medicine.definition.name}】，清理并包扎创处。物资会实际消耗，伤情至多缓解一级。`;
-      } else {
-        dynamicNarrate = `你取出【${medicine.instance.customName ?? medicine.definition.name}】检查妥当；身上没有需要处理的已记录创伤，因此没有消耗它。`;
-      }
+    const playerId = gameState
+      ? (gameState.lord.canonicalCharacterId ?? `save:${gameState.worldCharacters?.runId ?? 'current'}:player`)
+      : undefined;
+    const injury = playerId
+      ? gameState?.health.characters[playerId]?.injuries.find((entry) => entry.recovery.stage !== 'healed' && entry.recovery.stage !== 'permanent')
+      : undefined;
+    const medicine = availableItems.find((entry) => entry.definition.category === 'medicine'
+      && (entry.definition.tags.includes('bandage') || entry.definition.tags.includes('injury')));
+    if (medicine && injury) {
+      stateCommands.push({ type: 'TREAT_INJURY', injuryId: injury.id, treatment: 'first_aid', supplyInstanceId: medicine.instance.instanceId, environment: 'shelter' });
+      dynamicNarrate = `你取出【${medicine.instance.customName ?? medicine.definition.name}】，针对已记录的具体伤病进行急救。物资只有在规则校验通过后才会消耗；包扎可以控制出血，但不会让伤势立即降级。`;
+    } else if (injury) {
+      dynamicNarrate = '你检查了创处，但当前随身、所在据点和同行车驾中没有适合这项急救的可访问物资；没有物品被消耗。';
     } else {
-      dynamicNarrate = '当前随身行囊、据点和同行车驾中没有可用药物，叙事不会临时创造一份。';
+      dynamicNarrate = '你检查了身体状态；目前没有需要处理的未愈伤病，因此没有消耗医疗物资。';
     }
   } else if (/地图|密信|钥匙|物品/i.test(playerInput)) {
     dynamicNarrate = '你检查了当前可访问物品，没有发现与要求相符的现成实例。若要取得新的文书或钥匙，必须由明确剧情来源使用已登记的目录定义创建，不能由一句含糊描述凭空生成。';
@@ -275,6 +277,7 @@ export async function requestTurnResolutionCompletion(
     return JSON.stringify({
       schemaVersion: 2,
       resolution: '程序离线解析了当前行动，最终事实仍以命令验证结果为准。',
+      actionPhases: [{ kind: 'action', durationMinutes: 15, activity: 'light', reason: '离线规则模式按一次短行动估算耗时' }],
       diceRequest: { roll: false, attribute: 'diplomacy', dc: 12, domain: 'diplomacy', reason: '离线模式直接使用本地规则结算' },
       outcomes: { deterministic: { stateCommands: demo.stateCommands ?? [], worldIntents: [] } },
     });

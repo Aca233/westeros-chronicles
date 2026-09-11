@@ -47,6 +47,7 @@ interface RuntimeCache {
 }
 
 export interface LandmarkRuntimeOptions {
+  signal?: AbortSignal
   manifestLoader?: (signal?: AbortSignal) => Promise<LandmarkModelManifest>
   layerFactory?: (profile: LandmarkLightingProfile) => LandmarkCustomLayer
   cacheFactory?: (options: LandmarkResourceCacheOptions) => RuntimeCache
@@ -126,6 +127,7 @@ class ActiveLandmarkRuntime implements LandmarkRuntime {
   sync(reason: LandmarkSyncReason): void {
     if (this.destroyed) return
     this.reasons.push(reason)
+    if (this.reasons.length > 32) this.reasons.shift()
     const requests = visibleLandmarkRequests(
       this.modelManifest.landmarks,
       runtimeViewportBounds(this.map, this.mapManifest),
@@ -145,6 +147,7 @@ class ActiveLandmarkRuntime implements LandmarkRuntime {
       this.attached.delete(key)
     }
     for (const request of requests) {
+      if (this.attached.has(request.key)) continue
       const task = this.attach(request, generation)
       this.pending.add(task)
       void task.finally(() => this.pending.delete(task))
@@ -205,8 +208,12 @@ export async function createLandmarkRuntime(
   mapManifest: Pick<MapManifest, 'westerosBounds'>,
   options: LandmarkRuntimeOptions = {},
 ): Promise<LandmarkRuntime> {
-  const abort = new AbortController()
-  const modelManifest = await (options.manifestLoader ?? ((signal) => landmarkRepository.loadManifest(signal)))(abort.signal)
+  // The repository promise is shared across map instances; cancel only this
+  // consumer, never another instance's manifest request.
+  const modelManifest = await (options.manifestLoader
+    ? options.manifestLoader(options.signal)
+    : landmarkRepository.loadManifest())
+  options.signal?.throwIfAborted()
   const hardware = options.hardware ?? browserHardware()
   const lightingProfile = landmarkLightingProfile(hardware)
   const layer = options.layerFactory?.(lightingProfile) ?? createLandmarkCustomLayer({

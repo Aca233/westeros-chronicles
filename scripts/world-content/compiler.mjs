@@ -31,6 +31,7 @@ export async function readAndValidateWorldSource(contentDir) {
   const source = {
     manifest: await readJson(join(contentDir, 'manifest.json'), '世界清单'),
     playableCharacters: await readJson(join(contentDir, 'playable-characters.json'), '可玩人物'),
+    characterCreation: await readJson(join(contentDir, 'character-creation.json'), '人物创建选项'),
     startCharacters: await readJson(join(contentDir, 'start-state', 'characters.json'), '人物起点'),
     startTitles: await readJson(join(contentDir, 'start-state', 'titles.json'), '头衔起点'),
     startAssets: await readJson(join(contentDir, 'start-state', 'assets.json'), '资产起点'),
@@ -411,6 +412,7 @@ function buildOutputs(source, dependencies) {
   const payload = {
     startState,
     playableCharacters: source.playableCharacters,
+    characterCreation: source.characterCreation,
     terminology,
     gameplayLocations,
     holderSummaries,
@@ -440,7 +442,8 @@ function buildOutputs(source, dependencies) {
       gameplayLocations: '/data/world/gameplay-locations.json',
       holderSummaries: '/data/world/holder-summaries.json',
       ordinaryItems: '/data/world/ordinary-items.json',
-      loadouts: '/data/world/loadouts.json'
+      loadouts: '/data/world/loadouts.json',
+      characterCreation: '/data/world/character-creation.json'
     },
   };
   return { manifest, payload, contentHash, characterContentShards };
@@ -452,6 +455,7 @@ async function writeOutputTree(directory, outputs) {
     'manifest.json': outputs.manifest,
     'start-state.json': outputs.payload.startState,
     'playable-characters.json': outputs.payload.playableCharacters,
+    'character-creation.json': outputs.payload.characterCreation,
     'character-content/index.json': outputs.payload.characterContentIndex,
     'terminology.json': outputs.payload.terminology,
     'gameplay-locations.json': outputs.payload.gameplayLocations,

@@ -13,6 +13,7 @@ const RESOLUTION_V2_OUTPUT_PROMPT = `
 {
   "schemaVersion": 2,
   "resolution": "简短结论",
+  "actionPhases": [{ "kind": "preparation", "durationMinutes": 10, "activity": "light", "reason": "准备装备" }, { "kind": "action", "durationMinutes": 30, "activity": "strenuous", "reason": "执行行动" }],
   "diceRequest": { "roll": true, "attribute": "prowess", "secondaryAttribute": "martial", "dc": 14, "domain": "duel", "reason": "按具体方法解释主辅属性；不需要辅属性时省略该字段" },
   "outcomes": {
     "strongSuccess": { "stateCommands": [], "worldIntents": [] },
@@ -21,7 +22,8 @@ const RESOLUTION_V2_OUTPUT_PROMPT = `
     "failure": { "stateCommands": [], "worldIntents": [] }
   }
 }
-roll 为 false 时 outcomes 必须且只能包含 deterministic；roll 为 true 时必须且只能包含 strongSuccess、success、partial 与 failure。strongSuccess 必须完整包含普通成功效果，并且最多多出一个与当前动作直接相关的小优势；不得越级改变身份、权限、财富、伤势或 NPC 底线。所有数组必须存在，允许为空。不得输出未在规则清单中授权的状态命令。`;
+roll 为 false 时 outcomes 必须且只能包含 deterministic；roll 为 true 时必须且只能包含 strongSuccess、success、partial 与 failure。strongSuccess 必须完整包含普通成功效果，并且最多多出一个与当前动作直接相关的小优势；不得越级改变身份、权限、财富、伤势或 NPC 底线。所有数组必须存在，允许为空。actionPhases 必须按真实先后顺序列出行动阶段，durationMinutes 为非负整数分钟并给出 reason；正常休整需要显式 rest 阶段且 sleep=true，不能用“休息”暗示睡眠。不要同时用 ADVANCE_TIME 重复计算 actionPhases 已表达的耗时。不得输出未在规则清单中授权的状态命令。
+`;
 
 export interface DiceResolutionDraft {
   diceRequest: DiceRequest;
@@ -32,6 +34,7 @@ export interface DiceResolutionDraft {
   /** roll: true 时为部分成果版本，roll: false 时为空数组 */
   partialCommands?: StateCommand[];
   outcomeSummary: string;
+  actionPhases: import('../../features/time/gameClock').ActionPhaseDraft[];
   worldIntents: ReturnType<typeof parseUnresolvedWorldIntents>;
   strongSuccessWorldIntents?: ReturnType<typeof parseUnresolvedWorldIntents>;
   /** roll: true 时为失败版本，roll: false 时为空数组 */
@@ -49,6 +52,7 @@ export function parseTurnResolutionOutput(rawText: string): DiceResolutionDraft 
     failureCommands: parsed.failureCommands,
     partialCommands: parsed.partialCommands,
     outcomeSummary: parsed.outcomeSummary,
+    actionPhases: parsed.actionPhases,
     worldIntents: parseUnresolvedWorldIntents(
       (parsed.diceRequest.roll ? parsed.successWorldIntents : parsed.worldIntents) as Parameters<typeof parseUnresolvedWorldIntents>[0],
     ),

@@ -24,6 +24,7 @@ import type { RoutePlan, RouteRequest } from '../../features/map/routing/types';
 import { RouteClient } from '../../features/map/routing/routeClient';
 import { mapRepository } from '../../features/map/repository';
 import { advanceLivingWorld, applyLivingWorldIntent, routeBlockReason } from '../../features/world/livingWorldEngine';
+import { advanceGameMoment, totalActionMinutes } from '../../features/time/gameClock';
 export function buildTravelBaseline(
   gameState: GameState,
   lord: LordProfile,
@@ -136,7 +137,9 @@ function mergeWorldTransaction(target: WorldTransaction, source: WorldTransactio
   target.mutations.push(...source.mutations);
   target.eventDrafts.push(...source.eventDrafts);
   if (source.itemCommands?.length) target.itemCommands = [...(target.itemCommands ?? []), ...source.itemCommands];
-  if (source.dateAdvance) {
+  if (source.timeAdvanceMinutes !== undefined) {
+    target.timeAdvanceMinutes = (target.timeAdvanceMinutes ?? 0) + source.timeAdvanceMinutes;
+  } else if (source.dateAdvance) {
     const existing = target.dateAdvance ?? {};
     target.dateAdvance = {
       days: (existing.days ?? 0) + (source.dateAdvance.days ?? 0),
@@ -165,16 +168,21 @@ function worldDateOrdinal(date: WorldDate): number {
 export function prepareTemporalCommand(
   commands: readonly StateCommand[],
   currentDate: WorldDate,
-): { command?: StateCommand; days?: number } {
+): { command?: StateCommand; minutes?: number } {
   const setDate = commands.find((command) => command.type === 'SET_DATE');
   if (setDate?.type === 'SET_DATE') {
     const target = setWorldDateForward(currentDate, setDate);
-    return { command: setDate, days: worldDateOrdinal(target) - worldDateOrdinal(currentDate) };
+    return { command: setDate, minutes: (worldDateOrdinal(target) - worldDateOrdinal(currentDate)) * 1440 };
   }
   const advance = commands.find((command) => command.type === 'ADVANCE_TIME');
   if (advance?.type === 'ADVANCE_TIME') {
-    const target = advanceWorldDate(currentDate, advance);
-    return { command: advance, days: worldDateOrdinal(target) - worldDateOrdinal(currentDate) };
+    const minutes = (advance.years ?? 0) * 360 * 1440
+      + (advance.months ?? 0) * 30 * 1440
+      + (advance.days ?? 0) * 1440
+      + (advance.hours ?? 0) * 60
+      + (advance.minutes ?? 0);
+    if (!Number.isInteger(minutes) || minutes < 0) throw new Error('时间推进必须是非负整数分钟');
+    return { command: advance, minutes };
   }
   return {};
 }
@@ -784,33 +792,41 @@ export async function prepareWorldTurn(input: PrepareWorldTurnInput): Promise<Pr
       }
     }
 
-    if (!transaction.dateAdvance) {
+    if (transaction.timeAdvanceMinutes === undefined && !transaction.dateAdvance) {
+      const phaseMinutes = totalActionMinutes(input.draft.actionPhases);
       const temporal = prepareTemporalCommand(input.draft.stateCommands, currentDate);
-      if (temporal.command && temporal.days !== undefined) {
-        const preview = advanceLivingWorld(input.gameState.worldRuntime, currentDate, temporal.days, {
+      if (phaseMinutes > 0 && temporal.command) {
+        mapRejectedCommands.push({ type: temporal.command.type, reason: 'actionPhases 已提供本回合耗时，ADVANCE_TIME/SET_DATE 未重复执行' });
+      }
+      const requestedMinutes = phaseMinutes > 0 ? phaseMinutes : temporal.minutes ?? 0;
+      if (requestedMinutes > 0) {
+        const targetMoment = advanceGameMoment({ date: currentDate, minuteOfDay: input.gameState.currentMinute }, requestedMinutes);
+        const requestedDays = worldDateOrdinal(targetMoment.date) - worldDateOrdinal(currentDate);
+        const preview = advanceLivingWorld(input.gameState.worldRuntime, currentDate, requestedDays, {
           turn: input.nextTurnNumber,
           playerId,
           playerLocation: input.gameState.lord.location,
           transactionId: `${transactionId}:preview-time`,
         });
-        transaction.dateAdvance = { days: preview.actualDays };
-        if (preview.actualDays < temporal.days) {
+        const interrupted = preview.actualDays < requestedDays;
+        transaction.timeAdvanceMinutes = interrupted ? preview.actualDays * 1440 : requestedMinutes;
+        if (interrupted) {
           acceptedCommands.push({
             type: 'ADVANCE_TIME',
-            days: preview.actualDays,
-            reason: `原请求推进 ${temporal.days} 天，因需要玩家决定的局势在 ${preview.actualDays} 天后停止`,
+            minutes: transaction.timeAdvanceMinutes,
+            reason: `原请求推进 ${requestedMinutes} 分钟，因需要玩家决定的局势提前停止`,
           });
           transaction.eventDrafts.push({
             type: 'time.interrupted_for_decision',
             actorIds: [playerId],
             subjectRefs: [],
             location: { ...input.gameState.lord.location },
-            reason: `时间推进在第 ${preview.actualDays} 天因需要玩家决定的局势停止。`,
+            reason: `时间推进因需要玩家决定的局势提前停止。`,
             visibility: 'secret',
             knownBy: [playerId],
             ...(preview.stoppedForDecision ? { causeSource: { type: 'rule' as const, id: preview.stoppedForDecision.situationId } } : {}),
           });
-        } else {
+        } else if (phaseMinutes === 0 && temporal.command) {
           acceptedCommands.push(temporal.command);
         }
       }
@@ -849,7 +865,8 @@ export async function prepareWorldTurn(input: PrepareWorldTurnInput): Promise<Pr
     || Boolean(transaction.itemCommands?.length)
     || Boolean(transaction.siteCreations?.length)
     || transaction.nextJourney !== undefined
-    || Boolean(transaction.dateAdvance);
+    || Boolean(transaction.dateAdvance)
+    || (transaction.timeAdvanceMinutes ?? 0) > 0;
   return {
     transactionId,
     baseline,

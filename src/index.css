@@ -1502,6 +1502,36 @@ hr.hairline {
   stroke-width: 1.2px;
   filter: drop-shadow(0 0 3px rgba(245, 215, 150, 0.9));
 }
+/* 六区身体选择：按角色真实左右侧高亮，而不是按对称肌群高亮。 */
+.body-model--right-upper .rbh polygon:nth-of-type(7),
+.body-model--right-upper .rbh polygon:nth-of-type(10),
+.body-model--right-upper .rbh polygon:nth-of-type(14),
+.body-model--right-upper .rbh polygon:nth-of-type(30),
+.body-model--right-upper .rbh polygon:nth-of-type(33),
+.body-model--left-upper .rbh polygon:nth-of-type(8),
+.body-model--left-upper .rbh polygon:nth-of-type(9),
+.body-model--left-upper .rbh polygon:nth-of-type(13),
+.body-model--left-upper .rbh polygon:nth-of-type(31),
+.body-model--left-upper .rbh polygon:nth-of-type(32),
+.body-model--left-lower .rbh polygon:nth-of-type(16),
+.body-model--left-lower .rbh polygon:nth-of-type(19),
+.body-model--left-lower .rbh polygon:nth-of-type(21),
+.body-model--left-lower .rbh polygon:nth-of-type(23),
+.body-model--left-lower .rbh polygon:nth-of-type(25),
+.body-model--left-lower .rbh polygon:nth-of-type(26),
+.body-model--left-lower .rbh polygon:nth-of-type(28),
+.body-model--right-lower .rbh polygon:nth-of-type(17),
+.body-model--right-lower .rbh polygon:nth-of-type(18),
+.body-model--right-lower .rbh polygon:nth-of-type(20),
+.body-model--right-lower .rbh polygon:nth-of-type(22),
+.body-model--right-lower .rbh polygon:nth-of-type(24),
+.body-model--right-lower .rbh polygon:nth-of-type(27),
+.body-model--right-lower .rbh polygon:nth-of-type(29) {
+  fill: #f5d796 !important;
+  stroke: #fff1c2;
+  stroke-width: 1.2px;
+  filter: drop-shadow(0 0 3px rgba(245, 215, 150, 0.9));
+}
 
 /* ============================================================
    CK3 人物窗口:卷宗排版(少边框,重层级)
@@ -1894,6 +1924,41 @@ hr.hairline {
 .menu-skip .menu-footnote { animation: none; opacity: 1; }
 .menu-skip .menu-entry { animation: none; opacity: 1; transform: none; }
 
+/* 正文与资料允许复制；交互控件保持游戏 UI 行为 */
+.deed-prose,
+.deed-prose *,
+.scene-head,
+.scene-head *,
+.story-content,
+.story-content *,
+.character-description,
+.character-description *,
+.lore-text,
+.lore-text * {
+  user-select: text;
+}
+
+button,
+[role="button"],
+.interactive-card,
+[data-interactive="true"] {
+  user-select: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .menu-entry { opacity: 1; animation: none; }
+}
+
+/* 人物创建：正文与控件保持可读，比较器和库在桌面并排。 */
+.creator-v2 .creator-input { font-size: 14px; min-height: 40px; }
+.creator-v2 .text-\[8px\],
+.creator-v2 .text-\[9px\],
+.creator-v2 .text-\[10px\],
+.creator-v2 .text-\[11px\] { font-size: 12px; line-height: 1.5; }
+.creator-v2 .creator-stat-button { min-width: 30px; min-height: 30px; }
+.creator-v2 button:focus-visible,
+.creator-v2 summary:focus-visible { outline: 2px solid #c9a45c; outline-offset: 3px; }
+@media (max-width: 1023px) {
+  .creator-v2 .creator-body > aside:first-child { display: none; }
+  .creator-v2 .creator-trait-browser { max-height: 48vh; }
 }

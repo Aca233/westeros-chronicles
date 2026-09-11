@@ -3,6 +3,7 @@ import { applyItemActions, type ItemActionContext } from '../items/actions';
 import type { ItemAction, ItemPlacement, ItemStateCommand, ItemSystemState } from '../items/types';
 import { sameWorldLocation, UNKNOWN_WESTEROS_LOCATION_ID } from '../map/locationResolver';
 import { advanceWorldDate } from './worldHistory';
+import { advanceGameMoment } from '../time/gameClock';
 import { worldAssetId } from './worldAssetId';
 import {
   createWorldBaselineSnapshot,
@@ -51,8 +52,10 @@ function cloneCommitSlice(state: WorldCommitSlice): WorldCommitSlice {
   return {
     runtime: cloneWorldRuntimeState(state.runtime),
     items: structuredClone(state.items),
+    ...(state.health ? { health: structuredClone(state.health) } : {}),
     ...(state.journey ? { journey: structuredClone(state.journey) } : {}),
     date: { ...state.date },
+    minuteOfDay: state.minuteOfDay,
   };
 }
 
@@ -85,6 +88,7 @@ function applyItemCommands(
         .filter((vehicle) => sameWorldLocation(vehicle.location, actorLocation))
         .map((vehicle) => vehicle.id),
     ),
+    ...(state.health?.characters[actorId] ? { health: state.health.characters[actorId] } : {}),
   };
   const applied = applyItemActions(
     state.items,
@@ -388,6 +392,8 @@ export function commitWorldTransaction(
     if (!transaction.id.trim()) throw new Error('世界事务 ID 不能为空');
     if (!Number.isInteger(transaction.turn) || transaction.turn < 0) throw new Error('世界事务回合不合法');
     if (!transaction.reason.trim()) throw new Error('世界事务原因不能为空');
+    if (transaction.dateAdvance && transaction.timeAdvanceMinutes !== undefined) throw new Error('同一世界事务不能同时使用日期推进和分钟推进');
+    if (transaction.timeAdvanceMinutes !== undefined && (!Number.isInteger(transaction.timeAdvanceMinutes) || transaction.timeAdvanceMinutes < 0)) throw new Error('世界事务分钟耗时无效');
     const next = cloneCommitSlice(state);
     // 取物前先记录来源据点：结算后用于判定是否发生越权取用。
     const siteAccessCaptures = (transaction.itemCommands ?? []).flatMap((command) => {
@@ -401,7 +407,13 @@ export function commitWorldTransaction(
     const rebuiltBaseline = rebuildBaseline(baseline, next.items, transaction);
     transaction.mutations.forEach((mutation) => applyMutation(next.runtime, rebuiltBaseline, mutation));
     const livingEvents = applyLivingIntents(next, rebuiltBaseline, transaction);
-    if (transaction.dateAdvance) next.date = advanceWorldDate(next.date, transaction.dateAdvance);
+    if (transaction.timeAdvanceMinutes !== undefined) {
+      const advanced = advanceGameMoment({ date: next.date, minuteOfDay: next.minuteOfDay }, transaction.timeAdvanceMinutes);
+      next.date = advanced.date;
+      next.minuteOfDay = advanced.minuteOfDay;
+    } else if (transaction.dateAdvance) {
+      next.date = advanceWorldDate(next.date, transaction.dateAdvance);
+    }
     if (transaction.nextJourney === null) delete next.journey;
     else if (transaction.nextJourney !== undefined) next.journey = structuredClone(transaction.nextJourney);
 

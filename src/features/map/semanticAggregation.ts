@@ -54,6 +54,31 @@ interface SemanticAggregationInput<TPoint> {
 type CharacterAggregationInput = SemanticAggregationInput<MapCharacterPoint>
 type AssetAggregationInput = SemanticAggregationInput<MapAssetPoint>
 
+// These arrays are immutable repository snapshots; reuse their lookup tables
+// across both overlays and camera movements instead of reindexing every pan.
+const membershipIndexes = new WeakMap<readonly SemanticMembership[], Map<string, SemanticMembership>>()
+const titleIndexes = new WeakMap<readonly SemanticTitle[], {
+  byRankAndId: Map<string, SemanticTitle>
+  counties: Map<string, SemanticTitle>
+}>()
+
+function aggregationIndexes(input: Pick<CharacterAggregationInput, 'memberships' | 'titles'>) {
+  let membershipByLocation = membershipIndexes.get(input.memberships)
+  if (!membershipByLocation) {
+    membershipByLocation = new Map(input.memberships.map((membership) => [membership.locationId, membership]))
+    membershipIndexes.set(input.memberships, membershipByLocation)
+  }
+  let titles = titleIndexes.get(input.titles)
+  if (!titles) {
+    titles = {
+      byRankAndId: new Map(input.titles.map((title) => [`${title.rank}:${title.titleId}`, title])),
+      counties: new Map(input.titles.filter((title) => title.rank === 'county').map((title) => [title.titleId, title])),
+    }
+    titleIndexes.set(input.titles, titles)
+  }
+  return { membershipByLocation, titleByRankAndId: titles.byRankAndId, countyTitleById: titles.counties }
+}
+
 function stableUniquePoints<TPoint extends { id: string; locationId: string; mapX: number; mapY: number }>(
   points: readonly TPoint[],
   pixelBounds: MapBounds,
@@ -91,8 +116,7 @@ function aggregate(
 }
 
 export function aggregateCharacterPoints(input: CharacterAggregationInput): SemanticSubjectAggregate[] {
-  const membershipByLocation = new Map(input.memberships.map((membership) => [membership.locationId, membership]))
-  const titleByRankAndId = new Map(input.titles.map((title) => [`${title.rank}:${title.titleId}`, title]))
+  const { membershipByLocation, titleByRankAndId } = aggregationIndexes(input)
   const aggregateRank = input.aggregateRank
   const groups = new Map<string, { rank: SemanticRank; scopeId: string; memberIds: string[] }>()
 
@@ -124,11 +148,7 @@ export function aggregateCharacterPoints(input: CharacterAggregationInput): Sema
 
 export function aggregateAssetPoints(input: AssetAggregationInput): SemanticSubjectAggregate[] {
   const points = stableUniquePoints(input.points, input.pixelBounds)
-  const membershipByLocation = new Map(input.memberships.map((membership) => [membership.locationId, membership]))
-  const titleByRankAndId = new Map(input.titles.map((title) => [`${title.rank}:${title.titleId}`, title]))
-  const countyTitleById = new Map(
-    input.titles.filter((title) => title.rank === 'county').map((title) => [title.titleId, title]),
-  )
+  const { membershipByLocation, titleByRankAndId, countyTitleById } = aggregationIndexes(input)
   const aggregateRank = input.aggregateRank
 
   // 指定聚合等级且比 county 更粗时，按该等级头衔点聚合，不走地点→伯爵领折叠。
