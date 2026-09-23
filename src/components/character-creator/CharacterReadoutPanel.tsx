@@ -74,16 +74,19 @@ export function CharacterReadoutPanel({ draft, validation, readout }: { draft: C
         <div className="mt-2" aria-label="设计点数明细">
           <div className="flex items-end justify-between">
             <div><span className="text-[11px] text-parchment-faint">设计点数明细</span><div className="mt-1 font-display text-2xl text-gold-bright">{validation.usedDesignPoints}<span className="ml-1 text-[10px] text-parchment-faint">已用</span></div></div>
-            <div className={`text-right ${validation.remainingDesignPoints < 0 && !draft.freeMode ? 'text-rubric-bright' : 'text-gold'}`}>
+            <div className={`text-right ${validation.remainingDesignPoints < 0 ? 'text-rubric-bright' : 'text-gold'}`}>
               <span className="block text-[11px]">剩余 / {DESIGN_POINT_LIMIT}</span>
-              <strong className="font-display text-xl">{draft.freeMode ? '∞' : validation.remainingDesignPoints}</strong>
+              <strong className="font-display text-xl">{validation.remainingDesignPoints}</strong>
             </div>
           </div>
           <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-1 border-t border-hairline pt-2 text-[11px] text-parchment-dim">
             <div className="flex justify-between"><span>能力</span><span>{validation.budget.abilities}</span></div>
             <div className="flex justify-between"><span>本事</span><span>{validation.budget.skills}</span></div>
             <div className="flex justify-between"><span>身体与天赋</span><span>{validation.budget.body}</span></div>
-            <div className="flex justify-between"><span>缺陷返还</span><span>−{validation.budget.refund}</span></div>
+            <div className="flex justify-between"><span>性格</span><span>{validation.budget.personality}</span></div>
+            <div className="flex justify-between"><span>身份与名声</span><span>{validation.budget.identity}</span></div>
+            <div className="flex justify-between"><span>返还计入</span><span>−{validation.budget.refund}</span></div>
+            <div className="flex justify-between"><span>原始返还</span><span>{validation.budget.rawRefund}</span></div>
           </div>
         </div>
         <div className="mt-3 space-y-1.5 border-t border-hairline pt-2.5 text-[11px] text-parchment-dim">
@@ -97,11 +100,9 @@ export function CharacterReadoutPanel({ draft, validation, readout }: { draft: C
 
 export function AttributeBoard({
   readouts,
-  freeMode,
   onChange,
 }: {
   readouts: SkillReadout[];
-  freeMode: boolean;
   onChange: (key: keyof LordAttributes, delta: number) => void;
 }) {
   return (
@@ -136,7 +137,6 @@ export function AttributeBoard({
               <span>背景建议 {skill.suggested}</span>
               <span className={skill.manual === 0 ? '' : skill.manual > 0 ? 'text-gold' : 'text-rubric-bright'}>手动 {skill.manual === 0 ? '未调整' : formatDelta(skill.manual)}</span>
               {skill.manual !== 0 && <button type="button" onClick={() => onChange(skill.key, -skill.manual)} className="ml-auto inline-flex items-center gap-1 text-gold underline underline-offset-2"><RotateCcw className="h-3 w-3" />回到建议值</button>}
-              {freeMode && <span className="ml-auto text-gold-deep">自由模式</span>}
             </div>
           </div>
         ))}

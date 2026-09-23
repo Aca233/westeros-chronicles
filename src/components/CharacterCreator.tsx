@@ -32,11 +32,13 @@ import { characterAgeAtYear } from '../features/characters/characterDossier';
 import { worldContentRepository } from '../features/world-content/repository';
 import { CharacterSearch } from './CharacterSearch';
 import { CharacterPortrait } from './CharacterPortrait';
-import { TraitWorkbench, TraitInspector } from './character-creator/TraitWorkbench';
+import { TraitWorkbench } from './character-creator/TraitWorkbench';
 import { previewCreationTrait } from '../features/characters/creationTraitRules';
 import { CoatOfArms } from './CoatOfArms';
 import { CREATOR_PANELS, type CreatorPanel } from './character-creator/creatorTypes';
 import { AttributeBoard, CharacterReadoutPanel, CreatorTraitSummary, TraitSourceTag } from './character-creator/CharacterReadoutPanel';
+import { CreationLifePanel } from './character-creator/CreationLifePanel';
+import { isItemCatalogPreloaded, preloadItemCatalog } from '../data/itemDefinitions';
 import { characterReadout, skillReadouts, traitSourceOf, TRAIT_SOURCES } from './character-creator/characterReadout';
 import { GameIcon, getHouseIconId, type GameIconId } from './GameIcon';
 import {
@@ -86,7 +88,9 @@ export const CharacterCreator: React.FC = () => {
   const [invalidated, setInvalidated] = useState<string[]>([]);
   const [relationKind, setRelationKind] = useState<CustomRelationKind>('acquaintance');
   const [kinshipKind, setKinshipKind] = useState<'none' | 'cadet_branch' | 'bastard_child'>('none');
-  const [activePanel, setActivePanel] = useState<CreatorPanel>('identity');
+  const [activePanel, setActivePanel] = useState<CreatorPanel>('life');
+  const [catalogState, setCatalogState] = useState<'loading' | 'ready' | 'error'>(() => isItemCatalogPreloaded() ? 'ready' : 'loading');
+  const [catalogEpoch, setCatalogEpoch] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [progress, setProgress] = useState<OpeningGenerationProgress | null>(null);
   const [isSubmitting, setSubmitting] = useState(false);
@@ -112,6 +116,19 @@ export const CharacterCreator: React.FC = () => {
       });
     return () => { cancelled = true; };
   }, [isCreatorOpen]);
+
+  useEffect(() => {
+    if (!isCreatorOpen || isItemCatalogPreloaded()) {
+      if (isItemCatalogPreloaded()) setCatalogState('ready');
+      return;
+    }
+    let cancelled = false;
+    setCatalogState('loading');
+    preloadItemCatalog()
+      .then(() => { if (!cancelled) setCatalogState('ready'); })
+      .catch(() => { if (!cancelled) setCatalogState('error'); });
+    return () => { cancelled = true; };
+  }, [isCreatorOpen, catalogEpoch]);
 
   useEffect(() => {
     if (!isCreatorOpen) return;
@@ -372,7 +389,7 @@ export const CharacterCreator: React.FC = () => {
     setInvalidated([]);
     setRelationKind('acquaintance');
     setKinshipKind('none');
-    setActivePanel('identity');
+    setActivePanel('life');
     setError(null);
     setProgress(null);
     setResolvedRunId(null);
@@ -395,12 +412,11 @@ export const CharacterCreator: React.FC = () => {
               </div>
             </div>
             <div className="flex flex-wrap items-center justify-end gap-2">
-              <div className={`border px-3 py-1.5 text-xs ${validation.remainingDesignPoints < 0 && !draft.freeMode ? 'border-rubric text-rubric-bright' : 'border-gold-deep/70 text-parchment-dim'}`}>
+              <div className={`border px-3 py-1.5 text-xs ${validation.remainingDesignPoints < 0 ? 'border-rubric text-rubric-bright' : 'border-gold-deep/70 text-parchment-dim'}`}>
                 <span className="mr-2 text-parchment-faint">设计点</span>
-                <strong className="font-display text-base text-gold-bright">{draft.freeMode ? '∞' : validation.remainingDesignPoints}</strong>
+                <strong className="font-display text-base text-gold-bright">{validation.remainingDesignPoints}</strong>
                 <span className="ml-2 text-parchment-faint">/ {DESIGN_POINT_LIMIT}</span>
               </div>
-              <label className="flex items-center gap-2 border border-hairline px-3 py-2 text-xs text-parchment-dim"><input type="checkbox" checked={draft.freeMode} onChange={(event) => { setDraft((current) => ({ ...current, freeMode: event.target.checked })); setResolvedRunId(null); }} />自由模式</label>
               {previousDraft && <button type="button" disabled={isSubmitting} onClick={() => { setDraft(previousDraft); setPreviousDraft(null); setResolvedRunId(null); setInvalidated([]); }} className="btn-ghost text-xs">撤销</button>}
               <button type="button" onClick={resetEditor} disabled={isSubmitting} className="btn-ghost text-xs"><RotateCcw className="h-3.5 w-3.5" />重置</button>
               <button type="button" onClick={closeCreator} aria-label="关闭人物创建器" className="btn-ghost"><X className="h-4 w-4" /></button>
@@ -408,14 +424,14 @@ export const CharacterCreator: React.FC = () => {
           </div>
         </header>
 
-        <div {...({ inert: isSubmitting ? '' : undefined } as React.HTMLAttributes<HTMLDivElement>)} className="creator-body min-h-0 flex-1 grid grid-cols-1 overflow-y-auto lg:grid-cols-[260px_minmax(0,1fr)_350px] lg:overflow-hidden">
-          <aside className="border-r border-hairline bg-gradient-to-b from-ink-3 via-ink-2 to-ink p-4 lg:overflow-y-auto">
-            <div className="relative min-h-[250px] overflow-hidden border border-hairline bg-ink bg-[radial-gradient(circle_at_50%_38%,rgba(201,164,92,0.18),transparent_55%)]">
-              <div className="absolute inset-0 flex items-center justify-center pb-8"><UserRound className="h-32 w-32 text-gold-deep/45" strokeWidth={0.8} /></div>
-              <div className="absolute bottom-3 right-3 flex h-20 w-20 items-center justify-center border border-gold-deep/70 bg-ink-3/95 p-2 shadow-lg">
+        <div {...({ inert: isSubmitting ? '' : undefined } as React.HTMLAttributes<HTMLDivElement>)} className="creator-body min-h-0 flex-1 grid grid-cols-1 overflow-y-auto lg:grid-cols-[310px_minmax(0,1fr)] lg:overflow-hidden">
+          <aside className="border-b border-hairline bg-gradient-to-b from-ink-3 via-ink-2 to-ink p-3 lg:overflow-y-auto lg:border-b-0 lg:border-r">
+            <div className="creator-dossier-portrait relative min-h-[96px] overflow-hidden border border-hairline bg-ink bg-[radial-gradient(circle_at_30%_45%,rgba(201,164,92,0.18),transparent_55%)]">
+              <div className="absolute inset-y-0 left-4 flex items-center"><UserRound className="h-16 w-16 text-gold-deep/45" strokeWidth={0.8} /></div>
+              <div className="absolute right-3 top-3 flex h-14 w-14 items-center justify-center border border-gold-deep/70 bg-ink-3/95 p-1.5 shadow-lg">
                 {draft.house?.coatOfArms ? <CoatOfArms design={draft.house.coatOfArms} className="h-full" /> : previewHouse ? <GameIcon icon={getHouseIconId(previewHouse.sigil)} className="h-full w-full" /> : <ShieldCheck className="h-10 w-10 text-gold-deep/50" />}
               </div>
-              <span className="absolute inset-x-0 bottom-0 border-t border-hairline bg-ink/90 py-2 pl-3 pr-24 font-display text-[10px] tracking-[0.22em] text-gold-deep">{draft.house?.dynastyName || '无宗族'}</span>
+              <span className="absolute bottom-2 left-24 right-20 truncate font-display text-[10px] tracking-[0.15em] text-gold-deep">{draft.house?.dynastyName || '无宗族'}</span>
             </div>
 
             <div className="border-x border-b border-hairline bg-ink-2/55 px-3 py-4 text-center">
@@ -425,14 +441,22 @@ export const CharacterCreator: React.FC = () => {
               <p className="mt-2 border-t border-hairline pt-2 text-[10px] leading-relaxed text-parchment-faint">{readout.headline}：{origin.label}出身，{livelihood.label}为生。</p>
             </div>
 
-            <div className="mt-4 space-y-2 border-y border-hairline py-3 text-xs">
+            <nav className="mt-3 grid grid-cols-2 border-l border-t border-hairline sm:grid-cols-4 lg:grid-cols-2" aria-label="人物档案栏目">
+              {CREATOR_PANELS.map(({ id, label, note, icon: Icon }) => {
+                const active = activePanel === id;
+                const status = panelStatus[id];
+                return <button key={id} type="button" onClick={() => setActivePanel(id)} aria-pressed={active} title={note} data-creator-panel={id} data-panel-status={status.tone} className={`flex min-w-0 items-center gap-2 border-b border-r border-hairline px-3 py-2 text-left transition-colors ${active ? 'bg-gold-deep/20 text-gold-bright' : 'text-parchment-dim hover:bg-ink-2 hover:text-parchment'}`}><Icon className={`h-4 w-4 shrink-0 ${active ? 'text-gold' : 'text-parchment-faint'}`} /><span className="min-w-0 flex-1"><strong className="block truncate font-serif text-xs">{label}</strong><span className={`block truncate text-[9px] ${status.tone === 'done' ? 'text-gold-deep' : status.tone === 'todo' ? 'text-rubric-bright' : 'text-parchment-faint'}`}>{status.text}</span></span></button>;
+              })}
+            </nav>
+
+            <div className="creator-dossier-details mt-4 space-y-2 border-y border-hairline py-3 text-xs">
               <IdentityLine icon={<Users className="h-3.5 w-3.5" />} label="家族" value={draft.house?.houseName || '无'} />
               <IdentityLine icon={<BookOpen className="h-3.5 w-3.5" />} label="文化" value={draft.culture || '未指定'} />
               <IdentityLine icon={<Landmark className="h-3.5 w-3.5" />} label="信仰" value={draft.faith || '未指定'} />
               <IdentityLine icon={<MapPin className="h-3.5 w-3.5" />} label="地点" value={draft.location?.name || '未选择'} />
             </div>
 
-            <div className="mt-4">
+            <div className="creator-dossier-traits mt-4">
               <SectionTitle>人物特质</SectionTitle>
               <div className="mt-3 grid grid-cols-4 gap-2">
                 {selectedTraits.length > 0 ? selectedTraits.slice(0, 11).map((trait) => (
@@ -447,7 +471,7 @@ export const CharacterCreator: React.FC = () => {
               <div className="mt-3"><CreatorTraitSummary draft={draft} readouts={skillReadoutList} /></div>
             </div>
 
-            <div className="mt-5">
+            <div className="creator-dossier-opening mt-5">
               <SectionTitle>开局摘要</SectionTitle>
               <div className="mt-3 space-y-2 text-xs leading-relaxed text-parchment-faint">
                 <div>身世：<span className="text-parchment-dim">{origin.label} · {experience.label}</span></div>
@@ -457,25 +481,29 @@ export const CharacterCreator: React.FC = () => {
                 {draft.kinship && <div className="text-gold">架空亲属：{draft.kinship.targetName}</div>}
               </div>
             </div>
+
+            <div className="mt-4 border border-hairline bg-ink/45 p-3 text-xs" aria-label="设计点数简要">
+              <div className="flex items-end justify-between"><span className="text-parchment-faint">剩余设计点</span><strong className={`font-display text-xl ${validation.remainingDesignPoints < 0 ? 'text-rubric-bright' : 'text-gold-bright'}`}>{validation.remainingDesignPoints}</strong></div>
+              <div className="mt-2 h-1 bg-ink-3"><div className="h-full bg-gold-deep" style={{ width: `${Math.max(0, Math.min(100, validation.usedDesignPoints / DESIGN_POINT_LIMIT * 100))}%` }} /></div>
+              <p className="mt-2 text-[10px] text-parchment-faint">支出 {validation.usedDesignPoints + validation.budget.refund} · 返还 {validation.budget.refund}/{validation.budget.rawRefund}</p>
+            </div>
           </aside>
 
           <main className="min-w-0 bg-ink-2 lg:flex lg:min-h-0 lg:flex-col">
-            <nav className="grid shrink-0 grid-cols-3 border-b border-hairline bg-ink-3/75 sm:grid-cols-6" aria-label="人物设计栏目">
-              {CREATOR_PANELS.map(({ id, label, note, icon: Icon }, index) => {
-                const active = activePanel === id;
-                const status = panelStatus[id];
-                return <button key={id} type="button" onClick={() => setActivePanel(id)} aria-pressed={active} title={note} data-creator-panel={id} data-panel-status={status.tone} className={`relative flex min-w-0 items-center justify-center gap-2 border-r border-hairline px-2 py-3 text-left transition-colors last:border-r-0 ${active ? 'bg-gold-deep/15 text-gold-bright' : 'text-parchment-dim hover:bg-ink-2 hover:text-parchment'}`}>
-                  <span className="flex shrink-0 flex-col items-center gap-0.5">
-                    <Icon className={`h-4 w-4 ${active ? 'text-gold' : 'text-parchment-faint'}`} />
-                    <span className="font-display text-[9px] text-gold-deep">{index + 1}</span>
-                  </span>
-                  <span className="min-w-0"><strong className="block truncate font-serif text-xs">{label}</strong><span className={`hidden truncate text-[8px] xl:block ${status.tone === 'done' ? 'text-gold-deep' : status.tone === 'todo' ? 'text-rubric-bright' : 'text-parchment-faint'}`}>{status.text}</span></span>
-                  {active && <span className="absolute inset-x-2 bottom-0 h-0.5 bg-gold" />}
-                </button>;
-              })}
+            <nav className="sticky top-0 z-20 flex shrink-0 overflow-x-auto border-b border-hairline bg-ink-3/95 lg:hidden" aria-label="移动端人物档案栏目">
+              {CREATOR_PANELS.map(({ id, label }) => <button key={`mobile:${id}`} type="button" onClick={() => setActivePanel(id)} aria-pressed={activePanel === id} className={`shrink-0 border-r border-hairline px-4 py-2.5 text-xs ${activePanel === id ? 'bg-gold-deep/25 text-gold-bright' : 'text-parchment-dim'}`}>{label}</button>)}
             </nav>
-
             <div className="min-h-0 flex-1 p-4 md:p-5 lg:overflow-y-auto">
+              {activePanel === 'life' && <>
+                <CreationLifePanel draft={draft} roleLabel={role.label} originLabel={origin.label} experienceLabel={experience.label} livelihoodLabel={livelihood.label} situationLabel={situation.label} catalogState={catalogState} onRetryCatalog={() => setCatalogEpoch((value) => value + 1)} onEdit={setActivePanel} />
+                <details className="mt-4 border border-hairline bg-ink/35 p-4" data-creator-abilities>
+                  <summary className="cursor-pointer font-serif text-base text-gold">调整六项能力</summary>
+                  <p className="mt-2 text-xs leading-relaxed text-parchment-faint">能力决定人物做事时依靠什么。展开后可逐项调整；低于 8 的点数会返还预算。</p>
+                  <AttributeBoard readouts={skillReadoutList} onChange={changeAttribute} />
+                </details>
+                <div className="mt-4"><CharacterReadoutPanel draft={draft} validation={validation} readout={readout} /></div>
+              </>}
+
               {activePanel === 'identity' && <section>
                 <div className="mb-5"><p className="eyebrow">Identity</p><h2 className="mt-1 font-serif text-2xl text-gold-bright">身份与年龄</h2><p className="mt-2 max-w-3xl text-sm leading-relaxed text-parchment-dim">先确定你在维斯特洛是什么人。身份影响身世建议、地点推荐与关系语境，但不会替你决定性格。</p></div>
                 <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-5" aria-label="开局身份">
@@ -540,7 +568,7 @@ export const CharacterCreator: React.FC = () => {
                 </div>
               </section>}
 
-              {activePanel === 'traits' && <TraitWorkbench draft={draft} inspectedId={inspectedTraitId} onInspect={setInspectedTraitId} onToggle={toggleTrait} onChange={changeTraitDraft} />}
+              {activePanel === 'traits' && <TraitWorkbench draft={draft} inspectedId={inspectedTraitId} onInspect={setInspectedTraitId} onToggle={toggleTrait} onChange={changeTraitDraft} catalogState={catalogState} onRetryCatalog={() => setCatalogEpoch((value) => value + 1)} />}
 
               {activePanel === 'situation' && <section>
                 <div className="mb-5"><p className="eyebrow">Starting Situation</p><h2 className="mt-1 font-serif text-2xl text-gold-bright">开局处境</h2><p className="mt-2 text-sm leading-relaxed text-parchment-dim">决定第一幕开始时你正在做什么，以及故事从维斯特洛的哪里落笔。</p></div>
@@ -549,21 +577,12 @@ export const CharacterCreator: React.FC = () => {
               </section>}
             </div>
           </main>
-
-          <aside className="border-l border-hairline bg-ink p-4 lg:overflow-y-auto">
-            {activePanel === 'traits' && <TraitInspector draft={draft} inspectedId={inspectedTraitId} onInspect={setInspectedTraitId} onToggle={toggleTrait} onChange={changeTraitDraft} />}
-
-            <CharacterReadoutPanel draft={draft} validation={validation} readout={readout} />
-
-            <AttributeBoard readouts={skillReadoutList} freeMode={draft.freeMode} onChange={changeAttribute} />
-
-          </aside>
         </div>
 
         <footer className="shrink-0 border-t border-hairline bg-ink px-4 py-3 md:px-6">
           {progress && <div className="mb-3 flex flex-wrap items-center gap-3 border border-gold-deep/50 bg-ink-2 p-2 text-xs text-gold"><Sparkles className="h-3.5 w-3.5" /><span>{progress.phase === 'requesting' ? '正在准备第一幕' : progress.phase === 'streaming' ? '正在演绎第一幕' : '正在校验人物与地点引用'}</span>{progress.partialText && <span className="min-w-0 flex-1 truncate text-parchment-faint">{stripOpeningTags(progress.partialText).slice(-240)}</span>}<button type="button" onClick={cancelGeneration} className="btn-ghost !py-1 text-xs">取消生成</button></div>}
           {error && <div className="mb-3 flex flex-wrap items-center gap-2 border border-rubric/50 bg-rubric/5 p-2 text-xs text-rubric-bright"><span className="min-w-0 flex-1">{error}</span><button type="button" onClick={() => void handleStart()} disabled={isSubmitting} className="btn-ghost !py-1 text-xs">重试同一开局</button><button type="button" onClick={openSettings} className="btn-ghost !py-1 text-xs">模型设置</button></div>}
-          <div className="flex flex-col items-stretch justify-between gap-2 sm:flex-row sm:items-center"><div className={`flex items-center gap-2 text-xs ${validation.valid ? 'text-parchment-faint' : 'text-rubric-bright'}`}><ShieldCheck className="h-4 w-4" />{validation.valid ? `设计可用 · ${draft.freeMode ? '自由模式' : `剩余 ${validation.remainingDesignPoints} 点`} · 第一幕生成并保存成功后进入游戏` : validation.errors.join('；')}</div><button type="button" onClick={() => void handleStart()} disabled={!validation.valid || isSubmitting} className="btn-decree min-w-40 justify-center">{isSubmitting ? '正在生成并保存第一幕' : '以此身份开始'}</button></div>
+          <div className="flex flex-col items-stretch justify-between gap-2 sm:flex-row sm:items-center"><div className={`flex items-center gap-2 text-xs ${validation.valid ? 'text-parchment-faint' : 'text-rubric-bright'}`}><ShieldCheck className="h-4 w-4" />{validation.valid ? `人物可用 · 剩余 ${validation.remainingDesignPoints} 点 · 第一幕生成并保存成功后进入游戏` : validation.errors.join('；')}</div><button type="button" onClick={() => void handleStart()} disabled={!validation.valid || isSubmitting} className="btn-decree min-w-40 justify-center">{isSubmitting ? '正在生成并保存第一幕' : '以此身份开始'}</button></div>
         </footer>
       </div>
     </div>
@@ -627,6 +646,7 @@ interface PanelStatus {
 function creatorPanelStatus(draft: CharacterCreationDraft): Record<CreatorPanel, PanelStatus> {
   const identityReady = draft.name.trim().length > 0 && draft.culture.trim().length > 0 && draft.faith.trim().length > 0;
   return {
+    life: draft.location ? { text: '查看全貌', tone: 'done' } : { text: '尚缺地点', tone: 'todo' },
     identity: identityReady ? { text: '已确定', tone: 'done' } : { text: '待填写', tone: 'todo' },
     house: draft.house
       ? { text: draft.house.houseName, tone: 'done' }

@@ -5,7 +5,6 @@ import type { CoatOfArmsDesign } from '../../data/heraldry';
 import {
   CHARACTER_TRAITS,
   DESIGN_POINT_LIMIT,
-  MAX_PERSONALITY_TRAITS,
   calculateFinalAttributes,
   isDerivedInjuryTraitId,
 } from '../../data/characterTraits';
@@ -106,7 +105,7 @@ export interface CreationKinshipDraft {
 
 export interface CharacterCreationDraft {
   schemaVersion: 1;
-  selectionRulesVersion?: 2;
+  selectionRulesVersion?: 2 | 3;
   /** 成长方向不是已掌握特质，不参与开局效果与计费。 */
   learningTraitIds?: string[];
   traitBackgrounds?: Record<string, string>;
@@ -457,13 +456,6 @@ export function legalTraitIdsForAge(traitIds: readonly string[], age: number): {
       removed.push(id);
       continue;
     }
-    if (trait.category === 'personality') {
-      const personalityCount = result.filter((selected) => CHARACTER_TRAITS.find((entry) => entry.id === selected)?.category === 'personality').length;
-      if (personalityCount >= MAX_PERSONALITY_TRAITS) {
-        removed.push(id);
-        continue;
-      }
-    }
     result.push(id);
   }
   return { traitIds: result, removed };
@@ -511,7 +503,7 @@ export function rebaseDraftForBackground(
 export function createDefaultCharacterCreationDraft(): CharacterCreationDraft {
   const shell: CharacterCreationDraft = {
     schemaVersion: 1,
-    selectionRulesVersion: 2,
+    selectionRulesVersion: 3,
     learningTraitIds: [],
     traitBackgrounds: {},
     educationMode: 'background',
@@ -538,7 +530,7 @@ export function createDefaultCharacterCreationDraft(): CharacterCreationDraft {
   return shell;
 }
 
-function economyFor(draft: CharacterCreationDraft): { gold: number; silver: number } {
+export function economyFor(draft: CharacterCreationDraft): { gold: number; silver: number } {
   const roleGold: Record<CustomIdentityRole, number> = { commoner: 0, traveler: 1, retainer: 1, knight: 5, landless_noble: 8 };
   const roleSilver: Record<CustomIdentityRole, number> = { commoner: 18, traveler: 28, retainer: 36, knight: 42, landless_noble: 60 };
   const livelihoodGold: Record<CustomLivelihood, number> = { day_labor: 0, household_wage: 0, guard_work: 1, trade: 3, scribe_work: 1 };
@@ -546,7 +538,7 @@ function economyFor(draft: CharacterCreationDraft): { gold: number; silver: numb
   return { gold: roleGold[draft.role] + livelihoodGold[draft.livelihood], silver: roleSilver[draft.role] + livelihoodSilver[draft.livelihood] };
 }
 
-function itemPackageFor(draft: CharacterCreationDraft): CustomItemPackage {
+export function itemPackageFor(draft: CharacterCreationDraft): CustomItemPackage {
   if (draft.role === 'knight' || draft.experience === 'martial_training' && draft.livelihood === 'guard_work') return 'knight';
   if (draft.experience === 'academy_learning' || draft.livelihood === 'scribe_work') return 'scholar';
   if (draft.role === 'traveler' || draft.experience === 'trade_travel' || draft.experience === 'wandering_life') return 'traveler';
@@ -602,7 +594,7 @@ export function validateCharacterCreationDraft(draft: CharacterCreationDraft): C
     if (!Number.isInteger(value) || value < 0 || value > 30) errors.push(`${key} 必须是 0—30 的整数`);
   }
   const legal = legalTraitIdsForAge(draft.traitIds, draft.age);
-  if (legal.removed.length) errors.push('存在年龄不适用、互斥或超过性格上限的特质');
+  if (legal.removed.length) errors.push('存在年龄不适用或互斥的特质');
   for (const trait of CHARACTER_TRAITS.filter((entry) => draft.traitIds.includes(entry.id))) {
     const issue = creationTraitBlock(trait, draft) ?? creationTraitRequirement(trait, draft);
     if (issue) errors.push(`${trait.name}：${issue}`);
@@ -635,7 +627,7 @@ export function validateCharacterCreationDraft(draft: CharacterCreationDraft): C
   }
   const budget = creationBudget(draft.attributes, draft.traitIds);
   const usedDesignPoints = budget.total;
-  if (!draft.freeMode && usedDesignPoints > DESIGN_POINT_LIMIT) errors.push(`设计点数超出 ${DESIGN_POINT_LIMIT} 点预算`);
+  if (usedDesignPoints > DESIGN_POINT_LIMIT) errors.push(`设计点数超出 ${DESIGN_POINT_LIMIT} 点预算`);
   if (draft.role === 'commoner' && draft.house) warnings.push('平民可以保留家族背景，但不会因此自动获得贵族权利');
   return { valid: errors.length === 0, errors, warnings, budget, usedDesignPoints, remainingDesignPoints: DESIGN_POINT_LIMIT - usedDesignPoints };
 }

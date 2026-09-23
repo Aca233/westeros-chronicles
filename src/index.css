@@ -1959,6 +1959,10 @@ button,
 .creator-v2 button:focus-visible,
 .creator-v2 summary:focus-visible { outline: 2px solid #c9a45c; outline-offset: 3px; }
 @media (max-width: 1023px) {
-  .creator-v2 .creator-body > aside:first-child { display: none; }
+  .creator-v2 .creator-body > aside:first-child { display: block; }
+  .creator-v2 .creator-dossier-portrait,
+  .creator-v2 .creator-dossier-details,
+  .creator-v2 .creator-dossier-traits,
+  .creator-v2 .creator-dossier-opening { display: none; }
   .creator-v2 .creator-trait-browser { max-height: 48vh; }
 }

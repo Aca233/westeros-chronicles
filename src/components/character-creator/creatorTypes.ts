@@ -2,13 +2,14 @@ import type React from 'react';
 import {
   BookOpen,
   Crown,
+  Home,
   MapPin,
   Sparkles,
   UserRound,
   Users,
 } from 'lucide-react';
 
-export type CreatorPanel = 'identity' | 'house' | 'background' | 'relations' | 'traits' | 'situation';
+export type CreatorPanel = 'life' | 'identity' | 'house' | 'background' | 'relations' | 'traits' | 'situation';
 
 export const CREATOR_PANELS: Array<{
   id: CreatorPanel;
@@ -16,6 +17,7 @@ export const CREATOR_PANELS: Array<{
   note: string;
   icon: React.ElementType;
 }> = [
+  { id: 'life', label: '档案', note: '生活与开局全貌', icon: Home },
   { id: 'identity', label: '人物', note: '身份与年龄', icon: UserRound },
   { id: 'house', label: '家族', note: '宗族与纹章', icon: Crown },
   { id: 'background', label: '身世', note: '出身与生计', icon: BookOpen },

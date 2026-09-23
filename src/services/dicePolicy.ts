@@ -79,6 +79,9 @@ const ACTION_INTENTS: readonly ActionIntent[] = [
 // 方法优先于场景大类：同样是“进城”，伪造文书与翻墙应形成不同构筑。
 // 辅属性只在它对执行方式确有因果作用时出现，不强迫所有检定使用两项属性。
 const ACTION_METHODS: readonly ActionMethod[] = [
+  { label: '贴身控制', attribute: 'prowess', domain: 'duel', baseDc: 14, physical: true, patterns: [/摔跤|擒拿|贴身压制|控制.*持剑.*手|拖.*下马/] },
+  { label: '观察破绽后进攻', attribute: 'prowess', secondaryAttribute: 'learning', domain: 'duel', baseDc: 14, physical: true, patterns: [/(?:观察|寻找|看准|等待).*(?:破绽|步法).*(?:进攻|出手|刺击)|看准破绽出手/] },
+  { label: '佯攻诱招', attribute: 'prowess', secondaryAttribute: 'intrigue', domain: 'duel', baseDc: 14, physical: true, patterns: [/虚晃|假动作.*(?:进攻|出手|诱)|佯攻.*(?:对手|剑|刀)|诱使对手出招/] },
   { label: '伪造文书', attribute: 'intrigue', secondaryAttribute: 'learning', domain: 'intrigue', baseDc: 16, patterns: [/伪造|仿写|假(?:的)?(?:通行证|许可|军令|文书|印章)/] },
   { label: '隐蔽攀爬', attribute: 'prowess', secondaryAttribute: 'intrigue', domain: 'survival', baseDc: 15, physical: true, patterns: [/悄悄.*攀|攀.*(?:避开|躲开|不惊动)|翻(?:过|越).*(?:墙|城垛)/] },
   { label: '攀爬', attribute: 'prowess', domain: 'survival', baseDc: 13, physical: true, patterns: [/攀爬|翻墙|爬上|爬下|攀上|攀下/] },
